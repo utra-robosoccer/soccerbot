@@ -72,7 +72,8 @@ class FootStepPlanner:
     def setup_tasks(self):
         # Creating the kinematics solver
         self.solver = placo.KinematicsSolver(self.robot)
-        self.solver.enable_velocity_limits(True)
+        # self.solver.enable_velocity_limits(True)
+        self.solver.enable_velocity_limits(False)
         self.solver.dt = self.DT
 
         # Creating the walk QP tasks
