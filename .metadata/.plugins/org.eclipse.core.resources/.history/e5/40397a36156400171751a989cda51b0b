@@ -1,0 +1,4 @@
+/* Drivers for Dynamixel AX-12A Servo Motor */
+
+/***** Includes *****/
+#include "stm32f4xx_hal.h"
