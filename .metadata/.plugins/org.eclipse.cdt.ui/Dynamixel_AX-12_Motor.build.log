@@ -1,0 +1,32 @@
+17:55:02 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:41:0:
+../Src/..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.c: In function 'Dynamixel_ComputeChecksum':
+../Src/..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.c:107:2: warning: statement with no effect [-Wunused-value]
+  for(uint8_t i = 2; i++; i < length - 1){
+  ^
+../Src/main.c: At top level:
+../Src/..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.c:74:13: warning: 'Dynamixel_SetID' defined but not used [-Wunused-function]
+ static void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10860	     12	   1780	  12652	   316c	Dynamixel_AX-12_Motor.elf
+ 
+
+17:55:04 Build Finished (took 2s.262ms)
+
