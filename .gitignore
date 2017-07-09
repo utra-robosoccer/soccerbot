@@ -92,4 +92,4 @@ tmp/
 #.classpath
 
 # STM Microelectronics stuff
-
+**/Debug/
