@@ -1,6 +1,0 @@
-20:09:29 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
-make all 
-Src/main.d:1: *** multiple target patterns.  Stop.
-
-20:09:29 Build Finished (took 97ms)
-
