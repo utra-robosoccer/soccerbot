@@ -132,21 +132,12 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabl
 
 /********** GETTERS **********/
 // UNIMPLEMENTED
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
-	 * of the motor is.
-	 * Writes the results to hdynamixel -> _lastPosition
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
 void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x26 and 0x27 in the motor RAM to see what the current velocity
-	 * of the motor is.
+	/* Reads addresses 0x20 and 0x21 in the motor RAM to see what the current velocity
+	 * is of the motor.
 	 * Writes the results to hdynamixel -> _lastVelocity
 	 *
 	 * Arguments: hdynamixel, the motor handle

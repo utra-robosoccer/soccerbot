@@ -132,56 +132,21 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabl
 
 /********** GETTERS **********/
 // UNIMPLEMENTED
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
-	 * of the motor is.
-	 * Writes the results to hdynamixel -> _lastPosition
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x26 and 0x27 in the motor RAM to see what the current velocity
-	 * of the motor is.
-	 * Writes the results to hdynamixel -> _lastVelocity
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
-	 * Writes the results to hdynamixel -> _lastTemperature
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x28 and 0x29 in the motor RAM to see what the current
-	 * load is.
-	 * Writes the results to hdynamixel -> _lastLoad
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
 void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads address 0x2A in the motor RAM to see what the current voltage is.
-	 * Writes the results to hdynamixel -> _lastVoltage
+	 * Write the results to hdynamixel -> _lastVoltage
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 *
