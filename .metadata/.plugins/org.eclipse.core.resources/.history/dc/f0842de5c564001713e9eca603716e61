@@ -40,7 +40,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -50,6 +50,7 @@ UART_HandleTypeDef huart6;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 uint8_t buffrec[7];
+uint8_t Dynamixel_Requisites[5] = {0xff, 0xff, 0xfe, 0x05, 0x03};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,7 +61,7 @@ static void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+static void Dynamixel_Move(double angle);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -99,23 +100,16 @@ int main(void)
   __HAL_RCC_GPIOF_CLK_ENABLE();
 
   GPIO_InitTypeDef Data_Control;
+
   Data_Control.Pin = GPIO_PIN_15;
   Data_Control.Mode = GPIO_MODE_OUTPUT_PP;
   Data_Control.Speed = GPIO_SPEED_FREQ_LOW;
   Data_Control.Pull = GPIO_NOPULL;
+
   HAL_GPIO_Init(GPIOF, &Data_Control);
 
-  __HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
-
-  // Initialize master motor control first
-  Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
-  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, 1000000, &huart6);
-
-  Dynamixel_HandleTypeDef Motor1;
-  Dynamixel_Init(&Motor1, 0x01, 1000000, &huart6);
-
-
-  double angle = 0;
+  //__HAL_UART_ENABLE_IT(&huart3,UART_IT_RXNE); // UART receive interrupt
+  //__HAL_UART_ENABLE_IT(&huart3,UART_IT_TC); // UART transmit interrupt
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,31 +119,23 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  if(angle == 0){
-		  angle = 300;
-	  }
-	  else{
-		  angle = 0;
-	  }
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 1); // TX
+	  HAL_UART_Transmit(&huart6, Dynamixel_Requisites, 5, 100);
+	  Dynamixel_Move(0);
+	  HAL_Delay(400); // Tx delay
 
-	  Dynamixel_SetCWAngleLimit(&Motor1, 0);
-	  Dynamixel_SetCCWAngleLimit(&Motor1, 0);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 0); // Switch to RX
+	  HAL_UART_Receive(&huart6, buffrec, 7, 100); // Receive 7 bytes...
 
-	  // If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
-	  // continuously rotate
-	  Dynamixel_SetVelocity(&Motor1, 69);
-	  //Dynamixel_SetPosition(&Motor1, angle);
-	  __DYNAMIXEL_RECEIVE();
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 1); // Switch to TX
+	  HAL_UART_Transmit(&huart6, Dynamixel_Requisites, 5, 100);
+	  Dynamixel_Move(300);
+	  HAL_Delay(400); // Tx delay
 
-	  HAL_Delay(1500); // Delay for motor to move to the specified position
-
-	  Dynamixel_SetPosition(&MASTER_MOTOR_CONTROL, angle);
-	  __DYNAMIXEL_RECEIVE();
-
-	  HAL_Delay(1500); // Delay for motor to move to the specified position
-  }
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 0); // Switch to RX
+	  HAL_UART_Receive(&huart6, buffrec, 7, 100); // Receive 7 bytes...
   /* USER CODE END 3 */
-
+  }
 }
 
 /** System Clock Configuration
@@ -171,13 +157,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = 16;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 192;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
-  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -187,12 +167,12 @@ void SystemClock_Config(void)
     */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLRCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -233,7 +213,7 @@ static void MX_USART6_UART_Init(void)
 {
 
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 1000000;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
@@ -260,9 +240,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, GPIO_PIN_RESET);
@@ -277,7 +257,37 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void Dynamixel_Move(double angle)
+{
+	/* Takes a double between 0 and 300, encodes this position in an
+	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
+	 * user manual), and sends this information (along with requisites) over UART
+	 */
 
+	uint8_t reg_Goal_Position[1] = {0x1e}; // Address of goal position
+	uint8_t reg_Angle_Low_Byte[1]; // Low byte of goal position // Test case 1: 0xfe | Test case 2: 0xfd
+	uint8_t reg_Angle_High_Byte[1]; // High byte of goal position // Test case 1: 0x00 | Test case 2: 0x01
+	uint8_t Checksum[1]; // check sum = 255 - (sum % 256)
+
+	// Do computations
+	int normalized_value = (int)(angle / 300 * 1023); // maximum angle of 1023
+	reg_Angle_Low_Byte[0] = normalized_value & 0xFF;
+	reg_Angle_High_Byte[0] = (normalized_value >> 8) & 0xFF;
+
+	Checksum[0] = 255 - ((Dynamixel_Requisites[2]
+						+ Dynamixel_Requisites[3]
+						+ Dynamixel_Requisites[4]
+						+ reg_Goal_Position[0]
+						+ reg_Angle_Low_Byte[0]
+						+ reg_Angle_High_Byte[0]
+						) %  256);
+
+	// Transmit
+	HAL_UART_Transmit(&huart6, reg_Goal_Position, 1, 100);
+	HAL_UART_Transmit(&huart6, reg_Angle_Low_Byte, 1, 100);
+	HAL_UART_Transmit(&huart6, reg_Angle_High_Byte, 1, 100);
+	HAL_UART_Transmit(&huart6, Checksum, 1, 100);
+}
 /* USER CODE END 4 */
 
 /**

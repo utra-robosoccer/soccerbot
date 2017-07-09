@@ -180,6 +180,7 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTor
 	 */
 }
 
+// UNIMPLEMENTED
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle){
 	/* Sets the clockwise angle limit for the current motor.
 	 * Register 0x06 in EEPROM for low byte, 0x07 in EEPROM for high byte
@@ -221,6 +222,7 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAn
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 9, 100);
 }
 
+// UNIMPLEMENTED
 void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle){
 	/* Sets the counter-clockwise angle limit for the current motor.
 	 * Register 0x08 in EEPROM for low byte, 0x09 in EEPROM for high byte
@@ -247,7 +249,7 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxA
 	arrTransmit[5] = 0x08; // Address of min angle
 
 	// Translate the angles from degrees into 8-bit numbers
-	int normalized_value = (int)(maxAngle / 300 * 1023);
+	int normalized_value = (int)(minAngle / 300 * 1023);
 
 	arrTransmit[6] = normalized_value & 0xFF; // Low byte of CCW angle limit
 	arrTransmit[7] = (normalized_value >> 8) & 0xFF; // High byte of CCW angle limit

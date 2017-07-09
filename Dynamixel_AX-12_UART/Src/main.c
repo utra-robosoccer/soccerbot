@@ -108,7 +108,7 @@ int main(void)
 
   HAL_GPIO_Init(GPIOF, &Data_Control);
 
-  //__HAL_UART_ENABLE_IT(&huart3,UART_IT_RXNE); // UART receive interrupt
+  __HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt
   //__HAL_UART_ENABLE_IT(&huart3,UART_IT_TC); // UART transmit interrupt
   /* USER CODE END 2 */
 

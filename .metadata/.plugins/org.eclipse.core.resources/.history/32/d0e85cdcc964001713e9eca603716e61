@@ -134,10 +134,7 @@ int main(void)
 
 	  Dynamixel_SetCWAngleLimit(&Motor1, 0);
 	  Dynamixel_SetCCWAngleLimit(&Motor1, 0);
-
-	  // If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
-	  // continuously rotate
-	  Dynamixel_SetVelocity(&Motor1, 69);
+	  Dynamixel_SetVelocity(&Motor1, 20);
 	  //Dynamixel_SetPosition(&Motor1, angle);
 	  __DYNAMIXEL_RECEIVE();
 
