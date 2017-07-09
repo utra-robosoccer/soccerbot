@@ -1,6 +1,0 @@
-00:20:47 **** Incremental Build of configuration Debug for project FirstProject ****
-make all 
-make: Nothing to be done for `all'.
-
-00:20:49 Build Finished (took 1s.362ms)
-
