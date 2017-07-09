@@ -215,44 +215,22 @@ void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8
 void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope){
 	/* Sets the clockwise compliance slope for the current motor.
 	 * The compliance slope sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
+	 * The higher the value, the more flexibility that is obtained.
 	 * Address is 0x1C in RAM. Default value is 0x20 (tightest possible)
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  CWcomplianceSlope, parameter dictating the torque as the goal position is approached. Arguments in range [0,254]
-	 *
-	 * Returns: none
+	 * 			  CWcomplianceSlope, the
 	 */
 }
 
 // UNIMPLEMENTED
 void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceSlope){
-	/* Sets the counter-clockwise compliance slope for the current motor.
-	 * The compliance slope sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 * Address is 0x1D in RAM. Default value is 0x20 (tightest possible)
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  CWcomplianceSlope, parameter dictating the torque as the goal position is approached. Arguments in range [0,254]
-	 *
-	 * Returns: none
-	 */
+
 }
 
 // UNIMPLEMENTED
 void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
-	/* Sets address 0x18 in the RAM of the current motor. Default value is 0x00
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  isEnabled, if 1, then generates torque by impressing power to the motor
-	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
-	 *
-	 * Returns: none
-	 */
+
 }
 
 
