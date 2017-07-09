@@ -4000,3 +4000,16 @@ Command-line arguments:  -data /home/vuwij/Documents/soccer-embedded -os linux -
 
 !ENTRY org.eclipse.cdt.core 1 0 2017-07-08 21:48:27.857
 !MESSAGE Indexed 'soccer-audio' (19 sources, 61 headers) in 4.35 sec: 3,132 declarations; 15,893 references; 0 unresolved inclusions; 18 syntax errors; 0 unresolved names (0%)
+!SESSION 2017-07-08 22:04:14.290 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_131
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_CA
+Framework arguments:  -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2017-07-08 22:04:15.352
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY fr.ac6.mcu.ide 1 1 2017-07-08 22:04:20.726
+!MESSAGE Started RMI Server, listening on port 21112
