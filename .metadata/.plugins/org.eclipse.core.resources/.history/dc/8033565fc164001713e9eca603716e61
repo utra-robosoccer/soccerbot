@@ -7,8 +7,7 @@
 void Dynamixel_SetPosition(Dynamixel_HandleTypeDef *hdynamixel, double angle){
 	/* Takes a double between 0 and 300, encodes this position in an
 	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
-	 * user manual), and sends this information (along with requisites) over UART.
-	 * Low byte is 0x1E in motor RAM, high byte is 0x1F in motor RAM.
+	 * user manual), and sends this information (along with requisites) over UART
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  angle, the desired angular position. Arguemnts between 0 and 300 are valid
@@ -45,7 +44,6 @@ void Dynamixel_SetPosition(Dynamixel_HandleTypeDef *hdynamixel, double angle){
 // UNIMPLEMENTED
 void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity){
 	/* Sets the goal velocity of the motor in RAM.
-	 * Low byte is 0x20 in motor RAM, high byte is 0x21 in motor RAM.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid.
@@ -55,7 +53,7 @@ void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity)
 }
 
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
-	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
+	/* Sets the baud rate of a particular motor.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  baud, the baud rate. Arguments in range [7844, 1000000] are valid
@@ -94,7 +92,7 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 }
 
 void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
-	/* Sets motor ID. Register address is 0x03 in motor EEPROM
+	/* Sets motor ID.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  ID, the unique number between 0 and 252 to identify the motor. If 0xFE (254), then
@@ -126,7 +124,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 }
 
 // UNIMPLEMENTED
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque){
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, uint16_t maxTorque){
 	/* Sets the maximum torque limit for all motor operations.
 	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
 	 *
@@ -138,122 +136,28 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorqu
 }
 
 // UNIMPLEMENTED
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque){
-	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
-	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  goalTorque, the percentage of the maximum possible torque (max: 100). Gets converted into 10-bit number
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, uint16_t goalTorque);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle, double maxAngle){
-	/* Sets the clockwise angle limit for the current motor.
-	 * Register 0x06 in EEPROM for min angle, 0x07 in EEPROM for max angle
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  minAngle, the minimum angle for all motor operations. Arguments between 0 and 300 are valid
-	 * 			  maxAngle, the maximum angle for all motor operations. Arguments between 0 and 300 are valid.
-	 *
-	 * If minAngle for CCW angle limit (addr: 0x08) is 0 AND minAngle for CW angle limit (addr: 0x06) is 0,
-	 * then motor is in wheel mode where it can continuously rotate. Otherwise, motor is in joint mode where its
-	 * motion is constrained between the set bounds.
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle, double minAngle);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle, double maxAngle){
-	/* Sets the counter-clockwise angle limit for the current motor.
-	 * Register 0x08 in EEPROM for min angle, 0x09 in EEPROM for max angle
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  minAngle, the minimum angle for all motor operations. Arguments between 0 and 300 are valid
-	 * 			  maxAngle, the maximum angle for all motor operations. Arguments between 0 and 300 are valid.
-	 *
-	 * If minAngle for CCW angle limit (addr: 0x08) is 0 AND minAngle for CW angle limit (addr: 0x06) is 0,
-	 * then motor is in wheel mode where it can continuously rotate. Otherwise, motor is in joint mode where its
-	 * motion is constrained between the set bounds.
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle, double minAngle);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin){
-	/* Sets the clockwise compliance margin for the current motor.
-	 * The compliance margin is the acceptable error between the current position and goal position.
-	 * The greater the value, the more error is acceptable.
-	 * Register 0x1A in RAM. Default value: 0x01 (smallest possible)
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  CWcomplianceMargin, the acceptable error between the current and goal position. Arguments in range [0, 255]
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin){
-	/* Sets the counter-clockwise compliance margin for the current motor.
-	 * The compliance margin is the acceptable error between the current position and goal position.
-	 * The greater the value, the more error is acceptable.
-	 * Register 0x1B in RAM. Default value: 0x01 (smallest possible)
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  CCWcomplianceMargin, the acceptable error between the current and goal position. Arguments in range [0, 255]
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope){
-	/* Sets the clockwise compliance slope for the current motor.
-	 * The compliance slope sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 * Address is 0x1C in RAM. Default value is 0x20 (tightest possible)
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  CWcomplianceSlope, parameter dictating the torque as the goal position is approached. Arguments in range [0,254]
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope);
 
 // UNIMPLEMENTED
-void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceSlope){
-	/* Sets the counter-clockwise compliance slope for the current motor.
-	 * The compliance slope sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 * Address is 0x1D in RAM. Default value is 0x20 (tightest possible)
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  CWcomplianceSlope, parameter dictating the torque as the goal position is approached. Arguments in range [0,254]
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceSlope);
 
 // UNIMPLEMENTED
-void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
-	/* Sets address 0x18 in the RAM of the current motor. Default value is 0x00
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  isEnabled, if 1, then generates torque by impressing power to the motor
-	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled);
 
 
 /********** GETTERS **********/

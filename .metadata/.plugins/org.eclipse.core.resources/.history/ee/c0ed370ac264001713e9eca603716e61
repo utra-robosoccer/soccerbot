@@ -35,8 +35,8 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud); //
 void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID); // (EEPROM)
 void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque); // (EEPROM) UNIMPLEMENTED
 void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque); // (RAM) UNIMPLEMENTED
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle, double maxAngle); // (EEPROM) UNIMPLEMENTED
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle, double maxAngle); // (EEPROM) UNIMPLEMENTED
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle, double minAngle); // (EEPROM) UNIMPLEMENTED
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle, double minAngle); // (EEPROM) UNIMPLEMENTED
 void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin); // (RAM) UNIMPLEMENTED
 void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin); // (RAM) UNIMPLEMENTED
 void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope); // (RAM) UNIMPLEMENTED
