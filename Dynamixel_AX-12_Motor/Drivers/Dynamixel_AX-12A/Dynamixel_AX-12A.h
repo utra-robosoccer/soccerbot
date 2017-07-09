@@ -24,10 +24,10 @@ typedef struct{
 }Dynamixel_HandleTypeDef;
 
 /***** Private function prototypes *****/
-static void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, double BaudRate, UART_HandleTypeDef* UART_Handle);
-static void Dynamixel_SetAngle(Dynamixel_HandleTypeDef *hdynamixel, double angle);
-static void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud);
-static void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID);
-static uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
+void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, double BaudRate, UART_HandleTypeDef* UART_Handle);
+void Dynamixel_SetAngle(Dynamixel_HandleTypeDef *hdynamixel, double angle);
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud);
+void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID);
+uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 #endif /* __DYNAMIXEL_AX-12A_H */
