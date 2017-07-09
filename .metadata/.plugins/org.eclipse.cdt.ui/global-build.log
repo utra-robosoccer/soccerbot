@@ -1,0 +1,23 @@
+21:50:59 **** Incremental Build of configuration Debug for project soccer-audio ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+/home/vuwij/Documents/soccer-embedded/soccer-audio/Debug
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed="__attribute__((__packed__))"' -DUSE_HAL_DRIVER -DSTM32F411xE -I"/home/vuwij/Documents/soccer-embedded/soccer-audio/Inc" -I"/home/vuwij/Documents/soccer-embedded/soccer-audio/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/home/vuwij/Documents/soccer-embedded/soccer-audio/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"/home/vuwij/Documents/soccer-embedded/soccer-audio/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/home/vuwij/Documents/soccer-embedded/soccer-audio/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building target: soccer-audio.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F411VETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "soccer-audio.elf" @"objects.list"  
+Finished building target: soccer-audio.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "soccer-audio.elf" "soccer-audio.bin"
+arm-none-eabi-size "soccer-audio.elf"
+   text	   data	    bss	    dec	    hex	filename
+   4080	     12	   1572	   5664	   1620	soccer-audio.elf
+ 
+21:51:05 **** Incremental Build of configuration Debug for project soccer-audio ****
+make all 
+make: Nothing to be done for 'all'.

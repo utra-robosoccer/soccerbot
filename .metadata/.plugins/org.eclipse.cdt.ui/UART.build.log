@@ -1,0 +1,7 @@
+13:31:56 **** Clean-only build of configuration Debug for project UART ****
+make clean 
+rm -rf *
+ 
+
+13:31:56 Build Finished (took 317ms)
+
