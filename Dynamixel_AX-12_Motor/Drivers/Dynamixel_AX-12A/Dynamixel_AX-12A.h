@@ -55,6 +55,9 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEME
 // Computation
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
+// Transmission
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+
 // Initialization
 void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, double BaudRate, UART_HandleTypeDef* UART_Handle);
 

@@ -217,7 +217,7 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTor
 	arrTransmit[5] = 0x06; // Write address for goal torque
 
 	// Translate the goal torque from a percentage into a 10-bit number
-	int normalized_value = (int)(minAngle / 300 * 1023);
+	int normalized_value = (int)(goalTorque / 300 * 1023);
 
 	arrTransmit[6] = normalized_value & 0xFF; // Low byte of goal torque
 	arrTransmit[7] = (normalized_value >> 8) & 0xFF; // High byte of goal torque
@@ -516,9 +516,48 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 }
 
 /********** Transmission **********/
-void Dynamixel_DataHandler(uint8_t arrSize, uint8_t instruction, uint8_t writeAddr, uint8_t param1, uint8_t param2){
-	/* Handles sending of data since this nearly identical for all setters */
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
+						   uint8_t writeAddr, uint8_t param1, uint8_t param2){
+	/* Handles sending of data since this nearly identical for all setters
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  arrSize, the size of the array to be transmitted. Must be 8 or 9
+	 * 			  writeAddr, the address for the parameters to be written to (may be motor EEPROM or RAM)
+	 * 			  param1, the first parameter
+	 * 			  param2, the second parameter. If arrSize == 8, then param2 is ignored and should be passed as -1
+	 *
+	 * Returns: none
+	 */
 
+	// Check that array size is 8 or 9 (ideally this will be expanded to instructions of arbitrary length for sync write)
+	if(arrSize != 8 && arrSize != 9){
+		_Error_Handler(__FILE__, __LINE__);
+		return;
+	}
+
+	// Define array for transmission
+	uint8_t arrTransmit[arrSize];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = arrSize - 4; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x03; // WRITE instruction
+	arrTransmit[5] = writeAddr; // Write address for register
+	arrTransmit[6] = param1;
+
+	// Checksum = 255 - (sum % 256)
+	arrTransmit[7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
+	if(arrSize == 9){
+		arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
+	}
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, 100);
 }
 
 /********** Initialization *********/
