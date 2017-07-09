@@ -93,3 +93,24 @@ tmp/
 
 # STM Microelectronics stuff
 **/Debug/
+.metadata/.mylyn/contexts/
+.metadata/.plugins/org.eclipse.core.resources/.history/
+.metadata/.plugins/org.eclipse.core.resources/.projects/
+.metadata/.plugins/org.eclipse.core.resources/.projects/
+.metadata/.plugins/org.eclipse.core.resources/.root/21.tree
+.metadata/.plugins/org.eclipse.core.resources/21.snap
+.metadata/.plugins/org.eclipse.debug.core/
+.metadata/.plugins/org.eclipse.emf.common.ui/
+.metadata/.plugins/org.eclipse.mylyn.bugzilla.core/
+.metadata/.plugins/org.eclipse.mylyn.commons.notifications.ui/
+.metadata/.plugins/org.eclipse.mylyn.context.core/
+.metadata/.plugins/org.eclipse.mylyn.tasks.ui/
+.metadata/.plugins/org.eclipse.team.svn.core/
+.metadata/.plugins/org.eclipse.team.svn.revision.graph/
+.metadata/.plugins/org.eclipse.tracecompass.tmf.analysis.xml.ui/
+
+.metadata/.plugins/org.eclipse.core.resources/.projects/Dynamixel_AX-12_Motor/.indexes/c4/history.index
+*.index
+*.xmi
+*.snap
+.metadata/.plugins/org.eclipse.core.resources/.projects/Dynamixel_AX-12_Motor/.indexes/c4/history.index
