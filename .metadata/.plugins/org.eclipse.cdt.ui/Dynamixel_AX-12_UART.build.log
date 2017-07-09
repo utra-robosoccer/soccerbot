@@ -1,6 +1,0 @@
-20:42:12 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_UART ****
-make all 
-Src/main.d:1: *** multiple target patterns.  Stop.
-
-20:42:12 Build Finished (took 68ms)
-
