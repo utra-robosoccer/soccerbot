@@ -104,7 +104,7 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 
 	// Loop through the array starting from the 2nd element of the array and finishing before the last
 	// since the last is where the checksum will be stored
-	for(uint8_t i = 2; i++; i < length - 1){
+	for(uint8_t i = 2; i < length - 1; i++){
 		accumulate += arr[i];
 	}
 
@@ -112,11 +112,11 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 }
 
 void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
-						   double BaudRate, UART_HandleTypeDef* UART_Handle)
+						   double BaudRate, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
-	Dynamixel_SetBaudRate(hdynamixel, BaudRate); // UART communication baud rate
 	hdynamixel -> _curPosition = 0; // In future, initialize this accurately
 	hdynamixel -> _curVelocity = 0; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
+	//Dynamixel_SetBaudRate(hdynamixel, BaudRate); // UART communication baud rate
 }

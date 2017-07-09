@@ -38,15 +38,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
-
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
 
@@ -60,7 +57,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_USART3_UART_Init(void);
-static void MX_ADC1_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -98,12 +94,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART6_UART_Init();
   MX_USART3_UART_Init();
-  MX_ADC1_Init();
 
   /* USER CODE BEGIN 2 */
   __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_ADC1_CLK_ENABLE();
-  __HAL_ADC_ENABLE(&hadc1);
 
   GPIO_InitTypeDef Data_Control;
   Data_Control.Pin = GPIO_PIN_15;
@@ -112,23 +105,17 @@ int main(void)
   Data_Control.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &Data_Control);
 
-  GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  HAL_ADC_Start(&hadc1);
+  __HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
 
-  __HAL_UART_ENABLE_IT(&huart3,UART_IT_RXNE); // UART receive interrupt
-  __HAL_UART_ENABLE_IT(&huart3,UART_IT_TC); // UART transmit interrupt
+  // Initialize master motor control first
+  Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
+  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, 1000000, &huart6);
 
   Dynamixel_HandleTypeDef Motor1;
   Dynamixel_Init(&Motor1, 0x01, 1000000, &huart6);
 
-  Dynamixel_HandleTypeDef GLOBAL_MOTOR_CONTROL;
-  Dynamixel_Init(&GLOBAL_MOTOR_CONTROL, 0xFE, 1000000, &huart6);
 
-  uint32_t angle = 0;
+  double angle = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -138,18 +125,11 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  // Receive analog input from pin PA3 to convert into an angular position
-	  if(HAL_ADC_PollForConversion(&hadc1, 500) == HAL_OK){
-		  // Scale ADC value to the angular bounds of the motor
-		  angle = HAL_ADC_GetValue(&hadc1) / 4096 * 300;
+	  if(angle == 0){
+		  angle = 300;
 	  }
 	  else{
-		  if(angle == 0){
-			  angle = 300;
-		  }
-		  else{
-			  angle = 0;
-		  }
+		  angle = 0;
 	  }
 
 	  Dynamixel_SetAngle(&Motor1, angle);
@@ -223,43 +203,6 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* ADC1 init function */
-static void MX_ADC1_Init(void)
-{
-
-  ADC_ChannelConfTypeDef sConfig;
-
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
-    */
-  hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV6;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  if (HAL_ADC_Init(&hadc1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-    */
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
 /* USART3 init function */
 static void MX_USART3_UART_Init(void)
 {
@@ -311,7 +254,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
