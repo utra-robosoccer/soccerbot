@@ -3,7 +3,7 @@
 #include "stm32f4xx_hal_conf.h"
 
 /***** Functions *****/
-static void Dynamixel_SetAngle(Dynamixel_HandleTypeDef *hdynamixel, double angle)
+void Dynamixel_SetAngle(Dynamixel_HandleTypeDef *hdynamixel, double angle)
 {
 	/* Takes a double between 0 and 300, encodes this position in an
 	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
@@ -36,7 +36,7 @@ static void Dynamixel_SetAngle(Dynamixel_HandleTypeDef *hdynamixel, double angle
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 9, 100);
 }
 
-static void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 	/* Set baud rate of a particular motor */
 
 	// Define array for transmission
@@ -71,7 +71,7 @@ static void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double ba
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, 100);
 }
 
-static void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
+void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 	/* Set motor ID */
 
 	// Define array for transmission
@@ -96,7 +96,7 @@ static void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, 100);
 }
 
-static uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
+uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	/* Compute the checksum for data to be transmitted */
 
 	// Local variable declaration
@@ -111,7 +111,7 @@ static uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	return 255 - (accumulate % 256); // Lower 8 bits of the logical NOT of the sum
 }
 
-static void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
+void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
 						   double BaudRate, UART_HandleTypeDef* UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)

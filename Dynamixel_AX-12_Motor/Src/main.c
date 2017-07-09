@@ -38,7 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include "..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.c"
+#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
 
 /* USER CODE BEGIN Includes */
 
