@@ -40,7 +40,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.h"
+#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -132,12 +132,12 @@ int main(void)
 		  angle = 0;
 	  }
 
-	  Dynamixel_SetAngle(&Motor1, angle);
+	  Dynamixel_SetPosition(&Motor1, angle);
 	  __DYNAMIXEL_RECEIVE();
 
 	  HAL_Delay(1500); // Delay for motor to move to the specified position
 
-	  Dynamixel_SetAngle(&Motor1, angle);
+	  Dynamixel_SetPosition(&MASTER_MOTOR_CONTROL, angle);
 	  __DYNAMIXEL_RECEIVE();
 
 	  HAL_Delay(1500); // Delay for motor to move to the specified position
