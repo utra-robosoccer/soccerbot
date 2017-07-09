@@ -132,7 +132,13 @@ int main(void)
 		  angle = 0;
 	  }
 
-	  Dynamixel_SetPosition(&Motor1, angle);
+	  Dynamixel_SetCWAngleLimit(&Motor1, 0);
+	  Dynamixel_SetCCWAngleLimit(&Motor1, 0);
+
+	  // If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
+	  // continuously rotate
+	  Dynamixel_SetVelocity(&Motor1, 69);
+	  //Dynamixel_SetPosition(&Motor1, angle);
 	  __DYNAMIXEL_RECEIVE();
 
 	  HAL_Delay(1500); // Delay for motor to move to the specified position
