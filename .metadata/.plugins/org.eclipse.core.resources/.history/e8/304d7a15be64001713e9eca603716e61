@@ -132,89 +132,22 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabl
 
 /********** GETTERS **********/
 // UNIMPLEMENTED
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
-	 * of the motor is.
-	 * Writes the results to hdynamixel -> _lastPosition
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x26 and 0x27 in the motor RAM to see what the current velocity
-	 * of the motor is.
-	 * Writes the results to hdynamixel -> _lastVelocity
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
-	 * Writes the results to hdynamixel -> _lastTemperature
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads addresses 0x28 and 0x29 in the motor RAM to see what the current
-	 * load is.
-	 * Writes the results to hdynamixel -> _lastLoad
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads address 0x2A in the motor RAM to see what the current voltage is.
-	 * Writes the results to hdynamixel -> _lastVoltage
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
+void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel);
 
 // UNIMPLEMENTED
-uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads the 0x2E address in motor RAM to see if motor is moving.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: 0 if not moving
-	 * 			1 if moving
-	 */
-
-	return 0;
-}
-
-// UNIMPLEMENTED
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads the CW (addr: 0x06) and CCW (addr: 0x07) angle limits. If both are 0, motor is in wheel mode
-	 * and can spin indefinitely. Otherwise, motor is in joint mode and has angle limits set
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: 0 if in wheel mode
-	 * 			1 if in joint mode
-	 */
-
-	return 1;
-}
+uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel);
 
 /********** Computation **********/
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
@@ -242,6 +175,5 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
 	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
 	hdynamixel -> _lastVoltage = 0; // In future, initialize this accurately
 	hdynamixel -> _lastLoad = 0; // In future, initialize this accurately
-	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
 }

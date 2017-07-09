@@ -50,7 +50,6 @@ void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEME
 void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 
 // Computation
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
