@@ -21,8 +21,6 @@ typedef struct{
 	uint16_t				_lastPosition;			/*!< Position read from motor					*/
 	uint16_t				_lastVelocity;			/*!< Velocity read from motor					*/
 	uint16_t				_lastTemperature;		/*!< Temperature read from motor				*/
-	uint16_t				_lastVoltage;			/*!< Voltage read from motor					*/
-	uint16_t				_lastLoad;				/*!< Load read from motor						*/
 	UART_HandleTypeDef		*_UART_Handle;			/*!< UART handle for motor						*/
 }Dynamixel_HandleTypeDef;
 

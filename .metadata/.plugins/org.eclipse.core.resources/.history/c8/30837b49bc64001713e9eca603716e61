@@ -40,7 +40,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
+#include "..\Drivers\Dynamixel_AX-12A\Dynamixel_AX-12A.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
