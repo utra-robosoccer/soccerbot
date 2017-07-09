@@ -115,8 +115,8 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
 						   double BaudRate, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
-	hdynamixel -> _lastPosition = 0; // In future, initialize this accurately
-	hdynamixel -> _lastVelocity = 0; // In future, initialize this accurately
-	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
+	hdynamixel -> _curPosition = 0; // In future, initialize this accurately
+	hdynamixel -> _curVelocity = 0; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
+	//Dynamixel_SetBaudRate(hdynamixel, BaudRate); // UART communication baud rate
 }
