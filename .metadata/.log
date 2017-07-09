@@ -565,3 +565,6 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64 -pluginCustomization con
 
 !ENTRY org.eclipse.ui 4 4 2017-07-08 21:15:09.043
 !MESSAGE Plug-in 'org.eclipse.m2e.core.ui' contributed an invalid Menu Extension (Path: 'org.eclipse.ui.projectConfigure' is invalid): org.eclipse.m2e.enableNatureAction
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-07-08 21:32:22.607
+!MESSAGE Indexed 'soccer-audio' (19 sources, 61 headers) in 1.21 sec: 3,132 declarations; 15,883 references; 0 unresolved inclusions; 18 syntax errors; 0 unresolved names (0%)

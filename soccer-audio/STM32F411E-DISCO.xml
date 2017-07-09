@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<targetDefinitions xmlns="http://openstm32.org/stm32TargetDefinitions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://openstm32.org/stm32TargetDefinitions stm32TargetDefinitions.xsd">
+  <board id="stm32f411e-disco">
+    <name>STM32F411E-DISCO</name>
+    <mcuId>stm32f411vetx</mcuId>
+    <dbgIF>SWD</dbgIF>
+    <dbgIF>JTAG</dbgIF>
+    <dbgDEV>ST-LinkV2</dbgDEV>
+  </board>
+</targetDefinitions>
