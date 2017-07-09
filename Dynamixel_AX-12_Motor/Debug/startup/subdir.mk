@@ -14,7 +14,7 @@ OBJS += \
 startup/%.o: ../startup/%.s
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Assembler'
-	@echo %cd%
+	@echo $(PWD)
 	arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
