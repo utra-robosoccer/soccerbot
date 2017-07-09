@@ -1,0 +1,35 @@
+/**
+  ******************************************************************************
+  * @file    main.c
+  * @author  Ac6
+  * @version V1.0
+  * @date    01-December-2013
+  * @brief   Default main function.
+  ******************************************************************************
+*/
+
+
+#include "stm32f4xx.h"
+#include "stm32f4xx_nucleo_144.h"
+			
+
+int main(void)
+{
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitTypeDef LED;
+
+	//ch 29
+	LED.Pin = GPIO_PIN_7 | GPIO_PIN_14;
+	LED.Mode = GPIO_MODE_OUTPUT_PP;
+	LED.Speed = GPIO_SPEED_FREQ_LOW;
+	LED.Pull = GPIO_NOPULL;
+
+	HAL_GPIO_Init(GPIOB, &LED);
+
+	// Figure out how to use delay function
+	while(1){
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+		HAL_Delay(1);
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+	}
+}
