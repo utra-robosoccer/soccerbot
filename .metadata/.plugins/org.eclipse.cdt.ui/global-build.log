@@ -24,3 +24,9 @@ arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
    text	   data	    bss	    dec	    hex	filename
    8744	     12	   1708	  10464	   28e0	Dynamixel_AX-12_Motor.elf
  
+13:27:11 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+13:27:14 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.

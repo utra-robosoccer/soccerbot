@@ -25,7 +25,7 @@ void Dynamixel_SetPosition(Dynamixel_HandleTypeDef *hdynamixel, double angle){
 	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
 	arrTransmit[3] = 0x05; // Length of message minus the obligatory bytes
 	arrTransmit[4] = 0x03; // WRITE instruction
-	arrTransmit[5] = 0x1e; // Address of goal position
+	arrTransmit[5] = 0x1e; // Write address for goal position
 
 	// Translate the angle from degrees into a 10-bit number
 	int normalized_value = (int)(angle / 300 * 1023); // maximum angle of 1023
@@ -61,7 +61,7 @@ void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity)
 	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
 	arrTransmit[3] = 0x05; // Length of message minus the obligatory bytes
 	arrTransmit[4] = 0x03; // WRITE instruction
-	arrTransmit[5] = 0x20; // Address of goal velocity
+	arrTransmit[5] = 0x20; // Write address for goal velocity
 
 	// Translate the position from rpm into a 10-bit number
 	int normalized_value = 0;
@@ -101,7 +101,7 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
 	arrTransmit[3] = 0x04; // Length of message minus the obligatory bytes
 	arrTransmit[4] = 0x03; // WRITE instruction
-	arrTransmit[5] = 0x04; // Baud rate register address
+	arrTransmit[5] = 0x04; // Write address for register address
 
 	// Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps
 	if(baud > 0){
@@ -156,7 +156,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, 100);
 }
 
-// UNIMPLEMENTED
+// NEEDS TESTING
 void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque){
 	/* Sets the maximum torque limit for all motor operations.
 	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
@@ -166,9 +166,35 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorqu
 	 *
 	 * Returns: none
 	 */
+
+	// Define array for transmission
+	uint8_t arrTransmit[9];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 0x05; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x03; // WRITE instruction
+	arrTransmit[5] = 0x0E; // Address of low byte of max torque
+
+	// Translate the input from percentage into and 10-bit number
+	int normalized_value = (int)(maxTorque / 100 * 1023);
+
+	arrTransmit[6] = normalized_value & 0xFF; // Low byte of CW angle limit
+	arrTransmit[7] = (normalized_value >> 8) & 0xFF; // High byte of CW angle limit
+
+	// Checksum = 255 - (sum % 256)
+	arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, 9);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 9, 100);
 }
 
-// UNIMPLEMENTED
+// NEEDS TESTING
 void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque){
 	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
 	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
@@ -178,6 +204,32 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTor
 	 *
 	 * Returns: none
 	 */
+
+	// Define array for transmission
+	uint8_t arrTransmit[9];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 0x05; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x03; // WRITE instruction
+	arrTransmit[5] = 0x06; // Write address for goal torque
+
+	// Translate the goal torque from a percentage into a 10-bit number
+	int normalized_value = (int)(minAngle / 300 * 1023);
+
+	arrTransmit[6] = normalized_value & 0xFF; // Low byte of goal torque
+	arrTransmit[7] = (normalized_value >> 8) & 0xFF; // High byte of goal torque
+
+	// Checksum = 255 - (sum % 256)
+	arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, 9);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 9, 100);
 }
 
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle){
@@ -274,6 +326,32 @@ void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_
 	 *
 	 * Returns: none
 	 */
+
+	// Define array for transmission
+	uint8_t arrTransmit[9];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 0x05; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x03; // WRITE instruction
+	arrTransmit[5] = 0x08; // Address of min angle
+
+	// Translate the angles from degrees into 8-bit numbers
+	int normalized_value = (int)(CWcomplianceMargin / 300 * 1023);
+
+	arrTransmit[6] = normalized_value & 0xFF; // Low byte of CCW angle limit
+	arrTransmit[7] = (normalized_value >> 8) & 0xFF; // High byte of CCW angle limit
+
+	// Checksum = 255 - (sum % 256)
+	arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, 9);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 9, 100);
 }
 
 // UNIMPLEMENTED
@@ -435,6 +513,12 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	}
 
 	return 255 - (accumulate % 256); // Lower 8 bits of the logical NOT of the sum
+}
+
+/********** Transmission **********/
+void Dynamixel_DataHandler(uint8_t arrSize, uint8_t instruction, uint8_t writeAddr, uint8_t param1, uint8_t param2){
+	/* Handles sending of data since this nearly identical for all setters */
+
 }
 
 /********** Initialization *********/

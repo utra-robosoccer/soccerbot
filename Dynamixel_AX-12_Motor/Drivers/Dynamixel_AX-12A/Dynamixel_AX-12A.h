@@ -30,13 +30,13 @@ typedef struct{
 /*************** Private function prototypes ***************/
 // Setters
 void Dynamixel_SetPosition(Dynamixel_HandleTypeDef *hdynamixel, double angle); // (RAM)
-void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity); // (RAM) UNIMPLEMENTED
+void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity); // (RAM)
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud); // (EEPROM)
 void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID); // (EEPROM)
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque); // (EEPROM) UNIMPLEMENTED
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque); // (RAM) UNIMPLEMENTED
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle); // (EEPROM) UNIMPLEMENTED
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle); // (EEPROM) UNIMPLEMENTED
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque); // (EEPROM)
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque); // (RAM)
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle); // (EEPROM)
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle); // (EEPROM)
 void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin); // (RAM) UNIMPLEMENTED
 void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin); // (RAM) UNIMPLEMENTED
 void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope); // (RAM) UNIMPLEMENTED

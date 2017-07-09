@@ -1,29 +1,6 @@
-13:25:07 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+13:27:14 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
 make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-Finished building: ../Src/main.c
- 
-Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
-Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
- 
-Building target: Dynamixel_AX-12_Motor.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
-Finished building target: Dynamixel_AX-12_Motor.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
-arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
-   text	   data	    bss	    dec	    hex	filename
-   8744	     12	   1708	  10464	   28e0	Dynamixel_AX-12_Motor.elf
- 
+make: Nothing to be done for `all'.
 
-13:25:09 Build Finished (took 2s.940ms)
+13:27:15 Build Finished (took 473ms)
 
