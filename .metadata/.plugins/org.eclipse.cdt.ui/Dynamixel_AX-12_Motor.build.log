@@ -1,4 +1,4 @@
-19:33:25 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+20:15:43 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
 make all 
 Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
 Invoking: MCU GCC Compiler
@@ -16,8 +16,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
 arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
    text	   data	    bss	    dec	    hex	filename
-   8744	     12	   1708	  10464	   28e0	Dynamixel_AX-12_Motor.elf
+   8680	     12	   1708	  10400	   28a0	Dynamixel_AX-12_Motor.elf
  
 
-19:33:28 Build Finished (took 2s.614ms)
+20:15:45 Build Finished (took 2s.570ms)
 
