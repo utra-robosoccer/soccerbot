@@ -6,61 +6,34 @@
 /********** Setters **********/
 
 // NEEDS TESTING POST-REFACTOR
-void Dynamixel_SetPosition(Dynamixel_HandleTypeDef *hdynamixel, double angle){
-	/* Takes a double between 0 and 300, encodes this position in an
-	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
-	 * user manual), and sends this information (along with requisites) over UART.
-	 * Low byte is 0x1E in motor RAM, high byte is 0x1F in motor RAM.
+void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
+	/* Sets the ID (identification number) for the current motor.
+	 *
+	 * Instruction register address: 0x03 (EEPROM)
+	 * Default value: 140
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  angle, the desired angular position. Arguemnts between 0 and 300 are valid
+	 * 			  ID, the number between 0 and 252 to identify the motor. If 0xFE (254), then
+	 * 			  	  any messages broadcasted to that ID will be broadcasted to all motors
 	 *
 	 * Returns: none
 	 */
 
-	// Translate the angle from degrees into a 10-bit number
-	int normalized_value = (int)(angle / 300 * 1023); // maximum angle of 1023
-
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal position
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal position
-
 	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 9, 0x1e, lowByte, highByte);
-}
-
-// NEEDS TESTING POST-REFACTOR
-void Dynamixel_SetVelocity(Dynamixel_HandleTypeDef *hdynamixel, double velocity){
-	/* Sets the goal velocity of the motor in RAM.
-	 * Low byte is 0x20 in motor RAM, high byte is 0x21 in motor RAM.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid. If 0, max is used.
-	 *
-	 * Returns: none
-	 */
-
-	// Translate the position from RPM into a 10-bit number
-	int normalized_value = 0;
-	if(hdynamixel -> _isJointMode){
-		normalized_value = (int)(velocity / 114 * 1023);
-	}
-	else{
-		normalized_value = (int)(velocity / 114 * 2047);
-	}
-
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal velocity
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal velocity
-
-	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 9, 0x20, lowByte, highByte);
+	Dynamixel_DataWriter(hdynamixel, 8, 0x03, ID, -1);
 }
 
 // NEEDS TESTING POST-REFACTOR
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
 	 *
+	 * Instruction register address: 0x04 (EEPROM)
+	 * Default value: 0x01
+	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  baud, the baud rate. Arguments in range [7844, 1000000] are valid
+	 *
+	 * Returns: none
 	 */
 
 	// Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps
@@ -77,67 +50,39 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 	Dynamixel_DataWriter(hdynamixel, 8, 0x04, hdynamixel -> _BaudRate, -1);
 }
 
-// NEEDS TESTING POST-REFACTOR
-void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
-	/* Sets motor ID. Register address is 0x03 in motor EEPROM
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  ID, the unique number between 0 and 252 to identify the motor. If 0xFE (254), then
-	 * 			  	  any messages broadcasted to that ID will be broadcasted to all motors
-	 *
-	 * Returns: none
-	 */
-
-	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 8, 0x03, ID, -1);
-}
-
 // NEEDS TESTING
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque){
-	/* Sets the maximum torque limit for all motor operations.
-	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
+void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef *hdynamixel, double microSec){
+	/* Sets the time, in microseconds, that the motor should wait before returning a status packet.
+	 *
+	 * Instruction register address: 0x05(EEPROM)
+	 * Default value: 250 (0xFA)
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 *			  maxTorque, the maximum torque as a percentage (max: 100). Gets converted to 10-bit number
+	 * 			  microSec, the time in microseconds to delay. Arguments in range [2, 508] are valid. Default: 500
 	 *
 	 * Returns: none
 	 */
 
-	// Translate the input from percentage into and 10-bit number
-	int normalized_value = (int)(maxTorque / 100 * 1023);
-
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of max torque
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of max torque
-
-	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 9, 0x0E, lowByte, highByte);
-}
-
-// NEEDS TESTING
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque){
-	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
-	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  goalTorque, the percentage of the maximum possible torque (max: 100). Gets converted into 10-bit number
-	 *
-	 * Returns: none
-	 */
-
-	// Translate the input from percentage into and 10-bit number
-	int normalized_value = (int)(goalTorque / 100 * 1023);
-
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal torque
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal torque
+	// Compute validity
+	uint8_t motor_data;
+	if((microSec < 1) || (microSec > 509)){
+		motor_data = 250;
+	}
+	else{
+		motor_data = (uint8_t)(microSec / 2);
+	}
 
 	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 9, 0x22, lowByte, highByte);
+	Dynamixel_DataWriter(hdynamixel, 8, 0x05, motor_data, -1);
 }
 
 // NEEDS TESTING POST-REFACTOR
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle){
 	/* Sets the clockwise angle limit for the current motor.
 	 * Register 0x06 in EEPROM for low byte, 0x07 in EEPROM for high byte
+	 *
+	 * Instruction register address: 0x06 (EEPROM)
+	 * Default value: 0x0000
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  minAngle, the minimum angle for all motor operations. Arguments between 0 and 300 are valid
@@ -164,6 +109,9 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxA
 	/* Sets the counter-clockwise angle limit for the current motor.
 	 * Register 0x08 in EEPROM for low byte, 0x09 in EEPROM for high byte
 	 *
+	 * Instruction register address: 0x08 (EEPROM)
+	 * Default value: 0x03FF
+	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  maxAngle, the maximum angle for all motor operations. Arguments between 0 and 300 are valid.
 	 *
@@ -185,11 +133,194 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxA
 }
 
 // NEEDS TESTING
+void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double highestVoltage){
+	/* Sets the highest operating voltage limit for the current motor.
+	 *
+	 * Instruction register address: 0x0C (EEPROM)
+	 * Default value: 140 (0xBE)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  highestVoltage, the highest operating voltage in volts
+	 *
+	 * Returns: none
+	 */
+
+	// Declare local variable. Initialize to default value
+	uint8_t high_voltage_data = 0xBE;
+
+	// Evaluate argument validity and translate into motor data
+	if(highestVoltage > 6 && highestVoltage < 14){
+		high_voltage_data = (uint8_t)(highestVoltage * 10);
+	}
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x0C, high_voltage_data, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double lowestVoltage){
+	/* Sets the lowest operating voltage limit for the current motor.
+	 *
+	 * Instruction register address: 0x0D (EEPROM)
+	 * Default value: 60 (0x3C)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  lowestVoltage, the lowest operating voltage in volts
+	 *
+	 * Returns: none
+	 */
+
+	// Declare local variable. Initialize to default value
+	uint8_t low_voltage_data = 0x3C;
+
+	// Evaluate argument validity and translate into motor data
+	if(lowestVoltage > 6 && lowestVoltage < 14){
+		low_voltage_data = (uint8_t)(lowestVoltage * 10);
+	}
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x0D, low_voltage_data, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque){
+	/* Sets the maximum torque limit for all motor operations.
+	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
+	 *
+	 * Register address: 0x0E (EEPROM)
+	 * Default value: 0x3FF
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *			  maxTorque, the maximum torque as a percentage (max: 100). Gets converted to 10-bit number
+	 *
+	 * Returns: none
+	 */
+
+	// Translate the input from percentage into and 10-bit number
+	int normalized_value = (int)(maxTorque / 100 * 1023);
+
+	uint8_t lowByte = normalized_value & 0xFF; // Low byte of max torque
+	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of max torque
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 9, 0x0E, lowByte, highByte);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef *hdynamixel, uint8_t status_data){
+	/* Sets the conditions under which a status packet will be returned.
+	 *
+	 * Register address: 0x10 (EEPROM)
+	 * Default value: 0x02
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  status, 0 to return only on ping
+	 * 			  		  1 to return only for reads
+	 * 			  		  2 to return for all commands
+	 *
+	 * Returns: none
+	 */
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x10, status_data, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_LED_data){
+	/* Sets the conditions under which the motor LED will light up.
+	 *
+	 * Register address: 0x11 (EEPROM)
+	 * Default value: 0x24 (0x00100100 -> b7b6b5b4b3b2b1b0)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  alarm_data, bit 7: no function
+	 * 			  			  bit 6: flash LED when an instruction error occurs
+	 * 			  			  bit 5: flash LED when current load cannot be controlled with the specified maximum torque
+	 * 			  			  bit 4: flash LED when the checksum of the transmitted packet is invalid
+	 * 			  			  bit 3: flash LED when the command is given beyond the range of usage
+	 * 			  			  bit 2: flash LED when the internal temperature exceeds the operating range
+	 * 			  			  bit 1: flash LED when goal position exceeds the CW angle limit or CCW angle limit
+	 * 			  			  bit 0: flash LED when applied voltage is out of oeprating
+	 *
+	 * Several of these bits may be set simultaneously.
+	 *
+	 * Returns: none
+	 */
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x11, alarm_LED_data, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_shutdown_data){
+	/* Sets the conditions under which the motor will turn off its torque.
+	 *
+	 * Register address: 0x12 (EEPROM)
+	 * Default value: 0x24
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  alarm_data, bit 7: no function
+	 * 			  			  bit 6: torque off when an instruction error occurs
+	 * 			  			  bit 5: torque off when current load cannot be controlled with the specified maximum torque
+	 * 			  			  bit 4: torque off when the checksum of the transmitted packet is invalid
+	 * 			  			  bit 3: torque off when the command is given beyond the range of usage
+	 * 			  			  bit 2: torque off when the internal temperature exceeds the operating range
+	 * 			  			  bit 1: torque off when goal position exceeds the CW angle limit or CCW angle limit
+	 * 			  			  bit 0: torque off when applied voltage is out of oeprating
+	 *
+	 * Several of these bits may be set simultaneously.
+	 *
+	 * Returns: none
+	 */
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x12, alarm_shutdown_data, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
+	/* Enables or disables torque for current motor.
+	 *
+	 * Instruction register address: 0x18 (RAM)
+	 * Default value: 0x00
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  isEnabled, if 1, then generates torque by impressing power to the motor
+	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
+	 *
+	 * Returns: none
+	 */
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x18, isEnabled, -1);
+}
+
+// NEEDS TESTING
+void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
+	/* Toggles the motor LED.
+	 *
+	 * Register address: 0x19
+	 * Default value: 0x00
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  isEnabled, 0 if LED off
+	 * 			  			 1 if LED on
+	 *
+	 * Returns: none
+	 */
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 8, 0x19, isEnabled, -1);
+}
+
+// NEEDS TESTING
 void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin){
 	/* Sets the clockwise compliance margin for the current motor.
 	 * The compliance margin is the acceptable error between the current position and goal position.
 	 * The greater the value, the more error is acceptable.
-	 * Register 0x1A in RAM. Default value: 0x01
+	 *
+	 * Instruction register address: 0x1A (RAM)
+	 * Default value: 0x01
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  CWcomplianceMargin, the acceptable error between the current and goal position. Arguments in range [0, 255]
@@ -209,7 +340,9 @@ void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8
 	/* Sets the counter-clockwise compliance margin for the current motor.
 	 * The compliance margin is the acceptable error between the current position and goal position.
 	 * The greater the value, the more error is acceptable.
-	 * Register 0x1B in RAM. Default value: 0x01 (smallest possible)
+	 *
+	 * Instruction register address: 0x1B (RAM)
+	 * Default value: 0x01
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  CCWcomplianceMargin, the acceptable error between the current and goal position. Arguments in range [0, 255]
@@ -230,7 +363,9 @@ void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t
 	 * The higher the value, the more flexibility that is obtained. That is, a high value
 	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
 	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 * Address is 0x1C in RAM. Default value is 0x20
+	 *
+	 * Instruction register address: 0x1C (RAM)
+	 * Default value: 0x20
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  CWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
@@ -276,7 +411,9 @@ void Dynamixel_SetCCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_
 	 * The higher the value, the more flexibility that is obtained. That is, a high value
 	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
 	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 * Address is 0x1D in RAM. Default value is 0x20 (tightest possible)
+	 *
+	 * Instruction register address: 0x1D (RAM)
+	 * Default value: 0x20
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  CWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
@@ -316,21 +453,129 @@ void Dynamixel_SetCCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_
 	Dynamixel_DataWriter(hdynamixel, 8, 0x1D, step, -1);
 }
 
-// NEEDS TESTING
-void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
-	/* Sets address 0x18 in the RAM of the current motor. Default value is 0x00
+// NEEDS TESTING POST-REFACTOR
+void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef *hdynamixel, double goalAngle){
+	/* Takes a double between 0 and 300, encodes this position in an
+	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
+	 * user manual), and sends this information (along with requisites) over UART.
+	 * Low byte is 0x1E in motor RAM, high byte is 0x1F in motor RAM.
+	 *
+	 * Instruction register address: 0x1E (RAM)
+	 * Default value: none
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  isEnabled, if 1, then generates torque by impressing power to the motor
-	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
+	 * 			  angle, the desired angular position. Arguemnts between 0 and 300 are valid
+	 *
+	 * Returns: none
+	 */
+
+	// Translate the angle from degrees into a 10-bit number
+	int normalized_value = (int)(goalAngle / 300 * 1023); // maximum angle of 1023
+
+	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal position
+	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal position
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 9, 0x1e, lowByte, highByte);
+}
+
+// NEEDS TESTING POST-REFACTOR
+void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef *hdynamixel, double goalVelocity){
+	/* Sets the goal velocity of the motor in RAM.
+	 * Low byte is 0x20 in motor RAM, high byte is 0x21 in motor RAM.
+	 *
+	 * Instruction register address: 0x20 (RAM)
+	 * Default value: none
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid. If 0, max is used.
+	 *
+	 * Returns: none
+	 */
+
+	// Translate the position from RPM into a 10-bit number
+	int normalized_value = 0;
+	if(hdynamixel -> _isJointMode){
+		normalized_value = (int)(goalVelocity / 114 * 1023);
+	}
+	else{
+		normalized_value = (int)(goalVelocity / 114 * 2047);
+	}
+
+	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal velocity
+	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal velocity
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 9, 0x20, lowByte, highByte);
+}
+
+// NEEDS TESTING
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque){
+	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
+	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
+	 *
+	 * Instruction register address: 0x22 (RAM)
+	 * Default value: ADDR14 (low byte) and ADDR15 (high byte)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  goalTorque, the percentage of the maximum possible torque (max: 100). Gets converted into 10-bit number
+	 *
+	 * Returns: none
+	 */
+
+	// Translate the input from percentage into and 10-bit number
+	int normalized_value = (int)(goalTorque / 100 * 1023);
+
+	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal torque
+	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal torque
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 9, 0x22, lowByte, highByte);
+}
+
+// NEEDS TESTING
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked){
+	/* Locks the EEPROM of the current motor until the next power cycle.
+	 *
+	 * Instruction register address: 0x2F (RAM)
+	 * Default value: 0x00
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  isLocked, 0 if EEPROM is to be read/write
+	 * 			  			1 if EEPROM is to be made read-only
 	 *
 	 * Returns: none
 	 */
 
 	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 8, 0x18, isEnabled, -1);
+	Dynamixel_DataWriter(hdynamixel, 8, 0x2F, isLocked, -1);
 }
 
+// NEEDS TESTING
+void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch){
+	/* Sets a quantity proportional to the minimum current supplied to the motor during operation.
+	 * Units are not specified in datasheet, and therefore this function is not entirely useful without
+	 * sufficient testing.
+	 * Low byte at address 0x30 and high byte at address 0x31
+	 *
+	 * Instruction register address: 0x30
+	 * Default value: 0x0020 (maximum: 0x3FF)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  punch, for now, arguments in range [0, 1023] are valid
+	 *
+	 * Returns: none
+	 */
+
+	// Translate the punch into a 10-bit number
+	int normalized_value = punch;
+
+	uint8_t lowByte = normalized_value & 0xFF; // Low byte of punch
+	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of punch
+
+	// Write data to motor
+	Dynamixel_DataWriter(hdynamixel, 9, 0x30, lowByte, highByte);
+}
 
 /********** GETTERS **********/
 // UNIMPLEMENTED
@@ -350,17 +595,6 @@ void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads addresses 0x26 and 0x27 in the motor RAM to see what the current velocity
 	 * of the motor is.
 	 * Writes the results to hdynamixel -> _lastVelocity
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-}
-
-// UNIMPLEMENTED
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
-	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
-	 * Writes the results to hdynamixel -> _lastTemperature
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 *
@@ -392,6 +626,35 @@ void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // UNIMPLEMENTED
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
+	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
+	 * Writes the results to hdynamixel -> _lastTemperature
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
+}
+
+// UNIMPLEMENTED
+uint8_t Dynamixel_GetRegistered(Dynamixel_HandleTypeDef *hdynamixel){
+	/* Used to tell if command sent was written to motor registers.
+	 * Can also be used to see if instruction in motor register has been executed.
+	 *
+	 * Read address: 0x2C
+	 * Default value: 0x00
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: 1 if there are commands transmitted by REG_WRITE
+	 * 			0 otherwise.
+	 * 			If ACTION command is executed, the value is changed into 0.
+	 */
+
+	return -1;
+}
+
+// UNIMPLEMENTED
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads the 0x2E address in motor RAM to see if motor is moving.
 	 *
@@ -401,7 +664,7 @@ uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel){
 	 * 			1 if moving
 	 */
 
-	return 0;
+	return -1;
 }
 
 // UNIMPLEMENTED
@@ -415,7 +678,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel){
 	 * 			1 if in joint mode
 	 */
 
-	return 1;
+	return -1;
 }
 
 /********** Computation **********/
@@ -480,15 +743,15 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, 
 }
 
 /********** Initialization *********/
-void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID,\
-						   double BaudRate, UART_HandleTypeDef *UART_Handle)
+void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
+	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
 	hdynamixel -> _lastPosition = 0; // In future, initialize this accurately
 	hdynamixel -> _lastVelocity = 0; // In future, initialize this accurately
-	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
-	hdynamixel -> _lastVoltage = 0; // In future, initialize this accurately
 	hdynamixel -> _lastLoad = 0; // In future, initialize this accurately
+	hdynamixel -> _lastVoltage = 0; // In future, initialize this accurately
+	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
 	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
 }

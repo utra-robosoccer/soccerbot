@@ -109,10 +109,10 @@ int main(void)
 
   // Initialize master motor control first
   Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
-  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, 1000000, &huart6);
+  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, &huart6);
 
   Dynamixel_HandleTypeDef Motor1;
-  Dynamixel_Init(&Motor1, 0x01, 1000000, &huart6);
+  Dynamixel_Init(&Motor1, 0x01, &huart6);
 
 
   double angle = 0;
@@ -137,13 +137,13 @@ int main(void)
 
 	  // If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
 	  // continuously rotate
-	  Dynamixel_SetVelocity(&Motor1, 69);
+	  Dynamixel_SetGoalVelocity(&Motor1, 69);
 	  //Dynamixel_SetPosition(&Motor1, angle);
 	  __DYNAMIXEL_RECEIVE();
 
 	  HAL_Delay(1500); // Delay for motor to move to the specified position
 
-	  Dynamixel_SetPosition(&MASTER_MOTOR_CONTROL, angle);
+	  Dynamixel_SetGoalPosition(&MASTER_MOTOR_CONTROL, angle);
 	  __DYNAMIXEL_RECEIVE();
 
 	  HAL_Delay(1500); // Delay for motor to move to the specified position
