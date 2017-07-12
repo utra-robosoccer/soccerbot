@@ -1,10 +1,19 @@
-/***** Includes *****/
+/********************************* Includes ************************************/
 #include "Dynamixel_AX-12A.h"
 #include "stm32f4xx_hal_conf.h"
 
-/********** Functions **********/
-/********** Setters **********/
+/******************************** Functions ************************************/
 
+/*******************************************************************************/
+/*	Setter helper functions													   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
 // NEEDS TESTING POST-REFACTOR
 void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 	/* Sets the ID (identification number) for the current motor.
@@ -577,7 +586,19 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch){
 	Dynamixel_DataWriter(hdynamixel, 9, 0x30, lowByte, highByte);
 }
 
-/********** GETTERS **********/
+
+
+
+/*******************************************************************************/
+/*	Getter helper functions											  		   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
 // UNIMPLEMENTED
 void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
@@ -617,6 +638,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel){
 // UNIMPLEMENTED
 void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads address 0x2A in the motor RAM to see what the current voltage is.
+	 * Value retrieved from motor is 10 times the actual voltage.
 	 * Writes the results to hdynamixel -> _lastVoltage
 	 *
 	 * Arguments: hdynamixel, the motor handle
@@ -628,6 +650,7 @@ void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
 // UNIMPLEMENTED
 void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
 	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
+	 * Results in degrees Celsius.
 	 * Writes the results to hdynamixel -> _lastTemperature
 	 *
 	 * Arguments: hdynamixel, the motor handle
@@ -681,9 +704,104 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel){
 	return -1;
 }
 
-/********** Computation **********/
+
+
+
+/*******************************************************************************/
+/*	Other motor instruction help functions									   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
+// NEEDS TESTING
+void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
+		uint8_t writeAddr, uint8_t param1, uint8_t param2){
+	/* Implementation of REG WRITE instruction with 2 parameters.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  writeAddr, thhe starting address for where the data is to be written
+	 * 			  param1, the first parameter
+	 * 			  param2, the second parameter
+	 *
+	 * Returns: none
+	 */
+
+	// Define arrays for transmission
+	uint8_t arrTransmit[arrSize];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = arrSize - 4; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x04; // REG WRITE instruction
+	arrTransmit[5] = writeAddr;
+	arrTransmit[7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
+	if(arrSize == 9){
+		arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
+	}
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
+}
+
+// NEEDS TESTING
+void Dynamixel_Action(Dynamixel_HandleTypeDef *hdynamixel){
+	/* Implements the ACTION instruction. This triggers the instruction registered by the REG WRITE
+	 * instruction. This way, time delays can be reduced for the concurrent motion of several
+	 * motors.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
+
+	// Define arrays for transmission and reception
+	uint8_t arrTransmit[6];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 2; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x05; // ACTION instruction
+	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+}
+
+
+
+
+/*******************************************************************************/
+/*	Computation helper functions											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
-	/* Compute the checksum for data to be transmitted */
+	/* Compute the checksum for data to be transmitted.
+	 *
+	 * Arguments: arr, the array to be transmitted and ran through the checksum function
+	 * 			  length, the total length of the array arr
+	 *
+	 * Returns: the 1-byte number that is the checksum
+	 */
 
 	// Local variable declaration
 	uint8_t accumulate = 0;
@@ -697,10 +815,78 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	return 255 - (accumulate % 256); // Lower 8 bits of the logical NOT of the sum
 }
 
-/********** Transmission **********/
+
+
+
+/*******************************************************************************/
+/*	Error handling helper functions											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
+// UNIMPLEMENTED
+void Dynamixel_ErrorHandler(uint8_t errCode){
+	/* Handles errors raised in error code bytes of status packets.
+	 *
+	 * Arguments: errCode, the error code returned by the status packet
+	 *
+	 * Returns: none
+	 */
+
+	// TODO: write function
+	return;
+}
+
+
+
+
+/*******************************************************************************/
+/*	Transmit/receive helper functions										   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
+// NEEDS TESTING
+void Dynamixel_Ping(Dynamixel_HandleTypeDef *hdynamixel){
+	/* Used only for returning a status packet or checking the existence of a motor
+	 * with a specified ID. Does not command any operations.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
+
+	// Define arrays for transmission and reception
+	uint8_t arrTransmit[6];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 2; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x01; // PING instruction
+	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+}
+
+// NEEDS TESTING
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
 						   uint8_t writeAddr, uint8_t param1, uint8_t param2){
-	/* Handles sending of data since this nearly identical for all setters
+	/* Handles sending of data since this nearly identical for all setters.
+	 * Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  arrSize, the size of the array to be transmitted. Must be 8 or 9
@@ -725,11 +911,11 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, 
 	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
 	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
 	arrTransmit[3] = arrSize - 4; // Length of message minus the obligatory bytes
-	arrTransmit[4] = 0x03; // WRITE instruction
+	arrTransmit[4] = 0x03; // WRITE DATA instruction
 	arrTransmit[5] = writeAddr; // Write address for register
 	arrTransmit[6] = param1;
 
-	// Checksum = 255 - (sum % 256)
+	// Checksum
 	arrTransmit[7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
 	if(arrSize == 9){
 		arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
@@ -739,10 +925,109 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, 
 	__DYNAMIXEL_TRANSMIT();
 
 	// Transmit
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, 100);
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
+
+	// In the future, it would be good to read a status packet back after the transmit and ensure
+	// that there were no errors. If errors occurred, the message could be resent
 }
 
-/********** Initialization *********/
+// UNIMPLEMENTED
+void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
+	/* Used for sending control signals to several specified Dynamixel actuators concurrently.
+	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  arrSize, the size of the array of parameters to be transmitted
+	 * 			  params, the array holding all the instructions and parameters to be passed to the various actuators
+	 *
+	 * Returns: none
+	 */
+}
+
+// NEEDS TESTING
+uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readAddr, uint8_t readLength){
+	/* Reads data back from the motor passed in by the handle. This process is identical
+	 * for all the getters which is why it is encapsulated in this function. Reading data
+	 * uses the READ DATA instruction, 0x02, in the motor instruction set.
+	 *
+	 * The status packet returned will be of them form:
+	 * 0xFF 0xFF ID LENGTH ERR PARAM_1...PARAM_N CHECKSUM, where N = readLength
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *			  readAddr, the address inside the motor memory table where reading is to begin
+	 *			  readLength, the number of bytes to be read. Must be either 1 or 2.
+	 *
+	 * Returns: a 16-bit value containing 1 or both bytes received, as applicable. The
+	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
+	 */
+
+	// Define arrays for transmission
+	uint8_t arrTransmit[8];
+
+	// Clear array for reception
+	for(uint8_t i = 0; i < BUFF_RX_SIZE; i++){
+		arrReceive[i] = 0;
+	}
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 4; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x02; // READ DATA instruction
+	arrTransmit[5] = readAddr; // Write address for register
+	arrTransmit[6] = readLength; // Number of bytes to be read from motor
+	arrTransmit[7] = Dynamixel_ComputeChecksum(arrTransmit, 8);
+
+	// Ensure that received data has valid checksum. If it does not, send data request again
+	uint8_t valid = 0;
+	while(!valid){
+		// Set data direction for transmit
+		__DYNAMIXEL_TRANSMIT();
+
+		// Transmit
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, TRANSMIT_TIMEOUT);
+
+		// Set data direction for receive
+		__DYNAMIXEL_RECEIVE();
+
+		// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
+		if(readLength == 1){
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
+			valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
+		}
+		else{
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
+			valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[8]); // Verify checksums match
+		}
+	}
+
+	// Check the status packet received for errors
+	if(arrReceive[5] != 0){
+		Dynamixel_ErrorHandler(arrReceive[5]);
+	}
+
+	if(readLength == 1){
+		return (uint16_t)arrReceive[5];
+	}
+	else{
+		return (uint16_t)(arrReceive[5] & (arrReceive[6] << 8));
+	}
+}
+
+
+
+
+/*******************************************************************************/
+/*	Initialization helper functions											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/********************************************((*********************************/
 void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
@@ -754,4 +1039,34 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_Handle
 	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
 	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
+}
+
+// NEEDS TESTING
+void Dynamixel_Reset(Dynamixel_HandleTypeDef *hdynamixel){
+	/* Resets the control table values of the motor to the Factory Default Value settings.
+	 * Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are
+	 * connected on the same bus, there will not be a way to assign them unique IDs without
+	 * first disconnecting them.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
+
+	// Define arrays for transmission and reception
+	uint8_t arrTransmit[6];
+
+	// Do assignments and computations
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 2; // Length of message minus the obligatory bytes
+	arrTransmit[4] = 0x06; // READ DATA instruction
+	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
+
+	// Set data direction
+	__DYNAMIXEL_TRANSMIT();
+
+	// Transmit
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
 }
