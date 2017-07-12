@@ -11,10 +11,15 @@
 #define __DYNAMIXEL_TRANSMIT() HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE() HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 0) // Set data direction pin low (RX)
 
-/*************** Private variables ***************/
-UART_HandleTypeDef Dynamixel_huart;
+/*************** Defines ***************/
+#define TRANSMIT_TIMEOUT 10 // Timeout for UART transmissions, in milliseconds
+#define RECEIVE_TIMEOUT 10	// Timeout for UART receptions, in milliseconds
+#define BUFF_RX_SIZE 8		// Receive buffer size for UART receptions
 
-/*************** Exported types ***************/
+/************** Private Variables ****************/
+uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART
+
+/*************** Types ***************/
 typedef struct{
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
 	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
@@ -27,8 +32,8 @@ typedef struct{
 	UART_HandleTypeDef		*_UART_Handle;			/*!< UART handle for motor							*/
 }Dynamixel_HandleTypeDef;
 
-/*************** Private function prototypes ***************/
-// Setters
+/*************** Function prototypes ***************/
+// Setters (use the WRITE DATA instruction)
 void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID); // (EEPROM)
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud); // (EEPROM)
 void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef *hdynamixel, double microSec); // (EEPROM)
@@ -53,7 +58,7 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTor
 void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked); // (RAM)
 void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch); // (RAM)
 
-// Getters
+// Getters (use READ DATA instruction)
 void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
@@ -63,13 +68,24 @@ uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEM
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
 
+// Other motor instructions (low level control with timing from different WRITE DATA instruction)
+void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_Action(Dynamixel_HandleTypeDef *hdynamixel);
+
 // Computation
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
-// Transmission
+// Error handling
+void Dynamixel_ErrorHandler(uint8_t);
+
+// Transmission & Reception
+void Dynamixel_Ping(Dynamixel_HandleTypeDef *hdynamixel);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
+uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Initialization
 void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
+void Dynamixel_Reset(Dynamixel_HandleTypeDef *hdynamixel);
 
 #endif /* __DYNAMIXEL_AX-12A_H */
