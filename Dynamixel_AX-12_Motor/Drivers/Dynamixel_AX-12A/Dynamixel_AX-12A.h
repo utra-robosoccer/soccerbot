@@ -23,12 +23,13 @@ uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART
 typedef struct{
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
 	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
-	uint16_t				_lastPosition;			/*!< Position read from motor						*/
-	uint16_t				_lastVelocity;			/*!< Velocity read from motor						*/
+	float					_lastPosition;			/*!< Position read from motor						*/
+	float					_lastVelocity;			/*!< Velocity read from motor						*/
 	uint16_t				_lastLoad;				/*!< Load read from motor							*/
-	uint16_t				_lastVoltage;			/*!< Voltage read from motor						*/
-	uint16_t				_lastTemperature;		/*!< Temperature read from motor					*/
-	uint16_t				_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
+	uint8_t					_lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
+	float					_lastVoltage;			/*!< Voltage read from motor						*/
+	uint8_t					_lastTemperature;		/*!< Temperature read from motor					*/
+	uint8_t					_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
 	UART_HandleTypeDef		*_UART_Handle;			/*!< UART handle for motor							*/
 }Dynamixel_HandleTypeDef;
 
@@ -59,14 +60,14 @@ void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked)
 void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch); // (RAM)
 
 // Getters (use READ DATA instruction)
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel); // UNIMPLEMENTED
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel);
+uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef *hdynamixel);
+uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel);
+uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel);
 
 // Other motor instructions (low level control with timing from different WRITE DATA instruction)
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
