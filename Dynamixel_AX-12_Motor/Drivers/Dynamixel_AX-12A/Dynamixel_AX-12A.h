@@ -90,4 +90,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
+// Test/demonstration
+void Dynamixel_Test(Dynamixel_HandleTypeDef** arrHdynamixel);
+
 #endif /* __DYNAMIXEL_AX-12A_H__ */

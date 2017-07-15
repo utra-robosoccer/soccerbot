@@ -13,13 +13,15 @@
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
-// NEEDS TESTING POST-REFACTOR
+/*******************************************************************************/
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID){
 	/* Sets the ID (identification number) for the current motor.
+	 * Note that the instruction will be broadcasted using the current ID.
+	 * As such, if the ID is not known, the motor ID should be initialized
+	 * to the broadcast ID (0xFE) in the Dynamixel_Init function.
 	 *
 	 * Instruction register address: 0x03 (EEPROM)
-	 * Default value: 140
+	 * Default value: 1
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  ID, the number between 0 and 252 to identify the motor. If 0xFE (254), then
@@ -30,6 +32,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID){
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 8, 0x03, ID, -1);
+	hdynamixel->_ID = ID;
 }
 
 // TODO: Test
@@ -232,7 +235,6 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t
 	Dynamixel_DataWriter(hdynamixel, 8, 0x10, status_data, -1);
 }
 
-// TODO: Test
 void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data){
 	/* Sets the conditions under which the motor LED will light up.
 	 *
@@ -594,7 +596,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch){
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 // NEEDS TO BE TESTED
 void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
@@ -755,7 +757,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 /*******************************************************************************/
-/*	Other motor instruction help functions									   */
+/*	Other motor instruction helper functions								   */
 /*								 											   */
 /*								 											   */
 /*								 											   */
@@ -763,7 +765,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 // NEEDS TESTING
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 		uint8_t writeAddr, uint8_t param1, uint8_t param2){
@@ -840,7 +842,7 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	/* Compute the checksum for data to be transmitted.
 	 *
@@ -874,7 +876,7 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 // UNIMPLEMENTED
 void Dynamixel_ErrorHandler(uint8_t errCode){
 	/* Handles errors raised in error code bytes of status packets.
@@ -900,7 +902,7 @@ void Dynamixel_ErrorHandler(uint8_t errCode){
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 // NEEDS TESTING
 void Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Used only for returning a status packet or checking the existence of a motor
@@ -945,7 +947,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	 */
 
 	// Check that array size is 8 or 9
-	if(arrSize != 8 && arrSize != 9){
+	if(!((arrSize == 8) || (arrSize == 9))){
 		_Error_Handler(__FILE__, __LINE__);
 		return;
 	}
@@ -1074,7 +1076,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*								 											   */
 /*								 											   */
 /*								 											   */
-/********************************************((*********************************/
+/*******************************************************************************/
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
@@ -1119,4 +1121,80 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 }
 
 
+
+
+/*******************************************************************************/
+/*	Test/demonstration functions											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*******************************************************************************/
+void Dynamixel_Test(Dynamixel_HandleTypeDef** arrHdynamixel){
+	/* Demonstrates the various functions available. The functionality this
+	 * function demonstrates can be used as an indicator for the integrity of
+	 * the code.
+	 *
+	 * Arguments: arrHdynamixel, the array handles for the connected motors
+	 *
+	 * Returns: none
+	 */
+
+	// Local variable declaration and initialization
+	double angle = 0;
+	Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
+	Dynamixel_HandleTypeDef* Motor1 = arrHdynamixel[0];
+
+	// Initialize master UART handle to that of the first motor handle
+	Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, arrHdynamixel[0]->_UART_Handle);
+
+	/* Test 1: Dynamixel_LEDEnable
+	 * Pass condition: Motor LED blinks on then off
+	 */
+	Dynamixel_LEDEnable(Motor1, 1);
+	HAL_Delay(500);
+	Dynamixel_LEDEnable(Motor1, 0);
+
+	/* Test 2: Dynamixel_SetID
+	 * Pass condition: Motor LED blinks on then off
+	 */
+	uint8_t oldID = Motor1->_ID; // Save ID for later restoration
+	Dynamixel_SetID(Motor1, (Motor1->_ID + 20) % 0xFE); // Different, valid ID
+	Dynamixel_LEDEnable(Motor1, 1); // Set LED on with new motor ID
+	HAL_Delay(500);
+	Dynamixel_LEDEnable(Motor1, 0); // Set LED off with new motor ID
+	Motor1 -> _ID = oldID; // Restore previous state
+
+	/* Test 3: Dynamixel_SetGoalPosition
+	 *
+	 */
+
+	/* Test 4: Dynamixel_SetGoalVelocity
+	 *
+	 */
+
+	/* Test 5: Dynamixel_SetCWAngleLimit
+	 *
+	 */
+
+	/* Test 6: Dynamixel_SetCCWAngleLimit
+	 *
+	 */
+
+	// If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
+	// continuously rotate
+	Dynamixel_SetGoalVelocity(arrHdynamixel[0], 69);
+	//Dynamixel_SetPosition(&Motor1, angle);
+	__DYNAMIXEL_RECEIVE();
+
+	HAL_Delay(1500); // Delay for motor to move to the specified position
+
+	Dynamixel_SetGoalPosition(&MASTER_MOTOR_CONTROL, angle);
+	__DYNAMIXEL_RECEIVE();
+
+	HAL_Delay(1500); // Delay for motor to move to the specified position
+}
 

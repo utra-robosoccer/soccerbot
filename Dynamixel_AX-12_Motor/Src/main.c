@@ -107,15 +107,12 @@ int main(void)
 
   __HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
 
-  // Initialize master motor control first
-  Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
-  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, &huart6);
-
   Dynamixel_HandleTypeDef Motor1;
   Dynamixel_Init(&Motor1, 0x01, &huart6);
 
+  Dynamixel_HandleTypeDef Motor2;
+  Dynamixel_Init(&Motor2, 0xFE, &huart6);
 
-  double angle = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,28 +122,9 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  if(angle == 0){
-		  angle = 300;
-	  }
-	  else{
-		  angle = 0;
-	  }
-
-	  Dynamixel_SetCWAngleLimit(&Motor1, 0);
-	  Dynamixel_SetCCWAngleLimit(&Motor1, 0);
-
-	  // If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
-	  // continuously rotate
-	  Dynamixel_SetGoalVelocity(&Motor1, 69);
-	  //Dynamixel_SetPosition(&Motor1, angle);
-	  __DYNAMIXEL_RECEIVE();
-
-	  HAL_Delay(1500); // Delay for motor to move to the specified position
-
-	  Dynamixel_SetGoalPosition(&MASTER_MOTOR_CONTROL, angle);
-	  __DYNAMIXEL_RECEIVE();
-
-	  HAL_Delay(1500); // Delay for motor to move to the specified position
+	  // Initialize array of motor handles
+	  Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
+	  Dynamixel_Test(arrHdynamixel);
   }
   /* USER CODE END 3 */
 
