@@ -15,7 +15,7 @@
 /*								 											   */
 /********************************************((*********************************/
 // NEEDS TESTING POST-REFACTOR
-void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
+void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID){
 	/* Sets the ID (identification number) for the current motor.
 	 *
 	 * Instruction register address: 0x03 (EEPROM)
@@ -33,7 +33,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID){
 }
 
 // TODO: Test
-void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, double baud){
 	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
 	 *
 	 * Instruction register address: 0x04 (EEPROM)
@@ -60,7 +60,7 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud){
 }
 
 // TODO: Test
-void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef *hdynamixel, double microSec){
+void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double microSec){
 	/* Sets the time, in microseconds, that the motor should wait before returning a status packet.
 	 *
 	 * Instruction register address: 0x05(EEPROM)
@@ -85,8 +85,7 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef *hdynamixel, double mi
 	Dynamixel_DataWriter(hdynamixel, 8, 0x05, motor_data, -1);
 }
 
-// TODO: Test
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle){
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle){
 	/* Sets the clockwise angle limit for the current motor.
 	 * Register 0x06 in EEPROM for low byte, 0x07 in EEPROM for high byte
 	 *
@@ -113,8 +112,7 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAn
 	Dynamixel_DataWriter(hdynamixel, 9, 0x06, lowByte, highByte);
 }
 
-// TODO: Test
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle){
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle){
 	/* Sets the counter-clockwise angle limit for the current motor.
 	 * Register 0x08 in EEPROM for low byte, 0x09 in EEPROM for high byte
 	 *
@@ -142,7 +140,7 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxA
 }
 
 // TODO: Test
-void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double highestVoltage){
+void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double highestVoltage){
 	/* Sets the highest operating voltage limit for the current motor.
 	 *
 	 * Instruction register address: 0x0C (EEPROM)
@@ -167,7 +165,7 @@ void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, doubl
 }
 
 // TODO: Test
-void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double lowestVoltage){
+void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double lowestVoltage){
 	/* Sets the lowest operating voltage limit for the current motor.
 	 *
 	 * Instruction register address: 0x0D (EEPROM)
@@ -192,7 +190,7 @@ void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double
 }
 
 // TODO: Test
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque){
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorque){
 	/* Sets the maximum torque limit for all motor operations.
 	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
 	 *
@@ -216,7 +214,7 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorqu
 }
 
 // TODO: Test
-void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef *hdynamixel, uint8_t status_data){
+void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data){
 	/* Sets the conditions under which a status packet will be returned.
 	 *
 	 * Register address: 0x10 (EEPROM)
@@ -235,7 +233,7 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef *hdynamixel, uint8_t
 }
 
 // TODO: Test
-void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_LED_data){
+void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data){
 	/* Sets the conditions under which the motor LED will light up.
 	 *
 	 * Register address: 0x11 (EEPROM)
@@ -261,7 +259,7 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_LE
 }
 
 // TODO: Test
-void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_shutdown_data){
+void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data){
 	/* Sets the conditions under which the motor will turn off its torque.
 	 *
 	 * Register address: 0x12 (EEPROM)
@@ -287,7 +285,7 @@ void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ala
 }
 
 // TODO: Test
-void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
+void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
 	/* Enables or disables torque for current motor.
 	 *
 	 * Instruction register address: 0x18 (RAM)
@@ -305,7 +303,7 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabl
 }
 
 // TODO: Test
-void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled){
+void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
 	/* Toggles the motor LED.
 	 *
 	 * Register address: 0x19
@@ -323,7 +321,7 @@ void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled)
 }
 
 // TODO: Test
-void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin){
+void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin){
 	/* Sets the clockwise compliance margin for the current motor.
 	 * The compliance margin is the acceptable error between the current position and goal position.
 	 * The greater the value, the more error is acceptable.
@@ -345,7 +343,7 @@ void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_
 }
 
 // TODO: Test
-void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin){
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin){
 	/* Sets the counter-clockwise compliance margin for the current motor.
 	 * The compliance margin is the acceptable error between the current position and goal position.
 	 * The greater the value, the more error is acceptable.
@@ -367,7 +365,7 @@ void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8
 }
 
 // TODO: Test
-void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope){
+void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope){
 	/* Sets the clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
 	 * The higher the value, the more flexibility that is obtained. That is, a high value
 	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
@@ -415,7 +413,7 @@ void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t
 }
 
 // TODO: Test
-void Dynamixel_SetCCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceSlope){
+void Dynamixel_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope){
 	/* Sets the counter-clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
 	 * The higher the value, the more flexibility that is obtained. That is, a high value
 	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
@@ -462,8 +460,7 @@ void Dynamixel_SetCCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_
 	Dynamixel_DataWriter(hdynamixel, 8, 0x1D, step, -1);
 }
 
-// TODO: Test
-void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef *hdynamixel, double goalAngle){
+void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle){
 	/* Takes a double between 0 and 300, encodes this position in an
 	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
 	 * user manual), and sends this information (along with requisites) over UART.
@@ -488,8 +485,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef *hdynamixel, double goalA
 	Dynamixel_DataWriter(hdynamixel, 9, 0x1e, lowByte, highByte);
 }
 
-// TODO: Test
-void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef *hdynamixel, double goalVelocity){
+void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity){
 	/* Sets the goal velocity of the motor in RAM.
 	 * Low byte is 0x20 in motor RAM, high byte is 0x21 in motor RAM.
 	 *
@@ -519,7 +515,7 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef *hdynamixel, double goalV
 }
 
 // TODO: Test
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque){
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque){
 	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
 	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
 	 *
@@ -543,7 +539,7 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTor
 }
 
 // TODO: Test
-void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked){
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isLocked){
 	/* Locks the EEPROM of the current motor until the next power cycle.
 	 *
 	 * Instruction register address: 0x2F (RAM)
@@ -561,7 +557,7 @@ void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked)
 }
 
 // TODO: Test
-void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch){
+void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch){
 	/* Sets a quantity proportional to the minimum current supplied to the motor during operation.
 	 * Units are not specified in datasheet, and therefore this function is not entirely useful without
 	 * sufficient testing.
@@ -600,7 +596,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch){
 /*								 											   */
 /********************************************((*********************************/
 // NEEDS TO BE TESTED
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads addresses 0x24 and 0x25 in the motors RAM to see what the current position
 	 * of the motor is.
 	 * Writes the results to hdynamixel -> _lastPosition
@@ -618,7 +614,7 @@ void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads addresses 0x26 and 0x27 in the motor RAM to see what the current velocity
 	 * of the motor is.
 	 * Writes the results to hdynamixel -> _lastVelocity
@@ -643,7 +639,7 @@ void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads addresses 0x28 and 0x29 in the motor RAM to see what the current
 	 * load is. Load is a percentage of the maximum torque. Value of 0-1023
 	 * gets translated into a counterclockwise load, and value of 1024-2047
@@ -669,7 +665,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads address 0x2A in the motor RAM to see what the current voltage is.
 	 * Value retrieved from motor is 10 times the actual voltage.
 	 * Writes the results to hdynamixel -> _lastVoltage
@@ -687,7 +683,7 @@ void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor.
 	 * Results in degrees Celsius.
 	 * Writes the results to hdynamixel -> _lastTemperature
@@ -702,7 +698,7 @@ void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-uint8_t Dynamixel_GetRegistered(Dynamixel_HandleTypeDef *hdynamixel){
+uint8_t Dynamixel_GetRegistered(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Used to tell if command sent was written to motor registers.
 	 * Can also be used to see if instruction in motor register has been executed.
 	 *
@@ -721,7 +717,7 @@ uint8_t Dynamixel_GetRegistered(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel){
+uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads the 0x2E address in motor RAM to see if motor is moving.
 	 *
 	 * Arguments: hdynamixel, the motor handle
@@ -735,7 +731,7 @@ uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel){
+uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Reads the CW (addr: 0x06) and CCW (addr: 0x07) angle limits. If both are 0, motor is in wheel mode
 	 * and can spin indefinitely. Otherwise, motor is in joint mode and has angle limits set
 	 *
@@ -769,7 +765,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel){
 /*								 											   */
 /********************************************((*********************************/
 // NEEDS TESTING
-void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
+void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 		uint8_t writeAddr, uint8_t param1, uint8_t param2){
 	/* Implementation of REG WRITE instruction with 2 parameters.
 	 *
@@ -804,7 +800,7 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
 }
 
 // TODO: Test
-void Dynamixel_Action(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Implements the ACTION instruction. This triggers the instruction registered by the REG WRITE
 	 * instruction. This way, time delays can be reduced for the concurrent motion of several
 	 * motors.
@@ -906,7 +902,7 @@ void Dynamixel_ErrorHandler(uint8_t errCode){
 /*								 											   */
 /********************************************((*********************************/
 // NEEDS TESTING
-void Dynamixel_Ping(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Used only for returning a status packet or checking the existence of a motor
 	 * with a specified ID. Does not command any operations.
 	 *
@@ -934,7 +930,7 @@ void Dynamixel_Ping(Dynamixel_HandleTypeDef *hdynamixel){
 }
 
 // TODO: Test
-void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, \
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 						   uint8_t writeAddr, uint8_t param1, uint8_t param2){
 	/* Handles sending of data since this nearly identical for all setters.
 	 * Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
@@ -996,7 +992,7 @@ void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
 }
 
 // TODO: Test
-uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readAddr, uint8_t readLength){
+uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
 	/* Reads data back from the motor passed in by the handle. This process is identical
 	 * for all the getters which is why it is encapsulated in this function. Reading data
 	 * uses the READ DATA instruction, 0x02, in the motor instruction set.
@@ -1044,7 +1040,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readA
 
 		// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
 		if(readLength == 1){
-			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 7, RECEIVE_TIMEOUT);
 			valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
 		}
 		else{
@@ -1079,7 +1075,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readA
 /*								 											   */
 /*								 											   */
 /********************************************((*********************************/
-void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
 	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
@@ -1093,7 +1089,7 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_Handle
 }
 
 // TODO: Test
-void Dynamixel_Reset(Dynamixel_HandleTypeDef *hdynamixel){
+void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Resets the control table values of the motor to the Factory Default Value settings.
 	 * Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are
 	 * connected on the same bus, there will not be a way to assign them unique IDs without
@@ -1121,3 +1117,6 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef *hdynamixel){
 	// Transmit
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
 }
+
+
+

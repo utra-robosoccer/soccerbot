@@ -1,8 +1,8 @@
 /*************** Drivers for Dynamixel AX-12A Servo Motor ***************/
 
 /*************** Define to prevent recursive inclusion ***************/
-#ifndef __DYNAMIXEL_AX_12A_H
-#define __DYNAMIXEL_AX_12A_H
+#ifndef __DYNAMIXEL_AX_12A_H__
+#define __DYNAMIXEL_AX_12A_H__
 
 /*************** Includes ***************/
 #include "stm32f4xx_hal.h"
@@ -17,7 +17,8 @@
 #define BUFF_RX_SIZE 8		// Receive buffer size for UART receptions
 
 /************** Private Variables ****************/
-uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART
+uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
+								  // In future, make a ring buffer
 
 /*************** Types ***************/
 typedef struct{
@@ -35,43 +36,43 @@ typedef struct{
 
 /*************** Function prototypes ***************/
 // Setters (use the WRITE DATA instruction)
-void Dynamixel_SetID(Dynamixel_HandleTypeDef *hdynamixel, int ID); // (EEPROM)
-void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef *hdynamixel, double baud); // (EEPROM)
-void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef *hdynamixel, double microSec); // (EEPROM)
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double minAngle); // (EEPROM)
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef *hdynamixel, double maxAngle); // (EEPROM)
-void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double highestVoltage); // (EEPROM)
-void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef *hdynamixel, double lowestVoltage); // (EEPROM)
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef *hdynamixel, double maxTorque); // (EEPROM)
-void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef *hdynamixel, uint8_t status_data); // (EEPROM)
-void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_LED_data); // (EEPROM)
-void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef *hdynamixel, uint8_t alarm_shutdown_data); // (EEPROM)
+void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID); // (EEPROM)
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, double baud); // (EEPROM)
+void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double microSec); // (EEPROM)
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
+void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double highestVoltage); // (EEPROM)
+void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double lowestVoltage); // (EEPROM)
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorque); // (EEPROM)
+void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data); // (EEPROM)
+void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data); // (EEPROM)
+void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data); // (EEPROM)
 
-void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled); // (RAM)
-void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isEnabled); // (RAM)
-void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceMargin); // (RAM)
-void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceMargin); // (RAM)
-void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CWcomplianceSlope); // (RAM)
-void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef *hdynamixel, uint8_t CCWcomplianceSlope); // (RAM)
-void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef *hdynamixel, double goalAngle); // (RAM)
-void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef *hdynamixel, double goalVelocity); // (RAM)
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef *hdynamixel, double goalTorque); // (RAM)
-void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef *hdynamixel, uint8_t isLocked); // (RAM)
-void Dynamixel_SetPunch(Dynamixel_HandleTypeDef *hdynamixel, double punch); // (RAM)
+void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
+void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
+void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin); // (RAM)
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin); // (RAM)
+void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope); // (RAM)
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope); // (RAM)
+void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle); // (RAM)
+void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity); // (RAM)
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque); // (RAM)
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isLocked); // (RAM)
+void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch); // (RAM)
 
 // Getters (use READ DATA instruction)
-void Dynamixel_GetPosition(Dynamixel_HandleTypeDef *hdynamixel);
-void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef *hdynamixel);
-void Dynamixel_GetLoad(Dynamixel_HandleTypeDef *hdynamixel);
-void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef *hdynamixel);
-void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef *hdynamixel);
-uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef *hdynamixel);
-uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef *hdynamixel);
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Other motor instructions (low level control with timing from different WRITE DATA instruction)
-void Dynamixel_RegWrite(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-void Dynamixel_Action(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Computation
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
@@ -80,13 +81,13 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 void Dynamixel_ErrorHandler(uint8_t);
 
 // Transmission & Reception
-void Dynamixel_Ping(Dynamixel_HandleTypeDef *hdynamixel);
-void Dynamixel_DataWriter(Dynamixel_HandleTypeDef *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
-uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef *hdynamixel, uint8_t readAddr, uint8_t readLength);
+uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Initialization
-void Dynamixel_Init(Dynamixel_HandleTypeDef *hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
-void Dynamixel_Reset(Dynamixel_HandleTypeDef *hdynamixel);
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
+void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
-#endif /* __DYNAMIXEL_AX-12A_H */
+#endif /* __DYNAMIXEL_AX-12A_H__ */
