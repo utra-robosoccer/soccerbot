@@ -1,6 +1,6 @@
-16:38:44 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+19:31:58 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
 make all 
 make: Nothing to be done for `all'.
 
-16:38:44 Build Finished (took 468ms)
+19:31:59 Build Finished (took 515ms)
 

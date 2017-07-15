@@ -15,6 +15,11 @@
 #define TRANSMIT_TIMEOUT 10 // Timeout for UART transmissions, in milliseconds
 #define RECEIVE_TIMEOUT 10	// Timeout for UART receptions, in milliseconds
 #define BUFF_RX_SIZE 8		// Receive buffer size for UART receptions
+#define MAX_VELOCITY 114	// Maximum angular velocity (RPM)
+#define MIN_VELOCITY 0		// Minimum angular velocity (RPM)
+#define MAX_ANGLE 300		// Maximum angular position (joint mode)
+#define MIN_ANGLE 0			// Minimum angular position (joint mode)
+#define DEFAULT_ID 1		// Default motor ID
 
 /************** Private Variables ****************/
 uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
@@ -81,7 +86,7 @@ uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 void Dynamixel_ErrorHandler(uint8_t);
 
 // Transmission & Reception
-void Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
@@ -91,6 +96,8 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Test/demonstration
-void Dynamixel_Test(Dynamixel_HandleTypeDef** arrHdynamixel);
+void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize);
+void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
+void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
 
 #endif /* __DYNAMIXEL_AX-12A_H__ */
