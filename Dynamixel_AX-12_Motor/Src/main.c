@@ -105,13 +105,13 @@ int main(void)
   Data_Control.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &Data_Control);
 
-  __HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
+  //__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
 
   Dynamixel_HandleTypeDef Motor1;
   Dynamixel_Init(&Motor1, 0x01, &huart6);
 
   Dynamixel_HandleTypeDef Motor2;
-  Dynamixel_Init(&Motor2, 0xFE, &huart6);
+  Dynamixel_Init(&Motor2, 0x02, &huart6);
 
   /* USER CODE END 2 */
 
@@ -122,9 +122,13 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  // Initialize array of motor handles
-	  Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
-	  Dynamixel_Test(arrHdynamixel);
+		Dynamixel_BroadcastRevive(&Motor2, 0x02);
+
+		HAL_Delay(1500); // Wait for motor power-on LED to turn off
+		// Initialize array of motor handles
+		//Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
+		//Dynamixel_Test(arrHdynamixel, 2);
+		while(1){	continue;	}
   }
   /* USER CODE END 3 */
 

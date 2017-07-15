@@ -210,8 +210,8 @@ void USART6_IRQHandler(void)
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */
-  HAL_UART_Receive_IT(&huart6, buffrec, 7); // Receive 7 bytes
-  HAL_UART_Transmit(&huart3, buffrec, 7, 100); // Send received bytes via UART3 TX
+  //HAL_UART_Receive_IT(&huart6, buffrec, 7); // Receive 7 bytes
+  //HAL_UART_Transmit(&huart3, buffrec, 7, 100); // Send received bytes via UART3 TX
   /* USER CODE END USART6_IRQn 1 */
 }
 
