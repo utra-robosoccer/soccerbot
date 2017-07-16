@@ -1186,6 +1186,7 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	// Initialize master UART handle to that of the first motor handle
 	Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, arrHdynamixel[0]->_UART_Handle);
 
+
 	/* Test 1: Dynamixel_LEDEnable
 	 * Pass condition: Motor LED blinks on then off
 	 */
@@ -1203,7 +1204,9 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	Dynamixel_LEDEnable(Motor1, 1); // Set LED on with new motor ID
 	HAL_Delay(500);
 	Dynamixel_LEDEnable(Motor1, 0); // Set LED off with new motor ID
-	Motor1 -> _ID = oldID; // Restore previous state
+	Dynamixel_SetID(Motor1, oldID); // Restore previous state
+	HAL_Delay(500);
+
 
 	/* Test 3: Dynamixel_SetGoalPosition
 	 * Pass condition: Motor(s) attached to TX/RX line are seen rotating
@@ -1218,40 +1221,66 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	}
 	HAL_Delay(1500);
 
+
 	/* Test 4: Dynamixel_SetGoalVelocity
-	 * Pass condition:
+	 * Pass condition: All motors connected move at different speeds
 	 */
 	for(int i = 0; i < arrSize; i++){
-		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY / (i + 1));
+		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY / (i*2 + 1));
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MAX_ANGLE);
 	}
 	HAL_Delay(1500);
 	for(int i = 0; i < arrSize; i++){
-		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY / (i + 1));
+		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY / (i*2 + 1));
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
 	}
 	HAL_Delay(1500);
+	// Set motors to middle position with identical velocities
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY);
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], (MIN_ANGLE + MAX_ANGLE) / 2);
+	}
+	HAL_Delay(1500);
+
 
 	/* Test 5: Dynamixel_SetCWAngleLimit
-	 * Pass condition:
+	 * Pass condition: Motor(s) move between 150 and 300 degrees when
+	 * instructed to move between 0 and 300 degrees
 	 */
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 150);
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], MAX_ANGLE);
+	}
+	HAL_Delay(1500);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 150);
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
+	}
+	HAL_Delay(1500);
+	// Set back to defaults
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 0);
+	}
+
 
 	/* Test 6: Dynamixel_SetCCWAngleLimit
-	 * Pass condition:
+	 * Pass condition: Motor(s) move between 0 and 150 degrees when
+	 * instructed to move between 0 and 300 degrees
 	 */
-
-	// If velocity if set and not position, and the CW and CCW angle limits are set to 0, then the motor will
-	// continuously rotate
-	Dynamixel_SetGoalVelocity(arrHdynamixel[0], 69);
-	//Dynamixel_SetPosition(&Motor1, angle);
-	__DYNAMIXEL_RECEIVE();
-
-	HAL_Delay(1500); // Delay for motor to move to the specified position
-
-	Dynamixel_SetGoalPosition(&MASTER_MOTOR_CONTROL, angle);
-	__DYNAMIXEL_RECEIVE();
-
-	HAL_Delay(1500); // Delay for motor to move to the specified position
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 150);
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
+	}
+	HAL_Delay(1500);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 150);
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], MAX_ANGLE);
+	}
+	HAL_Delay(1500);
+	// Set back to defaults
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 300);
+	}
 }
 
 void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
@@ -1260,7 +1289,8 @@ void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	 * through its full angle span (joint mode).
 	 *
 	 * This function should be used when a motor is unresponsive, and the
-	 * health of the motor wants to be verified.
+	 * health of the motor wants to be verified. Basically, it's used
+	 * to see whether a motor is bricked.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  ID, the desired motor ID
@@ -1282,7 +1312,8 @@ void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	 * through its full angle span (joint mode).
 	 *
 	 * This function should be used when the health of all motors connected to
-	 * the bus is to be checked by a standardized testing procedure.
+	 * the bus are to be checked by a standardized testing procedure.
+	 * Basically, it's used to see whether any motor connected to the bus is bricked.
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  ID, the desired motor ID

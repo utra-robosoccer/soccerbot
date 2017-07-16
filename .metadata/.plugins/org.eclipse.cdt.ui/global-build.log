@@ -2590,3 +2590,454 @@ arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
 19:31:58 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
 make all 
 make: Nothing to be done for `all'.
+19:43:27 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6072	     12	   1708	   7792	   1e70	Dynamixel_AX-12_Motor.elf
+ 
+19:43:32 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:43:42 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:3: warning: implicit declaration of function 'Dynamixel_Test' [-Wimplicit-function-declaration]
+   Dynamixel_Test(arrHdynamixel, 2);
+   ^
+Finished building: ../Src/main.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Src/main.o: In function `main':
+D:\Users\Tyler\Documents\STM\Workspace\Dynamixel_AX-12_Motor\Debug/../Src/main.c:129: undefined reference to `Dynamixel_Test'
+collect2.exe: error: ld returned 1 exit status
+make: *** [Dynamixel_AX-12_Motor.elf] Error 1
+19:43:59 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9980	     12	   1708	  11700	   2db4	Dynamixel_AX-12_Motor.elf
+ 
+19:44:03 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:45:15 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9996	     12	   1708	  11716	   2dc4	Dynamixel_AX-12_Motor.elf
+ 
+19:45:19 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:45:55 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10012	     12	   1708	  11732	   2dd4	Dynamixel_AX-12_Motor.elf
+ 
+19:46:01 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:46:53 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10012	     12	   1708	  11732	   2dd4	Dynamixel_AX-12_Motor.elf
+ 
+19:46:57 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:50:23 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10012	     12	   1708	  11732	   2dd4	Dynamixel_AX-12_Motor.elf
+ 
+19:50:26 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:51:22 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:52:12 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10020	     12	   1708	  11740	   2ddc	Dynamixel_AX-12_Motor.elf
+ 
+19:52:42 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1207:2: error: expected ';' before 'HAL_Delay'
+  HAL_Delay(500);
+  ^
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+make: *** [Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o] Error 1
+19:52:48 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10020	     12	   1708	  11740	   2ddc	Dynamixel_AX-12_Motor.elf
+ 
+19:52:52 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:53:22 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9988	     12	   1708	  11708	   2dbc	Dynamixel_AX-12_Motor.elf
+ 
+19:53:26 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:55:16 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1246:2: error: expected ';' before 'for'
+  for(int i = 0; i < arrSize; i++){
+  ^
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+make: *** [Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o] Error 1
+19:55:38 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10020	     12	   1708	  11740	   2ddc	Dynamixel_AX-12_Motor.elf
+ 
+19:56:23 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10020	     12	   1708	  11740	   2ddc	Dynamixel_AX-12_Motor.elf
+ 
+19:56:27 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:59:16 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10028	     12	   1708	  11748	   2de4	Dynamixel_AX-12_Motor.elf
+ 
+19:59:21 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+19:59:41 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10020	     12	   1708	  11740	   2ddc	Dynamixel_AX-12_Motor.elf
+ 
+19:59:44 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+20:00:29 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10036	     12	   1708	  11756	   2dec	Dynamixel_AX-12_Motor.elf
+ 
+20:00:33 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.
+20:01:55 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+Building file: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Dynamixel_AX-12_Motor/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.d" -MT"Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" -o "Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.o" "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c: In function 'Dynamixel_TestAll':
+../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c:1182:9: warning: unused variable 'angle' [-Wunused-variable]
+  double angle = 0;
+         ^
+Finished building: ../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.c
+ 
+Building target: Dynamixel_AX-12_Motor.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Dynamixel_AX-12_Motor.elf" @"objects.list"  
+Finished building target: Dynamixel_AX-12_Motor.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Dynamixel_AX-12_Motor.elf" "Dynamixel_AX-12_Motor.bin"
+arm-none-eabi-size "Dynamixel_AX-12_Motor.elf"
+   text	   data	    bss	    dec	    hex	filename
+  10052	     12	   1708	  11772	   2dfc	Dynamixel_AX-12_Motor.elf
+ 
+20:01:58 **** Incremental Build of configuration Debug for project Dynamixel_AX-12_Motor ****
+make all 
+make: Nothing to be done for `all'.

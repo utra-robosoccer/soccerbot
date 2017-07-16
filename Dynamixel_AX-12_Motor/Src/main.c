@@ -122,12 +122,11 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		Dynamixel_BroadcastRevive(&Motor2, 0x02);
-
 		HAL_Delay(1500); // Wait for motor power-on LED to turn off
+
 		// Initialize array of motor handles
-		//Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
-		//Dynamixel_Test(arrHdynamixel, 2);
+		Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
+		Dynamixel_TestAll(arrHdynamixel, 2);
 		while(1){	continue;	}
   }
   /* USER CODE END 3 */
