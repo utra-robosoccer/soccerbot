@@ -14,7 +14,7 @@
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID){
+void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	/* Sets the ID (identification number) for the current motor.
 	 * Note that the instruction will be broadcasted using the current ID.
 	 * As such, if the ID is not known, the motor ID should be initialized
@@ -77,8 +77,8 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double mi
 
 	// Compute validity
 	uint8_t motor_data;
-	if((microSec < 1) || (microSec > 509)){
-		motor_data = 250;
+	if((microSec < 1) || (microSec > 508)){
+		motor_data = DEFAULT_RETURN_DELAY;
 	}
 	else{
 		motor_data = (uint8_t)(microSec / 2);
@@ -105,11 +105,18 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAn
 	 * Returns: none
 	 */
 
-	// Translate the angles from degrees into 8-bit numbers
-	int normalized_value = (int)(minAngle / 300 * 1023);
+	// Initialize local variable to default value
+	uint16_t normalized_value = 0;
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of CW angle limit
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of CW angle limit
+	// Evaluate argument validity. Optimize for edge case minAngle = MIN_ANGLE
+	if((minAngle > MIN_ANGLE) && (minAngle <= MAX_ANGLE)){
+
+		// Translate the angle from degrees into a 10-bit number
+		normalized_value = (uint16_t)(minAngle / MAX_ANGLE * 1023);
+	}
+
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of CW angle limit
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of CW angle limit
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x06, lowByte, highByte);
@@ -132,11 +139,18 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxA
 	 * Returns: none
 	 */
 
-	// Translate the angles from degrees into 8-bit numbers
-	int normalized_value = (int)(maxAngle / 300 * 1023);
+	// Initialize local variable to default value
+	uint16_t normalized_value = 1023;
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of CCW angle limit
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of CCW angle limit
+	// Evaluate argument validity. Optimize for edge case maxAngle = MAX_ANGLE
+	if((maxAngle >= MIN_ANGLE) && (maxAngle < MAX_ANGLE)){
+
+		// Translate the angle from degrees into a 10-bit number
+		normalized_value = (uint16_t)(maxAngle / MAX_ANGLE * 1023);
+	}
+
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of CCW angle limit
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of CCW angle limit
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x08, lowByte, highByte);
@@ -158,8 +172,8 @@ void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, doubl
 	// Declare local variable. Initialize to default value
 	uint8_t high_voltage_data = 0xBE;
 
-	// Evaluate argument validity and translate into motor data
-	if(highestVoltage > 6 && highestVoltage < 14){
+	// Evaluate argument validity and translate into motor data. Optimize for highestVoltage = MAX_VOLTAGE.
+	if((highestVoltage >= MIN_VOLTAGE) && (highestVoltage < MAX_VOLTAGE)){
 		high_voltage_data = (uint8_t)(highestVoltage * 10);
 	}
 
@@ -183,8 +197,10 @@ void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double
 	// Declare local variable. Initialize to default value
 	uint8_t low_voltage_data = 0x3C;
 
-	// Evaluate argument validity and translate into motor data
-	if(lowestVoltage > 6 && lowestVoltage < 14){
+	// Evaluate argument validity and translate into motor data. Optimize for lowestVoltage = MIN_VOLTAGE
+	if((lowestVoltage > MIN_VOLTAGE) && (lowestVoltage <= MAX_VOLTAGE)){
+
+		// Translate into format that motor can understand
 		low_voltage_data = (uint8_t)(lowestVoltage * 10);
 	}
 
@@ -206,8 +222,15 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorqu
 	 * Returns: none
 	 */
 
-	// Translate the input from percentage into and 10-bit number
-	int normalized_value = (int)(maxTorque / 100 * 1023);
+	// Initialize to default value
+	uint16_t normalized_value = 1023;
+
+	// Evaluate argument validity and optimize for edge case maxTorque = MAX_TORQUE
+	if((maxTorque >= MIN_TORQUE) && (maxTorque < MAX_TORQUE)){
+
+		// Translate the input from percentage into a 10-bit number
+		normalized_value = (uint16_t)(maxTorque / 100 * 1023);
+	}
 
 	uint8_t lowByte = normalized_value & 0xFF; // Low byte of max torque
 	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of max torque
@@ -490,10 +513,10 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalA
 	}
 
 	// Translate the angle from degrees into a 10-bit number
-	int normalized_value = (int)(goalAngle / MAX_ANGLE * 1023); // maximum angle of 1023
+	uint16_t normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023); // maximum angle of 1023
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal position
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal position
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x1e, lowByte, highByte);
@@ -507,34 +530,35 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalV
 	 * Default value: none
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid. If 0, max is used.
+	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid when in joint mode.
+	 * 			  In wheel mode, negative arguments correspond to CW rotation.
 	 *
 	 * Returns: none
 	 */
 
-	/* Check for input validity. If input not valid, replace goalAngle with closest
-	 * valid value to ensure code won't halt.
-	 */
-	if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MAX_VELOCITY)){
-		if(goalVelocity > MIN_VELOCITY){
-			goalVelocity = MAX_VELOCITY;
-		}
-		else{
-			goalVelocity = MIN_VELOCITY;
-		}
-	}
-
 	// Translate the position from RPM into a 10-bit number
-	int normalized_value = 0;
+	uint16_t normalized_value = 0;
 	if(hdynamixel -> _isJointMode){
-		normalized_value = (int)(goalVelocity / MAX_VELOCITY * 1023);
-	}
-	else{
-		normalized_value = (int)(goalVelocity / MAX_VELOCITY * 2047);
+		/* Check for input validity. If input not valid, replace goalAngle with closest
+		 * valid value to ensure code won't halt. */
+		if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MAX_VELOCITY)){
+			if(goalVelocity > MIN_VELOCITY){
+				goalVelocity = MAX_VELOCITY;
+			}
+			else{
+				goalVelocity = MIN_VELOCITY;
+			}
+		}
 	}
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal velocity
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal velocity
+	normalized_value = (uint16_t)(goalVelocity / MAX_VELOCITY * 1023);
+	if(goalVelocity < 0){
+		Dynamixel_LEDEnable(hdynamixel, 1);
+		normalized_value = ((uint16_t)((goalVelocity * -1) / MAX_VELOCITY * 1023)) | 0b000010000000000;
+	}
+
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal velocity
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal velocity
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x20, lowByte, highByte);
@@ -555,31 +579,28 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTor
 	 */
 
 	// Translate the input from percentage into and 10-bit number
-	int normalized_value = (int)(goalTorque / 100 * 1023);
+	uint16_t normalized_value = (uint16_t)(goalTorque / 100 * 1023);
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of goal torque
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of goal torque
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal torque
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal torque
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x22, lowByte, highByte);
 }
 
-// TODO: Test
-void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isLocked){
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Locks the EEPROM of the current motor until the next power cycle.
 	 *
 	 * Instruction register address: 0x2F (RAM)
 	 * Default value: 0x00
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  isLocked, 0 if EEPROM is to be read/write
-	 * 			  			1 if EEPROM is to be made read-only
 	 *
 	 * Returns: none
 	 */
 
 	// Write data to motor
-	Dynamixel_DataWriter(hdynamixel, 8, 0x2F, isLocked, -1);
+	Dynamixel_DataWriter(hdynamixel, 8, 0x2F, 1, -1);
 }
 
 // TODO: Test
@@ -599,10 +620,10 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch){
 	 */
 
 	// Translate the punch into a 10-bit number
-	int normalized_value = punch;
+	uint16_t normalized_value = punch;
 
-	uint8_t lowByte = normalized_value & 0xFF; // Low byte of punch
-	uint8_t highByte = (normalized_value >> 8) & 0xFF; // High byte of punch
+	uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of punch
+	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of punch
 
 	// Write data to motor
 	Dynamixel_DataWriter(hdynamixel, 9, 0x30, lowByte, highByte);
@@ -687,7 +708,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
 	if(retVal > 1023){
 		retVal = retVal - 1023;
 	}
-	hdynamixel -> _lastLoad = retVal / 1023 * 100;
+	hdynamixel -> _lastLoad = (uint8_t)(retVal / 1023 * 100);
 }
 
 // TODO: Test
@@ -772,7 +793,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	uint16_t retValCCW = Dynamixel_DataReader(hdynamixel, 0x08, 2);
 
 	// Parse data and write it into motor handle
-	hdynamixel -> _isJointMode = ((retValCW + retValCCW ) != 0);
+	hdynamixel -> _isJointMode = (uint8_t)((retValCW | retValCCW ) != 0);
 
 	// Return
 	return(hdynamixel -> _isJointMode);
@@ -961,6 +982,11 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	// Define array for transmission
 	uint8_t arrTransmit[arrSize];
 
+	// Clear array for status packet
+	for(uint8_t i = 0; i < BUFF_RX_SIZE; i++){
+		arrReceive[i] = 0;
+	}
+
 	// Do assignments and computations
 	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
 	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
@@ -976,8 +1002,13 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 		arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
 	}
 
-	// Set data direction
+	// Set data direction for transmit
 	__DYNAMIXEL_TRANSMIT();
+
+	/* In the future, a lock should be placed here, and it should be unlocked after the status
+	 * packet is received. This requires using interrupts for TX/RX and it cannot be implemented
+	 * right now because the blocking transmit and receive use timer interrupts for their timeout
+	 */
 
 	// Transmit
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
@@ -1055,6 +1086,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
 			//valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
 		}
+
 	//}
 
 	// Check the status packet received for errors
@@ -1087,11 +1119,12 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 {
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
 	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
-	hdynamixel -> _lastPosition = 0; // In future, initialize this accurately
-	hdynamixel -> _lastVelocity = 0; // In future, initialize this accurately
-	hdynamixel -> _lastLoad = 0; // In future, initialize this accurately
-	hdynamixel -> _lastVoltage = 0; // In future, initialize this accurately
-	hdynamixel -> _lastTemperature = 0; // In future, initialize this accurately
+	hdynamixel -> _lastPosition = -1; // In future, initialize this accurately
+	hdynamixel -> _lastVelocity = -1; // In future, initialize this accurately
+	hdynamixel -> _lastLoad = -1; // In future, initialize this accurately
+	hdynamixel -> _lastLoadDirection = -1; // In future, initialize this accurately
+	hdynamixel -> _lastVoltage = -1; // In future, initialize this accurately
+	hdynamixel -> _lastTemperature = -1; // In future, initialize this accurately
 	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
 }
@@ -1218,8 +1251,10 @@ void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel){
 	 *
 	 * Returns: none
 	 */
+
 	Dynamixel_SetCWAngleLimit(hdynamixel, 0);
 	Dynamixel_SetCCWAngleLimit(hdynamixel, 0);
+	hdynamixel -> _isJointMode = 0;
 }
 
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
@@ -1230,8 +1265,23 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	 *
 	 * Returns: none
 	 */
+
+	// In the future, it would be good to make this robust by returning the motor
+	// to the nearest valid position. Otherwise, motor gets confused because it's
+	// locked out of its valid boundaries and there you can't instruct it to go anywhere
+//	Dynamixel_GetPosition(hdynamixel);
+//	while((hdynamixel -> _lastPosition < MIN_ANGLE) || (hdynamixel -> _lastPosition > MAX_ANGLE)){
+//		if(360 - hdynamixel -> _lastPosition < 15){
+//			Dynamixel_SetGoalVelocity(hdynamixel, MAX_VELOCITY);
+//		}
+//		else{
+//			Dynamixel_SetGoalVelocity(hdynamixel, -MAX_VELOCITY);
+//		}
+//		Dynamixel_GetPosition(hdynamixel);
+//	}
 	Dynamixel_SetCWAngleLimit(hdynamixel, MIN_ANGLE);
 	Dynamixel_SetCCWAngleLimit(hdynamixel, MAX_ANGLE);
+	hdynamixel -> _isJointMode = 1;
 }
 
 
@@ -1270,11 +1320,15 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 
 
 	/* Test 1: Dynamixel_LEDEnable
-	 * Pass condition: Motor LED blinks on then off
+	 * Pass condition: Motor LED(s) blink(s) on then off
 	 */
-	Dynamixel_LEDEnable(Motor1, 1);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_LEDEnable(arrHdynamixel[i], 1);
+	}
 	HAL_Delay(500);
-	Dynamixel_LEDEnable(Motor1, 0);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
+	}
 	HAL_Delay(500);
 
 
@@ -1282,7 +1336,7 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	 * Pass condition: Motor LED blinks on then off
 	 */
 	uint8_t oldID = Motor1 -> _ID; // Save ID for later restoration
-	Dynamixel_SetID(Motor1, (Motor1->_ID + 20) % 0xFE); // Different, valid ID
+	Dynamixel_SetID(Motor1, (Motor1 ->_ID + 20) % 0xFE); // Different, valid ID
 	Dynamixel_LEDEnable(Motor1, 1); // Set LED on with new motor ID
 	HAL_Delay(500);
 	Dynamixel_LEDEnable(Motor1, 0); // Set LED off with new motor ID
@@ -1325,6 +1379,20 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	HAL_Delay(1500);
 
 
+	/* ODD NOTE: with the current code, if the below line is uncommented,
+	 * then Motor2 will rotate in the CW direction in the last half of test 7.
+	 * Otherwise, if Motor1's EEPROM is not locked, Motor2 doesn't respond
+	 * properly to to the CW direction instruction...
+	 *
+	 * A possible reason for this is that the data writer does not take the time to
+	 * read a status packet back, and thus its data might be getting mixed with the
+	 * status packet signals the motor is trying to send back
+	 */
+	// Dynamixel_LockEEPROM(arrHdynamixel[0], 1); // If uncommented, the effects of
+												  // settings angle limits will be clearly
+												  // visible
+
+
 	/* Test 5: Dynamixel_SetCWAngleLimit
 	 * Pass condition: Motor(s) move between 150 and 300 degrees when
 	 * instructed to move between 0 and 300 degrees
@@ -1333,16 +1401,17 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 150);
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MAX_ANGLE);
 	}
-	HAL_Delay(1500);
+	HAL_Delay(750);
 	for(int i = 0; i < arrSize; i++){
 		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 150);
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
 	}
-	HAL_Delay(1500);
+	HAL_Delay(750);
 	// Set back to defaults
 	for(int i = 0; i < arrSize; i++){
 		Dynamixel_SetCWAngleLimit(arrHdynamixel[i], 0);
 	}
+	HAL_Delay(375);
 
 
 	/* Test 6: Dynamixel_SetCCWAngleLimit
@@ -1353,20 +1422,22 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 150);
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
 	}
-	HAL_Delay(1500);
+	HAL_Delay(750);
 	for(int i = 0; i < arrSize; i++){
 		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 150);
 		Dynamixel_SetGoalPosition(arrHdynamixel[i], MAX_ANGLE);
 	}
-	HAL_Delay(1500);
+	HAL_Delay(750);
 	// Set back to defaults
 	for(int i = 0; i < arrSize; i++){
 		Dynamixel_SetCCWAngleLimit(arrHdynamixel[i], 300);
 	}
+	HAL_Delay(375);
 
 
 	/* Test 7: Dynamixel_EnterWheelMode
-	 * Pass: Motor(s) rotate through over 360 degrees
+	 * Pass: Motor(s) rotate through over 360 degrees, first in the CCW direction,
+	 * then in the counterclockwise direction
 	 */
 	for(int i = 0; i < arrSize; i++){
 		Dynamixel_EnterWheelMode(arrHdynamixel[i]);
@@ -1374,7 +1445,10 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	}
 	HAL_Delay(1500);
 	for(int i = 0; i < arrSize; i++){
-		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MIN_VELOCITY);
+		/* Motor should ignore the goal position command */
+		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
+		Dynamixel_SetGoalVelocity(arrHdynamixel[i], -MAX_VELOCITY);
+		HAL_Delay(10);
 	}
 	HAL_Delay(1500);
 
@@ -1397,7 +1471,6 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	}
 	HAL_Delay(1500);
 
-
 	/* Test 9: Dynamixel_IsJointMode
 	 * Pass: Motor LEDs are brightened for 1 second, then go off for 1 second,
 	 * then go on for 1 second, then go off.
@@ -1419,6 +1492,4 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 //		Dynamixel_EnterJointMode(arrHdynamixel[i]);
 //		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
 //	}
-
-
 }
