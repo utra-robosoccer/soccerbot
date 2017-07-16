@@ -2,17 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="GPIOD" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Dynamixel_HandleTypeDef  "/>
+			<item value="Dynamixel_HandleTypeDef * "/>
 			<item value="GPIOD"/>
 			<item value="__HAL_UART_ENABLE"/>
 			<item value="uart"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Dynamixel_HandleTypeDef* "/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
