@@ -12,14 +12,19 @@
 #define __DYNAMIXEL_RECEIVE() HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 0) // Set data direction pin low (RX)
 
 /*************** Defines ***************/
-#define TRANSMIT_TIMEOUT 10 // Timeout for UART transmissions, in milliseconds
-#define RECEIVE_TIMEOUT 10	// Timeout for UART receptions, in milliseconds
-#define BUFF_RX_SIZE 8		// Receive buffer size for UART receptions
-#define MAX_VELOCITY 114	// Maximum angular velocity (RPM)
-#define MIN_VELOCITY 0		// Minimum angular velocity (RPM)
-#define MAX_ANGLE 300		// Maximum angular position (joint mode)
-#define MIN_ANGLE 0			// Minimum angular position (joint mode)
-#define DEFAULT_ID 1		// Default motor ID
+#define TRANSMIT_TIMEOUT 10 		// Timeout for UART transmissions, in milliseconds
+#define RECEIVE_TIMEOUT 10			// Timeout for UART receptions, in milliseconds
+#define BUFF_RX_SIZE 8				// Receive buffer size for UART receptions
+#define MAX_VELOCITY 114				// Maximum angular velocity (RPM)
+#define MIN_VELOCITY 1				// Minimum angular velocity (RPM)
+#define MAX_ANGLE 300				// Maximum angular position (joint mode)
+#define MIN_ANGLE 0					// Minimum angular position (joint mode)
+#define MAX_TORQUE 100				// Maximum torque (percent of maximum)
+#define MIN_TORQUE 0				// Minimum torque (percent of maximum)
+#define DEFAULT_ID 1				// Default motor ID
+#define DEFAULT_RETURN_DELAY 250	// Default time motor waits before returning status packet (microseconds)
+#define MAX_VOLTAGE 14				// Maximum operating voltage
+#define MIN_VOLTAGE 6				// Minimum operating voltage
 
 /************** Private Variables ****************/
 uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
@@ -31,7 +36,7 @@ typedef struct{
 	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
 	float					_lastPosition;			/*!< Position read from motor						*/
 	float					_lastVelocity;			/*!< Velocity read from motor						*/
-	uint16_t				_lastLoad;				/*!< Load read from motor							*/
+	uint8_t					_lastLoad;				/*!< Load read from motor							*/
 	uint8_t					_lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
 	float					_lastVoltage;			/*!< Voltage read from motor						*/
 	uint8_t					_lastTemperature;		/*!< Temperature read from motor					*/
@@ -41,7 +46,7 @@ typedef struct{
 
 /*************** Function prototypes ***************/
 // Setters (use the WRITE DATA instruction)
-void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, int ID); // (EEPROM)
+void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, double baud); // (EEPROM)
 void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double microSec); // (EEPROM)
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
@@ -62,7 +67,7 @@ void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8
 void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle); // (RAM)
 void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity); // (RAM)
 void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque); // (RAM)
-void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isLocked); // (RAM)
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel); // (RAM)
 void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch); // (RAM)
 
 // Getters (use READ DATA instruction)
