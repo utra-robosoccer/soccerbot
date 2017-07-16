@@ -103,7 +103,7 @@ void Dynamixel_ErrorHandler(uint8_t);
 // Interfaces for previously-defined functions
 void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
 void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
-void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity);
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Testing

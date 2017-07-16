@@ -273,7 +273,7 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LE
 	 * 			  			  bit 3: flash LED when the command is given beyond the range of usage
 	 * 			  			  bit 2: flash LED when the internal temperature exceeds the operating range
 	 * 			  			  bit 1: flash LED when goal position exceeds the CW angle limit or CCW angle limit
-	 * 			  			  bit 0: flash LED when applied voltage is out of oeprating
+	 * 			  			  bit 0: flash LED when applied voltage is out of operating range
 	 *
 	 * Several of these bits may be set simultaneously.
 	 *
@@ -299,7 +299,7 @@ void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ala
 	 * 			  			  bit 3: torque off when the command is given beyond the range of usage
 	 * 			  			  bit 2: torque off when the internal temperature exceeds the operating range
 	 * 			  			  bit 1: torque off when goal position exceeds the CW angle limit or CCW angle limit
-	 * 			  			  bit 0: torque off when applied voltage is out of oeprating
+	 * 			  			  bit 0: torque off when applied voltage is out of operating range
 	 *
 	 * Several of these bits may be set simultaneously.
 	 *
@@ -531,7 +531,8 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalV
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  velocity, the goal velocity in RPM. Arguments of 0-114 are valid when in joint mode.
-	 * 			  In wheel mode, negative arguments correspond to CW rotation.
+	 * 			  0 corresponds to MAX motion in joint mode, and minimum motion in wheel mode
+	 * 			  In wheel mode, negative arguments correspond to CW rotation
 	 *
 	 * Returns: none
 	 */
@@ -553,7 +554,6 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalV
 
 	normalized_value = (uint16_t)(goalVelocity / MAX_VELOCITY * 1023);
 	if(goalVelocity < 0){
-		Dynamixel_LEDEnable(hdynamixel, 1);
 		normalized_value = ((uint16_t)((goalVelocity * -1) / MAX_VELOCITY * 1023)) | 0b000010000000000;
 	}
 
@@ -793,7 +793,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	uint16_t retValCCW = Dynamixel_DataReader(hdynamixel, 0x08, 2);
 
 	// Parse data and write it into motor handle
-	hdynamixel -> _isJointMode = (uint8_t)((retValCW | retValCCW ) != 0);
+	hdynamixel -> _isJointMode = (uint8_t)((retValCW | retValCCW) != 0);
 
 	// Return
 	return(hdynamixel -> _isJointMode);
@@ -1015,6 +1015,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 
 	// In the future, it would be good to read a status packet back after the transmit and ensure
 	// that there were no errors. If errors occurred, the message could be resent
+
 }
 
 // UNIMPLEMENTED
@@ -1067,7 +1068,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 
 	// Ensure that received data has valid checksum. If it does not, send data request again
 	uint8_t valid = 0;
-	//while(!valid){
+//	while(!valid){
 		// Set data direction for transmit
 		__DYNAMIXEL_TRANSMIT();
 
@@ -1084,10 +1085,9 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		}
 		else{
 			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
-			//valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
+//			valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
 		}
-
-	//}
+//	}
 
 	// Check the status packet received for errors
 	if(arrReceive[5] != 0){
@@ -1098,7 +1098,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		return (uint16_t)arrReceive[5];
 	}
 	else{
-		return (uint16_t)(arrReceive[5] & (arrReceive[6] << 8));
+		return (uint16_t)(arrReceive[5] | (arrReceive[6] << 8));
 	}
 }
 
@@ -1243,18 +1243,23 @@ void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	Dynamixel_Revive(hdynamixel, ID);
 }
 
-void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel){
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity){
 	/* Sets the control registers such that the rotational angle of the motor
 	 * is not bounded.
 	 *
 	 * Arguments: hdynamixel, the motor handle
+	 * 			  goalVelocity, the desired velocity to use when entering wheel mode
 	 *
 	 * Returns: none
 	 */
 
+	/* When the angle limits are both set to 0, then motor will attempt to
+	 * rotate with maximum velocity. To prevent undesired behaviour, the
+	 * goal velocity should be set right after calling this function */
 	Dynamixel_SetCWAngleLimit(hdynamixel, 0);
 	Dynamixel_SetCCWAngleLimit(hdynamixel, 0);
 	hdynamixel -> _isJointMode = 0;
+	Dynamixel_SetGoalVelocity(hdynamixel, goalVelocity);
 }
 
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
@@ -1279,9 +1284,10 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 //		}
 //		Dynamixel_GetPosition(hdynamixel);
 //	}
+
+	hdynamixel -> _isJointMode = 1;
 	Dynamixel_SetCWAngleLimit(hdynamixel, MIN_ANGLE);
 	Dynamixel_SetCCWAngleLimit(hdynamixel, MAX_ANGLE);
-	hdynamixel -> _isJointMode = 1;
 }
 
 
@@ -1388,9 +1394,12 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	 * read a status packet back, and thus its data might be getting mixed with the
 	 * status packet signals the motor is trying to send back
 	 */
-	// Dynamixel_LockEEPROM(arrHdynamixel[0], 1); // If uncommented, the effects of
-												  // settings angle limits will be clearly
-												  // visible
+//	Dynamixel_LockEEPROM(arrHdynamixel[0], 1); 		// If uncommented, the effects of
+													// settings angle limits will be clearly
+													// visible
+//	for(int i = 0; i < arrSize; i++){
+//		Dynamixel_SetStatusReturnLevel(arrHdynamixel[i], 1);
+//	}
 
 
 	/* Test 5: Dynamixel_SetCWAngleLimit
@@ -1435,18 +1444,19 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	HAL_Delay(375);
 
 
+	/*FAILS*/
 	/* Test 7: Dynamixel_EnterWheelMode
 	 * Pass: Motor(s) rotate through over 360 degrees, first in the CCW direction,
 	 * then in the counterclockwise direction
 	 */
 	for(int i = 0; i < arrSize; i++){
-		Dynamixel_EnterWheelMode(arrHdynamixel[i]);
+		Dynamixel_EnterWheelMode(arrHdynamixel[i], MAX_VELOCITY);
 		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY);
 	}
 	HAL_Delay(1500);
 	for(int i = 0; i < arrSize; i++){
 		/* Motor should ignore the goal position command */
-		Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
+		//Dynamixel_SetGoalPosition(arrHdynamixel[i], MIN_ANGLE);
 		Dynamixel_SetGoalVelocity(arrHdynamixel[i], -MAX_VELOCITY);
 		HAL_Delay(10);
 	}
@@ -1471,25 +1481,28 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	}
 	HAL_Delay(1500);
 
+
+	/*FAILS*/
 	/* Test 9: Dynamixel_IsJointMode
 	 * Pass: Motor LEDs are brightened for 1 second, then go off for 1 second,
 	 * then go on for 1 second, then go off.
 	 */
-//	for(int i = 0; i < arrSize; i++){
-//		Dynamixel_LEDEnable(arrHdynamixel[i], Dynamixel_IsJointMode(arrHdynamixel[i]));
-//	}
-//	HAL_Delay(1000);
-//	for(int i = 0; i < arrSize; i++){
-//		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
-//	}
-//	HAL_Delay(1000);
-//	for(int i = 0; i < arrSize; i++){
-//		Dynamixel_EnterWheelMode(arrHdynamixel[i]);
-//		Dynamixel_LEDEnable(arrHdynamixel[i], (Dynamixel_IsJointMode(arrHdynamixel[i]) == 0));
-//	}
-//	HAL_Delay(1000);
-//	for(int i = 0; i < arrSize; i++){
-//		Dynamixel_EnterJointMode(arrHdynamixel[i]);
-//		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
-//	}
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_LEDEnable(arrHdynamixel[i], Dynamixel_IsJointMode(arrHdynamixel[i]));
+	}
+	HAL_Delay(1000);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
+	}
+	HAL_Delay(1000);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_EnterWheelMode(arrHdynamixel[i], 0);
+		Dynamixel_LEDEnable(arrHdynamixel[i], (Dynamixel_IsJointMode(arrHdynamixel[i]) == 0));
+	}
+	HAL_Delay(1000);
+	for(int i = 0; i < arrSize; i++){
+		Dynamixel_EnterJointMode(arrHdynamixel[i]);
+		Dynamixel_SetGoalVelocity(arrHdynamixel[i], MAX_VELOCITY);
+		Dynamixel_LEDEnable(arrHdynamixel[i], 0);
+	}
 }
