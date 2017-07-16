@@ -82,9 +82,6 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel);
 // Computation
 uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
-// Error handling
-void Dynamixel_ErrorHandler(uint8_t);
-
 // Transmission & Reception
 uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
@@ -95,9 +92,16 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
-// Test/demonstration
-void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize);
+// Error handling
+void Dynamixel_ErrorHandler(uint8_t);
+
+// Interfaces for previously-defined functions
 void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
 void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+
+// Testing
+void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize);
 
 #endif /* __DYNAMIXEL_AX-12A_H__ */
