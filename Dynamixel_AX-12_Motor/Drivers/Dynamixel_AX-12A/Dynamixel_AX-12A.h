@@ -34,7 +34,7 @@ uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
 typedef struct{
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
 	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
-	float					_lastPosition;			/*!< Position read from motor						*/
+	uint16_t				_lastPosition;			/*!< Position read from motor						*/
 	float					_lastVelocity;			/*!< Velocity read from motor						*/
 	uint8_t					_lastLoad;				/*!< Load read from motor							*/
 	uint8_t					_lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
