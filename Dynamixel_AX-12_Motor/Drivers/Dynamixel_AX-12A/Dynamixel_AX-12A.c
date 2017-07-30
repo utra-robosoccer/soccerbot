@@ -657,7 +657,7 @@ void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 	uint16_t retVal = Dynamixel_DataReader(hdynamixel, 0x24, 2);
 
 	// Parse data and write it into motor handle
-	hdynamixel -> _lastPosition = (float)(retVal / 1023 * 300);
+	hdynamixel -> _lastPosition = (uint16_t)(retVal * 300 / 1023);
 }
 
 // TODO: Test
@@ -1014,7 +1014,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
 
 	// In the future, it would be good to read a status packet back after the transmit and ensure
-	// that there were no errors. If errors occurred, the message could be resent
+	// that there were no errors. If errors occurred, the message could be re-sent
 
 }
 
@@ -1115,8 +1115,18 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle)
-{
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle){
+	/* Initializes the motor handle.
+	 *
+	 * Arguments: hdynamixel, the motor handle to be initialized
+	 * 			  ID, the ID the motor has. Note that this function will not set
+	 * 			  	  the ID in case there are multiple actuators on the same bus
+	 * 			  UART_Handle, the handle to the UART that will be used to
+	 * 			      communicate with this motor
+	 *
+	 * Returns: none
+	 */
+
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
 	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
 	hdynamixel -> _lastPosition = -1; // In future, initialize this accurately
@@ -1444,7 +1454,6 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	HAL_Delay(375);
 
 
-	/*FAILS*/
 	/* Test 7: Dynamixel_EnterWheelMode
 	 * Pass: Motor(s) rotate through over 360 degrees, first in the CCW direction,
 	 * then in the counterclockwise direction
