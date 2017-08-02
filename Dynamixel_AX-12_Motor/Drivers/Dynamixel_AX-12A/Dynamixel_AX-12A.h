@@ -26,6 +26,8 @@
 #define MIN_TORQUE 					0		// Minimum torque (percent of maximum)
 #define MAX_VOLTAGE 				14		// Maximum operating voltage
 #define MIN_VOLTAGE 				6		// Minimum operating voltage
+#define MAX_PUNCH					1023	// Maximum punch (proportional to minimum current)
+#define MIN_PUNCH					0		// Minimum punch (proportional to minimum current)
 
 /* Instruction set definitions. */
 #define INST_PING					0x01	// Gets a status packet
@@ -68,19 +70,26 @@
 #define REG_MOVING					0x2E	// Motor motion register
 
 /* Default register value definitions. */
-#define BROADCAST_ID				0xFE	// Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
-#define DEFAULT_ID 					0x01	// Default motor ID
-#define DEFAULT_BAUD_RATE			0x01	// Default baud rate
-#define DEFAULT_RETURN_DELAY 		0xFA	// Default time motor waits before returning status packet (microseconds)
-#define DEFAULT_CW_ANGLE_LIMIT		0x0000	// Default clockwise angle limit
-#define DEFAULT_CCW_ANGLE_LIMIT		0x03FF	// Default counter-clockwise angle limit
-#define DEFAULT_HIGH_VOLTAGE_LIMIT	0xBE	// Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
-#define DEFAULT_LOW_VOLTAGE_LIMIT	0x3C	// Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
-#define DEFAULT_MAXIMUM_TORQUE		0x03FF	// Default maximum torque limit (10-bit percentage)
-#define DEFAULT_STATUS_RETURN_LEVEL	0x02	// Default condition(s) under which a status packet will be returned (all)
-#define DEFAULT_ALARM_LED			0x24	// Default condition(s) under which the alarm LED will be set
-#define DEFAULT_ALARM_SHUTDOWN		0x24	// Default condition(s) under which the motor will shut down due to an alarm
-#define DEFAULT_TORQUE_ENABLE		0x00	// Default motor power state
+#define BROADCAST_ID					0xFE	// Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
+#define DEFAULT_ID 						0x01	// Default motor ID
+#define DEFAULT_BAUD_RATE				0x01	// Default baud rate
+#define DEFAULT_RETURN_DELAY 			0xFA	// Default time motor waits before returning status packet (microseconds)
+#define DEFAULT_CW_ANGLE_LIMIT			0x0000	// Default clockwise angle limit
+#define DEFAULT_CCW_ANGLE_LIMIT			0x03FF	// Default counter-clockwise angle limit
+#define DEFAULT_HIGH_VOLTAGE_LIMIT		0xBE	// Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
+#define DEFAULT_LOW_VOLTAGE_LIMIT		0x3C	// Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
+#define DEFAULT_MAXIMUM_TORQUE			0x03FF	// Default maximum torque limit (10-bit percentage)
+#define DEFAULT_STATUS_RETURN_LEVEL		0x02	// Default condition(s) under which a status packet will be returned (all)
+#define DEFAULT_ALARM_LED				0x24	// Default condition(s) under which the alarm LED will be set
+#define DEFAULT_ALARM_SHUTDOWN			0x24	// Default condition(s) under which the motor will shut down due to an alarm
+#define DEFAULT_TORQUE_ENABLE			0x00	// Default motor power state
+#define	DEFAULT_LED_ENABLE				0x00	// Default LED state
+#define DEFAULT_CW_COMPLIANCE_MARGIN	0x01	// Default clockwise compliance margin (position error)
+#define DEFAULT_CCW_COMPLIANCE_MARGIN	0x01	// Default counter-clockwise compliance margin (position error)
+#define DEFAULT_CW_COMPLIANCE_SLOPE		0x20	// Default clockwise compliance slope (torque near goal position)
+#define DEFAULT_CCW_COMPLIANCE_SLOPE	0x20	// Default counter-clockwise compliance slope (torque near goal position)
+#define DEFAULT_EEPROM_LOCK				0x00	// Default value for the EEPROM lock
+#define DEFAULT_PUNCH					0x0020	// Default punch
 
 /***************************** Private Variables ******************************/
 uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
@@ -102,46 +111,46 @@ typedef struct{
 
 /***************************** Function prototypes ****************************/
 // Setters (use the WRITE DATA instruction)
-inline void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
-inline void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, double baud); // (EEPROM)
-inline void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double microSec); // (EEPROM)
-inline void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
-inline void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
-inline void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double highestVoltage); // (EEPROM)
-inline void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double lowestVoltage); // (EEPROM)
-inline void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorque); // (EEPROM)
-inline void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data); // (EEPROM)
-inline void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data); // (EEPROM)
-inline void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data); // (EEPROM)
+void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, double baud); // (EEPROM)
+void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double microSec); // (EEPROM)
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
+void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double highestVoltage); // (EEPROM)
+void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double lowestVoltage); // (EEPROM)
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorque); // (EEPROM)
+void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data); // (EEPROM)
+void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data); // (EEPROM)
+void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data); // (EEPROM)
 
-inline void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
-inline void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
-inline void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin); // (RAM)
-inline void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin); // (RAM)
-inline void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope); // (RAM)
-inline void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope); // (RAM)
-inline void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle); // (RAM)
-inline void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity); // (RAM)
-inline void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque); // (RAM)
-inline void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel); // (RAM)
-inline void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch); // (RAM)
+void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
+void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled); // (RAM)
+void Dynamixel_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin); // (RAM)
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin); // (RAM)
+void Dynamixel_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope); // (RAM)
+void Dynamixel_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope); // (RAM)
+void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle); // (RAM)
+void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity); // (RAM)
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque); // (RAM)
+void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel); // (RAM)
+void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch); // (RAM)
 
 // Getters (use READ DATA instruction)
-inline void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel);
-inline void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel);
-inline void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel);
-inline void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel);
-inline void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel);
-inline uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel);
-inline uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel);
-inline uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel);
+ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Other motor instructions (low level control with timing from different WRITE DATA instruction)
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Computation
-inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
+uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 // Transmission & Reception
 uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
@@ -157,10 +166,10 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_ErrorHandler(uint8_t);
 
 // Interfaces for previously-defined functions
-inline void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
-inline void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
-inline void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity);
-inline void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
+void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity);
+void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Testing
 void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize);
