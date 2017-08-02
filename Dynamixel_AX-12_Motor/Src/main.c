@@ -112,6 +112,7 @@ int main(void)
 
   Dynamixel_HandleTypeDef Motor2;
   Dynamixel_Init(&Motor2, 0x02, &huart6);
+  Dynamixel_SetGoalPosition(&Motor2, 300);
 
   Dynamixel_HandleTypeDef Motor3;
   Dynamixel_Init(&Motor3, 0x03, &huart6);
