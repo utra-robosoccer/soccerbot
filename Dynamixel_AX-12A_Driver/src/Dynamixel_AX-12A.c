@@ -1040,7 +1040,11 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	 */
 
 	/* Transmit. */
+#if TRANSMIT_IT
+	HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit, arrSize);
+#else
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
+#endif
 
 	// In the future, it would be good to read a status packet back after the transmit and ensure
 	// that there were no errors. If errors occurred, the message could be re-sent
@@ -1102,7 +1106,11 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		__DYNAMIXEL_TRANSMIT();
 
 		// Transmit
+#if TRANSMIT_IT
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit, 8);
+#else
 		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, TRANSMIT_TIMEOUT);
+#endif
 
 		// Set data direction for receive
 		__DYNAMIXEL_RECEIVE();
@@ -1168,6 +1176,8 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	hdynamixel -> _lastTemperature = -1; // In future, initialize this accurately
 	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
+
+	Dynamixel_SetStatusReturnLevel(hdynamixel, 1); // Return status packet only for reads
 }
 
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
