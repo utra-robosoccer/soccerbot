@@ -40,7 +40,8 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Drivers/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
+#include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
+#include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -107,7 +108,7 @@ int main(void)
 
   //__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motor
 
-  Dynamixel_HandleTypeDef Motor1;
+/*  Dynamixel_HandleTypeDef Motor1;
   Dynamixel_Init(&Motor1, 0x01, &huart6);
 
   Dynamixel_HandleTypeDef Motor2;
@@ -124,7 +125,7 @@ int main(void)
   Dynamixel_Init(&Motor5, 0x05, &huart6);
 
   Dynamixel_HandleTypeDef MASTER_MOTOR_CONTROL;
-  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, &huart6);
+  Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, &huart6);*/
 
 
   /* USER CODE END 2 */
@@ -133,6 +134,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  unsigned char buff[2] = {0x7F, 0x7F};
+	  HAL_UART_Transmit(&huart6, buff, 2, 100);
+	  HAL_UART_Transmit(&huart6, buff, 2, 100);
+	  //Dynamixel_SetGoalPosition(&Motor1, 150);
+	  //Dynamixel_SetGoalPosition(&Motor1, 150);
+	  while(1);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -169,8 +176,8 @@ int main(void)
 //	  }
 
 
-	  uint8_t numMotors = 5;
-	  Dynamixel_HandleTypeDef* arrHdynamixel[5] = {&Motor1, &Motor2, &Motor3, &Motor4, &Motor5};
+//	  uint8_t numMotors = 5;
+//	  Dynamixel_HandleTypeDef* arrHdynamixel[5] = {&Motor1, &Motor2, &Motor3, &Motor4, &Motor5};
 
 //	  /* Move each motor on the leg in sequence from top to bottom to validate the settings
 //	   * of the IDs. */
@@ -206,11 +213,11 @@ int main(void)
 //		  Dynamixel_SetGoalVelocity(arrHdynamixel[i], 10);
 //	  }
 //	  while(1){}
-
-	  /* Save original position, move up, then return. */
+/*
+	   Save original position, move up, then return.
 	  uint16_t arrTarget[5] = {150, 150, 150, 150, 150};
 	  uint16_t arrRecord[5];
-	  /* Record original positions. */
+	   Record original positions.
 	  for(uint8_t i = 0; i < numMotors; i++){
 		  Dynamixel_GetPosition(arrHdynamixel[i]);
 		  arrRecord[i] = arrHdynamixel[i] -> _lastPosition;
@@ -218,7 +225,7 @@ int main(void)
 	  //HAL_UART_Transmit(&huart3, arrRecord, 10, 100);
 	  //while(1){}
 	  while(1){
-		  /* Getting up motion. */
+		   Getting up motion.
 		  for(uint8_t i = 0; i < numMotors; i++){
 			  Dynamixel_TorqueEnable(arrHdynamixel[i], 1);
 			  if(i == 2){
@@ -228,7 +235,7 @@ int main(void)
 			  Dynamixel_SetGoalPosition(arrHdynamixel[i], arrTarget[i]);
 		  }
 		  HAL_Delay(1000);
-		  /* Move to recorded positions. */
+		   Move to recorded positions.
 		  for(uint8_t i = 0; i < numMotors; i++){
 			  Dynamixel_SetGoalPosition(arrHdynamixel[i], arrRecord[i]);
 			  Dynamixel_SetGoalVelocity(arrHdynamixel[i], 20);
@@ -237,7 +244,7 @@ int main(void)
 			  }
 		  }
 		  HAL_Delay(1200);
-	  }
+	  }*/
 
 //		Initialize array of motor handles
 //		Dynamixel_HandleTypeDef* arrHdynamixel[2] = {&Motor1, &Motor2};
@@ -265,7 +272,6 @@ int main(void)
 //		Dynamixel_TestAll(arrHdynamixel, 2);
 
 		// Do nothing until reset or programmed
-		while(1){	continue;	}
   }
   /* USER CODE END 3 */
 

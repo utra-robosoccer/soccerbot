@@ -13,6 +13,7 @@
 
 /*********************************** Defines **********************************/
 /* Communications. */
+#define TRANSMIT_IT					0		// 1 if using interrupts for transmit, otherwise 0 (polling)
 #define TRANSMIT_TIMEOUT 			10 		// Timeout for UART transmissions, in milliseconds
 #define RECEIVE_TIMEOUT 			10		// Timeout for UART receptions, in milliseconds
 #define BUFF_RX_SIZE 				8		// Receive buffer size for UART receptions (number of bytes)

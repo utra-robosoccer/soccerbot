@@ -7,13 +7,28 @@
 		<item value="629" key="DIALOG_X_ORIGIN"/>
 		<item value="233" key="DIALOG_Y_ORIGIN"/>
 	</section>
+	<section name="ExternalProjectImportWizard">
+		<item value="false" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="D:\Users\Tyler\Documents\STM\Workspace"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
+		</list>
+	</section>
 	<section name="WORKBENCH_SETTINGS">
 		<list key="ENABLED_TRANSFERS">
 		</list>
 	</section>
+	<section name="NewWizardAction">
+	</section>
 	<section name="ChooseWorkspaceDialogSettings">
 		<item value="625" key="DIALOG_X_ORIGIN"/>
 		<item value="340" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="BasicNewProjectResourceWizard">
 	</section>
 	<section name="SaveAsDialogSettings">
 		<item value="700" key="DIALOG_WIDTH"/>
