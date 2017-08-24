@@ -17,8 +17,9 @@
 #define NUM_MOTORS						18		// Used to determine buffer sizes
 const uint8_t TRANSMIT_TIMEOUT = 10; 			// Timeout for UART transmissions, in milliseconds
 const uint8_t RECEIVE_TIMEOUT = 10;				// Timeout for UART receptions, in milliseconds
-#define BUFF_RX_SIZE					8		// Receive buffer size for UART receptions (number of bytes)
+#define BUFF_SIZE_RX					8		// Receive buffer size for UART receptions (number of bytes)
 #define TX_PACKET_SIZE					9		// Maximum packet size for regular motor commands (exclusion: sync write)
+#define BUFF_SIZE_SYNC_WRITE			64		// Maximum packet size for sync write (18*3 +
 
 /* Value limit definitions. */
 const uint8_t MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
@@ -96,10 +97,17 @@ const uint16_t DEFAULT_PUNCH = 0x0020;				// Default punch
 
 /****************************** Public Variables ******************************/
 /* Buffer for data received from motors. */
-uint8_t arrReceive[BUFF_RX_SIZE];
+uint8_t arrReceive[BUFF_SIZE_RX];
 
 /* Bytes to be transmitted to motors are written to this array. */
 uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE];
+
+/* Sync write buffer. */
+#if (BUFF_SIZE_SYNC_WRITE > 8)
+uint8_t arrSyncWrite[BUFF_SIZE_SYNC_WRITE] = {0xFF, 0xFF, 0xFE, 0x00, 0x83, 0x00};
+#else
+	#error BUFF_SIZE_SYNC_WRITE is too small (min: 8)!
+#endif
 
 /*********************************** Types ************************************/
 typedef struct{
