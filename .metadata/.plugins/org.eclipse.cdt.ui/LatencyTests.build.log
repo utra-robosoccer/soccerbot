@@ -1,4 +1,4 @@
-09:45:25 **** Incremental Build of configuration Debug for project LatencyTests ****
+09:56:40 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
@@ -71,5 +71,5 @@ arm-none-eabi-size "LatencyTests.elf"
    7668	     12	   2068	   9748	   2614	LatencyTests.elf
  
 
-09:45:27 Build Finished (took 2s.130ms)
+09:56:42 Build Finished (took 1s.970ms)
 

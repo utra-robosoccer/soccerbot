@@ -1011,10 +1011,28 @@ void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
 	 * 			  arrSize, the size of the array of parameters to be transmitted
 	 * 			  params, the array holding all the instructions and parameters to be passed to the various actuators
 	 *
+	 * Params must be in the following format:
+	 * 		1st element --> starting address of dynamixel control table where writing should begin
+	 * 		2nd element --> Length of data to be written to EACH motor (not total length)
+	 * 		3rd element --> ID of 1st motor
+	 * 		4th element --> 1st parameter for 1st motor...
+	 * 		L+3 element --> Lth parameter for 1st motor...
+	 * 		L+4 element --> ID of 2nd motor
+	 * 		L+5 element -->	1st parameter for 2nd motor...
+	 * 		2L+4 element --> Lth parameter for 2nd motor...
+	 * 		etc.
+	 *
 	 * Returns: none
 	 */
 
+	//TODO: CHECK ALL OF THIS AND ENSURE THE IMPLEMENTATION IS CORRECT
+	arrSyncWrite[3] = arrSize + 5; // Length of packet + len(0xFF, 0xFF, 0xFE, length, checksum)
 
+	for(uint8_t i = 0; i < arrSize; i++){
+		arrSyncWrite[i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
+	}
+
+	arrSyncWrite[arrSize + 4] = Dynamixel_ComputeChecksum(arrSyncWrite, arrSize + 5);
 }
 
 // TODO: Fix the checksum verification so that there are no stalls
@@ -1035,7 +1053,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	 */
 
 	/* Clear array for reception. */
-	for(uint8_t i = 0; i < BUFF_RX_SIZE; i++){
+	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
 		arrReceive[i] = 0;
 	}
 
