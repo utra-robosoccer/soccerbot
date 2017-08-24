@@ -14,9 +14,11 @@
 /*********************************** Defines **********************************/
 /* Communications. */
 #define TRANSMIT_IT						0		// 1 if using interrupts for transmit, otherwise 0 (polling)
+#define NUM_MOTORS						18		// Used to determine buffer sizes
 const uint8_t TRANSMIT_TIMEOUT 			10 		// Timeout for UART transmissions, in milliseconds
 const uint8_t RECEIVE_TIMEOUT 			10		// Timeout for UART receptions, in milliseconds
 const uint8_t BUFF_RX_SIZE 				8		// Receive buffer size for UART receptions (number of bytes)
+const uint8_t TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
 
 /* Value limit definitions. */
 const uint8_t MAX_VELOCITY 				114		// Maximum angular velocity (RPM)
@@ -92,9 +94,12 @@ const uint8_t DEFAULT_CCW_COMPLIANCE_SLOPE	0x20	// Default counter-clockwise com
 const uint8_t DEFAULT_EEPROM_LOCK			0x00	// Default value for the EEPROM lock
 const uint16_t DEFAULT_PUNCH				0x0020	// Default punch
 
-/***************************** Private Variables ******************************/
-uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
-								  // In future, make a ring buffer
+/****************************** Public Variables ******************************/
+/* Buffer for data received from motors. */
+extern uint8_t arrReceive[BUFF_RX_SIZE];
+
+/* Bytes to be transmitted to motors are written to this array. */
+extern uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE];
 
 /*********************************** Types ************************************/
 typedef struct{

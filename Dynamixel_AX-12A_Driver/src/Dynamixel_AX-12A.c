@@ -1008,27 +1008,16 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 		return;
 	}
 
-	/* Define array for transmission. */
-	uint8_t arrTransmit[arrSize];
-
-	/* Clear array for status packet. */
-	for(uint8_t i = 0; i < BUFF_RX_SIZE; i++){
-		arrReceive[i] = 0;
-	}
-
 	/* Do assignments and computations. */
-	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
-	arrTransmit[3] = arrSize - 4; // Length of message minus the obligatory bytes
-	arrTransmit[4] = INST_WRITE_DATA; // WRITE DATA instruction
-	arrTransmit[5] = writeAddr; // Write address for register
-	arrTransmit[6] = param1;
+	arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
+	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
+	arrTransmit[ID][5] = writeAddr; // Write address for register
+	arrTransmit[ID][6] = param1;
 
 	/* Checksum. */
-	arrTransmit[7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
+	arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
 	if(arrSize == 9){
-		arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
+		arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
 	}
 
 	/* Set data direction for transmit. */
@@ -1045,10 +1034,6 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 #else
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
 #endif
-
-	// In the future, it would be good to read a status packet back after the transmit and ensure
-	// that there were no errors. If errors occurred, the message could be re-sent
-
 }
 
 // UNIMPLEMENTED
@@ -1083,23 +1068,18 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
 	 */
 
-	/* Define arrays for transmission. */
-	uint8_t arrTransmit[8];
-
 	/* Clear array for reception. */
 	for(uint8_t i = 0; i < BUFF_RX_SIZE; i++){
 		arrReceive[i] = 0;
 	}
 
 	/* Do assignments and computations. */
-	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
-	arrTransmit[3] = 4; // Length of message minus the obligatory bytes
-	arrTransmit[4] = INST_READ_DATA; // READ DATA instruction
-	arrTransmit[5] = readAddr; // Write address for register
-	arrTransmit[6] = readLength; // Number of bytes to be read from motor
-	arrTransmit[7] = Dynamixel_ComputeChecksum(arrTransmit, 8);
+	uint8_t ID = hdynamixel -> _ID;
+	arrTransmit[ID][3] = 4; // Length of message minus the obligatory bytes
+	arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
+	arrTransmit[ID][5] = readAddr; // Write address for register
+	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
+	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit, 8);
 
 	// Ensure that received data has valid checksum. If it does not, send data request again
 //	uint8_t valid = 0;
@@ -1168,6 +1148,7 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	 * Returns: none
 	 */
 
+	/* Set fields in motor handle. */
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
 	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
 	hdynamixel -> _lastPosition = -1; // In future, initialize this accurately
@@ -1179,7 +1160,13 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
 
-	Dynamixel_SetStatusReturnLevel(hdynamixel, 1); // Return status packet only for reads
+	/* Motor transmit array initialization. */
+	arrTransmit[ID][0] = 0xFF; // Obligatory bytes for starting communication
+	arrTransmit[ID][1] = 0xFF; // Obligatory bytes for starting communication
+	arrTransmit[ID][2] = ID;   // Motor ID
+
+	/* Configure motor to return status packets only for read commands. */
+	Dynamixel_SetStatusReturnLevel(hdynamixel, 1);
 }
 
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
