@@ -907,41 +907,6 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 /*******************************************************************************/
-/*	Computation helper functions											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
-uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
-	/* Compute the checksum for data to be transmitted.
-	 *
-	 * Arguments: arr, the array to be transmitted and ran through the checksum function
-	 * 			  length, the total length of the array arr
-	 *
-	 * Returns: the 1-byte number that is the checksum
-	 */
-
-	/* Local variable declaration. */
-	uint8_t accumulate = 0;
-
-	/* Loop through the array starting from the 2nd element of the array and finishing before the last
-	 * since the last is where the checksum will be stored. */
-	for(uint8_t i = 2; i < length - 1; i++){
-		accumulate += arr[i];
-	}
-
-	return 255 - (accumulate % 256); // Lower 8 bits of the logical NOT of the sum
-}
-
-
-
-
-
-/*******************************************************************************/
 /*	Transmit/receive helper functions										   */
 /*								 											   */
 /*								 											   */
@@ -1009,15 +974,16 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	}
 
 	/* Do assignments and computations. */
+	uint8_t ID = hdynamixel -> _ID;
 	arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
 	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 	arrTransmit[ID][5] = writeAddr; // Write address for register
 	arrTransmit[ID][6] = param1;
 
 	/* Checksum. */
-	arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
+	arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize): param2;
 	if(arrSize == 9){
-		arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
+		arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize);
 	}
 
 	/* Set data direction for transmit. */
@@ -1030,9 +996,9 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 
 	/* Transmit. */
 #if TRANSMIT_IT
-	HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit, arrSize);
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize);
 #else
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize, TRANSMIT_TIMEOUT);
 #endif
 }
 
@@ -1079,7 +1045,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
 	arrTransmit[ID][5] = readAddr; // Write address for register
 	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
-	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit, 8);
+	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
 
 	// Ensure that received data has valid checksum. If it does not, send data request again
 //	uint8_t valid = 0;
@@ -1089,9 +1055,9 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 
 		// Transmit
 #if TRANSMIT_IT
-		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit, 8);
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
 #else
-		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 8, TRANSMIT_TIMEOUT);
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
 #endif
 
 		// Set data direction for receive
