@@ -45,6 +45,8 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
@@ -60,6 +62,8 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
+static void MX_UART4_Init(void);
+static void MX_UART5_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -98,17 +102,57 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
+  MX_UART4_Init();
+  MX_UART5_Init();
 
   /* USER CODE BEGIN 2 */
-	__HAL_UART_DISABLE_IT(&huart6,UART_IT_RXNE); // UART receive interrupt for motors (huart6)
-	__HAL_UART_DISABLE_IT(&huart2,UART_IT_RXNE); // UART receive interrupt for motors (huart2)
+  	// Disable receive interrupts for the motor UARTs
+	__HAL_UART_DISABLE_IT(&huart6,UART_IT_RXNE);
+	__HAL_UART_DISABLE_IT(&huart5,UART_IT_RXNE);
+	__HAL_UART_DISABLE_IT(&huart4,UART_IT_RXNE);
+	__HAL_UART_DISABLE_IT(&huart2,UART_IT_RXNE);
 
 	Dynamixel_HandleTypeDef Motor1;
-	Dynamixel_Init(&Motor1, 0x01, &huart6);
+	Dynamixel_Init(&Motor1, 0x01, &huart2);
+	Dynamixel_HandleTypeDef Motor2;
+	Dynamixel_Init(&Motor1, 0x02, &huart2);
+	Dynamixel_HandleTypeDef Motor3;
+	Dynamixel_Init(&Motor1, 0x03, &huart2);
+	Dynamixel_HandleTypeDef Motor4;
+	Dynamixel_Init(&Motor1, 0x04, &huart2);
+	Dynamixel_HandleTypeDef Motor5;
+	Dynamixel_Init(&Motor1, 0x05, &huart4);
+	Dynamixel_HandleTypeDef Motor6;
+	Dynamixel_Init(&Motor1, 0x06, &huart4);
+	Dynamixel_HandleTypeDef Motor7;
+	Dynamixel_Init(&Motor1, 0x07, &huart4);
+	Dynamixel_HandleTypeDef Motor8;
+	Dynamixel_Init(&Motor1, 0x08, &huart4);
+	Dynamixel_HandleTypeDef Motor9;
+	Dynamixel_Init(&Motor1, 0x09, &huart5);
+	Dynamixel_HandleTypeDef Motor10;
+	Dynamixel_Init(&Motor1, 0x0A, &huart5);
+	Dynamixel_HandleTypeDef Motor11;
+	Dynamixel_Init(&Motor1, 0x0B, &huart5);
+	Dynamixel_HandleTypeDef Motor12;
+	Dynamixel_Init(&Motor1, 0x0C, &huart5);
+	Dynamixel_HandleTypeDef Motor13;
+	Dynamixel_Init(&Motor1, 0x0D, &huart5);
+	Dynamixel_HandleTypeDef Motor14;
+	Dynamixel_Init(&Motor1, 0x0E, &huart6);
+	Dynamixel_HandleTypeDef Motor15;
+	Dynamixel_Init(&Motor1, 0x0F, &huart6);
+	Dynamixel_HandleTypeDef Motor16;
+	Dynamixel_Init(&Motor1, 0x10, &huart6);
+	Dynamixel_HandleTypeDef Motor17;
+	Dynamixel_Init(&Motor1, 0x11, &huart6);
+	Dynamixel_HandleTypeDef Motor18;
+	Dynamixel_Init(&Motor1, 0x12, &huart6);
 
-	Dynamixel_EnterWheelMode(&Motor1, 50);
-	HAL_Delay(1000);
-	Dynamixel_TorqueEnable(&Motor1, 1);
+
+//	Dynamixel_EnterWheelMode(&Motor1, 50);
+//	HAL_Delay(1000);
+//	Dynamixel_TorqueEnable(&Motor1, 1);
 
   /* USER CODE END 2 */
 
@@ -119,10 +163,10 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  Dynamixel_SetGoalTorque(&Motor1, 10);
-	  for(uint32_t i = 0; i < 50000; i++);
-	  Dynamixel_SetGoalTorque(&Motor1, 100);
-	  for(uint32_t i = 0; i < 50000; i++);
+//	  Dynamixel_SetGoalTorque(&Motor1, 10);
+//	  for(uint32_t i = 0; i < 50000; i++);
+//	  Dynamixel_SetGoalTorque(&Motor1, 100);
+//	  for(uint32_t i = 0; i < 50000; i++);
   }
   /* USER CODE END 3 */
 
@@ -190,6 +234,44 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+}
+
+/* UART4 init function */
+static void MX_UART4_Init(void)
+{
+
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 1000000;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* UART5 init function */
+static void MX_UART5_Init(void)
+{
+
+  huart5.Instance = UART5;
+  huart5.Init.BaudRate = 1000000;
+  huart5.Init.WordLength = UART_WORDLENGTH_8B;
+  huart5.Init.StopBits = UART_STOPBITS_1;
+  huart5.Init.Parity = UART_PARITY_NONE;
+  huart5.Init.Mode = UART_MODE_TX_RX;
+  huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart5) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
 }
 
 /* USART2 init function */
@@ -271,6 +353,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();

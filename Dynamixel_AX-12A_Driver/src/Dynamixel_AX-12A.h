@@ -13,84 +13,84 @@
 
 /*********************************** Defines **********************************/
 /* Communications. */
-#define TRANSMIT_IT					0		// 1 if using interrupts for transmit, otherwise 0 (polling)
-#define TRANSMIT_TIMEOUT 			10 		// Timeout for UART transmissions, in milliseconds
-#define RECEIVE_TIMEOUT 			10		// Timeout for UART receptions, in milliseconds
-#define BUFF_RX_SIZE 				8		// Receive buffer size for UART receptions (number of bytes)
+#define TRANSMIT_IT						0		// 1 if using interrupts for transmit, otherwise 0 (polling)
+const uint8_t TRANSMIT_TIMEOUT 			10 		// Timeout for UART transmissions, in milliseconds
+const uint8_t RECEIVE_TIMEOUT 			10		// Timeout for UART receptions, in milliseconds
+const uint8_t BUFF_RX_SIZE 				8		// Receive buffer size for UART receptions (number of bytes)
 
 /* Value limit definitions. */
-#define MAX_VELOCITY 				114		// Maximum angular velocity (RPM)
-#define MIN_VELOCITY 				1		// Minimum angular velocity (RPM)
-#define MAX_ANGLE 					300		// Maximum angular position (joint mode)
-#define MIN_ANGLE 					0		// Minimum angular position (joint mode)
-#define MAX_TORQUE 					100		// Maximum torque (percent of maximum)
-#define MIN_TORQUE 					0		// Minimum torque (percent of maximum)
-#define MAX_VOLTAGE 				14		// Maximum operating voltage
-#define MIN_VOLTAGE 				6		// Minimum operating voltage
-#define MAX_PUNCH					1023	// Maximum punch (proportional to minimum current)
-#define MIN_PUNCH					0		// Minimum punch (proportional to minimum current)
+const uint8_t MAX_VELOCITY 				114		// Maximum angular velocity (RPM)
+const uint8_t MIN_VELOCITY 				1		// Minimum angular velocity (RPM)
+const uint16_t MAX_ANGLE 				300		// Maximum angular position (joint mode)
+const uint8_t MIN_ANGLE 				0		// Minimum angular position (joint mode)
+const uint8_t MAX_TORQUE 				100		// Maximum torque (percent of maximum)
+const uint8_t MIN_TORQUE 				0		// Minimum torque (percent of maximum)
+const uint8_t MAX_VOLTAGE 				14		// Maximum operating voltage
+const uint8_t MIN_VOLTAGE 				6		// Minimum operating voltage
+const uint8_t MAX_PUNCH					1023	// Maximum punch (proportional to minimum current)
+const uint16_tMIN_PUNCH					0		// Minimum punch (proportional to minimum current)
 
 /* Instruction set definitions. */
-#define INST_PING					0x01	// Gets a status packet
-#define INST_READ_DATA				0x02	// Reads data from a motor register
-#define INST_WRITE_DATA				0x03	// Writes data for immediate execution
-#define INST_REG_WRITE				0x04	// Registers an instruction to be executed at a later time
-#define INST_ACTION					0x05	// Triggers instructions registered by INST_REG_WRITE
-#define INST_RESET					0x06	// Resets the Dynamixel actuator(s) specified
-#define INST_SYNC_WRITE				0x83	// Used to send commands concurrently to a set of specified motors
+const uint8_t INST_PING					0x01	// Gets a status packet
+const uint8_t INST_READ_DATA			0x02	// Reads data from a motor register
+const uint8_t INST_WRITE_DATA			0x03	// Writes data for immediate execution
+const uint8_t INST_REG_WRITE			0x04	// Registers an instruction to be executed at a later time
+const uint8_t INST_ACTION				0x05	// Triggers instructions registered by INST_REG_WRITE
+const uint8_t INST_RESET				0x06	// Resets the Dynamixel actuator(s) specified
+const uint8_t INST_SYNC_WRITE			0x83	// Used to send commands concurrently to a set of specified motors
 
 /* Register definitions. */
-#define REG_ID						0x03	// Motor ID register
-#define	REG_BAUD_RATE				0x04	// Baud rate register
-#define REG_RETURN_DELAY_TIME		0x05	// Status packet return delay time register
-#define REG_CW_ANGLE_LIMIT			0x06	// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
-#define REG_CCW_ANGLE_LIMIT			0x08	// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
-#define REG_HIGH_VOLTAGE_LIMIT		0x0C	// Maximum voltage limit register
-#define REG_LOW_VOLTAGE_LIMIT		0x0D	// Minimum voltage limit register
-#define REG_MAX_TORQUE				0x0E	// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
-#define REG_STATUS_RETURN_LEVEL		0x10	// Status packet return condition(s) register
-#define REG_ALARM_LED				0x11	// Alarm LED condition(s) register
-#define REG_ALARM_SHUTDOWN			0x12	// Alarm shutdown condition(s) register
-#define REG_TORQUE_ENABLE			0x18	// Motor power control register
-#define REG_LED_ENABLE				0x19	// LED control register
-#define REG_CW_COMPLIANCE_MARGIN	0x1A	// Clockwise compliance margin register
-#define REG_CCW_COMPLIANCE_MARGIN	0x1B	// Counter-clockwise compliance margin register
-#define REG_CW_COMPLIANCE_SLOPE		0x1C	// Clockwise compliance slope register
-#define REG_CCW_COMPLIANCE_SLOPE	0x1D	// Counter-clockwise compliance slope register
-#define REG_GOAL_POSITION			0x1E	// Goal position register (0x1E = low byte, 0x1F = high byte)
-#define REG_GOAL_VELOCITY			0x20	// Goal velocity register (0x20 = low byte, 0x21 = high byte)
-#define REG_GOAL_TORQUE				0x22	// Goal torque register (0x22 = low byte, 0x23 = high byte)
-#define REG_LOCK_EEPROM				0x2F	// EEPROM lock register
-#define REG_PUNCH					0x30	// Punch (0x30 = low register, 0x31 = high register)
-#define REG_CURRENT_POSITION		0x24	// Current position register (0x24 = low byte, 0x25 = high byte)
-#define REG_CURRENT_VELOCITY		0x26	// Current velocity register (0x26 = low byte, 0x27 = high byte)
-#define REG_CURRENT_LOAD			0x28	// Current load register (0x28 = low byte, 0x29 = high byte)
-#define REG_CURRENT_VOLTAGE			0x2A	// Current voltage register
-#define REG_CURRENT_TEMPERATURE		0x2B	// Current temperature register
-#define REG_REGISTERED				0x2C	// Command execution status register
-#define REG_MOVING					0x2E	// Motor motion register
+const uint8_t REG_ID					0x03	// Motor ID register
+const uint8_t	REG_BAUD_RATE			0x04	// Baud rate register
+const uint8_t REG_RETURN_DELAY_TIME		0x05	// Status packet return delay time register
+const uint8_t REG_CW_ANGLE_LIMIT		0x06	// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
+const uint8_t REG_CCW_ANGLE_LIMIT		0x08	// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
+const uint8_t REG_HIGH_VOLTAGE_LIMIT	0x0C	// Maximum voltage limit register
+const uint8_t REG_LOW_VOLTAGE_LIMIT		0x0D	// Minimum voltage limit register
+const uint8_t REG_MAX_TORQUE			0x0E	// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
+const uint8_t REG_STATUS_RETURN_LEVEL	0x10	// Status packet return condition(s) register
+const uint8_t REG_ALARM_LED				0x11	// Alarm LED condition(s) register
+const uint8_t REG_ALARM_SHUTDOWN		0x12	// Alarm shutdown condition(s) register
+const uint8_t REG_TORQUE_ENABLE			0x18	// Motor power control register
+const uint8_t REG_LED_ENABLE			0x19	// LED control register
+const uint8_t REG_CW_COMPLIANCE_MARGIN	0x1A	// Clockwise compliance margin register
+const uint8_t REG_CCW_COMPLIANCE_MARGIN	0x1B	// Counter-clockwise compliance margin register
+const uint8_t REG_CW_COMPLIANCE_SLOPE	0x1C	// Clockwise compliance slope register
+const uint8_t REG_CCW_COMPLIANCE_SLOPE	0x1D	// Counter-clockwise compliance slope register
+const uint8_t REG_GOAL_POSITION			0x1E	// Goal position register (0x1E = low byte, 0x1F = high byte)
+const uint8_t REG_GOAL_VELOCITY			0x20	// Goal velocity register (0x20 = low byte, 0x21 = high byte)
+const uint8_t REG_GOAL_TORQUE			0x22	// Goal torque register (0x22 = low byte, 0x23 = high byte)
+const uint8_t REG_LOCK_EEPROM			0x2F	// EEPROM lock register
+const uint8_t REG_PUNCH					0x30	// Punch (0x30 = low register, 0x31 = high register)
+const uint8_t REG_CURRENT_POSITION		0x24	// Current position register (0x24 = low byte, 0x25 = high byte)
+const uint8_t REG_CURRENT_VELOCITY		0x26	// Current velocity register (0x26 = low byte, 0x27 = high byte)
+const uint8_t REG_CURRENT_LOAD			0x28	// Current load register (0x28 = low byte, 0x29 = high byte)
+const uint8_t REG_CURRENT_VOLTAGE		0x2A	// Current voltage register
+const uint8_t REG_CURRENT_TEMPERATURE	0x2B	// Current temperature register
+const uint8_t REG_REGISTERED			0x2C	// Command execution status register
+const uint8_t REG_MOVING				0x2E	// Motor motion register
 
 /* Default register value definitions. */
-#define BROADCAST_ID					0xFE	// Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
-#define DEFAULT_ID 						0x01	// Default motor ID
-#define DEFAULT_BAUD_RATE				0x01	// Default baud rate
-#define DEFAULT_RETURN_DELAY 			0xFA	// Default time motor waits before returning status packet (microseconds)
-#define DEFAULT_CW_ANGLE_LIMIT			0x0000	// Default clockwise angle limit
-#define DEFAULT_CCW_ANGLE_LIMIT			0x03FF	// Default counter-clockwise angle limit
-#define DEFAULT_HIGH_VOLTAGE_LIMIT		0xBE	// Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
-#define DEFAULT_LOW_VOLTAGE_LIMIT		0x3C	// Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
-#define DEFAULT_MAXIMUM_TORQUE			0x03FF	// Default maximum torque limit (10-bit percentage)
-#define DEFAULT_STATUS_RETURN_LEVEL		0x02	// Default condition(s) under which a status packet will be returned (all)
-#define DEFAULT_ALARM_LED				0x24	// Default condition(s) under which the alarm LED will be set
-#define DEFAULT_ALARM_SHUTDOWN			0x24	// Default condition(s) under which the motor will shut down due to an alarm
-#define DEFAULT_TORQUE_ENABLE			0x00	// Default motor power state
-#define	DEFAULT_LED_ENABLE				0x00	// Default LED state
-#define DEFAULT_CW_COMPLIANCE_MARGIN	0x01	// Default clockwise compliance margin (position error)
-#define DEFAULT_CCW_COMPLIANCE_MARGIN	0x01	// Default counter-clockwise compliance margin (position error)
-#define DEFAULT_CW_COMPLIANCE_SLOPE		0x20	// Default clockwise compliance slope (torque near goal position)
-#define DEFAULT_CCW_COMPLIANCE_SLOPE	0x20	// Default counter-clockwise compliance slope (torque near goal position)
-#define DEFAULT_EEPROM_LOCK				0x00	// Default value for the EEPROM lock
-#define DEFAULT_PUNCH					0x0020	// Default punch
+const uint8_t BROADCAST_ID					0xFE	// Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
+const uint8_t DEFAULT_ID 					0x01	// Default motor ID
+const uint8_t DEFAULT_BAUD_RATE				0x01	// Default baud rate
+const uint8_t DEFAULT_RETURN_DELAY 			0xFA	// Default time motor waits before returning status packet (microseconds)
+const uint16_t DEFAULT_CW_ANGLE_LIMIT		0x0000	// Default clockwise angle limit
+const uint16_t DEFAULT_CCW_ANGLE_LIMIT		0x03FF	// Default counter-clockwise angle limit
+const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT	0xBE	// Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
+const uint8_t DEFAULT_LOW_VOLTAGE_LIMIT		0x3C	// Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
+const uint16_t DEFAULT_MAXIMUM_TORQUE		0x03FF	// Default maximum torque limit (10-bit percentage)
+const uint8_t DEFAULT_STATUS_RETURN_LEVEL	0x02	// Default condition(s) under which a status packet will be returned (all)
+const uint8_t DEFAULT_ALARM_LED				0x24	// Default condition(s) under which the alarm LED will be set
+const uint8_t DEFAULT_ALARM_SHUTDOWN		0x24	// Default condition(s) under which the motor will shut down due to an alarm
+const uint8_t DEFAULT_TORQUE_ENABLE			0x00	// Default motor power state
+const uint8_t DEFAULT_LED_ENABLE			0x00	// Default LED state
+const uint8_t DEFAULT_CW_COMPLIANCE_MARGIN	0x01	// Default clockwise compliance margin (position error)
+const uint8_t DEFAULT_CCW_COMPLIANCE_MARGIN	0x01	// Default counter-clockwise compliance margin (position error)
+const uint8_t DEFAULT_CW_COMPLIANCE_SLOPE	0x20	// Default clockwise compliance slope (torque near goal position)
+const uint8_t DEFAULT_CCW_COMPLIANCE_SLOPE	0x20	// Default counter-clockwise compliance slope (torque near goal position)
+const uint8_t DEFAULT_EEPROM_LOCK			0x00	// Default value for the EEPROM lock
+const uint16_t DEFAULT_PUNCH				0x0020	// Default punch
 
 /***************************** Private Variables ******************************/
 uint8_t arrReceive[BUFF_RX_SIZE]; // Array that holds bytes received over UART.
@@ -144,7 +144,7 @@ void Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel);
 uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel);
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel);
- uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Other motor instructions (low level control with timing from different WRITE DATA instruction)
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
