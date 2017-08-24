@@ -1062,6 +1062,8 @@ void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
 	 *
 	 * Returns: none
 	 */
+
+
 }
 
 // TODO: Fix the checksum verification so that there are no stalls
