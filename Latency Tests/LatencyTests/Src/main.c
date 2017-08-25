@@ -113,46 +113,41 @@ int main(void)
 	__HAL_UART_DISABLE_IT(&huart2,UART_IT_RXNE);
 
 	Dynamixel_HandleTypeDef Motor1;
-	Dynamixel_Init(&Motor1, 0x01, &huart2);
+	Dynamixel_Init(&Motor1, 1, &huart2);
 	Dynamixel_HandleTypeDef Motor2;
-	Dynamixel_Init(&Motor1, 0x02, &huart2);
+	Dynamixel_Init(&Motor1, 2, &huart2);
 	Dynamixel_HandleTypeDef Motor3;
-	Dynamixel_Init(&Motor1, 0x03, &huart2);
+	Dynamixel_Init(&Motor1, 3, &huart2);
 	Dynamixel_HandleTypeDef Motor4;
-	Dynamixel_Init(&Motor1, 0x04, &huart2);
+	Dynamixel_Init(&Motor1, 4, &huart2);
 	Dynamixel_HandleTypeDef Motor5;
-	Dynamixel_Init(&Motor1, 0x05, &huart4);
+	Dynamixel_Init(&Motor1, 5, &huart4);
 	Dynamixel_HandleTypeDef Motor6;
-	Dynamixel_Init(&Motor1, 0x06, &huart4);
+	Dynamixel_Init(&Motor1, 6, &huart4);
 	Dynamixel_HandleTypeDef Motor7;
-	Dynamixel_Init(&Motor1, 0x07, &huart4);
+	Dynamixel_Init(&Motor1, 7, &huart4);
 	Dynamixel_HandleTypeDef Motor8;
-	Dynamixel_Init(&Motor1, 0x08, &huart4);
+	Dynamixel_Init(&Motor1, 8, &huart4);
 	Dynamixel_HandleTypeDef Motor9;
-	Dynamixel_Init(&Motor1, 0x09, &huart5);
+	Dynamixel_Init(&Motor1, 9, &huart5);
 	Dynamixel_HandleTypeDef Motor10;
-	Dynamixel_Init(&Motor1, 0x0A, &huart5);
+	Dynamixel_Init(&Motor1, 10, &huart5);
 	Dynamixel_HandleTypeDef Motor11;
-	Dynamixel_Init(&Motor1, 0x0B, &huart5);
+	Dynamixel_Init(&Motor1, 11, &huart5);
 	Dynamixel_HandleTypeDef Motor12;
-	Dynamixel_Init(&Motor1, 0x0C, &huart5);
+	Dynamixel_Init(&Motor1, 12, &huart5);
 	Dynamixel_HandleTypeDef Motor13;
-	Dynamixel_Init(&Motor1, 0x0D, &huart5);
+	Dynamixel_Init(&Motor1, 13, &huart5);
 	Dynamixel_HandleTypeDef Motor14;
-	Dynamixel_Init(&Motor1, 0x0E, &huart6);
+	Dynamixel_Init(&Motor1, 14, &huart6);
 	Dynamixel_HandleTypeDef Motor15;
-	Dynamixel_Init(&Motor1, 0x0F, &huart6);
+	Dynamixel_Init(&Motor1, 15, &huart6);
 	Dynamixel_HandleTypeDef Motor16;
-	Dynamixel_Init(&Motor1, 0x10, &huart6);
+	Dynamixel_Init(&Motor1, 16, &huart6);
 	Dynamixel_HandleTypeDef Motor17;
-	Dynamixel_Init(&Motor1, 0x11, &huart6);
+	Dynamixel_Init(&Motor1, 17, &huart6);
 	Dynamixel_HandleTypeDef Motor18;
-	Dynamixel_Init(&Motor1, 0x12, &huart6);
-
-
-//	Dynamixel_EnterWheelMode(&Motor1, 50);
-//	HAL_Delay(1000);
-//	Dynamixel_TorqueEnable(&Motor1, 1);
+	Dynamixel_Init(&Motor1, 18, &huart6);
 
   /* USER CODE END 2 */
 
@@ -163,10 +158,7 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-//	  Dynamixel_SetGoalTorque(&Motor1, 10);
-//	  for(uint32_t i = 0; i < 50000; i++);
-//	  Dynamixel_SetGoalTorque(&Motor1, 100);
-//	  for(uint32_t i = 0; i < 50000; i++);
+
   }
   /* USER CODE END 3 */
 
