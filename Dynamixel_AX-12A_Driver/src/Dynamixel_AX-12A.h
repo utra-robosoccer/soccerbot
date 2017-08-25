@@ -13,13 +13,14 @@
 
 /*********************************** Defines **********************************/
 /* Communications. */
-#define TRANSMIT_IT						0		// 1 if using interrupts for transmit, otherwise 0 (polling)
-#define NUM_MOTORS						18		// Used to determine buffer sizes
-const uint8_t TRANSMIT_TIMEOUT = 10; 			// Timeout for UART transmissions, in milliseconds
-const uint8_t RECEIVE_TIMEOUT = 10;				// Timeout for UART receptions, in milliseconds
-#define BUFF_SIZE_RX					8		// Receive buffer size for UART receptions (number of bytes)
-#define TX_PACKET_SIZE					9		// Maximum packet size for regular motor commands (exclusion: sync write)
-#define BUFF_SIZE_SYNC_WRITE			64		// Maximum packet size for sync write (18*3 +
+#define TRANSMIT_IT				0		// 1 if using interrupts for transmit, otherwise 0 (polling)
+#define NUM_MOTORS				18		// Used to determine buffer sizes
+#define BUFF_SIZE_RX			8		// Receive buffer size for UART receptions (number of bytes)
+#define TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
+#define BUFF_SIZE_SYNC_WRITE	64		// Maximum packet size for sync write
+#define NUM_UARTS				6		// Number of UARTs available for motor communication
+const uint8_t TRANSMIT_TIMEOUT = 10; 	// Timeout for blocking UART transmissions, in milliseconds
+const uint8_t RECEIVE_TIMEOUT = 10;		// Timeout for blocking UART receptions, in milliseconds
 
 /* Value limit definitions. */
 const uint8_t MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
@@ -30,7 +31,7 @@ const uint8_t MAX_TORQUE = 100;		// Maximum torque (percent of maximum)
 const uint8_t MIN_TORQUE = 0;		// Minimum torque (percent of maximum)
 const uint8_t MAX_VOLTAGE = 14;		// Maximum operating voltage
 const uint8_t MIN_VOLTAGE = 6;		// Minimum operating voltage
-const uint16_t MAX_PUNCH = 1023;		// Maximum punch (proportional to minimum current)
+const uint16_t MAX_PUNCH = 1023;	// Maximum punch (proportional to minimum current)
 const uint8_t MIN_PUNCH = 0;		// Minimum punch (proportional to minimum current)
 
 /* Instruction set definitions. */
@@ -97,17 +98,33 @@ const uint16_t DEFAULT_PUNCH = 0x0020;				// Default punch
 
 /****************************** Public Variables ******************************/
 /* Buffer for data received from motors. */
-uint8_t arrReceive[BUFF_SIZE_RX];
+uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}
+};
 
 /* Bytes to be transmitted to motors are written to this array. */
-uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE];
+uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE] = {
+	{0xFF, 0xFF, 1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 6, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 16, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 17, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+};
 
 /* Sync write buffer. */
-#if (BUFF_SIZE_SYNC_WRITE > 8)
-uint8_t arrSyncWrite[BUFF_SIZE_SYNC_WRITE] = {0xFF, 0xFF, 0xFE, 0x00, 0x83, 0x00};
-#else
-	#error BUFF_SIZE_SYNC_WRITE is too small (min: 8)!
-#endif
+uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
 
 /*********************************** Types ************************************/
 typedef struct{
@@ -188,7 +205,7 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 // Transmission & Reception
 uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
+void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Initialization

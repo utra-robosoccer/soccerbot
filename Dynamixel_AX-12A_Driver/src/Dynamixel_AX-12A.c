@@ -995,20 +995,23 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	 */
 
 	/* Transmit. */
-#if TRANSMIT_IT
+	#if TRANSMIT_IT
 		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize);
-#else
+	#else
 		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize, TRANSMIT_TIMEOUT);
-#endif
+	#endif
 }
 
 // UNIMPLEMENTED
-void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
+void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t numParams, uint8_t *params){
 	/* Used for sending control signals to several specified Dynamixel actuators concurrently.
-	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set.
+	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set. Note that the
+	 * broadcast ID is used, so all motors attached to the same UART will have to spend time
+	 * processing the command packet, even if they are not addressed in it.
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  arrSize, the size of the array of parameters to be transmitted
+	 * 			  uartIndex, the index of the UART which the motors to be communicated with are routed to
+	 * 			  numParams, the number of parameters to be transmitted from the arrSyncWrite buffer
 	 * 			  params, the array holding all the instructions and parameters to be passed to the various actuators
 	 *
 	 * Params must be in the following format:
@@ -1025,14 +1028,23 @@ void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params){
 	 * Returns: none
 	 */
 
-	//TODO: CHECK ALL OF THIS AND ENSURE THE IMPLEMENTATION IS CORRECT
-	arrSyncWrite[3] = arrSize + 5; // Length of packet + len(0xFF, 0xFF, 0xFE, length, checksum)
+	/* Write packet length into transmission array. */
+	arrSyncWrite[uartIndex][3] = numParams + 4; // Length of packet + len(INST_SYNC_WRITE, arrSyncWrite[4], arrSyncWrite[5], checksum)
 
-	for(uint8_t i = 0; i < arrSize; i++){
-		arrSyncWrite[i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
+	/* Copy parameters into transmission array. */
+	for(uint8_t i = 0; i < numParams; i++){
+		arrSyncWrite[uartIndex][i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
 	}
 
-	arrSyncWrite[arrSize + 4] = Dynamixel_ComputeChecksum(arrSyncWrite, arrSize + 5);
+	/* Compute checksum. */
+	arrSyncWrite[uartIndex][numParams + 4] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numParams + 5);
+
+	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE, length, 0x83, checksum). */
+	#if TRANSMIT_IT
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], numParams + 6);
+	#else
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], numParams + 6, TRANSMIT_TIMEOUT);
+	#endif
 }
 
 // TODO: Fix the checksum verification so that there are no stalls
@@ -1053,12 +1065,12 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	 */
 
 	/* Clear array for reception. */
+	uint8_t ID = hdynamixel -> _ID;
 	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
-		arrReceive[i] = 0;
+		arrReceive[ID][i] = 0;
 	}
 
 	/* Do assignments and computations. */
-	uint8_t ID = hdynamixel -> _ID;
 	arrTransmit[ID][3] = 4; // Length of message minus the obligatory bytes
 	arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
 	arrTransmit[ID][5] = readAddr; // Write address for register
@@ -1072,38 +1084,38 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		__DYNAMIXEL_TRANSMIT();
 
 		// Transmit
-#if TRANSMIT_IT
+	#if TRANSMIT_IT
 		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-#else
+	#else
 		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
-#endif
+	#endif
 
 		// Set data direction for receive
 		__DYNAMIXEL_RECEIVE();
 
 		// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
 		if(readLength == 1){
-			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 7, RECEIVE_TIMEOUT);
-			//valid = (Dynamixel_ComputeChecksum(arrReceive, 7) == arrReceive[6]); // Verify checksums match
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 7, RECEIVE_TIMEOUT);
+			//valid = (Dynamixel_ComputeChecksum(arrReceive[ID], 7) == arrReceive[ID][6]); // Verify checksums match
 		}
 		else{
-			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive, 8, RECEIVE_TIMEOUT);
-//			valid = (Dynamixel_ComputeChecksum(arrReceive, 8) == arrReceive[7]); // Verify checksums match
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 8, RECEIVE_TIMEOUT);
+//			valid = (Dynamixel_ComputeChecksum(arrReceive[ID], 8) == arrReceive[ID][7]); // Verify checksums match
 		}
 //	}
 
 	// Check the status packet received for errors
-	if(arrReceive[5] != 0){
+	if(arrReceive[ID][5] != 0){
 
 		/* Call the error handler with the error code as the argument. */
-		Dynamixel_ErrorHandler(arrReceive[5]);
+		Dynamixel_ErrorHandler(arrReceive[ID][5]);
 	}
 
 	if(readLength == 1){
-		return (uint16_t)arrReceive[5];
+		return (uint16_t)arrReceive[ID][5];
 	}
 	else{
-		return (uint16_t)(arrReceive[5] | (arrReceive[6] << 8));
+		return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
 	}
 }
 
@@ -1134,20 +1146,22 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 
 	/* Set fields in motor handle. */
 	hdynamixel -> _ID = ID; // Motor ID (unique or global)
-	hdynamixel -> _BaudRate = 1000000; // In future, can initialize this accurately by reading from EEPROM. Or, take a baud rate argument and at bottom of this function, set the EEPROM
-	hdynamixel -> _lastPosition = -1; // In future, initialize this accurately
-	hdynamixel -> _lastVelocity = -1; // In future, initialize this accurately
-	hdynamixel -> _lastLoad = -1; // In future, initialize this accurately
-	hdynamixel -> _lastLoadDirection = -1; // In future, initialize this accurately
-	hdynamixel -> _lastVoltage = -1; // In future, initialize this accurately
-	hdynamixel -> _lastTemperature = -1; // In future, initialize this accurately
-	hdynamixel -> _isJointMode = 1; // In future, initialize this accurately
+	hdynamixel -> _BaudRate = 1000000; // Number of bytes per second transmitted by the UART
+	hdynamixel -> _lastPosition = -1; // In future, could initialize this accurately
+	hdynamixel -> _lastVelocity = -1; // In future, could initialize this accurately
+	hdynamixel -> _lastLoad = -1; // In future, could initialize this accurately
+	hdynamixel -> _lastLoadDirection = -1; // In future, could initialize this accurately
+	hdynamixel -> _lastVoltage = -1; // In future, could initialize this accurately
+	hdynamixel -> _lastTemperature = -1; // In future, could initialize this accurately
+	hdynamixel -> _isJointMode = 1; // In future, could initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
 
-	/* Motor transmit array initialization. */
-	arrTransmit[ID][0] = 0xFF; // Obligatory bytes for starting communication
-	arrTransmit[ID][1] = 0xFF; // Obligatory bytes for starting communication
-	arrTransmit[ID][2] = ID;   // Motor ID
+	/* Motor buffer initialization. */
+	/* ----> Sync write buffer <---- */
+	arrSyncWrite[ID][0] = 0xFF;
+	arrSyncWrite[ID][1] = 0xFF;
+	arrSyncWrite[ID][2] = 0xFE;
+	arrSyncWrite[ID][4] = INST_SYNC_WRITE;
 
 	/* Configure motor to return status packets only for read commands. */
 	Dynamixel_SetStatusReturnLevel(hdynamixel, 1);
@@ -1164,7 +1178,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	 * Returns: none
 	 */
 
-	/* Define arrays for transmission and reception. */
+	/* Define array for transmission. */
 	uint8_t arrTransmit[6];
 
 	/* Do assignments and computations. */
