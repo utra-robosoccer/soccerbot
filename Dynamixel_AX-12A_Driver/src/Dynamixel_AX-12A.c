@@ -967,16 +967,9 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	 * Returns: none
 	 */
 
-	/* Check that array size is 8 or 9. */
-	if(!((arrSize == 8) || (arrSize == 9))){
-		_Error_Handler(__FILE__, __LINE__);
-		return;
-	}
-
 	/* Do assignments and computations. */
 	uint8_t ID = hdynamixel -> _ID;
 	arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
-	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 	arrTransmit[ID][5] = writeAddr; // Write address for register
 	arrTransmit[ID][6] = param1;
 
@@ -1092,6 +1085,10 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 
 		// Set data direction for receive
 		__DYNAMIXEL_RECEIVE();
+
+		// Set the instruction back to INST_WRITE_DATA in the buffer because writing
+		// is expected to be more common than reading
+		arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 
 		// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
 		if(readLength == 1){
