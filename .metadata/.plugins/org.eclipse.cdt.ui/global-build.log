@@ -2888,3 +2888,1205 @@ arm-none-eabi-size "LatencyTests.elf"
    text	   data	    bss	    dec	    hex	filename
    7668	     12	   2068	   9748	   2614	LatencyTests.elf
  
+22:25:25 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_SyncWriter':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1031:18: error: assignment to expression with array type
+  arrSyncWrite[3] = arrSize + 4; // Length of packet + len(INST_SYNC_WRITE, arrSyncWrite[4], arrSyncWrite[5], checksum)
+                  ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1035:23: error: assignment to expression with array type
+   arrSyncWrite[i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
+                       ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1039:56: warning: passing argument 1 of 'Dynamixel_ComputeChecksum' from incompatible pointer type [-Wincompatible-pointer-types]
+  arrSyncWrite[arrSize + 4] = Dynamixel_ComputeChecksum(arrSyncWrite, arrSize + 5);
+                                                        ^
+In file included from ../Src/main.c:43:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:164:16: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'uint8_t (*)[64] {aka unsigned char (*)[64]}'
+ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
+                ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1039:28: error: assignment to expression with array type
+  arrSyncWrite[arrSize + 4] = Dynamixel_ComputeChecksum(arrSyncWrite, arrSize + 5);
+                            ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_DataReader':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1068:10: error: redefinition of 'ID'
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1062:10: note: previous definition of 'ID' was here
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1156:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:26:42 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_SyncWriter':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1031:15: error: 'hdynamixel' undeclared (first use in this function)
+  uint8_t ID = hdynamixel -> _ID;
+               ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1031:15: note: each undeclared identifier is reported only once for each function it appears in
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_DataReader':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1071:10: error: redefinition of 'ID'
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1065:10: note: previous definition of 'ID' was here
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1159:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1161:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1163:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:31:55 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1006:6: error: conflicting types for 'Dynamixel_SyncWriter'
+ void Dynamixel_SyncWriter(uint8_t uartIndex, uint8_t arrSize, uint8_t *params){
+      ^
+In file included from ../Src/main.c:43:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:188:6: note: previous declaration of 'Dynamixel_SyncWriter' was here
+ void Dynamixel_SyncWriter(uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
+      ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_DataReader':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1068:10: error: redefinition of 'ID'
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1062:10: note: previous definition of 'ID' was here
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1156:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:32:18 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_DataReader':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1068:10: error: redefinition of 'ID'
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1062:10: note: previous definition of 'ID' was here
+  uint8_t ID = hdynamixel -> _ID;
+          ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1156:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:32:32 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1157:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1159:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:33:33 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, ID, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1157:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1159:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:34:09 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1157:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1159:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:34:41 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {ID);
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1157:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1159:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:35:08 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:41:02 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:43:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:106:1: error: stray '#' in program
+ #if(NUM_MOTORS > 1)
+ ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:106:2: error: expected '}' before 'if'
+ #if(NUM_MOTORS > 1)
+  ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:108:1: error: stray '#' in program
+ #endif
+ ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:111:1: error: stray '#' in program
+ #endif
+ ^
+In file included from ../Src/main.c:43:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:4:0: error: unterminated #ifndef
+ #ifndef __DYNAMIXEL_AX_12A_H__
+ ^
+In file included from ../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:2:0,
+                 from ../Src/main.c:44:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:4:0: error: unterminated #ifndef
+ #ifndef __DYNAMIXEL_AX_12A_H__
+ ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:42:26 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:20: error: expected expression before '{' token
+  arrTransmit[ID] = {0xFF, 0xFF, 0x00};
+                    ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1158:19: error: expected expression before '{' token
+  arrReceive[ID] = {0};
+                   ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1160:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:45:47 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_Init':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1155:21: error: expected expression before '{' token
+  arrSyncWrite[ID] = {0xFF, 0xFF, 0xFE, 0x00, 0x00, 0x00};
+                     ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:46:55 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7672	    176	   2280	  10128	   2790	LatencyTests.elf
+ 
+22:57:57 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1006:6: error: conflicting types for 'Dynamixel_SyncWriter'
+ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t numParams, uint8_t *params){
+      ^
+In file included from ../Src/main.c:43:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h:208:6: note: previous declaration of 'Dynamixel_SyncWriter' was here
+ void Dynamixel_SyncWriter(uint8_t uartIndex, uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
+      ^
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_SyncWriter':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1040:94: error: 'arrSize' undeclared (first use in this function)
+  arrSyncWrite[uartIndex][numParams + 4] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], arrSize + 5);
+                                                                                              ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1040:94: note: each undeclared identifier is reported only once for each function it appears in
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1046:62: error: 'ID' undeclared (first use in this function)
+   HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[ID], numParams + 6, TRANSMIT_TIMEOUT);
+                                                              ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:58:18 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+In file included from ../Src/main.c:44:0:
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c: In function 'Dynamixel_SyncWriter':
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1040:94: error: 'arrSize' undeclared (first use in this function)
+  arrSyncWrite[uartIndex][numParams + 4] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], arrSize + 5);
+                                                                                              ^
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1040:94: note: each undeclared identifier is reported only once for each function it appears in
+../Src/../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c:1046:62: error: 'ID' undeclared (first use in this function)
+   HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[ID], numParams + 6, TRANSMIT_TIMEOUT);
+                                                              ^
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+make: *** [Src/main.o] Error 1
+22:59:00 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:149:26: warning: unused variable 'Motor18' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor18;
+                          ^
+../Src/main.c:147:26: warning: unused variable 'Motor17' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor17;
+                          ^
+../Src/main.c:145:26: warning: unused variable 'Motor16' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor16;
+                          ^
+../Src/main.c:143:26: warning: unused variable 'Motor15' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor15;
+                          ^
+../Src/main.c:141:26: warning: unused variable 'Motor14' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor14;
+                          ^
+../Src/main.c:139:26: warning: unused variable 'Motor13' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor13;
+                          ^
+../Src/main.c:137:26: warning: unused variable 'Motor12' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor12;
+                          ^
+../Src/main.c:135:26: warning: unused variable 'Motor11' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor11;
+                          ^
+../Src/main.c:133:26: warning: unused variable 'Motor10' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor10;
+                          ^
+../Src/main.c:131:26: warning: unused variable 'Motor9' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor9;
+                          ^
+../Src/main.c:129:26: warning: unused variable 'Motor8' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor8;
+                          ^
+../Src/main.c:127:26: warning: unused variable 'Motor7' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor7;
+                          ^
+../Src/main.c:125:26: warning: unused variable 'Motor6' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor6;
+                          ^
+../Src/main.c:123:26: warning: unused variable 'Motor5' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor5;
+                          ^
+../Src/main.c:121:26: warning: unused variable 'Motor4' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor4;
+                          ^
+../Src/main.c:119:26: warning: unused variable 'Motor3' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor3;
+                          ^
+../Src/main.c:117:26: warning: unused variable 'Motor2' [-Wunused-variable]
+  Dynamixel_HandleTypeDef Motor2;
+                          ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7672	    176	   2280	  10128	   2790	LatencyTests.elf
+ 
