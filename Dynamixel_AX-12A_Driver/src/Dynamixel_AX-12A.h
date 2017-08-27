@@ -102,7 +102,8 @@ uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}
 };
 
 /* Bytes to be transmitted to motors are written to this array. */
-uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE] = {
+uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
+	{0xFF, 0xFF, 0xFE, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 1, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 2, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 3, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
@@ -120,7 +121,7 @@ uint8_t arrTransmit[NUM_MOTORS][TX_PACKET_SIZE] = {
 	{0xFF, 0xFF, 15, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 16, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 17, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00}
 };
 
 /* Sync write buffer. */
@@ -137,7 +138,9 @@ typedef struct{
 	float					_lastVoltage;			/*!< Voltage read from motor						*/
 	uint8_t					_lastTemperature;		/*!< Temperature read from motor					*/
 	uint8_t					_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
-	UART_HandleTypeDef		*_UART_Handle;			/*!< UART handle for motor							*/
+	UART_HandleTypeDef*		_UART_Handle;			/*!< UART handle for motor							*/
+	GPIO_TypeDef*			_dataDirPort;			/*!< Port data direction pin is on					*/
+	uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
 }Dynamixel_HandleTypeDef;
 
 /***************************** Function prototypes ****************************/
