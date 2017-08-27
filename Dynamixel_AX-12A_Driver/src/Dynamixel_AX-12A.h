@@ -8,12 +8,12 @@
 #include "stm32f4xx_hal.h"
 
 /******************************(**** Macros ******************************(****/
-#define __DYNAMIXEL_TRANSMIT() HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 1) // Set data direction pin high (TX)
-#define __DYNAMIXEL_RECEIVE() HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, 0) // Set data direction pin low (RX)
+#define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
+#define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
 
 /*********************************** Defines **********************************/
 /* Communications. */
-#define TRANSMIT_IT				0		// 1 if using interrupts for transmit, otherwise 0 (polling)
+#define TRANSMIT_IT				1		// 1 if using interrupts for transmit, otherwise 0 (polling)
 #define NUM_MOTORS				18		// Used to determine buffer sizes
 #define BUFF_SIZE_RX			8		// Receive buffer size for UART receptions (number of bytes)
 #define TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
@@ -212,7 +212,8 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Initialization
-void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle);
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle,\
+		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum);
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Error handling

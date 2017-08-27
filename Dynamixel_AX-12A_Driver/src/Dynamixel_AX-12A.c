@@ -868,7 +868,7 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 	}
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT();
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
@@ -897,7 +897,7 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT();
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
@@ -938,13 +938,17 @@ uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT();
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+	#if TRANSMIT_IT
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit, 6);
+	#else
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+	#endif
 
 	/* Set data direction for receive. */
-	__DYNAMIXEL_RECEIVE();
+	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Receive. */
 	HAL_UART_Receive(hdynamixel -> _UART_Handle, arrTransmit, 6, RECEIVE_TIMEOUT);
@@ -980,7 +984,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	}
 
 	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT();
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* In the future, a lock should be placed here, and it should be unlocked after the status
 	 * packet is received. This requires using interrupts for TX/RX and it cannot be implemented
@@ -1032,6 +1036,9 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 	/* Compute checksum. */
 	arrSyncWrite[uartIndex][numParams + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numParams + 5);
 
+	// Set data direction for transmit
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
 	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE, length, 0x83, checksum). */
 	#if TRANSMIT_IT
 		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], numParams + 6);
@@ -1070,36 +1077,30 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
 	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
 
-	// Ensure that received data has valid checksum. If it does not, send data request again
-//	uint8_t valid = 0;
-//	while(!valid){
-		// Set data direction for transmit
-		__DYNAMIXEL_TRANSMIT();
+	// Set data direction for transmit
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-		// Transmit
+	// Transmit
 	#if TRANSMIT_IT
 		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
 	#else
 		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
 	#endif
 
-		// Set data direction for receive
-		__DYNAMIXEL_RECEIVE();
+	// Set data direction for receive
+	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-		// Set the instruction back to INST_WRITE_DATA in the buffer because writing
-		// is expected to be more common than reading
-		arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
+	/* Set the instruction back to INST_WRITE_DATA in the buffer because writing
+	 * is expected to be more common than reading. */
+	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 
-		// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
-		if(readLength == 1){
-			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 7, RECEIVE_TIMEOUT);
-			//valid = (Dynamixel_ComputeChecksum(arrReceive[ID], 7) == arrReceive[ID][6]); // Verify checksums match
-		}
-		else{
-			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 8, RECEIVE_TIMEOUT);
-//			valid = (Dynamixel_ComputeChecksum(arrReceive[ID], 8) == arrReceive[ID][7]); // Verify checksums match
-		}
-//	}
+	// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
+	if(readLength == 1){
+		HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 7, RECEIVE_TIMEOUT);
+	}
+	else{
+		HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 8, RECEIVE_TIMEOUT);
+	}
 
 	// Check the status packet received for errors
 	if(arrReceive[ID][5] != 0){
@@ -1129,7 +1130,8 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle){
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
+		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum){
 	/* Initializes the motor handle.
 	 *
 	 * Arguments: hdynamixel, the motor handle to be initialized
@@ -1137,6 +1139,10 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	 * 			  	  the ID in case there are multiple actuators on the same bus
 	 * 			  UART_Handle, the handle to the UART that will be used to
 	 * 			      communicate with this motor
+	 * 			  DataDirPort, the pointer to the port that the data direction pin
+	 * 			  	  for the motor is on
+	 * 			  DataDirPinNum, the number corresponding to the pin that controls
+	 * 			      data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
 	 *
 	 * Returns: none
 	 */
@@ -1152,9 +1158,8 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	hdynamixel -> _lastTemperature = -1; 		// In future, could initialize this accurately
 	hdynamixel -> _isJointMode = 1; 			// In future, could initialize this accurately
 	hdynamixel -> _UART_Handle = UART_Handle; 	// For UART TX and RX
-
-	hdynamixel -> _dataDirPort = -1;
-	hdynamixel -> _dataDirPinNum = -1;
+	hdynamixel -> _dataDirPort = DataDirPort;
+	hdynamixel -> _dataDirPinNum = DataDirPinNum;
 
 	/* Motor buffer initialization. */
 	/* ----> Sync write buffer <---- */
@@ -1190,7 +1195,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT();
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
@@ -1361,7 +1366,8 @@ void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize)
 	Dynamixel_HandleTypeDef* Motor1 = arrHdynamixel[0];
 
 	/* Initialize master UART handle to that of the first motor handle. */
-	Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, arrHdynamixel[0]->_UART_Handle);
+	Dynamixel_Init(&MASTER_MOTOR_CONTROL, 0xFE, arrHdynamixel[0]->_UART_Handle,\
+			arrHdynamixel[0] -> _dataDirPort, arrHdynamixel[0] -> _dataDirPinNum);
 
 
 	/* Test 1: Dynamixel_LEDEnable
