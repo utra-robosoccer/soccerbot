@@ -64,6 +64,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
+static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -105,51 +106,39 @@ int main(void)
   MX_UART4_Init();
   MX_UART5_Init();
 
+  /* Initialize interrupts */
+  MX_NVIC_Init();
+
   /* USER CODE BEGIN 2 */
-  	// Disable receive interrupts for the motor UARTs
-	__HAL_UART_DISABLE_IT(&huart6,UART_IT_RXNE);
-	__HAL_UART_DISABLE_IT(&huart5,UART_IT_RXNE);
-	__HAL_UART_DISABLE_IT(&huart4,UART_IT_RXNE);
-	__HAL_UART_DISABLE_IT(&huart2,UART_IT_RXNE);
+//  	// Enable receive & transmit interrupts for the motor UARTs
+//	__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
+//	__HAL_UART_ENABLE_IT(&huart6,UART_IT_TC);
+//	__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+//	__HAL_UART_ENABLE_IT(&huart2,UART_IT_TC);
+
 
 	Dynamixel_HandleTypeDef Motor1;
-	Dynamixel_Init(&Motor1, 1, &huart2);
+	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor2;
-	Dynamixel_Init(&Motor2, 2, &huart2);
+	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor3;
-	Dynamixel_Init(&Motor3, 3, &huart2);
+	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor4;
-	Dynamixel_Init(&Motor4, 4, &huart2);
+	Dynamixel_Init(&Motor4, 4, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor5;
-	Dynamixel_Init(&Motor5, 5, &huart2);
+	Dynamixel_Init(&Motor5, 5, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor6;
-	Dynamixel_Init(&Motor6, 6, &huart6);
+	Dynamixel_Init(&Motor6, 6, &huart6, GPIOF, GPIO_PIN_15);
 	Dynamixel_HandleTypeDef Motor7;
-	Dynamixel_Init(&Motor7, 7, &huart6);
+	Dynamixel_Init(&Motor7, 7, &huart6, GPIOF, GPIO_PIN_15);
 	Dynamixel_HandleTypeDef Motor8;
-	Dynamixel_Init(&Motor8, 8, &huart6);
+	Dynamixel_Init(&Motor8, 8, &huart6, GPIOF, GPIO_PIN_15);
 	Dynamixel_HandleTypeDef Motor9;
-	Dynamixel_Init(&Motor9, 9, &huart6);
+	Dynamixel_Init(&Motor9, 9, &huart6, GPIOF, GPIO_PIN_15);
 	Dynamixel_HandleTypeDef Motor10;
-	Dynamixel_Init(&Motor10, 10, &huart6);
-//	Dynamixel_HandleTypeDef Motor11;
-//	Dynamixel_Init(&Motor11, 11, &huart4);
-//	Dynamixel_HandleTypeDef Motor12;
-//	Dynamixel_Init(&Motor12, 12, &huart4);
-//	Dynamixel_HandleTypeDef Motor13;
-//	Dynamixel_Init(&Motor13, 13, &huart4);
-//	Dynamixel_HandleTypeDef Motor14;
-//	Dynamixel_Init(&Motor14, 14, &huart2);
-//	Dynamixel_HandleTypeDef Motor15;
-//	Dynamixel_Init(&Motor15, 15, &huart2);
-//	Dynamixel_HandleTypeDef Motor16;
-//	Dynamixel_Init(&Motor16, 16, &huart2);
-//	Dynamixel_HandleTypeDef Motor17;
-//	Dynamixel_Init(&Motor17, 17, &huart2);
-//	Dynamixel_HandleTypeDef Motor18;
-//	Dynamixel_Init(&Motor18, 18, &huart2);
+	Dynamixel_Init(&Motor10, 10, &huart6, GPIOF, GPIO_PIN_15);
 
-	Dynamixel_HandleTypeDef* arrDynamixel[18];
+	Dynamixel_HandleTypeDef* arrDynamixel[10];
 	arrDynamixel[0] = &Motor1;
 	arrDynamixel[1] = &Motor2;
 	arrDynamixel[2] = &Motor3;
@@ -160,14 +149,6 @@ int main(void)
 	arrDynamixel[7] = &Motor8;
 	arrDynamixel[8] = &Motor9;
 	arrDynamixel[9] = &Motor10;
-//	arrDynamixel[10] = &Motor11;
-//	arrDynamixel[11] = &Motor12;
-//	arrDynamixel[12] = &Motor13;
-//	arrDynamixel[13] = &Motor14;
-//	arrDynamixel[14] = &Motor15;
-//	arrDynamixel[15] = &Motor16;
-//	arrDynamixel[16] = &Motor17;
-//	arrDynamixel[17] = &Motor18;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -184,8 +165,14 @@ int main(void)
 //	  arr[3] = 0;
 //	  arr[4] = 0;
 //	  Dynamixel_SyncWriter(&Motor1, 6-1, 5, arr);
-	  for(uint8_t i = 0; i < 5; i++){
+//	  for(uint8_t i = 0; i < 10; i++){
+//		  /* Make all motors return only for reads. */
+//		  Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
+//		  HAL_Delay(20);
+//	  }
+	  for(uint8_t i = 0; i < 10; i++){
 		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
+		  HAL_Delay(10);
 	  }
 	  while(1);
   }
@@ -255,6 +242,18 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+}
+
+/** NVIC Configuration
+*/
+static void MX_NVIC_Init(void)
+{
+  /* USART2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
+  /* USART6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART6_IRQn);
 }
 
 /* UART4 init function */
