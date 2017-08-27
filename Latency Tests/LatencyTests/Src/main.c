@@ -115,40 +115,59 @@ int main(void)
 	Dynamixel_HandleTypeDef Motor1;
 	Dynamixel_Init(&Motor1, 1, &huart2);
 	Dynamixel_HandleTypeDef Motor2;
-	Dynamixel_Init(&Motor1, 2, &huart2);
+	Dynamixel_Init(&Motor2, 2, &huart2);
 	Dynamixel_HandleTypeDef Motor3;
-	Dynamixel_Init(&Motor1, 3, &huart2);
+	Dynamixel_Init(&Motor3, 3, &huart2);
 	Dynamixel_HandleTypeDef Motor4;
-	Dynamixel_Init(&Motor1, 4, &huart2);
+	Dynamixel_Init(&Motor4, 4, &huart2);
 	Dynamixel_HandleTypeDef Motor5;
-	Dynamixel_Init(&Motor1, 5, &huart4);
+	Dynamixel_Init(&Motor5, 5, &huart2);
 	Dynamixel_HandleTypeDef Motor6;
-	Dynamixel_Init(&Motor1, 6, &huart4);
+	Dynamixel_Init(&Motor6, 6, &huart6);
 	Dynamixel_HandleTypeDef Motor7;
-	Dynamixel_Init(&Motor1, 7, &huart4);
+	Dynamixel_Init(&Motor7, 7, &huart6);
 	Dynamixel_HandleTypeDef Motor8;
-	Dynamixel_Init(&Motor1, 8, &huart4);
+	Dynamixel_Init(&Motor8, 8, &huart6);
 	Dynamixel_HandleTypeDef Motor9;
-	Dynamixel_Init(&Motor1, 9, &huart5);
+	Dynamixel_Init(&Motor9, 9, &huart6);
 	Dynamixel_HandleTypeDef Motor10;
-	Dynamixel_Init(&Motor1, 10, &huart5);
-	Dynamixel_HandleTypeDef Motor11;
-	Dynamixel_Init(&Motor1, 11, &huart5);
-	Dynamixel_HandleTypeDef Motor12;
-	Dynamixel_Init(&Motor1, 12, &huart5);
-	Dynamixel_HandleTypeDef Motor13;
-	Dynamixel_Init(&Motor1, 13, &huart5);
-	Dynamixel_HandleTypeDef Motor14;
-	Dynamixel_Init(&Motor1, 14, &huart6);
-	Dynamixel_HandleTypeDef Motor15;
-	Dynamixel_Init(&Motor1, 15, &huart6);
-	Dynamixel_HandleTypeDef Motor16;
-	Dynamixel_Init(&Motor1, 16, &huart6);
-	Dynamixel_HandleTypeDef Motor17;
-	Dynamixel_Init(&Motor1, 17, &huart6);
-	Dynamixel_HandleTypeDef Motor18;
-	Dynamixel_Init(&Motor1, 18, &huart6);
+	Dynamixel_Init(&Motor10, 10, &huart6);
+//	Dynamixel_HandleTypeDef Motor11;
+//	Dynamixel_Init(&Motor11, 11, &huart4);
+//	Dynamixel_HandleTypeDef Motor12;
+//	Dynamixel_Init(&Motor12, 12, &huart4);
+//	Dynamixel_HandleTypeDef Motor13;
+//	Dynamixel_Init(&Motor13, 13, &huart4);
+//	Dynamixel_HandleTypeDef Motor14;
+//	Dynamixel_Init(&Motor14, 14, &huart2);
+//	Dynamixel_HandleTypeDef Motor15;
+//	Dynamixel_Init(&Motor15, 15, &huart2);
+//	Dynamixel_HandleTypeDef Motor16;
+//	Dynamixel_Init(&Motor16, 16, &huart2);
+//	Dynamixel_HandleTypeDef Motor17;
+//	Dynamixel_Init(&Motor17, 17, &huart2);
+//	Dynamixel_HandleTypeDef Motor18;
+//	Dynamixel_Init(&Motor18, 18, &huart2);
 
+	Dynamixel_HandleTypeDef* arrDynamixel[18];
+	arrDynamixel[0] = &Motor1;
+	arrDynamixel[1] = &Motor2;
+	arrDynamixel[2] = &Motor3;
+	arrDynamixel[3] = &Motor4;
+	arrDynamixel[4] = &Motor5;
+	arrDynamixel[5] = &Motor6;
+	arrDynamixel[6] = &Motor7;
+	arrDynamixel[7] = &Motor8;
+	arrDynamixel[8] = &Motor9;
+	arrDynamixel[9] = &Motor10;
+//	arrDynamixel[10] = &Motor11;
+//	arrDynamixel[11] = &Motor12;
+//	arrDynamixel[12] = &Motor13;
+//	arrDynamixel[13] = &Motor14;
+//	arrDynamixel[14] = &Motor15;
+//	arrDynamixel[15] = &Motor16;
+//	arrDynamixel[16] = &Motor17;
+//	arrDynamixel[17] = &Motor18;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -158,7 +177,17 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
+//	  unsigned char arr[5];
+//	  arr[0] = REG_GOAL_POSITION;
+//	  arr[1] = 2;
+//	  arr[2] = 1;
+//	  arr[3] = 0;
+//	  arr[4] = 0;
+//	  Dynamixel_SyncWriter(&Motor1, 6-1, 5, arr);
+	  for(uint8_t i = 0; i < 5; i++){
+		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
+	  }
+	  while(1);
   }
   /* USER CODE END 3 */
 
@@ -359,6 +388,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : USER_Btn_Pin */
   GPIO_InitStruct.Pin = USER_Btn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -405,6 +437,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_VBUS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 }
 

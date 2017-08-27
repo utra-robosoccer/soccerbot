@@ -1022,7 +1022,7 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 	 */
 
 	/* Write packet length into transmission array. */
-	arrSyncWrite[uartIndex][3] = numParams + 4; // Length of packet + len(INST_SYNC_WRITE, arrSyncWrite[4], arrSyncWrite[5], checksum)
+	arrSyncWrite[uartIndex][3] = numParams + 2; // Length of packet + len(INST_SYNC_WRITE, arrSyncWrite[4], arrSyncWrite[5], checksum)
 
 	/* Copy parameters into transmission array. */
 	for(uint8_t i = 0; i < numParams; i++){
@@ -1030,7 +1030,7 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 	}
 
 	/* Compute checksum. */
-	arrSyncWrite[uartIndex][numParams + 4] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numParams + 5);
+	arrSyncWrite[uartIndex][numParams + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numParams + 5);
 
 	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE, length, 0x83, checksum). */
 	#if TRANSMIT_IT
@@ -1142,16 +1142,19 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	 */
 
 	/* Set fields in motor handle. */
-	hdynamixel -> _ID = ID; // Motor ID (unique or global)
-	hdynamixel -> _BaudRate = 1000000; // Number of bytes per second transmitted by the UART
-	hdynamixel -> _lastPosition = -1; // In future, could initialize this accurately
-	hdynamixel -> _lastVelocity = -1; // In future, could initialize this accurately
-	hdynamixel -> _lastLoad = -1; // In future, could initialize this accurately
-	hdynamixel -> _lastLoadDirection = -1; // In future, could initialize this accurately
-	hdynamixel -> _lastVoltage = -1; // In future, could initialize this accurately
-	hdynamixel -> _lastTemperature = -1; // In future, could initialize this accurately
-	hdynamixel -> _isJointMode = 1; // In future, could initialize this accurately
-	hdynamixel -> _UART_Handle = UART_Handle; // For UART TX and RX
+	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
+	hdynamixel -> _BaudRate = 1000000; 			// Number of bytes per second transmitted by the UART
+	hdynamixel -> _lastPosition = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately
+	hdynamixel -> _lastLoadDirection = -1; 		// In future, could initialize this accurately
+	hdynamixel -> _lastVoltage = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastTemperature = -1; 		// In future, could initialize this accurately
+	hdynamixel -> _isJointMode = 1; 			// In future, could initialize this accurately
+	hdynamixel -> _UART_Handle = UART_Handle; 	// For UART TX and RX
+
+	hdynamixel -> _dataDirPort = -1;
+	hdynamixel -> _dataDirPinNum = -1;
 
 	/* Motor buffer initialization. */
 	/* ----> Sync write buffer <---- */
@@ -1251,12 +1254,12 @@ void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	 * Returns: none
 	 */
 
+	hdynamixel -> _ID = 0xFE;
 	Dynamixel_Reset(hdynamixel);
 	Dynamixel_SetID(hdynamixel, ID);
 	Dynamixel_SetGoalVelocity(hdynamixel, MAX_VELOCITY * 0.75);
-	Dynamixel_SetGoalPosition(hdynamixel, 300);
+	Dynamixel_SetGoalPosition(hdynamixel, 150);
 	HAL_Delay(1500);
-	Dynamixel_SetGoalPosition(hdynamixel, 0);
 }
 
 void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
