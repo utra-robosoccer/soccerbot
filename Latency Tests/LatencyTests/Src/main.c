@@ -173,14 +173,11 @@ int main(void)
 	  arrSW[11] = 4; // MOTOR4
 	  arrSW[12] = 0;
 	  arrSW[13] = 2;
-	  arrSW[14] = 5; // MOTOR5
-	  arrSW[15] = 0;
-	  arrSW[16] = 2;
 
 	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
 
 	  HAL_Delay(500);
-	  Dynamixel_SetGoalPosition(&Motor5, 150);
+	  //Dynamixel_SetGoalPosition(&Motor5, 150);
 	  while(1);
   }
   /* USER CODE END 3 */

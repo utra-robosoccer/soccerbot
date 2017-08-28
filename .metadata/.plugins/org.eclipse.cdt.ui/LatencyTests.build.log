@@ -1,4 +1,4 @@
-22:03:51 **** Incremental Build of configuration Debug for project LatencyTests ****
+22:26:37 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
@@ -20,8 +20,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
 arm-none-eabi-size "LatencyTests.elf"
    text	   data	    bss	    dec	    hex	filename
-   9544	    184	   2280	  12008	   2ee8	LatencyTests.elf
+   9132	    184	   2280	  11596	   2d4c	LatencyTests.elf
  
 
-22:03:53 Build Finished (took 1s.983ms)
+22:26:39 Build Finished (took 2s.24ms)
 
