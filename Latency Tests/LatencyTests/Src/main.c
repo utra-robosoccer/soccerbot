@@ -110,13 +110,6 @@ int main(void)
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
-//  	// Enable receive & transmit interrupts for the motor UARTs
-//	__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
-//	__HAL_UART_ENABLE_IT(&huart6,UART_IT_TC);
-//	__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
-//	__HAL_UART_ENABLE_IT(&huart2,UART_IT_TC);
-
-
 	Dynamixel_HandleTypeDef Motor1;
 	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_HandleTypeDef Motor2;
@@ -149,6 +142,9 @@ int main(void)
 	arrDynamixel[7] = &Motor8;
 	arrDynamixel[8] = &Motor9;
 	arrDynamixel[9] = &Motor10;
+
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -158,22 +154,80 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-//	  unsigned char arr[5];
-//	  arr[0] = REG_GOAL_POSITION;
-//	  arr[1] = 2;
-//	  arr[2] = 1;
-//	  arr[3] = 0;
-//	  arr[4] = 0;
-//	  Dynamixel_SyncWriter(&Motor1, 6-1, 5, arr);
+	  /* SYNC WRITE EXAMPLE FROM THE USER MANUAL. */
+//	  unsigned char arr[28] = {
+// 	 	  0XFF, 0XFF, 0XFE, 0X18, 0X83, 0X1E, 0X04, 0X00, 0X10,
+//		  0X00, 0X50, 0X01, 0X01, 0X20, 0X02, 0X60, 0X03, 0X02,
+//		  0X30, 0X00, 0X70, 0X01, 0X03, 0X20, 0X02, 0X80, 0X03,
+//		  0X12
+//	  };
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, 1);
+//  	  HAL_UART_Transmit(&huart2, arr, 28, 100);
+
+	  uint8_t uartNumber = 2;
+	  uint8_t L = 2;
+	  uint8_t numMotors = 2;
+
+	  uint8_t arrSW[8];
+	  arrSW[0] = REG_GOAL_POSITION;
+	  arrSW[1] = L;
+	  arrSW[2] = 1; // MOTOR1
+	  arrSW[3] = 0;
+	  arrSW[4] = 2;
+	  arrSW[5] = 2; // MOTOR2
+	  arrSW[6] = 0;
+	  arrSW[7] = 2;
+
+	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
+
+//	  uint8_t uartNumber = 2;
+//	  uint8_t L = 4;
+//	  uint8_t numMotors = 4;
+//
+//	  uint8_t arrSW[22];
+//	  arrSW[0] = REG_GOAL_POSITION;
+//	  arrSW[1] = L;
+//	  arrSW[2] = 0; // MOTOR0
+//	  arrSW[3] = 0X10;
+//	  arrSW[4] = 0;
+//	  arrSW[5] = 0X50;
+//	  arrSW[6] = 0X01;
+//	  arrSW[7] = 1; // MOTOR1
+//	  arrSW[8] = 0X20;
+//	  arrSW[9] = 0X02;
+//	  arrSW[10] = 0X60;
+//	  arrSW[11] = 0x03;
+//	  arrSW[12] = 2; // MOTOR2
+//	  arrSW[13] = 0x30;
+//	  arrSW[14] = 0;
+//	  arrSW[15] = 0x70;
+//	  arrSW[16] = 0x01;
+//	  arrSW[17] = 3; // MOTOR3
+//	  arrSW[18] = 0X20;
+//	  arrSW[19] = 0X02;
+//	  arrSW[20] = 0X80;
+//	  arrSW[21] = 0x03;
+//
+//	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
+
+//	  uint8_t arr[14] = {
+//		  0xFF, 0XFF, 0XFE, 10, 0X83,
+//		  0x1e,
+//		  2,
+//		  1, 0, 2,
+//		  2, 0, 2,
+//		  0x51
+//		  };
+//
+//	  HAL_Delay(100);
+//	  HAL_UART_Transmit(&huart2, arr, 14, 100);
+//	  Dynamixel_SetGoalPosition(&Motor1, 150);
+//	  Dynamixel_SetGoalPosition(&Motor2, 150);
+
 //	  for(uint8_t i = 0; i < 10; i++){
-//		  /* Make all motors return only for reads. */
-//		  Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
+//		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
 //		  HAL_Delay(20);
 //	  }
-	  for(uint8_t i = 0; i < 10; i++){
-		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
-		  HAL_Delay(10);
-	  }
 	  while(1);
   }
   /* USER CODE END 3 */

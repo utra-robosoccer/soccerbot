@@ -84,7 +84,7 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, double mi
 
 	/* Compute validity. */
 	uint8_t motor_data;
-	if((microSec < 1) || (microSec > 508)){
+	if((microSec < 2) || (microSec > 508)){
 		motor_data = DEFAULT_RETURN_DELAY;
 	}
 	else{
@@ -1000,7 +1000,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 }
 
 // UNIMPLEMENTED
-void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t numParams, uint8_t *params){
+void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t N, uint8_t *params){
 	/* Used for sending control signals to several specified Dynamixel actuators concurrently.
 	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set. Note that the
 	 * broadcast ID is used, so all motors attached to the same UART will have to spend time
@@ -1008,12 +1008,12 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 	 *
 	 * Arguments: hdynamixel, the motor handle
 	 * 			  uartIndex, the index of the UART which the motors to be communicated with are routed to
-	 * 			  numParams, the number of parameters to be transmitted from the arrSyncWrite buffer
+	 * 			  N = number of motors
 	 * 			  params, the array holding all the instructions and parameters to be passed to the various actuators
 	 *
 	 * Params must be in the following format:
 	 * 		1st element --> starting address of dynamixel control table where writing should begin
-	 * 		2nd element --> Length of data to be written to EACH motor (not total length)
+	 * 		2nd element --> Length of data to be written to EACH motor (L)
 	 * 		3rd element --> ID of 1st motor
 	 * 		4th element --> 1st parameter for 1st motor...
 	 * 		L+3 element --> Lth parameter for 1st motor...
@@ -1026,24 +1026,27 @@ void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex
 	 */
 
 	/* Write packet length into transmission array. */
-	arrSyncWrite[uartIndex][3] = numParams + 2; // Length of packet + len(INST_SYNC_WRITE, arrSyncWrite[4], arrSyncWrite[5], checksum)
+	uint8_t length = (params[1] + 1) * N + 4;
+	arrSyncWrite[uartIndex][3] = length;
+
 
 	/* Copy parameters into transmission array. */
-	for(uint8_t i = 0; i < numParams; i++){
+	uint8_t numLoops = (params[1] + 1) * N + 2; // Number of parameters in params
+	for(uint8_t i = 0; i < numLoops; i++){
 		arrSyncWrite[uartIndex][i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
 	}
 
 	/* Compute checksum. */
-	arrSyncWrite[uartIndex][numParams + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numParams + 5);
+	arrSyncWrite[uartIndex][numLoops + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numLoops + 6);
 
 	// Set data direction for transmit
 	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE, length, 0x83, checksum). */
+	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE). */
 	#if TRANSMIT_IT
-		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], numParams + 6);
+		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4);
 	#else
-		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], numParams + 6, TRANSMIT_TIMEOUT);
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4, TRANSMIT_TIMEOUT);
 	#endif
 }
 
@@ -1170,6 +1173,9 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 
 	/* Configure motor to return status packets only for read commands. */
 	Dynamixel_SetStatusReturnLevel(hdynamixel, 1);
+
+	/* Set minimum delay return time (2 microseconds). */
+	Dynamixel_SetReturnDelayTime(hdynamixel, 2);
 }
 
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
