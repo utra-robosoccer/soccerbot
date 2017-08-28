@@ -154,19 +154,9 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  /* SYNC WRITE EXAMPLE FROM THE USER MANUAL. */
-//	  unsigned char arr[28] = {
-// 	 	  0XFF, 0XFF, 0XFE, 0X18, 0X83, 0X1E, 0X04, 0X00, 0X10,
-//		  0X00, 0X50, 0X01, 0X01, 0X20, 0X02, 0X60, 0X03, 0X02,
-//		  0X30, 0X00, 0X70, 0X01, 0X03, 0X20, 0X02, 0X80, 0X03,
-//		  0X12
-//	  };
-//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, 1);
-//  	  HAL_UART_Transmit(&huart2, arr, 28, 100);
-
 	  uint8_t uartNumber = 2;
 	  uint8_t L = 2;
-	  uint8_t numMotors = 2;
+	  uint8_t numMotors = 4;
 
 	  uint8_t arrSW[8];
 	  arrSW[0] = REG_GOAL_POSITION;
@@ -177,57 +167,20 @@ int main(void)
 	  arrSW[5] = 2; // MOTOR2
 	  arrSW[6] = 0;
 	  arrSW[7] = 2;
+	  arrSW[8] = 3; // MOTOR3
+	  arrSW[9] = 0;
+	  arrSW[10] = 2;
+	  arrSW[11] = 4; // MOTOR4
+	  arrSW[12] = 0;
+	  arrSW[13] = 2;
+	  arrSW[14] = 5; // MOTOR5
+	  arrSW[15] = 0;
+	  arrSW[16] = 2;
 
 	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
 
-//	  uint8_t uartNumber = 2;
-//	  uint8_t L = 4;
-//	  uint8_t numMotors = 4;
-//
-//	  uint8_t arrSW[22];
-//	  arrSW[0] = REG_GOAL_POSITION;
-//	  arrSW[1] = L;
-//	  arrSW[2] = 0; // MOTOR0
-//	  arrSW[3] = 0X10;
-//	  arrSW[4] = 0;
-//	  arrSW[5] = 0X50;
-//	  arrSW[6] = 0X01;
-//	  arrSW[7] = 1; // MOTOR1
-//	  arrSW[8] = 0X20;
-//	  arrSW[9] = 0X02;
-//	  arrSW[10] = 0X60;
-//	  arrSW[11] = 0x03;
-//	  arrSW[12] = 2; // MOTOR2
-//	  arrSW[13] = 0x30;
-//	  arrSW[14] = 0;
-//	  arrSW[15] = 0x70;
-//	  arrSW[16] = 0x01;
-//	  arrSW[17] = 3; // MOTOR3
-//	  arrSW[18] = 0X20;
-//	  arrSW[19] = 0X02;
-//	  arrSW[20] = 0X80;
-//	  arrSW[21] = 0x03;
-//
-//	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
-
-//	  uint8_t arr[14] = {
-//		  0xFF, 0XFF, 0XFE, 10, 0X83,
-//		  0x1e,
-//		  2,
-//		  1, 0, 2,
-//		  2, 0, 2,
-//		  0x51
-//		  };
-//
-//	  HAL_Delay(100);
-//	  HAL_UART_Transmit(&huart2, arr, 14, 100);
-//	  Dynamixel_SetGoalPosition(&Motor1, 150);
-//	  Dynamixel_SetGoalPosition(&Motor2, 150);
-
-//	  for(uint8_t i = 0; i < 10; i++){
-//		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
-//		  HAL_Delay(20);
-//	  }
+	  HAL_Delay(500);
+	  Dynamixel_SetGoalPosition(&Motor5, 150);
 	  while(1);
   }
   /* USER CODE END 3 */

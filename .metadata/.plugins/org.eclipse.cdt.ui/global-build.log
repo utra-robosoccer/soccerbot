@@ -751,3 +751,51 @@ arm-none-eabi-size "LatencyTests.elf"
 21:58:43 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
+22:00:41 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[10];
+                           ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9384	    184	   2280	  11848	   2e48	LatencyTests.elf
+ 
+22:03:51 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[10];
+                           ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9544	    184	   2280	  12008	   2ee8	LatencyTests.elf
+ 
