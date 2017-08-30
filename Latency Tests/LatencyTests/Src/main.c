@@ -40,12 +40,20 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
+/* Motor driver. */
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
+
+/* Simulink. */
+#include <stddef.h>
+#include <stdio.h>                     			/* This ert_main.c example uses printf/fflush */
+#include "simplepid_ert_rtw/simplepid.h"        /* Model's header file */
+#include "simplepid_ert_rtw/rtwtypes.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart4;
+TIM_HandleTypeDef htim10;
+
 UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
@@ -54,6 +62,22 @@ UART_HandleTypeDef huart6;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 uint8_t buffrec[7];
+
+Dynamixel_HandleTypeDef Motor1;
+Dynamixel_HandleTypeDef Motor2;
+Dynamixel_HandleTypeDef Motor3;
+Dynamixel_HandleTypeDef Motor4;
+Dynamixel_HandleTypeDef Motor5;
+Dynamixel_HandleTypeDef Motor6;
+Dynamixel_HandleTypeDef Motor7;
+Dynamixel_HandleTypeDef Motor8;
+Dynamixel_HandleTypeDef Motor9;
+Dynamixel_HandleTypeDef Motor10;
+Dynamixel_HandleTypeDef Motor11;
+Dynamixel_HandleTypeDef Motor12;
+
+volatile double lastTorque;
+volatile uint8_t firstEntry = 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,13 +86,13 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
-static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
+static void MX_TIM10_Init(void);
 static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void rt_OneStep(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -103,35 +127,34 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
-  MX_UART4_Init();
   MX_UART5_Init();
+  MX_TIM10_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
-	Dynamixel_HandleTypeDef Motor1;
+  	/* UART2 --> Motors: 1, 2, 3	|	Data Direction Pin: D7. */
 	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_HandleTypeDef Motor2;
 	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_HandleTypeDef Motor3;
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_HandleTypeDef Motor4;
-	Dynamixel_Init(&Motor4, 4, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_HandleTypeDef Motor5;
-	Dynamixel_Init(&Motor5, 5, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_HandleTypeDef Motor6;
-	Dynamixel_Init(&Motor6, 6, &huart6, GPIOF, GPIO_PIN_15);
-	Dynamixel_HandleTypeDef Motor7;
-	Dynamixel_Init(&Motor7, 7, &huart6, GPIOF, GPIO_PIN_15);
-	Dynamixel_HandleTypeDef Motor8;
-	Dynamixel_Init(&Motor8, 8, &huart6, GPIOF, GPIO_PIN_15);
-	Dynamixel_HandleTypeDef Motor9;
-	Dynamixel_Init(&Motor9, 9, &huart6, GPIOF, GPIO_PIN_15);
-	Dynamixel_HandleTypeDef Motor10;
-	Dynamixel_Init(&Motor10, 10, &huart6, GPIOF, GPIO_PIN_15);
 
-	Dynamixel_HandleTypeDef* arrDynamixel[10];
+	/* UART3 --> Motors: 4, 5, 6	|	Data Direction Pin: E15. */
+	Dynamixel_Init(&Motor4, 4, &huart3, GPIOE, GPIO_PIN_15);
+	Dynamixel_Init(&Motor5, 5, &huart3, GPIOE, GPIO_PIN_15);
+	Dynamixel_Init(&Motor6, 6, &huart3, GPIOE, GPIO_PIN_15);
+
+	/* UART5 --> Motors: 7, 8, 9	|	Data Direction Pin: E10. */
+	Dynamixel_Init(&Motor7, 7, &huart5, GPIOE, GPIO_PIN_10);
+	Dynamixel_Init(&Motor8, 8, &huart5, GPIOE, GPIO_PIN_10);
+	Dynamixel_Init(&Motor9, 9, &huart5, GPIOE, GPIO_PIN_10);
+
+	/* UART6 --> Motors: 10, 11, 12	|	Data Direction Pin: F15. */
+	Dynamixel_Init(&Motor10, 10, &huart6, GPIOF, GPIO_PIN_15);
+	Dynamixel_Init(&Motor11, 11, &huart6, GPIOF, GPIO_PIN_15);
+	Dynamixel_Init(&Motor12, 12, &huart6, GPIOF, GPIO_PIN_15);
+
+	Dynamixel_HandleTypeDef* arrDynamixel[12];
 	arrDynamixel[0] = &Motor1;
 	arrDynamixel[1] = &Motor2;
 	arrDynamixel[2] = &Motor3;
@@ -142,9 +165,17 @@ int main(void)
 	arrDynamixel[7] = &Motor8;
 	arrDynamixel[8] = &Motor9;
 	arrDynamixel[9] = &Motor10;
+	arrDynamixel[10] = &Motor11;
+	arrDynamixel[11] = &Motor12;
 
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, 1);
+	HAL_Delay(100); // Just in case
+
+	Dynamixel_EnterWheelMode(&Motor10, 100);
+
+	HAL_TIM_Base_Start_IT(&htim10); // Starts the Timer-based interrupt generation
+
+	/* Initialize model */
+	simplepid_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -154,31 +185,27 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  uint8_t uartNumber = 2;
-	  uint8_t L = 2;
-	  uint8_t numMotors = 4;
-
-	  uint8_t arrSW[8];
-	  arrSW[0] = REG_GOAL_POSITION;
-	  arrSW[1] = L;
-	  arrSW[2] = 1; // MOTOR1
-	  arrSW[3] = 0;
-	  arrSW[4] = 2;
-	  arrSW[5] = 2; // MOTOR2
-	  arrSW[6] = 0;
-	  arrSW[7] = 2;
-	  arrSW[8] = 3; // MOTOR3
-	  arrSW[9] = 0;
-	  arrSW[10] = 2;
-	  arrSW[11] = 4; // MOTOR4
-	  arrSW[12] = 0;
-	  arrSW[13] = 2;
-
-	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
-
-	  HAL_Delay(500);
-	  //Dynamixel_SetGoalPosition(&Motor5, 150);
-	  while(1);
+//	  uint8_t uartNumber = 2;
+//	  uint8_t L = 2;
+//	  uint8_t numMotors = 4;
+//
+//	  uint8_t arrSW[8];
+//	  arrSW[0] = REG_GOAL_POSITION;
+//	  arrSW[1] = L;
+//	  arrSW[2] = 1; // MOTOR1
+//	  arrSW[3] = 0;
+//	  arrSW[4] = 2;
+//	  arrSW[5] = 2; // MOTOR2
+//	  arrSW[6] = 0;
+//	  arrSW[7] = 2;
+//	  arrSW[8] = 3; // MOTOR3
+//	  arrSW[9] = 0;
+//	  arrSW[10] = 2;
+//	  arrSW[11] = 4; // MOTOR4
+//	  arrSW[12] = 0;
+//	  arrSW[13] = 2;
+//
+//	  Dynamixel_SyncWriter(&Motor1, uartNumber, numMotors, arrSW);
   }
   /* USER CODE END 3 */
 
@@ -229,7 +256,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
@@ -260,19 +287,16 @@ static void MX_NVIC_Init(void)
   HAL_NVIC_EnableIRQ(USART6_IRQn);
 }
 
-/* UART4 init function */
-static void MX_UART4_Init(void)
+/* TIM10 init function */
+static void MX_TIM10_Init(void)
 {
 
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 1000000;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  htim10.Instance = TIM10;
+  htim10.Init.Prescaler = 90;
+  htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim10.Init.Period = 9999;
+  htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -375,15 +399,18 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_15, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10|GPIO_PIN_15, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
@@ -392,7 +419,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
 
   /*Configure GPIO pin : USER_Btn_Pin */
   GPIO_InitStruct.Pin = USER_Btn_Pin;
@@ -406,6 +433,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PE10 PE15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LD3_Pin LD2_Pin */
   GPIO_InitStruct.Pin = LD3_Pin|LD2_Pin;
@@ -451,6 +485,77 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void rt_OneStep(void){
+  static boolean_T OverrunFlag = false;
+
+  /* '<Root>/Position' */
+  static real_T arg_Position = 0.0;
+
+  /* '<Root>/Torque' */
+  static real_T arg_Torque;
+
+  /* Disable interrupts here */
+
+  /* Check for overrun */
+  if (OverrunFlag) {
+    return;
+  }
+
+  OverrunFlag = true;
+
+  /* Save FPU context here (if necessary) */
+  /* Re-enable timer or interrupt here */
+  /* Set model inputs here */
+  Dynamixel_GetPosition(&Motor10);
+  arg_Position = (double)(Motor10._lastPosition - 150) * 2;
+
+  /* Step the model */
+  simplepid_step(arg_Position, &arg_Torque);
+
+  /* Get model outputs here */
+  if(firstEntry == 0){
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
+	  if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+		  if(arg_Torque < 0){
+			  Dynamixel_SetGoalVelocity(&Motor10, -MAX_VELOCITY);
+			  arg_Torque *= -1;
+		  }
+		  else{
+			  Dynamixel_SetGoalVelocity(&Motor10, MAX_VELOCITY);
+		  }
+		  lastTorque = arg_Torque;
+  	  }
+  }
+  else{
+	  if(arg_Torque < 0){
+		  Dynamixel_SetGoalVelocity(&Motor10, -MAX_VELOCITY);
+		  arg_Torque *= -1;
+	  }
+	  else{
+		  Dynamixel_SetGoalVelocity(&Motor10, MAX_VELOCITY);
+	  }
+	  firstEntry = 0;
+	  lastTorque = arg_Torque;
+  }
+  if(arg_Torque < 0){
+	  arg_Torque *= -1;
+  }
+  arg_Torque = (arg_Torque > MAX_TORQUE) ? MAX_TORQUE : arg_Torque;
+  Dynamixel_SetGoalTorque(&Motor10, arg_Torque);
+
+  /* Indicate task complete */
+  OverrunFlag = false;
+
+  /* Disable interrupts here */
+  /* Restore FPU context here (if necessary) */
+  /* Enable interrupts here */
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
+	if(htim->Instance == TIM10){
+		rt_OneStep();
+	}
+}
 
 /* USER CODE END 4 */
 

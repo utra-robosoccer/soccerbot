@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;LatencyTests/Src/simplepid_ert_rtw&apos;" deleteContents="false" description="Delete resource &apos;LatencyTests/Src/simplepid_ert_rtw&apos;" element1="/LatencyTests/Src/simplepid_ert_rtw" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1504048483489"/>
+</session>
