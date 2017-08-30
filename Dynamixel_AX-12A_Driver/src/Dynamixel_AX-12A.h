@@ -13,7 +13,7 @@
 
 /*********************************** Defines **********************************/
 /* Communications. */
-#define TRANSMIT_IT				1		// 1 if using interrupts for transmit, otherwise 0 (polling)
+#define TRANSMIT_IT				0		// 1 if using interrupts for transmit, otherwise 0 (polling)
 #define NUM_MOTORS				18		// Used to determine buffer sizes
 #define BUFF_SIZE_RX			8		// Receive buffer size for UART receptions (number of bytes)
 #define TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
@@ -23,8 +23,8 @@ const uint8_t TRANSMIT_TIMEOUT = 10; 	// Timeout for blocking UART transmissions
 const uint8_t RECEIVE_TIMEOUT = 10;		// Timeout for blocking UART receptions, in milliseconds
 
 /* Value limit definitions. */
-const uint8_t MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
-const uint8_t MIN_VELOCITY = 1;		// Minimum angular velocity (RPM)
+const double MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
+const double MIN_VELOCITY = 1;		// Minimum angular velocity (RPM)
 const uint16_t MAX_ANGLE = 300;		// Maximum angular position (joint mode)
 const uint8_t MIN_ANGLE = 0;		// Minimum angular position (joint mode)
 const uint8_t MAX_TORQUE = 100;		// Maximum torque (percent of maximum)

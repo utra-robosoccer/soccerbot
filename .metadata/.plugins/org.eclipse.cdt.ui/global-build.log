@@ -1,61 +1,791 @@
-20:35:08 **** Incremental Build of configuration Debug for project LatencyTests ****
+21:42:33 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14540	    184	   2960	  17684	   4514	LatencyTests.elf
+ 
+21:42:45 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
-20:35:17 **** Incremental Build of configuration Debug for project LatencyTests ****
+21:44:53 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:519:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:519:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14556	    184	   2960	  17700	   4524	LatencyTests.elf
+ 
+21:45:28 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14548	    184	   2960	  17692	   451c	LatencyTests.elf
+ 
+21:46:31 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14556	    184	   2960	  17700	   4524	LatencyTests.elf
+ 
+21:46:47 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
-20:38:44 **** Incremental Build of configuration Debug for project LatencyTests ****
+21:47:34 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
-20:39:07 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9224	    184	   2280	  11688	   2da8	LatencyTests.elf
- 
-20:45:40 **** Incremental Build of configuration Debug for project LatencyTests ****
+21:47:39 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
-20:46:55 **** Incremental Build of configuration Debug for project LatencyTests ****
+21:49:38 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14588	    184	   2960	  17732	   4544	LatencyTests.elf
+ 
+21:51:00 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14572	    184	   2960	  17716	   4534	LatencyTests.elf
+ 
+21:51:23 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14588	    184	   2960	  17732	   4544	LatencyTests.elf
+ 
+21:53:34 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14588	    184	   2960	  17732	   4544	LatencyTests.elf
+ 
+21:55:27 **** Clean-only build of configuration Debug for project LatencyTests ****
+make clean 
+rm -rf *
+D:\Ac6\SystemWorkbench\plugins\fr.ac6.mcu.externaltools.arm-none.win32_1.13.2.201703061525\tools\make\rm.exe: cannot remove `LatencyTests.elf': Permission denied
+make: [clean] Error 1 (ignored)
+ 
+21:55:28 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../startup/startup_stm32f446xx.s
+Invoking: MCU GCC Assembler
+%cd%
+arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "startup/startup_stm32f446xx.o" "../startup/startup_stm32f446xx.s"
+Finished building: ../startup/startup_stm32f446xx.s
+ 
+Building file: ../Src/simplepid_ert_rtw/ert_main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/ert_main.d" -MT"Src/simplepid_ert_rtw/ert_main.o" -o "Src/simplepid_ert_rtw/ert_main.o" "../Src/simplepid_ert_rtw/ert_main.c"
+Finished building: ../Src/simplepid_ert_rtw/ert_main.c
+ 
+Building file: ../Src/simplepid_ert_rtw/simplepid.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/simplepid.d" -MT"Src/simplepid_ert_rtw/simplepid.o" -o "Src/simplepid_ert_rtw/simplepid.o" "../Src/simplepid_ert_rtw/simplepid.c"
+Finished building: ../Src/simplepid_ert_rtw/simplepid.c
+ 
+Building file: ../Src/simplepid_ert_rtw/simplepid_data.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/simplepid_data.d" -MT"Src/simplepid_ert_rtw/simplepid_data.o" -o "Src/simplepid_ert_rtw/simplepid_data.o" "../Src/simplepid_ert_rtw/simplepid_data.c"
+Finished building: ../Src/simplepid_ert_rtw/simplepid_data.c
+ 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14588	    184	   2960	  17732	   4544	LatencyTests.elf
+ 
+21:56:50 **** Clean-only build of configuration Debug for project LatencyTests ****
+make clean 
+rm -rf *
+D:\Ac6\SystemWorkbench\plugins\fr.ac6.mcu.externaltools.arm-none.win32_1.13.2.201703061525\tools\make\rm.exe: cannot remove `LatencyTests.elf': Permission denied
+make: [clean] Error 1 (ignored)
+ 
+21:56:50 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../startup/startup_stm32f446xx.s
+Invoking: MCU GCC Assembler
+%cd%
+arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "startup/startup_stm32f446xx.o" "../startup/startup_stm32f446xx.s"
+Finished building: ../startup/startup_stm32f446xx.s
+ 
+Building file: ../Src/simplepid_ert_rtw/ert_main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/ert_main.d" -MT"Src/simplepid_ert_rtw/ert_main.o" -o "Src/simplepid_ert_rtw/ert_main.o" "../Src/simplepid_ert_rtw/ert_main.c"
+Finished building: ../Src/simplepid_ert_rtw/ert_main.c
+ 
+Building file: ../Src/simplepid_ert_rtw/simplepid.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/simplepid.d" -MT"Src/simplepid_ert_rtw/simplepid.o" -o "Src/simplepid_ert_rtw/simplepid.o" "../Src/simplepid_ert_rtw/simplepid.c"
+Finished building: ../Src/simplepid_ert_rtw/simplepid.c
+ 
+Building file: ../Src/simplepid_ert_rtw/simplepid_data.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/simplepid_ert_rtw/simplepid_data.d" -MT"Src/simplepid_ert_rtw/simplepid_data.o" -o "Src/simplepid_ert_rtw/simplepid_data.o" "../Src/simplepid_ert_rtw/simplepid_data.c"
+Finished building: ../Src/simplepid_ert_rtw/simplepid_data.c
+ 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14628	    184	   2960	  17772	   456c	LatencyTests.elf
+ 
+21:59:22 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14620	    184	   2960	  17764	   4564	LatencyTests.elf
+ 
+22:00:38 **** Incremental Build of configuration Debug for project LatencyTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+                           ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
+Finished building: ../Src/main.c
+ 
+Building target: LatencyTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
+Finished building target: LatencyTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
+arm-none-eabi-size "LatencyTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  14612	    184	   2960	  17756	   455c	LatencyTests.elf
+ 
+22:01:32 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 make: Nothing to be done for `all'.
-20:48:14 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-20:48:40 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-20:48:45 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-20:52:49 **** Incremental Build of configuration Debug for project LatencyTests ****
+22:02:11 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
 %cd%
 arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
 ../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
                            ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
 Finished building: ../Src/main.c
  
 Building target: LatencyTests.elf
@@ -68,1037 +798,5 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
 arm-none-eabi-size "LatencyTests.elf"
    text	   data	    bss	    dec	    hex	filename
-   9248	    184	   2280	  11712	   2dc0	LatencyTests.elf
- 
-20:56:46 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9436	    184	   2280	  11900	   2e7c	LatencyTests.elf
- 
-21:00:01 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9436	    184	   2280	  11900	   2e7c	LatencyTests.elf
- 
-21:00:57 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:01:27 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:02:46 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:04:10 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:04:45 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:05:37 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:20:01 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9224	    184	   2280	  11688	   2da8	LatencyTests.elf
- 
-21:27:24 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:31:37 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:32:31 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:32:44 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:35:07 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:35:18 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:36:09 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:37:13 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:38:01 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:38:29 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:39:13 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:39:24 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:40:51 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:42:32 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:45:24 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9496	    184	   2280	  11960	   2eb8	LatencyTests.elf
- 
-21:45:43 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9496	    184	   2280	  11960	   2eb8	LatencyTests.elf
- 
-21:46:12 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:47:48 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:49:26 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9488	    184	   2280	  11952	   2eb0	LatencyTests.elf
- 
-21:49:50 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9228	    184	   2280	  11692	   2dac	LatencyTests.elf
- 
-21:50:40 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9416	    184	   2280	  11880	   2e68	LatencyTests.elf
- 
-21:51:49 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9228	    184	   2280	  11692	   2dac	LatencyTests.elf
- 
-21:52:46 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9344	    184	   2280	  11808	   2e20	LatencyTests.elf
- 
-21:53:58 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-21:54:43 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9416	    184	   2280	  11880	   2e68	LatencyTests.elf
- 
-21:55:48 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9416	    184	   2280	  11880	   2e68	LatencyTests.elf
- 
-21:57:43 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9344	    184	   2280	  11808	   2e20	LatencyTests.elf
- 
-21:58:34 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9344	    184	   2280	  11808	   2e20	LatencyTests.elf
- 
-21:58:43 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:00:41 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9384	    184	   2280	  11848	   2e48	LatencyTests.elf
- 
-22:03:51 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9544	    184	   2280	  12008	   2ee8	LatencyTests.elf
- 
-22:06:35 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9288	    184	   2280	  11752	   2de8	LatencyTests.elf
- 
-22:07:19 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9272	    184	   2280	  11736	   2dd8	LatencyTests.elf
- 
-22:07:32 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9108	    184	   2280	  11572	   2d34	LatencyTests.elf
- 
-22:08:45 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9120	    184	   2280	  11584	   2d40	LatencyTests.elf
- 
-22:10:44 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9304	    184	   2280	  11768	   2df8	LatencyTests.elf
- 
-22:11:16 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9132	    184	   2280	  11596	   2d4c	LatencyTests.elf
- 
-22:16:43 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9120	    184	   2280	  11584	   2d40	LatencyTests.elf
- 
-22:17:07 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:17:49 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9120	    184	   2280	  11584	   2d40	LatencyTests.elf
- 
-22:18:30 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9104	    184	   2280	  11568	   2d30	LatencyTests.elf
- 
-22:20:14 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:21:00 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:24:10 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9120	    184	   2280	  11584	   2d40	LatencyTests.elf
- 
-22:24:18 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:24:30 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-make: Nothing to be done for `all'.
-22:25:46 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9384	    184	   2280	  11848	   2e48	LatencyTests.elf
- 
-22:26:37 **** Incremental Build of configuration Debug for project LatencyTests ****
-make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
-                           ^
-Finished building: ../Src/main.c
- 
-Building target: LatencyTests.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "LatencyTests.elf" @"objects.list"  
-Finished building target: LatencyTests.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
-arm-none-eabi-size "LatencyTests.elf"
-   text	   data	    bss	    dec	    hex	filename
-   9132	    184	   2280	  11596	   2d4c	LatencyTests.elf
+  14620	    184	   2960	  17764	   4564	LatencyTests.elf
  

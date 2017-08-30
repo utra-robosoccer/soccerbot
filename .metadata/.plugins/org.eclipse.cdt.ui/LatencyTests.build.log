@@ -1,13 +1,20 @@
-22:26:37 **** Incremental Build of configuration Debug for project LatencyTests ****
+22:02:11 **** Incremental Build of configuration Debug for project LatencyTests ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
 %cd%
 arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Latency Tests/LatencyTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
 ../Src/main.c: In function 'main':
-../Src/main.c:134:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
-  Dynamixel_HandleTypeDef* arrDynamixel[10];
+../Src/main.c:157:27: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
                            ^
+../Src/main.c: In function 'rt_OneStep':
+../Src/main.c:518:34: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                  ^
+../Src/main.c:518:72: warning: left shift count >= width of type [-Wshift-count-overflow]
+    if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+                                                                        ^
 Finished building: ../Src/main.c
  
 Building target: LatencyTests.elf
@@ -20,8 +27,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "LatencyTests.elf" "LatencyTests.bin"
 arm-none-eabi-size "LatencyTests.elf"
    text	   data	    bss	    dec	    hex	filename
-   9132	    184	   2280	  11596	   2d4c	LatencyTests.elf
+  14620	    184	   2960	  17764	   4564	LatencyTests.elf
  
 
-22:26:39 Build Finished (took 2s.24ms)
+22:02:14 Build Finished (took 2s.590ms)
 
