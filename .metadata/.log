@@ -1914,3 +1914,9 @@ org.eclipse.epp.logging.aeri.core.util.Logs$LogTraceException
 
 !ENTRY org.eclipse.cdt.dsf 4 10005 2017-08-27 21:32:23.351
 !MESSAGE Request for monitor: 'CountingRequestMonitor: Status OK: org.eclipse.cdt.dsf code=0  null children=[]' resulted in a rejected execution exception.
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-08-29 23:23:22.165
+!MESSAGE Indexed 'Jump' (19 sources, 28 headers) in 1.06 sec: 3,355 declarations; 27,100 references; 3 unresolved inclusions; 18 syntax errors; 3,207 unresolved names (9.5%)
+
+!ENTRY fr.ac6.mcu.debug 4 0 2017-08-29 23:51:04.420
+!MESSAGE Project no longer exists

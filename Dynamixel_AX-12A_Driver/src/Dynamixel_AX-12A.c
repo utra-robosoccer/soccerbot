@@ -1173,12 +1173,15 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 
 	/* Configure motor to return status packets only for read commands. */
 	Dynamixel_SetStatusReturnLevel(hdynamixel, 1);
+	HAL_Delay(10);
 
 	/* Set minimum delay return time (2 microseconds). */
 	Dynamixel_SetReturnDelayTime(hdynamixel, 2);
+	HAL_Delay(10);
 
 	/* Impress current to motor to enable torque. */
 	Dynamixel_TorqueEnable(hdynamixel, 1);
+	HAL_Delay(10);
 }
 
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
@@ -1272,7 +1275,7 @@ void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	Dynamixel_Reset(hdynamixel);
 	Dynamixel_SetID(hdynamixel, ID);
 	HAL_Delay(10);
-	Dynamixel_SetGoalVelocity(hdynamixel, MAX_VELOCITY * 0.75);
+	Dynamixel_SetGoalVelocity(hdynamixel, MAX_VELOCITY * 0.5);
 	HAL_Delay(10);
 	Dynamixel_SetGoalPosition(hdynamixel, 150);
 	HAL_Delay(10);
