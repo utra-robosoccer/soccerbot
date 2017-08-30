@@ -92,7 +92,8 @@ static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-void rt_OneStep(void);
+void rt_OneStepWheelMode(void);
+void rt_OneStepJointMode(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -170,7 +171,9 @@ int main(void)
 
 	HAL_Delay(100); // Just in case
 
-	Dynamixel_EnterWheelMode(&Motor10, 100);
+	//Dynamixel_EnterWheelMode(&Motor10, 100);
+	Dynamixel_EnterJointMode(&Motor10);
+	Dynamixel_SetGoalVelocity(&Motor10, MAX_VELOCITY);
 
 	HAL_TIM_Base_Start_IT(&htim10); // Starts the Timer-based interrupt generation
 
@@ -294,7 +297,7 @@ static void MX_TIM10_Init(void)
   htim10.Instance = TIM10;
   htim10.Init.Prescaler = 90;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 9999;
+  htim10.Init.Period = 999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
@@ -485,7 +488,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void rt_OneStep(void){
+void rt_OneStepWheelMode(void){
   static boolean_T OverrunFlag = false;
 
   /* '<Root>/Position' */
@@ -507,18 +510,17 @@ void rt_OneStep(void){
   /* Re-enable timer or interrupt here */
   /* Set model inputs here */
   Dynamixel_GetPosition(&Motor10);
-  arg_Position = (double)(Motor10._lastPosition - 150) * 2;
+  arg_Position = (double)(Motor10._lastPosition - 150) / 100;
 
   /* Step the model */
   simplepid_step(arg_Position, &arg_Torque);
 
   /* Get model outputs here */
   if(firstEntry == 0){
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
-	  if(((uint64_t)lastTorque & (1 << 63)) != ((uint64_t)arg_Torque & (1 << 63))){
+	  if((lastTorque > 0) != (arg_Torque > 0)){
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7); // Toggle LED
 		  if(arg_Torque < 0){
 			  Dynamixel_SetGoalVelocity(&Motor10, -MAX_VELOCITY);
-			  arg_Torque *= -1;
 		  }
 		  else{
 			  Dynamixel_SetGoalVelocity(&Motor10, MAX_VELOCITY);
@@ -529,7 +531,6 @@ void rt_OneStep(void){
   else{
 	  if(arg_Torque < 0){
 		  Dynamixel_SetGoalVelocity(&Motor10, -MAX_VELOCITY);
-		  arg_Torque *= -1;
 	  }
 	  else{
 		  Dynamixel_SetGoalVelocity(&Motor10, MAX_VELOCITY);
@@ -551,9 +552,74 @@ void rt_OneStep(void){
   /* Enable interrupts here */
 }
 
+void rt_OneStepJointMode(void){
+  static boolean_T OverrunFlag = false;
+
+  /* '<Root>/Position' */
+  static real_T arg_Position = 0.0;
+
+  /* '<Root>/Torque' */
+  static real_T arg_Torque;
+
+  /* Disable interrupts here */
+
+  /* Check for overrun */
+  if (OverrunFlag) {
+    return;
+  }
+
+  OverrunFlag = true;
+
+  /* Save FPU context here (if necessary) */
+  /* Re-enable timer or interrupt here */
+  /* Set model inputs here */
+  Dynamixel_GetPosition(&Motor10);
+  arg_Position = (double)(Motor10._lastPosition - 150) / 100;
+
+  /* Step the model */
+  simplepid_step(arg_Position, &arg_Torque);
+
+  /* Get model outputs here */
+  if(firstEntry == 0){
+	  if((lastTorque > 0) != (arg_Torque > 0)){
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1); // Toggle LED
+		  if(arg_Torque < 0){
+			  Dynamixel_SetGoalPosition(&Motor10, MIN_ANGLE);
+		  }
+		  else{
+			  Dynamixel_SetGoalPosition(&Motor10, MAX_ANGLE);
+		  }
+		  lastTorque = arg_Torque;
+  	  }
+  }
+  else{
+	  if(arg_Torque < 0){
+		  Dynamixel_SetGoalPosition(&Motor10, MIN_ANGLE);
+	  }
+	  else{
+		  Dynamixel_SetGoalPosition(&Motor10, MAX_ANGLE);
+	  }
+	  firstEntry = 0;
+	  lastTorque = arg_Torque;
+  }
+  if(arg_Torque < 0){
+	  arg_Torque *= -1;
+  }
+  arg_Torque = (arg_Torque > MAX_TORQUE) ? MAX_TORQUE : arg_Torque;
+  Dynamixel_SetGoalTorque(&Motor10, arg_Torque);
+
+  /* Indicate task complete */
+  OverrunFlag = false;
+
+  /* Disable interrupts here */
+  /* Restore FPU context here (if necessary) */
+  /* Enable interrupts here */
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
 	if(htim->Instance == TIM10){
-		rt_OneStep();
+		//rt_OneStepWheelMode();
+		rt_OneStepJointMode();
 	}
 }
 
