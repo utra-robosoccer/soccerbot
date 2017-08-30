@@ -60,7 +60,6 @@
 //  /* Save FPU context here (if necessary) */
 //  /* Re-enable timer or interrupt here */
 //  /* Set model inputs here */
-//  arg_Position =
 //
 //  /* Step the model */
 //  simplepid_step(arg_Position, &arg_Torque);
