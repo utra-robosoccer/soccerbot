@@ -149,9 +149,12 @@ int main(void)
 	arrDynamixel[10] = &Motor11;
 	arrDynamixel[11] = &Motor12;
 
-  	HAL_Delay(100); // Just in case
+  	HAL_Delay(1000); // Just in case
   	for(uint8_t i = 0; i < 12; i++){
-  		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY);
+  		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.2);
+//  		Dynamixel_LEDEnable(arrDynamixel[i], 1);
+//  		HAL_Delay(1000);
+//  		Dynamixel_LEDEnable(arrDynamixel[i], 0);
   		HAL_Delay(10);
   	}
 
@@ -165,11 +168,81 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		for(uint8_t i = 0; i < 12; i++){
-			Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
-			HAL_Delay(100);
-		}
 
+	  /* STAND-UP FROM FACE PLANT. --> BEGIN */
+	  /* STAND-UP FROM FACE PLANT. --> State 1 */
+	  Dynamixel_SetGoalPosition(&Motor1, 150);
+	  Dynamixel_SetGoalPosition(&Motor4, 150);
+	  uint8_t eps = 5;
+	  uint16_t target_motor3 = 210;
+	  uint16_t target_motor6 = 90;
+	  while(1){
+		  Dynamixel_SetGoalTorque(&Motor3, 100);
+		  Dynamixel_SetGoalTorque(&Motor6, 100);
+		  Dynamixel_GetPosition(&Motor3);
+		  Dynamixel_GetPosition(&Motor6);
+		  Dynamixel_SetGoalPosition(&Motor3, target_motor3);
+		  Dynamixel_SetGoalPosition(&Motor6, target_motor6);
+		  if((target_motor3 - Motor3._lastPosition < eps) && (Motor6._lastPosition - target_motor6 < eps)){
+			  break;
+		  }
+	  }
+	  /* STAND-UP FROM FACE PLANT. --> State 2 */
+	  eps = 5;
+	  uint16_t target_motor7 = 40;
+	  uint16_t target_motor10 = 240;
+	  while(1){
+		  Dynamixel_SetGoalTorque(&Motor7, 100);
+		  Dynamixel_SetGoalTorque(&Motor10, 100);
+		  Dynamixel_GetPosition(&Motor7);
+		  Dynamixel_GetPosition(&Motor10);
+		  Dynamixel_SetGoalPosition(&Motor7, target_motor7);
+		  Dynamixel_SetGoalPosition(&Motor10, target_motor10);
+		  if((target_motor10 - Motor10._lastPosition < eps) && (Motor7._lastPosition - target_motor7 < eps)){
+			  break;
+		  }
+	  }
+	  /* STAND-UP FROM FACE PLANT. --> State 3 */
+	  eps = 5;
+	  target_motor3 = 150;
+	  target_motor6 = 150;
+	  while(1){
+		  Dynamixel_SetGoalTorque(&Motor3, 100);
+		  Dynamixel_SetGoalTorque(&Motor6, 100);
+		  Dynamixel_GetPosition(&Motor3);
+		  Dynamixel_GetPosition(&Motor6);
+		  Dynamixel_SetGoalPosition(&Motor3, target_motor3);
+		  Dynamixel_SetGoalPosition(&Motor6, target_motor6);
+		  if((target_motor3 - Motor3._lastPosition < eps) && (Motor6._lastPosition - target_motor6 < eps)){
+			  break;
+		  }
+	  }
+	  /* STAND-UP FROM FACE PLANT. --> State 4 */
+	  eps = 5;
+	  uint8_t flag = 1;
+	  uint16_t temp;
+	  int16_t targets[12] = {0, 0, 70, 0, 0, 230, 0, 220, 0, 0, 120, 0};
+	  while(1){
+		  for(uint8_t i = 0; i < 12; i++){
+			  if(targets[i] == 0){	continue;	}
+			  else{
+				  flag = 0;
+				  Dynamixel_SetGoalTorque(arrDynamixel[i], 100);
+				  Dynamixel_GetPosition(arrDynamixel[i]);
+				  Dynamixel_SetGoalPosition(arrDynamixel[i], targets[i]);
+			  }
+			  temp = arrDynamixel[i]->_lastPosition - targets[i];
+			  if((temp > 0 && temp < eps) ||
+			     (temp < 0 && temp > -eps)){
+				  targets[i] = 0;
+			  }
+			  if(flag){
+				  break;
+			  }
+		  }
+	  }
+
+	  /* SYNC WRITE STAND-UP (requires assistance) --> BEGIN */
 	  while(1);
 	  uint8_t uartNumber_2 = 2;
 	  uint8_t L_2 = 2;
@@ -235,11 +308,13 @@ int main(void)
 	  arrSW_6[9] = 0;
 	  arrSW_6[10] = 2;
 
-	  Dynamixel_SyncWriter(&Motor2, uartNumber_2, numMotors_2, arrSW_2);
-	  Dynamixel_SyncWriter(&Motor7, uartNumber_5, numMotors_5, arrSW_5);
-	  Dynamixel_SyncWriter(&Motor5, uartNumber_3, numMotors_3, arrSW_3);
-	  Dynamixel_SyncWriter(&Motor10, uartNumber_6, numMotors_6, arrSW_6);
-
+	  while(1){
+		  Dynamixel_SyncWriter(&Motor2, uartNumber_2, numMotors_2, arrSW_2);
+		  Dynamixel_SyncWriter(&Motor5, uartNumber_3, numMotors_3, arrSW_3);
+		  Dynamixel_SyncWriter(&Motor7, uartNumber_5, numMotors_5, arrSW_5);
+		  Dynamixel_SyncWriter(&Motor10, uartNumber_6, numMotors_6, arrSW_6);
+		  HAL_Delay(20);
+	  }
 	  while(1);
   }
   /* USER CODE END 3 */

@@ -1271,7 +1271,6 @@ void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	 * Returns: none
 	 */
 
-	hdynamixel -> _ID = 0xFE;
 	Dynamixel_Reset(hdynamixel);
 	Dynamixel_SetID(hdynamixel, ID);
 	HAL_Delay(10);
