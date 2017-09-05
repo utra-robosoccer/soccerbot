@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
-	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.2120074052" name="Debug">
+	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.289817268" name="Debug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider id="fr.ac6.mcu.ide.build.CrossBuiltinSpecsDetector">
 				<language id="org.eclipse.cdt.core.gcc">
@@ -2119,7 +2119,7 @@
 			</provider>
 		</extension>
 	</configuration>
-	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.release.40802069" name="Release">
+	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.release.1499589351" name="Release">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider id="fr.ac6.mcu.ide.build.CrossBuiltinSpecsDetector">
 				<language id="org.eclipse.cdt.core.gcc">
