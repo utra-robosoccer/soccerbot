@@ -158,6 +158,14 @@ int main(void)
   	arrDynamixel[10] = &Motor11;
   	arrDynamixel[11] = &Motor12;
 
+//  	while(1){
+//  	//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.2);
+//		Dynamixel_LEDEnable(arrDynamixel[10], 1);
+//		HAL_Delay(1000);
+//		Dynamixel_LEDEnable(arrDynamixel[10], 0);
+//		HAL_Delay(1000);
+//	}
+
 	for(uint8_t i = 0; i < 12; i++){
 //		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.2);
   		Dynamixel_LEDEnable(arrDynamixel[i], 1);
@@ -165,7 +173,44 @@ int main(void)
   		Dynamixel_LEDEnable(arrDynamixel[i], 0);
   		HAL_Delay(10);
 	}
-	while(1);
+	// By Shahryar
+//	for(uint8_t i = 0; i < 12; i++){
+//		Dynamixel_EnterJointMode(arrDynamixel[i]);
+//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY);
+//		Dynamixel_SetGoalTorque(arrDynamixel[i], MAX_TORQUE);
+//	}
+//	for(uint8_t i = 0; i < 12; i++){
+//		Dynamixel_EnterJointMode(arrDynamixel[i]);
+//		HAL_Delay(10);
+//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY);
+//		HAL_Delay(10);
+//		Dynamixel_SetGoalTorque(arrDynamixel[i], MAX_TORQUE);
+//		HAL_Delay(10);
+//		Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
+//		HAL_Delay(1000);
+//	}
+#define SET_POS(a,b)	Dynamixel_EnterJointMode(arrDynamixel[a]); \
+						Dynamixel_SetGoalVelocity(arrDynamixel[a], MAX_VELOCITY); \
+						Dynamixel_SetGoalTorque(arrDynamixel[a], MAX_TORQUE); \
+						Dynamixel_SetGoalPosition(arrDynamixel[a], b);
+	while(1){
+		SET_POS(2, 150-75);
+		SET_POS(6, 150-90);
+		SET_POS(7, 150+45);
+
+		SET_POS(5, 150+75);
+		SET_POS(9, 150+90);
+		SET_POS(10, 150-45);
+		HAL_Delay(3000);
+		SET_POS(2, 150);
+		SET_POS(6, 150);
+		SET_POS(7, 150);
+
+		SET_POS(5, 150);
+		SET_POS(9, 150);
+		SET_POS(10, 150);
+		HAL_Delay(3000);
+	}
   /* USER CODE END 2 */
 
   /* Infinite loop */
