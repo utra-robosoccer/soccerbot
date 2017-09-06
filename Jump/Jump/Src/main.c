@@ -53,18 +53,26 @@
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-Dynamixel_HandleTypeDef Motor1;
+/* Directions are relative to the robot's perspective. */
+Dynamixel_HandleTypeDef Motor1; // Right motor to rotate left leg about vertical axis
 Dynamixel_HandleTypeDef Motor2;
 Dynamixel_HandleTypeDef Motor3;
-Dynamixel_HandleTypeDef Motor4;
+Dynamixel_HandleTypeDef Motor4; // Left motor to rotate right leg about vertical axis
 Dynamixel_HandleTypeDef Motor5;
 Dynamixel_HandleTypeDef Motor6;
-Dynamixel_HandleTypeDef Motor7;
-Dynamixel_HandleTypeDef Motor8;
-Dynamixel_HandleTypeDef Motor9;
-Dynamixel_HandleTypeDef Motor10;
-Dynamixel_HandleTypeDef Motor11;
-Dynamixel_HandleTypeDef Motor12;
+Dynamixel_HandleTypeDef Motor7; // Right knee
+Dynamixel_HandleTypeDef Motor8; // Controls up/down motion of right foot
+Dynamixel_HandleTypeDef Motor9; // Controls side-to-side motion of right foot
+Dynamixel_HandleTypeDef Motor10; // Left knee
+Dynamixel_HandleTypeDef Motor11; // Controls up/down motion of left foot
+Dynamixel_HandleTypeDef Motor12; // Controls side-to-side motion of left foot
+
+// UN-ID'd:
+Dynamixel_HandleTypeDef Motor13; // Right shoulder
+Dynamixel_HandleTypeDef Motor14; // Right elbow
+Dynamixel_HandleTypeDef Motor15; // Left shoulder
+Dynamixel_HandleTypeDef Motor16; // Left elbow
+Dynamixel_HandleTypeDef Motor17; // Neck
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,7 +81,7 @@ static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void syncWriteStandUp(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -110,6 +118,7 @@ int main(void)
   MX_USART6_UART_Init();
   MX_UART5_Init();
   MX_TIM10_Init();
+  MX_UART4_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -120,15 +129,15 @@ int main(void)
 	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
 
-	/* UART3 --> Motors: 4, 5, 6	|	Data Direction Pin: E15 (STM32) / D37 (Nucleo446ZE). */
-	Dynamixel_Init(&Motor4, 4, &huart3, GPIOE, GPIO_PIN_15);
-	Dynamixel_Init(&Motor5, 5, &huart3, GPIOE, GPIO_PIN_15);
-	Dynamixel_Init(&Motor6, 6, &huart3, GPIOE, GPIO_PIN_15);
+	/* UART4 --> Motors: 4, 5, 6	|	Data Direction Pin: C12 (STM32) / D47 (Nucleo446ZE). */
+	Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_12);
+	Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_12);
+	Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_12);
 
-	/* UART5 --> Motors: 7, 8, 9	|	Data Direction Pin: E10 (STM32) / D40 (Nucleo446ZE). */
-	Dynamixel_Init(&Motor7, 7, &huart5, GPIOE, GPIO_PIN_10);
-	Dynamixel_Init(&Motor8, 8, &huart5, GPIOE, GPIO_PIN_10);
-	Dynamixel_Init(&Motor9, 9, &huart5, GPIOE, GPIO_PIN_10);
+	/* UART5 --> Motors: 7, 8, 9	|	Data Direction Pin: F10 (STM32) / A5 (Nucleo446ZE). */
+	Dynamixel_Init(&Motor7, 7, &huart5, GPIOF, GPIO_PIN_10);
+	Dynamixel_Init(&Motor8, 8, &huart5, GPIOF, GPIO_PIN_10);
+	Dynamixel_Init(&Motor9, 9, &huart5, GPIOF, GPIO_PIN_10);
 
 	/* UART6 --> Motors: 10, 11, 12	|	Data Direction Pin: F15 (STM32) / D2 (Nucleo446ZE). */
 	Dynamixel_Init(&Motor10, 10, &huart6, GPIOF, GPIO_PIN_15);
@@ -149,14 +158,14 @@ int main(void)
 	arrDynamixel[10] = &Motor11;
 	arrDynamixel[11] = &Motor12;
 
-  	HAL_Delay(1000); // Just in case
   	for(uint8_t i = 0; i < 12; i++){
   		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.2);
 //  		Dynamixel_LEDEnable(arrDynamixel[i], 1);
 //  		HAL_Delay(1000);
 //  		Dynamixel_LEDEnable(arrDynamixel[i], 0);
-  		HAL_Delay(10);
+//  		HAL_Delay(10);
   	}
+  	while(1);
 
   	//HAL_TIM_Base_Start_IT(&htim10); // Starts the Timer-based interrupt generation
   /* USER CODE END 2 */
@@ -169,6 +178,9 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 
+
+
+	  while(1);
 	  /* STAND-UP FROM FACE PLANT. --> BEGIN */
 	  /* STAND-UP FROM FACE PLANT. --> State 1 */
 	  Dynamixel_SetGoalPosition(&Motor1, 150);
@@ -242,80 +254,8 @@ int main(void)
 		  }
 	  }
 
-	  /* SYNC WRITE STAND-UP (requires assistance) --> BEGIN */
 	  while(1);
-	  uint8_t uartNumber_2 = 2;
-	  uint8_t L_2 = 2;
-	  uint8_t numMotors_2 = 3;
-	  uint8_t arrSW_2[11];
-	  arrSW_2[0] = REG_GOAL_POSITION;
-	  arrSW_2[1] = L_2;
-	  arrSW_2[2] = 1; // MOTOR1
-	  arrSW_2[3] = 0;
-	  arrSW_2[4] = 2;
-	  arrSW_2[5] = 2; // MOTOR2
-	  arrSW_2[6] = 0;
-	  arrSW_2[7] = 2;
-	  arrSW_2[8] = 3; // MOTOR3
-	  arrSW_2[9] = 0;
-	  arrSW_2[10] = 2;
-
-	  uint8_t uartNumber_5 = 5;
-	  uint8_t L_5 = 2;
-	  uint8_t numMotors_5 = 3;
-	  uint8_t arrSW_5[11];
-	  arrSW_5[0] = REG_GOAL_POSITION;
-	  arrSW_5[1] = L_5;
-	  arrSW_5[2] = 7; // MOTOR7
-	  arrSW_5[3] = 0;
-	  arrSW_5[4] = 2;
-	  arrSW_5[5] = 8; // MOTOR8
-	  arrSW_5[6] = 0;
-	  arrSW_5[7] = 2;
-	  arrSW_5[8] = 9; // MOTOR9
-	  arrSW_5[9] = 0;
-	  arrSW_5[10] = 2;
-
-	  uint8_t uartNumber_3 = 3;
-	  uint8_t L_3 = 2;
-	  uint8_t numMotors_3 = 3;
-	  uint8_t arrSW_3[11];
-	  arrSW_3[0] = REG_GOAL_POSITION;
-	  arrSW_3[1] = L_3;
-	  arrSW_3[2] = 4; // MOTOR4
-	  arrSW_3[3] = 0;
-	  arrSW_3[4] = 2;
-	  arrSW_3[5] = 5; // MOTOR5
-	  arrSW_3[6] = 0xDE;
-	  arrSW_3[7] = 1;
-	  arrSW_3[8] = 6; // MOTOR6
-	  arrSW_3[9] = 0;
-	  arrSW_3[10] = 2;
-
-	  uint8_t uartNumber_6 = 6;
-	  uint8_t L_6 = 2;
-	  uint8_t numMotors_6 = 3;
-	  uint8_t arrSW_6[11];
-	  arrSW_6[0] = REG_GOAL_POSITION;
-	  arrSW_6[1] = L_6;
-	  arrSW_6[2] = 10; // MOTOR10
-	  arrSW_6[3] = 0;
-	  arrSW_6[4] = 2;
-	  arrSW_6[5] = 11; // MOTOR11
-	  arrSW_6[6] = 0;
-	  arrSW_6[7] = 2;
-	  arrSW_6[8] = 12; // MOTOR12
-	  arrSW_6[9] = 0;
-	  arrSW_6[10] = 2;
-
-	  while(1){
-		  Dynamixel_SyncWriter(&Motor2, uartNumber_2, numMotors_2, arrSW_2);
-		  Dynamixel_SyncWriter(&Motor5, uartNumber_3, numMotors_3, arrSW_3);
-		  Dynamixel_SyncWriter(&Motor7, uartNumber_5, numMotors_5, arrSW_5);
-		  Dynamixel_SyncWriter(&Motor10, uartNumber_6, numMotors_6, arrSW_6);
-		  HAL_Delay(20);
-	  }
-	  while(1);
+	  //syncWriteStandUp();
   }
   /* USER CODE END 3 */
 
@@ -398,7 +338,79 @@ static void MX_NVIC_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void syncWriteStandUp(void){
+	uint8_t uartNumber_2 = 2;
+	  uint8_t L_2 = 2;
+	  uint8_t numMotors_2 = 3;
+	  uint8_t arrSW_2[11];
+	  arrSW_2[0] = REG_GOAL_POSITION;
+	  arrSW_2[1] = L_2;
+	  arrSW_2[2] = 1; // MOTOR1
+	  arrSW_2[3] = 0;
+	  arrSW_2[4] = 2;
+	  arrSW_2[5] = 2; // MOTOR2
+	  arrSW_2[6] = 0;
+	  arrSW_2[7] = 2;
+	  arrSW_2[8] = 3; // MOTOR3
+	  arrSW_2[9] = 0;
+	  arrSW_2[10] = 2;
 
+	  uint8_t uartNumber_5 = 5;
+	  uint8_t L_5 = 2;
+	  uint8_t numMotors_5 = 3;
+	  uint8_t arrSW_5[11];
+	  arrSW_5[0] = REG_GOAL_POSITION;
+	  arrSW_5[1] = L_5;
+	  arrSW_5[2] = 7; // MOTOR7
+	  arrSW_5[3] = 0;
+	  arrSW_5[4] = 2;
+	  arrSW_5[5] = 8; // MOTOR8
+	  arrSW_5[6] = 0;
+	  arrSW_5[7] = 2;
+	  arrSW_5[8] = 9; // MOTOR9
+	  arrSW_5[9] = 0;
+	  arrSW_5[10] = 2;
+
+	  uint8_t uartNumber_4 = 4;
+	  uint8_t L_4 = 2;
+	  uint8_t numMotors_4 = 3;
+	  uint8_t arrSW_4[11];
+	  arrSW_4[0] = REG_GOAL_POSITION;
+	  arrSW_4[1] = L_4;
+	  arrSW_4[2] = 4; // MOTOR4
+	  arrSW_4[3] = 0;
+	  arrSW_4[4] = 2;
+	  arrSW_4[5] = 5; // MOTOR5
+	  arrSW_4[6] = 0xDE;
+	  arrSW_4[7] = 1;
+	  arrSW_4[8] = 6; // MOTOR6
+	  arrSW_4[9] = 0;
+	  arrSW_4[10] = 2;
+
+	  uint8_t uartNumber_6 = 6;
+	  uint8_t L_6 = 2;
+	  uint8_t numMotors_6 = 3;
+	  uint8_t arrSW_6[11];
+	  arrSW_6[0] = REG_GOAL_POSITION;
+	  arrSW_6[1] = L_6;
+	  arrSW_6[2] = 10; // MOTOR10
+	  arrSW_6[3] = 0;
+	  arrSW_6[4] = 2;
+	  arrSW_6[5] = 11; // MOTOR11
+	  arrSW_6[6] = 0;
+	  arrSW_6[7] = 2;
+	  arrSW_6[8] = 12; // MOTOR12
+	  arrSW_6[9] = 0;
+	  arrSW_6[10] = 2;
+
+	  while(1){
+		  Dynamixel_SyncWriter(&Motor2, uartNumber_2, numMotors_2, arrSW_2);
+		  Dynamixel_SyncWriter(&Motor5, uartNumber_4, numMotors_4, arrSW_4);
+		  Dynamixel_SyncWriter(&Motor7, uartNumber_5, numMotors_5, arrSW_5);
+		  Dynamixel_SyncWriter(&Motor10, uartNumber_6, numMotors_6, arrSW_6);
+		  HAL_Delay(20);
+	  }
+}
 /* USER CODE END 4 */
 
 /**

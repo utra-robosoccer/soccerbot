@@ -1,4 +1,4 @@
-23:06:58 **** Incremental Build of configuration Debug for project Jump ****
+19:53:13 **** Incremental Build of configuration Debug for project Jump ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
@@ -16,8 +16,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "Jump.elf" "Jump.bin"
 arm-none-eabi-size "Jump.elf"
    text	   data	    bss	    dec	    hex	filename
-  12492	    184	   2896	  15572	   3cd4	Jump.elf
+  10512	    184	   3016	  13712	   3590	Jump.elf
  
 
-23:07:01 Build Finished (took 2s.298ms)
+19:53:15 Build Finished (took 1s.967ms)
 
