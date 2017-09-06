@@ -55,10 +55,10 @@
 
 /* Directions are relative to the robot's perspective. */
 Dynamixel_HandleTypeDef Motor1; // Right motor to rotate left leg about vertical axis
-Dynamixel_HandleTypeDef Motor2;
+Dynamixel_HandleTypeDef Motor2; // <--- --->
 Dynamixel_HandleTypeDef Motor3;
 Dynamixel_HandleTypeDef Motor4; // Left motor to rotate right leg about vertical axis
-Dynamixel_HandleTypeDef Motor5;
+Dynamixel_HandleTypeDef Motor5; // <--- --->
 Dynamixel_HandleTypeDef Motor6;
 Dynamixel_HandleTypeDef Motor7; // Right knee
 Dynamixel_HandleTypeDef Motor8; // Controls up/down motion of right foot
@@ -167,48 +167,35 @@ int main(void)
 //	}
 
 	for(uint8_t i = 0; i < 12; i++){
-//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.2);
-  		Dynamixel_LEDEnable(arrDynamixel[i], 1);
-  		HAL_Delay(1000);
-  		Dynamixel_LEDEnable(arrDynamixel[i], 0);
-  		HAL_Delay(10);
+		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.1);
+//  		Dynamixel_LEDEnable(arrDynamixel[i], 1);
+//  		HAL_Delay(1000);
+//  		Dynamixel_LEDEnable(arrDynamixel[i], 0);
+//  		HAL_Delay(10);
 	}
-	// By Shahryar
-//	for(uint8_t i = 0; i < 12; i++){
-//		Dynamixel_EnterJointMode(arrDynamixel[i]);
-//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY);
-//		Dynamixel_SetGoalTorque(arrDynamixel[i], MAX_TORQUE);
-//	}
-//	for(uint8_t i = 0; i < 12; i++){
-//		Dynamixel_EnterJointMode(arrDynamixel[i]);
-//		HAL_Delay(10);
-//		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY);
-//		HAL_Delay(10);
-//		Dynamixel_SetGoalTorque(arrDynamixel[i], MAX_TORQUE);
-//		HAL_Delay(10);
-//		Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
-//		HAL_Delay(1000);
-//	}
-#define SET_POS(a,b)	Dynamixel_EnterJointMode(arrDynamixel[a]); \
-						Dynamixel_SetGoalVelocity(arrDynamixel[a], MAX_VELOCITY); \
-						Dynamixel_SetGoalTorque(arrDynamixel[a], MAX_TORQUE); \
-						Dynamixel_SetGoalPosition(arrDynamixel[a], b);
+
 	while(1){
-		SET_POS(2, 150-75);
-		SET_POS(6, 150-90);
-		SET_POS(7, 150+45);
+		/* Standing upright (slightly bent). */
+		uint16_t uprightPositions[12] = {150, 150, 150-40,
+									     150, 150, 150+40,
+										 150-70, 150+30, 150,
+										 150+70, 150-30, 150,
+										};
 
-		SET_POS(5, 150+75);
-		SET_POS(9, 150+90);
-		SET_POS(10, 150-45);
+		for(uint8_t i = 0; i < 12; i++){
+			Dynamixel_SetGoalPosition(arrDynamixel[i], uprightPositions[i]);
+		}
 		HAL_Delay(3000);
-		SET_POS(2, 150);
-		SET_POS(6, 150);
-		SET_POS(7, 150);
 
-		SET_POS(5, 150);
-		SET_POS(9, 150);
-		SET_POS(10, 150);
+		/* Bent. */
+		uint16_t bentPositions[12] = {150, 150, 150-30,
+									  150, 150, 150+30,
+									  150-90, 150+50, 150,
+									  150+90, 150-50, 150,
+									 };
+		for(uint8_t i = 0; i < 12; i++){
+			Dynamixel_SetGoalPosition(arrDynamixel[i], bentPositions[i]);
+		}
 		HAL_Delay(3000);
 	}
   /* USER CODE END 2 */

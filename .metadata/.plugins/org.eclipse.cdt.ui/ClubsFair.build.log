@@ -1,9 +1,9 @@
-04:05:25 **** Incremental Build of configuration Debug for project ClubsFair ****
+13:31:09 **** Incremental Build of configuration Debug for project ClubsFair ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
-/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Debug
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Inc" -I"/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/other/STM32/soccer-embedded/ClubsFair/ClubsFair/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
 Finished building: ../Src/main.c
  
 Building target: ClubsFair.elf
@@ -16,8 +16,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "ClubsFair.elf" "ClubsFair.bin"
 arm-none-eabi-size "ClubsFair.elf"
    text	   data	    bss	    dec	    hex	filename
-  11884	    184	   3016	  15084	   3aec	ClubsFair.elf
+  11892	    184	   3016	  15092	   3af4	ClubsFair.elf
  
 
-04:05:25 Build Finished (took 577ms)
+13:31:11 Build Finished (took 1s.970ms)
 
