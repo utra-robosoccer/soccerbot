@@ -167,7 +167,7 @@ int main(void)
 //	}
 
 	for(uint8_t i = 0; i < 12; i++){
-		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.1);
+		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.05);
 //  		Dynamixel_LEDEnable(arrDynamixel[i], 1);
 //  		HAL_Delay(1000);
 //  		Dynamixel_LEDEnable(arrDynamixel[i], 0);
@@ -176,8 +176,8 @@ int main(void)
 
 	while(1){
 		/* Standing upright (slightly bent). */
-		uint16_t uprightPositions[12] = {150, 150, 150-40,
-									     150, 150, 150+40,
+		uint16_t uprightPositions[12] = {150, 150, 150-50,
+									     150, 150, 150+50,
 										 150-70, 150+30, 150,
 										 150+70, 150-30, 150,
 										};
@@ -188,13 +188,23 @@ int main(void)
 		HAL_Delay(3000);
 
 		/* Bent. */
-		uint16_t bentPositions[12] = {150, 150, 150-30,
-									  150, 150, 150+30,
-									  150-90, 150+50, 150,
-									  150+90, 150-50, 150,
+		uint16_t bentPositions[12] = {150, 150, 150-40,
+									  150, 150, 150+40,
+									  150-90, 150+50, 150-20,
+									  150+90, 150-50, 150-20,
 									 };
 		for(uint8_t i = 0; i < 12; i++){
 			Dynamixel_SetGoalPosition(arrDynamixel[i], bentPositions[i]);
+		}
+		HAL_Delay(3000);
+
+		uint16_t bentPositions2[12] = {150, 150, 150-40,
+									  150, 150, 150+40,
+									  150-90, 150+50, 150+20,
+									  150+90, 150-50, 150+20,
+									 };
+		for(uint8_t i = 0; i < 12; i++){
+			Dynamixel_SetGoalPosition(arrDynamixel[i], bentPositions2[i]);
 		}
 		HAL_Delay(3000);
 	}
