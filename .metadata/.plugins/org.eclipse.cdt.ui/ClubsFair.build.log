@@ -1,4 +1,4 @@
-13:31:09 **** Incremental Build of configuration Debug for project ClubsFair ****
+14:02:41 **** Incremental Build of configuration Debug for project ClubsFair ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
@@ -16,8 +16,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "ClubsFair.elf" "ClubsFair.bin"
 arm-none-eabi-size "ClubsFair.elf"
    text	   data	    bss	    dec	    hex	filename
-  11892	    184	   3016	  15092	   3af4	ClubsFair.elf
+  11988	    184	   3016	  15188	   3b54	ClubsFair.elf
  
 
-13:31:11 Build Finished (took 1s.970ms)
+14:02:43 Build Finished (took 1s.921ms)
 
