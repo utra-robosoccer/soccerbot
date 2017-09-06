@@ -2564,3 +2564,23 @@ org.eclipse.core.internal.resources.ResourceException: Resource '/MPU6050/Debug/
 !SUBENTRY 1 org.eclipse.core.resources 4 368 2017-08-30 20:05:08.583
 !MESSAGE Resource '/MPU6050/Debug/sources.mk' does not exist.
 >>>>>>> origin/master
+!SESSION 2017-09-05 18:42:26.532 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_131
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_CA
+Framework arguments:  -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product
+
+!ENTRY fr.ac6.mcu.ide 1 1 2017-09-05 18:42:40.909
+!MESSAGE Started RMI Server, listening on port 21112
+
+!ENTRY org.eclipse.egit.ui 2 0 2017-09-05 18:42:45.407
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-09-05 20:05:13.416
+!MESSAGE Indexed 'ClubsFair' (22 sources, 31 headers) in 1.37 sec: 3,388 declarations; 27,297 references; 3 unresolved inclusions; 18 syntax errors; 3,216 unresolved names (9.5%)
