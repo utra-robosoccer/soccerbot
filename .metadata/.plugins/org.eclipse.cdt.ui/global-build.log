@@ -1459,3 +1459,160 @@ arm-none-eabi-size "ClubsFair.elf"
    text	   data	    bss	    dec	    hex	filename
   11988	    184	   3016	  15188	   3b54	ClubsFair.elf
  
+18:04:01 **** Build of configuration Debug for project BlinkLED ****
+make all 
+Building file: ../startup/startup_stm32l432xx.s
+Invoking: MCU GCC Assembler
+%cd%
+arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "startup/startup_stm32l432xx.o" "../startup/startup_stm32l432xx.s"
+Finished building: ../startup/startup_stm32l432xx.s
+ 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32l4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32l4xx_hal_msp.d" -MT"Src/stm32l4xx_hal_msp.o" -o "Src/stm32l4xx_hal_msp.o" "../Src/stm32l4xx_hal_msp.c"
+Finished building: ../Src/stm32l4xx_hal_msp.c
+ 
+Building file: ../Src/stm32l4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32l4xx_it.d" -MT"Src/stm32l4xx_it.o" -o "Src/stm32l4xx_it.o" "../Src/stm32l4xx_it.c"
+Finished building: ../Src/stm32l4xx_it.c
+ 
+Building file: ../Src/system_stm32l4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32l4xx.d" -MT"Src/system_stm32l4xx.o" -o "Src/system_stm32l4xx.o" "../Src/system_stm32l4xx.c"
+Finished building: ../Src/system_stm32l4xx.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c
+ 
+Building target: BlinkLED.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32L432KCUx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "BlinkLED.elf" @"objects.list"  
+Finished building target: BlinkLED.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "BlinkLED.elf" "BlinkLED.bin"
+arm-none-eabi-size "BlinkLED.elf"
+   text	   data	    bss	    dec	    hex	filename
+   4664	     24	   1568	   6256	   1870	BlinkLED.elf
+ 
+18:04:27 **** Incremental Build of configuration Debug for project BlinkLED ****
+make all 
+make: Nothing to be done for `all'.
+18:08:30 **** Incremental Build of configuration Debug for project BlinkLED ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/BlinkLED/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building target: BlinkLED.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32L432KCUx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "BlinkLED.elf" @"objects.list"  
+Finished building target: BlinkLED.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "BlinkLED.elf" "BlinkLED.bin"
+arm-none-eabi-size "BlinkLED.elf"
+   text	   data	    bss	    dec	    hex	filename
+   4672	     24	   1568	   6264	   1878	BlinkLED.elf
+ 
