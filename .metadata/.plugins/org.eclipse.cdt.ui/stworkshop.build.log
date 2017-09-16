@@ -1,0 +1,23 @@
+13:37:37 **** Incremental Build of configuration Debug for project stworkshop ****
+make all 
+Building file: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L432xx -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Drivers/STM32L4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Workshop/stworkshop/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.d" -MT"Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o" -o "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o" "../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c
+ 
+Building target: stworkshop.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32L432KCUx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "stworkshop.elf" @"objects.list"  
+Finished building target: stworkshop.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "stworkshop.elf" "stworkshop.bin"
+arm-none-eabi-size "stworkshop.elf"
+   text	   data	    bss	    dec	    hex	filename
+   4776	     24	   1568	   6368	   18e0	stworkshop.elf
+ 
+
+13:37:39 Build Finished (took 2s.248ms)
+
