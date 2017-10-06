@@ -1,48 +1,10 @@
-/**
-  ******************************************************************************
-  * File Name          : main.c
-  * Description        : Main program body
-  ******************************************************************************
-  ** This notice applies to any and all portions of this file
-  * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
-  * inserted by the user or by software development tools
-  * are owned by their respective copyright owners.
-  *
-  * COPYRIGHT(c) 2017 STMicroelectronics
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-
-/* USER CODE BEGIN Includes */
 #include "MPU-REGS.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -52,8 +14,7 @@
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
 
-uint16_t total_count;
-
+uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
 float acc_X;
 int Gyro_X, Gyro_Y, Gyro_Z;
@@ -62,77 +23,88 @@ int Rem_X_Gyro,Rem_Y_Gyro,Rem_Z_Gyro;
 char Sign_X_Accel, Sign_Y_Accel, Sign_Z_Accel;
 char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 
-
-/* USER CODE END Includes */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
-/* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
-
-/* USER CODE END PFP */
-
-/* USER CODE BEGIN 0 */
-void MPU6050_READ_DATA(uint8_t Reg_addr,uint8_t* sensor_buffer){
+/* Reads data stored in sensor output registers and stores data into a buffer
+   
+   Parameters: Reg_addr: address of register required to be read from
+   	       sensor_buffer: 
+void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer){
 	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
-
 }
 
+/* Write one-byte to sensor register
+ * Returns: None
+ */
 void MPU6050_WRITE_REG(uint8_t reg_addr, uint8_t data){
 	HAL_I2C_Mem_Write(&hi2c3, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
 }
 
-void print_8bit(uint8_t eightbit){
-	for(int i = 7; i >= 0; i--)
-			  HAL_UART_Transmit(&huart2,(((eightbit >> i) & 0b01) ? ("1") : ("0")) ,1, 10);
-			  HAL_UART_Transmit(&huart2,"\n\r" ,2 , 10);
-}
 
+/* Reads data from registers via I2C3 and prints out the 8-bit data value via USART2
+   Return: None 
+ */
 void MPU6050_READ_REG(uint8_t reg_addr){
 	uint8_t receivebyte;
 	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
 	print_8bit(receivebyte);
 }
 
+
+/* Initializes registers of sensor control:
+   MPU6050_RA_GYRO_CONFIG:  register address: 1B
+   		            configuration: Disables self-test mode for gyroscope, and sets gyroscope full scale range to ± 250 °/s
+   MPU6050_RA_ACCEL_CONFIG: register address：1C
+   		  	    configuration: Disables self-test mode for accelerometer, and sets acceerometer  full scale range to ± 2g
+   MPU6050_RA_PWR_MGMT_1:   register address: 6B
+   			    configuration: Disables sleep mode, set clock source as internal 8MHz oscillator
+   MPU6050_RA_PWR_MGMT_1:   register address: 6C
+   			    configuration: Disables standby mode for both sensors
+   MPU6050_RA_SMPLRT_DIV:   register address: 19
+   			    configuration: Specifies the divider from the gyroscope output rate to generate the Sample Rate for MPU-6050
+			    		   Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV)
+   Return: None */
 void MPU6050_init(){
 	MPU6050_WRITE_REG(MPU6050_RA_ACCEL_CONFIG, 0);
-	MPU6050_WRITE_REG(MPU6050_RA_GYRO_CONFIG, 1<<3);
+	MPU6050_WRITE_REG(MPU6050_RA_GYRO_CONFIG, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_PWR_MGMT_1, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_PWR_MGMT_2, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_SMPLRT_DIV, 249);
 }
 
-void RESET_FIFO(){
-	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<MPU6050_USERCTRL_FIFO_RESET_BIT);
+/* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers. This bit automatically clears to 0 after the reset has been triggered.
+ *Return: None
+*/
+void MPU6050_RESET_SENSOR_REG(){
+	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1);
 }
 
-void set_Accel_Gyro_FIFO_Enabled(){
 
-	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT | 1<<MPU6050_ACCEL_FIFO_EN_BIT);
-	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<6);
-}
-
-void clear_int(){
+/* Disables all interrupts 
+   Register address： 38
+   Returns : None
+ */
+void MPU6050_Clear_Int(){
 	MPU6050_WRITE_REG(MPU6050_RA_INT_ENABLE, 0);
 }
 
-void data_ready_int(){
+
+/* Enables data ready interrupt
+   Register address： 38
+   Returns : None
+*/
+void MPU6050_Data_Ready_Int(){
 	MPU6050_WRITE_REG(MPU6050_RA_INT_ENABLE, 1);
 }
 
-void get_val_gyro(){
-	Read_Gyroscope();
+
+/* Reads output data stored in gyroscope output registers and print out angular velocity
+    Returns : None
+*/
+void MPU6050_Get_Val_Gyro(){
+	MPU6050_Read_Gyroscope();
 	print_Angular_Velocity();
 }
-
 
 void print_Angular_Velocity(){
 	char buffer_X[20];
@@ -207,7 +179,10 @@ void print_Acceleration(){
 	HAL_UART_Transmit(&huart2,"\n\r" ,2 , 10);
 
 }
-void Read_Gyroscope(){
+
+/*Reads output data stored in gyroscope output registers
+  Returns : None*/
+void MPU6050_Read_Gyroscope(){
 
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(MPU6050_RA_GYRO_XOUT_H,output_buffer);
@@ -226,9 +201,13 @@ void Read_Gyroscope(){
 	Rem_Z_Gyro = (int)(Z % 131)*10;
 }
 
-void Read_Accelerometer(){
+
+/*Reads output data stored in accelerometer output registers and converts the data in 2's complement to decimal numbers
+  Returns : None*/
+void MPU6050_Read_Accelerometer(){
 
 	uint8_t output_buffer[6];
+	MPU6050_READ_DATA(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
 	uint16_t X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	uint16_t Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
 	uint16_t Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
@@ -245,15 +224,62 @@ void Read_Accelerometer(){
 	Rem_Z_Accel = (int)(Z % REM_COEF)*10;
 }
 
-void get_val_Accel(){
-	Read_Accelerometer();
-    print_Acceleration();
 
+
+/*Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
+  Returns: None
+ */
+void MPU6050_Get_Val_Accel(){
+	MPU6050_Read_Accelerometer();
+        print_Acceleration();
 }
 
 
+/*This function is called automatically when a interrupt is generated. Any instructions from the user given a specific interrupt is to be written in this function.
+ The following instructions show an example of dealing with a data ready interrupt
+ 
+ Parameter：GPIO_Pin: This parameter is automatically inputted by EXTI(X)_HANDLER function and indicates upon which pin the interrupt is generated. By physically 
+ connecting interrupt pins on MPU6050 to a pin on microcontroller(requires pre-configuration beforehand), the user will be able to tell if the interrupt is generated
+ by MPU6050 or other devices if possible.
+ 
+ Return: None
+*/
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+		uint8_t output[2];
+		HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR, MPU6050_RA_GYRO_YOUT_H, 1 , output, 2,1000);
+		HAL_UART_Transmit(&huart2,&output[0],1,100);
+		HAL_UART_Transmit(&huart2,&output[1],1,100);
 
-void Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
+
+}
+
+************************************************ FIFO ******************************************************************************************************************
+void MPU6050_Set_Gyro_FIFO_Enabled(){
+	//MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT);
+	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT);
+	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<6);
+}
+
+void set_Accel_FIFO_Enabled(){
+
+	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT | 1<<MPU6050_ACCEL_FIFO_EN_BIT);
+	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<6);
+}
+
+void FIFOcount(){
+	uint8_t count_H,count_L;
+	HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) MPU6050_RA_FIFO_COUNTH, 1 , &count_H, 6,1000);
+	HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) MPU6050_RA_FIFO_COUNTL, 1 , &count_L, 6,1000);
+
+	TOTAL_COUNT=(count_H<<8|count_L);
+}
+/* Clear FIFO buffer
+   Return: None 
+ */
+void MPU6050_RESET_FIFO(){
+	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<MPU6050_USERCTRL_FIFO_RESET_BIT);
+}
+void MPU6050_Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 	    // HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_gyro , 6 , 100);
 	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[0] , 1 , 100);
 	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[1] , 1 , 100);
@@ -261,12 +287,13 @@ void Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[3] , 1 , 100);
 	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[4] , 1 , 100);
 	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[5] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[0] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[1] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[2] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[3] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[4] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_accel[5] ,1 , 100);
+
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[0] ,1 , 100);
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[1] ,1 , 100);
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[2] ,1 , 100);
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[3] ,1 , 100);
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[4] ,1 , 100);
+	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[5] ,1 , 100);
 
 	    	uint16_t X = abs((int16_t)(buffer_gyro[0]<<8|buffer_gyro[1]));
 	    	uint16_t Y = abs((int16_t)(buffer_gyro[2]<<8|buffer_gyro[3]));
@@ -295,88 +322,8 @@ void Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 	  		Rem_X_Accel = (int)(X % REM_COEF)*10;
 	   		Rem_Y_Accel = (int)(Y % REM_COEF)*10;
 	   		Rem_Z_Accel = (int)(Z % REM_COEF)*10;
-}
-
-/* USER CODE END 0 */
-
-int main(void)
-{
-
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration----------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_I2C3_Init();
-  MX_USART2_UART_Init();
-
-  /* USER CODE BEGIN 2 */
-  MPU6050_init();
-  RESET_FIFO();
-  set_Accel_Gyro_FIFO_Enabled();
-  clear_int();
-
-
-  HAL_Delay(1000);
-  /* USER CODE END 2 */
-  uint8_t zero =0;
-  int j = 0;
-  for(;j<50;j++){
-	  HAL_Delay(50);
-	  HAL_UART_Transmit(&huart2,&zero,1,100);
-  }
-  zero = 0xFF;
-  HAL_UART_Transmit(&huart2,&zero,1,100);
-  data_ready_int();
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-
-//	  HAL_UART_Transmit(&huart2,&zero,1,100);
-
-
-
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
-
-  }
-  /* USER CODE END 3 */
 
 }
-
-/** System Clock Configuration
- *
-*/
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	if(GPIO_Pin == GPIO_PIN_1){
-		uint8_t output[2];
-		MPU6050_READ_DATA(MPU6050_RA_ACCEL_XOUT_H,output);
-		HAL_UART_Transmit(&huart2,&output[1],1,100);
-		HAL_UART_Transmit(&huart2,&output[0],1,100);
-
-	}
-}
-
 void SystemClock_Config(void)
 {
 
@@ -479,3 +426,4 @@ void assert_failed(uint8_t* file, uint32_t line)
 */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
