@@ -4,6 +4,11 @@
  *  Created on: Aug 26, 2017
  *      Author: yangyifan
  */
+#define printf(x)	HAL_UART_Transmit(&huart2,x,sizeof(x),10)
+#define printnl(a)	printf(a); \
+					printf("\n\r")
+#define INT_COEF 16384.0f
+#define REM_COEF 16384
 
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
