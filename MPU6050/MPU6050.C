@@ -1,18 +1,10 @@
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32f4xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-#include "MPU-REGS.h"
-#include <stdlib.h>
-#include <stdio.h>
-#define printf(x)	HAL_UART_Transmit(&huart2,x,sizeof(x),10)
-#define printnl(a)	printf(a); \
-					printf("\n\r")
-#define INT_COEF 16384.0f
-#define REM_COEF 16384
+#include "MPU6050.h"
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
