@@ -20,7 +20,8 @@ void SystemClock_Config(void);
 /* Reads data stored in sensor output registers and stores data into a buffer
    
    Parameters: Reg_addr: address of register required to be read from
-   	       sensor_buffer: an 8-bit array used to 
+   	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
+	       		      the user.
 */
 void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer){
 	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
@@ -90,7 +91,7 @@ void MPU6050_Data_Ready_Int(){
 	MPU6050_WRITE_REG(MPU6050_RA_INT_ENABLE, 1);
 }
 
-/* Reads output data stored in gyroscope output registers and print out angular velocity
+/* Reads output data stored in gyroscope output registers and prints out angular velocity
     Returns : None
 */
 void MPU6050_Get_Val_Gyro(){
