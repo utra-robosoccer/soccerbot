@@ -99,7 +99,7 @@ void MPU6050_Get_Val_Gyro(){
 	print_Angular_Velocity();
 }
 
-void print_Angular_Velocity(){
+void MPU6050_print_Angular_Velocity(){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
@@ -137,7 +137,7 @@ void print_Angular_Velocity(){
 }
 
 
-void print_Acceleration(){
+void MPU6050_print_Acceleration(){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
