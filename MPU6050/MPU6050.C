@@ -66,9 +66,11 @@ void MPU6050_init(){
 	MPU6050_WRITE_REG(MPU6050_RA_SMPLRT_DIV, 249);
 }
 
-/* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers. This bit automatically clears to 0 after the reset has been triggered.
- *Return: None
-*/
+/* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers. 
+   This bit automatically clears to 0 after the reset has been triggered.
+ 
+   register address: 6A
+   Return: None */
 void MPU6050_RESET_SENSOR_REG(){
 	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1);
 }
@@ -99,6 +101,7 @@ void MPU6050_Get_Val_Gyro(){
 	print_Angular_Velocity();
 }
 
+/* Only for testing */
 void MPU6050_print_Angular_Velocity(){
 	char buffer_X[20];
 	char buffer_Y[20];
@@ -106,8 +109,7 @@ void MPU6050_print_Angular_Velocity(){
 	char buffer_remx[20];
 	char buffer_remy[20];
 	char buffer_remz[20];
-
-
+	
 	itoa(Gyro_X, buffer_X, 10);
 	itoa(Gyro_Y, buffer_Y, 10);
 	itoa(Gyro_Z, buffer_Z, 10);
@@ -136,7 +138,7 @@ void MPU6050_print_Angular_Velocity(){
 
 }
 
-
+/* Only for testing */
 void MPU6050_print_Acceleration(){
 	char buffer_X[20];
 	char buffer_Y[20];
@@ -173,7 +175,7 @@ void MPU6050_print_Acceleration(){
 
 }
 
-/*Reads output data stored in gyroscope output registers
+/*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
 void MPU6050_Read_Gyroscope(){
 
@@ -185,7 +187,6 @@ void MPU6050_Read_Gyroscope(){
 	Sign_X_Gyro = (output_buffer[0] >> 7) ? '-' : '+';
 	Sign_Y_Gyro = (output_buffer[2] >> 7) ? '-' : '+';
 	Sign_Z_Gyro = (output_buffer[4] >> 7) ? '-' : '+';
-
 	Gyro_X = X/131;
 	Gyro_Y = Y/131;
 	Gyro_Z = Z/131;
@@ -195,7 +196,7 @@ void MPU6050_Read_Gyroscope(){
 }
 
 
-/*Reads output data stored in accelerometer output registers and converts the data in 2's complement to decimal numbers
+/*Reads output data stored in accelerometer output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
 void MPU6050_Read_Accelerometer(){
 
@@ -207,7 +208,6 @@ void MPU6050_Read_Accelerometer(){
 	Sign_X_Accel = (output_buffer[0] >> 7) ? '-' : '+';
 	Sign_Y_Accel = (output_buffer[2] >> 7) ? '-' : '+';
 	Sign_Z_Accel = (output_buffer[4] >> 7) ? '-' : '+';
-
 	Acc_X = X/INT_COEF;
 	acc_X =  X/INT_COEF;;
 	Acc_Y = Y/INT_COEF;
@@ -219,7 +219,8 @@ void MPU6050_Read_Accelerometer(){
 
 
 
-/*Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
+/*For testing only.
+  Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
   Returns: None
  */
 void MPU6050_Get_Val_Accel(){
