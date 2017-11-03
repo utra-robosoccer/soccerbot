@@ -13,6 +13,18 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
+/*********************************** Types ************************************/
+typedef struct{
+	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
+	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
+	uint16_t				X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
+	uint16_t				Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
+	uint16_t				Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
+	uint16_t				X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
+	uint16_t				Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
+	uint16_t				Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/					*/
+}MPU6050_HandleTypeDef;
+
 /*
  * MPU-REGS.h
  *
