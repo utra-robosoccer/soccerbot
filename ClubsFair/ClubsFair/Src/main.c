@@ -120,6 +120,8 @@ int main(void)
   MX_TIM10_Init();
   MX_UART4_Init();
 
+
+
   /* Initialize interrupts */
   MX_NVIC_Init();
 
@@ -165,6 +167,20 @@ int main(void)
 //		Dynamixel_LEDEnable(arrDynamixel[10], 0);
 //		HAL_Delay(1000);
 //	}
+
+  	Dynamixel_SetGoalVelocity(&Motor3, 100);
+  	while(1){
+  		Dynamixel_SetGoalPosition(&Motor3, 0);
+  		HAL_Delay(1000);
+  		Dynamixel_SetGoalPosition(&Motor3, 300);
+
+
+  		do{
+  			Dynamixel_GetPosition(&Motor3);
+  			HAL_Delay(10);
+  		}while(&Motor3._lastPosition < (uint16_t)290);
+  		//HAL_Delay(1000);
+  	}
 
 	for(uint8_t i = 0; i < 12; i++){
 		Dynamixel_SetGoalVelocity(arrDynamixel[i], MAX_VELOCITY*0.05);

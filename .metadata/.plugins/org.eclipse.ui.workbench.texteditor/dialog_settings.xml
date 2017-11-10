@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Revive" key="selection"/>
+		<item value="Init" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="revive"/>
+			<item value="init"/>
+			<item value="position"/>
+			<item value="dynamixel"/>
 			<item value="reset"/>
+			<item value="revive"/>
 			<item value="while"/>
 			<item value="goalpos"/>
 			<item value="sync"/>
-			<item value="setstatus"/>
-			<item value="setgoalpos"/>
-			<item value="statusreturn"/>
 		</list>
 		<list key="replacehistory">
 			<item value="BUFF_SIZE_RX"/>

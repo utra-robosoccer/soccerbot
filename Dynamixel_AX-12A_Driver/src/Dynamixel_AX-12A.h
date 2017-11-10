@@ -6,6 +6,7 @@
 
 /********************************** Includes **********************************/
 #include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_conf.h"
 
 /******************************(**** Macros ******************************(****/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
