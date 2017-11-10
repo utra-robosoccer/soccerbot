@@ -1,6 +1,5 @@
 /********************************* Includes ************************************/
 #include "Dynamixel_AX-12A.h"
-#include "stm32f4xx_hal_conf.h"
 
 /******************************** Functions ************************************/
 
@@ -1153,7 +1152,7 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	/* Set fields in motor handle. */
 	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
 	hdynamixel -> _BaudRate = 1000000; 			// Number of bytes per second transmitted by the UART
-	hdynamixel -> _lastPosition = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastPosition = 0; 			// In future, could initialize this accurately
 	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
 	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately
 	hdynamixel -> _lastLoadDirection = -1; 		// In future, could initialize this accurately

@@ -1,0 +1,23 @@
+17:44:44 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  12852	    184	   2120	  15156	   3b34	PositionControlTests.elf
+ 
+
+17:44:47 Build Finished (took 2s.824ms)
+
