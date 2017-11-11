@@ -6091,3 +6091,1233 @@ arm-none-eabi-size "PositionControlTests.elf"
    text	   data	    bss	    dec	    hex	filename
   12852	    184	   2120	  15156	   3b34	PositionControlTests.elf
  
+18:12:01 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:12:31 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:12:43 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:13:22 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:13:34 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:13:56 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:14:12 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:14:27 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:14:38 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:14:48 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:15:00 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:15:14 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:15:23 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:15:32 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:15:52 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:00 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:08 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:14 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:22 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:31 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:16:39 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:17:02 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:17:11 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:17:23 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:17:32 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:17:41 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:18:26 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:18:35 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:18:40 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:18:46 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:199:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9360	    184	   2200	  11744	   2de0	PositionControlTests.elf
+ 
+18:26:46 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34580	    184	   2200	  36964	   9064	PositionControlTests.elf
+ 
+18:29:11 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9464	    184	   2200	  11848	   2e48	PositionControlTests.elf
+ 
+18:32:16 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34588	    184	   2200	  36972	   906c	PositionControlTests.elf
+ 
+18:33:01 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34628	    184	   2200	  37012	   9094	PositionControlTests.elf
+ 
+18:33:25 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34628	    184	   2200	  37012	   9094	PositionControlTests.elf
+ 
+18:33:44 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34612	    184	   2200	  36996	   9084	PositionControlTests.elf
+ 
+18:34:33 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9512	    184	   2200	  11896	   2e78	PositionControlTests.elf
+ 
+18:34:56 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9512	    184	   2200	  11896	   2e78	PositionControlTests.elf
+ 
+18:35:49 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9512	    184	   2200	  11896	   2e78	PositionControlTests.elf
+ 
+18:46:47 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9512	    184	   2200	  11896	   2e78	PositionControlTests.elf
+ 
+18:47:06 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34484	    184	   2200	  36868	   9004	PositionControlTests.elf
+ 
+18:47:31 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34500	    184	   2200	  36884	   9014	PositionControlTests.elf
+ 
+18:49:22 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9464	    184	   2200	  11848	   2e48	PositionControlTests.elf
+ 
+18:55:00 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+   9464	    184	   2200	  11848	   2e48	PositionControlTests.elf
+ 
+18:55:12 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34480	    184	   2200	  36864	   9000	PositionControlTests.elf
+ 
+18:56:35 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34484	    184	   2200	  36868	   9004	PositionControlTests.elf
+ 
+18:57:15 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34500	    184	   2200	  36884	   9014	PositionControlTests.elf
+ 
+18:58:48 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34616	    184	   2200	  37000	   9088	PositionControlTests.elf
+ 
+19:02:47 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34840	    184	   2200	  37224	   9168	PositionControlTests.elf
+ 
+19:05:10 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34840	    184	   2200	  37224	   9168	PositionControlTests.elf
+ 
+19:05:12 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+make: Nothing to be done for `all'.
+19:05:13 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+make: Nothing to be done for `all'.
+19:05:37 **** Incremental Build of configuration Debug for project PositionControlTests ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
+Finished building: ../Src/main.c
+ 
+Building target: PositionControlTests.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "PositionControlTests.elf" @"objects.list"  
+Finished building target: PositionControlTests.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
+arm-none-eabi-size "PositionControlTests.elf"
+   text	   data	    bss	    dec	    hex	filename
+  34840	    184	   2200	  37224	   9168	PositionControlTests.elf
+ 
