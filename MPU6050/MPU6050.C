@@ -1,17 +1,10 @@
+
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32f4xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-#include "MPU-REGS.h"
-#include <stdlib.h>
-#include <stdio.h>
-#define printf(x)	HAL_UART_Transmit(&huart2,x,sizeof(x),10)
-#define printnl(a)	printf(a); \
-					printf("\n\r")
-#define INT_COEF 16384.0f
-#define REM_COEF 16384
+#include "MPU6050.h"
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
@@ -27,10 +20,13 @@ void SystemClock_Config(void);
 /* Reads data stored in sensor output registers and stores data into a buffer
    
    Parameters: Reg_addr: address of register required to be read from
-   	       sensor_buffer: 
+   	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
+	       		      the user.
+*/
 void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer){
 	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
 }
+
 /* Write one-byte to sensor register
  * Returns: None
  */
@@ -70,9 +66,11 @@ void MPU6050_init(){
 	MPU6050_WRITE_REG(MPU6050_RA_SMPLRT_DIV, 249);
 }
 
-/* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers. This bit automatically clears to 0 after the reset has been triggered.
- *Return: None
-*/
+/* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers. 
+   This bit automatically clears to 0 after the reset has been triggered.
+ 
+   register address: 6A
+   Return: None */
 void MPU6050_RESET_SENSOR_REG(){
 	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1);
 }
@@ -95,8 +93,7 @@ void MPU6050_Data_Ready_Int(){
 	MPU6050_WRITE_REG(MPU6050_RA_INT_ENABLE, 1);
 }
 
-
-/* Reads output data stored in gyroscope output registers and print out angular velocity
+/* Reads output data stored in gyroscope output registers and prints out angular velocity
     Returns : None
 */
 void MPU6050_Get_Val_Gyro(){
@@ -104,15 +101,15 @@ void MPU6050_Get_Val_Gyro(){
 	print_Angular_Velocity();
 }
 
-void print_Angular_Velocity(){
+/* Only for testing */
+void MPU6050_print_Angular_Velocity(){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
 	char buffer_remx[20];
 	char buffer_remy[20];
 	char buffer_remz[20];
-
-
+	
 	itoa(Gyro_X, buffer_X, 10);
 	itoa(Gyro_Y, buffer_Y, 10);
 	itoa(Gyro_Z, buffer_Z, 10);
@@ -141,8 +138,8 @@ void print_Angular_Velocity(){
 
 }
 
-
-void print_Acceleration(){
+/* Only for testing */
+void MPU6050_print_Acceleration(){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
@@ -178,7 +175,7 @@ void print_Acceleration(){
 
 }
 
-/*Reads output data stored in gyroscope output registers
+/*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
 void MPU6050_Read_Gyroscope(){
 
@@ -190,7 +187,6 @@ void MPU6050_Read_Gyroscope(){
 	Sign_X_Gyro = (output_buffer[0] >> 7) ? '-' : '+';
 	Sign_Y_Gyro = (output_buffer[2] >> 7) ? '-' : '+';
 	Sign_Z_Gyro = (output_buffer[4] >> 7) ? '-' : '+';
-
 	Gyro_X = X/131;
 	Gyro_Y = Y/131;
 	Gyro_Z = Z/131;
@@ -200,7 +196,7 @@ void MPU6050_Read_Gyroscope(){
 }
 
 
-/*Reads output data stored in accelerometer output registers and converts the data in 2's complement to decimal numbers
+/*Reads output data stored in accelerometer output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
 void MPU6050_Read_Accelerometer(){
 
@@ -212,7 +208,6 @@ void MPU6050_Read_Accelerometer(){
 	Sign_X_Accel = (output_buffer[0] >> 7) ? '-' : '+';
 	Sign_Y_Accel = (output_buffer[2] >> 7) ? '-' : '+';
 	Sign_Z_Accel = (output_buffer[4] >> 7) ? '-' : '+';
-
 	Acc_X = X/INT_COEF;
 	acc_X =  X/INT_COEF;;
 	Acc_Y = Y/INT_COEF;
@@ -224,7 +219,8 @@ void MPU6050_Read_Accelerometer(){
 
 
 
-/*Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
+/*For testing only.
+  Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
   Returns: None
  */
 void MPU6050_Get_Val_Accel(){
@@ -322,105 +318,3 @@ void MPU6050_Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 	   		Rem_Z_Accel = (int)(Z % REM_COEF)*10;
 
 }
-void SystemClock_Config(void)
-{
-
-  RCC_OscInitTypeDef RCC_OscInitStruct;
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-
-    /**Configure the main internal regulator output voltage 
-    */
-  __HAL_RCC_PWR_CLK_ENABLE();
-
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
-    /**Initializes the CPU, AHB and APB busses clocks 
-    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = 16;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 192;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
-  RCC_OscInitStruct.PLL.PLLQ = 8;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Initializes the CPU, AHB and APB busses clocks 
-    */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure the Systick interrupt time 
-    */
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
-
-    /**Configure the Systick 
-    */
-  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
-
-  /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
-void _Error_Handler(char * file, int line)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  while(1) 
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */ 
-}
-
-#ifdef USE_FULL_ASSERT
-
-/**
-   * @brief Reports the name of the source file and the source line number
-   * where the assert_param error has occurred.
-   * @param file: pointer to the source file name
-   * @param line: assert_param error line source number
-   * @retval None
-   */
-void assert_failed(uint8_t* file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-
-}
-
-#endif
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-*/ 
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
