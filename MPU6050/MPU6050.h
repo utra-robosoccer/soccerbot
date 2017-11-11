@@ -1,9 +1,12 @@
 /*
- * MPU-REGS.h
+ * MPU6050.h
  *
- *  Created on: Aug 26, 2017
+ *  Created on: Nov 10, 2017
  *      Author: yangyifan
  */
+
+//#ifndef MPU6050_H_
+//  #define MPU6050_H_
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
@@ -32,15 +35,24 @@ typedef struct{
 	uint16_t				Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
 	uint16_t				X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
 	uint16_t				Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
-	uint16_t				Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/					*/
+	uint16_t				Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
 }MPU6050_HandleTypeDef;
 
-/*
- * MPU-REGS.h
- *
- *  Created on: Aug 25, 2017
- *      Author: shahryar
- */
+void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer);
+void MPU6050_WRITE_REG(uint8_t reg_addr, uint8_t data);
+void MPU6050_READ_REG(uint8_t reg_addr);
+void MPU6050_init();
+void MPU6050_RESET_SENSOR_REG();
+void MPU6050_Clear_Int();
+void MPU6050_Data_Ready_Int();
+void MPU6050_Get_Val_Gyro();
+void MPU6050_print_Angular_Velocity();
+void MPU6050_print_Acceleration();
+void MPU6050_Read_Gyroscope();
+void MPU6050_Read_Accelerometer();
+void MPU6050_Get_Val_Accel();
+
+
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
 #define MPU6050_ADDR     0b11010000
@@ -305,7 +317,7 @@ typedef struct{
 #define MPU6050_INTERRUPT_DATA_RDY_BIT      0
 
 // TODO: figure out what these actually do
-// UMPL source code is not very obivous
+// UMPL source code is not very obvous
 #define MPU6050_DMPINT_5_BIT            5
 #define MPU6050_DMPINT_4_BIT            4
 #define MPU6050_DMPINT_3_BIT            3
@@ -394,67 +406,5 @@ typedef struct{
 #define MPU6050_DMP_MEMORY_BANK_SIZE    256
 #define MPU6050_DMP_MEMORY_CHUNK_SIZE   16
 
-*********************************************************************************************
-/*GPIO PIN definition*/
-#define CS_I2C_SPI_Pin GPIO_PIN_3
-#define CS_I2C_SPI_GPIO_Port GPIOE
-#define PC14_OSC32_IN_Pin GPIO_PIN_14
-#define PC14_OSC32_IN_GPIO_Port GPIOC
-#define PC15_OSC32_OUT_Pin GPIO_PIN_15
-#define PC15_OSC32_OUT_GPIO_Port GPIOC
-#define PH0_OSC_IN_Pin GPIO_PIN_0
-#define PH0_OSC_IN_GPIO_Port GPIOH
-#define PH1_OSC_OUT_Pin GPIO_PIN_1
-#define PH1_OSC_OUT_GPIO_Port GPIOH
-#define OTG_FS_PowerSwitchOn_Pin GPIO_PIN_0
-#define OTG_FS_PowerSwitchOn_GPIO_Port GPIOC
-#define PDM_OUT_Pin GPIO_PIN_3
-#define PDM_OUT_GPIO_Port GPIOC
-#define I2S3_WS_Pin GPIO_PIN_4
-#define I2S3_WS_GPIO_Port GPIOA
-#define SPI1_SCK_Pin GPIO_PIN_5
-#define SPI1_SCK_GPIO_Port GPIOA
-#define SPI1_MISO_Pin GPIO_PIN_6
-#define SPI1_MISO_GPIO_Port GPIOA
-#define SPI1_MOSI_Pin GPIO_PIN_7
-#define SPI1_MOSI_GPIO_Port GPIOA
-#define CLK_IN_Pin GPIO_PIN_10
-#define CLK_IN_GPIO_Port GPIOB
-#define LD4_Pin GPIO_PIN_12
-#define LD4_GPIO_Port GPIOD
-#define LD3_Pin GPIO_PIN_13
-#define LD3_GPIO_Port GPIOD
-#define LD5_Pin GPIO_PIN_14
-#define LD5_GPIO_Port GPIOD
-#define LD6_Pin GPIO_PIN_15
-#define LD6_GPIO_Port GPIOD
-#define I2S3_MCK_Pin GPIO_PIN_7
-#define I2S3_MCK_GPIO_Port GPIOC
-#define VBUS_FS_Pin GPIO_PIN_9
-#define VBUS_FS_GPIO_Port GPIOA
-#define OTG_FS_ID_Pin GPIO_PIN_10
-#define OTG_FS_ID_GPIO_Port GPIOA
-#define OTG_FS_DM_Pin GPIO_PIN_11
-#define OTG_FS_DM_GPIO_Port GPIOA
-#define OTG_FS_DP_Pin GPIO_PIN_12
-#define OTG_FS_DP_GPIO_Port GPIOA
-#define SWDIO_Pin GPIO_PIN_13
-#define SWDIO_GPIO_Port GPIOA
-#define SWCLK_Pin GPIO_PIN_14
-#define SWCLK_GPIO_Port GPIOA
-#define I2S3_SCK_Pin GPIO_PIN_10
-#define I2S3_SCK_GPIO_Port GPIOC
-#define I2S3_SD_Pin GPIO_PIN_12
-#define I2S3_SD_GPIO_Port GPIOC
-#define Audio_RST_Pin GPIO_PIN_4
-#define Audio_RST_GPIO_Port GPIOD
-#define OTG_FS_OverCurrent_Pin GPIO_PIN_5
-#define OTG_FS_OverCurrent_GPIO_Port GPIOD
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
-#define Audio_SCL_Pin GPIO_PIN_6
-#define Audio_SCL_GPIO_Port GPIOB
-#define Audio_SDA_Pin GPIO_PIN_9
-#define Audio_SDA_GPIO_Port GPIOB
 
-#endif /* MPU_REGS_H_ */
+#endif /* MPU6050_H_ */
