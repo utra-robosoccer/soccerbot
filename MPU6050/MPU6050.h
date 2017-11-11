@@ -1,12 +1,3 @@
-/*
- * MPU6050.h
- *
- *  Created on: Nov 10, 2017
- *      Author: yangyifan
- */
-
-//#ifndef MPU6050_H_
-//  #define MPU6050_H_
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
