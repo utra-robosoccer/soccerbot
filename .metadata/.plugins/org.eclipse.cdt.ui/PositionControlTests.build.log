@@ -1,9 +1,13 @@
-17:44:44 **** Incremental Build of configuration Debug for project PositionControlTests ****
+19:05:37 **** Incremental Build of configuration Debug for project PositionControlTests ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
 %cd%
 arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Position Control Tests/PositionControlTests/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:28: warning: variable 'arrDynamixel' set but not used [-Wunused-but-set-variable]
+   Dynamixel_HandleTypeDef* arrDynamixel[3];
+                            ^
 Finished building: ../Src/main.c
  
 Building target: PositionControlTests.elf
@@ -16,8 +20,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "PositionControlTests.elf" "PositionControlTests.bin"
 arm-none-eabi-size "PositionControlTests.elf"
    text	   data	    bss	    dec	    hex	filename
-  12852	    184	   2120	  15156	   3b34	PositionControlTests.elf
+  34840	    184	   2200	  37224	   9168	PositionControlTests.elf
  
 
-17:44:47 Build Finished (took 2s.824ms)
+19:05:40 Build Finished (took 2s.394ms)
 
