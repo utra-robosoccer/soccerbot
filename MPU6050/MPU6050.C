@@ -14,24 +14,24 @@ void SystemClock_Config(void);
    	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
 	 		      	  	  the user.
 */
-void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer){
-	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
+void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
+	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
 }
 
 /* Write one-byte to sensor register
  * Returns: None
  */
-void MPU6050_WRITE_REG(uint8_t reg_addr, uint8_t data){
-	HAL_I2C_Mem_Write(&hi2c3, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
+void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
+	HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
 }
 
 
 /* Reads data from registers via I2C3 and prints out the 8-bit data value via USART2
    Return: None
  */
-void MPU6050_READ_REG(uint8_t reg_addr){
+void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
 	uint8_t receivebyte;
-	uint8_t status = HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
+	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
 	print_8bit(receivebyte);
 }
 
@@ -93,7 +93,7 @@ void MPU6050_Get_Val_Gyro(){
 }
 
 /* Only for testing */
-void MPU6050_print_Angular_Velocity(){
+void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
@@ -108,29 +108,29 @@ void MPU6050_print_Angular_Velocity(){
 	itoa(Rem_Y_Gyro, buffer_remy, 10);
 	itoa(Rem_Z_Gyro, buffer_remz, 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_X_Gyro ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_X ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remx,1 , 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle , &Sign_X_Gyro ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_X ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remx,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_Y_Gyro ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_Y ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remy,1 , 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Y_Gyro ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Y ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remy,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_Z_Gyro ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_Z ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remz,1, 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
-	HAL_UART_Transmit(&huart2,"\n\r" ,2 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Z_Gyro ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Z ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remz,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"\n\r" ,2 , 10);
 
 }
 
 /* Only for testing */
-void MPU6050_print_Acceleration(){
+void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050){
 	char buffer_X[20];
 	char buffer_Y[20];
 	char buffer_Z[20];
@@ -145,33 +145,41 @@ void MPU6050_print_Acceleration(){
 	itoa(Rem_Y_Accel, buffer_remy, 10);
 	itoa(Rem_Z_Accel, buffer_remz, 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_X_Accel ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_X ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remx,3 , 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_X_Accel ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_X ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remx,3 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_Y_Accel ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_Y ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remy,3 , 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Y_Accel ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Y ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remy,3 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
 
-	HAL_UART_Transmit(&huart2, &Sign_Z_Accel ,1, 10);
-	HAL_UART_Transmit(&huart2, buffer_Z ,3, 10);
-	HAL_UART_Transmit(&huart2,"." ,1 , 10);
-	HAL_UART_Transmit(&huart2,buffer_remz,3, 10);
-	HAL_UART_Transmit(&huart2,"    " ,4 , 10);
-	HAL_UART_Transmit(&huart2,"\n\r" ,2 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Z_Accel ,1, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Z ,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remz,3, 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
+	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"\n\r" ,2 , 10);
 
 }
 
 /*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
-void MPU6050_Read_Gyroscope(){
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
 
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(MPU6050_RA_GYRO_XOUT_H,output_buffer);
+	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	uint16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	uint16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+	sMPU6050 ->_X_GYRO = X;
+	sMPU6050 ->_Y_GYRO = Y;
+	sMPU6050 ->_Z_GYRO = Z;
+	
+	/*************The following part modifies outputs for printing prpose**********/
 	uint16_t X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	uint16_t Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
 	uint16_t Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
@@ -189,10 +197,18 @@ void MPU6050_Read_Gyroscope(){
 
 /*Reads output data stored in accelerometer output registers, and converts the data in 2's complement to decimal numbers
   Returns : None*/
-void MPU6050_Read_Accelerometer(){
+void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050){
 
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	uint16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+	uint16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+	uint16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+	sMPU6050 ->_X_ACCEL = X_A;
+	sMPU6050 ->_Y_ACCEL = Y_A;
+	sMPU6050 ->_Z_ACCEL = Z_A;
+	
+	/*************The following part modifies outputs for printing prpose**********/
 	uint16_t X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	uint16_t Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
 	uint16_t Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
@@ -214,7 +230,7 @@ void MPU6050_Read_Accelerometer(){
  */
 void MPU6050_Get_Val_Accel(){
 	MPU6050_Read_Accelerometer();
-    MPU6050_print_Acceleration();
+    	MPU6050_print_Acceleration();
 }
 
 
@@ -307,8 +323,20 @@ void MPU6050_Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 	   		Rem_Z_Accel = (int)(Z % REM_COEF)*10;
 }
 
-/** System Clock Configuration
-*/
+/************set up sensor handle************************************/
+	sMPU6050 -> _ID = ID;
+	sMPU6050 -> _UART_Handle = UART_Handle;       
+	sMPU6050 -> _I2C =  I2C_Handle;
+	sMPU6050 -> _BaudRate = BaudRate;
+	sMPU6050 -> _X_GYRO = 0; 
+	sMPU6050 -> _Y_GYRO = 0; 
+	sMPU6050 -> _Z_GYRO = 0; 
+	sMPU6050 ->_X_ACCEL = 0;
+	sMPU6050 ->_Y_ACCEL = 0;
+	sMPU6050 ->_Z_ACCEL = 0;
+
+
+/** System Clock Configuration*/
 void SystemClock_Config(void)
 {
 
