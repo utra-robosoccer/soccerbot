@@ -326,7 +326,7 @@ void MPU6050_Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
 /************set up sensor handle************************************/
 	sMPU6050 -> _ID = ID;
 	sMPU6050 -> _UART_Handle = UART_Handle;       
-	sMPU6050 -> _I2C =  I2C_Handle;
+	sMPU6050 -> _I2C_Handle =  I2C_Handle;
 	sMPU6050 -> _BaudRate = BaudRate;
 	sMPU6050 -> _X_GYRO = 0; 
 	sMPU6050 -> _Y_GYRO = 0; 
