@@ -5,9 +5,6 @@
 #include "gpio.h"
 #include "MPU6050.h"
 
-void SystemClock_Config(void);
-
-
 /* Reads data stored in sensor output registers and stores data into a buffer
 
    Parameters: Reg_addr: address of register required to be read from
@@ -48,13 +45,15 @@ void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
    MPU6050_RA_SMPLRT_DIV:   register address: 19
    			    configuration: Specifies the divider from the gyroscope output rate to generate the Sample Rate for MPU-6050
 			    		   Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV)
+					   		Gyroscope Output Rate = 8KHz
    Return: None */
-void MPU6050_init(){
+void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
 	MPU6050_WRITE_REG(MPU6050_RA_ACCEL_CONFIG, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_GYRO_CONFIG, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_PWR_MGMT_1, 0);
 	MPU6050_WRITE_REG(MPU6050_RA_PWR_MGMT_2, 0);
-	MPU6050_WRITE_REG(MPU6050_RA_SMPLRT_DIV, 249);
+	MPU6050_WRITE_REG(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296); 
+	sMPU6050 -> _Sample_Rate = 8000/ (1+ MPU6050_CLOCK_DIV_296);
 }
 
 /* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers.
@@ -245,14 +244,18 @@ void MPU6050_Get_Val_Accel(){
 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		uint8_t output[2];
-//		HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR, MPU6050_RA_GYRO_YOUT_H, 1 , output, 2,1000);
-//		HAL_UART_Transmit(&huart2,&output[0],1,100);
-//		HAL_UART_Transmit(&huart2,&output[1],1,100);
-		MPU6050_Get_Val_Gyro();
+	/***************for matlab simulation****************************************************************/
+		/*
+		HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR, MPU6050_RA_GYRO_YOUT_H, 1 , output, 2,1000);
+		HAL_UART_Transmit(&huart2,&output[0],1,100);
+		HAL_UART_Transmit(&huart2,&output[1],1,100);
+		*/
+	/*output values from gyroscope or accelerometer */
+		/* eg. MPU6050_Get_Val_Gyro(); 	*/
 
 }
 
-/************************************************ FIFO ****************************************************************/
+/***************************** FIFO, will not be used****************************************************************/
 void MPU6050_Set_Gyro_FIFO_Enabled(){
 	//MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT);
 	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT);
