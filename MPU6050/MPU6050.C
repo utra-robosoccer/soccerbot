@@ -99,7 +99,8 @@ void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050){
 	char buffer_remx[20];
 	char buffer_remy[20];
 	char buffer_remz[20];
-
+	
+/* 	Convert Integers to Characters	*/
 	itoa(Gyro_X, buffer_X, 10);
 	itoa(Gyro_Y, buffer_Y, 10);
 	itoa(Gyro_Z, buffer_Z, 10);
@@ -137,6 +138,7 @@ void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050){
 	char buffer_remy[20];
 	char buffer_remz[20];
 
+/* 	Convert Integers to Characters	*/
 	itoa(Acc_X, buffer_X, 10);
 	itoa(Acc_Y, buffer_Y, 10);
 	itoa(Acc_Z, buffer_Z, 10);
