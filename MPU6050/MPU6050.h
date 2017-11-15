@@ -34,27 +34,23 @@ typedef struct{
 	uint16_t				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
 	uint16_t				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
 }MPU6050_HandleTypeDef;
-
-/**************Set up MPU6050 Handle*********************************************/
-
-
-void MPU6050_READ_DATA(uint8_t Reg_addr, uint8_t* sensor_buffer);
-void MPU6050_WRITE_REG(uint8_t reg_addr, uint8_t data);
-void MPU6050_READ_REG(uint8_t reg_addr);
-void MPU6050_init();
+/****************Function Definition********************************/
+void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
+void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
+void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr)
+void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_RESET_SENSOR_REG();
 void MPU6050_Clear_Int();
 void MPU6050_Data_Ready_Int();
 void MPU6050_Get_Val_Gyro();
-void MPU6050_print_Angular_Velocity();
-void MPU6050_print_Acceleration();
-void MPU6050_Read_Gyroscope();
-void MPU6050_Read_Accelerometer();
 void MPU6050_Get_Val_Accel();
+void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050)
+void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050)
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
-
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
 #define MPU6050_ADDR    	    0b11010000
