@@ -116,3 +116,4 @@ tmp/
 .metadata/.plugins/org.eclipse.core.resources/.projects/Dynamixel_AX-12_Motor/.indexes/c4/history.index
 .metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 *.pdom
+.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
