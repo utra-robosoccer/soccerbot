@@ -999,55 +999,42 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 }
 
 // UNIMPLEMENTED
-void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t N, uint8_t *params){
-	/* Used for sending control signals to several specified Dynamixel actuators concurrently.
-	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set. Note that the
-	 * broadcast ID is used, so all motors attached to the same UART will have to spend time
-	 * processing the command packet, even if they are not addressed in it.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  uartIndex, the index of the UART which the motors to be communicated with are routed to
-	 * 			  N = number of motors
-	 * 			  params, the array holding all the instructions and parameters to be passed to the various actuators
-	 *
-	 * Params must be in the following format:
-	 * 		1st element --> starting address of dynamixel control table where writing should begin
-	 * 		2nd element --> Length of data to be written to EACH motor (L)
-	 * 		3rd element --> ID of 1st motor
-	 * 		4th element --> 1st parameter for 1st motor...
-	 * 		L+3 element --> Lth parameter for 1st motor...
-	 * 		L+4 element --> ID of 2nd motor
-	 * 		L+5 element -->	1st parameter for 2nd motor...
-	 * 		2L+4 element --> Lth parameter for 2nd motor...
-	 * 		etc.
-	 *
-	 * Returns: none
-	 */
-
-	/* Write packet length into transmission array. */
-	uint8_t length = (params[1] + 1) * N + 4;
-	arrSyncWrite[uartIndex][3] = length;
-
-
-	/* Copy parameters into transmission array. */
-	uint8_t numLoops = (params[1] + 1) * N + 2; // Number of parameters in params
-	for(uint8_t i = 0; i < numLoops; i++){
-		arrSyncWrite[uartIndex][i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
-	}
-
-	/* Compute checksum. */
-	arrSyncWrite[uartIndex][numLoops + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numLoops + 6);
-
-	// Set data direction for transmit
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE). */
-	#if TRANSMIT_IT
-		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4);
-	#else
-		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4, TRANSMIT_TIMEOUT);
-	#endif
-}
+//void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteNode* commandList){
+//	/* Used for sending control signals to several specified Dynamixel actuators concurrently.
+//	 * Uses the SYNC WRITE instruction, 0x83, in the motor instruction set. Note that the
+//	 * broadcast ID is used, so all motors attached to the same UART will have to spend time
+//	 * processing the command packet, even if they are not addressed in it.
+//	 *
+//	 * Arguments: hdynamixel, the motor handle of any motor on the UART which is to broadcast the SYNC WRITE command
+//	 * 			  commandList, the linked list of commands to be synchronously written
+//	 *
+//	 * Returns: none
+//	 */
+//
+//	/* Write packet length into transmission array. */
+//	uint8_t length = (params[1] + 1) * N + 4;
+//	arrSyncWrite[uartIndex][3] = length;
+//
+//
+//	/* Copy parameters into transmission array. */
+//	uint8_t numLoops = (params[1] + 1) * N + 2; // Number of parameters in params
+//	for(uint8_t i = 0; i < numLoops; i++){
+//		arrSyncWrite[uartIndex][i + 5] = params[i]; // Start writing into arrSyncWrite at 5th element
+//	}
+//
+//	/* Compute checksum. */
+//	arrSyncWrite[uartIndex][numLoops + 5] = Dynamixel_ComputeChecksum(arrSyncWrite[uartIndex], numLoops + 6);
+//
+//	// Set data direction for transmit
+//	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+//
+//	/* Transmit data. Number of bytes to be transmitted is numParams + len(0xFF, 0xFF, 0xFE). */
+//	#if TRANSMIT_IT
+//		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4);
+//	#else
+//		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrSyncWrite[uartIndex], length + 4, TRANSMIT_TIMEOUT);
+//	#endif
+//}
 
 // TODO: Fix the checksum verification so that there are no stalls
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
@@ -1105,10 +1092,10 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	}
 
 	// Check the status packet received for errors
-	if(arrReceive[ID][5] != 0){
+	if(arrReceive[ID][4] != 0){
 
 		/* Call the error handler with the error code as the argument. */
-		Dynamixel_ErrorHandler(arrReceive[ID][5]);
+		Dynamixel_ErrorHandler(arrReceive[ID][4]);
 	}
 
 	if(readLength == 1){

@@ -1,0 +1,23 @@
+17:45:30 **** Incremental Build of configuration Debug for project Walking ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building target: Walking.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "Walking.elf" @"objects.list"  
+Finished building target: Walking.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "Walking.elf" "Walking.bin"
+arm-none-eabi-size "Walking.elf"
+   text	   data	    bss	    dec	    hex	filename
+ 106192	    184	   2688	 109064	  1aa08	Walking.elf
+ 
+
+17:45:33 Build Finished (took 2s.226ms)
+
