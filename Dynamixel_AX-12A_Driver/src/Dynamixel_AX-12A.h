@@ -143,6 +143,17 @@ typedef struct{
 	uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
 }Dynamixel_HandleTypeDef;
 
+//typedef struct{
+//	uint8_t					ID;
+//	int						position;
+//	int 					velocity;
+//	int 					torque;
+//	int 					hasPosition;
+//	int 					hasVelocity;
+//	int						hasTorque;
+//	SyncWriteNode* 			next;
+//}SyncWriteNode;
+
 /***************************** Function prototypes ****************************/
 // Setters (use the WRITE DATA instruction)
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
@@ -208,7 +219,7 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 // Transmission & Reception
 uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t uartIndex, uint8_t arrSize, uint8_t *params); // UNIMPLEMENTED
+//void Dynamixel_SyncWriter(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteNode* commandList); // UNIMPLEMENTED
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Initialization
