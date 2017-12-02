@@ -1,4 +1,14 @@
 
+#ifndef MPU_REGS_H_
+#define MPU_REGS_H_
+
+#include "stm32l4xx_hal.h"
+#include "i2c.h"
+#include "usart.h"
+#include "gpio.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
 float acc_X;
@@ -8,25 +18,19 @@ int Rem_X_Gyro,Rem_Y_Gyro,Rem_Z_Gyro;
 char Sign_X_Accel, Sign_Y_Accel, Sign_Z_Accel;
 char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 
-#define printf(x)	HAL_UART_Transmit(&huart2,x,sizeof(x),10)
-#define printnl(a)	printf(a); \
-					printf("\n\r")
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
 
-#ifndef MPU_REGS_H_
-#define MPU_REGS_H_
-
-/**********************************Communiction********************************/
+/**********************************Communication********************************/
 #define I2C	3
 #define UART_Handle	2
 /*********************************** Types ************************************/
 typedef struct{
 	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
 	uint32_t				_BaudRate;				/*!< UART communication baud rate*/
-	uint8_t					_Sample_Rate
-	*UART_HandleTypeDef			_UART_Handle;
-	*I2C_HandleTypeDef 			_I2C_Handle;
+	uint8_t					_Sample_Rate;
+	UART_HandleTypeDef*		_UART_Handle;
+	I2C_HandleTypeDef* 		_I2C_Handle;
 	uint16_t				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
 	uint16_t				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
 	uint16_t				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
@@ -37,7 +41,7 @@ typedef struct{
 /****************Function Definition********************************/
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
-void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr)
+void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
 void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_RESET_SENSOR_REG();
 void MPU6050_Clear_Int();
@@ -46,8 +50,8 @@ void MPU6050_Get_Val_Gyro();
 void MPU6050_Get_Val_Accel();
 void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050)
-void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050)
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
