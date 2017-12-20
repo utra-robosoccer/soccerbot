@@ -8766,3 +8766,1487 @@ arm-none-eabi-size "Walking.elf"
    text	   data	    bss	    dec	    hex	filename
  106192	    184	   2688	 109064	  1aa08	Walking.elf
  
+15:34:31 **** Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../startup/startup_stm32f446xx.s
+Invoking: MCU GCC Assembler
+%cd%
+arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "startup/startup_stm32f446xx.o" "../startup/startup_stm32f446xx.s"
+Finished building: ../startup/startup_stm32f446xx.s
+ 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:58:26: warning: passing argument 2 of 'HAL_UART_Receive' makes pointer from integer without a cast [-Wint-conversion]
+ #define RECEIVE_TIMEOUT  10
+                          ^
+../Src/main.c:127:30: note: in expansion of macro 'RECEIVE_TIMEOUT'
+    HAL_UART_Receive(&huart3, RECEIVE_TIMEOUT);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:127:4: error: too few arguments to function 'HAL_UART_Receive'
+    HAL_UART_Receive(&huart3, RECEIVE_TIMEOUT);
+    ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:128:31: error: expected expression before ',' token
+    HAL_UART_Transmit(&huart3, , arrSize, TRANSMIT_TIMEOUT);
+                               ^
+../Src/main.c:128:33: error: 'arrSize' undeclared (first use in this function)
+    HAL_UART_Transmit(&huart3, , arrSize, TRANSMIT_TIMEOUT);
+                                 ^
+../Src/main.c:128:33: note: each undeclared identifier is reported only once for each function it appears in
+../Src/main.c:125:8: warning: unused variable 'receiveSize' [-Wunused-variable]
+    int receiveSize = sizeof(struct RobotGoal);
+        ^
+../Src/main.c:124:8: warning: unused variable 'transmitSize' [-Wunused-variable]
+    int transmitSize = sizeof(struct RobotState);
+        ^
+../Src/main.c:122:21: warning: unused variable 'receiveBuffer' [-Wunused-variable]
+    struct RobotGoal receiveBuffer[1];
+                     ^
+../Src/main.c:121:22: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+    struct RobotState transmitBuffer[1];
+                      ^
+make: *** [Src/main.o] Error 1
+15:34:33 **** Incremental Build of configuration Debug for project Walking ****
+make all 
+Building file: ../startup/startup_stm32f446xx.s
+Invoking: MCU GCC Assembler
+%cd%
+arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -o "startup/startup_stm32f446xx.o" "../startup/startup_stm32f446xx.s"
+Finished building: ../startup/startup_stm32f446xx.s
+ 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Walking/Walking/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Command canceled
+15:36:19 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:58:26: error: expected ')' before numeric constant
+ #define RECEIVE_TIMEOUT  10
+                          ^
+../Src/main.c:125:57: note: in expansion of macro 'RECEIVE_TIMEOUT'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                                                         ^
+../Src/main.c:125:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct RobotGoal *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:125:4: error: too few arguments to function 'HAL_UART_Receive'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+    ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:114:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:111:21: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+   struct RobotState transmitBuffer[1];
+                     ^
+make: *** [Src/main.o] Error 1
+15:37:55 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:58:26: error: expected ')' before numeric constant
+ #define RECEIVE_TIMEOUT  10
+                          ^
+../Src/main.c:125:57: note: in expansion of macro 'RECEIVE_TIMEOUT'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                                                         ^
+../Src/main.c:125:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct RobotGoal *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:125:4: error: too few arguments to function 'HAL_UART_Receive'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+    ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:114:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:111:21: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+   struct RobotState transmitBuffer[1];
+                     ^
+make: *** [Src/main.o] Error 1
+15:38:17 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:124:57: error: expected ')' before 'RECEIVE_TIMEOUT'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                                                         ^
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct RobotGoal *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:124:4: error: too few arguments to function 'HAL_UART_Receive'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize RECEIVE_TIMEOUT);
+    ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:21: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+   struct RobotState transmitBuffer[1];
+                     ^
+make: *** [Src/main.o] Error 1
+15:38:25 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:124:57: error: expected ')' before numeric constant
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize 10);
+                                                         ^
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct RobotGoal *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:124:4: error: too few arguments to function 'HAL_UART_Receive'
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize 10);
+    ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:21: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+   struct RobotState transmitBuffer[1];
+                     ^
+make: *** [Src/main.o] Error 1
+15:38:33 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, receiveBuffer, receiveSize, 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct RobotGoal *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:21: warning: unused variable 'transmitBuffer' [-Wunused-variable]
+   struct RobotState transmitBuffer[1];
+                     ^
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6168	     12	   1892	   8072	   1f88	CommTest.elf
+ 
+15:41:02 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:110:28: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+   int RobotState[] = (int*)malloc(sizeof(struct RobotState));
+                            ^
+../Src/main.c:110:28: warning: incompatible implicit declaration of built-in function 'malloc'
+../Src/main.c:110:28: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+../Src/main.c:110:22: error: invalid initializer
+   int RobotState[] = (int*)malloc(sizeof(struct RobotState));
+                      ^
+../Src/main.c:111:21: error: invalid initializer
+   int RobotGoal[] = (int*)malloc(sizeof(struct RobotGoal));
+                     ^
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, RobotGoal, receiveSize, 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:7: warning: unused variable 'RobotState' [-Wunused-variable]
+   int RobotState[] = (int*)malloc(sizeof(struct RobotState));
+       ^
+make: *** [Src/main.o] Error 1
+15:41:37 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:110:25: error: 'structRobotState' undeclared (first use in this function)
+   int RobotState[sizeof(structRobotState)];
+                         ^
+../Src/main.c:110:25: note: each undeclared identifier is reported only once for each function it appears in
+../Src/main.c:111:27: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+   int RobotGoal[] = (int*)malloc(sizeof(struct RobotGoal));
+                           ^
+../Src/main.c:111:27: warning: incompatible implicit declaration of built-in function 'malloc'
+../Src/main.c:111:27: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+../Src/main.c:111:21: error: invalid initializer
+   int RobotGoal[] = (int*)malloc(sizeof(struct RobotGoal));
+                     ^
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, RobotGoal, receiveSize, 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:7: warning: unused variable 'RobotState' [-Wunused-variable]
+   int RobotState[sizeof(structRobotState)];
+       ^
+make: *** [Src/main.o] Error 1
+15:41:43 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:111:27: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+   int RobotGoal[] = (int*)malloc(sizeof(struct RobotGoal));
+                           ^
+../Src/main.c:111:27: warning: incompatible implicit declaration of built-in function 'malloc'
+../Src/main.c:111:27: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+../Src/main.c:111:21: error: invalid initializer
+   int RobotGoal[] = (int*)malloc(sizeof(struct RobotGoal));
+                     ^
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, RobotGoal, receiveSize, 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:7: warning: unused variable 'RobotState' [-Wunused-variable]
+   int RobotState[sizeof(struct RobotState)];
+       ^
+make: *** [Src/main.o] Error 1
+15:42:01 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:124:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, RobotGoal, receiveSize, 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:113:7: warning: unused variable 'transmitSize' [-Wunused-variable]
+   int transmitSize = sizeof(struct RobotState);
+       ^
+../Src/main.c:110:7: warning: unused variable 'RobotState' [-Wunused-variable]
+   int RobotState[sizeof(struct RobotState)];
+       ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6168	     12	   1892	   8072	   1f88	CommTest.elf
+ 
+15:42:31 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:113:11: warning: unused variable 'transmitSize' [-Wunused-variable]
+   uint8_t transmitSize = sizeof(struct RobotState);
+           ^
+../Src/main.c:110:11: warning: unused variable 'RobotState' [-Wunused-variable]
+   uint8_t RobotState[sizeof(struct RobotState)];
+           ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6168	     12	   1892	   8072	   1f88	CommTest.elf
+ 
+15:53:34 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c: In function 'HAL_UART_RxHalfCpltCallback':
+../Src/main.c:378:11: error: invalid operands to binary == (have 'UART_HandleTypeDef * {aka struct <anonymous> *}' and 'UART_HandleTypeDef {aka struct <anonymous>}')
+  if(huart == huart3){
+           ^
+make: *** [Src/main.o] Error 1
+15:53:46 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+15:55:53 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+15:56:42 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+15:56:47 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+16:00:46 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c: In function 'HAL_UART_RxHalfCpltCallback':
+../Src/main.c:381:31: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+    HAL_UART_Transmit(&huart3, arrAck, 3, 10);
+                               ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:647:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+16:01:03 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+16:03:18 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c: In function 'HAL_UART_RxCpltCallback':
+../Src/main.c:381:31: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+    HAL_UART_Transmit(&huart3, arrAck, 3, 10);
+                               ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:647:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+16:03:36 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:121:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+16:03:43 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+16:04:30 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:122:30: warning: passing argument 2 of 'HAL_UART_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
+    HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
+                              ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:648:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^
+../Src/main.c:112:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+16:13:39 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:112:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:111:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+16:13:52 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+16:16:11 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:112:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:111:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+18:27:57 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:112:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:111:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6176	     12	   1892	   8080	   1f90	CommTest.elf
+ 
+18:35:59 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:114:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building file: ../Src/stm32f4xx_hal_msp.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_hal_msp.d" -MT"Src/stm32f4xx_hal_msp.o" -o "Src/stm32f4xx_hal_msp.o" "../Src/stm32f4xx_hal_msp.c"
+Finished building: ../Src/stm32f4xx_hal_msp.c
+ 
+Building file: ../Src/stm32f4xx_it.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/stm32f4xx_it.d" -MT"Src/stm32f4xx_it.o" -o "Src/stm32f4xx_it.o" "../Src/stm32f4xx_it.c"
+Finished building: ../Src/stm32f4xx_it.c
+ 
+Building file: ../Src/system_stm32f4xx.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/system_stm32f4xx.d" -MT"Src/system_stm32f4xx.o" -o "Src/system_stm32f4xx.o" "../Src/system_stm32f4xx.c"
+Finished building: ../Src/system_stm32f4xx.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+ 
+Building file: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d" -MT"Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" -o "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o" "../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+Finished building: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6724	     12	   1900	   8636	   21bc	CommTest.elf
+ 
+18:36:18 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+18:36:43 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:114:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6724	     12	   1900	   8636	   21bc	CommTest.elf
+ 
+18:36:55 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:115:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6740	     12	   1900	   8652	   21cc	CommTest.elf
+ 
+18:37:06 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c:114:13: warning: unused variable 'robotgoal' [-Wunused-variable]
+   RobotGoal robotgoal;
+             ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6724	     12	   1900	   8636	   21bc	CommTest.elf
+ 
+18:43:09 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:128:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:116:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6724	     12	   1900	   8636	   21bc	CommTest.elf
+ 
+18:43:19 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+18:45:01 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:128:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:116:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c: In function 'HAL_UART_RxCpltCallback':
+../Src/main.c:386:6: error: 'robotgoal' undeclared (first use in this function)
+   if(robotgoal.a % 5 == 0){
+      ^
+../Src/main.c:386:6: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Src/main.o] Error 1
+18:45:04 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:128:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'RobotGoal * {aka struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:116:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:115:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c: In function 'HAL_UART_RxCpltCallback':
+../Src/main.c:386:6: error: 'robotgoal' undeclared (first use in this function)
+   if(robotgoal.a % 5 == 0){
+      ^
+../Src/main.c:386:6: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Src/main.o] Error 1
+18:45:43 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6756	     12	   1956	   8724	   2214	CommTest.elf
+ 
+18:45:47 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+18:47:05 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   6756	     12	   1956	   8724	   2214	CommTest.elf
+ 
+18:47:14 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+18:51:11 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7064	     12	   1956	   9032	   2348	CommTest.elf
+ 
+18:58:52 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7048	     12	   1956	   9016	   2338	CommTest.elf
+ 
+18:59:01 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+make: Nothing to be done for `all'.
+19:21:17 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+../Src/main.c: In function 'HAL_UART_RxCpltCallback':
+../Src/main.c:392:23: error: invalid initializer
+   uint8_t arrAck[1] = robotgoal.a;
+                       ^
+make: *** [Src/main.o] Error 1
+19:21:47 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7052	     12	   1956	   9020	   233c	CommTest.elf
+ 
+19:25:02 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+                                  ^
+In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
+                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
+                 from ../Src/main.c:40:
+D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^
+../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+   7088	     12	   1956	   9056	   2360	CommTest.elf
+ 
