@@ -1,23 +1,14 @@
-19:25:02 **** Incremental Build of configuration Debug for project CommTest ****
+20:46:02 **** Incremental Build of configuration Debug for project CommTest ****
 make all 
 Building file: ../Src/main.c
 Invoking: MCU GCC Compiler
 %cd%
 arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
 ../Src/main.c: In function 'main':
-../Src/main.c:129:34: warning: passing argument 2 of 'HAL_UART_Receive_IT' from incompatible pointer type [-Wincompatible-pointer-types]
-     HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
-                                  ^
-In file included from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc/stm32f4xx_hal_conf.h:368:0,
-                 from D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:48,
-                 from ../Src/main.c:40:
-D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:650:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'volatile RobotGoal * {aka volatile struct robot_goal *}'
- HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
-                   ^
-../Src/main.c:117:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+../Src/main.c:123:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
    uint8_t receivebuffer[2];
            ^
-../Src/main.c:116:14: warning: unused variable 'robotstate' [-Wunused-variable]
+../Src/main.c:122:14: warning: unused variable 'robotstate' [-Wunused-variable]
    RobotState robotstate;
               ^
 Finished building: ../Src/main.c
@@ -32,8 +23,8 @@ Generating binary and Printing size information:
 arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
 arm-none-eabi-size "CommTest.elf"
    text	   data	    bss	    dec	    hex	filename
-   7088	     12	   1956	   9056	   2360	CommTest.elf
+   7040	     12	   2052	   9104	   2390	CommTest.elf
  
 
-19:25:04 Build Finished (took 1s.972ms)
+20:46:04 Build Finished (took 1s.817ms)
 

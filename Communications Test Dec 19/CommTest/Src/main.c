@@ -59,7 +59,11 @@ volatile uint8_t receiving;
 
 volatile RobotGoal robotgoal;
 
-volatile uint8_t arrAck[1];
+uint8_t arrACK[] = {'A', 'C', 'K'};
+
+volatile uint8_t arrRxCallback[1];
+
+uint8_t arr100[100];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -117,6 +121,10 @@ int main(void)
 
   RobotState robotstate;
   uint8_t receivebuffer[2];
+
+  for(int i = 0; i < 100; i++){
+	  arr100[i] = i;
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,10 +134,16 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  if(!receiving){
-		  receiving = 1;
-		  HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+	  for(int i = 0; i < 26; i++){
+		  HAL_UART_Transmit(&huart3, &arr100[i + 65], 1, 10);
+		  ledState = !ledState;
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, ledState);
 	  }
+
+//	  if(!receiving){
+//		  receiving = 1;
+//		  HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+//	  }
 	  //HAL_UART_Receive(&huart3, &robotgoal, sizeof(RobotGoal), 10);
   }
   /* USER CODE END 3 */
@@ -389,8 +403,14 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart){
 		ledState = !ledState;
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, ledState);
 
-		arrAck[0] = robotgoal.a;
-		HAL_UART_Transmit(&huart3, arrAck, sizeof(arrAck), 10);
+
+		HAL_UART_Transmit(&huart3, arr100, sizeof(arr100), 100);
+
+//		for(int i = 0; i < 100; i++){
+//			HAL_UART_Transmit(&huart3, arrACK, sizeof(arrACK), 100);
+//		}
+//		arrRxCallback[0] = robotgoal.a;
+//		HAL_UART_Transmit(&huart3, arrRxCallback, sizeof(arrRxCallback), 100);
 
 		receiving = 0;
 	}
