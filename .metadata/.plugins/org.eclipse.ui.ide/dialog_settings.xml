@@ -12,6 +12,14 @@
 		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="/home/vuwij/soccerbot/soccer/build"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/Dynamixel_AX-12_UART"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/Workshop/stworkshop"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/Latency Tests/LatencyTests"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/Communications Test Dec 19/CommTest"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/Workshop/BlinkLED"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/ClubsFair/ClubsFair"/>
+			<item value="/home/vuwij/Documents/soccer-embedded/JasonTest"/>
 			<item value="/other/STM32/soccer-embedded/Latency Tests"/>
 			<item value="/other/STM32/soccer-embedded/ClubsFair"/>
 		</list>

@@ -87,7 +87,7 @@ tmp/
 ### Eclipse Patch ###
 # Eclipse Core		
 #.project
-
+.metadata/
 # JDT-specific (Eclipse Java Development Tools)		
 #.classpath
 

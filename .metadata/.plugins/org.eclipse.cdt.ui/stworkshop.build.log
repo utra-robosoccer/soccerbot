@@ -1,7 +1,6 @@
-18:49:35 **** Clean-only build of configuration Debug for project stworkshop ****
-make clean 
-rm -rf *
- 
+22:43:54 **** Incremental Build of configuration Debug for project stworkshop ****
+make all 
+make: Nothing to be done for 'all'.
 
-18:49:37 Build Finished (took 2s.313ms)
+22:43:54 Build Finished (took 119ms)
 
