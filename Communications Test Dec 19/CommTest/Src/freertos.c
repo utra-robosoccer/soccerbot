@@ -1,8 +1,7 @@
 /**
   ******************************************************************************
-  * File Name          : stm32f4xx_hal_msp.c
-  * Description        : This file provides code for the MSP Initialization 
-  *                      and de-Initialization codes.
+  * File Name          : freertos.c
+  * Description        : Code for freertos applications
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -46,55 +45,105 @@
   *
   ******************************************************************************
   */
+
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "cmsis_os.h"
 
-extern void _Error_Handler(char *, int);
-/* USER CODE BEGIN 0 */
+/* USER CODE BEGIN Includes */     
+#include "RobotGoal.h"
+#include "RobotState.h"
+#include "usart.h"
+#include "gpio.h"
+/* USER CODE END Includes */
 
-/* USER CODE END 0 */
-/**
-  * Initializes the Global MSP.
-  */
-void HAL_MspInit(void)
-{
-  /* USER CODE BEGIN MspInit 0 */
+/* Variables -----------------------------------------------------------------*/
+osThreadId ReceiptTaskHandle;
+osSemaphoreId BinarySemHandle;
 
-  /* USER CODE END MspInit 0 */
+/* USER CODE BEGIN Variables */
+uint8_t arrACK[] = {'A', 'C', 'K'};
+/* USER CODE END Variables */
 
-  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+/* Function prototypes -------------------------------------------------------*/
+void StartReceiptTask(void const * argument);
 
-  /* System interrupt init*/
-  /* MemoryManagement_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(MemoryManagement_IRQn, 0, 0);
-  /* BusFault_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(BusFault_IRQn, 0, 0);
-  /* UsageFault_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UsageFault_IRQn, 0, 0);
-  /* SVCall_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SVCall_IRQn, 0, 0);
-  /* DebugMonitor_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DebugMonitor_IRQn, 0, 0);
-  /* PendSV_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(PendSV_IRQn, 15, 0);
-  /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
+void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
-  /* USER CODE BEGIN MspInit 1 */
+/* USER CODE BEGIN FunctionPrototypes */
 
-  /* USER CODE END MspInit 1 */
+/* USER CODE END FunctionPrototypes */
+
+/* Hook prototypes */
+
+/* Init FreeRTOS */
+
+void MX_FREERTOS_Init(void) {
+  /* USER CODE BEGIN Init */
+       
+  /* USER CODE END Init */
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* Create the semaphores(s) */
+  /* definition and creation of BinarySem */
+  osSemaphoreDef(BinarySem);
+  BinarySemHandle = osSemaphoreCreate(osSemaphore(BinarySem), 1);
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* Create the thread(s) */
+  /* definition and creation of ReceiptTask */
+  osThreadDef(ReceiptTask, StartReceiptTask, osPriorityNormal, 0, 128);
+  ReceiptTaskHandle = osThreadCreate(osThread(ReceiptTask), NULL);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
 }
 
-/* USER CODE BEGIN 1 */
+/* StartReceiptTask function */
+void StartReceiptTask(void const * argument)
+{
 
-/* USER CODE END 1 */
+  /* USER CODE BEGIN StartReceiptTask */
+  RobotGoal robotgoal;
+  HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+  int ledState=1;
 
-/**
-  * @}
-  */
+  /* Infinite loop */
+  for(;;)
+  {
+	if (xSemaphoreTake(BinarySemHandle, 99999999)){
+		ledState = !ledState;
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, ledState);
+		HAL_UART_Transmit(&huart3, arrACK, sizeof(arrACK), 100);
+		HAL_UART_Receive_IT(&huart3, &robotgoal, sizeof(RobotGoal));
+	}
+    osDelay(1);
+  }
+  /* USER CODE END StartReceiptTask */
+}
 
-/**
-  * @}
-  */
+/* USER CODE BEGIN Application */
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart){
+	if(huart == &huart3){
+		xSemaphoreGiveFromISR(BinarySemHandle, NULL);
+	}
+}
+/* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
