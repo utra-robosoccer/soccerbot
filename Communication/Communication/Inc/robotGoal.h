@@ -12,8 +12,8 @@
 #include "stm32l4xx_hal.h"
 
 typedef struct robot_goal{
-	uint32_t id;
-	char message[50];
+	volatile uint32_t id;
+	volatile char message[50];
 } RobotGoal;
 
 #endif /* ROBOTGOAL_H_ */
