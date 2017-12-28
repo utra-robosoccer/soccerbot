@@ -1,6 +1,38 @@
+<<<<<<< HEAD
 19:09:49 **** Incremental Build of configuration Debug for project CommTest ****
 make all 
 make: Nothing to be done for 'all'.
 
 19:09:49 Build Finished (took 150ms)
+=======
+21:48:00 **** Incremental Build of configuration Debug for project CommTest ****
+make all 
+Building file: ../Src/main.c
+Invoking: MCU GCC Compiler
+%cd%
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Drivers/CMSIS/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Middlewares/Third_Party/FreeRTOS/Source/include" -I"D:/Users/Tyler/Documents/STM/Workspace/Communications Test Dec 19/CommTest/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
+../Src/main.c: In function 'main':
+../Src/main.c:124:11: warning: unused variable 'receivebuffer' [-Wunused-variable]
+   uint8_t receivebuffer[2];
+           ^
+../Src/main.c:123:14: warning: unused variable 'robotstate' [-Wunused-variable]
+   RobotState robotstate;
+              ^
+Finished building: ../Src/main.c
+ 
+Building target: CommTest.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "CommTest.elf" @"objects.list"  
+Finished building target: CommTest.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "CommTest.elf" "CommTest.bin"
+arm-none-eabi-size "CommTest.elf"
+   text	   data	    bss	    dec	    hex	filename
+  13904	     20	  17812	  31736	   7bf8	CommTest.elf
+ 
+
+21:48:03 Build Finished (took 2s.317ms)
+>>>>>>> c01c93d228ae9688f9b8ef3bc2ea3006715d0647
 
