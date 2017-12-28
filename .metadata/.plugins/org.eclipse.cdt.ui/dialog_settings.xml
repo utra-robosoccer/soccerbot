@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item value="Default C source template" key="LastUsedSourceTemplate"/>
+	<item value="Default C header template" key="LastUsedHeaderTemplate"/>
 	<section name="org.eclipse.cdt.internal.ui.browser.opentype.OpenTypeActionSettings">
 		<item value="true" key="show_enums"/>
 		<item value="true" key="show_unions"/>
@@ -21,10 +23,22 @@
 		<item value="223" key="size.height"/>
 		<item value="1016" key="size.width"/>
 	</section>
+	<section name="CPathsPropertyPage">
+		<item value="0" key="pageIndex"/>
+	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
+	</section>
+	<section name="NewClassWizardPage">
+	</section>
+	<section name="RenameInformationPopup">
 	</section>
 	<section name="CRenameRefactoringInputPage">
 	</section>
+	<section name="IncludeSysmbolsPropertyPage">
+		<item value="0" key="pageIndex"/>
+	</section>
 	<section name="completion_proposal_size">
+		<item value="270" key="size.y"/>
+		<item value="1069" key="size.x"/>
 	</section>
 </section>

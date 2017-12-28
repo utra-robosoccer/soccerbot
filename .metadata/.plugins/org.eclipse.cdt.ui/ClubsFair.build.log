@@ -1,27 +1,6 @@
-20:21:45 **** Incremental Build of configuration Debug for project ClubsFair ****
+19:09:49 **** Incremental Build of configuration Debug for project ClubsFair ****
 make all 
-Building file: ../Src/main.c
-Invoking: MCU GCC Compiler
-%cd%
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"D:/Users/Tyler/Documents/STM/Workspace/ClubsFair/ClubsFair/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"Src/main.d" -MT"Src/main.o" -o "Src/main.o" "../Src/main.c"
-../Src/main.c: In function 'main':
-../Src/main.c:181:34: warning: comparison between pointer and integer
-     }while(&Motor3._lastPosition < (uint16_t)290);
-                                  ^
-Finished building: ../Src/main.c
- 
-Building target: ClubsFair.elf
-Invoking: MCU GCC Linker
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F446ZETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -lm -o "ClubsFair.elf" @"objects.list"  
-Finished building target: ClubsFair.elf
- 
-make --no-print-directory post-build
-Generating binary and Printing size information:
-arm-none-eabi-objcopy -O binary "ClubsFair.elf" "ClubsFair.bin"
-arm-none-eabi-size "ClubsFair.elf"
-   text	   data	    bss	    dec	    hex	filename
-  11252	    184	   3160	  14596	   3904	ClubsFair.elf
- 
+make: Nothing to be done for 'all'.
 
-20:21:48 Build Finished (took 2s.490ms)
+19:09:49 Build Finished (took 184ms)
 
