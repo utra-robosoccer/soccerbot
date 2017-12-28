@@ -1,7 +1,0 @@
-22:18:15 **** Clean-only build of configuration Debug for project Dynamixel_AX-12_Motor ****
-make clean 
-rm -rf *
- 
-
-22:18:16 Build Finished (took 366ms)
-
