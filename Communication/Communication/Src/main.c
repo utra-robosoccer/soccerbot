@@ -52,12 +52,12 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 volatile uint8_t ledState;
-volatile uint8_t replying;
-volatile uint8_t connected;
-volatile RobotGoal robotGoal;
+uint8_t replying;
+uint8_t connected;
+RobotGoal robotGoal, *robotGoalPtr;
+uint8_t robotGoalBuffer[sizeof(RobotGoal)];
+
 RobotState robotState, *robotStatePtr;
-char ack[4] = "ACK";
-char begin_receive[13] = "Begin Receive";
 
 /* USER CODE END PV */
 
@@ -108,7 +108,10 @@ int main(void) {
 	replying = 0;
 	connected = 0;
 
-	HAL_UART_Receive_IT(&huart2, (uint8_t *) &robotGoal, sizeof(RobotGoal));
+	robotGoal.id = 0;
+	memset(robotGoalBuffer,0,sizeof(robotGoalBuffer));
+	robotGoalPtr = &robotGoal;
+
 	robotState.id = 1;
 	robotStatePtr = &robotState;
 
@@ -124,17 +127,9 @@ int main(void) {
 		if (!connected) {
 			ledState = !ledState;
 			HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, ledState);
-			sprintf(robotState.msg, "Start");
+			sprintf(robotState.msg, "START");
 			send_state(robotStatePtr);
-			HAL_Delay(500);
-		}
-
-		if (replying) {
-			robotState.id++;
-			sprintf(robotState.msg, "ACK\n");
-			send_state(robotStatePtr);
-			replying = 0;
-			continue;
+			HAL_Delay(1000);
 		}
 	}
 	/* USER CODE END 3 */
@@ -256,16 +251,21 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-
 	if (huart == &huart2) {
-		ledState = !ledState;
-//		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, ledState);
+		memcpy((char *) &robotGoal, robotGoalBuffer, sizeof(RobotGoal));
+		if (!strcmp((char *) robotGoal.message, "BEGIN")) {
+			connected = 1;
+			robotState.id++;
+		}
 
-//		char c = robotGoal.message[5];
-		if (robotGoal.id == 1)
-			connected = 0;
+		if (connected) {
+			sprintf(robotState.msg, "ACK");
+		}
+		else {
+			sprintf(robotState.msg, "NACK");
+		}
 
-		replying = 1;
+		send_state(robotStatePtr);
 	}
 }
 /* USER CODE END 4 */
