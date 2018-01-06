@@ -183,14 +183,6 @@ int main(void)
   arrDynamixel[10] = &Motor11;
   arrDynamixel[11] = &Motor12;
 
-  int pos = 100;
-  Dynamixel_SetGoalPosition(arrDynamixel[0], pos);
-  do{
-	  pos += 10;
-	  Dynamixel_GetPosition(arrDynamixel[0]);
-	  Dynamixel_SetGoalPosition(arrDynamixel[0], pos);
-  }while(arrDynamixel[0] -> _lastPosition < 150);
-
   for(int i = 0; i < 12; i++){
 	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
 	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
