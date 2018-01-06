@@ -5,14 +5,9 @@
 #define __DYNAMIXEL_AX_12A_H__
 
 /********************************** Includes **********************************/
-#ifdef stm32f4xx_hal.h
-	#include "stm32f4xx_hal.h"
-	#include "stm32f4xx_hal_conf.h"
-#endif
-#ifdef stm32h7xx_hal.h
-	#include "stm32h7xx_hal.h"
-	#include "stm32h7xx_hal_conf.h"
-#endif
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_conf.h"
+
 /******************************(**** Macros ******************************(****/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
