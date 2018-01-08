@@ -201,8 +201,8 @@ int main(void)
 
   for(int i = 0; i < 18; i++){
 	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
-	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
+	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 5);
+	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 5);
   }
   /* USER CODE END 2 */
 
