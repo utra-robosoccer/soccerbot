@@ -10,8 +10,8 @@
 ]>
 
 <targetDefinitions>
-  <board id="imu_h743">
-    <name>IMU_H743</name>
+  <board id="imu2">
+    <name>IMU2</name>
     <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
     <mcuId>stm32h743zitx</mcuId>
