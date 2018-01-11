@@ -52,25 +52,25 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
-//#include "MPU6050.h"
+#include "stm32h7xx_hal.h"
+#include "MPU6050.h"
 #include "usart.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "stm32h7xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
-osThreadId IMUTaskHandle;
+osThreadId IMUtaskHandle;
 
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
-void StartDefaultTask(void const * argument);
+void StartIMUtask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -100,9 +100,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
-  /* definition and creation of IMUTask */
-  osThreadDef(IMUTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
+  /* definition and creation of IMUtask */
+  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
+  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -113,19 +113,55 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 }
 
-/* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
+/* StartIMUtask function */
+void StartIMUtask(void const * argument)
 {
 
-  /* USER CODE BEGIN StartDefaultTask */
+  /* USER CODE BEGIN StartIMUtask */
+    uint8_t output_buffer[6];
+    uint8_t output_buffer_2[6];
+    MPU6050_HandleTypeDef IMUdata;
+    IMUdata._I2C_Handle = &hi2c3;
+    uint16_t test=5;
+    MPU6050_RESET_SENSOR_REG(IMUdata);
+    MPU6050_init(&IMUdata);
+
   /* Infinite loop */
-	uint16_t Xg=5;
   for(;;)
   {
-	//	HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-    osDelay(1);
+	  MPU6050_READ_DATA(&IMUdata, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	  			  	uint16_t Xa = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	  			  	uint16_t Ya = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	  			  	uint16_t Za = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+
+	  			  	//Now read the gyroscope values:
+
+	  				MPU6050_READ_DATA(&IMUdata, MPU6050_RA_GYRO_XOUT_H,output_buffer_2);
+	  				uint16_t Xg = abs((int16_t)(output_buffer_2[0]<<8|output_buffer_2[1]));
+	  				uint16_t Yg = abs((int16_t)(output_buffer_2[2]<<8|output_buffer_2[3]));
+	  				uint16_t Zg = abs((int16_t)(output_buffer_2[4]<<8|output_buffer_2[5]));
+
+
+	  				//Now store in struct:
+	  				IMUdata._X_ACCEL = Xa;
+	  				IMUdata._Y_ACCEL = Ya;
+	  				IMUdata._Z_ACCEL = Za;
+
+	  				IMUdata._X_GYRO = Xg;
+	  				IMUdata._Y_GYRO = Yg;
+	  				IMUdata._Z_GYRO = Zg;
+
+	  				//TEST: Read a specific register
+
+	  				//Now enqueue the struct
+	  				//NOTE: determine how large the queue should be
+
+	  				//xQueueSend( IMUqueueHandle, &IMUdata, 1000);
+	  				HAL_UART_Transmit(&huart3, &Xg, 2, 10);
+	  				//HAL_UART_Transmit(&huart3, &test, 2, 10);
+	  				osDelay(1000);
   }
-  /* USER CODE END StartDefaultTask */
+  /* USER CODE END StartIMUtask */
 }
 
 /* USER CODE BEGIN Application */

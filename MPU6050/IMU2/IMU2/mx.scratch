@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\izaak\Documents\GitHub\soccer-embedded\MPU6050\IMU_H743\IMU_H743\\IMU_H743</ProjectName>
+<ProjectName>C:\Users\izaak\Documents\GitHub\soccer-embedded\MPU6050\IMU2\IMU2\\IMU2</ProjectName>
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\izaak\STM32Cube\Repository\STM32Cube_FW_H7_V1.1.0\Drivers\CMSIS</HAL_Driver>
 
@@ -22,7 +22,7 @@
 
 <configs>
   <config>
-    <name>IMU_H743</name>				
+    <name>IMU2</name>				
     <device>STM32H743ZITx</device>		 
     <heapSize>0x200</heapSize>
     <stackSize>0x400</stackSize>
