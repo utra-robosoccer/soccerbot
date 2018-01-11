@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * COPYRIGHT(c) 2018 STMicroelectronics
+  * COPYRIGHT(c) 2017 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -35,19 +35,12 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
-
-
-	//the purpose of this is to allow users to press the user button (blue) on the board and collect information on the motor position values.
-	//format for 1 button press:		1:position;2:position;3:position;...12:position;/
-
-
+/* Motor driver. */
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
 /* USER CODE END Includes */
@@ -56,12 +49,9 @@
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
-UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
+UART_HandleTypeDef huart3;
 
-/* USER CODE BEGIN PV */
-volatile int global_enable=0;
-/* Private variables ---------------------------------------------------------*/
 const double MOTORANGLES[12][1001] = {
 		{//1
 				0.0070087,0.014233,0.02166,0.029276,0.037068,0.045024,0.053133,0.061384,0.069766,0.07827,0.086885,0.095604,0.10442,0.11331,0.12229,0.13071,0.1386,0.14601,0.15296,0.15948,0.16559,0.17133,0.17671,0.18176,0.1865,0.19172,0.19808,0.20534,0.21331,0.22176,0.23044,0.23908,0.24736,0.25499,0.26167,0.26711,0.27113,0.2736,0.2745,0.25617,0.2372,0.21799,0.19893,0.18034,0.16248,0.14556,0.12968,0.11488,0.10114,0.0884,0.076157,0.063993,0.051905,0.039893,0.027955,0.016088,0.0042925,-0.0074339,-0.019092,-0.030682,-0.042206,-0.053663,-0.065055,-0.076381,-0.087642,-0.098208,-0.10812,-0.11742,-0.12614,-0.13432,-0.14199,-0.14919,-0.15594,-0.16227,-0.16821,-0.17379,-0.17902,-0.18392,-0.18853,-0.19285,-0.1969,-0.20071,-0.20428,-0.20763,-0.21078,-0.21373,-0.21651,-0.21911,-0.22156,-0.20866,-0.19586,-0.18315,-0.17052,-0.15799,-0.14553,-0.13316,-0.12086,-0.10864,-0.096492,-0.084412,-0.072401,-0.060456,-0.048577,-0.036761,-0.025008,-0.013317,-0.0016871,0.0098828,0.021393,0.032844,0.044236,0.05557,0.066844,0.078061,0.089218,0.099686,0.10951,0.11872,0.12736,0.13546,0.14306,0.15019,0.15688,0.16316,0.16904,0.17528,0.18249,0.19049,0.19911,0.20816,0.2174,0.22658,0.23541,0.24358,0.25082,0.25684,0.26144,0.26451,0.266,0.24819,0.22975,0.21106,0.1925,0.17439,0.15699,0.14049,0.12499,0.11053,0.097087,0.084593,0.072571,0.060617,0.048728,0.036903,0.025142,0.013443,0.0018052,-0.0097718,-0.021289,-0.032746,-0.044144,-0.055483,-0.066763,-0.077984,-0.089147,-0.099619,-0.10944,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19744,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22188,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096675,-0.084585,-0.072564,-0.060609,-0.048721,-0.036897,-0.025136,-0.013437,-0.0017999,0.0097768,0.021293,0.032751,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.20897,-0.19615,-0.18342,-0.17078,-0.15823,-0.14577,-0.13338,-0.12107,-0.10884,-0.096676,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17525,0.18246,0.19046,0.19908,0.20813,0.21737,0.22655,0.23538,0.24356,0.25079,0.25682,0.26142,0.26449,0.26599,0.24817,0.22973,0.21104,0.19248,0.17438,0.15698,0.14048,0.12498,0.11052,0.097078,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17453,-0.17972,-0.18458,-0.18914,-0.19343,-0.19745,-0.20122,-0.20476,-0.20808,-0.2112,-0.21413,-0.21688,-0.21946,-0.22189,-0.22416,-0.2263,-0.22831,-0.23019,-0.23196,-0.23362,-0.23519,-0.23665,-0.23803,-0.23933,-0.24054,-0.22661
@@ -101,6 +91,8 @@ const double MOTORANGLES[12][1001] = {
 		}
 };
 
+/* USER CODE BEGIN PV */
+/* Private variables ---------------------------------------------------------*/
 Dynamixel_HandleTypeDef Motor1;
 Dynamixel_HandleTypeDef Motor2;
 Dynamixel_HandleTypeDef Motor3;
@@ -126,6 +118,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 
+
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
@@ -139,9 +132,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
-
-global_enable=0;
 
   /* USER CODE END 1 */
 
@@ -171,148 +161,73 @@ global_enable=0;
 
   /* USER CODE BEGIN 2 */
   Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-    Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-    Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-    Dynamixel_Init(&Motor4, 4, &huart5, GPIOC, GPIO_PIN_12);
-    Dynamixel_Init(&Motor5, 5, &huart5, GPIOC, GPIO_PIN_12);
-    Dynamixel_Init(&Motor6, 6, &huart5, GPIOC, GPIO_PIN_12);
-    Dynamixel_Init(&Motor7, 7, &huart6, GPIOF, GPIO_PIN_10);
-    Dynamixel_Init(&Motor8, 8, &huart6, GPIOF, GPIO_PIN_10);
-    Dynamixel_Init(&Motor9, 9, &huart6, GPIOF, GPIO_PIN_10);
-    Dynamixel_Init(&Motor10, 10, &huart4, GPIOB, GPIO_PIN_6);
-    Dynamixel_Init(&Motor11, 11, &huart4, GPIOB, GPIO_PIN_6);
-    Dynamixel_Init(&Motor12, 12, &huart4, GPIOB, GPIO_PIN_6);
+  Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
+  Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
+  Dynamixel_Init(&Motor4, 4, &huart5, GPIOC, GPIO_PIN_12);
+  Dynamixel_Init(&Motor5, 5, &huart5, GPIOC, GPIO_PIN_12);
+  Dynamixel_Init(&Motor6, 6, &huart5, GPIOC, GPIO_PIN_12);
+  Dynamixel_Init(&Motor7, 7, &huart6, GPIOF, GPIO_PIN_10);
+  Dynamixel_Init(&Motor8, 8, &huart6, GPIOF, GPIO_PIN_10);
+  Dynamixel_Init(&Motor9, 9, &huart6, GPIOF, GPIO_PIN_10);
+  Dynamixel_Init(&Motor10, 10, &huart4, GPIOB, GPIO_PIN_6);
+  Dynamixel_Init(&Motor11, 11, &huart4, GPIOB, GPIO_PIN_6);
+  Dynamixel_Init(&Motor12, 12, &huart4, GPIOB, GPIO_PIN_6);
 
-    Dynamixel_HandleTypeDef* arrDynamixel[12];
-    arrDynamixel[0] = &Motor1;
-    arrDynamixel[1] = &Motor2;
-    arrDynamixel[2] = &Motor3;
-    arrDynamixel[3] = &Motor4;
-    arrDynamixel[4] = &Motor5;
-    arrDynamixel[5] = &Motor6;
-    arrDynamixel[6] = &Motor7;
-    arrDynamixel[7] = &Motor8;
-    arrDynamixel[8] = &Motor9;
-    arrDynamixel[9] = &Motor10;
-    arrDynamixel[10] = &Motor11;
-    arrDynamixel[11] = &Motor12;
+  Dynamixel_HandleTypeDef* arrDynamixel[12];
+  arrDynamixel[0] = &Motor1;
+  arrDynamixel[1] = &Motor2;
+  arrDynamixel[2] = &Motor3;
+  arrDynamixel[3] = &Motor4;
+  arrDynamixel[4] = &Motor5;
+  arrDynamixel[5] = &Motor6;
+  arrDynamixel[6] = &Motor7;
+  arrDynamixel[7] = &Motor8;
+  arrDynamixel[8] = &Motor9;
+  arrDynamixel[9] = &Motor10;
+  arrDynamixel[10] = &Motor11;
+  arrDynamixel[11] = &Motor12;
 
-//    for(int i = 0; i < 12; i++){
-//  	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
-//  	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-//  	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
-//    }
-
-
-    //Dynamixel_SetGoalPosition(&Motor1, 100);
-    while(1){
-    	Dynamixel_GetPosition(&Motor1);
-    	HAL_UART_Transmit(&huart3, Motor1._lastPosition & 0xFF, 1, 100);
-    	HAL_UART_Transmit(&huart3, (Motor1._lastPosition >> 8) & 0xFF, 1, 100);
-    	HAL_Delay(2000);
-    }
+  for(int i = 0; i < 12; i++){
+	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
+	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
+	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
+  }
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //  Dynamixel_LEDEnable(&Motor1, 0);
+//  Dynamixel_LEDEnable(&Motor1, 0);
 
-    uint16_t positions[12];
-    uint16_t Xg, xyz, reversedNumber;
-    char iChar;
-    int temp, remainder;
-    HAL_UART_Transmit(&huart3, "Position values/" , 16, 100);
-
-
-    while (1)
-    {
-
-
-    	if(global_enable==1){
+  uint16_t Xg=0;
+  while (1)
+  {
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-/*
-  	  for(int j = 0; j < 1001; j ++){
-  		  for(int i = 0; i < 12; i++){
-  			  if(i<6){
-  				  if(i == 3 || i == 4){
-  					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-  				  }
-  				  else{
-  					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-  				  }
-  			  }
-  			  else{
-  				  if(i == 8 || i == 11){
-  					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-  				  }
-  				  else{
-  					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-  				  }
-  			  }
-  		  }
-  		  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-  		  HAL_Delay(10);
-  	  }
-*/
-
-
-    for(uint16_t i = 0; i < 12; i++){
-    	uint16_t ID=i+1;
-		Dynamixel_GetPosition(arrDynamixel[i]);
-		Xg=arrDynamixel[i] -> _lastPosition;
-
-		//first send the motor ID (in ascii)
-		xyz=ID;
-		reversedNumber=0;
-		if(ID>9){
-			while(xyz != 0)
-			{
-				remainder = xyz%10;
-				reversedNumber = reversedNumber*10 + remainder;
-				xyz /= 10;
-			}
-
-
-			for(int j=0; j<2;j++){
-				temp = reversedNumber%10;
-				iChar= '0' + temp;
-				reversedNumber=reversedNumber/10;
-				HAL_UART_Transmit(&huart3, &iChar , 1, 100);
-			}
-		}
-
-		else{
-			iChar='0'+ID;
-			HAL_UART_Transmit(&huart3, &iChar , 1, 100);
-			}
-
-		//send a colon
-		HAL_UART_Transmit(&huart3, ":" , 1, 100);
-
-		//HAL_UART_Transmit(&huart3, &Xg , 2, 100);
-
-
-		for(int j=0; j<3;j++){
-
-		}
-
-
-		//HAL_UART_Transmit(&huart3, &iChar, 1, 100);
-		//HAL_UART_Transmit(&huart3, ":",1, 100);
-
-
-		//HAL_UART_Transmit(&huart3, &Xg, 2, 100);
-		HAL_Delay(10);
-    }
-
-	HAL_UART_Transmit(&huart3, "/" , 1, 100);
-	global_enable=0;
-    }
-
-    }
+	  for(int j = 0; j < 1001; j ++){
+		  for(int i = 0; i < 12; i++){
+			  if(i<6){
+				  if(i == 3 || i == 4){
+					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
+				  }
+				  else{
+					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
+				  }
+			  }
+			  else{
+				  if(i == 8 || i == 11){
+					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
+				  }
+				  else{
+					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
+				  }
+			  }
+		  }
+		  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
+		  HAL_Delay(10);
+	  }
+  }
   /* USER CODE END 3 */
 
 }
@@ -412,6 +327,24 @@ static void MX_UART5_Init(void)
 
 }
 
+static void MX_USART3_UART_Init(void)
+{
+
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
 /* USART2 init function */
 static void MX_USART2_UART_Init(void)
 {
@@ -425,25 +358,6 @@ static void MX_USART2_UART_Init(void)
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
-/* USART3 init function */
-static void MX_USART3_UART_Init(void)
-{
-
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -469,9 +383,9 @@ static void MX_USART6_UART_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -492,8 +406,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET);
@@ -507,11 +421,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  /*Configure GPIO pin : USER_Btn_Pin */
+  GPIO_InitStruct.Pin = USER_Btn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PF10 */
   GPIO_InitStruct.Pin = GPIO_PIN_10;
@@ -562,17 +476,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	global_enable=1;
-}
+
 /* USER CODE END 4 */
 
 /**
