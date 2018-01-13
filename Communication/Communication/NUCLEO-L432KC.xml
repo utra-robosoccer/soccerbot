@@ -1,10 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<targetDefinitions xmlns="http://openstm32.org/stm32TargetDefinitions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://openstm32.org/stm32TargetDefinitions stm32TargetDefinitions.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE targetDefinitions [ 
+	<!ELEMENT targetDefinitions (board)>
+	<!ELEMENT board (name, dbgIF+, dbgDEV, mcuId)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT dbgIF (#PCDATA)>
+	<!ELEMENT dbgDEV (#PCDATA)>
+	<!ELEMENT mcuId (#PCDATA)>
+	<!ATTLIST board id CDATA #REQUIRED>
+]>
+
+<targetDefinitions>
   <board id="nucleo-l432kc">
     <name>NUCLEO-L432KC</name>
-    <mcuId>stm32l432kcux</mcuId>
     <dbgIF>SWD</dbgIF>
     <dbgIF>JTAG</dbgIF>
-    <dbgDEV>ST-LinkV2-1</dbgDEV>
+    <dbgDEV>ST-Link</dbgDEV>
+    <mcuId>stm32l432kcux</mcuId>
   </board>
 </targetDefinitions>
