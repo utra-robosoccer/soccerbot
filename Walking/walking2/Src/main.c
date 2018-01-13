@@ -41,6 +41,13 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
+
+
+
+	//the purpose of this is to allow users to press the user button (blue) on the board and collect information on the motor position values.
+	//format for 1 button press:		1:position;2:position;3:position;...12:position;/
+
+
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
 #include "../../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
 /* USER CODE END Includes */
@@ -53,6 +60,7 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
+volatile int global_enable=0;
 /* Private variables ---------------------------------------------------------*/
 const double MOTORANGLES[12][1001] = {
 		{//1
@@ -132,6 +140,9 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 
+
+global_enable=0;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -186,10 +197,19 @@ int main(void)
     arrDynamixel[10] = &Motor11;
     arrDynamixel[11] = &Motor12;
 
-    for(int i = 0; i < 12; i++){
-  	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
-  	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-  	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
+//    for(int i = 0; i < 12; i++){
+//  	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 10);
+//  	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
+//  	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
+//    }
+
+
+    //Dynamixel_SetGoalPosition(&Motor1, 100);
+    while(1){
+    	Dynamixel_GetPosition(&Motor1);
+    	HAL_UART_Transmit(&huart3, Motor1._lastPosition & 0xFF, 1, 100);
+    	HAL_UART_Transmit(&huart3, (Motor1._lastPosition >> 8) & 0xFF, 1, 100);
+    	HAL_Delay(2000);
     }
 
   /* USER CODE END 2 */
@@ -203,12 +223,17 @@ int main(void)
     char iChar;
     int temp, remainder;
     HAL_UART_Transmit(&huart3, "Position values/" , 16, 100);
+
+
     while (1)
     {
+
+
+    	if(global_enable==1){
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    	/*
+/*
   	  for(int j = 0; j < 1001; j ++){
   		  for(int i = 0; i < 12; i++){
   			  if(i<6){
@@ -231,7 +256,9 @@ int main(void)
   		  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
   		  HAL_Delay(10);
   	  }
-  	  */
+*/
+
+
     for(uint16_t i = 0; i < 12; i++){
     	uint16_t ID=i+1;
 		Dynamixel_GetPosition(arrDynamixel[i]);
@@ -265,6 +292,9 @@ int main(void)
 		//send a colon
 		HAL_UART_Transmit(&huart3, ":" , 1, 100);
 
+		//HAL_UART_Transmit(&huart3, &Xg , 2, 100);
+
+
 		for(int j=0; j<3;j++){
 
 		}
@@ -277,6 +307,11 @@ int main(void)
 		//HAL_UART_Transmit(&huart3, &Xg, 2, 100);
 		HAL_Delay(10);
     }
+
+	HAL_UART_Transmit(&huart3, "/" , 1, 100);
+	global_enable=0;
+    }
+
     }
   /* USER CODE END 3 */
 
@@ -534,7 +569,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	global_enable=1;
+}
 /* USER CODE END 4 */
 
 /**

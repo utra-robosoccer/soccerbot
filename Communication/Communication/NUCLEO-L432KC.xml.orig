@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE targetDefinitions [ 
+	<!ELEMENT targetDefinitions (board)>
+	<!ELEMENT board (name, dbgIF+, dbgDEV, mcuId)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT dbgIF (#PCDATA)>
+	<!ELEMENT dbgDEV (#PCDATA)>
+	<!ELEMENT mcuId (#PCDATA)>
+	<!ATTLIST board id CDATA #REQUIRED>
+]>
+
+<targetDefinitions>
+  <board id="nucleo-l432kc">
+    <name>NUCLEO-L432KC</name>
+<<<<<<< HEAD
+    <dbgIF>SWD</dbgIF>
+    <dbgIF>JTAG</dbgIF>
+    <dbgDEV>ST-Link</dbgDEV>
+    <mcuId>stm32l432kcux</mcuId>
+=======
+    <mcuId>stm32l432kcux</mcuId>
+    <dbgIF>JTAG</dbgIF>
+    <dbgIF>SWD</dbgIF>
+    <dbgDEV>ST-LinkV2-1</dbgDEV>
+>>>>>>> 441b09bfd08168d344bbf62d5ab21cfe037e391d
+  </board>
+</targetDefinitions>
