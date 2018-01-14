@@ -117,7 +117,7 @@ int main(void)
 	robotGoal.id = 0;
 	robotGoalPtr = &robotGoal;
 	memset(robotGoal.msg,0,strlen(robotGoal.msg));
-	HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
+	HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
 
 	// Sending
 	robotState.id = 1;
@@ -141,8 +141,9 @@ int main(void)
 			HAL_Delay(1000);
 		}
 		else {
+			sprintf(robotState.msg, "NACK");
 			send_state(robotStatePtr);
-			HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
+			HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
 			HAL_Delay(1000);
 		}
 	}
@@ -296,7 +297,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 		if(!connected) {
 			if (!strcmp((char *) robotGoal.msg, "BEGIN")) {
 				connected = 1;
-				robotState.id++;
 			}
 		} else {
 			// Checksum
@@ -311,10 +311,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 			sprintf(robotState.msg, "NACK");
 		}
 
+		robotState.id = robotGoal.id;
 		send_state(robotStatePtr);
-		HAL_UART_Transmit_IT(&huart2, robotGoalPtr, sizeof(RobotGoal));
+		HAL_UART_Transmit_IT(&huart2, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
 	}
-	HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
+	HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
 }
 /* USER CODE END 4 */
 

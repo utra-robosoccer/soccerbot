@@ -14,6 +14,6 @@
 typedef struct robot_state{
 	uint32_t id;
 	char msg[12];
-}RobotState;
+} RobotState;
 
 #endif /* ROBOTSTATE_H_ */
