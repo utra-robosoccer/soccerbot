@@ -96,6 +96,12 @@ extern const double MOTORANGLES[DIM][SIZE];
 //		}
 //};
 
+const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
+					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
+					   MOTOR16, MOTOR17, MOTOR18
+};
+
 const double PI = 3.141592654;
 
 Dynamixel_HandleTypeDef Motor1;
@@ -205,9 +211,12 @@ int main(void)
 
   for(int i = 0; i < 18; i++){
 	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 100);
-	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 5);
-	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 5);
+	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 4);
+	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 4);
   }
+
+//  Dynamixel_SetCWComplianceSlope(arrDynamixel[MOTOR8], 1);
+//  Dynamixel_SetCCWComplianceSlope(arrDynamixel[MOTOR8], 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -218,22 +227,32 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 	  for(int j = 0; j < SIZE; j ++){
-		  for(int i = 0; i < 12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			  if(i<6){
-				  if(i == 3 || i == 4){
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-				  }
-				  else{
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-				  }
-			  }
-			  else{
-				  if(i == 8 || i == 11){
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-				  }
-				  else{
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-				  }
+		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			  switch(i){
+				  case MOTOR1:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 1);
+								  break;
+				  case MOTOR2:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3);
+								  break;
+				  case MOTOR3:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 1);
+								  break;
+				  case MOTOR4:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 2);
+								  break;
+				  case MOTOR5:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 0);
+								  break;
+				  case MOTOR6:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 0);
+								  break;
+				  case MOTOR7:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 0);
+								  break;
+				  case MOTOR8:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 3);
+								  break;
+				  case MOTOR9:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 0);
+								  break;
+				  case MOTOR10:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 4);
+								  break;
+				  case MOTOR11:   Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 1);
+								  break;
+				  case MOTOR12:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3);
+								  break;
 			  }
 		  }
 		  HAL_Delay(10); // Default from Lukas: 10
