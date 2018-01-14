@@ -47,6 +47,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -54,7 +55,8 @@ UART_HandleTypeDef huart2;
 volatile uint8_t ledState;
 uint8_t replying;
 uint8_t connected;
-RobotGoal robotGoal, *robotGoalPtr;
+RobotGoal robotGoal;
+RobotGoal *robotGoalPtr;
 uint8_t robotGoalBuffer[sizeof(RobotGoal)];
 
 RobotState robotState, *robotStatePtr;
@@ -65,6 +67,7 @@ RobotState robotState, *robotStatePtr;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -101,23 +104,25 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
 
-  while(1){
-	  HAL_UART_Transmit(&huart2, "s", 1, 10);
-  }
 	// Blink the LED
 	ledState = 0;
 	replying = 0;
 	connected = 0;
 
+	// Recieving
 	robotGoal.id = 0;
-	memset(robotGoalBuffer,0,sizeof(robotGoalBuffer));
 	robotGoalPtr = &robotGoal;
+	memset(robotGoal.msg,0,strlen(robotGoal.msg));
+	HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
 
+	// Sending
 	robotState.id = 1;
 	robotStatePtr = &robotState;
+	memset(robotState.msg,0,strlen(robotState.msg));
 
   /* USER CODE END 2 */
 
@@ -133,6 +138,11 @@ int main(void)
 			HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, ledState);
 			sprintf(robotState.msg, "START");
 			send_state(robotStatePtr);
+			HAL_Delay(1000);
+		}
+		else {
+			send_state(robotStatePtr);
+			HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
 			HAL_Delay(1000);
 		}
 	}
@@ -181,7 +191,8 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART2;
+  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -204,7 +215,28 @@ void SystemClock_Config(void)
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(SysTick_IRQn, 1, 0);
+}
+
+/* USART1 init function */
+static void MX_USART1_UART_Init(void)
+{
+
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
 }
 
 /* USART2 init function */
@@ -259,22 +291,30 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	if (huart == &huart2) {
-		memcpy((char *) &robotGoal, robotGoalBuffer, sizeof(RobotGoal));
-		if (!strcmp((char *) robotGoal.message, "BEGIN")) {
-			connected = 1;
-			robotState.id++;
+	if (huart == &huart1) {
+
+		if(!connected) {
+			if (!strcmp((char *) robotGoal.msg, "BEGIN")) {
+				connected = 1;
+				robotState.id++;
+			}
+		} else {
+			// Checksum
+
 		}
+
+		memset(robotState.msg,0,strlen(robotState.msg));
 
 		if (connected) {
 			sprintf(robotState.msg, "ACK");
-		}
-		else {
+		} else {
 			sprintf(robotState.msg, "NACK");
 		}
 
 		send_state(robotStatePtr);
+		HAL_UART_Transmit_IT(&huart2, robotGoalPtr, sizeof(RobotGoal));
 	}
+	HAL_UART_Receive_IT(&huart1, robotGoalPtr, sizeof(RobotGoal));
 }
 /* USER CODE END 4 */
 
