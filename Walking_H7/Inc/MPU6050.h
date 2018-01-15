@@ -31,12 +31,12 @@ typedef struct{
 	uint8_t					_Sample_Rate;
 	UART_HandleTypeDef*		_UART_Handle;
 	I2C_HandleTypeDef* 		_I2C_Handle;
-	uint16_t				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
-	uint16_t				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
-	uint16_t				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
-	uint16_t				_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
-	uint16_t				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
-	uint16_t				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
+	int16_t					_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
+	int16_t					_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
+	int16_t					_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
+	int16_t					_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
+	int16_t					_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
+	int16_t					_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
 }MPU6050_HandleTypeDef;
 /****************Function Definition********************************/
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
