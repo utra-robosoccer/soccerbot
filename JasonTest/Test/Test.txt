@@ -1,0 +1,63 @@
+Configuration	Test
+STM32CubeMX 	4.21.0
+Date	01/05/2018
+MCU	STM32H743ZITx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+SYS	Trace Asynchronous Sw	SYS_JTMS-SWDIO	PA13
+SYS	Trace Asynchronous Sw	SYS_JTCK-SWCLK	PA14
+SYS	Trace Asynchronous Sw	SYS_JTDO-SWO	PB3
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+7	PC13	GPIO_EXTI13	USER_Btn [B1]
+8	PC14-OSC32_IN*	RCC_OSC32_IN	
+9	PC15-OSC32_OUT*	RCC_OSC32_OUT	
+23	PH0-OSC_IN*	RCC_OSC_IN	MCO
+24	PH1-OSC_OUT*	RCC_OSC_OUT	
+75	PB14	GPIO_Output	LD3 [Red]
+77	PD8*	USART3_TX	STLK_RX [STM32F103CBT6_PA3]
+78	PD9*	USART3_RX	STLK_TX [STM32F103CBT6_PA2]
+91	PG6	GPIO_Output	USB_PowerSwitchOn [STMPS2151STR_EN]
+92	PG7	GPIO_Input	USB_OverCurrent [STMPS2151STR_FAULT]
+100	PA8*	USB_OTG_FS_SOF	USB_SOF [TP1]
+101	PA9*	USB_OTG_FS_VBUS	USB_VBUS
+102	PA10*	USB_OTG_FS_ID	USB_ID
+103	PA11*	USB_OTG_FS_DM	USB_DM
+104	PA12*	USB_OTG_FS_DP	USB_DP
+105	PA13	SYS_JTMS-SWDIO	TMS
+109	PA14	SYS_JTCK-SWCLK	TCK
+133	PB3	SYS_JTDO-SWO	SWO
+137	PB7	GPIO_Output	LD2 [Blue]
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : Test
+Project Folder : /home/vuwij/Documents/soccer-embedded/JasonTest/Test
+Toolchain / IDE : EWARM
+Firmware Package Name and Version : STM32Cube FW_H7 V1.0.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy all used libraries into the project folder
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : Balanced Size/Speed
+
+
+
+
+
+

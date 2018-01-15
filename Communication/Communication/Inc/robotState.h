@@ -13,7 +13,7 @@
 
 typedef struct robot_state{
 	uint32_t id;
-	char msg[50];
-}RobotState;
+	char msg[12];
+} RobotState;
 
 #endif /* ROBOTSTATE_H_ */

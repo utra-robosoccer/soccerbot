@@ -13,9 +13,7 @@
 
 typedef struct robot_goal{
 	uint32_t id;
-	char message[50];
+	char msg[12];
 } RobotGoal;
-
-extern uint8_t robotGoalBuffer[sizeof(RobotGoal)];
 
 #endif /* ROBOTGOAL_H_ */

@@ -18,6 +18,9 @@ void send_state(RobotState* robotstate);
 RobotGoal receive_state();
 
 // The UART handler for serial messages
+extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
+
+#define START_PATTERN 0xAA
 
 #endif /* SERIAL_H_ */
