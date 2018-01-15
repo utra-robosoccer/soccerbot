@@ -118,28 +118,28 @@ void StartIMUtask(void const * argument)
 {
 
   /* USER CODE BEGIN StartIMUtask */
-    uint8_t output_buffer[6];
-    uint8_t output_buffer_2[6];
+    int8_t output_buffer[6];
+    int8_t output_buffer_2[6];
     MPU6050_HandleTypeDef IMUdata;
     IMUdata._I2C_Handle = &hi2c3;
     uint16_t test=5;
-    MPU6050_RESET_SENSOR_REG(IMUdata);
+    MPU6050_RESET_SENSOR_REG(&IMUdata);
     MPU6050_init(&IMUdata);
 
   /* Infinite loop */
   for(;;)
   {
 	  MPU6050_READ_DATA(&IMUdata, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-	  			  	uint16_t Xa = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	  			  	uint16_t Ya = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	  			  	uint16_t Za = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+	  			  	int16_t Xa = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	  			  	int16_t Ya = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	  			  	int16_t Za = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
 
 	  			  	//Now read the gyroscope values:
 
 	  				MPU6050_READ_DATA(&IMUdata, MPU6050_RA_GYRO_XOUT_H,output_buffer_2);
-	  				uint16_t Xg = abs((int16_t)(output_buffer_2[0]<<8|output_buffer_2[1]));
-	  				uint16_t Yg = abs((int16_t)(output_buffer_2[2]<<8|output_buffer_2[3]));
-	  				uint16_t Zg = abs((int16_t)(output_buffer_2[4]<<8|output_buffer_2[5]));
+	  				int16_t Xg = abs((int16_t)(output_buffer_2[0]<<8|output_buffer_2[1]));
+	  				int16_t Yg = abs((int16_t)(output_buffer_2[2]<<8|output_buffer_2[3]));
+	  				int16_t Zg = abs((int16_t)(output_buffer_2[4]<<8|output_buffer_2[5]));
 
 
 	  				//Now store in struct:
@@ -157,7 +157,7 @@ void StartIMUtask(void const * argument)
 	  				//NOTE: determine how large the queue should be
 
 	  				//xQueueSend( IMUqueueHandle, &IMUdata, 1000);
-	  				HAL_UART_Transmit(&huart3, &Xg, 2, 10);
+	  				HAL_UART_Transmit(&huart3, &test, 2, 10);
 	  				//HAL_UART_Transmit(&huart3, &test, 2, 10);
 	  				osDelay(1000);
   }
