@@ -48,6 +48,8 @@
 #include "../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
 #include "../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
 #include <stdio.h>
+#include <errno.h>
+#include <sys/unistd.h> // STDOUT_FILENO, STDERR_FILENO
 
 /* Motor Angles. */
 #include "../../../../control/soccer-control/angles.h"
@@ -151,6 +153,7 @@ double PID(double value, double * collector, double * last, double kp, double ki
 	*last = value;
 	return output;
 }
+
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -238,6 +241,22 @@ void getIMU(){
 //		  				HAL_UART_Transmit(&huart3, &Xa, 2, 10);
 		  				//HAL_UART_Transmit(&huart3, &test, 2, 10);
 //		  				HAL_Delay(100);
+}
+
+int _write(int file, char *data, int len)
+{
+   if ((file != STDOUT_FILENO) && (file != STDERR_FILENO))
+   {
+      errno = EBADF;
+      return -1;
+   }
+
+   // arbitrary timeout 1000
+   HAL_StatusTypeDef status =
+      HAL_UART_Transmit(&huart3, (uint8_t*)data, len, 1000);
+
+   // return # of bytes written - as best we can tell
+   return (status == HAL_OK ? len : 0);
 }
 
 /* USER CODE END 0 */
