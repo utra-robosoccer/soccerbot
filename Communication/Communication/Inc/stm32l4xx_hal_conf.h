@@ -5,7 +5,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2018 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -186,7 +186,7 @@
   */     
   
 #define  VDD_VALUE					  ((uint32_t)3300U) /*!< Value of VDD in mv */           
-#define  TICK_INT_PRIORITY            ((uint32_t)0U)    /*!< tick interrupt priority */            
+#define  TICK_INT_PRIORITY            ((uint32_t)1U)    /*!< tick interrupt priority */            
 #define  USE_RTOS                     0U     
 #define  PREFETCH_ENABLE              0U
 #define  INSTRUCTION_CACHE_ENABLE     1U
