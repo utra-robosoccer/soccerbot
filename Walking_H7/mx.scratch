@@ -9,12 +9,6 @@
 
 <filestoremove>
 	<file>
-	   		<name>..\Src\main.c</name>
-	   		<name>..\Src\gpio.c</name>
-	   		<name>..\Src\i2c.c</name>
-	   		<name>..\Src\usart.c</name>
-	   		<name>..\Src\stm32h7xx_it.c</name>
-	   		<name>..\Src\stm32h7xx_hal_msp.c</name>
 	</file>
 </filestoremove>
 
@@ -23,11 +17,6 @@
 	   <include></include>
     </Aincludes>
 	<Cincludes>
-	   		<include>..\Drivers\STM32H7xx_HAL_Driver\Inc</include>
-	   		<include>..\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy</include>
-	   		<include>..\Drivers\CMSIS\Device\ST\STM32H7xx\Include</include>
-	   		<include>..\Drivers\CMSIS\Include</include>
-	   		<include>..\Inc</include>
     </Cincludes>
 </inctoremove>
 
@@ -63,8 +52,6 @@
             <define></define>
         </Adefines>
         <Cdefines>
-            <define>__weak=__attribute__((weak))</define>
-            <define>__packed=__attribute__((__packed__))</define>
             <define>USE_FULL_LL_DRIVER</define>
             <define>MBEDTLS_CONFIG_FILE=&quot;mbedtls_config.h&quot;</define>
             <define>_TIMEVAL_DEFINED</define>

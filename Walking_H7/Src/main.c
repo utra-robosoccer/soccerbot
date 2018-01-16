@@ -47,9 +47,14 @@
 /* Motor driver. */
 #include "../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.h"
 #include "../../Dynamixel_AX-12A_Driver/src/Dynamixel_AX-12A.c"
+#include <stdio.h>
+#include <errno.h>
+#include <sys/unistd.h> // STDOUT_FILENO, STDERR_FILENO
 
 /* Motor Angles. */
 #include "../../../../control/soccer-control/angles.h"
+
+#include "MPU6050.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -96,6 +101,12 @@ extern const double MOTORANGLES[DIM][SIZE];
 //		}
 //};
 
+const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
+					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
+					   MOTOR16, MOTOR17, MOTOR18
+};
+
 const double PI = 3.141592654;
 
 Dynamixel_HandleTypeDef Motor1;
@@ -117,6 +128,10 @@ Dynamixel_HandleTypeDef Motor16;
 Dynamixel_HandleTypeDef Motor17;
 Dynamixel_HandleTypeDef Motor18;
 
+MPU6050_HandleTypeDef IMUdata;
+
+int8_t output_buffer[6];
+int8_t output_buffer_2[6];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,10 +139,125 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+void integrate(double * collector, double value) {
+	*collector += value * 0.01;
+}
+
+double derivate(double last, double current) {
+	return (current - last) / 0.01;
+}
+
+double PID(double value, double * collector, double * last, double kp, double ki, double kd) {
+	integrate(collector, value);
+	double output = kp * value + ki * (*collector) + kd * derivate(*last, value);
+	*last = value;
+	return output;
+}
 
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void StartIMUtask()
+{
+
+  /* USER CODE BEGIN StartIMUtask */
+    uint8_t output_buffer[6];
+    uint8_t output_buffer_2[6];
+    MPU6050_HandleTypeDef IMUdata;
+    IMUdata._I2C_Handle = &hi2c1;
+    uint16_t test=5;
+    MPU6050_RESET_SENSOR_REG(IMUdata);
+    MPU6050_init(&IMUdata);
+
+  /* Infinite loop */
+  for(;;)
+  {
+	  MPU6050_READ_DATA(&IMUdata, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	  			  	uint16_t Xa = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	  			  	uint16_t Ya = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	  			  	uint16_t Za = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+
+	  			  	//Now read the gyroscope values:
+
+	  				MPU6050_READ_DATA(&IMUdata, MPU6050_RA_GYRO_XOUT_H,output_buffer_2);
+	  				uint16_t Xg = abs((int16_t)(output_buffer_2[0]<<8|output_buffer_2[1]));
+	  				uint16_t Yg = abs((int16_t)(output_buffer_2[2]<<8|output_buffer_2[3]));
+	  				uint16_t Zg = abs((int16_t)(output_buffer_2[4]<<8|output_buffer_2[5]));
+
+
+	  				//Now store in struct:
+	  				IMUdata._X_ACCEL = Xa;
+	  				IMUdata._Y_ACCEL = Ya;
+	  				IMUdata._Z_ACCEL = Za;
+
+	  				IMUdata._X_GYRO = Xg;
+	  				IMUdata._Y_GYRO = Yg;
+	  				IMUdata._Z_GYRO = Zg;
+
+	  				//TEST: Read a specific register
+
+	  				//Now enqueue the struct
+	  				//NOTE: determine how large the queue should be
+
+	  				//xQueueSend( IMUqueueHandle, &IMUdata, 1000);
+	  				HAL_UART_Transmit(&huart3, &Xg, 2, 10);
+	  				//HAL_UART_Transmit(&huart3, &test, 2, 10);
+	  				HAL_Delay(1000);
+  }
+  /* USER CODE END StartIMUtask */
+}
+void getIMU(){
+	/* USER CODE BEGIN StartIMUtask */
+
+	    uint16_t test=5;
+		  MPU6050_READ_DATA(&IMUdata, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+		  			  	int16_t Xa = (int16_t)((output_buffer[0]<<8|output_buffer[1]));
+		  			  	int16_t Ya = (int16_t)((output_buffer[2]<<8|output_buffer[3]));
+		  			  	int16_t Za = (int16_t)((output_buffer[4]<<8|output_buffer[5]));
+
+		  			  	//Now read the gyroscope values:
+
+		  				MPU6050_READ_DATA(&IMUdata, MPU6050_RA_GYRO_XOUT_H,output_buffer_2);
+		  				int16_t Xg = (int16_t)((output_buffer_2[0]<<8|output_buffer_2[1]));
+		  				int16_t Yg = (int16_t)((output_buffer_2[2]<<8|output_buffer_2[3]));
+		  				int16_t Zg = (int16_t)((output_buffer_2[4]<<8|output_buffer_2[5]));
+
+
+		  				//Now store in struct:
+		  				IMUdata._X_ACCEL = Xa;
+		  				IMUdata._Y_ACCEL = Ya;
+		  				IMUdata._Z_ACCEL = Za;
+
+		  				IMUdata._X_GYRO = Xg;
+		  				IMUdata._Y_GYRO = Yg;
+		  				IMUdata._Z_GYRO = Zg;
+
+		  				//TEST: Read a specific register
+
+		  				//Now enqueue the struct
+		  				//NOTE: determine how large the queue should be
+
+		  				//xQueueSend( IMUqueueHandle, &IMUdata, 1000);
+//		  				HAL_UART_Transmit(&huart3, &Xa, 2, 10);
+		  				//HAL_UART_Transmit(&huart3, &test, 2, 10);
+//		  				HAL_Delay(100);
+}
+
+int _write(int file, char *data, int len)
+{
+   if ((file != STDOUT_FILENO) && (file != STDERR_FILENO))
+   {
+      errno = EBADF;
+      return -1;
+   }
+
+   // arbitrary timeout 1000
+   HAL_StatusTypeDef status =
+      HAL_UART_Transmit(&huart3, (uint8_t*)data, len, 1000);
+
+   // return # of bytes written - as best we can tell
+   return (status == HAL_OK ? len : 0);
+}
 
 /* USER CODE END 0 */
 
@@ -162,8 +292,36 @@ int main(void)
   MX_USART2_UART_Init();
   MX_UART5_Init();
   MX_I2C1_Init();
+  MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
+//  char a = 0;
+//  for(int i = 0; i < 20; i++){
+//	  HAL_UART_Transmit(&huart3, &a, 1, 10);
+//	  HAL_Delay(500);
+//  }
+//  a = 0xAA;
+//  HAL_UART_Transmit(&huart3, &a, 1, 10);
+//  HAL_Delay(100);
+  // StartIMUtask();
+//  while(1){
+//	  HAL_UART_Transmit(&huart3, "cv", 2, 10);
+//	  HAL_Delay(100);
+//  }
+  HAL_Delay(1000);
+  IMUdata._I2C_Handle = &hi2c1;
+  MPU6050_RESET_SENSOR_REG(&IMUdata);
+  HAL_Delay(1000);
+  MPU6050_init(&IMUdata);
+  HAL_Delay(1000);
+//  while(1){
+//	  HAL_Delay(100);
+//	  getIMU();
+//	  char zz[2];
+//	  zz[1] = IMUdata._X_ACCEL & 0xFF;
+//	  zz[0] = IMUdata._X_ACCEL >> 8;
+//	  HAL_UART_Transmit(&huart3, (uint8_t *)zz, 2, 10);
+//  }
   Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
   Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
   Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
@@ -205,9 +363,12 @@ int main(void)
 
   for(int i = 0; i < 18; i++){
 	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 100);
-	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 5);
-	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 5);
+	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 4);
+	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 4);
   }
+
+//  Dynamixel_SetCWComplianceSlope(arrDynamixel[MOTOR8], 1);
+//  Dynamixel_SetCCWComplianceSlope(arrDynamixel[MOTOR8], 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -217,23 +378,66 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+
+	  double intg_ax = 0.0, intg_ay = 0.0, intg_az = 0.0;
+	  double intg_gx = 0.0, intg_gy = 0.0, intg_gz = 0.0;
+	  double intg_qx = 0.0, intg_qy = 0.0, intg_qz = 0.0;
+	  double last_ax = 0.0, last_ay = 0.0, last_az = 0.0;
+	  double last_qx = 0.0, last_qy = 0.0, last_qz = 0.0;
+	  double kp_ax = -10.0, kp_ay = -8.0, kp_az = 0.0, kp_qx = -500.0, kp_qy = 0.0, kp_qz = 0.0;
+	  double ki_ax = -1.0, ki_ay = -4.0, ki_az = 0.0, ki_qx = -500.0, ki_qy = 0.0, ki_qz = 0.0;
+	  double kd_ax = -0.01, kd_ay = -0.00, kd_az = 0.0, kd_qx = -1.0, kd_qy = 0.0, kd_qz = 0.0;
+	  double motor_perturb[12];
+
+	  const double MAX_PERTURB = 15;
 	  for(int j = 0; j < SIZE; j ++){
-		  for(int i = 0; i < 12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			  if(i<6){
-				  if(i == 3 || i == 4){
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-				  }
-				  else{
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-				  }
-			  }
-			  else{
-				  if(i == 8 || i == 11){
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150);
-				  }
-				  else{
-					  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150);
-				  }
+		  getIMU();
+
+		  integrate(&intg_gx, ((double)IMUdata._X_GYRO)/32768.0);
+
+		  double PID_ax = 0;//PID(((double)IMUdata._X_ACCEL)/32768.0, &intg_ax, &last_ax, kp_ax, ki_ax, kd_ax);
+		  double PID_ay = 0;//PID(((double)IMUdata._Y_ACCEL)/32768.0, &intg_ay, &last_ay, kp_ay, ki_ay, kd_ay);
+		  double PID_qx = PID(intg_gx, &intg_qx, &last_qx, kp_qx, ki_qx, kd_qx);
+
+		  motor_perturb[MOTOR1]  =  ((PID_ax < MAX_PERTURB ? PID_ax : MAX_PERTURB) > -MAX_PERTURB ? PID_ax : -MAX_PERTURB);
+		  motor_perturb[MOTOR2]  = -((PID_ay - PID_qx < MAX_PERTURB ? PID_ay - PID_qx : MAX_PERTURB) > -MAX_PERTURB ? PID_ay - PID_qx : -MAX_PERTURB);
+		  motor_perturb[MOTOR3]  = 0;
+		  motor_perturb[MOTOR4]  = -((PID_ay - PID_qx < MAX_PERTURB ? PID_ay - PID_qx : MAX_PERTURB) > -MAX_PERTURB ? PID_ay - PID_qx : -MAX_PERTURB);
+		  motor_perturb[MOTOR5]  =  ((PID_ax < MAX_PERTURB ? PID_ax : MAX_PERTURB) > -MAX_PERTURB ? PID_ax : -MAX_PERTURB);
+		  motor_perturb[MOTOR6]  = 0;
+		  motor_perturb[MOTOR7]  = 0;
+		  motor_perturb[MOTOR8]  =  ((PID_ax < MAX_PERTURB ? PID_ax : MAX_PERTURB) > -MAX_PERTURB ? PID_ax : -MAX_PERTURB);
+		  motor_perturb[MOTOR9]  =  ((PID_ay - PID_qx < MAX_PERTURB ? PID_ay - PID_qx : MAX_PERTURB) > -MAX_PERTURB ? PID_ay - PID_qx : -MAX_PERTURB);
+		  motor_perturb[MOTOR10] = 0;
+		  motor_perturb[MOTOR11] =  ((PID_ay - PID_qx < MAX_PERTURB ? PID_ay - PID_qx : MAX_PERTURB) > -MAX_PERTURB ? PID_ay - PID_qx : -MAX_PERTURB);
+		  motor_perturb[MOTOR12] =  ((PID_ax < MAX_PERTURB ? PID_ax : MAX_PERTURB) > -MAX_PERTURB ? PID_ax : -MAX_PERTURB);
+
+		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			  switch(i){
+				  case MOTOR1:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 1 + motor_perturb[MOTOR1]);
+								  break;
+				  case MOTOR2:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3 + motor_perturb[MOTOR2]);
+								  break;
+				  case MOTOR3:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 1 + motor_perturb[MOTOR3]);
+								  break;
+				  case MOTOR4:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 2 + motor_perturb[MOTOR4]);
+								  break;
+				  case MOTOR5:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 0 + motor_perturb[MOTOR5]);
+								  break;
+				  case MOTOR6:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 0 + motor_perturb[MOTOR6]);
+								  break;
+				  case MOTOR7:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 0 + motor_perturb[MOTOR7]);
+								  break;
+				  case MOTOR8:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 3 + motor_perturb[MOTOR8]);
+								  break;
+				  case MOTOR9:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 0 + motor_perturb[MOTOR9]);
+								  break;
+				  case MOTOR10:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 4 + motor_perturb[MOTOR10]);
+								  break;
+				  case MOTOR11:   Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 1 + motor_perturb[MOTOR11]);
+								  break;
+				  case MOTOR12:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3 + motor_perturb[MOTOR12]);
+								  break;
 			  }
 		  }
 		  HAL_Delay(10); // Default from Lukas: 10
@@ -293,9 +497,10 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_UART4
-                              |RCC_PERIPHCLK_UART7|RCC_PERIPHCLK_USART1
-                              |RCC_PERIPHCLK_UART5|RCC_PERIPHCLK_I2C1;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USART2
+                              |RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_UART7
+                              |RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_UART5
+                              |RCC_PERIPHCLK_I2C1;
   PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
   PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
   PeriphClkInitStruct.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
