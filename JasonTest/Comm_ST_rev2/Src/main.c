@@ -38,36 +38,22 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l4xx_hal.h"
+#include "usart.h"
+#include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include <robotGoal.h>
-#include <robotState.h>
-#include "serial.h"
-#include "string.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-volatile uint8_t ledState;
-uint8_t replying;
-uint8_t connected;
-RobotGoal robotGoal;
-RobotGoal *robotGoalPtr;
-uint8_t robotGoalBuffer[sizeof(RobotGoal)];
-
-RobotState robotState, *robotStatePtr;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -76,6 +62,120 @@ static void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN 0 */
 
+typedef struct __attribute__((packed, aligned(1))) RobotStatus{
+	uint32_t id;
+	char	msg[12];
+} RobotStatus;
+//typedef struct __attribute__((packed, aligned(1))) RobotStatus{
+
+// } RobotStatus;
+RobotStatus RS;
+// scratch buffer
+uint8_t Rx_char = 0;
+uint8_t	Rx_index = 0;
+uint8_t	is_prev_esc = 0;
+uint8_t	has_started = 0;
+
+
+#define MAX_SIZE_MSG sizeof(RobotStatus)
+uint8_t Rx_msg[MAX_SIZE_MSG];
+
+
+#define ESCAPE	0xFF
+#define ESC_START	0x0F
+#define ESC_END		0xF0
+#define START	0x55
+#define END		0xAA
+// RXCallback
+void RX_Parser(){
+	switch(Rx_char){
+		case START:	Rx_index = 0;
+				is_prev_esc = 0;
+				has_started = 1;
+				break;
+		case END:	// validate
+				if(Rx_index == MAX_SIZE_MSG){
+					memcpy(&RS, Rx_msg, (uint32_t)sizeof(RobotStatus));
+					// Tx_Parser(&RS, sizeof(RobotStatus));
+					// HAL_UART_Transmit_IT(&huart2, &RS, sizeof(RobotStatus));
+				}
+				is_prev_esc = 0;
+				has_started = 0;
+				Rx_index = 0;
+				break;
+		// ESCAPE
+		// ESCAPE then ESCAPE
+		case ESCAPE:	if(has_started){	// ignore out of context data
+					if(is_prev_esc){
+						Rx_msg[Rx_index] = ESCAPE;
+						is_prev_esc = 0;
+						Rx_index++;
+					}
+					else{
+						is_prev_esc = 1;
+					}
+				}
+				break;
+		// ESCAPE then ESC_START
+		case ESC_START:	if(has_started){
+							Rx_msg[Rx_index] = (is_prev_esc) ? START : ESC_START;
+							is_prev_esc = 0;
+							Rx_index++;
+						}
+				break;
+		// ESCAPE then ESC_START
+		case ESC_END:	if(has_started){
+							Rx_msg[Rx_index] = (is_prev_esc) ? END : ESC_END;
+							is_prev_esc = 0;
+							Rx_index++;
+						}
+				break;
+		default:
+				if(has_started && (is_prev_esc == 0)){
+					Rx_msg[Rx_index] = Rx_char;
+					Rx_index++;
+					is_prev_esc = 0;
+				}
+	}
+	HAL_UART_Receive_IT(&huart2, &Rx_char, 1);
+}
+
+#define UART_HANDLER &huart2
+static void send_byte(uint8_t byte) {
+	// Encapsulates the data into a packet
+#ifdef PC
+	int wlen = write(fd, &byte, 1);
+	if (wlen != 1) {
+		printf("Error from write: %d, %d\n", wlen, errno);
+	}
+	tcflush(fd, TCOFLUSH);
+#else
+	HAL_UART_Transmit(UART_HANDLER, &byte, 1, 1);
+#endif
+}
+
+void Tx_Parser(uint8_t* addr, uint16_t size){
+	send_byte(START);
+	for(uint16_t i = 0; i < size; i++){
+		switch(addr[i]){
+			case START:
+				send_byte(ESCAPE);
+				send_byte(ESC_START);
+				break;
+			case END:
+				send_byte(ESCAPE);
+				send_byte(ESC_END);
+				break;
+			case ESCAPE:
+				send_byte(ESCAPE);
+				send_byte(ESCAPE);
+				break;
+			default:
+				send_byte(addr[i]);
+		}
+	}
+	send_byte(END);
+}
 /* USER CODE END 0 */
 
 int main(void)
@@ -104,49 +204,23 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
-
-	// Blink the LED
-	ledState = 0;
-	replying = 0;
-	connected = 0;
-
-	// Receiving
-	robotGoal.id = 0;
-	robotGoalPtr = &robotGoal;
-	memset(robotGoal.msg,0,strlen(robotGoal.msg));
-	HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
-
-	// Sending
-	robotState.id = 1;
-	robotStatePtr = &robotState;
-	memset(robotState.msg,0,strlen(robotState.msg));
-
+  HAL_UART_Receive_IT(&huart2, &Rx_char, 1);
+  //RS.id = 3;
+  //memcpy(RS.msg, "Test12345!@#", 12);
+  //Tx_Parser(&RS, sizeof(RobotStatus));
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	while (1) {
+  while (1)
+  {
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
 
-		if (!connected) {
-			ledState = !ledState;
-			HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, ledState);
-			sprintf(robotState.msg, "START");
-			send_state(robotStatePtr);
-			HAL_Delay(1000);
-		}
-		else {
-			sprintf(robotState.msg, "NACK");
-			send_state(robotStatePtr);
-			HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
-			HAL_Delay(2000);
-		}
-	}
+  }
   /* USER CODE END 3 */
 
 }
@@ -192,8 +266,7 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART2;
-  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -216,105 +289,15 @@ void SystemClock_Config(void)
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 1, 0);
-}
-
-/* USART1 init function */
-static void MX_USART1_UART_Init(void)
-{
-
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
-/* USART2 init function */
-static void MX_USART2_UART_Init(void)
-{
-
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
-/** Configure pins as 
-        * Analog 
-        * Input 
-        * Output
-        * EVENT_OUT
-        * EXTI
-*/
-static void MX_GPIO_Init(void)
-{
-
-  GPIO_InitTypeDef GPIO_InitStruct;
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : LD3_Pin */
-  GPIO_InitStruct.Pin = LD3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD3_GPIO_Port, &GPIO_InitStruct);
-
+  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	if (huart == &huart1) {
-
-		if(!connected) {
-			if (!strcmp((char *) robotGoal.msg, "BEGIN")) {
-				connected = 1;
-			}
-		} else {
-			// Checksum
-		}
-
-		memset(robotState.msg,0,strlen(robotState.msg));
-
-		if (connected) {
-			sprintf(robotState.msg, "ACK");
-		} else {
-			sprintf(robotState.msg, "NACK");
-		}
-
-		robotState.id = robotGoal.id;
-		send_state(robotStatePtr);
-		HAL_UART_Transmit_IT(&huart2, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
+	if (huart == &huart2) {
+		RX_Parser();
 	}
-	// HAL_UART_Receive_IT(&huart1, (uint8_t *) robotGoalPtr, sizeof(RobotGoal));
+
 }
 /* USER CODE END 4 */
 
@@ -326,9 +309,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 void _Error_Handler(char * file, int line)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-	/* User can add his own implementation to report the HAL error return state */
-	while (1) {
-	}
+  /* User can add his own implementation to report the HAL error return state */
+  while(1) 
+  {
+  }
   /* USER CODE END Error_Handler_Debug */ 
 }
 
@@ -344,8 +328,8 @@ void _Error_Handler(char * file, int line)
 void assert_failed(uint8_t* file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-	/* User can add his own implementation to report the file name and line number,
-	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* User can add his own implementation to report the file name and line number,
+    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 
 }
