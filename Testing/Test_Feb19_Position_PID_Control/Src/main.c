@@ -51,7 +51,7 @@
 #include <math.h>
 #include "../../../../soccer-control/PID.h"  // Control routines & helpers
 #include "../../../../soccer-control/rtwtypes.h"  // Type definitions from auto-gen code
-#include "../../../../soccer-control/angles.h"  // Joint trajectories
+//#include "../../../../soccer-control/angles.h"  // Joint trajectories
 
 /* Other */
 #include <stdio.h>
@@ -64,7 +64,10 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-extern const double MOTORANGLES[DIM][SIZE];
+//extern const double MOTORANGLES[DIM][SIZE];
+const int DIM = 16;
+const int SIZE = 400;
+const double MOTORANGLES[14][400] = {0};
 
 
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
