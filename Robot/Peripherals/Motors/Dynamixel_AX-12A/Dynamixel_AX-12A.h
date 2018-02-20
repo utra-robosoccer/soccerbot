@@ -13,6 +13,7 @@
 	#include "stm32h7xx_hal.h"
 	#include "stm32h7xx_hal_conf.h"
 #endif
+
 /******************************(**** Macros ******************************(****/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
@@ -229,6 +230,8 @@ void Dynamixel_Revive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
 void Dynamixel_BroadcastRevive(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID);
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity);
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+void Dynamixel_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope); // WRAPPER
+void Dynamixel_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceMargin); // WRAPPER
 
 // Testing
 void Dynamixel_TestAll(Dynamixel_HandleTypeDef** arrHdynamixel, uint8_t arrSize);
