@@ -44,8 +44,8 @@
 
 /* USER CODE BEGIN Includes */
 /* Motor driver. */
-#include "../../../Robot/Peripherals/Motors/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
-#include "../../../Robot/Peripherals/Motors/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
+#include "../../../Robot/include/Motors/Dynamixel_AX-12A/Dynamixel_AX-12A.h"
+#include "../../../Robot/include/Motors/Dynamixel_AX-12A/Dynamixel_AX-12A.c"
 
 /* Controls */
 #include <math.h>
@@ -67,7 +67,7 @@
 extern const double MOTORANGLES[DIM][SIZE];
 
 
-const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
 					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
 					   MOTOR16, MOTOR17, MOTOR18
