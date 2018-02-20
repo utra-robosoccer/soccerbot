@@ -1333,6 +1333,35 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	Dynamixel_SetCCWAngleLimit(hdynamixel, MAX_ANGLE);
 }
 
+void Dynamixel_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope){
+	/* Sets both the clockwise and counterclockwise compliance slopes.
+	 * The higher the value, the more flexibility that is obtained. That is, a high value
+	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
+	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
+	 *
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  complianceSlope, arguments in range [1, 7], with 1 being the least flexible
+	 *
+	 */
+
+	Dynamixel_SetCWComplianceSlope(hdynamixel, complianceSlope);
+	Dynamixel_SetCWComplianceSlope(hdynamixel, complianceSlope);
+}
+
+void Dynamixel_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceMargin){
+	/* Sets both the clockwise and counterclockwise compliance margins.
+	 * The compliance margin is the acceptable error between the current position and goal position.
+	 * The greater the value, the more error is acceptable.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  complianceMargin, the acceptable error between the current and goal position.
+	 * 			  					Arguments in range [0, 255]
+	 */
+
+	Dynamixel_SetCWComplianceMargin(hdynamixel, complianceMargin);
+	Dynamixel_SetCCWComplianceMargin(hdynamixel, complianceMargin);
+}
 
 
 
