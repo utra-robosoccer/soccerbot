@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/izaak/Documents/GitHub/soccer-embedded/Development/IMU_c/IMU_c/Inc
+HeaderPath=C:/Users/izaak/Documents/GitHub/soccer-embedded/Development/IMU_c/Inc
 HeaderFiles=gpio.h;FreeRTOSConfig.h;i2c.h;usart.h;stm32h7xx_it.h;stm32h7xx_hal_conf.h;main.h;
-SourcePath=C:/Users/izaak/Documents/GitHub/soccer-embedded/Development/IMU_c/IMU_c/Src
+SourcePath=C:/Users/izaak/Documents/GitHub/soccer-embedded/Development/IMU_c/Src
 SourceFiles=gpio.c;freertos.c;i2c.c;usart.c;stm32h7xx_it.c;stm32h7xx_hal_msp.c;stm32h7xx_hal_timebase_TIM.c;main.c;
 
 [PreviousLibFiles]
