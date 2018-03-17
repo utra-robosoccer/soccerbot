@@ -2,6 +2,13 @@
 
 //The first section of this is new content. This, along with MPU6050.h, are being rebuilt from scratch. The code which previously existed is further below.
 
+/** Default constructor, uses default I2C address.
+ * @see MPU6050_DEFAULT_ADDRESS
+ */
+
+MPU6050::MPU6050() {
+    devAddr = MPU6050_DEFAULT_ADDRESS;
+}
 
 
 
