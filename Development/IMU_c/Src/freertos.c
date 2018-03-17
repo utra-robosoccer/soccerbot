@@ -52,7 +52,11 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
-
+#include "MPU6050.h"
+#include "i2c.h"
+#include "usart.h"
+#include "gpio.h"
+#include "stm32h7xx_hal.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -111,10 +115,17 @@ void StartIMUtask(void const * argument)
 {
 
   /* USER CODE BEGIN StartIMUtask */
+    int8_t output_buffer[6];
+    int8_t output_buffer_2[6];
+    MPU6050_HandleTypeDef IMUdata;
+    IMUdata._I2C_Handle = &hi2c2;
+    uint16_t test=5;
+    MPU6050_RESET_SENSOR_REG(&IMUdata);
+    MPU6050_init(&IMUdata);
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	HAL_UART_Transmit(&(sMPU6050 -> UART_Handle) , &Sign_X_Gyro ,1, 10);
   }
   /* USER CODE END StartIMUtask */
 }
