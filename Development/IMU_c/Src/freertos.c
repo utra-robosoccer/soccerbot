@@ -115,17 +115,23 @@ void StartIMUtask(void const * argument)
 {
 
   /* USER CODE BEGIN StartIMUtask */
-    int8_t output_buffer[6];
-    int8_t output_buffer_2[6];
+	int8_t Xg;
+	int8_t output_buffer[6];
     MPU6050_HandleTypeDef IMUdata;
     IMUdata._I2C_Handle = &hi2c2;
     uint16_t test=5;
+    //MPU6050_RESET_SENSOR_REG(&IMUdata);
     MPU6050_RESET_SENSOR_REG(&IMUdata);
     MPU6050_init(&IMUdata);
   /* Infinite loop */
   for(;;)
   {
-	HAL_UART_Transmit(&(sMPU6050 -> UART_Handle) , &Sign_X_Gyro ,1, 10);
+	  //MPU6050_READ_DATA(&IMUdata, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	  MPU6050_Read_Accelerometer(&IMUdata);
+	  MPU6050_Read_Gyroscope(&IMUdata);
+	  IMUdata._X_GYRO = Xg;
+	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
+	  osDelay(10);
   }
   /* USER CODE END StartIMUtask */
 }
