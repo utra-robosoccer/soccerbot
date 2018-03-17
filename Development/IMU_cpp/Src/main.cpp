@@ -44,6 +44,11 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
+  Parts of the code are based off of the arduino libraries. Credit:
+
+  	  I2Cdev device library code is placed under the MIT license
+  	  Copyright (c) 2012 Jeff Rowberg
+
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -55,10 +60,6 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
-
-
-//TEST!!!!!
 
 
 /* USER CODE END Includes */

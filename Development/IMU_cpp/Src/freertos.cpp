@@ -56,6 +56,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "stm32h7xx_hal.h"
+#include "MPU6050.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
