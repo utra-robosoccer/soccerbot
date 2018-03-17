@@ -45,9 +45,6 @@
 
 /* USER CODE BEGIN Includes */
 /* Motor driver. */
-#include "AX12A.h"
-
-/* Controls */
 #include <math.h>
 #include "../../../../../control/soccer-control/PID.h"  // Control routines & helpers
 #include "../../../../../control/soccer-control/rtwtypes.h"  // Type definitions from auto-gen code
@@ -55,6 +52,7 @@
 
 /* Other */
 #include <stdio.h>
+#include "AX12Aold.h"
 
 /* USER CODE END Includes */
 
