@@ -104,6 +104,11 @@ void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 #define MPU6050_RA_GYRO_ZOUT_H      0x47
 #define MPU6050_RA_GYRO_ZOUT_L      0x48
 
+#define MPU6050_RA_USER_CTRL		0x6A
+
+#define MPU6050_RA_PWR_MGMT_1		0x6B
+#define MPU6050_RA_PWR_MGMT_2		0x6C
+
 #define MPU6050_RA_FIFO_COUNTH      0x72
 #define MPU6050_RA_FIFO_COUNTL      0x73
 #define MPU6050_RA_FIFO_R_W         0x74
