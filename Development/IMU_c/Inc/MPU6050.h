@@ -2,7 +2,7 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
-#include "stm32l4xx_hal.h"
+#include "stm32h7xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
