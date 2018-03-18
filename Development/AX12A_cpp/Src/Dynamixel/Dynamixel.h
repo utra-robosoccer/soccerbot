@@ -10,6 +10,7 @@
 #define DYNAMIXEL_H_
 
 /********************************** Includes **********************************/
+/* Hardware libraries */
 #ifdef stm32f4xx_hal
 	#include "stm32f4xx_hal.h"
 	#include "stm32f4xx_hal_conf.h"
@@ -19,9 +20,11 @@
 	#include "stm32h7xx_hal_conf.h"
 #endif
 
+/* I/O */
 #include "gpio.h"
 #include "usart.h"
 
+/* c++ objects */
 #include <stdint.h>
 
 
@@ -37,7 +40,7 @@ struct MotorInitData{
 /********************************** Classes ***********************************/
 class Dynamixel {
 	public:
-		/* Fields */
+		/********** Fields **********/
 		uint8_t					_ID;					/*!< Motor identification (0-252)					*/
 		uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
 		uint16_t				_lastPosition;			/*!< Position read from motor						*/
@@ -53,9 +56,24 @@ class Dynamixel {
 
 
 
-		/* Methods */
+		/********** Methods **********/
+		// Constructor and destructor
 		Dynamixel(MotorInitData motorInitData);
 		virtual ~Dynamixel();
+
+
+		// Low-level transmission and reception
+		virtual void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+		virtual uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
+		virtual void computeChecksum(uint8_t *arr, int length)
+
+
+		// Other low-level motor commands (seldom used)
+		uint8_t ping();
+		void regWrite(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+		void action();
+		void reset();
+
 
 		// Setters (use the WRITE DATA instruction)
 		void setID(uint8_t ID); // (EEPROM)
@@ -69,7 +87,6 @@ class Dynamixel {
 		void setStatusReturnLevel(uint8_t status_data); // (EEPROM)
 		void setAlarmLED(uint8_t alarm_LED_data); // (EEPROM)
 		void setAlarmShutdown(uint8_t alarm_shutdown_data); // (EEPROM)
-
 		void setTorqueEnable(uint8_t isEnabled); // (RAM)
 		void setLEDEnable(uint8_t isEnabled); // (RAM)
 		void setCWComplianceMargin(uint8_t CWcomplianceMargin); // (RAM)
@@ -82,6 +99,7 @@ class Dynamixel {
 		void setEEPROMLock(); // (RAM)
 		void setPunch(double punch); // (RAM)
 
+
 		// Getters (use READ DATA instruction)
 		void getPosition();
 		void getVelocity();
@@ -92,13 +110,10 @@ class Dynamixel {
 		uint8_t isMoving();
 		uint8_t isJointMode();
 
-		// Other motor instructions (low level control with timing from different WRITE DATA instruction)
-		void regWrite(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-		void action();
 
-		// Interfaces for previously-defined functions
-		void setComplianceSlope(uint8_t complianceSlope); // WRAPPER
-		void setComplianceMargin(uint8_t complianceMargin); // WRAPPER
+		// Wrappers
+		void setComplianceSlope(uint8_t complianceSlope);
+		void setComplianceMargin(uint8_t complianceMargin);
 };
 
 #endif /* DYNAMIXEL_H_ */
