@@ -40,19 +40,19 @@ struct MotorInitData{
 /********************************** Classes ***********************************/
 class Dynamixel {
 	public:
-		/********** Fields **********/
-		uint8_t					_ID;					/*!< Motor identification (0-252)					*/
-		uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
-		uint16_t				_lastPosition;			/*!< Position read from motor						*/
-		float					_lastVelocity;			/*!< Velocity read from motor						*/
-		uint8_t					_lastLoad;				/*!< Load read from motor							*/
-		uint8_t					_lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
-		float					_lastVoltage;			/*!< Voltage read from motor						*/
-		uint8_t					_lastTemperature;		/*!< Temperature read from motor					*/
-		uint8_t					_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
-		UART_HandleTypeDef*		_UART_Handle;			/*!< UART handle for motor							*/
-		GPIO_TypeDef*			_dataDirPort;			/*!< Port data direction pin is on					*/
-		uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
+		/********** Properties **********/
+		uint8_t					ID;						/*!< Motor identification (0-252)					*/
+		uint32_t				baudRate;				/*!< UART communication baud rate					*/
+		uint16_t				lastPosition;			/*!< Position read from motor						*/
+		float					lastVelocity;			/*!< Velocity read from motor						*/
+		uint8_t					lastLoad;				/*!< Load read from motor							*/
+		uint8_t					lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
+		float					lastVoltage;			/*!< Voltage read from motor						*/
+		uint8_t					lastTemperature;		/*!< Temperature read from motor					*/
+		UART_HandleTypeDef*		UART_Handle;			/*!< UART handle for motor							*/
+		GPIO_TypeDef*			dataDirPort;			/*!< Port data direction pin is on					*/
+		uint16_t				dataDirPinNum;			/*!< Data direction pin number						*/
+
 
 
 
@@ -62,10 +62,17 @@ class Dynamixel {
 		virtual ~Dynamixel();
 
 
+		// Initialization method
+		int Init(); // TODO: While the constructor assigns values to object properties, this function should
+					// perform the actual distribution of these parameters to the motors. That is, the
+					// constructor should not perform any I/O with motors, while this initialization function should.
+					// This ensures that objects creation will succeed, even when initialization of motors may fail
+
+
 		// Low-level transmission and reception
 		virtual void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 		virtual uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
-		virtual void computeChecksum(uint8_t *arr, int length)
+		virtual void computeChecksum(uint8_t *arr, int length);
 
 
 		// Other low-level motor commands (seldom used)
@@ -79,25 +86,18 @@ class Dynamixel {
 		void setID(uint8_t ID); // (EEPROM)
 		void setBaudRate(double baud); // (EEPROM)
 		void setReturnDelayTime(double microSec); // (EEPROM)
-		void setCWAngleLimit(double minAngle); // (EEPROM)
-		void setCCWAngleLimit(double maxAngle); // (EEPROM)
+		void setMinAngle(double minAngle); // (EEPROM) -- CW angle limit
+		void setMaxAngle(double maxAngle); // (EEPROM) -- CCW angle limit
+		void setTemperatureLimit(); // (EEPROM)
 		void setHighestVoltageLimit(double highestVoltage); // (EEPROM)
 		void setLowestVoltageLimit(double lowestVoltage); // (EEPROM)
-		void setMaxTorque(double maxTorque); // (EEPROM)
-		void setStatusReturnLevel(uint8_t status_data); // (EEPROM)
-		void setAlarmLED(uint8_t alarm_LED_data); // (EEPROM)
-		void setAlarmShutdown(uint8_t alarm_shutdown_data); // (EEPROM)
+
+		virtual void setStatusReturnLevel(uint8_t status_data); // (EEPROM in AX-12A, RAM in MX-28)
+
 		void setTorqueEnable(uint8_t isEnabled); // (RAM)
 		void setLEDEnable(uint8_t isEnabled); // (RAM)
-		void setCWComplianceMargin(uint8_t CWcomplianceMargin); // (RAM)
-		void setCCWComplianceMargin(uint8_t CCWcomplianceMargin); // (RAM)
-		void setCWComplianceSlope(uint8_t CWcomplianceSlope); // (RAM)
-		void setCCWComplianceSlope(uint8_t CCWcomplianceSlope); // (RAM)
 		void setGoalPosition(double goalAngle); // (RAM)
 		void setGoalVelocity(double goalVelocity); // (RAM)
-		void setGoalTorque(double goalTorque); // (RAM)
-		void setEEPROMLock(); // (RAM)
-		void setPunch(double punch); // (RAM)
 
 
 		// Getters (use READ DATA instruction)
@@ -107,13 +107,7 @@ class Dynamixel {
 		void getVoltage();
 		void getTemperature();
 		uint8_t isRegistered();
-		uint8_t isMoving();
-		uint8_t isJointMode();
-
-
-		// Wrappers
-		void setComplianceSlope(uint8_t complianceSlope);
-		void setComplianceMargin(uint8_t complianceMargin);
+		bool isMoving();
 };
 
 #endif /* DYNAMIXEL_H_ */

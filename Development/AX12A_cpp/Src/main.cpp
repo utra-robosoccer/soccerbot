@@ -126,7 +126,8 @@ int main(void)
 
   for(int motor = MOTOR1; motor <= MOTOR12; motor++){
 	  motorManager.motorTable[motor]->setGoalVelocity(100);
-	  motorManager.motorTable[motor]->setComplianceSlope(4);
+	  AX12A* motorPtr = dynamic_cast<AX12A*>(motorManager.motorTable[motor]);
+	  motorPtr -> setComplianceSlope(4);
   }
   /* USER CODE END 2 */
 
