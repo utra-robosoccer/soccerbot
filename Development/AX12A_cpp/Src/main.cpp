@@ -50,6 +50,10 @@
 #include "../../../../../control/soccer-control/rtwtypes.h"  // Type definitions from auto-gen code
 //#include "../../../../soccer-control/angles.h"  // Joint trajectories
 
+#include "MotorManager.h"
+#include "Dynamixel.h"
+#include "AX12A/AX12A.h"
+
 /* Other */
 #include <stdio.h>
 #include "AX12Aold.h"
@@ -64,33 +68,7 @@ const int DIM = 16;
 const int SIZE = 400;
 const double MOTORANGLES[14][400] = {0};
 
-
-enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
-					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
-					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
-					   MOTOR16, MOTOR17, MOTOR18
-};
-
 const double PI = M_PI; // From math.h
-
-Dynamixel_HandleTypeDef Motor1;
-Dynamixel_HandleTypeDef Motor2;
-Dynamixel_HandleTypeDef Motor3;
-Dynamixel_HandleTypeDef Motor4;
-Dynamixel_HandleTypeDef Motor5;
-Dynamixel_HandleTypeDef Motor6;
-Dynamixel_HandleTypeDef Motor7;
-Dynamixel_HandleTypeDef Motor8;
-Dynamixel_HandleTypeDef Motor9;
-Dynamixel_HandleTypeDef Motor10;
-Dynamixel_HandleTypeDef Motor11;
-Dynamixel_HandleTypeDef Motor12;
-Dynamixel_HandleTypeDef Motor13;
-Dynamixel_HandleTypeDef Motor14;
-Dynamixel_HandleTypeDef Motor15;
-Dynamixel_HandleTypeDef Motor16;
-Dynamixel_HandleTypeDef Motor17;
-Dynamixel_HandleTypeDef Motor18;
 
 /* USER CODE END PV */
 
@@ -144,49 +122,11 @@ int main(void)
   MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
-  Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-  Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-  Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-  Dynamixel_Init(&Motor4, 4, &huart1, GPIOB, GPIO_PIN_10);
-  Dynamixel_Init(&Motor5, 5, &huart1, GPIOB, GPIO_PIN_10);
-  Dynamixel_Init(&Motor6, 6, &huart1, GPIOB, GPIO_PIN_10);
-  Dynamixel_Init(&Motor7, 7, &huart7, GPIOA, GPIO_PIN_15);
-  Dynamixel_Init(&Motor8, 8, &huart7, GPIOA, GPIO_PIN_15);
-  Dynamixel_Init(&Motor9, 9, &huart7, GPIOA, GPIO_PIN_15);
-  Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0);
-  Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0);
-  Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0);
-  Dynamixel_Init(&Motor13, 13, &huart4, GPIOA, GPIO_PIN_0);
-  Dynamixel_Init(&Motor14, 14, &huart4, GPIOA, GPIO_PIN_0);
-  Dynamixel_Init(&Motor15, 15, &huart4, GPIOA, GPIO_PIN_0);
-  Dynamixel_Init(&Motor16, 16, &huart4, GPIOA, GPIO_PIN_0);
-  Dynamixel_Init(&Motor17, 17, &huart4, GPIOA, GPIO_PIN_0);
-  Dynamixel_Init(&Motor18, 18, &huart4, GPIOA, GPIO_PIN_0);
-
-  Dynamixel_HandleTypeDef* arrDynamixel[18];
-  arrDynamixel[0] = &Motor1;
-  arrDynamixel[1] = &Motor2;
-  arrDynamixel[2] = &Motor3;
-  arrDynamixel[3] = &Motor4;
-  arrDynamixel[4] = &Motor5;
-  arrDynamixel[5] = &Motor6;
-  arrDynamixel[6] = &Motor7;
-  arrDynamixel[7] = &Motor8;
-  arrDynamixel[8] = &Motor9;
-  arrDynamixel[9] = &Motor10;
-  arrDynamixel[10] = &Motor11;
-  arrDynamixel[11] = &Motor12;
-  arrDynamixel[12] = &Motor13;
-  arrDynamixel[13] = &Motor14;
-  arrDynamixel[14] = &Motor15;
-  arrDynamixel[15] = &Motor16;
-  arrDynamixel[16] = &Motor17;
-  arrDynamixel[17] = &Motor18;
+  MotorManager motorManager = new MotorManager();
 
   for(int i = 0; i < 18; i++){
-	  Dynamixel_SetGoalVelocity(arrDynamixel[i], 100);
-	  Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 4);
-	  Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 4);
+	  motorManager.motorTable[i]->setGoalVelocity(100);
+	  motorManager.motorTable[i]->setComplianceSlope(4);
   }
   /* USER CODE END 2 */
 
@@ -200,29 +140,29 @@ int main(void)
 	  for(int j = 0; j < SIZE; j ++){
 		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			  switch(i){
-				  case MOTOR1:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 1);
+				  case MOTOR1:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 - 1);
 								  break;
-				  case MOTOR2:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3);
+				  case MOTOR2:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 3);
 								  break;
-				  case MOTOR3:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 1);
+				  case MOTOR3:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 1);
 								  break;
-				  case MOTOR4:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 2);
+				  case MOTOR4:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 2);
 								  break;
-				  case MOTOR5:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 0);
+				  case MOTOR5:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 - 0);
 								  break;
-				  case MOTOR6:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 0);
+				  case MOTOR6:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 0);
 								  break;
-				  case MOTOR7:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 0);
+				  case MOTOR7:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 0);
 								  break;
-				  case MOTOR8:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 - 3);
+				  case MOTOR8:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 - 3);
 								  break;
-				  case MOTOR9:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 - 0);
+				  case MOTOR9:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 - 0);
 								  break;
-				  case MOTOR10:	  Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 4);
+				  case MOTOR10:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 4);
 								  break;
-				  case MOTOR11:   Dynamixel_SetGoalPosition(arrDynamixel[i], MOTORANGLES[i][j]*180/PI + 150 + 1);
+				  case MOTOR11:   motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 1);
 								  break;
-				  case MOTOR12:	  Dynamixel_SetGoalPosition(arrDynamixel[i], -1*MOTORANGLES[i][j]*180/PI + 150 + 3);
+				  case MOTOR12:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 3);
 								  break;
 			  }
 		  }
