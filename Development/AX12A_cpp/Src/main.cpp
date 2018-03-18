@@ -124,9 +124,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   MotorManager motorManager = new MotorManager();
 
-  for(int i = 0; i < 18; i++){
-	  motorManager.motorTable[i]->setGoalVelocity(100);
-	  motorManager.motorTable[i]->setComplianceSlope(4);
+  for(int motor = MOTOR1; motor <= MOTOR12; motor++){
+	  motorManager.motorTable[motor]->setGoalVelocity(100);
+	  motorManager.motorTable[motor]->setComplianceSlope(4);
   }
   /* USER CODE END 2 */
 
@@ -138,33 +138,11 @@ int main(void)
   /* USER CODE BEGIN 3 */
 
 	  for(int j = 0; j < SIZE; j ++){
-		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			  switch(i){
-				  case MOTOR1:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 - 1);
-								  break;
-				  case MOTOR2:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 3);
-								  break;
-				  case MOTOR3:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 1);
-								  break;
-				  case MOTOR4:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 2);
-								  break;
-				  case MOTOR5:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 - 0);
-								  break;
-				  case MOTOR6:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 0);
-								  break;
-				  case MOTOR7:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 0);
-								  break;
-				  case MOTOR8:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 - 3);
-								  break;
-				  case MOTOR9:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 - 0);
-								  break;
-				  case MOTOR10:	  motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 4);
-								  break;
-				  case MOTOR11:   motorManager.motorTable[i]->setGoalPosition(MOTORANGLES[i][j]*180/PI + 150 + 1);
-								  break;
-				  case MOTOR12:	  motorManager.motorTable[i]->setGoalPosition(-1*MOTORANGLES[i][j]*180/PI + 150 + 3);
-								  break;
-			  }
+		  for(int motor = MOTOR1; motor <= MOTOR12; motor++){ // NB: motor begins at 0 (i.e. Motor1 corresponds to motor = 0)
+			  motorManager.motorTable[motor] -> setGoalPosition(MOTORANGLES[motor][j] *
+					  	  	  	  	  	  	  	  	  	  	  	motorCalibrationConstants[motor].m +
+																motorCalibrationConstants[motor].a
+																);
 		  }
 		  HAL_Delay(10); // Default from Lukas: 10
 	  }

@@ -41,6 +41,9 @@ uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
 
 
+/****************************** Private Variables *******************************/
+static const double PI = M_PI; // From math.h
+
 static MotorInitData motorInitData [NUM_MOTORS] = {
 	{1, &huart2, GPIOD, GPIO_PIN_7},
 	{2, &huart2, GPIOD, GPIO_PIN_7},
@@ -62,7 +65,31 @@ static MotorInitData motorInitData [NUM_MOTORS] = {
 	{18, &huart4, GPIOA, GPIO_PIN_0}
 };
 
+// TODO: Bake these constants into each individual motor; assign them at initialization
+// time and then automatically take care of them in all position commands
+MotorCalibrationConstants motorCalibrationConstants [NUM_MOTORS] = {
+		{-180 / PI, 150 - 1}, // Motor1
+		{-180 / PI, 150 + 3}, // Motor2
+		{-180 / PI, 150 + 1}, // Motor3
+		{180 / PI, 150 + 2},  // Motor4
+		{180 / PI, 150 - 0},  // Motor5
+		{-180 / PI, 150 - 0}, // Motor6
+		{180 / PI, 150 - 0},  // Motor7
+		{180 / PI, 150 - 3},  // Motor8
+		{-180 / PI, 150 - 0}, // Motor9
+		{180 / PI, 150 + 4},  // Motor10
+		{180 / PI, 150 + 1},  // Motor11
+		{-180 / PI, 150 + 3}, // Motor12
+		{180 / PI, 150 - 0},  // Motor13 -- NOT CALIBRATED
+		{180 / PI, 150 - 0},  // Motor14 -- NOT CALIBRATED
+		{180 / PI, 150 - 0},  // Motor15 -- NOT CALIBRATED
+		{180 / PI, 150 - 0},  // Motor16 -- NOT CALIBRATED
+		{180 / PI, 150 - 0},  // Motor17 -- NOT CALIBRATED
+		{180 / PI, 150 - 0}   // Motor18 -- NOT CALIBRATED
+};
 
+
+/**************************** Method Implementations ****************************/
 MotorManager::MotorManager() {
 	/* Instantiate motors and initialize object fields. */
 

@@ -11,7 +11,7 @@
 
 #include "Dynamixel.h"
 #include <vector>
-
+#include <math.h>
 
 /* Communications. */
 #define TRANSMIT_IT				0		// 1 if using interrupts for transmit, otherwise 0 (polling)
@@ -23,19 +23,9 @@
 const uint8_t TRANSMIT_TIMEOUT = 10; 	// Timeout for blocking UART transmissions, in milliseconds
 const uint8_t RECEIVE_TIMEOUT = 10;		// Timeout for blocking UART receptions, in milliseconds
 
-
 #define INST_WRITE_DATA			0x03	// Writes data for immediate execution
 
 
-/******************************* Public Variables *******************************/
-/* Buffer for data received from motors. */
-extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
-
-/* Bytes to be transmitted to motors are written to this array. */
-extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
-
-/* Sync write buffer. */
-extern uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
 
 
 /*********************************** Enums ***********************************/
@@ -60,6 +50,19 @@ enum motorNames{
 	MOTOR18
 };
 
+/********************************** Structs ***********************************/
+// Data structure to organize calibration constants applied to all motor position
+// commands.
+//
+// The calibration constants are defined in MotorManager.cpp
+struct MotorCalibrationConstants{
+	float m; // Multiplicative factor
+	int a; // Additive factor
+};
+
+
+
+
 /********************************** Classes ***********************************/
 class MotorManager {
 	public:
@@ -68,5 +71,21 @@ class MotorManager {
 		MotorManager();
 		virtual ~MotorManager();
 };
+
+
+
+
+/******************************* Public Variables *******************************/
+/* Buffer for data received from motors. */
+extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
+
+/* Bytes to be transmitted to motors are written to this array. */
+extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
+
+/* Sync write buffer. */
+extern uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
+
+extern MotorCalibrationConstants motorCalibrationConstants [NUM_MOTORS];
+
 
 #endif /* MOTORMANAGER_H_ */
