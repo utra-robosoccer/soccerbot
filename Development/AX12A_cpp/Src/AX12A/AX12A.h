@@ -90,8 +90,43 @@ const uint8_t MIN_PUNCH = 0;		// Minimum punch (proportional to minimum current)
 
 class AX12A: public Dynamixel {
 public:
+	/********** Properties **********/
+	uint8_t					_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
+
+
+	/********** Methods **********/
+	// Constructor and destructor
 	AX12A();
 	virtual ~AX12A();
+
+	// Low-level transmission and reception
+	void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+	uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
+	void computeChecksum(uint8_t *arr, int length);
+
+	// Setters (use the WRITE DATA instruction)
+	void setGoalTorque(double goalTorque); // (RAM)
+	void setMaxTorque(double maxTorque); // (EEPROM)
+	void setAlarmLED(uint8_t alarm_LED_data); // (EEPROM)
+	void setAlarmShutdown(uint8_t alarm_shutdown_data); // (EEPROM)
+	void setCWComplianceMargin(uint8_t CWcomplianceMargin); // (RAM)
+	void setCCWComplianceMargin(uint8_t CCWcomplianceMargin); // (RAM)
+	void setCWComplianceSlope(uint8_t CWcomplianceSlope); // (RAM)
+	void setCCWComplianceSlope(uint8_t CCWcomplianceSlope); // (RAM)
+	void setEEPROMLock(); // (RAM)
+	void setPunch(double punch); // (RAM)
+	void reset();
+
+	// Getters (use the READ DATA instruction)
+	uint8_t isJointMode();
+
+	// Interfaces for previously-defined functions
+	void revive(uint8_t ID); // TODO: Check this over for correctness in the context of several motors
+	void broadcastRevive(uint8_t ID); // TODO: Check this over for correctness in the context of several motors
+	void enterWheelMode(double goalVelocity);
+	void enterJointMode();
+	void setComplianceSlope(uint8_t complianceSlope);
+	void setComplianceMargin(uint8_t complianceMargin);
 };
 
 #endif /* AX12A_H_ */
