@@ -20,11 +20,21 @@
 #endif
 
 #include "gpio.h"
+#include "usart.h"
 
 #include <stdint.h>
 
-/********************************** Classes ***********************************/
 
+
+/********************************** Structs ***********************************/
+struct MotorInitData{
+	 int id;
+	 UART_HandleTypeDef* uart;
+	 GPIO_TypeDef* DataDirPort;
+	 uint16_t DataDirPinNum;
+};
+
+/********************************** Classes ***********************************/
 class Dynamixel {
 	public:
 		/* Fields */
@@ -43,9 +53,8 @@ class Dynamixel {
 
 
 
-
 		/* Methods */
-		Dynamixel();
+		Dynamixel(MotorInitData motorInitData);
 		virtual ~Dynamixel();
 
 		// Setters (use the WRITE DATA instruction)
@@ -86,6 +95,10 @@ class Dynamixel {
 		// Other motor instructions (low level control with timing from different WRITE DATA instruction)
 		void regWrite(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 		void action();
+
+		// Interfaces for previously-defined functions
+		void setComplianceSlope(uint8_t complianceSlope); // WRAPPER
+		void setComplianceMargin(uint8_t complianceMargin); // WRAPPER
 };
 
 #endif /* DYNAMIXEL_H_ */

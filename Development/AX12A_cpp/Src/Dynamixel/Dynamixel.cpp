@@ -7,8 +7,9 @@
 
 #include "Dynamixel.h"
 
-Dynamixel::Dynamixel() {
+Dynamixel::Dynamixel(MotorInitData motorInitData) {
 	// TODO Auto-generated constructor stub
+
 
 }
 
