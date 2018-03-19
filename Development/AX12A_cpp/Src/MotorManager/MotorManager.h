@@ -9,7 +9,9 @@
 #define MOTORMANAGER_H_
 
 
-#include "Dynamixel.h"
+#include "../Dynamixel/Dynamixel.h"
+#include "../AX12A/AX12A.h"
+//#include "../MX28/MX28.h" // Not ready for this yet
 #include <vector>
 #include <math.h>
 

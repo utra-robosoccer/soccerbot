@@ -94,7 +94,8 @@ MotorManager::MotorManager() {
 	/* Instantiate motors and initialize object fields. */
 
 	for(int motor = MOTOR1; motor <= MOTOR18; motor++){
-		this->motorTable[motor] = new AX12A(motorInitData[motor]);
+		AX12A* motorPtr = new AX12A(motorInitData[motor])
+		this -> motorTable[motor] = motorPtr;
 	}
 }
 
