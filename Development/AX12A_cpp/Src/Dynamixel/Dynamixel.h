@@ -27,21 +27,28 @@
 /* c++ objects */
 #include <stdint.h>
 
+/*********************************** Macros ***********************************/
+#define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, GPIO_PIN_SET) // Set data direction pin high (TX)
+#define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, GPIO_PIN_RESET) // Set data direction pin low (RX)
 
 
 /********************************** Structs ***********************************/
 struct MotorInitData{
 	 int id;
-	 UART_HandleTypeDef* uart;
-	 GPIO_TypeDef* DataDirPort;
-	 uint16_t DataDirPinNum;
+	 UART_HandleTypeDef* uartHandle;
+	 GPIO_TypeDef* dataDirPort;
+	 uint16_t dataDirPinNum;
 };
 
 /********************************** Classes ***********************************/
+// Abstract class
 class Dynamixel {
 	public:
+		/********** Register Addresses **********/
+		static uint8_t REG_GOAL_POSITION;
+
 		/********** Properties **********/
-		uint8_t					ID;						/*!< Motor identification (0-252)					*/
+		uint8_t					id;						/*!< Motor identification (0-252)					*/
 		uint32_t				baudRate;				/*!< UART communication baud rate					*/
 		uint16_t				lastPosition;			/*!< Position read from motor						*/
 		float					lastVelocity;			/*!< Velocity read from motor						*/
@@ -49,7 +56,7 @@ class Dynamixel {
 		uint8_t					lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
 		float					lastVoltage;			/*!< Voltage read from motor						*/
 		uint8_t					lastTemperature;		/*!< Temperature read from motor					*/
-		UART_HandleTypeDef*		UART_Handle;			/*!< UART handle for motor							*/
+		UART_HandleTypeDef*		uartHandle;				/*!< UART handle for motor							*/
 		GPIO_TypeDef*			dataDirPort;			/*!< Port data direction pin is on					*/
 		uint16_t				dataDirPinNum;			/*!< Data direction pin number						*/
 
@@ -58,7 +65,7 @@ class Dynamixel {
 
 		/********** Methods **********/
 		// Constructor and destructor
-		Dynamixel(MotorInitData motorInitData);
+		Dynamixel(MotorInitData* motorInitData);
 		virtual ~Dynamixel();
 
 
@@ -69,10 +76,10 @@ class Dynamixel {
 					// This ensures that objects creation will succeed, even when initialization of motors may fail
 
 
-		// Low-level transmission and reception
-		virtual void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-		virtual uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
-		virtual void computeChecksum(uint8_t *arr, int length);
+		// Low-level transmission and reception (pure virtual functions)
+		virtual void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2) =0;
+		virtual uint16_t dataReader(uint8_t readAddr, uint8_t readLength) =0;
+		virtual void computeChecksum(uint8_t *arr, int length) =0;
 
 
 		// Other low-level motor commands (seldom used)
