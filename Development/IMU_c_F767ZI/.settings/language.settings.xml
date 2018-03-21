@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
-	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.616926312" name="Debug">
+	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1754542533" name="Debug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
 			<provider-reference id="org.eclipse.cdt.core.ReferencedProjectsLanguageSettingsProvider" ref="shared-provider"/>
@@ -11,7 +11,7 @@
 			</provider>
 		</extension>
 	</configuration>
-	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.release.2031066880" name="Release">
+	<configuration id="fr.ac6.managedbuild.config.gnu.cross.exe.release.1201261211" name="Release">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
 			<provider-reference id="org.eclipse.cdt.core.ReferencedProjectsLanguageSettingsProvider" ref="shared-provider"/>

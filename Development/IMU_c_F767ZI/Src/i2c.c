@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
+  * File Name          : I2C.c
+  * Description        : This file provides code for the configuration
+  *                      of the I2C instances.
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -47,87 +48,112 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
-
-/* USER CODE BEGIN Includes */     
 #include "i2c.h"
-#include "usart.h"
+
 #include "gpio.h"
-#include "stm32h7xx_hal.h"
-#include "MPU6050.h"
-/* USER CODE END Includes */
 
-/* Variables -----------------------------------------------------------------*/
-osThreadId IMUtaskHandle;
+/* USER CODE BEGIN 0 */
 
-/* USER CODE BEGIN Variables */
+/* USER CODE END 0 */
 
-/* USER CODE END Variables */
+I2C_HandleTypeDef hi2c2;
 
-/* Function prototypes -------------------------------------------------------*/
-void StartIMUtask(void const * argument);
-
-void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
-
-/* USER CODE BEGIN FunctionPrototypes */
-
-/* USER CODE END FunctionPrototypes */
-
-/* Hook prototypes */
-
-/* Init FreeRTOS */
-
-void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
-       
-  /* USER CODE END Init */
-
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* Create the thread(s) */
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-}
-
-/* StartIMUtask function */
-void StartIMUtask(void const * argument)
+/* I2C2 init function */
+void MX_I2C2_Init(void)
 {
 
-  /* USER CODE BEGIN StartIMUtask */
-	uint8_t Xg=2;
-	MPU6050 *testimu= new MPU6050();
-  /* Infinite loop */
-  for(;;)
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.Timing = 0x00303D5B;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
   {
-	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-	  osDelay(500);
+    _Error_Handler(__FILE__, __LINE__);
   }
-  /* USER CODE END StartIMUtask */
+
+    /**Configure Analogue filter 
+    */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Digital filter 
+    */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
 }
 
-/* USER CODE BEGIN Application */
-     
-/* USER CODE END Application */
+void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct;
+  if(i2cHandle->Instance==I2C2)
+  {
+  /* USER CODE BEGIN I2C2_MspInit 0 */
+
+  /* USER CODE END I2C2_MspInit 0 */
+  
+    /**I2C2 GPIO Configuration    
+    PF0     ------> I2C2_SDA
+    PF1     ------> I2C2_SCL 
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+    HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+    /* I2C2 clock enable */
+    __HAL_RCC_I2C2_CLK_ENABLE();
+  /* USER CODE BEGIN I2C2_MspInit 1 */
+
+  /* USER CODE END I2C2_MspInit 1 */
+  }
+}
+
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
+{
+
+  if(i2cHandle->Instance==I2C2)
+  {
+  /* USER CODE BEGIN I2C2_MspDeInit 0 */
+
+  /* USER CODE END I2C2_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_I2C2_CLK_DISABLE();
+  
+    /**I2C2 GPIO Configuration    
+    PF0     ------> I2C2_SDA
+    PF1     ------> I2C2_SCL 
+    */
+    HAL_GPIO_DeInit(GPIOF, GPIO_PIN_0|GPIO_PIN_1);
+
+  /* USER CODE BEGIN I2C2_MspDeInit 1 */
+
+  /* USER CODE END I2C2_MspDeInit 1 */
+  }
+} 
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

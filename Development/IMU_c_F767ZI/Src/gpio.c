@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
+  * File Name          : gpio.c
+  * Description        : This file provides code for the configuration
+  *                      of all used GPIO pins.
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -47,87 +48,39 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
-
-/* USER CODE BEGIN Includes */     
-#include "i2c.h"
-#include "usart.h"
 #include "gpio.h"
-#include "stm32h7xx_hal.h"
-#include "MPU6050.h"
-/* USER CODE END Includes */
+/* USER CODE BEGIN 0 */
 
-/* Variables -----------------------------------------------------------------*/
-osThreadId IMUtaskHandle;
+/* USER CODE END 0 */
 
-/* USER CODE BEGIN Variables */
+/*----------------------------------------------------------------------------*/
+/* Configure GPIO                                                             */
+/*----------------------------------------------------------------------------*/
+/* USER CODE BEGIN 1 */
 
-/* USER CODE END Variables */
+/* USER CODE END 1 */
 
-/* Function prototypes -------------------------------------------------------*/
-void StartIMUtask(void const * argument);
-
-void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
-
-/* USER CODE BEGIN FunctionPrototypes */
-
-/* USER CODE END FunctionPrototypes */
-
-/* Hook prototypes */
-
-/* Init FreeRTOS */
-
-void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
-       
-  /* USER CODE END Init */
-
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* Create the thread(s) */
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-}
-
-/* StartIMUtask function */
-void StartIMUtask(void const * argument)
+/** Pinout Configuration
+*/
+void MX_GPIO_Init(void)
 {
 
-  /* USER CODE BEGIN StartIMUtask */
-	uint8_t Xg=2;
-	MPU6050 *testimu= new MPU6050();
-  /* Infinite loop */
-  for(;;)
-  {
-	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-	  osDelay(500);
-  }
-  /* USER CODE END StartIMUtask */
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+
 }
 
-/* USER CODE BEGIN Application */
-     
-/* USER CODE END Application */
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
