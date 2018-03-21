@@ -2,33 +2,60 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
-#include "stm32h7xx_hal.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-class MPU6050 {
-    public:
-		__I2C_HandleTypeDef* _I2C_Handle;
-        MPU6050(); //constructor, just assigns the address
-        void init(); //performs all basic initialization
+uint16_t TOTAL_COUNT;
+uint8_t Acc_X, Acc_Y, Acc_Z;
+float acc_X;
+int Gyro_X, Gyro_Y, Gyro_Z;
+int Rem_X_Accel,Rem_Y_Accel,Rem_Z_Accel;
+int Rem_X_Gyro,Rem_Y_Gyro,Rem_Z_Gyro;
+char Sign_X_Accel, Sign_Y_Accel, Sign_Z_Accel;
+char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 
-    private:
-        uint8_t devAddr;
-        uint8_t buffer[14];
-};
+#define INT_COEF 16384.0f
+#define REM_COEF 16384
 
-void MPU6050_WRITE_REG(MPU6050 *MPU6050,uint8_t reg_addr, uint8_t data);
-void MPU6050_READ_DATA(MPU6050 *MPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
-void MPU6050_WRITE_REG(MPU6050 *MPU6050,uint8_t reg_addr, uint8_t data);
+/**********************************Communication********************************/
+#define I2C	3
+#define UART_Handle	2
+/*********************************** Types ************************************/
+typedef struct{
+	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
+	uint32_t				_BaudRate;				/*!< UART communication baud rate*/
+	uint8_t					_Sample_Rate;
+	UART_HandleTypeDef*		_UART_Handle;
+	I2C_HandleTypeDef* 		_I2C_Handle;
+	int16_t				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
+	int16_t				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
+	int16_t				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
+	int16_t				_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
+	int16_t				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
+	int16_t				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
+}MPU6050_HandleTypeDef;
+/****************Function Definition********************************/
+void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
+void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
+void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
+void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_RESET_SENSOR_REG();
+void MPU6050_Clear_Int();
+void MPU6050_Data_Ready_Int();
+void MPU6050_Get_Val_Gyro();
+void MPU6050_Get_Val_Accel();
+void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
-#define MPU6050_DEFAULT_ADDRESS     MPU6050_ADDRESS_AD0_LOW
 #define MPU6050_ADDR    	    0b11010000
 #define MPU6050_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
@@ -190,58 +217,4 @@ void MPU6050_WRITE_REG(MPU6050 *MPU6050,uint8_t reg_addr, uint8_t data);
 #define MPU6050_WAKE_FREQ_2P5       0x1
 #define MPU6050_WAKE_FREQ_5         0x2
 
-
-/*
-//*********************Below this line is what already existed:***************************************************************
-uint16_t TOTAL_COUNT;
-uint8_t Acc_X, Acc_Y, Acc_Z;
-float acc_X;
-int Gyro_X, Gyro_Y, Gyro_Z;
-int Rem_X_Accel,Rem_Y_Accel,Rem_Z_Accel;
-int Rem_X_Gyro,Rem_Y_Gyro,Rem_Z_Gyro;
-char Sign_X_Accel, Sign_Y_Accel, Sign_Z_Accel;
-char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
-
-#define INT_COEF 16384.0f
-#define REM_COEF 16384
-
-*********************************Communication*******************************
-#define I2C	3
-#define UART_Handle	2
-********************************** Types ***********************************
-typedef struct{
-	uint8_t					_ID;					!< Sensor identification (0-252)
-	uint32_t				_BaudRate;				!< UART communication baud rate
-	uint8_t					_Sample_Rate;
-	UART_HandleTypeDef*		_UART_Handle;
-	I2C_HandleTypeDef* 		_I2C_Handle;
-	int16_t				_X_GYRO;  			!< x-axis angular velocity read from sensor
-	int16_t				_Y_GYRO;  			!< y-axis angular velocity read from sensor
-	int16_t				_Z_GYRO;  			!< z-axis angular velocity read from sensor
-	int16_t				_X_ACCEL;  			!< x-axis acceleration read from sensor
-	int16_t				_Y_ACCEL;  			!< y-axis acceleration read from sensor
-	int16_t				_Z_ACCEL;  			!< z-axis acceleration read from sensor
-}MPU6050_HandleTypeDef;
-
-
-
-
-***************Function Definition*******************************
-void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
-void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
-void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
-void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_RESET_SENSOR_REG();
-void MPU6050_Clear_Int();
-void MPU6050_Data_Ready_Int();
-void MPU6050_Get_Val_Gyro();
-void MPU6050_Get_Val_Accel();
-void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);*/
-
-
-
 #endif /* MPU6050_H_ */
-

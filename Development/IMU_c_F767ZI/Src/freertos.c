@@ -52,22 +52,25 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
+#include "stm32f7xx_hal.h"
+#include "MPU6050.h"
+#include "usart.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-#include "stm32h7xx_hal.h"
-#include "MPU6050.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
-osThreadId IMUtaskHandle;
+osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
-void StartIMUtask(void const * argument);
+void StartDefaultTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -97,9 +100,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
+  /* definition and creation of defaultTask */
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -110,20 +113,26 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 }
 
-/* StartIMUtask function */
-void StartIMUtask(void const * argument)
+/* StartDefaultTask function */
+void StartDefaultTask(void const * argument)
 {
 
-  /* USER CODE BEGIN StartIMUtask */
-	uint8_t Xg=2;
-	MPU6050 *testimu= new MPU6050();
+  /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  for(;;)
+	int8_t test=5;
+    MPU6050_HandleTypeDef IMUdata;
+    IMUdata._I2C_Handle = &hi2c2;
+    MPU6050_init(&IMUdata);
+	for(;;)
   {
-	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-	  osDelay(500);
+		MPU6050_Read_Accelerometer(&IMUdata);
+		MPU6050_Read_Gyroscope(&IMUdata);
+		HAL_UART_Transmit(&huart3, IMUdata._X_ACCEL, 2, 10);
+		//HAL_UART_Transmit(&huart3, &test, 1, 10);
+
+		osDelay(1000);
   }
-  /* USER CODE END StartIMUtask */
+  /* USER CODE END StartDefaultTask */
 }
 
 /* USER CODE BEGIN Application */

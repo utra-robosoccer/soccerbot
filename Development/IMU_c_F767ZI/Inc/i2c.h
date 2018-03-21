@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
+  * File Name          : I2C.h
+  * Description        : This file provides code for the configuration
+  *                      of the I2C instances.
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -45,89 +46,46 @@
   *
   ******************************************************************************
   */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __i2c_H
+#define __i2c_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
+#include "stm32f7xx_hal.h"
+#include "main.h"
 
-/* USER CODE BEGIN Includes */     
-#include "i2c.h"
-#include "usart.h"
-#include "gpio.h"
-#include "stm32h7xx_hal.h"
-#include "MPU6050.h"
+/* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
-/* Variables -----------------------------------------------------------------*/
-osThreadId IMUtaskHandle;
+extern I2C_HandleTypeDef hi2c2;
 
-/* USER CODE BEGIN Variables */
+/* USER CODE BEGIN Private defines */
 
-/* USER CODE END Variables */
+/* USER CODE END Private defines */
 
-/* Function prototypes -------------------------------------------------------*/
-void StartIMUtask(void const * argument);
+extern void _Error_Handler(char *, int);
 
-void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+void MX_I2C2_Init(void);
 
-/* USER CODE BEGIN FunctionPrototypes */
+/* USER CODE BEGIN Prototypes */
 
-/* USER CODE END FunctionPrototypes */
+/* USER CODE END Prototypes */
 
-/* Hook prototypes */
-
-/* Init FreeRTOS */
-
-void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
-       
-  /* USER CODE END Init */
-
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* Create the thread(s) */
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
+#ifdef __cplusplus
 }
+#endif
+#endif /*__ i2c_H */
 
-/* StartIMUtask function */
-void StartIMUtask(void const * argument)
-{
+/**
+  * @}
+  */
 
-  /* USER CODE BEGIN StartIMUtask */
-	uint8_t Xg=2;
-	MPU6050 *testimu= new MPU6050();
-  /* Infinite loop */
-  for(;;)
-  {
-	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-	  osDelay(500);
-  }
-  /* USER CODE END StartIMUtask */
-}
-
-/* USER CODE BEGIN Application */
-     
-/* USER CODE END Application */
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

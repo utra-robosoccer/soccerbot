@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
+  * File Name          : main.hpp
+  * Description        : This file contains the common defines of the application
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -45,89 +45,46 @@
   *
   ******************************************************************************
   */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __MAIN_H
+#define __MAIN_H
+  /* Includes ------------------------------------------------------------------*/
 
 /* Includes ------------------------------------------------------------------*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
+/* USER CODE BEGIN Includes */
 
-/* USER CODE BEGIN Includes */     
-#include "i2c.h"
-#include "usart.h"
-#include "gpio.h"
-#include "stm32h7xx_hal.h"
-#include "MPU6050.h"
 /* USER CODE END Includes */
 
-/* Variables -----------------------------------------------------------------*/
-osThreadId IMUtaskHandle;
+/* Private define ------------------------------------------------------------*/
 
-/* USER CODE BEGIN Variables */
+/* ########################## Assert Selection ############################## */
+/**
+  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
+  *        HAL drivers code
+  */
+/* #define USE_FULL_ASSERT    1U */
 
-/* USER CODE END Variables */
+/* USER CODE BEGIN Private defines */
 
-/* Function prototypes -------------------------------------------------------*/
-void StartIMUtask(void const * argument);
+/* USER CODE END Private defines */
 
-void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+#ifdef __cplusplus
+ extern "C" {
+#endif
+void _Error_Handler(char *, int);
 
-/* USER CODE BEGIN FunctionPrototypes */
-
-/* USER CODE END FunctionPrototypes */
-
-/* Hook prototypes */
-
-/* Init FreeRTOS */
-
-void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
-       
-  /* USER CODE END Init */
-
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* Create the thread(s) */
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartIMUtask, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
+#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+#ifdef __cplusplus
 }
+#endif
 
-/* StartIMUtask function */
-void StartIMUtask(void const * argument)
-{
+/**
+  * @}
+  */ 
 
-  /* USER CODE BEGIN StartIMUtask */
-	uint8_t Xg=2;
-	MPU6050 *testimu= new MPU6050();
-  /* Infinite loop */
-  for(;;)
-  {
-	  HAL_UART_Transmit(&huart3, &Xg, 2, 10);
-	  osDelay(500);
-  }
-  /* USER CODE END StartIMUtask */
-}
+/**
+  * @}
+*/ 
 
-/* USER CODE BEGIN Application */
-     
-/* USER CODE END Application */
-
+#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
