@@ -51,12 +51,40 @@
 
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOA
+#define RS_Pin GPIO_PIN_1
+#define RS_GPIO_Port GPIOA
+#define E_Pin GPIO_PIN_3
+#define E_GPIO_Port GPIOA
+#define DAT1_Pin GPIO_PIN_4
+#define DAT1_GPIO_Port GPIOA
+#define DAT2_Pin GPIO_PIN_5
+#define DAT2_GPIO_Port GPIOA
+#define DAT3_Pin GPIO_PIN_6
+#define DAT3_GPIO_Port GPIOA
+#define DAT4_Pin GPIO_PIN_7
+#define DAT4_GPIO_Port GPIOA
+#define row2_Pin GPIO_PIN_0
+#define row2_GPIO_Port GPIOB
+#define col1_Pin GPIO_PIN_1
+#define col1_GPIO_Port GPIOB
+#define col2_Pin GPIO_PIN_8
+#define col2_GPIO_Port GPIOA
+#define col3_Pin GPIO_PIN_11
+#define col3_GPIO_Port GPIOA
+#define row1_Pin GPIO_PIN_12
+#define row1_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
 #define LD3_Pin GPIO_PIN_3
 #define LD3_GPIO_Port GPIOB
+#define col4_Pin GPIO_PIN_5
+#define col4_GPIO_Port GPIOB
+#define row4_Pin GPIO_PIN_6
+#define row4_GPIO_Port GPIOB
+#define row3_Pin GPIO_PIN_7
+#define row3_GPIO_Port GPIOB
 
 /* ########################## Assert Selection ############################## */
 /**

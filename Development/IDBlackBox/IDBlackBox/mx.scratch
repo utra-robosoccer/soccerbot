@@ -9,6 +9,7 @@
 
 <filestoremove>
     <file>
+    <name>..\Src\tim.c</name>
     </file>
 </filestoremove>
 
@@ -32,7 +33,7 @@
     <usedDebug>true</usedDebug>
     	<debugprobe>swd</debugprobe>
     <optimization>6</optimization>
-    <icfloc>1</icfloc>
+    <icfloc>0</icfloc>
     <Adefines>
         <define></define>
     </Adefines>   
