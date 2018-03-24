@@ -44,12 +44,35 @@
 
 /* USER CODE BEGIN Includes */
 #include "AX12A.h"
+#include "lcd.h"
+#include "keypad.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+//typedef struct menuItem{
+//	const char *msg; // Message to print to LCD
+//	void (*func) (int); // Function to invoke from menu
+//};
+//
+//typedef struct menu{
+//	struct menu* parent;
+//	struct menuItem** items;
+//};
+
+// Top-level menu
+const char msgSetID[] = "Set ID         ";
+const char msgReset[] = "Reset          ";
+const char msgBroadcastRevive[] = "Brdcst Revive  ";
+
+// Set ID --> submenu
+const char msgSelectID[] = "Enter ID: ";
+const char msgSelectIDClear[] = "Clear?         <";
+// Also need a message "ID set to __. \n Confirm?"
+const char msgSelectIDSuccess[] = "ID set to ";
 
 /* USER CODE END PV */
 
@@ -97,8 +120,13 @@ int main(void)
   MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
+  // Initialize motor handle
   Dynamixel_HandleTypeDef motor;
   Dynamixel_Init(&motor, BROADCAST_ID, &huart1, GPIOA, GPIO_PIN_0);
+
+  // Initialize LCD
+  initLCD();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,6 +137,7 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+
 	  // Begin interface here
 	  // lcd.init
 	  // write menu
