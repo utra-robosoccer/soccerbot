@@ -3,16 +3,27 @@
 
 const char keys[] = {'1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'D'};
 
-const struct{
-	pin row1 = {GPIOA, GPIO_PIN_12}; 	// D2 (output)
-	pin row2 = {GPIOB, GPIO_PIN_0}; 	// D3 (output)
-	pin row3 = {GPIOB, GPIO_PIN_7}; 	// D4 (output)
-	pin row4 = {GPIOB, GPIO_PIN_6}; 	// D5 (output)
-	pin col1 = {GPIOB, GPIO_PIN_1}; 	// D6 (input)
-	pin col2 = {GPIOA, GPIO_PIN_8}; 	// D9 (input)
-	pin col3 = {GPIOA, GPIO_PIN_11}; 	// D10 (input)
-	pin col4 = {GPIOB, GPIO_PIN_5}; 	// D11 (input)
-}keyPins;
+typedef struct{
+	pin row1;
+	pin row2;
+	pin row3;
+	pin row4;
+	pin col1;
+	pin col2;
+	pin col3;
+	pin col4;
+}keyPins_t;
+
+const keyPins_t keyPins = {
+	{GPIOA, GPIO_PIN_12}, 	// D2 (output)
+	{GPIOB, GPIO_PIN_0}, 	// D3 (output)
+	{GPIOB, GPIO_PIN_7}, 	// D4 (output)
+	{GPIOB, GPIO_PIN_6}, 	// D5 (output)
+	{GPIOB, GPIO_PIN_1}, 	// D6 (input)
+	{GPIOA, GPIO_PIN_8}, 	// D9 (input)
+	{GPIOA, GPIO_PIN_11}, 	// D10 (input)
+	{GPIOB, GPIO_PIN_5} 	// D11 (input)
+};
 
 unsigned char readKeyboard(void){
     /* Iterates through the keypad for possible presses. For each row that is

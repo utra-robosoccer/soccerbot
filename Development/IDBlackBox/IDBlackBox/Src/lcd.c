@@ -3,7 +3,7 @@
 
 const pin RS = {GPIOA, GPIO_PIN_1};
 const pin E = {GPIOA, GPIO_PIN_3};
-const GPIO_TypeDef* LCD_PORT = GPIOA;
+GPIO_TypeDef* const LCD_PORT = GPIOA;
 const uint16_t DAT1 = GPIO_PIN_4; // least significant bit pin for data
 const uint16_t DAT4 = GPIO_PIN_7; // most significant bit pin for data
 
@@ -15,7 +15,12 @@ void Delay_us(int us){
 	 * Returns: none
 	 */
 
-
+	// system clock ticks at 32 MHz, i.e. it has a 31 ns period
+	// 33 * 31 ns ~= 1 us
+	volatile int i = 0;
+	while(i < 33 * us){
+		i++;
+	}
 }
 
 inline void pulseE(void){
