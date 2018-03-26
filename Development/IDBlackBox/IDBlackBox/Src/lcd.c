@@ -1,11 +1,21 @@
+/********************************* Includes ************************************/
 #include "lcd.h"
 
+/*********************************** Types ************************************/
+typedef struct{
+	GPIO_TypeDef* pinPort;
+	uint16_t pinNum;
+}pin;
 
+/******************************** Variables ************************************/
 const pin RS = {GPIOA, GPIO_PIN_1};
 const pin E = {GPIOA, GPIO_PIN_3};
 GPIO_TypeDef* const LCD_PORT = GPIOA;
 const uint16_t DAT1 = GPIO_PIN_4; // least significant bit pin for data
 const uint16_t DAT4 = GPIO_PIN_7; // most significant bit pin for data
+
+
+/******************************** Functions ************************************/
 
 void Delay_us(int us){
 	/* Delays (empty CPU cycles) for the specified number of microseconds
@@ -101,8 +111,8 @@ void initLCD(void){
     lcdInst(0b00101000);
     lcdInst(0b00001111);
     lcdInst(0b00000110);
-    __lcd_clear();
+    lcdClear();
 
     /* Enforce on: display, cursor, and cursor blinking. */
-    __lcd_display_control(1, 1, 1);
+    lcdControl(1, 1, 1);
 }
