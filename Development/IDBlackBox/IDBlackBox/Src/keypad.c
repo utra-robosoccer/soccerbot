@@ -1,7 +1,11 @@
-
+/********************************* Includes ************************************/
 #include "keypad.h"
 
-const char keys[] = {'1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'D'};
+/*********************************** Types ************************************/
+typedef struct{
+	GPIO_TypeDef* pinPort;
+	uint16_t pinNum;
+}pin;
 
 typedef struct{
 	pin row1;
@@ -14,6 +18,9 @@ typedef struct{
 	pin col4;
 }keyPins_t;
 
+/******************************** Variables ************************************/
+const char keys[] = {'1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'D'};
+
 const keyPins_t keyPins = {
 	{GPIOA, GPIO_PIN_12}, 	// D2 (output)
 	{GPIOB, GPIO_PIN_0}, 	// D3 (output)
@@ -25,7 +32,9 @@ const keyPins_t keyPins = {
 	{GPIOB, GPIO_PIN_5} 	// D11 (input)
 };
 
-unsigned char readKeyboard(void){
+/******************************** Functions ************************************/
+
+uint8_t readKeypad(void){
     /* Iterates through the keypad for possible presses. For each row that is
      * set high, each column is scanned for a connection (by default, these
      * columns being scanned are pulled to ground). The first key found is
@@ -58,18 +67,19 @@ unsigned char readKeyboard(void){
     return 0xF0;
 }
 
-uint8_t keypadRoutine(void){
+int8_t keypadRoutine(void){
     /* Main keypad routine.
      *
      * Arguments: none
      *
-     * Returns: -1 if no key pressed, and a nonnegative number in range [0, 15] otherwise
+     * Returns: -1 if no key pressed, and a non-negative number in range [0, 15] otherwise.
+     * 			The non-negative number indexes into the keys[] array.
      */
 
 	uint8_t isValid = 0;
 
 	/* Poll the keyboard for a key press. */
-	uint8_t dataOut = readKeyboard();
+	uint8_t dataOut = readKeypad();
 
 	/* Check if a key push is detected. */
 	if (dataOut != 0xF0){
@@ -78,17 +88,17 @@ uint8_t keypadRoutine(void){
 		 * after 20 milliseconds and it is the same as before, it is assumed
 		 * valid. */
 		HAL_Delay(20);
-		if (dataOut == readKeyboard()){
+		if (dataOut == readKeypad()){
 			isValid = 1;
 
 			/* Hold data avaliable pin high while key is pressed. */
-			while (dataOut == readKeyboard()){
+			while (dataOut == readKeypad()){
 			}
 		}
 	}
 
 	if (isValid){
-		return keys[dataOut];
+		return dataOut;
 	}
 	return -1;
 }

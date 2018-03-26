@@ -4,15 +4,10 @@
 
 #include "gpio.h"
 
+extern const char keys[];
+
 /************************ Private Function prototypes *************************/
-uint8_t readKeyboard(void);
-uint8_t keypadRoutine(void);
-
-
-/*********************************** Types ************************************/
-typedef struct{
-	GPIO_TypeDef* pinPort;
-	uint16_t pinNum;
-}pin;
+uint8_t readKeypad(void);
+int8_t keypadRoutine(void);
 
 #endif	/* UART_PIC_H */
