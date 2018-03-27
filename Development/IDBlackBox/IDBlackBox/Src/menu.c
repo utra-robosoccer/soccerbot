@@ -15,12 +15,12 @@
  */
 
 #define MAX_TITLE_SIZE 16
-#define MAX_NUM_SUBMENUS 5
-typedef struct menu{
-	char title[MAX_TITLE_SIZE]; // Message to print to LCD
+#define MAX_NUM_SUBMENUS 4
+struct menu_t{
+	char* title; // Message to print to LCD
 	void (*cmd) (); // Function to invoke at this state
 	uint8_t numSubmenus;
-	struct menu* submenu[MAX_NUM_SUBMENUS];
+	struct menu_t* submenu[MAX_NUM_SUBMENUS];
 };
 
 /******************************** Variables ************************************/
@@ -112,7 +112,34 @@ void menu(void){
 	 * Returns: none
 	 */
 
+	struct menu_t menuSetID;
+	menuSetID.cmd = NULL;
+	menuSetID.title = "Set ID         ";
+	menuSetID.numSubmenus = 0;
 
+	struct menu_t menuReset;
+	menuReset.cmd = NULL;
+	menuReset.title = "Reset          ";
+	menuReset.numSubmenus = 0;
+
+	struct menu_t menuRevive;
+	menuRevive.cmd = NULL;
+	menuRevive.title = "Brdcst Revive  ";
+	menuRevive.numSubmenus = 0;
+
+	struct menu_t menuSetLED;
+	menuSetLED.cmd = NULL;
+	menuSetLED.title = "Set LED        ";
+	menuSetLED.numSubmenus = 0;
+
+	struct menu_t menuTop;
+	menuTop.cmd = NULL;
+	menuTop.title = NULL;
+	menuTop.numSubmenus = 4;
+	menuTop.submenu[0] = &menuSetID;
+	menuTop.submenu[1] = &menuReset;
+	menuTop.submenu[2] = &menuRevive;
+	menuTop.submenu[3] = &menuSetLED;
 	while(1){
 
 	}
