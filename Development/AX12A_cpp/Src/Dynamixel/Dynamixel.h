@@ -53,7 +53,12 @@ extern const uint8_t MIN_VOLTAGE; 		// Minimum operating voltage
 extern const uint16_t MAX_PUNCH;  		// Maximum punch (proportional to minimum current)
 extern const uint8_t MIN_PUNCH;   		// Minimum punch (proportional to minimum current)
 
-
+extern const uint8_t BROADCAST_ID;
+extern const uint8_t DEFAULT_ID;
+extern const uint8_t DEFAULT_RETURN_DELAY;
+extern const uint8_t DEFAULT_TORQUE_ENABLE;
+extern const uint8_t DEFAULT_LED_ENABLE;
+extern const uint8_t DEFAULT_STATUS_RETURN_LEVEL;
 
 
 /*********************************** Macros ***********************************/

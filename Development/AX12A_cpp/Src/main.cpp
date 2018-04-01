@@ -135,8 +135,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  motors[0] -> setLEDEnable(1);
-  while(1);
+//  motors[0] -> setLEDEnable(1);
+//  while(1);
   while (1){
   /* USER CODE END WHILE */
 

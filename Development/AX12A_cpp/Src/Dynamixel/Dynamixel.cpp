@@ -32,9 +32,12 @@ const uint16_t MAX_PUNCH             = 1023;		// Maximum punch (proportional to 
 const uint8_t MIN_PUNCH              = 0;		// Minimum punch (proportional to minimum current)
 
 /* Default register value definitions. */
+const uint8_t BROADCAST_ID					= 0xFE;	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
+const uint8_t DEFAULT_ID					= 0x01;	    // Default motor ID
 const uint8_t DEFAULT_RETURN_DELAY			= 0xFA;	    // Default time motor waits before returning status packet (microseconds)
 const uint8_t DEFAULT_TORQUE_ENABLE			= 0x00;	    // Default motor power state
 const uint8_t DEFAULT_LED_ENABLE			= 0x00;	    // Default LED state
+const uint8_t DEFAULT_STATUS_RETURN_LEVEL	= 0x02;	    // Default condition(s) under which a status packet will be returned (all)
 
 /********************************* Functions *********************************/
 Dynamixel::Dynamixel(MotorInitData* motorInitData) {
