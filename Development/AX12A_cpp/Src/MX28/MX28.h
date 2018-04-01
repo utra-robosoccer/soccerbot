@@ -5,27 +5,41 @@
  *      Author: Admin
  */
 
+
+
+
+/************************* Prevent recursive inclusion ************************/
 #ifndef MX28_MX28_H_
 #define MX28_MX28_H_
 
+
+
+
+/********************************** Includes **********************************/
+#include "../Dynamixel/Dynamixel.h"
+
+
+
+
+/********************************** Classes ***********************************/
 class MX28: public Dynamixel {
 public:
 	/********** Properties **********/
 	uint16_t 			lastTick;					/*!< Time tick (ms) read from motor					*/
 	float	 			lastPWM;					/*!< PWM output as a percentage 					*/
 	uint32_t 			lastVelocityTrajectory;		/*!< --												*/
-	uint32_t 			lastPositionTrajecctory;	/*!< --												*/
+	uint32_t 			lastPositionTrajectory;	/*!< --												*/
 
 
 	/********** Methods **********/
 	// Constructor and destructor
-	MX28();
+	MX28(MotorInitData* motorInitData);
 	virtual ~MX28();
 
 	// Low-level transmission and reception
 	void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 	uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
-	void computeChecksum(uint8_t *arr, int length);
+	uint8_t computeChecksum(uint8_t *arr, int length);
 
 
 	// Setters (use the WRITE DATA instruction)

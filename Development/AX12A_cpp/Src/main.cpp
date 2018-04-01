@@ -46,17 +46,16 @@
 /* USER CODE BEGIN Includes */
 /* Motor driver. */
 #include <math.h>
-#include "../../../../../control/soccer-control/PID.h"  // Control routines & helpers
-#include "../../../../../control/soccer-control/rtwtypes.h"  // Type definitions from auto-gen code
+//#include "../../../../../control/soccer-control/PID.h"  // Control routines & helpers
+//#include "../../../../../control/soccer-control/rtwtypes.h"  // Type definitions from auto-gen code
 //#include "../../../../soccer-control/angles.h"  // Joint trajectories
 
-#include "MotorManager.h"
-#include "Dynamixel.h"
+#include "MotorManager/MotorManager.h"
+#include "Dynamixel/Dynamixel.h"
 #include "AX12A/AX12A.h"
 
 /* Other */
 #include <stdio.h>
-#include "AX12Aold.h"
 
 /* USER CODE END Includes */
 
@@ -122,11 +121,11 @@ int main(void)
   MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
-  MotorManager motorManager = new MotorManager();
+  MotorManager* motorManager = new MotorManager();
 
   for(int motor = MOTOR1; motor <= MOTOR12; motor++){
-	  motorManager.motorTable[motor] -> setGoalVelocity(100);
-	  AX12A* motorPtr = dynamic_cast<AX12A*>(motorManager.motorTable[motor]);
+	  motorManager -> motorTable[motor] -> setGoalVelocity(100);
+	  AX12A* motorPtr = (AX12A*)(motorManager -> motorTable[motor]);
 	  motorPtr -> setComplianceSlope(4);
   }
   /* USER CODE END 2 */
@@ -140,10 +139,10 @@ int main(void)
 
 	  for(int j = 0; j < SIZE; j ++){
 		  for(int motor = MOTOR1; motor <= MOTOR12; motor++){ // NB: motor begins at 0 (i.e. Motor1 corresponds to motor = 0)
-			  motorManager.motorTable[motor] -> setGoalPosition(MOTORANGLES[motor][j] *
-					  	  	  	  	  	  	  	  	  	  	  	motorCalibrationConstants[motor].m +
-																motorCalibrationConstants[motor].a
-																);
+			  motorManager -> motorTable[motor] -> setGoalPosition(MOTORANGLES[motor][j] *
+																	motorCalibrationConstants[motor].m +
+																	motorCalibrationConstants[motor].a
+																	);
 		  }
 		  HAL_Delay(10); // Default from Lukas: 10
 	  }
