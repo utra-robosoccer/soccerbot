@@ -24,46 +24,43 @@ const uint8_t INST_RESET			= 0x06;	    // Resets the Dynamixel actuator(s) speci
 const uint8_t INST_SYNC_WRITE		= 0x83;	    // Used to send commands concurrently to a set of specified motors
 
 /* Register definitions. */
-const uint8_t REG_ID 					= 0x03;		// Motor ID register
-const uint8_t REG_BAUD_RATE				= 0x04;		// Baud rate register
-const uint8_t REG_RETURN_DELAY_TIME		= 0x05;		// Status packet return delay time register
-const uint8_t REG_CW_ANGLE_LIMIT		= 0x06;		// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
-const uint8_t REG_CCW_ANGLE_LIMIT		= 0x08;		// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
-const uint8_t REG_HIGH_VOLTAGE_LIMIT	= 0x0C;		// Maximum voltage limit register
-const uint8_t REG_LOW_VOLTAGE_LIMIT		= 0x0D;		// Minimum voltage limit register
-const uint8_t REG_MAX_TORQUE			= 0x0E;		// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
-const uint8_t REG_STATUS_RETURN_LEVEL	= 0x10;		// Status packet return condition(s) register
-const uint8_t REG_ALARM_LED				= 0x11;		// Alarm LED condition(s) register
-const uint8_t REG_ALARM_SHUTDOWN		= 0x12;		// Alarm shutdown condition(s) register
-const uint8_t REG_TORQUE_ENABLE 		= 0x18;		// Motor power control register
-const uint8_t REG_LED_ENABLE			= 0x19;		// LED control register
-const uint8_t REG_CW_COMPLIANCE_MARGIN	= 0x1A;		// Clockwise compliance margin register
-const uint8_t REG_CCW_COMPLIANCE_MARGIN	= 0x1B;		// Counter-clockwise compliance margin register
-const uint8_t REG_CW_COMPLIANCE_SLOPE	= 0x1C;		// Clockwise compliance slope register
-const uint8_t REG_CCW_COMPLIANCE_SLOPE	= 0x1D;		// Counter-clockwise compliance slope register
-const uint8_t REG_GOAL_POSITION			= 0x1E;		// Goal position register (0x1E = low byte, 0x1F = high byte)
-const uint8_t REG_GOAL_VELOCITY			= 0x20;		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
-const uint8_t REG_GOAL_TORQUE			= 0x22;		// Goal torque register (0x22 = low byte, 0x23 = high byte)
-const uint8_t REG_LOCK_EEPROM 	 		= 0x2F;		// EEPROM lock register
-const uint8_t REG_PUNCH 	 			= 0x30;		// Punch (0x30 = low register, 0x31 = high register)
-const uint8_t REG_CURRENT_POSITION 		= 0x24;		// Current position register (0x24 = low byte, 0x25 = high byte)
-const uint8_t REG_CURRENT_VELOCITY 	 	= 0x26;		// Current velocity register (0x26 = low byte, 0x27 = high byte)
-const uint8_t REG_CURRENT_LOAD 			= 0x28;		// Current load register (0x28 = low byte, 0x29 = high byte)
-const uint8_t REG_CURRENT_VOLTAGE 		= 0x2A;		// Current voltage register
-const uint8_t REG_CURRENT_TEMPERATURE 	= 0x2B;		// Current temperature register
-const uint8_t REG_REGISTERED 			= 0x2C;		// Command execution status register
-const uint8_t REG_MOVING 				= 0x2E;		// Motor motion register
+const uint8_t AX12A_REG_ID 					    = 0x03;		// Motor ID register
+const uint8_t AX12A_REG_BAUD_RATE				= 0x04;		// Baud rate register
+const uint8_t AX12A_REG_RETURN_DELAY_TIME		= 0x05;		// Status packet return delay time register
+const uint8_t AX12A_REG_CW_ANGLE_LIMIT		    = 0x06;		// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
+const uint8_t AX12A_REG_CCW_ANGLE_LIMIT		    = 0x08;		// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
+const uint8_t AX12A_REG_HIGH_VOLTAGE_LIMIT	    = 0x0C;		// Maximum voltage limit register
+const uint8_t AX12A_REG_LOW_VOLTAGE_LIMIT		= 0x0D;		// Minimum voltage limit register
+const uint8_t AX12A_REG_MAX_TORQUE			    = 0x0E;		// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
+const uint8_t AX12A_REG_STATUS_RETURN_LEVEL	    = 0x10;		// Status packet return condition(s) register
+const uint8_t AX12A_REG_ALARM_LED				= 0x11;		// Alarm LED condition(s) register
+const uint8_t AX12A_REG_ALARM_SHUTDOWN		    = 0x12;		// Alarm shutdown condition(s) register
+const uint8_t AX12A_REG_TORQUE_ENABLE 		    = 0x18;		// Motor power control register
+const uint8_t AX12A_REG_LED_ENABLE			    = 0x19;		// LED control register
+const uint8_t AX12A_REG_CW_COMPLIANCE_MARGIN	= 0x1A;		// Clockwise compliance margin register
+const uint8_t AX12A_REG_CCW_COMPLIANCE_MARGIN	= 0x1B;		// Counter-clockwise compliance margin register
+const uint8_t AX12A_REG_CW_COMPLIANCE_SLOPE	    = 0x1C;		// Clockwise compliance slope register
+const uint8_t AX12A_REG_CCW_COMPLIANCE_SLOPE    = 0x1D;		// Counter-clockwise compliance slope register
+const uint8_t AX12A_REG_GOAL_POSITION		    = 0x1E;		// Goal position register (0x1E = low byte, 0x1F = high byte)
+const uint8_t AX12A_REG_GOAL_VELOCITY		    = 0x20;		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
+const uint8_t AX12A_REG_GOAL_TORQUE			    = 0x22;		// Goal torque register (0x22 = low byte, 0x23 = high byte)
+const uint8_t AX12A_REG_LOCK_EEPROM 	 	    = 0x2F;		// EEPROM lock register
+const uint8_t AX12A_REG_PUNCH 	 			    = 0x30;		// Punch (0x30 = low register, 0x31 = high register)
+const uint8_t AX12A_REG_CURRENT_POSITION 	    = 0x24;		// Current position register (0x24 = low byte, 0x25 = high byte)
+const uint8_t AX12A_REG_CURRENT_VELOCITY 	    = 0x26;		// Current velocity register (0x26 = low byte, 0x27 = high byte)
+const uint8_t AX12A_REG_CURRENT_LOAD 		    = 0x28;		// Current load register (0x28 = low byte, 0x29 = high byte)
+const uint8_t AX12A_REG_CURRENT_VOLTAGE 	    = 0x2A;		// Current voltage register
+const uint8_t AX12A_REG_CURRENT_TEMPERATURE     = 0x2B;		// Current temperature register
+const uint8_t AX12A_REG_REGISTERED 			    = 0x2C;		// Command execution status register
+const uint8_t AX12A_REG_MOVING 				    = 0x2E;		// Motor motion register
 
 /* Default register value definitions. */
-const uint8_t BROADCAST_ID					= 0xFE;	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
-const uint8_t DEFAULT_ID					= 0x01;	    // Default motor ID
 const uint8_t DEFAULT_BAUD_RATE				= 0x01;	    // Default baud rate
 const uint16_t DEFAULT_CW_ANGLE_LIMIT		= 0x0000;	// Default clockwise angle limit
 const uint16_t DEFAULT_CCW_ANGLE_LIMIT		= 0x03FF;	// Default counter-clockwise angle limit
 const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT	= 0xBE;	    // Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
 const uint8_t DEFAULT_LOW_VOLTAGE_LIMIT		= 0x3C;	    // Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
 const uint16_t DEFAULT_MAXIMUM_TORQUE		= 0x03FF;	// Default maximum torque limit (10-bit resolution percentage)
-const uint8_t DEFAULT_STATUS_RETURN_LEVEL	= 0x02;	    // Default condition(s) under which a status packet will be returned (all)
 const uint8_t DEFAULT_ALARM_LED				= 0x24;	    // Default condition(s) under which the alarm LED will be set
 const uint8_t DEFAULT_ALARM_SHUTDOWN		= 0x24;	    // Default condition(s) under which the motor will shut down due to an alarm
 const uint8_t DEFAULT_CW_COMPLIANCE_MARGIN	= 0x01;	    // Default clockwise compliance margin (position error)
@@ -81,11 +78,11 @@ AX12A::AX12A(MotorInitData* motorInitData) :
 	Dynamixel(motorInitData)
 {
 	// TODO Auto-generated constructor stub
-	this -> REG_GOAL_POSITION = AX12A::REG_GOAL_POSITION;
-	this -> REG_GOAL_VELOCITY = AX12A::REG_GOAL_POSITION;
-	this -> REG_TORQUE_ENABLE = AX12A::REG_TORQUE_ENABLE;
-	this -> REG_RETURN_DELAY_TIME = AX12A::REG_RETURN_DELAY_TIME;
-	this -> REG_LED_ENABLE = AX12A::REG_LED_ENABLE;
+	this -> REG_GOAL_POSITION = AX12A_REG_GOAL_POSITION;
+	this -> REG_GOAL_VELOCITY = AX12A_REG_GOAL_VELOCITY;
+	this -> REG_TORQUE_ENABLE = AX12A_REG_TORQUE_ENABLE;
+	this -> REG_RETURN_DELAY_TIME = AX12A_REG_RETURN_DELAY_TIME;
+	this -> REG_LED_ENABLE = AX12A_REG_LED_ENABLE;
 }
 
 AX12A::~AX12A() {
@@ -151,7 +148,7 @@ void AX12A::setCWComplianceSlope(uint8_t CWcomplianceSlope){
 	}
 
 	/* Write data to motor. */
-	AX12A::dataWriter(8, REG_CW_COMPLIANCE_SLOPE, step, -1);
+	AX12A::dataWriter(8, AX12A_REG_CW_COMPLIANCE_SLOPE, step, -1);
 }
 
 void AX12A::setCCWComplianceSlope(uint8_t CCWcomplianceSlope){
@@ -197,7 +194,7 @@ void AX12A::setCCWComplianceSlope(uint8_t CCWcomplianceSlope){
 	}
 
 	/* Write data to motor. */
-	AX12A::dataWriter(8, REG_CCW_COMPLIANCE_SLOPE, step, -1);
+	AX12A::dataWriter(8, AX12A_REG_CCW_COMPLIANCE_SLOPE, step, -1);
 }
 
 void AX12A::setComplianceSlope(uint8_t complianceSlope){
@@ -332,7 +329,7 @@ void AX12A::setStatusReturnLevel(uint8_t status_data){
 	}
 
 	/* Write data to motor. */
-	AX12A::dataWriter(8, REG_STATUS_RETURN_LEVEL, status_data, -1);
+	AX12A::dataWriter(8, AX12A_REG_STATUS_RETURN_LEVEL, status_data, -1);
 }
 
 uint8_t AX12A::computeChecksum(uint8_t *arr, int length){

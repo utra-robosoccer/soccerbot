@@ -28,20 +28,14 @@ extern const uint8_t INST_RESET;
 extern const uint8_t INST_SYNC_WRITE;
 
 /* Default register value definitions. */
-extern const uint8_t BROADCAST_ID;
-extern const uint8_t DEFAULT_ID;
 extern const uint8_t DEFAULT_BAUD_RATE;
-extern const uint8_t DEFAULT_RETURN_DELAY;
 extern const uint16_t DEFAULT_CW_ANGLE_LIMIT;
 extern const uint16_t DEFAULT_CCW_ANGLE_LIMIT;
 extern const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT;
 extern const uint8_t DEFAULT_LOW_VOLTAGE_LIMIT;
 extern const uint16_t DEFAULT_MAXIMUM_TORQUE;
-extern const uint8_t DEFAULT_STATUS_RETURN_LEVEL;
 extern const uint8_t DEFAULT_ALARM_LED;
 extern const uint8_t DEFAULT_ALARM_SHUTDOWN;
-extern const uint8_t DEFAULT_TORQUE_ENABLE;
-extern const uint8_t DEFAULT_LED_ENABLE;
 extern const uint8_t DEFAULT_CW_COMPLIANCE_MARGIN;
 extern const uint8_t DEFAULT_CCW_COMPLIANCE_MARGIN;
 extern const uint8_t DEFAULT_CW_COMPLIANCE_SLOPE;
