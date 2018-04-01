@@ -94,15 +94,15 @@ class Dynamixel {
 
 		uint8_t REG_GOAL_POSITION;
 		uint8_t REG_GOAL_VELOCITY;
+		uint8_t REG_TORQUE_ENABLE;
+		uint8_t REG_RETURN_DELAY_TIME;
+		uint8_t REG_LED_ENABLE;
 
 		/********** Methods **********/
 		// Constructor and destructor
 		Dynamixel(MotorInitData* motorInitData);
 		virtual ~Dynamixel();
-
-
-		// Initialization method
-		int Init(); // TODO: While the constructor assigns values to object properties, this function should
+		virtual int Init() =0; // TODO: While the constructor assigns values to object properties, this function should
 					// perform the actual distribution of these parameters to the motors. That is, the
 					// constructor should not perform any I/O with motors, while this initialization function should.
 					// This ensures that object creation will succeed, even when initialization of motors may fail

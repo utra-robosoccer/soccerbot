@@ -31,8 +31,10 @@ const uint8_t MIN_VOLTAGE            = 6;		// Minimum operating voltage
 const uint16_t MAX_PUNCH             = 1023;		// Maximum punch (proportional to minimum current)
 const uint8_t MIN_PUNCH              = 0;		// Minimum punch (proportional to minimum current)
 
-
-
+/* Default register value definitions. */
+const uint8_t DEFAULT_RETURN_DELAY			= 0xFA;	    // Default time motor waits before returning status packet (microseconds)
+const uint8_t DEFAULT_TORQUE_ENABLE			= 0x00;	    // Default motor power state
+const uint8_t DEFAULT_LED_ENABLE			= 0x00;	    // Default LED state
 
 /********************************* Functions *********************************/
 Dynamixel::Dynamixel(MotorInitData* motorInitData) {
@@ -66,16 +68,84 @@ Dynamixel::Dynamixel(MotorInitData* motorInitData) {
 		this -> dataDirPinNum = motorInitData -> dataDirPinNum;
 		this -> isJointMode = 1;
 
+		/* The following must be set properly in the constructor
+		 * of the derived class.
+		 */
 		this -> REG_GOAL_POSITION = 0;
 		this -> REG_GOAL_VELOCITY = 0;
+		this -> REG_TORQUE_ENABLE = 0;
+		this -> REG_RETURN_DELAY_TIME = 0;
+		this -> REG_LED_ENABLE = 0;
 }
 
 Dynamixel::~Dynamixel() {
 	// TODO Auto-generated destructor stub
 }
 
-int Dynamixel::Init(){
-	return -1;
+void Dynamixel::setReturnDelayTime(double microSec){
+	/* Sets the time, in microseconds, that the motor should wait before returning a status packet.
+	 *
+	 * Instruction register address: 0x05(EEPROM)
+	 * Default value: 250 (0xFA)
+	 *
+	 * Arguments: microSec, the time in microseconds to delay. Arguments in range [2, 508] are valid. Default: 500
+	 *
+	 * Returns: none
+	 */
+
+	/* Compute validity. */
+	uint8_t motor_data;
+	if((microSec < 2) || (microSec > 508)){
+		motor_data = DEFAULT_RETURN_DELAY;
+	}
+	else{
+		motor_data = (uint8_t)(microSec / 2);
+	}
+
+	/* Write data to motor. */
+	dataWriter(8, this -> REG_RETURN_DELAY_TIME, motor_data, 0);
+}
+
+void Dynamixel::setTorqueEnable(uint8_t isEnabled){
+	/* Enables or disables torque for current motor.
+	 *
+	 * Instruction register address: 0x18 (RAM)
+	 * Default value: 0x00
+	 *
+	 * Arguments: isEnabled, if 1, then generates torque by impressing power to the motor
+	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
+	 *
+	 * Returns: none
+	 */
+
+	/* Evaluate argument validity. */
+	if((isEnabled != 1) && (isEnabled != 0)){
+		isEnabled = DEFAULT_TORQUE_ENABLE;
+	}
+
+	/* Write data to motor. */
+	dataWriter(8, this -> REG_TORQUE_ENABLE, isEnabled, 0);
+}
+
+void Dynamixel::setLEDEnable(uint8_t isEnabled){
+	/* Toggles the motor LED.
+	 *
+	 * Register address: 0x19
+	 * Default value: 0x00
+	 *
+	 * Arguments: isEnabled, 0 if LED off
+	 * 			  			 1 if LED on
+	 *
+	 * Returns: none
+	 */
+
+	/* Evaluate argument validity. */
+	if((isEnabled != 1) && (isEnabled != 0)){
+		isEnabled = DEFAULT_LED_ENABLE;
+	}
+
+	/* Write data to motor. */
+	dataWriter(8, this -> REG_LED_ENABLE, isEnabled, -1);
 }
 
 void Dynamixel::setGoalPosition(double goalAngle){
@@ -111,7 +181,7 @@ void Dynamixel::setGoalPosition(double goalAngle){
 	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
 
 	/* Write data to motor. */
-	this -> dataWriter(9, this -> REG_GOAL_POSITION, lowByte, highByte);
+	dataWriter(9, this -> REG_GOAL_POSITION, lowByte, highByte);
 }
 
 void Dynamixel::setGoalVelocity(double goalVelocity){
@@ -154,5 +224,5 @@ void Dynamixel::setGoalVelocity(double goalVelocity){
 	uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal velocity
 
 	/* Write data to motor. */
-	dataWriter(9, REG_GOAL_VELOCITY, lowByte, highByte); // Implemented in derived classes
+	dataWriter(9, this -> REG_GOAL_VELOCITY, lowByte, highByte); // Implemented in derived classes
 }

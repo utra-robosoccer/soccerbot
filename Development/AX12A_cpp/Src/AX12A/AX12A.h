@@ -59,6 +59,7 @@ public:
 	// Constructor and destructor
 	AX12A(MotorInitData* motorInitData);
 	virtual ~AX12A();
+	int Init();
 
 	// Low-level transmission and reception
 	void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);

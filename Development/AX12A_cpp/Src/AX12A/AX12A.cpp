@@ -58,7 +58,6 @@ const uint8_t REG_MOVING 				= 0x2E;		// Motor motion register
 const uint8_t BROADCAST_ID					= 0xFE;	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
 const uint8_t DEFAULT_ID					= 0x01;	    // Default motor ID
 const uint8_t DEFAULT_BAUD_RATE				= 0x01;	    // Default baud rate
-const uint8_t DEFAULT_RETURN_DELAY			= 0xFA;	    // Default time motor waits before returning status packet (microseconds)
 const uint16_t DEFAULT_CW_ANGLE_LIMIT		= 0x0000;	// Default clockwise angle limit
 const uint16_t DEFAULT_CCW_ANGLE_LIMIT		= 0x03FF;	// Default counter-clockwise angle limit
 const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT	= 0xBE;	    // Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
@@ -67,8 +66,6 @@ const uint16_t DEFAULT_MAXIMUM_TORQUE		= 0x03FF;	// Default maximum torque limit
 const uint8_t DEFAULT_STATUS_RETURN_LEVEL	= 0x02;	    // Default condition(s) under which a status packet will be returned (all)
 const uint8_t DEFAULT_ALARM_LED				= 0x24;	    // Default condition(s) under which the alarm LED will be set
 const uint8_t DEFAULT_ALARM_SHUTDOWN		= 0x24;	    // Default condition(s) under which the motor will shut down due to an alarm
-const uint8_t DEFAULT_TORQUE_ENABLE			= 0x00;	    // Default motor power state
-const uint8_t DEFAULT_LED_ENABLE			= 0x00;	    // Default LED state
 const uint8_t DEFAULT_CW_COMPLIANCE_MARGIN	= 0x01;	    // Default clockwise compliance margin (position error)
 const uint8_t DEFAULT_CCW_COMPLIANCE_MARGIN	= 0x01;	    // Default counter-clockwise compliance margin (position error)
 const uint8_t DEFAULT_CW_COMPLIANCE_SLOPE	= 0x20;	    // Default clockwise compliance slope (torque near goal position)
@@ -86,10 +83,29 @@ AX12A::AX12A(MotorInitData* motorInitData) :
 	// TODO Auto-generated constructor stub
 	this -> REG_GOAL_POSITION = AX12A::REG_GOAL_POSITION;
 	this -> REG_GOAL_VELOCITY = AX12A::REG_GOAL_POSITION;
+	this -> REG_TORQUE_ENABLE = AX12A::REG_TORQUE_ENABLE;
+	this -> REG_RETURN_DELAY_TIME = AX12A::REG_RETURN_DELAY_TIME;
+	this -> REG_LED_ENABLE = AX12A::REG_LED_ENABLE;
 }
 
 AX12A::~AX12A() {
 	// TODO Auto-generated destructor stub
+}
+
+int AX12A::Init(){
+	/* Configure motor to return status packets only for read commands. */
+	AX12A::setStatusReturnLevel(1);
+	HAL_Delay(10);
+
+	/* Set minimum delay return time (2 microseconds). */
+	AX12A::setReturnDelayTime(2);
+	HAL_Delay(10);
+
+	/* Impress current to motor to enable torque. */
+	AX12A::setTorqueEnable(1);
+	HAL_Delay(10);
+
+	return 1;
 }
 
 void AX12A::setCWComplianceSlope(uint8_t CWcomplianceSlope){

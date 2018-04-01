@@ -124,25 +124,31 @@ int main(void)
   MotorManager* motorManager = new MotorManager();
 
   for(int motor = MOTOR1; motor <= MOTOR12; motor++){
-	  motorManager -> motorTable[motor] -> setGoalVelocity(100);
 	  AX12A* motorPtr = (AX12A*)(motorManager -> motorTable[motor]);
+	  motorPtr -> Init();
+	  motorPtr -> setGoalVelocity(100);
 	  motorPtr -> setComplianceSlope(4);
   }
+
+  std::vector<Dynamixel*> motors = motorManager -> motorTable;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  motors[0] -> setLEDEnable(1);
+  while(1);
   while (1){
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
 
 	  for(int j = 0; j < SIZE; j ++){
-		  for(int motor = MOTOR1; motor <= MOTOR12; motor++){ // NB: motor begins at 0 (i.e. Motor1 corresponds to motor = 0)
-			  motorManager -> motorTable[motor] -> setGoalPosition(MOTORANGLES[motor][j] *
-																	motorCalibrationConstants[motor].m +
-																	motorCalibrationConstants[motor].a
-																	);
+		  for(int motor = MOTOR1; motor <= MOTOR12; motor++){
+			  // NB: motor begins at 0 (i.e. MOTOR1 corresponds to the motor at index 0 of the table)
+			  motors[motor] -> setGoalPosition(MOTORANGLES[motor][j] *
+											   motorCalibrationConstants[motor].m +
+											   motorCalibrationConstants[motor].a
+											   );
 		  }
 		  HAL_Delay(10); // Default from Lukas: 10
 	  }
