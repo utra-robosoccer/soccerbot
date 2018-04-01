@@ -131,7 +131,7 @@ class Dynamixel {
 		void setHighestVoltageLimit(double highestVoltage); // (EEPROM)
 		void setLowestVoltageLimit(double lowestVoltage); // (EEPROM)
 
-		virtual void setStatusReturnLevel(uint8_t status_data); // (EEPROM in AX-12A, RAM in MX-28)
+		virtual void setStatusReturnLevel(uint8_t status_data) =0; // (EEPROM in AX-12A, RAM in MX-28)
 
 		void setTorqueEnable(uint8_t isEnabled); // (RAM)
 		void setLEDEnable(uint8_t isEnabled); // (RAM)
