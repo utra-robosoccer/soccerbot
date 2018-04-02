@@ -41,6 +41,15 @@
 extern const uint TRANSMIT_TIMEOUT;
 extern const uint RECEIVE_TIMEOUT;
 
+/* Instruction set definitions. */
+extern const uint8_t INST_PING;
+extern const uint8_t INST_READ_DATA;
+extern const uint8_t INST_WRITE_DATA;
+extern const uint8_t INST_REG_WRITE;
+extern const uint8_t INST_ACTION;
+extern const uint8_t INST_RESET;
+extern const uint8_t INST_SYNC_WRITE;
+
 /* Value limit definitions. */
 extern const double MAX_VELOCITY;		// Maximum angular velocity (RPM)
 extern const double MIN_VELOCITY;		// Minimum angular velocity (RPM)
@@ -55,6 +64,7 @@ extern const uint8_t MIN_PUNCH;   		// Minimum punch (proportional to minimum cu
 
 extern const uint8_t BROADCAST_ID;
 extern const uint8_t DEFAULT_ID;
+extern const uint8_t DEFAULT_BAUD_RATE;
 extern const uint8_t DEFAULT_RETURN_DELAY;
 extern const uint8_t DEFAULT_TORQUE_ENABLE;
 extern const uint8_t DEFAULT_LED_ENABLE;
@@ -86,10 +96,9 @@ class Dynamixel {
 		/********** Properties **********/
 		uint8_t					id;						/*!< Motor identification (0-252)					*/
 		uint32_t				baudRate;				/*!< UART communication baud rate					*/
-		uint16_t				lastPosition;			/*!< Position read from motor						*/
+		float				    lastPosition;			/*!< Position read from motor						*/
 		float					lastVelocity;			/*!< Velocity read from motor						*/
-		uint8_t					lastLoad;				/*!< Load read from motor							*/
-		uint8_t					lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
+		float					lastLoad;				/*!< Load read from motor (< 0 -> CW | > 0 -> CCW)	*/
 		float					lastVoltage;			/*!< Voltage read from motor						*/
 		uint8_t					lastTemperature;		/*!< Temperature read from motor					*/
 		UART_HandleTypeDef*		uartHandle;				/*!< UART handle for motor							*/
@@ -97,11 +106,20 @@ class Dynamixel {
 		uint16_t				dataDirPinNum;			/*!< Data direction pin number						*/
 		bool 					isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
 
+		/* Motor-specific properties. */
+		uint16_t angleResolution;
+
+		uint8_t REG_ID;
+		uint8_t REG_BAUD_RATE;
 		uint8_t REG_GOAL_POSITION;
 		uint8_t REG_GOAL_VELOCITY;
 		uint8_t REG_TORQUE_ENABLE;
 		uint8_t REG_RETURN_DELAY_TIME;
 		uint8_t REG_LED_ENABLE;
+		uint8_t REG_CURRENT_POSITION;
+		uint8_t REG_CURRENT_VELOCITY;
+		uint8_t REG_CURRENT_LOAD;
+
 
 		/********** Methods **********/
 		// Constructor and destructor
@@ -128,7 +146,7 @@ class Dynamixel {
 
 		// Setters (use the WRITE DATA instruction)
 		void setID(uint8_t ID); // (EEPROM)
-		void setBaudRate(double baud); // (EEPROM)
+		virtual void setBaudRate(double baud) =0; // (EEPROM)
 		void setReturnDelayTime(double microSec); // (EEPROM)
 		void setMinAngle(double minAngle); // (EEPROM) -- CW angle limit
 		void setMaxAngle(double maxAngle); // (EEPROM) -- CCW angle limit

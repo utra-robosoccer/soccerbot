@@ -35,6 +35,7 @@ public:
 	// Constructor and destructor
 	MX28(MotorInitData* motorInitData);
 	virtual ~MX28();
+	int Init();
 
 	// Low-level transmission and reception
 	void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
@@ -43,6 +44,8 @@ public:
 
 
 	// Setters (use the WRITE DATA instruction)
+	void setBaudRate(double baud); // (EEPROM)
+
 	void setDriveMode(); // (EEPROM)
 	void setOperatingMode(); // (EEPROM)
 	void setShadowID(); // (EEPROM)
@@ -53,6 +56,8 @@ public:
 	void setAccelerationLimit(); // (EEPROM)
 	void setVelocityLimit(); // (EEPROM)
 	void setShutdownConditions(); // (EEPROM)
+
+	void setStatusReturnLevel(uint8_t status_data); // (RAM in MX-28)
 
 	void setHardwareErrorStatus(); // (RAM)
 	void setVelocityIGain(); // (RAM)
