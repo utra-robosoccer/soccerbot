@@ -18,17 +18,8 @@
 /********************************** Includes **********************************/
 #include "../Dynamixel/Dynamixel.h"
 
-/* Instruction set definitions. */
-extern const uint8_t INST_PING;
-extern const uint8_t INST_READ_DATA;
-extern const uint8_t INST_WRITE_DATA;
-extern const uint8_t INST_REG_WRITE;
-extern const uint8_t INST_ACTION;
-extern const uint8_t INST_RESET;
-extern const uint8_t INST_SYNC_WRITE;
-
 /* Default register value definitions. */
-extern const uint8_t DEFAULT_BAUD_RATE;
+
 extern const uint16_t DEFAULT_CW_ANGLE_LIMIT;
 extern const uint16_t DEFAULT_CCW_ANGLE_LIMIT;
 extern const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT;
@@ -55,12 +46,15 @@ public:
 	virtual ~AX12A();
 	int Init();
 
+
 	// Low-level transmission and reception
 	void dataWriter(uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
 	uint16_t dataReader(uint8_t readAddr, uint8_t readLength);
 	uint8_t computeChecksum(uint8_t *arr, int length);
 
+
 	// Setters (use the WRITE DATA instruction)
+	void setBaudRate(double baud); // (EEPROM)
 	void setGoalTorque(double goalTorque); // (RAM)
 	void setMaxTorque(double maxTorque); // (EEPROM)
 	void setAlarmLED(uint8_t alarm_LED_data); // (EEPROM)
@@ -71,12 +65,13 @@ public:
 	void setCCWComplianceSlope(uint8_t CCWcomplianceSlope); // (RAM)
 	void setEEPROMLock(); // (RAM)
 	void setPunch(double punch); // (RAM)
-	void reset();
 
 	void setStatusReturnLevel(uint8_t status_data); // (EEPROM in AX-12A)
 
+
 	// Getters (use the READ DATA instruction)
 	bool isInJointMode();
+
 
 	// Interfaces for previously-defined functions
 	void revive(uint8_t ID); // TODO: Check this over for correctness in the context of several motors

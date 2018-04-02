@@ -15,14 +15,6 @@
 
 
 /********************************* Constants *********************************/
-const uint8_t INST_PING				= 0x01;	    // Gets a status packet
-const uint8_t INST_READ_DATA		= 0x02;	    // Reads data from a motor register
-const uint8_t INST_WRITE_DATA		= 0x03;	    // Writes data for immediate execution
-const uint8_t INST_REG_WRITE		= 0x04;	    // Registers an instruction to be executed at a later time
-const uint8_t INST_ACTION			= 0x05;	    // Triggers instructions registered by INST_REG_WRITE
-const uint8_t INST_RESET			= 0x06;	    // Resets the Dynamixel actuator(s) specified
-const uint8_t INST_SYNC_WRITE		= 0x83;	    // Used to send commands concurrently to a set of specified motors
-
 /* Register definitions. */
 const uint8_t AX12A_REG_ID 					    = 0x03;		// Motor ID register
 const uint8_t AX12A_REG_BAUD_RATE				= 0x04;		// Baud rate register
@@ -55,7 +47,6 @@ const uint8_t AX12A_REG_REGISTERED 			    = 0x2C;		// Command execution status r
 const uint8_t AX12A_REG_MOVING 				    = 0x2E;		// Motor motion register
 
 /* Default register value definitions. */
-const uint8_t DEFAULT_BAUD_RATE				= 0x01;	    // Default baud rate
 const uint16_t DEFAULT_CW_ANGLE_LIMIT		= 0x0000;	// Default clockwise angle limit
 const uint16_t DEFAULT_CCW_ANGLE_LIMIT		= 0x03FF;	// Default counter-clockwise angle limit
 const uint8_t DEFAULT_HIGH_VOLTAGE_LIMIT	= 0xBE;	    // Default permitted maximum voltage (0xBE = 140 -> 14.0 V)
@@ -74,15 +65,23 @@ const uint16_t DEFAULT_PUNCH				= 0x0020;	// Default punch
 
 
 /********************************* Functions *********************************/
+// Constructor and destructor
 AX12A::AX12A(MotorInitData* motorInitData) :
 	Dynamixel(motorInitData)
 {
 	// TODO Auto-generated constructor stub
+	this -> angleResolution = 1023; // 2 ^ 10
+
+	this -> REG_ID = AX12A_REG_ID;
+	this -> REG_BAUD_RATE = AX12A_REG_BAUD_RATE;
 	this -> REG_GOAL_POSITION = AX12A_REG_GOAL_POSITION;
 	this -> REG_GOAL_VELOCITY = AX12A_REG_GOAL_VELOCITY;
 	this -> REG_TORQUE_ENABLE = AX12A_REG_TORQUE_ENABLE;
 	this -> REG_RETURN_DELAY_TIME = AX12A_REG_RETURN_DELAY_TIME;
 	this -> REG_LED_ENABLE = AX12A_REG_LED_ENABLE;
+	this -> REG_CURRENT_POSITION = 	AX12A_REG_CURRENT_POSITION;
+	this -> REG_CURRENT_VELOCITY = AX12A_REG_CURRENT_VELOCITY;
+	this -> REG_CURRENT_LOAD = AX12A_REG_CURRENT_LOAD;
 }
 
 AX12A::~AX12A() {
@@ -105,113 +104,10 @@ int AX12A::Init(){
 	return 1;
 }
 
-void AX12A::setCWComplianceSlope(uint8_t CWcomplianceSlope){
-	/* Sets the clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 *
-	 * Instruction register address: 0x1C (RAM)
-	 * Default value: 0x20
-	 *
-	 * Arguments: CWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
-	 *
-	 * Returns: none
-	 */
 
-	/* Translate the step into motor data. */
-	uint8_t step;
 
-	if(CWcomplianceSlope == 1){
-		step = 2;
-	}
-	else if(CWcomplianceSlope == 2){
-		step = 4;
-	}
-	else if(CWcomplianceSlope == 3){
-		step = 8;
-	}
-	else if(CWcomplianceSlope == 4){
-		step = 16;
-	}
-	else if(CWcomplianceSlope == 5){
-		step = 32;
-	}
-	else if(CWcomplianceSlope == 6){
-		step = 64;
-	}
-	else if(CWcomplianceSlope == 7){
-		step = 128;
-	}
-	else{
-		step = DEFAULT_CW_COMPLIANCE_SLOPE;
-	}
 
-	/* Write data to motor. */
-	AX12A::dataWriter(8, AX12A_REG_CW_COMPLIANCE_SLOPE, step, -1);
-}
-
-void AX12A::setCCWComplianceSlope(uint8_t CCWcomplianceSlope){
-	/* Sets the counter-clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 *
-	 * Instruction register address: 0x1D (RAM)
-	 * Default value: 0x20
-	 *
-	 * Arguments: CCWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
-	 *
-	 * Returns: none
-	 */
-
-	/* Translate the step into motor data. */
-	uint8_t step;
-
-	if(CCWcomplianceSlope == 1){
-		step = 2;
-	}
-	else if(CCWcomplianceSlope == 2){
-		step = 4;
-	}
-	else if(CCWcomplianceSlope == 3){
-		step = 8;
-	}
-	else if(CCWcomplianceSlope == 4){
-		step = 16;
-	}
-	else if(CCWcomplianceSlope == 5){
-		step = 32;
-	}
-	else if(CCWcomplianceSlope == 6){
-		step = 64;
-	}
-	else if(CCWcomplianceSlope == 7){
-		step = 128;
-	}
-	else{
-		step = DEFAULT_CCW_COMPLIANCE_SLOPE;
-	}
-
-	/* Write data to motor. */
-	AX12A::dataWriter(8, AX12A_REG_CCW_COMPLIANCE_SLOPE, step, -1);
-}
-
-void AX12A::setComplianceSlope(uint8_t complianceSlope){
-	/* Sets both the clockwise and counterclockwise compliance slopes.
-	 * The higher the value, the more flexibility that is obtained. That is, a high value
-	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
-	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
-	 *
-	 *
-	 * Arguments: complianceSlope, arguments in range [1, 7], with 1 being the least flexible
-	 *
-	 */
-
-	AX12A::setCWComplianceSlope(complianceSlope);
-	AX12A::setCWComplianceSlope(complianceSlope);
-}
-
+// Low-level transmission and reception
 void AX12A::dataWriter(uint8_t arrSize, \
 						   uint8_t writeAddr, uint8_t param1, uint8_t param2){
 	/* Handles sending of data since this nearly identical for all setters.
@@ -310,6 +206,153 @@ uint16_t AX12A::dataReader(uint8_t readAddr, uint8_t readLength){
 	}
 }
 
+uint8_t AX12A::computeChecksum(uint8_t *arr, int length){
+	/* Compute the checksum for data to be transmitted.
+	 *
+	 * Arguments: arr, the array to be transmitted and ran through the checksum function
+	 * 			  length, the total length of the array arr
+	 *
+	 * Returns: the 1-byte number that is the checksum
+	 */
+
+	/* Local variable declaration. */
+	uint8_t accumulate = 0;
+
+	/* Loop through the array starting from the 2nd element of the array and finishing before the last
+	 * since the last is where the checksum will be stored. */
+	for(uint8_t i = 2; i < length - 1; i++){
+		accumulate += arr[i];
+	}
+
+	return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
+}
+
+
+
+
+// Setters (use the WRITE DATA instruction)
+// TODO: test setBaudRate
+void AX12A::setBaudRate(double baud){
+	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
+	 *
+	 * Default value: 0x01
+	 *
+	 * Arguments: baud, the baud rate. Arguments in range [7844, 1000000] are valid
+	 *
+	 * Returns: none
+	 */
+
+	/* Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps. */
+	uint8_t baudArg;
+
+	if(baud > 0){
+		/* Valid for baud in range [7844, 1000000]. Will be converted to 8-bit resolution. */
+		baudArg = (uint8_t)((2000000 / baud) - 1);
+		this -> baudRate = baud;
+	}
+	else{
+		/* Default to 1 Mbps. */
+		this -> baudRate = 1000000;
+		baudArg = DEFAULT_BAUD_RATE;
+	}
+
+	/* Write data to motor. */
+	AX12A::dataWriter(8, this -> REG_BAUD_RATE, baudArg, 0);
+}
+
+void AX12A::setCWComplianceSlope(uint8_t CWcomplianceSlope){
+	/* Sets the clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
+	 * The higher the value, the more flexibility that is obtained. That is, a high value
+	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
+	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
+	 *
+	 * Instruction register address: 0x1C (RAM)
+	 * Default value: 0x20
+	 *
+	 * Arguments: CWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
+	 *
+	 * Returns: none
+	 */
+
+	/* Translate the step into motor data. */
+	uint8_t step;
+
+	if(CWcomplianceSlope == 1){
+		step = 2;
+	}
+	else if(CWcomplianceSlope == 2){
+		step = 4;
+	}
+	else if(CWcomplianceSlope == 3){
+		step = 8;
+	}
+	else if(CWcomplianceSlope == 4){
+		step = 16;
+	}
+	else if(CWcomplianceSlope == 5){
+		step = 32;
+	}
+	else if(CWcomplianceSlope == 6){
+		step = 64;
+	}
+	else if(CWcomplianceSlope == 7){
+		step = 128;
+	}
+	else{
+		step = DEFAULT_CW_COMPLIANCE_SLOPE;
+	}
+
+	/* Write data to motor. */
+	AX12A::dataWriter(8, AX12A_REG_CW_COMPLIANCE_SLOPE, step, 0);
+}
+
+void AX12A::setCCWComplianceSlope(uint8_t CCWcomplianceSlope){
+	/* Sets the counter-clockwise compliance slope for the current motor, which sets the level of torque near the goal position.
+	 * The higher the value, the more flexibility that is obtained. That is, a high value
+	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
+	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
+	 *
+	 * Instruction register address: 0x1D (RAM)
+	 * Default value: 0x20
+	 *
+	 * Arguments: CCWcomplianceSlope, arguments in range [1, 7], with 1 being the least flexible
+	 *
+	 * Returns: none
+	 */
+
+	/* Translate the step into motor data. */
+	uint8_t step;
+
+	if(CCWcomplianceSlope == 1){
+		step = 2;
+	}
+	else if(CCWcomplianceSlope == 2){
+		step = 4;
+	}
+	else if(CCWcomplianceSlope == 3){
+		step = 8;
+	}
+	else if(CCWcomplianceSlope == 4){
+		step = 16;
+	}
+	else if(CCWcomplianceSlope == 5){
+		step = 32;
+	}
+	else if(CCWcomplianceSlope == 6){
+		step = 64;
+	}
+	else if(CCWcomplianceSlope == 7){
+		step = 128;
+	}
+	else{
+		step = DEFAULT_CCW_COMPLIANCE_SLOPE;
+	}
+
+	/* Write data to motor. */
+	AX12A::dataWriter(8, AX12A_REG_CCW_COMPLIANCE_SLOPE, step, 0);
+}
+
+
 void AX12A::setStatusReturnLevel(uint8_t status_data){
 	/* Sets the conditions under which a status packet will be returned.
 	 *
@@ -332,23 +375,82 @@ void AX12A::setStatusReturnLevel(uint8_t status_data){
 	AX12A::dataWriter(8, AX12A_REG_STATUS_RETURN_LEVEL, status_data, -1);
 }
 
-uint8_t AX12A::computeChecksum(uint8_t *arr, int length){
-	/* Compute the checksum for data to be transmitted.
+
+
+
+// Interfaces for previously-defined functions
+void AX12A::enterWheelMode(double goalVelocity){
+	/* Sets the control registers such that the rotational angle of the motor
+	 * is not bounded.
 	 *
-	 * Arguments: arr, the array to be transmitted and ran through the checksum function
-	 * 			  length, the total length of the array arr
+	 * Arguments: goalVelocity, the desired velocity to use when entering wheel mode
 	 *
-	 * Returns: the 1-byte number that is the checksum
+	 * Returns: none
 	 */
 
-	/* Local variable declaration. */
-	uint8_t accumulate = 0;
-
-	/* Loop through the array starting from the 2nd element of the array and finishing before the last
-	 * since the last is where the checksum will be stored. */
-	for(uint8_t i = 2; i < length - 1; i++){
-		accumulate += arr[i];
-	}
-
-	return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
+	/* When the angle limits are both set to 0, then motor will attempt to
+	 * rotate with maximum velocity. To prevent undesired behaviour, the
+	 * goal velocity should be set right after calling this function */
+	Dynamixel::setMinAngle(0);
+	Dynamixel::setMaxAngle(0);
+	this -> isJointMode = 0;
+	AX12A::setGoalVelocity(goalVelocity);
 }
+
+// TODO: Re-test moving motor to nearest valid position
+void AX12A::enterJointMode(){
+	/* Sets the control registers such that the rotational angle of the motor
+	 * is constrained between the default values.
+	 *
+	 * Arguments: none
+	 *
+	 * Returns: none
+	 */
+
+	// In the future, it would be good to make this robust by returning the motor
+	// to the nearest valid position. Otherwise, motor gets confused because it's
+	// locked out of its valid boundaries and there you can't instruct it to go anywhere
+//	AX12A::getPosition();
+//	while((this -> lastPosition < MIN_ANGLE) || (this -> lastPosition > MAX_ANGLE)){
+//		if(360 - this -> lastPosition < 15){
+//			AX12A::setGoalVelocity(MAX_VELOCITY);
+//		}
+//		else{
+//			AX12A::setGoalVelocity(-MAX_VELOCITY);
+//		}
+//		AX12A::getPosition();
+//	}
+
+	this -> isJointMode = 1;
+	Dynamixel::setMinAngle(MIN_ANGLE);
+	Dynamixel::setMaxAngle(MAX_ANGLE);
+}
+
+void AX12A::setComplianceSlope(uint8_t complianceSlope){
+	/* Sets both the clockwise and counterclockwise compliance slopes.
+	 * The higher the value, the more flexibility that is obtained. That is, a high value
+	 * means that as the goal position is approached, the torque will be significantly reduced. If a low
+	 * value is used, then as the goal position is approached, the torque will not be reduced all that much.
+	 *
+	 *
+	 * Arguments: complianceSlope, arguments in range [1, 7], with 1 being the least flexible
+	 *
+	 */
+
+	AX12A::setCWComplianceSlope(complianceSlope);
+	AX12A::setCWComplianceSlope(complianceSlope);
+}
+
+void AX12A::setComplianceMargin(uint8_t complianceMargin){
+	/* Sets both the clockwise and counterclockwise compliance margins.
+	 * The compliance margin is the acceptable error between the current position and goal position.
+	 * The greater the value, the more error is acceptable.
+	 *
+	 * Arguments: complianceMargin, the acceptable error between the current and goal position.
+	 * 			  					Arguments in range [0, 255]
+	 */
+
+	AX12A::setCWComplianceMargin(complianceMargin);
+	AX12A::setCCWComplianceMargin(complianceMargin);
+}
+
