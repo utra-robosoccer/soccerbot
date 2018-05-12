@@ -5,7 +5,7 @@
 
 /********************************** Includes **********************************/
 #include "stm32h7xx_hal.h"
-#include "C:/Users/Gokul/SkyDrive/Documents/Work/stm32/Dynamixel_AX-12A_Driver/src/Dynamixel_AX_12A.h"
+#include "../Drivers/Motors/AX12A/AX12A.h"
 
 
 /* USER CODE BEGIN Private defines */
