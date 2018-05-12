@@ -55,10 +55,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Drivers/Motors/AX12A/AX12A.h"
-#include "../Drivers/Motors/MX28/MX28.h"
-#include "../Drivers/MPU6050/MPU6050.h"
-#include "UART_Handler.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -78,8 +75,7 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-extern Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
-extern UARTcmd Motorcmd[18];
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -115,38 +111,6 @@ int main(void)
   MX_I2C1_Init();
 
   /* USER CODE BEGIN 2 */
-  Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-  	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-  	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-  	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
-  	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15);
-  	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
-  	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10);
-  	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10);
-  	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10);
-  	Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0);
-  	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0);
-
-
-  	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
-  			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
-  			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
-
-
-  	for(int i=0;i<18;i++) {
-  		Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-  		Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
-  		(Motorcmd[i]).motorHandle = arrDynamixel[i];
-  		(Motorcmd[i]).type = cmdWRITE;
-  		(Motorcmd[i]).velocity = 10;
-  	}
 
   /* USER CODE END 2 */
 
