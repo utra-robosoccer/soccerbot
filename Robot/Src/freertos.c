@@ -70,16 +70,17 @@ osThreadId UART2_Handle;
 osThreadId UART4_Handle;
 osThreadId UART5_Handle;
 osThreadId UART7_Handle;
+osMessageQId UART1_reqHandle;
+osMessageQId UART2_reqHandle;
+osMessageQId UART4_reqHandle;
+osMessageQId UART5_reqHandle;
+osMessageQId UART7_reqHandle;
+osMessageQId UART_rxHandle;
 
 /* USER CODE BEGIN Variables */
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
 
-osThreadId defaultTaskHandle;
-osThreadId UART1_HandlerHandle;
-osThreadId UART2_HandlerHandle;
-osThreadId UART4_HandlerHandle;
-osThreadId UART5_HandlerHandle;
-osThreadId UART7_HandlerHandle;
+
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
 osMessageQId UART4_reqHandle;
@@ -141,11 +142,6 @@ void UART7_Handler(void const * argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-void UART1_Handler(void const * argument);
-void UART2_Handler(void const * argument);
-void UART4_Handler(void const * argument);
-void UART5_Handler(void const * argument);
-void UART7_Handler(void const * argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -197,33 +193,36 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  osThreadDef(UART1_Handler, UART1_Handler, osPriorityNormal, 0, 128);
-  UART1_HandlerHandle = osThreadCreate(osThread(UART1_Handler), NULL);
-  /*osThreadDef(UART2_Handler, UART2_Handler, osPriorityNormal, 0, 128);
-  UART2_HandlerHandle = osThreadCreate(osThread(UART2_Handler), NULL);
-  osThreadDef(UART4_Handler, UART4_Handler, osPriorityNormal, 0, 128);
-  UART4_HandlerHandle = osThreadCreate(osThread(UART4_Handler), NULL);
-  osThreadDef(UART5_Handler, UART5_Handler, osPriorityNormal, 0, 128);
-  UART5_HandlerHandle = osThreadCreate(osThread(UART5_Handler), NULL);
-  osThreadDef(UART7_Handler, UART7_Handler, osPriorityNormal, 0, 128);
-  UART7_HandlerHandle = osThreadCreate(osThread(UART7_Handler), NULL);*/
   //osThreadDef(IMUtask, startIMUtask, osPriorityNormal, 0, 128);
   //IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
   /* USER CODE END RTOS_THREADS */
 
-  /* USER CODE BEGIN RTOS_QUEUES */
+  /* Create the queue(s) */
+  /* definition and creation of UART1_req */
   osMessageQDef(UART1_req, 20, UARTcmd);
   UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
+
+  /* definition and creation of UART2_req */
   osMessageQDef(UART2_req, 20, UARTcmd);
   UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
+
+  /* definition and creation of UART4_req */
   osMessageQDef(UART4_req, 20, UARTcmd);
   UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
+
+  /* definition and creation of UART5_req */
   osMessageQDef(UART5_req, 20, UARTcmd);
   UART5_reqHandle = osMessageCreate(osMessageQ(UART5_req), NULL);
+
+  /* definition and creation of UART7_req */
   osMessageQDef(UART7_req, 20, UARTcmd);
   UART7_reqHandle = osMessageCreate(osMessageQ(UART7_req), NULL);
-  osMessageQDef(UART_rx, 20, UART_HandleTypeDef*);
+
+  /* definition and creation of UART_rx */
+  osMessageQDef(UART_rx, 20, UARTrx);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
+
+  /* USER CODE BEGIN RTOS_QUEUES */
   //osMessageQDef(IMUqueue, 16, uint16_t);
   //	  IMUqueueHandle = osMessageCreate(osMessageQ(IMUqueue), NULL);
 
@@ -242,7 +241,7 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);
 	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10);
 	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10);
 	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10);
