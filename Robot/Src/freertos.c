@@ -238,44 +238,6 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
 	int size = 1001, i, j;
-<<<<<<< HEAD
-	UARTcmd Motorcmd[18];
-	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0);
-
-
-	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
-			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
-			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
-
-
-	for(i=0;i<18;i++) {
-		Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-		Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
-		(Motorcmd[i]).motorHandle = arrDynamixel[i];
-		(Motorcmd[i]).type = cmdWRITE;
-		(Motorcmd[i]).velocity = 10;
-	}
-
-
-=======
->>>>>>> origin/master
 
 	(Motorcmd[0]).qHandle = UART2_reqHandle;
 	(Motorcmd[1]).qHandle = UART2_reqHandle;
