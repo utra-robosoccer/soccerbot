@@ -65,6 +65,11 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
+osThreadId UART1_Handle;
+osThreadId UART2_Handle;
+osThreadId UART4_Handle;
+osThreadId UART5_Handle;
+osThreadId UART7_Handle;
 
 /* USER CODE BEGIN Variables */
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
@@ -127,6 +132,11 @@ const double motorPosArr[12][1001] = {
 
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
+void UART1_Handler(void const * argument);
+void UART2_Handler(void const * argument);
+void UART4_Handler(void const * argument);
+void UART5_Handler(void const * argument);
+void UART7_Handler(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -162,14 +172,34 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 1024);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of UART1_ */
+  osThreadDef(UART1_, UART1_Handler, osPriorityIdle, 0, 128);
+  UART1_Handle = osThreadCreate(osThread(UART1_), NULL);
+
+  /* definition and creation of UART2_ */
+  osThreadDef(UART2_, UART2_Handler, osPriorityIdle, 0, 128);
+  UART2_Handle = osThreadCreate(osThread(UART2_), NULL);
+
+  /* definition and creation of UART4_ */
+  osThreadDef(UART4_, UART4_Handler, osPriorityIdle, 0, 128);
+  UART4_Handle = osThreadCreate(osThread(UART4_), NULL);
+
+  /* definition and creation of UART5_ */
+  osThreadDef(UART5_, UART5_Handler, osPriorityIdle, 0, 128);
+  UART5_Handle = osThreadCreate(osThread(UART5_), NULL);
+
+  /* definition and creation of UART7_ */
+  osThreadDef(UART7_, UART7_Handler, osPriorityIdle, 0, 128);
+  UART7_Handle = osThreadCreate(osThread(UART7_), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-/*  osThreadDef(UART1_Handler, UART1_Handler, osPriorityNormal, 0, 128);
+  osThreadDef(UART1_Handler, UART1_Handler, osPriorityNormal, 0, 128);
   UART1_HandlerHandle = osThreadCreate(osThread(UART1_Handler), NULL);
-  osThreadDef(UART2_Handler, UART2_Handler, osPriorityNormal, 0, 128);
+  /*osThreadDef(UART2_Handler, UART2_Handler, osPriorityNormal, 0, 128);
   UART2_HandlerHandle = osThreadCreate(osThread(UART2_Handler), NULL);
   osThreadDef(UART4_Handler, UART4_Handler, osPriorityNormal, 0, 128);
   UART4_HandlerHandle = osThreadCreate(osThread(UART4_Handler), NULL);
@@ -207,8 +237,7 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 	int size = 1001, i, j;
 	UARTcmd Motorcmd[18];
-
-	/*Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
+	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
@@ -225,7 +254,7 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0);
 	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0);
 	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0);*/
+	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0);
 
 
 	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
@@ -287,7 +316,7 @@ void StartDefaultTask(void const * argument)
 			  }
 			  xQueueSend((Motorcmd[i]).qHandle,&(Motorcmd[i]),0);
 		  }
-		  //osDelay(10);
+		  osDelay(10);
 	  }
 	}
 
@@ -295,17 +324,17 @@ void StartDefaultTask(void const * argument)
   /* USER CODE END StartDefaultTask */
 }
 
-/* USER CODE BEGIN Application *//*
+/* UART1_Handler function */
 void UART1_Handler(void const * argument)
 {
-   USER CODE BEGIN UART_Handler
-   Infinite loop
+  /* USER CODE BEGIN UART1_Handler */
+  /* Infinite loop */
   UARTcmd 	cmdMessage;
   for(;;)
-  	{
+	{
 	  while(xQueueReceive(UART1_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  SEND READ COMMAND TO MOTOR
+		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
@@ -314,20 +343,21 @@ void UART1_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
 	  }
-	  osDelay(1);
   }
-   USER CODE END UART_Handler
+  /* USER CODE END UART1_Handler */
 }
+
+/* UART2_Handler function */
 void UART2_Handler(void const * argument)
 {
-   USER CODE BEGIN UART_Handler
-   Infinite loop
+  /* USER CODE BEGIN UART2_Handler */
+  /* Infinite loop */
   UARTcmd 	cmdMessage;
   for(;;)
-  	{
+	{
 	  while(xQueueReceive(UART2_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  SEND READ COMMAND TO MOTOR
+		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
@@ -336,20 +366,21 @@ void UART2_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
 	  }
-	  osDelay(1);
   }
-   USER CODE END UART_Handler
+  /* USER CODE END UART2_Handler */
 }
+
+/* UART4_Handler function */
 void UART4_Handler(void const * argument)
 {
-   USER CODE BEGIN UART_Handler
-   Infinite loop
+  /* USER CODE BEGIN UART4_Handler */
+  /* Infinite loop */
   UARTcmd 	cmdMessage;
   for(;;)
   {
 	  while(xQueueReceive(UART4_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  SEND READ COMMAND TO MOTOR
+		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
@@ -358,20 +389,21 @@ void UART4_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
 	  }
-	  osDelay(1);
   }
-   USER CODE END UART_Handler
+  /* USER CODE END UART4_Handler */
 }
+
+/* UART5_Handler function */
 void UART5_Handler(void const * argument)
 {
-   USER CODE BEGIN UART_Handler
-   Infinite loop
-  UARTcmd 	cmdMessage;
+  /* USER CODE BEGIN UART5_Handler */
+  /* Infinite loop */
+	  UARTcmd 	cmdMessage;
   for(;;)
   {
 	  while(xQueueReceive(UART5_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  SEND READ COMMAND TO MOTOR
+		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
@@ -380,20 +412,21 @@ void UART5_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
 	  }
-	  osDelay(1);
   }
-   USER CODE END UART_Handler
+  /* USER CODE END UART5_Handler */
 }
+
+/* UART7_Handler function */
 void UART7_Handler(void const * argument)
 {
-   USER CODE BEGIN UART_Handler
-   Infinite loop
+  /* USER CODE BEGIN UART7_Handler */
+  /* Infinite loop */
   UARTcmd 	cmdMessage;
   for(;;)
   {
 	  while(xQueueReceive(UART7_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  SEND READ COMMAND TO MOTOR
+		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
@@ -402,10 +435,11 @@ void UART7_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
 	  }
-	  osDelay(1);
   }
-   USER CODE END UART_Handler
-}*/
+  /* USER CODE END UART7_Handler */
+}
+
+/* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
 

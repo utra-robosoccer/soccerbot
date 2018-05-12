@@ -1,6 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.IPParameters=Tasks01
-FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL
+FREERTOS.FootprintOK=true
+FREERTOS.IPParameters=Tasks01,FootprintOK
+FREERTOS.Tasks01=defaultTask,0,1024,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;UART1_,-3,128,UART1_Handler,Default,NULL,Dynamic,NULL,NULL;UART2_,-3,128,UART2_Handler,Default,NULL,Dynamic,NULL,NULL;UART4_,-3,128,UART4_Handler,Default,NULL,Dynamic,NULL,NULL;UART5_,-3,128,UART5_Handler,Default,NULL,Dynamic,NULL,NULL;UART7_,-3,128,UART7_Handler,Default,NULL,Dynamic,NULL,NULL
 File.Version=6
 KeepUserPlacement=true
 Mcu.Family=STM32H7

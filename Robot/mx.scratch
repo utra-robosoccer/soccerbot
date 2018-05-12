@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\Gokul\SkyDrive\Documents\Work\UTRA\RTOS_H7\RTOS_H7\\RTOS_H7</ProjectName>
+<ProjectName>C:\Users\Gokul\Documents\GitHub\soccer-embedded\Robot\\RTOS_H7</ProjectName>
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\Gokul\STM32Cube\Repository\STM32Cube_FW_H7_V1.1.0\Drivers\CMSIS</HAL_Driver>
 
