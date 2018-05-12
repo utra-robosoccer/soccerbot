@@ -240,14 +240,21 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 	int size = 1001, i, j;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a52532b... Fix merge conflict
 	UARTcmd Motorcmd[18];
 	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15);
+<<<<<<< HEAD
 	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
+=======
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);
+>>>>>>> parent of a52532b... Fix merge conflict
 	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10);
 	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10);
 	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10);
@@ -276,7 +283,12 @@ void StartDefaultTask(void const * argument)
 	}
 
 
+<<<<<<< HEAD
 >>>>>>> parent of 2f3358d... Tasks/Queues defined by Cube
+=======
+=======
+>>>>>>> origin/master
+>>>>>>> parent of a52532b... Fix merge conflict
 
 	(Motorcmd[0]).qHandle = UART2_reqHandle;
 	(Motorcmd[1]).qHandle = UART2_reqHandle;
