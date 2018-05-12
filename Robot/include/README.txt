@@ -1,1 +1,0 @@
-These folders represent namespaces.
