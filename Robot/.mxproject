@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/Gokul/SkyDrive/Documents/Work/UTRA/RTOS_H7/RTOS_H7/Inc
+HeaderPath=C:/Users/Gokul/Documents/GitHub/soccer-embedded/Robot/Inc
 HeaderFiles=gpio.h;i2c.h;usart.h;stm32h7xx_it.h;stm32h7xx_hal_conf.h;main.h;FreeRTOSConfig.h;
-SourcePath=C:/Users/Gokul/SkyDrive/Documents/Work/UTRA/RTOS_H7/RTOS_H7/Src
+SourcePath=C:/Users/Gokul/Documents/GitHub/soccer-embedded/Robot/Src
 SourceFiles=gpio.c;i2c.c;usart.c;stm32h7xx_it.c;stm32h7xx_hal_msp.c;main.c;freertos.c;stm32h7xx_hal_timebase_TIM.c;
 
 [PreviousLibFiles]
