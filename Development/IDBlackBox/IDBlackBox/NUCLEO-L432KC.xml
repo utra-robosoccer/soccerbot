@@ -10,11 +10,11 @@
 ]>
 
 <targetDefinitions>
-  <board id="nucleo-h743zi">
-    <name>NUCLEO-H743ZI</name>
+  <board id="nucleo-l432kc">
+    <name>NUCLEO-L432KC</name>
     <dbgIF>JTAG</dbgIF>
     <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
-    <mcuId>stm32h743zitx</mcuId>
+    <mcuId>stm32l432kcux</mcuId>
   </board>
 </targetDefinitions>
