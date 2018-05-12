@@ -57,10 +57,10 @@
 #include "usart.h"
 #include "gpio.h"
 #include "i2c.h"
-//#include "tim.h"
-//#include "MPU6050.h"
 #include "UART_Handler.h"
-#include "C:/Users/Gokul/SkyDrive/Documents/Work/stm32/Dynamixel_AX-12A_Driver/src/Dynamixel_AX_12A.c"
+#include "../Drivers/Motors/AX12A/AX12A.h"
+#include "../Drivers/Motors/MX28/MX28.h"
+#include "../Drivers/MPU6050/MPU6050.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
