@@ -5,14 +5,22 @@
 #define __AX12A_H__
 
 /********************************** Includes **********************************/
-#ifdef stm32f4xx_hal.h
+#ifdef stm32f4xx_hal
 	#include "stm32f4xx_hal.h"
 	#include "stm32f4xx_hal_conf.h"
 #endif
-#ifdef stm32h7xx_hal.h
+
+#ifdef stm32h7xx_hal
 	#include "stm32h7xx_hal.h"
 	#include "stm32h7xx_hal_conf.h"
 #endif
+
+/* I/O */
+#include "gpio.h"
+#include "usart.h"
+
+/* Types */
+#include <stdint.h>
 /*********************************** Macros ***********************************/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
@@ -25,20 +33,20 @@
 #define TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
 #define BUFF_SIZE_SYNC_WRITE	64		// Maximum packet size for sync write
 #define NUM_UARTS				6		// Number of UARTs available for motor communication
-const uint8_t TRANSMIT_TIMEOUT = 10; 	// Timeout for blocking UART transmissions, in milliseconds
-const uint8_t RECEIVE_TIMEOUT = 10;		// Timeout for blocking UART receptions, in milliseconds
+extern const uint8_t TRANSMIT_TIMEOUT; 	// Timeout for blocking UART transmissions, in milliseconds
+extern const uint8_t RECEIVE_TIMEOUT;	// Timeout for blocking UART receptions, in milliseconds
 
 /* Value limit definitions. */
-const double MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
-const double MIN_VELOCITY = 1;		// Minimum angular velocity (RPM)
-const uint16_t MAX_ANGLE = 300;		// Maximum angular position (joint mode)
-const uint8_t MIN_ANGLE = 0;		// Minimum angular position (joint mode)
-const uint8_t MAX_TORQUE = 100;		// Maximum torque (percent of maximum)
-const uint8_t MIN_TORQUE = 0;		// Minimum torque (percent of maximum)
-const uint8_t MAX_VOLTAGE = 14;		// Maximum operating voltage
-const uint8_t MIN_VOLTAGE = 6;		// Minimum operating voltage
-const uint16_t MAX_PUNCH = 1023;	// Maximum punch (proportional to minimum current)
-const uint8_t MIN_PUNCH = 0;		// Minimum punch (proportional to minimum current)
+extern const double MAX_VELOCITY;		// Maximum angular velocity (RPM)
+extern const double MIN_VELOCITY;		// Minimum angular velocity (RPM)
+extern const uint16_t MAX_ANGLE;		// Maximum angular position (joint mode)
+extern const uint8_t MIN_ANGLE;			// Minimum angular position (joint mode)
+extern const uint8_t MAX_TORQUE;		// Maximum torque (percent of maximum)
+extern const uint8_t MIN_TORQUE;		// Minimum torque (percent of maximum)
+extern const uint8_t MAX_VOLTAGE;		// Maximum operating voltage
+extern const uint8_t MIN_VOLTAGE;		// Minimum operating voltage
+extern const uint16_t MAX_PUNCH;		// Maximum punch (proportional to minimum current)
+extern const uint8_t MIN_PUNCH;			// Minimum punch (proportional to minimum current)
 
 /* Instruction set definitions. */
 #define INST_PING				0x01	// Gets a status packet
@@ -104,33 +112,13 @@ const uint8_t MIN_PUNCH = 0;		// Minimum punch (proportional to minimum current)
 
 /******************************* Public Variables *******************************/
 /* Buffer for data received from motors. */
-uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
+extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];;
 
 /* Bytes to be transmitted to motors are written to this array. */
-uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
-	{0xFF, 0xFF, 0xFE, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 1, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 2, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 3, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 4, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 5, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 6, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 7, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 8, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 9, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 10, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 11, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 12, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 13, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 14, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 15, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 16, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 17, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00}
-};
+extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
 
 /* Sync write buffer. */
-uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
+extern uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE];
 
 /*********************************** Types ************************************/
 typedef struct{

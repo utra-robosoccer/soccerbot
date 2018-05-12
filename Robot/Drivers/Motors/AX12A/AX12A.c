@@ -1,6 +1,62 @@
 /********************************* Includes ************************************/
 #include "AX12A.h"
 
+
+
+
+/********************************* Constants *********************************/
+const uint8_t TRANSMIT_TIMEOUT = 10; 	// Timeout for blocking UART transmissions, in milliseconds
+const uint8_t RECEIVE_TIMEOUT = 10;		// Timeout for blocking UART receptions, in milliseconds
+
+/* Value limit definitions. */
+const double MAX_VELOCITY = 114;	// Maximum angular velocity (RPM)
+const double MIN_VELOCITY = 1;		// Minimum angular velocity (RPM)
+const uint16_t MAX_ANGLE = 300;		// Maximum angular position (joint mode)
+const uint8_t MIN_ANGLE = 0;		// Minimum angular position (joint mode)
+const uint8_t MAX_TORQUE = 100;		// Maximum torque (percent of maximum)
+const uint8_t MIN_TORQUE = 0;		// Minimum torque (percent of maximum)
+const uint8_t MAX_VOLTAGE = 14;		// Maximum operating voltage
+const uint8_t MIN_VOLTAGE = 6;		// Minimum operating voltage
+const uint16_t MAX_PUNCH = 1023;	// Maximum punch (proportional to minimum current)
+const uint8_t MIN_PUNCH = 0;		// Minimum punch (proportional to minimum current)
+
+
+
+
+/******************************* Public Variables *******************************/
+/* Buffer for data received from motors. */
+uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
+
+/* Bytes to be transmitted to motors are written to this array. */
+uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
+	{0xFF, 0xFF, 0xFE, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 1, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 2, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 3, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 4, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 5, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 6, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 7, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 8, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 9, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 10, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 11, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 12, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 13, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 14, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 15, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 16, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 17, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00}
+};
+
+/* Sync write buffer. */
+// TODO
+uint8_t arrSyncWrite[NUM_UARTS][BUFF_SIZE_SYNC_WRITE] = {{0}};
+
+
+
+
 /******************************** Functions ************************************/
 
 /*******************************************************************************/
