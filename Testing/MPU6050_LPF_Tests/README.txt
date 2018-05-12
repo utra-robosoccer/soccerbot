@@ -1,0 +1,1 @@
+RTOS configured on STM32H743ZIT
