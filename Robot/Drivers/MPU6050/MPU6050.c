@@ -23,9 +23,10 @@ void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t
 /* Reads data from registers via I2C3 and prints out the 8-bit data value via USART2
    Return: None
  */
-void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
+uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
 	uint8_t receivebyte;
 	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
+	return receivebyte;
 }
 
 
@@ -176,10 +177,10 @@ void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050){
 
 }
 */
-/*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
-  Returns : None*/
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
 
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
+	/*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
+	  Returns : None*/
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
 	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
@@ -246,6 +247,26 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	roll = atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
 	sMPU6050 ->_ROLL = pitch;
 	sMPU6050 ->_PITCH= roll;
+}
+
+void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf){
+	/* uint8_t lpf : this input is between 0 and 7
+	 *
+	 * this function allows you to set the value of the LPF manually.
+	 * Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
+	 * for descriptions of what each value does.
+	 *
+	 */
+	// the LPF reg is decimal 26
+
+	uint8_t current_value;
+	uint8_t bitmask=7; // 00000111
+
+	current_value=MPU6050_READ_REG(sMPU6050, 26); //read the current value of the LPF reg
+	//note that this reg also contains unneeded fsync data which should be preserved
+
+	current_value = (current_value & (~bitmask)) | lpf;
+	MPU6050_WRITE_REG(sMPU6050, 26, current_value);
 }
 
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
