@@ -5,7 +5,11 @@
 
 /********************************** Includes **********************************/
 #include "stm32h7xx_hal.h"
-#include "C:/Users/Gokul/SkyDrive/Documents/Work/stm32/Dynamixel_AX-12A_Driver/src/Dynamixel_AX_12A.h"
+
+/*The following file directory needs to be excluded from the build.
+ * Otherwise, hard faults will occur.
+ */
+#include "../Drivers/Motors/AX12A/Dynamixel_AX_12A.h"
 
 
 /* USER CODE BEGIN Private defines */
