@@ -60,7 +60,12 @@
 //#include "tim.h"
 //#include "MPU6050.h"
 #include "UART_Handler.h"
-#include "C:/Users/Gokul/SkyDrive/Documents/Work/stm32/Dynamixel_AX-12A_Driver/src/Dynamixel_AX_12A.c"
+
+/*The following file directory (../Drivers/Motors/) needs to be excluded from the build.
+ * Otherwise, hard faults will occur - Undiagnosed
+ */
+#include "../Drivers/Motors/AX12A/Dynamixel_AX_12A.c"
+
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
