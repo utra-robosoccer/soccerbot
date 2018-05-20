@@ -60,11 +60,7 @@
 //#include "tim.h"
 //#include "MPU6050.h"
 #include "UART_Handler.h"
-
-/*The following file directory (../Drivers/Motors/) needs to be excluded from the build.
- * Otherwise, hard faults will occur - Undiagnosed
- */
-#include "../Drivers/Motors/AX12A/Dynamixel_AX_12A.c"
+#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
 /* USER CODE END Includes */
 
@@ -252,24 +248,24 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 	int size = 1001, i, j;
 	UARTcmd Motorcmd[18];
-	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7);
-	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
-	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10);
-	Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0);
-	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0);
+	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
+	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
+	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
+	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
+	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
+	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
+	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
+	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
+	Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
 
 
 	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
@@ -278,8 +274,13 @@ void StartDefaultTask(void const * argument)
 
 
 	for(i=0;i<18;i++) {
-		Dynamixel_SetCWComplianceSlope(arrDynamixel[i], 7);
-		Dynamixel_SetCCWComplianceSlope(arrDynamixel[i], 7);
+        /* Configure motor to return status packets only for read commands */
+        Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
+        osDelay(10);
+        Dynamixel_SetReturnDelayTime(arrDynamixel[i], 2);
+        osDelay(10);
+        Dynamixel_TorqueEnable(arrDynamixel[i], 1);
+		AX12A_SetComplianceSlope(arrDynamixel[i], 7);
 		(Motorcmd[i]).motorHandle = arrDynamixel[i];
 		(Motorcmd[i]).type = cmdWRITE;
 		(Motorcmd[i]).velocity = 10;

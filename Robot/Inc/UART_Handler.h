@@ -5,11 +5,7 @@
 
 /********************************** Includes **********************************/
 #include "stm32h7xx_hal.h"
-
-/*The following file directory needs to be excluded from the build.
- * Otherwise, hard faults will occur.
- */
-#include "../Drivers/Motors/AX12A/Dynamixel_AX_12A.h"
+#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
 
 /* USER CODE BEGIN Private defines */
