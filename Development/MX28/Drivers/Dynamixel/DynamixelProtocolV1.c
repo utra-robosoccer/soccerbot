@@ -832,7 +832,6 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 
 	/* Set fields in motor handle. */
 	hdynamixel -> _motorType = motorType;		// Identifies the type of actuator; used in certain functions
-	hdynamixel -> _protocolVersion = 1;			// Dynamixel comm protocol version used by the actuator
 	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
 	hdynamixel -> _lastPosition = -1; 			// In future, could initialize this accurately
 	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately

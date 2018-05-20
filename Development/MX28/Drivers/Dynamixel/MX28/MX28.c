@@ -17,12 +17,31 @@
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-// TODO
 void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset){
+	/* For an actuator not in multi-turn mode, this has no effect.
+	 *
+	 * For an actuator in multi-turn mode, this applies a tunable offset to all positions.
+	 * That is, it allows you to change where the actuator considers position 0 to be.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  offset, the signed offset argument indicating the offset to program
+	 *
+	 * Returns: none
+	 */
 
+	if(offset > 28672){
+		offset = 28672;
+	}
+	else if(offset < -28672){
+		offset = -28672;
+	}
+
+	uint8_t args[3] = {MX28_REG_MULTI_TURN_OFFSET, offset & 0xFF, (offset >> 16) & 0xFF};
+	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-// TODO
+// TODO. Challenge with this is it means we need to track resolution divider in the
+// handle so that we can compute position properly in the position functions
 void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divider){
 
 }
@@ -112,7 +131,19 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAc
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-// TODO
+extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
+extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel){
+	/* Activates multi-turn mode, which allows the actuator to have a range of
+	 * controllable position values from -28672 to 28672.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
 
+	if(hdynamixel -> _motorType == MX28TYPE){
+		Dynamixel_SetCWAngleLimit(hdynamixel, 4095);
+		Dynamixel_SetCCWAngleLimit(hdynamixel, 4095);
+	}
 }
