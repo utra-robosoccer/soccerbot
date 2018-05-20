@@ -1,6 +1,9 @@
 /* This header is for IO-related functions and data structures that need to be
  * included across all Dynamixel files.
  *
+ * This is the bottom "layer" of the Dynamixel library, as this header provides
+ * interfaces for the instructions in the instruction set.
+ *
  * Author: Tyler
  */
 
@@ -80,7 +83,7 @@ typedef struct{
 
 /***************************** Function prototypes ****************************/
 // Transmission & Reception
-void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 
 // Other motor instructions (low level control with timing from different WRITE DATA instruction)

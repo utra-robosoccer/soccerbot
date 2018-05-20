@@ -1,4 +1,6 @@
-/* This file is for IO-related functions and data structures.
+/* This file is for IO-related functions and data structures. This is the
+ * bottom "layer" of the Dynamixel library, as this file implements the instruction
+ * set and provides wrappers for it that upper layers can use.
  *
  * Author: Tyler
  */
@@ -47,37 +49,37 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
-						   uint8_t writeAddr, uint8_t param1, uint8_t param2){
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
 	/* Handles sending of data since this nearly identical for all setters.
 	 * Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  arrSize, the size of the array to be transmitted. Must be 8 or 9
-	 * 			  writeAddr, the address for the parameters to be written to (may be motor EEPROM or RAM)
-	 * 			  param1, the first parameter
-	 * 			  param2, the second parameter. If arrSize == 8, then param2 is ignored and should be passed as -1
+	 * 			  args is an array of arguments of the form
+	 * 						{ADDR, PARAM1, ...}
+	 *			  numArgs must be equal to sizeof(args), and must either be 2 or 3
 	 *
 	 * Returns: none
 	 */
 
-	/* Do assignments and computations. */
-	uint8_t ID = hdynamixel -> _ID;
-	arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
-	arrTransmit[ID][5] = writeAddr; // Write address for register
-	arrTransmit[ID][6] = param1;
+	/* Check validity so that we don't accidentally write something invalid */
+	if(numArgs <= 3){
+		/* Do assignments and computations. */
+		uint8_t ID = hdynamixel -> _ID;
+		arrTransmit[ID][3] = 2 + numArgs; // Length of message following length argument (arguments & checksum)
 
-	/* Checksum. */
-	arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize): param2;
-	if(arrSize == 9){
-		arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize);
+		for(uint8_t i = 0; i < numArgs; i ++){
+			arrTransmit[ID][5 + i] = args[i];
+		}
+
+		/* Checksum. */
+		arrTransmit[ID][4 + numArgs + 1] = Dynamixel_ComputeChecksum(arrTransmit[ID], 4 + numArgs + 2);
+
+		/* Set data direction for transmit. */
+		__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+		/* Transmit. */
+		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
 	}
-
-	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize, TRANSMIT_TIMEOUT);
 }
 
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){

@@ -1,3 +1,8 @@
+/* This file implements MX28-specific functions.
+ *
+ * Author: Tyler
+ */
+
 /********************************* Includes ************************************/
 #include "AX12A.h"
 
@@ -27,7 +32,10 @@ void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CW
 	 */
 
 	/* Write data to motor. */
-	Dynamixel_DataWriter(hdynamixel, 8, AX12A_REG_CW_COMPLIANCE_MARGIN, CWcomplianceMargin, -1);
+	if(hdynamixel -> _motorType == AX12ATYPE){
+		uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, CWcomplianceMargin};
+		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+	}
 }
 
 void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin){
@@ -45,7 +53,10 @@ void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t C
 	 */
 
 	/* Write data to motor. */
-	Dynamixel_DataWriter(hdynamixel, 8, AX12A_REG_CCW_COMPLIANCE_MARGIN, CCWcomplianceMargin, -1);
+	if(hdynamixel -> _motorType == AX12ATYPE){
+		uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, CCWcomplianceMargin};
+		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+	}
 }
 
 void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope){
@@ -92,7 +103,10 @@ void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWc
 	}
 
 	/* Write data to motor. */
-	Dynamixel_DataWriter(hdynamixel, 8, AX12A_REG_CW_COMPLIANCE_SLOPE, step, -1);
+	if(hdynamixel -> _motorType == AX12ATYPE){
+		uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_SLOPE, step};
+		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+	}
 }
 
 // TODO: Test
@@ -140,7 +154,10 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
 	}
 
 	/* Write data to motor. */
-	Dynamixel_DataWriter(hdynamixel, 8, AX12A_REG_CCW_COMPLIANCE_SLOPE, step, -1);
+	if(hdynamixel -> _motorType == AX12ATYPE){
+		uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_SLOPE, step};
+		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+	}
 }
 
 /*******************************************************************************/

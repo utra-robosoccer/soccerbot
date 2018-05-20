@@ -108,7 +108,7 @@ int main(void)
   Dynamixel_Init(&MX28, 1, &huart5, GPIOB, GPIO_PIN_0, MX28TYPE);
 
   Dynamixel_TorqueEnable(&MX28, 1);
-  Dynamixel_SetGoalPosition(&MX28, 220);
+  Dynamixel_SetGoalPosition(&MX28, 230);
   /* USER CODE END 2 */
 
   /* Infinite loop */
