@@ -69,7 +69,6 @@ enum motorTypes_e{
 // TODO: Should also have a resolution divider field for MX28
 typedef struct{
 	enum motorTypes_e		_motorType;				/*!< Identifies motor as AX12A, MX28, etc.			*/
-	uint8_t					_protocolVersion;
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
 	float					_lastPosition;			/*!< Position read from motor						*/
 	float					_lastVelocity;			/*!< Velocity read from motor						*/

@@ -34,8 +34,6 @@
 #include "AX12A/AX12A.h"
 
 /*********************************** Macros ***********************************/
-#define UNUSEDARGUMENT 0
-
 /* Value limit definitions */
 #define MIN_VELOCITY          1		// Minimum angular velocity (RPM)
 #define MAX_ANGLE             300	// Maximum angular position (joint mode)

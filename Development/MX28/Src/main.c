@@ -107,7 +107,18 @@ int main(void)
   Dynamixel_HandleTypeDef MX28;
   Dynamixel_Init(&MX28, 1, &huart5, GPIOB, GPIO_PIN_0, MX28TYPE);
 
+  /* Configure motor to return status packets only for read commands */
+  Dynamixel_SetStatusReturnLevel(&MX28, 1);
+  HAL_Delay(10);
+
+  /* Set minimum delay return time (2 microseconds) */
+  Dynamixel_SetReturnDelayTime(&MX28, 2);
+  HAL_Delay(10);
+
+  /* Impress current to motor to enable torque */
   Dynamixel_TorqueEnable(&MX28, 1);
+
+  /* Set a position */
   Dynamixel_SetGoalPosition(&MX28, 230);
   /* USER CODE END 2 */
 
