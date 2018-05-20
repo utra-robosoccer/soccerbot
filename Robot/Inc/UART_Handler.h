@@ -4,7 +4,16 @@
 
 
 /********************************** Includes **********************************/
-#include "stm32h7xx_hal.h"
+#ifdef stm32f4xx_hal
+	#include "stm32f4xx_hal.h"
+	#include "stm32f4xx_hal_conf.h"
+#endif
+
+#ifdef stm32h7xx_hal
+	#include "stm32h7xx_hal.h"
+	#include "stm32h7xx_hal_conf.h"
+#endif
+
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
 
