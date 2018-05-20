@@ -70,40 +70,42 @@ extern const uint8_t RECEIVE_TIMEOUT;	// Timeout for blocking UART receptions, i
 
 /* Register definitions. */
 // TODO
-#define MX28_REG_ID 					    		3		// Motor ID register
-#define MX28_REG_BAUD_RATE							4		// Baud rate register
-#define MX28_REG_RETURN_DELAY_TIME					5		// Status packet return delay time register
-//#define MX28_REG_CW_ANGLE_LIMIT		    		0x06	// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
-//#define MX28_REG_CCW_ANGLE_LIMIT		    		0x08	// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
-//#define MX28_REG_HIGH_VOLTAGE_LIMIT	    		0x0C	// Maximum voltage limit register
-//#define MX28_REG_LOW_VOLTAGE_LIMIT				0x0D	// Minimum voltage limit register
-//#define MX28_REG_MAX_TORQUE			    		0x0E	// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
-//#define MX28_REG_STATUS_RETURN_LEVEL	    		0x10	// Status packet return condition(s) register
-//#define MX28_REG_ALARM_LED						0xxxx	// Alarm LED condition(s) register
-//#define MX28_REG_ALARM_SHUTDOWN		    		0x12	// Alarm shutdown condition(s) register
-#define MX28_REG_TORQUE_ENABLE 		    			24		// Motor power control register
-#define MX28_REG_LED_ENABLE			    			25		// LED control register
-//#define MX28_REG_CW_COMPLIANCE_MARGIN				0x1A	// Clockwise compliance margin register
-//#define MX28_REG_CCW_COMPLIANCE_MARGIN			0x1B	// Counter-clockwise compliance margin register
-//#define MX28_REG_CW_COMPLIANCE_SLOPE	    		0x1C	// Clockwise compliance slope register
-//#define MX28_REG_CCW_COMPLIANCE_SLOPE    			0x1D	// Counter-clockwise compliance slope register
-#define MX28_REG_GOAL_POSITION		    			30		// Goal position register (0x1E = low byte, 0x1F = high byte)
-#define MX28_REG_GOAL_VELOCITY		    			32		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
-//#define MX28_REG_GOAL_TORQUE			    		0x22	// Goal torque register (0x22 = low byte, 0x23 = high byte)
-//#define MX28_REG_LOCK_EEPROM 	 	    			0x2F	// EEPROM lock register
-//#define MX28_REG_PUNCH 	 			    		0x30	// Punch (0x30 = low register, 0x31 = high register)
-//#define MX28_REG_CURRENT_POSITION 	    		0x24	// Current position register (0x24 = low byte, 0x25 = high byte)
-//#define MX28_REG_CURRENT_VELOCITY 	    		0x26	// Current velocity register (0x26 = low byte, 0x27 = high byte)
-//#define MX28_REG_CURRENT_LOAD 		    		0x28	// Current load register (0x28 = low byte, 0x29 = high byte)
-//#define MX28_REG_CURRENT_VOLTAGE 	    			0x2A	// Current voltage register
-//#define MX28_REG_CURRENT_TEMPERATURE     			0x2B	// Current temperature register
-//#define MX28_REG_REGISTERED 			    		0x2C	// Command execution status register
-//#define MX28_REG_MOVING 				    		0x2E	// Motor motion register
+#define REG_ID 					    		3		// Motor ID register
+#define REG_BAUD_RATE							4		// Baud rate register
+#define REG_RETURN_DELAY_TIME					5		// Status packet return delay time register
+#define REG_CW_ANGLE_LIMIT		    		0x06	// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
+#define REG_CCW_ANGLE_LIMIT		    		0x08	// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
+#define REG_HIGH_VOLTAGE_LIMIT	    		0x0C	// Maximum voltage limit register
+#define REG_LOW_VOLTAGE_LIMIT				0x0D	// Minimum voltage limit register
+#define REG_MAX_TORQUE			    		0x0E	// Maximum torque limit register (0x0E = low byte, 0x0F = high byte)
+#define REG_STATUS_RETURN_LEVEL	    		0x10	// Status packet return condition(s) register
+#define REG_ALARM_LED						011	// Alarm LED condition(s) register
+#define REG_ALARM_SHUTDOWN		    		0x12	// Alarm shutdown condition(s) register
+#define MX28_REG_MULTI_TURN_OFFSET				0x14	// Register to fine-tune "0" position
+#define MX28_REG_RESOLUTION_DIVIDER				0x16	// Register to change how many bits of resolution are used
+#define MX28_REG_TORQUE_ENABLE 		    			0x18		// Motor power control register
+#define REG_LED_ENABLE			    			0x19		// LED control register
+#define MX28_REG_D_GAIN							0x1A
+#define MX28_REG_I_GAIN							0x1B
+#define MX28_REG_P_GAIN							0x1C
+#define REG_GOAL_POSITION		    			0x1E		// Goal position register (0x1E = low byte, 0x1F = high byte)
+#define REG_GOAL_VELOCITY		    			0x20		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
+#define REG_GOAL_TORQUE			    			0x22	// Goal torque register (0x22 = low byte, 0x23 = high byte)
+#define REG_LOCK_EEPROM 	 	    			0x2F	// EEPROM lock register
+#define REG_PUNCH 	 			    		0x30	// Punch (0x30 = low register, 0x31 = high register)
+#define REG_CURRENT_POSITION 	    		0x24	// Current position register (0x24 = low byte, 0x25 = high byte)
+#define REG_CURRENT_VELOCITY 	    		0x26	// Current velocity register (0x26 = low byte, 0x27 = high byte)
+#define REG_CURRENT_LOAD 		    		0x28	// Current load register (0x28 = low byte, 0x29 = high byte)
+#define REG_CURRENT_VOLTAGE 	    			0x2A	// Current voltage register
+#define REG_CURRENT_TEMPERATURE     			0x2B	// Current temperature register
+#define REG_REGISTERED 			    		0x2C	// Command execution status register
+#define REG_MOVING 				    		0x2E	// Motor motion register
+#define MX28_REG_GOAL_ACCELERATION			0x49	// Goal acceleration register
 
 /* Default register value definitions. */
 #define BROADCAST_ID				 0xFE	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
 #define DEFAULT_ID					 0x01	    // Default motor ID
-#define MX28_DEFAULT_BAUD_RATE		 0x22	    // Default baud rate
+#define MX28_DEFAULT_BAUD_RATE		 0x22	    // Default baud rate register setting
 #define DEFAULT_RETURN_DELAY		 0xFA	    // Default time motor waits before returning status packet (microseconds)
 #define DEFAULT_TORQUE_ENABLE		 0x00	    // Default motor power state
 #define DEFAULT_LED_ENABLE			 0x00	    // Default LED state
