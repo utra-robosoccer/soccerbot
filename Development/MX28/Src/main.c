@@ -45,7 +45,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Drivers/MX28/MX28.h"
+#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -108,7 +108,7 @@ int main(void)
   Dynamixel_Init(&MX28, 1, &huart5, GPIOB, GPIO_PIN_0, MX28TYPE);
 
   Dynamixel_TorqueEnable(&MX28, 1);
-  setGoalPosition(&MX28, 220);
+  Dynamixel_SetGoalPosition(&MX28, 220);
   /* USER CODE END 2 */
 
   /* Infinite loop */
