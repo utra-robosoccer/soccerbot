@@ -107,23 +107,8 @@ int main(void)
   Dynamixel_HandleTypeDef MX28;
   Dynamixel_Init(&MX28, 1, &huart5, GPIOB, GPIO_PIN_0, MX28TYPE);
 
-  Dynamixel_DataReader(&MX28, 0, 1);
-
-  Dynamixel_LEDEnable(&MX28, 1);
-  LEDEnable(&MX28, 1);
-  while(1);
-//  Dynamixel_TorqueEnable(&MX28, 1);
-//  torqueEnable(&MX28, 1);
-//  while(1);
-
-//  Dynamixel_Ping(&MX28);
-//  Ping(&MX28);
-//while(1);
-
-//  Reset(&MX28, 0xFF);
-
   Dynamixel_TorqueEnable(&MX28, 1);
-  setGoalPosition(&MX28, 150);
+  setGoalPosition(&MX28, 220);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -128,46 +128,37 @@ void setBaudRate(Dynamixel_HandleTypeDef* hdynamixel, long baud){
 	/* Sets the baud rate of a particular MX28 motor. Default baud rate is 57,600 symbols/s.
 	 *
 	 * Arguments: hdynamixel, the motor handle
-	 * 			  baud, the baud rate. Arguments in range [9600, 4500000] are valid
+	 * 			  baud, the baud rate. Arguments in range [9600, 3000000] are valid
 	 *
 	 * Returns: none
 	 */
 
+	uint8_t baudArg;
+
 	/* Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps. */
-	if(baud >= 9600 && baud <= 4500000){
-		if(baud >= 9600 && baud < 57600){
-			hdynamixel -> _BaudRate = 0x00;
-		}
-		else if(baud >= 57600 && baud < 115200){
-			hdynamixel -> _BaudRate = 0x01;
-		}
-		else if(baud >= 115200 && baud < 1000000){
-			hdynamixel -> _BaudRate = 0x02;
-		}
-		else if(baud >= 1000000 && baud < 2000000){
-			hdynamixel -> _BaudRate = 0x03;
-		}
-		else if(baud >= 2000000 && baud < 3000000){
-			hdynamixel -> _BaudRate = 0x04;
-		}
-		else if(baud >= 3000000 && baud < 4000000){
-			hdynamixel -> _BaudRate = 0x05;
-		}
-		else if(baud >= 4000000 && baud < 4500000){
-			hdynamixel -> _BaudRate = 0x06;
+	if(baud >= 9600 && baud <= 3500000){
+		if(baud >= 2250000){
+			if(baud < 2500000){
+				baudArg = 250;
+			}
+			else if(baud < 3000000){
+				baudArg = 251;
+			}
+			else{
+				baudArg = 252;
+			}
 		}
 		else{
-			hdynamixel -> _BaudRate = 0x07;
+			baudArg = (uint8_t)((2000000 / baud) - 1);
 		}
-		
 	}
 	else{
-		/* Default to 1 Mbps. */
-		hdynamixel -> _BaudRate = DEFAULT_BAUD_RATE;
+		/* Default to 1000000 symbols/s */
+		baudArg = 1000000;
 	}
 
 	/* Write data to motor. */
-	Dynamixel_DataWriter(hdynamixel, 8, MX28_REG_BAUD_RATE, hdynamixel -> _BaudRate, UNUSEDARGUMENT);
+	Dynamixel_DataWriter(hdynamixel, 8, MX28_REG_BAUD_RATE, baudArg, UNUSEDARGUMENT);
 }
 
 void setGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle){
@@ -203,8 +194,6 @@ void setGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle){
 	Dynamixel_DataWriter(hdynamixel, 9, MX28_REG_GOAL_POSITION, lowByte, highByte);
 }
 
-
-
 void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
 	/* Enables or disables torque for current motor.
 	 *
@@ -223,27 +212,6 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabl
 
 	/* Write data to motor. */
 	Dynamixel_DataWriter(hdynamixel, 8, MX28_REG_TORQUE_ENABLE, isEnabled, UNUSEDARGUMENT);
-}
-
-void torqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
-	/* Enables or disables torque for a MX28.
-	 *
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  isEnabled, if 1, then generates torque by impressing power to the motor
-	 * 			  			 if 0, then interrupts power to the motor to prevent it from generating torque
-	 *
-	 * Returns: none
-	 */
-
-	/* Evaluate argument validity. */
-	if((isEnabled != 1) && (isEnabled != 0)){
-		isEnabled = DEFAULT_TORQUE_ENABLE;
-	}
-
-	/* Write data to motor. */
-	uint8_t args[2] = {MX28_REG_TORQUE_ENABLE, 1};
-	MX28_DataWriter(hdynamixel, args, sizeof(args));
 }
 
 void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
@@ -265,25 +233,6 @@ void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled)
 	Dynamixel_DataWriter(hdynamixel, 8, MX28_REG_LED_ENABLE, isEnabled, UNUSEDARGUMENT);
 }
 
-void LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
-	/* Updates the motor LED state for MX28.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  isEnabled, 0 if LED off
-	 * 			  			 1 if LED on
-	 *
-	 * Returns: none
-	 */
-
-	/* Evaluate argument validity. */
-	if((isEnabled != 1) && (isEnabled != 0)){
-		isEnabled = DEFAULT_LED_ENABLE;
-	}
-
-	/* Write data to motor. */
-	uint8_t args[3] = {MX28_REG_LED_ENABLE & 0xFF, (MX28_REG_LED_ENABLE >> 8) & 0xFF, isEnabled};
-	MX28_DataWriter(hdynamixel, args, sizeof(args));
-}
 
 /*******************************************************************************/
 /*	Getter helper functions											  		   */
@@ -337,282 +286,25 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, 
 	 * Returns: none
 	 */
 
-	if(hdynamixel -> _motorType == AX12ATYPE || (hdynamixel -> _motorType == MX28TYPE && hdynamixel -> _protocolVersion == 1)){
-		/* Do assignments and computations. */
-		uint8_t ID = hdynamixel -> _ID;
-		arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
-		arrTransmit[ID][5] = writeAddr; // Write address for register
-		arrTransmit[ID][6] = param1;
-
-		/* Checksum. */
-		arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize): param2;
-		if(arrSize == 9){
-			arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize);
-		}
-
-		/* Set data direction for transmit. */
-		__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-		/* Transmit. */
-		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize, TRANSMIT_TIMEOUT);
-	}
-}
-
-void MX28_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
-	/* Datawriter for MX28 using protocol version 2.0.
-	 *
-	 * args is an array of arguments of the form
-	 * 	{ADDR_L, ADDR_H, PARAM1_L, PARAM1_H, ...}
-	 *
-	 * and numArgs must be equal to sizeof(args)	 *
-	 */
-
 	/* Do assignments and computations. */
-//	uint8_t arrTransmit[12 + numArgs];
-	uint8_t arrTransmit[20];
-	arrTransmit[0] = 0xFF;
-	arrTransmit[1] = 0xFF;
-	arrTransmit[2] = 0xFD;
-	arrTransmit[3] = 0x00;
-	arrTransmit[4] = hdynamixel -> _ID;
-	arrTransmit[5] = (3 + numArgs) & 0xFF; //  3 for instruction and CRC, 2 for register address, numArgs for arguments
-	arrTransmit[6] = ((3 + numArgs) >> 8) & 0xFF;
-	arrTransmit[7] = INST_WRITE_DATA;
+	uint8_t ID = hdynamixel -> _ID;
+	arrTransmit[ID][3] = arrSize - 4; // Length of message minus the obligatory bytes
+	arrTransmit[ID][5] = writeAddr; // Write address for register
+	arrTransmit[ID][6] = param1;
 
-	for(uint16_t i = 0; i < numArgs; i++){
-		arrTransmit[8 + i] = args[i];
+	/* Checksum. */
+	arrTransmit[ID][7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize): param2;
+	if(arrSize == 9){
+		arrTransmit[ID][8] = Dynamixel_ComputeChecksum(arrTransmit[ID], arrSize);
 	}
 
-	uint16_t myCRC = update_crc(0, arrTransmit, 5 + arrTransmit[5] + arrTransmit[6]);
-
-	arrTransmit[7 + numArgs + 1] = myCRC & 0x00FF;
-	arrTransmit[7 + numArgs + 2] = (myCRC >> 8) & 0x00FF;
-
 	/* Set data direction for transmit. */
 	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 10 + numArgs, TRANSMIT_TIMEOUT);
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], arrSize, TRANSMIT_TIMEOUT);
 }
 
-void setProtocolTo1(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Sets motor protocol version to version 1.0 (relevant for MX28).
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
-	uint8_t args[3] = {MX28_REG_PROTOCOL_VERSION, 0, 1};
-	MX28_DataWriter(hdynamixel, args, sizeof(args));
-
-	hdynamixel -> _protocolVersion = 1;
-}
-
-uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Used only for returning a status packet or checking the existence of a motor
-	 * with a specified ID. Does not command any operations.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: motor ID seen in status packet
-	 */
-
-	/* Define arrays for transmission and reception. */
-	uint8_t arr[6];
-
-	/* Do assignments and computations. */
-	arr[0] = 0xff; // Obligatory bytes for starting communication
-	arr[1] = 0xff; // Obligatory bytes for starting communication
-	arr[2] = hdynamixel -> _ID; // Motor ID
-	arr[3] = 2; // Length of message minus the obligatory bytes
-	arr[4] = INST_PING; // PING instruction
-	arr[5] = Dynamixel_ComputeChecksum(arr, 6);
-
-	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 6, TRANSMIT_TIMEOUT);
-
-	/* Set data direction for receive. */
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Receive. */
-	HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 6, RECEIVE_TIMEOUT);
-	return(arr[2]);
-}
-
-uint8_t Ping(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Used only for returning a status packet or checking the existence of a motor
-	 * with a specified ID. Does not command any operations.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: error field in status packet
-	 */
-
-	/* Define arrays for transmission and reception. */
-	uint8_t arr[14] = {0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x03, 0x00, 0x01, 0x19, 0x4E};
-
-	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 10, TRANSMIT_TIMEOUT);
-
-	/* Set data direction for receive. */
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Receive. */
-	HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 4, RECEIVE_TIMEOUT);
-//	HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 4, 100000);
-	return(arr[8]);
-}
-
-
-
-/*******************************************************************************/
-/*	Initialization helper functions											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
-void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
-		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType){
-	/* Initializes the motor handle.
-	 *
-	 * Arguments: hdynamixel, the motor handle to be initialized
-	 * 			  ID, the ID the motor has. Note that this function will not set
-	 * 			  	  the ID in case there are multiple actuators on the same bus
-	 * 			  UART_Handle, the handle to the UART that will be used to
-	 * 			      communicate with this motor
-	 * 			  DataDirPort, the pointer to the port that the data direction pin
-	 * 			  	  for the motor is on
-	 * 			  DataDirPinNum, the number corresponding to the pin that controls
-	 * 			      data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
-	 * 			  motorType, indicates whether motor is AX12A or MX28
-	 *
-	 * Returns: none
-	 */
-
-	/* Set fields in motor handle. */
-	hdynamixel -> _motorType = motorType;
-	hdynamixel -> _protocolVersion = 2;
-	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
-	hdynamixel -> _BaudRate = 57600; 			// Number of bytes per second transmitted by the UART
-	hdynamixel -> _lastPosition = 0; 			// In future, could initialize this accurately
-	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
-	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately
-	hdynamixel -> _lastLoadDirection = -1; 		// In future, could initialize this accurately
-	hdynamixel -> _lastVoltage = -1; 			// In future, could initialize this accurately
-	hdynamixel -> _lastTemperature = -1; 		// In future, could initialize this accurately
-	hdynamixel -> _isJointMode = 1; 			// In future, could initialize this accurately
-	hdynamixel -> _UART_Handle = UART_Handle; 	// For UART TX and RX
-	hdynamixel -> _dataDirPort = DataDirPort;
-	hdynamixel -> _dataDirPinNum = DataDirPinNum;
-}
-
-void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Resets the control table values of the motor to the Factory Default Value settings.
-	 * Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are
-	 * connected on the same bus, there will not be a way to assign them unique IDs without
-	 * first disconnecting them. Need to wait around 500 ms before motor becomes valid again.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
-	/* Define array for transmission. */
-	uint8_t arrTransmit[6];
-
-	/* Do assignments and computations. */
-	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
-	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
-	arrTransmit[3] = 2; // Length of message minus the obligatory bytes
-	arrTransmit[4] = INST_RESET; // Reset instruction
-	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
-
-	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
-	hdynamixel -> _ID = DEFAULT_ID;
-}
-
-void Reset(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arg){
-	/* Resets the control table values of the motor to the Factory Default Value settings.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  arg, 0xFF -> reset all control table entries, 0x01 -> resets all entries except ID,
-	 * 			  	   0x02 -> resets all entries except ID and baud rate
-	 *
-	 * Returns: none
-	 */
-
-	uint8_t arrTransmit[11];
-	arrTransmit[0] = 0xFF;
-	arrTransmit[1] = 0xFF;
-	arrTransmit[2] = 0xFD;
-	arrTransmit[3] = 0x00;
-	arrTransmit[4] = hdynamixel -> _ID;
-	arrTransmit[5] = 0x04;
-	arrTransmit[6] = 0;
-	arrTransmit[7] = INST_RESET;
-	arrTransmit[8] = arg;
-
-	uint16_t myCRC = update_crc(0, arrTransmit, 5 + arrTransmit[5] + arrTransmit[6]);
-
-	arrTransmit[7 + 1 + 1] = myCRC & 0x00FF;
-	arrTransmit[7 + 1 + 2] = (myCRC >> 8) & 0x00FF;
-
-	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 10 + 1, TRANSMIT_TIMEOUT);
-
-	hdynamixel -> _ID = DEFAULT_ID;
-}
-
-void Reboot(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Reboots a MX28.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
-	uint8_t arrTransmit[10];
-	arrTransmit[0] = 0xFF;
-	arrTransmit[1] = 0xFF;
-	arrTransmit[2] = 0xFD;
-	arrTransmit[3] = 0x00;
-	arrTransmit[4] = hdynamixel -> _ID;
-	arrTransmit[5] = 0x04;
-	arrTransmit[6] = 0;
-	arrTransmit[7] = V2_INST_REBOOT;
-
-	uint16_t myCRC = update_crc(0, arrTransmit, 5 + arrTransmit[5] + arrTransmit[6]);
-
-	arrTransmit[7 + 1] = myCRC & 0x00FF;
-	arrTransmit[7 + 2] = (myCRC >> 8) & 0x00FF;
-
-	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Transmit. */
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 10, TRANSMIT_TIMEOUT);
-
-	hdynamixel -> _ID = DEFAULT_ID;
-}
 
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
 	/* Reads data back from the motor passed in by the handle. This process is identical
@@ -671,6 +363,155 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
 	}
 }
+//
+//void MX28_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
+//	/* Datawriter for MX28 using protocol version 2.0.
+//	 *
+//	 * args is an array of arguments of the form
+//	 * 	{ADDR_L, ADDR_H, PARAM1_L, PARAM1_H, ...}
+//	 *
+//	 * and numArgs must be equal to sizeof(args)	 *
+//	 */
+//
+//	/* Do assignments and computations. */
+////	uint8_t arrTransmit[12 + numArgs];
+//	uint8_t arrTransmit[20];
+//	arrTransmit[0] = 0xFF;
+//	arrTransmit[1] = 0xFF;
+//	arrTransmit[2] = 0xFD;
+//	arrTransmit[3] = 0x00;
+//	arrTransmit[4] = hdynamixel -> _ID;
+//	arrTransmit[5] = (3 + numArgs) & 0xFF; //  3 for instruction and CRC, 2 for register address, numArgs for arguments
+//	arrTransmit[6] = ((3 + numArgs) >> 8) & 0xFF;
+//	arrTransmit[7] = INST_WRITE_DATA;
+//
+//	for(uint16_t i = 0; i < numArgs; i++){
+//		arrTransmit[8 + i] = args[i];
+//	}
+//
+//	uint16_t myCRC = update_crc(0, arrTransmit, 5 + arrTransmit[5] + arrTransmit[6]);
+//
+//	arrTransmit[7 + numArgs + 1] = myCRC & 0x00FF;
+//	arrTransmit[7 + numArgs + 2] = (myCRC >> 8) & 0x00FF;
+//
+//	/* Set data direction for transmit. */
+//	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+//
+//	/* Transmit. */
+//	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 10 + numArgs, TRANSMIT_TIMEOUT);
+//}
+
+uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
+	/* Used only for returning a status packet or checking the existence of a motor
+	 * with a specified ID. Does not command any operations.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: motor ID seen in status packet
+	 */
+
+	/* Define arrays for transmission and reception. */
+	uint8_t arr[6];
+
+	/* Do assignments and computations. */
+	arr[0] = 0xff; // Obligatory bytes for starting communication
+	arr[1] = 0xff; // Obligatory bytes for starting communication
+	arr[2] = hdynamixel -> _ID; // Motor ID
+	arr[3] = 2; // Length of message minus the obligatory bytes
+	arr[4] = INST_PING; // PING instruction
+	arr[5] = Dynamixel_ComputeChecksum(arr, 6);
+
+	/* Set data direction for transmit. */
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+	/* Transmit. */
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 6, TRANSMIT_TIMEOUT);
+
+	/* Set data direction for receive. */
+	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+	/* Receive. */
+	HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 6, RECEIVE_TIMEOUT);
+	return(arr[2]);
+}
+
+
+
+
+/*******************************************************************************/
+/*	Initialization helper functions											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*******************************************************************************/
+void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
+		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType){
+	/* Initializes the motor handle.
+	 *
+	 * Arguments: hdynamixel, the motor handle to be initialized
+	 * 			  ID, the ID the motor has. Note that this function will not set
+	 * 			  	  the ID in case there are multiple actuators on the same bus
+	 * 			  UART_Handle, the handle to the UART that will be used to
+	 * 			      communicate with this motor
+	 * 			  DataDirPort, the pointer to the port that the data direction pin
+	 * 			  	  for the motor is on
+	 * 			  DataDirPinNum, the number corresponding to the pin that controls
+	 * 			      data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
+	 * 			  motorType, indicates whether motor is AX12A or MX28
+	 *
+	 * Returns: none
+	 */
+
+	/* Set fields in motor handle. */
+	hdynamixel -> _motorType = motorType;
+	hdynamixel -> _protocolVersion = 1;
+	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
+	hdynamixel -> _lastPosition = 0; 			// In future, could initialize this accurately
+	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately
+	hdynamixel -> _lastLoadDirection = -1; 		// In future, could initialize this accurately
+	hdynamixel -> _lastVoltage = -1; 			// In future, could initialize this accurately
+	hdynamixel -> _lastTemperature = -1; 		// In future, could initialize this accurately
+	hdynamixel -> _isJointMode = 1; 			// In future, could initialize this accurately
+	hdynamixel -> _UART_Handle = UART_Handle; 	// For UART TX and RX
+	hdynamixel -> _dataDirPort = DataDirPort;
+	hdynamixel -> _dataDirPinNum = DataDirPinNum;
+}
+
+void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
+	/* Resets the control table values of the motor to the Factory Default Value settings.
+	 * Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are
+	 * connected on the same bus, there will not be a way to assign them unique IDs without
+	 * first disconnecting them. Need to wait around 500 ms before motor becomes valid again.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 *
+	 * Returns: none
+	 */
+
+	/* Define array for transmission. */
+	uint8_t arrTransmit[6];
+
+	/* Do assignments and computations. */
+	arrTransmit[0] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[1] = 0xff; // Obligatory bytes for starting communication
+	arrTransmit[2] = hdynamixel -> _ID; // Motor ID
+	arrTransmit[3] = 2; // Length of message minus the obligatory bytes
+	arrTransmit[4] = INST_RESET; // Reset instruction
+	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
+
+	/* Set data direction. */
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+	/* Transmit. */
+	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+	hdynamixel -> _ID = DEFAULT_ID;
+}
+
 
 /*******************************************************************************/
 /*	Error handling helper functions											   */

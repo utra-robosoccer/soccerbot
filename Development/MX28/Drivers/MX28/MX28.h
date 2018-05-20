@@ -70,10 +70,9 @@ extern const uint8_t RECEIVE_TIMEOUT;	// Timeout for blocking UART receptions, i
 
 /* Register definitions. */
 // TODO
-#define MX28_REG_ID 					    		7		// Motor ID register
-#define MX28_REG_BAUD_RATE							8		// Baud rate register
-#define MX28_REG_RETURN_DELAY_TIME					9		// Status packet return delay time register
-#define MX28_REG_PROTOCOL_VERSION					13		// Version of communication protocol to be used
+#define MX28_REG_ID 					    		3		// Motor ID register
+#define MX28_REG_BAUD_RATE							4		// Baud rate register
+#define MX28_REG_RETURN_DELAY_TIME					5		// Status packet return delay time register
 //#define MX28_REG_CW_ANGLE_LIMIT		    		0x06	// Clockwise angle limit register (0x06 = low byte, 0x07 = high byte)
 //#define MX28_REG_CCW_ANGLE_LIMIT		    		0x08	// Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte)
 //#define MX28_REG_HIGH_VOLTAGE_LIMIT	    		0x0C	// Maximum voltage limit register
@@ -82,14 +81,14 @@ extern const uint8_t RECEIVE_TIMEOUT;	// Timeout for blocking UART receptions, i
 //#define MX28_REG_STATUS_RETURN_LEVEL	    		0x10	// Status packet return condition(s) register
 //#define MX28_REG_ALARM_LED						0xxxx	// Alarm LED condition(s) register
 //#define MX28_REG_ALARM_SHUTDOWN		    		0x12	// Alarm shutdown condition(s) register
-#define MX28_REG_TORQUE_ENABLE 		    			64		// Motor power control register
-#define MX28_REG_LED_ENABLE			    			65		// LED control register
+#define MX28_REG_TORQUE_ENABLE 		    			24		// Motor power control register
+#define MX28_REG_LED_ENABLE			    			25		// LED control register
 //#define MX28_REG_CW_COMPLIANCE_MARGIN				0x1A	// Clockwise compliance margin register
 //#define MX28_REG_CCW_COMPLIANCE_MARGIN			0x1B	// Counter-clockwise compliance margin register
 //#define MX28_REG_CW_COMPLIANCE_SLOPE	    		0x1C	// Clockwise compliance slope register
 //#define MX28_REG_CCW_COMPLIANCE_SLOPE    			0x1D	// Counter-clockwise compliance slope register
-#define MX28_REG_GOAL_POSITION		    			116		// Goal position register (0x1E = low byte, 0x1F = high byte)
-#define MX28_REG_GOAL_VELOCITY		    			104		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
+#define MX28_REG_GOAL_POSITION		    			30		// Goal position register (0x1E = low byte, 0x1F = high byte)
+#define MX28_REG_GOAL_VELOCITY		    			32		// Goal velocity register (0x20 = low byte, 0x21 = high byte)
 //#define MX28_REG_GOAL_TORQUE			    		0x22	// Goal torque register (0x22 = low byte, 0x23 = high byte)
 //#define MX28_REG_LOCK_EEPROM 	 	    			0x2F	// EEPROM lock register
 //#define MX28_REG_PUNCH 	 			    		0x30	// Punch (0x30 = low register, 0x31 = high register)
@@ -104,7 +103,7 @@ extern const uint8_t RECEIVE_TIMEOUT;	// Timeout for blocking UART receptions, i
 /* Default register value definitions. */
 #define BROADCAST_ID				 0xFE	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
 #define DEFAULT_ID					 0x01	    // Default motor ID
-#define DEFAULT_BAUD_RATE			 0x01	    // Default baud rate
+#define MX28_DEFAULT_BAUD_RATE		 0x22	    // Default baud rate
 #define DEFAULT_RETURN_DELAY		 0xFA	    // Default time motor waits before returning status packet (microseconds)
 #define DEFAULT_TORQUE_ENABLE		 0x00	    // Default motor power state
 #define DEFAULT_LED_ENABLE			 0x00	    // Default LED state
@@ -131,7 +130,6 @@ typedef struct{
 	enum motorTypes_e		_motorType;				/*!< Identifies motor as AX12A, MX28, etc.			*/
 	uint8_t					_protocolVersion;
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
-	uint32_t				_BaudRate;				/*!< UART communication baud rate					*/
 	uint16_t				_lastPosition;			/*!< Position read from motor						*/
 	float					_lastVelocity;			/*!< Velocity read from motor						*/
 	uint8_t					_lastLoad;				/*!< Load read from motor							*/
@@ -190,20 +188,13 @@ void LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled);
 
 
 // Transmission & Reception
-//uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
-void MX28_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
-//uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
-void setProtocolTo1(Dynamixel_HandleTypeDef* hdynamixel);
-uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
-uint8_t Ping(Dynamixel_HandleTypeDef* hdynamixel);
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
+uint8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Initialization
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType);
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
-void Reset(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arg);
-void Reboot(Dynamixel_HandleTypeDef* hdynamixel);
 
 #endif /* __MX28_H__ */
