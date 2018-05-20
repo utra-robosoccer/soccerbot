@@ -1,3 +1,8 @@
+/* This file implements MX28-specific functions.
+ *
+ * Author: Tyler
+ */
+
 /********************************* Includes ************************************/
 #include "MX28.h"
 
@@ -12,29 +17,86 @@
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-// TODO (all)
+// TODO
 void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset){
 
 }
 
+// TODO
 void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divider){
 
 }
 
 void MX28_SetDGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t DGain){
+	/* Sets the value of the derivative gain used in the motor's PID controller.
+	 * kD = DGain / 250
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  DGain, the derivative gain parameter
+	 *
+	 * Returns: none
+	 */
 
+	if(hdynamixel -> _motorType == MX28TYPE){
+		uint8_t args[2] = {MX28_REG_D_GAIN, DGain};
+		Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
+	}
 }
 
 void MX28_SetIGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t IGain){
+	/* Sets the value of the integral gain used in the motor's PID controller.
+	 * kI = IGain * 125/256
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  IGain, the integral gain parameter
+	 *
+	 * Returns: none
+	 */
 
+	if(hdynamixel -> _motorType == MX28TYPE){
+		uint8_t args[2] = {MX28_REG_I_GAIN, IGain};
+		Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
+	}
 }
 
 void MX28_SetPGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t PGain){
+	/* Sets the value of the proportional gain used in the motor's PID controller.
+	 * kP = PGain / 8
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  PGain, the proportional gain parameter
+	 *
+	 * Returns: none
+	 */
 
+	if(hdynamixel -> _motorType == MX28TYPE){
+		uint8_t args[2] = {MX28_REG_P_GAIN, PGain};
+		Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
+	}
 }
 
 void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAcceleration){
+	/* Sets the goal acceleration. The argument should be in units of degree/s^2
+	 *
+	 * Special: goalAcceleration of 0 means no control over accel (uses max accel of motor)
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 		      goalAcceleration, the target acceleration in degree/s^2
+	 */
 
+	if(hdynamixel -> _motorType == MX28TYPE){
+		if(goalAcceleration > 2180){
+			goalAcceleration = 2180;
+		}
+		if(goalAcceleration < 0){
+			goalAcceleration = 0;
+		}
+
+		uint8_t accelArg = (uint8_t)(goalAcceleration / 8.583);
+
+		uint8_t args[2] = {MX28_REG_GOAL_ACCELERATION, accelArg};
+		Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
+	}
 }
 
 
@@ -50,44 +112,7 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAc
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
+// TODO
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 }
-
-//void MX28_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
-//	/* Datawriter for MX28 using protocol version 2.0.
-//	 *
-//	 * args is an array of arguments of the form
-//	 * 	{ADDR_L, ADDR_H, PARAM1_L, PARAM1_H, ...}
-//	 *
-//	 * and numArgs must be equal to sizeof(args)	 *
-//	 */
-//
-//	/* Do assignments and computations. */
-////	uint8_t arrTransmit[12 + numArgs];
-//	uint8_t arrTransmit[20];
-//	arrTransmit[0] = 0xFF;
-//	arrTransmit[1] = 0xFF;
-//	arrTransmit[2] = 0xFD;
-//	arrTransmit[3] = 0x00;
-//	arrTransmit[4] = hdynamixel -> _ID;
-//	arrTransmit[5] = (3 + numArgs) & 0xFF; //  3 for instruction and CRC, 2 for register address, numArgs for arguments
-//	arrTransmit[6] = ((3 + numArgs) >> 8) & 0xFF;
-//	arrTransmit[7] = INST_WRITE_DATA;
-//
-//	for(uint16_t i = 0; i < numArgs; i++){
-//		arrTransmit[8 + i] = args[i];
-//	}
-//
-//	uint16_t myCRC = update_crc(0, arrTransmit, 5 + arrTransmit[5] + arrTransmit[6]);
-//
-//	arrTransmit[7 + numArgs + 1] = myCRC & 0x00FF;
-//	arrTransmit[7 + numArgs + 2] = (myCRC >> 8) & 0x00FF;
-//
-//	/* Set data direction for transmit. */
-//	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-//
-//	/* Transmit. */
-//	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 10 + numArgs, TRANSMIT_TIMEOUT);
-//}
-

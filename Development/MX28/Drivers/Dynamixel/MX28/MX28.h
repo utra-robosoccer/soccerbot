@@ -1,4 +1,7 @@
-/****************** Drivers for Dynamixel MX28 Servo Motor ******************/
+/* This file provides interfaces for MX28-specific functions.
+ *
+ * Author: Tyler
+ */
 
 /******************** Define to prevent recursive inclusion *******************/
 #ifndef __MX28_H__

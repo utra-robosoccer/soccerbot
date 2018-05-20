@@ -1,4 +1,7 @@
-/****************** Drivers for Dynamixel AX-12A Servo Motor ******************/
+/* This file provides interfaces for AX12A-specific functions.
+ *
+ * Author: Tyler
+ */
 
 /******************** Define to prevent recursive inclusion *******************/
 #ifndef __AX12A__
