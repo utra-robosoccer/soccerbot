@@ -119,7 +119,7 @@ int main(void)
   Dynamixel_TorqueEnable(&MX28, 1);
 
   /* Set a position */
-  Dynamixel_SetGoalPosition(&MX28, 230);
+  Dynamixel_SetGoalPosition(&MX28, 270);
   /* USER CODE END 2 */
 
   /* Infinite loop */

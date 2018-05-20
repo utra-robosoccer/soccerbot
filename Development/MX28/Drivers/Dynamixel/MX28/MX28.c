@@ -131,8 +131,6 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAc
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
-extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Activates multi-turn mode, which allows the actuator to have a range of
 	 * controllable position values from -28672 to 28672.
