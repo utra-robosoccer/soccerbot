@@ -8,7 +8,12 @@
 #define __MX28_H__
 
 /********************************** Includes **********************************/
-#include "../DynamixelV1IO.h"
+#include "../Dynamixel_HandleTypeDef.h"
+
+/*********************************** Externs **********************************/
+extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
+extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
+extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
 
 /*********************************** Macros ***********************************/
 /* Value limit definitions */

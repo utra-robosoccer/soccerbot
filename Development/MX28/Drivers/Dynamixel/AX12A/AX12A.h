@@ -8,7 +8,10 @@
 #define __AX12A__
 
 /********************************** Includes **********************************/
-#include "../DynamixelV1IO.h"
+#include "../Dynamixel_HandleTypeDef.h"
+
+/*********************************** Externs **********************************/
+extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 
 /*********************************** Macros ***********************************/
 /* Value limit definitions */

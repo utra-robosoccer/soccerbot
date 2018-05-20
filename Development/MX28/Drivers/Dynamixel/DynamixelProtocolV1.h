@@ -29,21 +29,30 @@
 #include <stdint.h>
 
 /* Dynamixel actuators */
-#include "DynamixelV1IO.h"
+#include "Dynamixel_HandleTypeDef.h"
 #include "MX28/MX28.h"
 #include "AX12A/AX12A.h"
 
 /*********************************** Macros ***********************************/
-/* Value limit definitions */
-#define MIN_VELOCITY          1		// Minimum angular velocity (RPM)
-#define MAX_ANGLE             300	// Maximum angular position (joint mode)
-#define MIN_ANGLE             0		// Minimum angular position (joint mode)
-#define MAX_TORQUE            100	// Maximum torque (percent of maximum)
-#define MIN_TORQUE            0		// Minimum torque (percent of maximum)
-#define MAX_VOLTAGE           14	// Maximum operating voltage
-#define MIN_VOLTAGE           6		// Minimum operating voltage
-#define MAX_PUNCH             1023	// Maximum punch (proportional to minimum current)
-#define MIN_PUNCH             0		// Minimum punch (proportional to minimum current)
+#define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
+#define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
+
+/* Communications */
+#define TRANSMIT_TIMEOUT 		10 		// Timeout for blocking UART transmissions, in milliseconds
+#define RECEIVE_TIMEOUT			10 		// Timeout for blocking UART receptions, in milliseconds
+#define NUM_MOTORS				18		// Used to determine buffer sizes
+#define BUFF_SIZE_RX			8		// Receive buffer size for UART receptions (number of bytes)
+#define TX_PACKET_SIZE			9		// Maximum packet size for regular motor commands (exclusion: sync write)
+#define NUM_UARTS				6		// Number of UARTs available for motor communication
+
+/* Instruction set definitions */
+#define INST_PING				0x01	    // Gets a status packet
+#define INST_READ_DATA			0x02	    // Reads data from a motor register
+#define INST_WRITE_DATA			0x03	    // Writes data for immediate execution
+#define INST_REG_WRITE			0x04	    // Registers an instruction to be executed at a later time
+#define INST_ACTION				0x05	    // Triggers instructions registered by INST_REG_WRITE
+#define INST_RESET				0x06	    // Resets the control tables of the Dynamixel actuator(s) specified
+#define INST_SYNC_WRITE			0x83	    // Writes on a specified address with a specified data length on multiple devices
 
 /* Register addresses */
 #define REG_ID 					    		0x03	// Motor ID register
@@ -74,6 +83,7 @@
 
 /* Default register values */
 #define BROADCAST_ID				 0xFE	    // Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus)
+#define DEFAULT_ID				0x01	    // Default motor ID
 #define DEFAULT_RETURN_DELAY		 0xFA	    // Default time motor waits before returning status packet (microseconds)
 #define DEFAULT_CW_ANGLE_LIMIT		 0x0000		// Default clockwise angle limit
 #define DEFAULT_LOW_VOLTAGE_LIMIT	 0x3C		// Default permitted minimum voltage (0x3C = 60 -> 6.0 V)
@@ -84,6 +94,24 @@
 #define DEFAULT_TORQUE_ENABLE		 0x00	    // Default motor power state
 #define DEFAULT_LED_ENABLE			 0x00	    // Default LED state
 #define DEFAULT_EEPROM_LOCK			 0x00	// Default value for the EEPROM lock
+
+/* Value limit definitions */
+#define MIN_VELOCITY          1		// Minimum angular velocity (RPM)
+#define MAX_ANGLE             300	// Maximum angular position (joint mode)
+#define MIN_ANGLE             0		// Minimum angular position (joint mode)
+#define MAX_TORQUE            100	// Maximum torque (percent of maximum)
+#define MIN_TORQUE            0		// Minimum torque (percent of maximum)
+#define MAX_VOLTAGE           14	// Maximum operating voltage
+#define MIN_VOLTAGE           6		// Minimum operating voltage
+#define MAX_PUNCH             1023	// Maximum punch (proportional to minimum current)
+#define MIN_PUNCH             0		// Minimum punch (proportional to minimum current)
+
+/******************************* Public Variables *******************************/
+/* Buffer for data received from motors. */
+extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
+
+/* Bytes to be transmitted to motors are written to this array. */
+extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
 
 /***************************** Function prototypes ****************************/
 // Setters (use the WRITE DATA instruction)
@@ -116,9 +144,19 @@ uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel);
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel);
 uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
+// Transmission & Reception
+void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
+uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
+
+// Other motor instructions (low level control with timing from different WRITE DATA instruction)
+void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2);
+void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel);
+int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
+
 // Setup
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType);
+void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 
 // Interfaces for previously-defined functions
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity);

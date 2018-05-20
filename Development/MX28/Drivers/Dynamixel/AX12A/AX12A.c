@@ -160,66 +160,8 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
 	}
 }
 
-/*******************************************************************************/
-/*	Initialization helper functions											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
-//void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,
-//		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum){
-//	/* Initializes the motor handle.
-//	 *
-//	 * Arguments: hdynamixel, the motor handle to be initialized
-//	 * 			  ID, the ID the motor has. Note that this function will not set
-//	 * 			  	  the ID in case there are multiple actuators on the same bus
-//	 * 			  UART_Handle, the handle to the UART that will be used to
-//	 * 			      communicate with this motor
-//	 * 			  DataDirPort, the pointer to the port that the data direction pin
-//	 * 			  	  for the motor is on
-//	 * 			  DataDirPinNum, the number corresponding to the pin that controls
-//	 * 			      data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
-//	 *
-//	 * Returns: none
-//	 */
-//
-//	/* Set fields in motor handle. */
-//	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
-//	hdynamixel -> _BaudRate = 1000000; 			// Number of bytes per second transmitted by the UART
-//	hdynamixel -> _lastPosition = -1; 			// In future, could initialize this accurately
-//	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
-//	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately
-//	hdynamixel -> _lastLoadDirection = -1; 		// In future, could initialize this accurately
-//	hdynamixel -> _lastVoltage = -1; 			// In future, could initialize this accurately
-//	hdynamixel -> _lastTemperature = -1; 		// In future, could initialize this accurately
-//	hdynamixel -> _isJointMode = 1; 			// In future, could initialize this accurately
-//	hdynamixel -> _UART_Handle = UART_Handle; 	// For UART TX and RX
-//	hdynamixel -> _dataDirPort = DataDirPort;
-//	hdynamixel -> _dataDirPinNum = DataDirPinNum;
-//
-//	/* Motor buffer initialization. */
-//	/* ----> Sync write buffer <---- */
-//	arrSyncWrite[ID][0] = 0xFF;
-//	arrSyncWrite[ID][1] = 0xFF;
-//	arrSyncWrite[ID][2] = 0xFE;
-//	arrSyncWrite[ID][4] = INST_SYNC_WRITE;
-//
-//	/* Configure motor to return status packets only for read commands. */
-//	Dynamixel_SetStatusReturnLevel(hdynamixel, 1);
-//	osDelay(10);
-//
-//	/* Set minimum delay return time (2 microseconds). */
-//	Dynamixel_SetReturnDelayTime(hdynamixel, 2);
-//	osDelay(10);
-//
-//	/* Impress current to motor to enable torque. */
-//	Dynamixel_TorqueEnable(hdynamixel, 1);
-//	osDelay(10);
-//}
+
+
 
 /*******************************************************************************/
 /*	Interfaces for previously-defined functions								   */
