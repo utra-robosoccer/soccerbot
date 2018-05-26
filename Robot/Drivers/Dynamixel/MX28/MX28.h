@@ -38,7 +38,7 @@ void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divi
 void MX28_SetDGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t DGain);
 void MX28_SetIGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t IGain);
 void MX28_SetPGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t PGain);
-void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAcceleration);
+void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcceleration);
 
 // Interfaces for previously-defined functions
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel);

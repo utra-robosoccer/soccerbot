@@ -297,8 +297,6 @@ void StartDefaultTask(void const * argument)
 		(Motorcmd[i]).velocity = 10;
 	}
 
-
-
 	(Motorcmd[0]).qHandle = UART2_reqHandle;
 	(Motorcmd[1]).qHandle = UART2_reqHandle;
 	(Motorcmd[2]).qHandle = UART2_reqHandle;
@@ -318,39 +316,40 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[16]).qHandle = UART4_reqHandle;
 	(Motorcmd[17]).qHandle = UART4_reqHandle;
 
-	//IMU Initialization
+	// IMU Initialization
 	uint8_t lpf=4;
 	IMUdata._I2C_Handle = &hi2c1;
 	MPU6050_init(&IMUdata);
 	MPU6050_set_LPF(&IMUdata, lpf);
+	MPU6050_manually_set_offsets(&IMUdata);
 
-	while(1) {
+	while(1){
 	  // Infinite loop
-		i=0;
-		j=0;
-	  for(j=0;j<size;j++) {
-		  for(i=0;i<18;i++) {
-			  if(i<6){
-				  if(i == 3 || i == 4){
-					  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150;
-				  }
-				  else{
-					  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150;
-				  }
-			  }
-			  else{
-				  if(i == 8 || i == 11){
-					  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150;
-				  }
-				  else{
-					  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150;
-				  }
-			  }
-			  xQueueSend((Motorcmd[i]).qHandle,&(Motorcmd[i]),0);
-		  }
-		  osDelay(10);
-	  }
-	}
+      i = 0;
+	  j = 0;
+      for(j = 0; j < size; j++){
+        for(i = 0; i < 18; i++){
+      	  if(i < 6){
+            if(i == 3 || i == 4){
+              (Motorcmd[i]).position = motorPosArr[i][j] * 180 /PI + 150;
+            }
+            else{
+              (Motorcmd[i]).position = motorPosArr[i][j] * 180 /PI + 150;
+            }
+      	  }
+      	  else{
+      		  if(i == 8 || i == 11){
+                (Motorcmd[i]).position = motorPosArr[i][j] * 180 / PI + 150;
+      		  }
+      		  else{
+                (Motorcmd[i]).position = motorPosArr[i][j] * 180 / PI + 150;
+      		  }
+      	  }
+      	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+      }
+      osDelay(10);
+    }
+  }
 
   /* Infinite loop */
   /* USER CODE END StartDefaultTask */
@@ -480,7 +479,7 @@ void StartIMUTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
 	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
 	//xQueueSend(IMUQueueHandle,&IMUdata,0); //This is to send data to Lukas later on
   }

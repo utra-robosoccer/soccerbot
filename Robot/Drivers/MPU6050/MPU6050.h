@@ -73,6 +73,7 @@ void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
