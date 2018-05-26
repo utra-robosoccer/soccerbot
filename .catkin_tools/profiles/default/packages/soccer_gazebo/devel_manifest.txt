@@ -1,0 +1,4 @@
+soccer_gazebo
+/home/vuwij/soccer_ws/devel/.private/soccer_gazebo/share/soccer_gazebo/cmake/soccer_gazeboConfig.cmake /home/vuwij/soccer_ws/devel/share/soccer_gazebo/cmake/soccer_gazeboConfig.cmake
+/home/vuwij/soccer_ws/devel/.private/soccer_gazebo/share/soccer_gazebo/cmake/soccer_gazeboConfig-version.cmake /home/vuwij/soccer_ws/devel/share/soccer_gazebo/cmake/soccer_gazeboConfig-version.cmake
+/home/vuwij/soccer_ws/devel/.private/soccer_gazebo/lib/pkgconfig/soccer_gazebo.pc /home/vuwij/soccer_ws/devel/lib/pkgconfig/soccer_gazebo.pc

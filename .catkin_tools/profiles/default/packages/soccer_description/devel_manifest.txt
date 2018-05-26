@@ -1,0 +1,4 @@
+soccer_description
+/home/vuwij/soccer_ws/devel/.private/soccer_description/share/soccer_description/cmake/soccer_descriptionConfig.cmake /home/vuwij/soccer_ws/devel/share/soccer_description/cmake/soccer_descriptionConfig.cmake
+/home/vuwij/soccer_ws/devel/.private/soccer_description/share/soccer_description/cmake/soccer_descriptionConfig-version.cmake /home/vuwij/soccer_ws/devel/share/soccer_description/cmake/soccer_descriptionConfig-version.cmake
+/home/vuwij/soccer_ws/devel/.private/soccer_description/lib/pkgconfig/soccer_description.pc /home/vuwij/soccer_ws/devel/lib/pkgconfig/soccer_description.pc
