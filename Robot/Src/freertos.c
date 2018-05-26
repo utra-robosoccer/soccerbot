@@ -58,7 +58,7 @@
 #include "gpio.h"
 #include "i2c.h"
 //#include "tim.h"
-//#include "MPU6050.h"
+#include "../Drivers/MPU6050/MPU6050.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
@@ -71,12 +71,14 @@ osThreadId UART2_Handle;
 osThreadId UART4_Handle;
 osThreadId UART5_Handle;
 osThreadId UART7_Handle;
+osThreadId IMUTaskHandle;
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
 osMessageQId UART4_reqHandle;
 osMessageQId UART5_reqHandle;
 osMessageQId UART7_reqHandle;
 osMessageQId UART_rxHandle;
+osMessageQId IMUQueueHandle;
 
 /* USER CODE BEGIN Variables */
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
@@ -93,7 +95,7 @@ osMessageQId UART4_reqHandle;
 osMessageQId UART5_reqHandle;
 osMessageQId UART7_reqHandle;
 osMessageQId UART_rxHandle;
-
+MPU6050_HandleTypeDef IMUdata;
 const double PI = 3.141592654;
 
 
@@ -144,6 +146,7 @@ void UART2_Handler(void const * argument);
 void UART4_Handler(void const * argument);
 void UART5_Handler(void const * argument);
 void UART7_Handler(void const * argument);
+void StartIMUTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -202,6 +205,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(UART7_, UART7_Handler, osPriorityIdle, 0, 128);
   UART7_Handle = osThreadCreate(osThread(UART7_), NULL);
 
+  /* definition and creation of IMUTask */
+  osThreadDef(IMUTask, StartIMUTask, osPriorityIdle, 0, 128);
+  IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 
@@ -233,6 +240,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of UART_rx */
   osMessageQDef(UART_rx, 20, UARTrx);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
+
+  /* definition and creation of IMUQueue */
+  osMessageQDef(IMUQueue, 20, MPU6050_HandleTypeDef);
+  IMUQueueHandle = osMessageCreate(osMessageQ(IMUQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   //osMessageQDef(IMUqueue, 16, uint16_t);
@@ -307,6 +318,11 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[16]).qHandle = UART4_reqHandle;
 	(Motorcmd[17]).qHandle = UART4_reqHandle;
 
+	//IMU Initialization
+	uint8_t lpf=4;
+	IMUdata._I2C_Handle = &hi2c1;
+	MPU6050_init(&IMUdata);
+	MPU6050_set_LPF(&IMUdata, lpf);
 
 	while(1) {
 	  // Infinite loop
@@ -453,6 +469,22 @@ void UART7_Handler(void const * argument)
 	  }
   }
   /* USER CODE END UART7_Handler */
+}
+
+/* StartIMUTask function */
+void StartIMUTask(void const * argument)
+{
+  /* USER CODE BEGIN StartIMUTask */
+
+	//MPU6050_10sec_calibration(&IMUdata);
+  /* Infinite loop */
+  for(;;)
+  {
+	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+	//xQueueSend(IMUQueueHandle,&IMUdata,0); //This is to send data to Lukas later on
+  }
+  /* USER CODE END StartIMUTask */
 }
 
 /* USER CODE BEGIN Application */

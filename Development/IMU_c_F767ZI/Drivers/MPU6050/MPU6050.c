@@ -15,32 +15,11 @@ void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_
 }
 
 
-//Using MPU6050_READ_DATA_DMA is preferred
-
-void MPU6050_READ_DATA_DMA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
-	/* Reads data stored in sensor output registers and stores data into a buffer
-
-	   Parameters: Reg_addr: address of register required to be read from
-	   	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
-		 		      	  	  the user.
-	*/
-	uint8_t status = HAL_I2C_Mem_Read_DMA(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6);
-}
-
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
 	/* Write one-byte to sensor register
 	 * Returns: None
 	 */
 	HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
-}
-
-//Using MPU6050_WRITE_REG_IT is preferred
-
-void MPU6050_WRITE_REG_IT(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
-	/* Write one-byte to sensor register
-	 * Returns: None
-	 */
-	HAL_I2C_Mem_Write_IT(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1);
 }
 
 uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
@@ -151,7 +130,7 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 
 	uint8_t output_buffer[6];
 	//Get the raw values
-	MPU6050_READ_DATA_DMA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
 	uint16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
 	uint16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
 	uint16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
