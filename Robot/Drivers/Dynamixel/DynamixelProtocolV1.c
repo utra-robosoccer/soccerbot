@@ -39,8 +39,14 @@ uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00}
 };
 
-
-
+/* Sync-writing position uses this array. */
+uint8_t arrSyncWritePosition[NUM_UARTS][23] = {
+	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+};
 
 /************************ Private Function Prototypes **************************/
 inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
@@ -170,7 +176,7 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, uint16_t 
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle){
+void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAngle){
 	/* Sets the clockwise angle limit for the current motor.
 	 * Register 0x06 in EEPROM for low byte, 0x07 in EEPROM for high byte
 	 *
@@ -210,7 +216,7 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAn
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle){
+void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAngle){
 	/* Sets the counter-clockwise angle limit for the current motor.
 	 * Register 0x08 in EEPROM for low byte, 0x09 in EEPROM for high byte
 	 *
@@ -258,7 +264,7 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxA
 }
 
 // TODO: Test
-void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double highestVoltage){
+void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float highestVoltage){
 	/* Sets the highest operating voltage limit for the current motor.
 	 *
 	 * Instruction register address: 0x0C (EEPROM)
@@ -291,7 +297,7 @@ void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, doubl
 }
 
 // TODO: Test
-void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double lowestVoltage){
+void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float lowestVoltage){
 	/* Sets the lowest operating voltage limit for the current motor.
 	 *
 	 * Instruction register address: 0x0D (EEPROM)
@@ -319,7 +325,7 @@ void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, double
 }
 
 // TODO: Test
-void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, double maxTorque){
+void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, float maxTorque){
 	/* Sets the maximum torque limit for all motor operations.
 	 * Low byte is addr 0x0E in motor RAM, high byte is addr 0x0F in motor RAM.
 	 *
@@ -475,7 +481,7 @@ void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled)
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalAngle){
+void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, float goalAngle){
 	/* Takes a double between 0 and 300, encodes this position in an
 	 * upper and low hex byte pair (with a maximum of 1023 as defined in the AX-12
 	 * user manual), and sends this information (along with requisites) over UART.
@@ -501,7 +507,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalA
 		}
 	}
 
-	/* Translate the angle from degrees into a 10-bit number. */
+	/* Translate the angle from degrees into a 10- or 12-bit number. */
 	uint16_t normalized_value = 0;
 	if(hdynamixel -> _motorType == AX12ATYPE){
 		normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
@@ -521,7 +527,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, double goalA
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity){
+void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* Sets the goal velocity of the motor in RAM.
 	 * Low byte is 0x20 in motor RAM, high byte is 0x21 in motor RAM.
 	 *
@@ -587,7 +593,7 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, double goalV
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, double goalTorque){
+void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, float goalTorque){
 	/* Sets the goal torque for the current motor. Initial value is taken from 0x0E and 0x0F (max torque in EEPROM)
 	 * Low byte is 0x22 in motor RAM, high byte is 0x23 in motor RAM.
 	 *
@@ -627,7 +633,7 @@ void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel){
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, double punch){
+void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 	/* Sets a quantity proportional to the minimum current supplied to the motor during operation.
 	 * Units are not specified in datasheet, and therefore this function is not entirely useful without
 	 * sufficient testing.
@@ -939,7 +945,205 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	}
 }
 
+// TODO: Test this
+void Dynamixel_SyncWritePosition(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock){
+	/* Implements the sync write instruction (0x83) for updating the positions of several motors connected
+	 * via the same UART module.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  syncWriteBlock, contains all the fields necessary for transmitting the data
+	 *
+	 * Returns: none
+	 */
 
+	/* Compute the first index into the sync write array */
+	uint8_t arrIdx = 0;
+	UART_HandleTypeDef* theUART = syncWriteBlock -> _UART_Handle;
+
+	if(theUART == &huart1){ arrIdx = 0; }
+	else if(theUART == &huart2){ arrIdx = 1; }
+	else if(theUART == &huart4){ arrIdx = 2; }
+	else if(theUART == &huart5){ arrIdx = 3; }
+	else if(theUART == &huart7){ arrIdx = 4; }
+	else{
+		// If we are here, then a UART that is not supported by the robot is attempting to be used
+		return;
+	}
+
+	/* Write packet length, based on the number of motors on this UART */
+	arrSyncWritePosition[arrIdx][3] = 4 + (syncWriteBlock -> numMotors) * (1 + 2);
+
+	/* Loop through motors in the syncWriteBlock, adding their IDs and arguments into the packet */
+	uint8_t idx = 7;
+	float goalAngle = 0;
+	uint16_t normalized_value = 0;
+	for(uint8_t motor = 0; motor < (syncWriteBlock -> numMotors); motor++){
+		// Put ID into packet
+		arrSyncWritePosition[arrIdx][idx] = (syncWriteBlock -> motorHandles)[motor] -> _ID;
+
+		/* Check for input validity. If input not valid, replace goalAngle with closest
+		 * valid value to ensure code won't halt. */
+		goalAngle = (syncWriteBlock -> motorArgs)[motor];
+		if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
+			if(goalAngle > MIN_ANGLE){
+				goalAngle = MAX_ANGLE;
+			}
+			else{
+				goalAngle = MIN_ANGLE;
+			}
+		}
+
+		/* Translate the angle from degrees into a 10- or 12-bit number. */
+		if((syncWriteBlock -> motorHandles)[motor] -> _motorType == AX12ATYPE){
+			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
+		}
+		else if((syncWriteBlock -> motorHandles)[motor] -> _motorType == MX28TYPE){
+			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 4095);
+		}
+		else{
+			// Should NEVER reach here!
+			return;
+		}
+
+		uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
+		uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
+
+		arrSyncWritePosition[arrIdx][idx + 1] = lowByte;
+		arrSyncWritePosition[arrIdx][idx + 2] = highByte;
+
+		idx += 3;
+	}
+
+	HAL_UART_Transmit(syncWriteBlock -> _UART_Handle, arrSyncWritePosition[arrIdx], 4 + arrSyncWritePosition[arrIdx][3], TRANSMIT_TIMEOUT);
+}
+
+// TODO: Test this
+void Dynamixel_SyncWritePositionAndVelocity(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock){
+	/* Implements the sync write instruction (0x83) for updating the positions and velocities
+	 * of several motors connected via the same UART module.
+	 *
+	 * Arguments: hdynamixel, the motor handle
+	 * 			  syncWriteBlock, contains all the fields necessary for transmitting the data
+	 *
+	 * Returns: none
+	 */
+
+	/* Compute the first index into the sync write array */
+	uint8_t arrIdx = 0;
+	UART_HandleTypeDef* theUART = syncWriteBlock -> _UART_Handle;
+
+	if(theUART == &huart1){ arrIdx = 0; }
+	else if(theUART == &huart2){ arrIdx = 1; }
+	else if(theUART == &huart4){ arrIdx = 2; }
+	else if(theUART == &huart5){ arrIdx = 3; }
+	else if(theUART == &huart7){ arrIdx = 4; }
+	else{
+		// If we are here, then a UART that is not supported by the robot is attempting to be used
+		return;
+	}
+
+	/* Write packet length, based on the number of motors on this UART */
+	arrSyncWritePosition[arrIdx][3] = 4 + (syncWriteBlock -> numMotors) * (1 + 2 + 2);
+
+	/* Loop through motors in the syncWriteBlock, adding their IDs and arguments into the packet */
+	uint8_t idx = 7;
+	uint8_t lowByte = 0;
+	uint8_t highByte = 0;
+	uint16_t normalized_value = 0;
+	float goalAngle = 0;
+	float goalVelocity = 0;
+
+	for(uint8_t motor = 0; motor < (syncWriteBlock -> numMotors); motor += 2){
+		// Put ID into packet
+		arrSyncWritePosition[arrIdx][idx] = (syncWriteBlock -> motorHandles)[motor] -> _ID;
+
+		/********** POSITION **********/
+		/* Check for input validity for position. If input not valid, replace goalAngle with closest
+		 * valid value to ensure code won't halt. */
+		goalAngle = (syncWriteBlock -> motorArgs)[motor]; // Position argument
+		if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
+			if(goalAngle > MIN_ANGLE){
+				goalAngle = MAX_ANGLE;
+			}
+			else{
+				goalAngle = MIN_ANGLE;
+			}
+		}
+
+		/* Translate the angle from degrees into a 10- or 12-bit number. */
+		normalized_value = 0;
+		if((syncWriteBlock -> motorHandles)[motor] -> _motorType == AX12ATYPE){
+			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
+		}
+		else if((syncWriteBlock -> motorHandles)[motor] -> _motorType == MX28TYPE){
+			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 4095);
+		}
+		else{
+			// Should NEVER reach here!
+			return;
+		}
+
+		lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
+		highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
+
+		arrSyncWritePosition[arrIdx][idx + 1] = lowByte;
+		arrSyncWritePosition[arrIdx][idx + 2] = highByte;
+
+		/********** VELOCITY **********/
+		/* Translate the position from RPM into a 10-bit number. */
+		normalized_value = 0;
+		goalVelocity = (syncWriteBlock -> motorArgs)[motor + 1]; // Velocity argument
+		if(hdynamixel -> _isJointMode){
+			/* Check for input validity. If input not valid, replace goalAngle with closest
+			 * valid value to ensure code won't halt. */
+			if(goalVelocity != 0){
+				if(hdynamixel -> _motorType == AX12ATYPE){
+					if((goalVelocity < MIN_VELOCITY) || (goalVelocity > AX12A_MAX_VELOCITY)){
+						if(goalVelocity > MIN_VELOCITY){
+							goalVelocity = AX12A_MAX_VELOCITY;
+						}
+						else{
+							goalVelocity = MIN_VELOCITY;
+						}
+					}
+				}
+				else if(hdynamixel -> _motorType == MX28TYPE){
+					if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MX28_MAX_VELOCITY)){
+						if(goalVelocity > MIN_VELOCITY){
+							goalVelocity = MX28_MAX_VELOCITY;
+						}
+						else{
+							goalVelocity = MIN_VELOCITY;
+						}
+					}
+				}
+			}
+		}
+
+		if(hdynamixel -> _motorType == AX12ATYPE){
+			normalized_value = (uint16_t)(goalVelocity / AX12A_MAX_VELOCITY * 1023);
+			if(goalVelocity < 0){
+				normalized_value = ((uint16_t)((goalVelocity * -1) / AX12A_MAX_VELOCITY * 1023)) | 0b000010000000000;
+			}
+		}
+		else if(hdynamixel -> _motorType == MX28TYPE){
+			normalized_value = (uint16_t)(goalVelocity / MX28_MAX_VELOCITY * 1023);
+			if(goalVelocity < 0){
+				normalized_value = ((uint16_t)((goalVelocity * -1) / MX28_MAX_VELOCITY * 1023)) | 0b000010000000000;
+			}
+		}
+
+		lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal velocity
+		highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal velocity
+
+		arrSyncWritePosition[arrIdx][idx + 3] = lowByte;
+		arrSyncWritePosition[arrIdx][idx + 4] = highByte;
+
+		idx += 5;
+	}
+
+	HAL_UART_Transmit(syncWriteBlock -> _UART_Handle, arrSyncWritePosition[arrIdx], 4 + arrSyncWritePosition[arrIdx][3], TRANSMIT_TIMEOUT);
+}
 
 
 /*******************************************************************************/
@@ -1139,7 +1343,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, double goalVelocity){
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* Sets the control registers such that the rotational angle of the motor
 	 * is not bounded.
 	 *
@@ -1204,4 +1408,28 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	}
 
 	return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
+}
+
+void syncWriteBlockInit(Dynamixel_HandleTypeDef** arrDynamixel, uint8_t numMotors, UART_HandleTypeDef* UART_Handle, SyncWriteBlock_t* syncWriteBlock){
+	/* Initializes the fields in the syncWriteBlock passed in by reference.
+	 *
+	 * Arguments: arrDynamixel, address of the array of motor handles
+	 *            numMotors, the size of the arrDynamixel array
+	 *            UART_Handle, the handle to the UART that will be used to
+	 * 			      communicate with this set of motors
+	 *            syncWriteBlock, the SyncWriteBlock_t structure to initialize
+	 *
+	 * Returns: none
+	 */
+
+	syncWriteBlock -> _UART_Handle = UART_Handle;
+
+	uint8_t idx = 0;
+	for(uint8_t i = 0; i < numMotors; i++){
+		if(arrDynamixel[i] -> _UART_Handle == syncWriteBlock -> _UART_Handle){
+            syncWriteBlock -> motorHandles[idx] = arrDynamixel[i];
+            syncWriteBlock -> numMotors = syncWriteBlock -> numMotors + 1;
+            idx++;
+		}
+	}
 }

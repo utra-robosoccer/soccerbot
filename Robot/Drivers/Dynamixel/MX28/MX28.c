@@ -8,8 +8,8 @@
 
 /*********************************** Externs **********************************/
 extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
-extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double minAngle); // (EEPROM)
-extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, double maxAngle); // (EEPROM)
+extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAngle); // (EEPROM)
+extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAngle); // (EEPROM)
 
 /******************************** Functions ************************************/
 /*******************************************************************************/
@@ -99,7 +99,7 @@ void MX28_SetPGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t PGain){
 	}
 }
 
-void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, double goalAcceleration){
+void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcceleration){
 	/* Sets the goal acceleration. The argument should be in units of degree/s^2
 	 *
 	 * Special: goalAcceleration of 0 means no control over accel (uses max accel of motor)

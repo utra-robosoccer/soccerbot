@@ -27,4 +27,19 @@ typedef struct{
 	uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
 }Dynamixel_HandleTypeDef;
 
+#define MAX_MOTORS_PER_UART 5
+typedef struct{
+	UART_HandleTypeDef* _UART_Handle; // UART handle in common to all motors here
+	Dynamixel_HandleTypeDef* motorHandles[MAX_MOTORS_PER_UART]; // Array of motor handles
+	float motorArgs[2 * MAX_MOTORS_PER_UART]; /* Buffer for motor commands
+											   *
+											   * Example: sending position commands for 3 motors
+											   * 	motorArgs = {motor1pos, motor2pos, motor3pos}
+											   *
+											   * Example: sending position and velocity commands for 3 motors
+											   * 	motorArgs = {motor1pos, motor1vel, motor2pos, motor2vel, motor3pos, motor3vel}
+											   */
+	uint8_t numMotors; // Number of motors in the motorHandles array
+}SyncWriteBlock_t;
+
 #endif /* __DYNAMIXEL_HANDLE_TYPE_DEF_H__ */
