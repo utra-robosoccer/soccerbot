@@ -14,7 +14,7 @@
 typedef struct robot_state {
 	uint32_t start_seq;
 	uint32_t id;
-	char msg[20];
+	char msg[80];
 	uint32_t end_seq;
 } RobotState;
 
