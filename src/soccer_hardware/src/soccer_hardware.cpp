@@ -44,7 +44,7 @@ void send_goal(RobotGoal* robotGoal) {
 int open_port(void) {
 	int fd; // file description for the serial port
 
-	fd = open("/dev/ttyS0",
+	fd = open("/dev/ttyTHS2",
 			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1)
 		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
@@ -65,8 +65,8 @@ int open_port(void) {
 int configure_port(int fd) {
 	struct termios port_settings;     // structure to store the port settings in
 
-	cfsetispeed(&port_settings, B2000000);    // set baud rates
-	cfsetospeed(&port_settings, B2000000);
+	cfsetispeed(&port_settings, B4000000);    // set baud rates
+	cfsetospeed(&port_settings, B4000000);
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
@@ -196,7 +196,7 @@ void receive_loop() {
 		totalSentPackets++;
 		if(!dataCorrect)
 			totalFailedPackets++;
-
+		tcflush(fd, TCIOFLUSH);
 		ROS_INFO("%d/%d Failed", totalFailedPackets, totalSentPackets);
 	}
 }
