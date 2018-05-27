@@ -85,6 +85,12 @@ osSemaphoreId semUART4TxHandle;
 osSemaphoreId semUART6TxHandle;
 
 /* USER CODE BEGIN Variables */
+const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
+					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
+					   MOTOR16, MOTOR17, MOTOR18
+};
+
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
 MPU6050_HandleTypeDef IMUdata;
 
@@ -209,11 +215,11 @@ void MX_FREERTOS_Init(void) {
   UART3_Handle = osThreadCreate(osThread(UART3_), NULL);
 
   /* definition and creation of UART4_ */
-  osThreadDef(UART4_, UART4_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART4_, UART4_Handler, osPriorityNormal, 0, 128);
   UART4_Handle = osThreadCreate(osThread(UART4_), NULL);
 
   /* definition and creation of UART6_ */
-  osThreadDef(UART6_, UART6_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART6_, UART6_Handler, osPriorityNormal, 0, 128);
   UART6_Handle = osThreadCreate(osThread(UART6_), NULL);
 
   /* definition and creation of IMUTask */
@@ -261,24 +267,24 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 	int size = 1001, i, j;
 	UARTcmd Motorcmd[18];
-	Dynamixel_Init(&Motor1, 1, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
-	Dynamixel_Init(&Motor2, 2, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
-	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
-	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
-	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
-	Dynamixel_Init(&Motor7, 7, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
-	Dynamixel_Init(&Motor8, 8, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
-	Dynamixel_Init(&Motor9, 9, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
-	Dynamixel_Init(&Motor10, 10, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
-	Dynamixel_Init(&Motor11, 11, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
-	Dynamixel_Init(&Motor12, 12, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
-	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor16, 16, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor17, 17, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor18, 18, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+	Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+	Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+	Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 
 
 	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
@@ -286,7 +292,7 @@ void StartDefaultTask(void const * argument)
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
 
-	for(i = 0; i < 18; i++) {
+	for(i = MOTOR1; i < MOTOR18; i++) {
         /* Configure motor to return status packets only for read commands */
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
         osDelay(10);
@@ -301,24 +307,24 @@ void StartDefaultTask(void const * argument)
 		(Motorcmd[i]).velocity = 10;
 	}
 
-	(Motorcmd[0]).qHandle = UART2_reqHandle;
-	(Motorcmd[1]).qHandle = UART2_reqHandle;
-	(Motorcmd[2]).qHandle = UART2_reqHandle;
+	(Motorcmd[0]).qHandle = UART6_reqHandle;
+	(Motorcmd[1]).qHandle = UART6_reqHandle;
+	(Motorcmd[2]).qHandle = UART6_reqHandle;
 	(Motorcmd[3]).qHandle = UART1_reqHandle;
 	(Motorcmd[4]).qHandle = UART1_reqHandle;
 	(Motorcmd[5]).qHandle = UART1_reqHandle;
-	(Motorcmd[6]).qHandle = UART6_reqHandle; // Changed from huart7
-	(Motorcmd[7]).qHandle = UART6_reqHandle; // Changed from huart7
-	(Motorcmd[8]).qHandle = UART6_reqHandle; // Changed from huart7
-	(Motorcmd[9]).qHandle = UART3_reqHandle; // Changed from huart5
-	(Motorcmd[10]).qHandle = UART3_reqHandle; // Changed from huart5
-	(Motorcmd[11]).qHandle = UART3_reqHandle; // Changed from huart5
-	(Motorcmd[12]).qHandle = UART4_reqHandle;
-	(Motorcmd[13]).qHandle = UART4_reqHandle;
-	(Motorcmd[14]).qHandle = UART4_reqHandle;
-	(Motorcmd[15]).qHandle = UART4_reqHandle;
-	(Motorcmd[16]).qHandle = UART4_reqHandle;
-	(Motorcmd[17]).qHandle = UART4_reqHandle;
+	(Motorcmd[6]).qHandle = UART4_reqHandle;
+	(Motorcmd[7]).qHandle = UART4_reqHandle;
+	(Motorcmd[8]).qHandle = UART4_reqHandle;
+	(Motorcmd[9]).qHandle = UART2_reqHandle;
+	(Motorcmd[10]).qHandle = UART2_reqHandle;
+	(Motorcmd[11]).qHandle = UART2_reqHandle;
+	(Motorcmd[12]).qHandle = UART3_reqHandle;
+	(Motorcmd[13]).qHandle = UART3_reqHandle;
+	(Motorcmd[14]).qHandle = UART3_reqHandle;
+	(Motorcmd[15]).qHandle = UART3_reqHandle;
+	(Motorcmd[16]).qHandle = UART3_reqHandle;
+	(Motorcmd[17]).qHandle = UART3_reqHandle;
 
 	// IMU Initialization
 	IMUdata._I2C_Handle = &hi2c1;
@@ -333,23 +339,33 @@ void StartDefaultTask(void const * argument)
       i = 0;
 	  j = 0;
       for(j = 0; j < size; j++){
-        for(i = 0; i < 18; i++){
-      	  if(i < 6){
-            if(i == 3 || i == 4){
-              (Motorcmd[i]).position = motorPosArr[i][j] * 180 /PI + 150;
-            }
-            else{
-              (Motorcmd[i]).position = motorPosArr[i][j] * 180 /PI + 150;
-            }
-      	  }
-      	  else{
-      		  if(i == 8 || i == 11){
-                (Motorcmd[i]).position = motorPosArr[i][j] * 180 / PI + 150;
-      		  }
-      		  else{
-                (Motorcmd[i]).position = motorPosArr[i][j] * 180 / PI + 150;
-      		  }
-      	  }
+		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			  switch(i){
+				  case MOTOR1:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 1;
+								  break;
+				  case MOTOR2:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
+								  break;
+				  case MOTOR3:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 1;
+								  break;
+				  case MOTOR4:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 2;
+								  break;
+				  case MOTOR5:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 0;
+								  break;
+				  case MOTOR6:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 0;
+								  break;
+				  case MOTOR7:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 0;
+								  break;
+				  case MOTOR8:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 3;
+								  break;
+				  case MOTOR9:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 0;
+								  break;
+				  case MOTOR10:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 4;
+								  break;
+				  case MOTOR11:   (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 1;
+								  break;
+				  case MOTOR12:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
+								  break;
+			  }
       	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
         }
       osDelay(CONTROL_CYCLE_TIME);
@@ -375,10 +391,10 @@ void UART1_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART1_Handler */
@@ -401,10 +417,10 @@ void UART2_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART2_Handler */
@@ -427,10 +443,10 @@ void UART3_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART3_Handler */
@@ -453,10 +469,10 @@ void UART4_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART4_Handler */
@@ -479,10 +495,10 @@ void UART6_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+//		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART6_Handler */
