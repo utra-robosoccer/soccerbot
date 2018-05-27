@@ -79,6 +79,11 @@ osMessageQId UART5_reqHandle;
 osMessageQId UART7_reqHandle;
 osMessageQId UART_rxHandle;
 osMessageQId IMUQueueHandle;
+osSemaphoreId semUART1TxHandle;
+osSemaphoreId semUART2TxHandle;
+osSemaphoreId semUART4TxHandle;
+osSemaphoreId semUART5TxHandle;
+osSemaphoreId semUART7TxHandle;
 
 /* USER CODE BEGIN Variables */
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
@@ -137,6 +142,8 @@ const double motorPosArr[12][1001] = {
 				0.0070087,0.014233,0.02166,0.029276,0.037068,0.045024,0.053133,0.061384,0.069766,0.07827,0.086885,0.095604,0.10442,0.11331,0.12229,0.13071,0.1386,0.14601,0.15296,0.15948,0.16559,0.17133,0.17671,0.18176,0.1865,0.19094,0.19511,0.19903,0.2027,0.20615,0.20939,0.21243,0.21528,0.21796,0.22048,0.22284,0.22506,0.22714,0.2291,0.21579,0.20259,0.18951,0.17653,0.16366,0.15089,0.13821,0.12563,0.11313,0.10072,0.0884,0.076157,0.063993,0.051905,0.039893,0.027955,0.016088,0.0042925,-0.0074339,-0.019092,-0.030682,-0.042206,-0.053663,-0.065055,-0.076381,-0.087642,-0.098208,-0.10812,-0.11742,-0.12614,-0.13432,-0.14199,-0.14919,-0.15594,-0.16227,-0.16821,-0.1745,-0.18175,-0.18978,-0.19843,-0.20751,-0.21678,-0.22598,-0.23484,-0.24304,-0.2503,-0.25635,-0.26098,-0.26408,-0.2656,-0.24781,-0.22939,-0.21073,-0.19219,-0.17411,-0.15673,-0.14025,-0.12477,-0.11032,-0.096894,-0.084412,-0.072401,-0.060456,-0.048577,-0.036761,-0.025008,-0.013317,-0.0016871,0.0098828,0.021393,0.032844,0.044236,0.05557,0.066844,0.078061,0.089218,0.099686,0.10951,0.11872,0.12736,0.13546,0.14306,0.15019,0.15688,0.16316,0.16904,0.17457,0.17975,0.18461,0.18917,0.19345,0.19747,0.20124,0.20478,0.2081,0.21122,0.21415,0.2169,0.21948,0.2219,0.20898,0.19616,0.18343,0.1708,0.15825,0.14578,0.13339,0.12108,0.10885,0.096684,0.084593,0.072571,0.060617,0.048728,0.036903,0.025142,0.013443,0.0018052,-0.0097718,-0.021289,-0.032746,-0.044144,-0.055483,-0.066763,-0.077984,-0.089147,-0.099619,-0.10944,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18245,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26598,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.060609,-0.048721,-0.036897,-0.025136,-0.013437,-0.0017999,0.0097768,0.021293,0.032751,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.24817,-0.22973,-0.21104,-0.19248,-0.17438,-0.15698,-0.14048,-0.12498,-0.11052,-0.097078,-0.084585,-0.072564,-0.06061,-0.048721,-0.036897,-0.025136,-0.013437,-0.0018001,0.0097766,0.021293,0.03275,0.044148,0.055487,0.066767,0.077988,0.08915,0.099622,0.10945,0.11866,0.1273,0.13541,0.14302,0.15015,0.15684,0.16312,0.16901,0.17453,0.17972,0.18458,0.18914,0.19343,0.19745,0.20122,0.20476,0.20808,0.2112,0.21413,0.21688,0.21946,0.22189,0.20897,0.19615,0.18342,0.17078,0.15823,0.14577,0.13338,0.12107,0.10884,0.096676,0.084585,0.072564,0.06061,0.048721,0.036897,0.025136,0.013437,0.0018001,-0.0097766,-0.021293,-0.03275,-0.044148,-0.055487,-0.066767,-0.077988,-0.08915,-0.099622,-0.10945,-0.11866,-0.1273,-0.13541,-0.14302,-0.15015,-0.15684,-0.16312,-0.16901,-0.17525,-0.18246,-0.19046,-0.19908,-0.20813,-0.21737,-0.22655,-0.23538,-0.24356,-0.25079,-0.25682,-0.26142,-0.26449,-0.26599,-0.26598,-0.26462,-0.26216,-0.25888,-0.2551,-0.25115,-0.24737,-0.24407,-0.2416,-0.24029,-0.24054,-0.22661
 		}
 };
+
+#define CONTROL_CYCLE_TIME 10 // Control cycle time in milliseconds
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -172,6 +179,27 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* definition and creation of semUART1Tx */
+  osSemaphoreDef(semUART1Tx);
+  semUART1TxHandle = osSemaphoreCreate(osSemaphore(semUART1Tx), 1);
+
+  /* definition and creation of semUART2Tx */
+  osSemaphoreDef(semUART2Tx);
+  semUART2TxHandle = osSemaphoreCreate(osSemaphore(semUART2Tx), 1);
+
+  /* definition and creation of semUART4Tx */
+  osSemaphoreDef(semUART4Tx);
+  semUART4TxHandle = osSemaphoreCreate(osSemaphore(semUART4Tx), 1);
+
+  /* definition and creation of semUART5Tx */
+  osSemaphoreDef(semUART5Tx);
+  semUART5TxHandle = osSemaphoreCreate(osSemaphore(semUART5Tx), 1);
+
+  /* definition and creation of semUART7Tx */
+  osSemaphoreDef(semUART7Tx);
+  semUART7TxHandle = osSemaphoreCreate(osSemaphore(semUART7Tx), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -182,31 +210,31 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 1024);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 1024);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of UART1_ */
-  osThreadDef(UART1_, UART1_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART1_, UART1_Handler, osPriorityNormal, 0, 128);
   UART1_Handle = osThreadCreate(osThread(UART1_), NULL);
 
   /* definition and creation of UART2_ */
-  osThreadDef(UART2_, UART2_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART2_, UART2_Handler, osPriorityNormal, 0, 128);
   UART2_Handle = osThreadCreate(osThread(UART2_), NULL);
 
   /* definition and creation of UART4_ */
-  osThreadDef(UART4_, UART4_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART4_, UART4_Handler, osPriorityNormal, 0, 128);
   UART4_Handle = osThreadCreate(osThread(UART4_), NULL);
 
   /* definition and creation of UART5_ */
-  osThreadDef(UART5_, UART5_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART5_, UART5_Handler, osPriorityNormal, 0, 128);
   UART5_Handle = osThreadCreate(osThread(UART5_), NULL);
 
   /* definition and creation of UART7_ */
-  osThreadDef(UART7_, UART7_Handler, osPriorityIdle, 0, 128);
+  osThreadDef(UART7_, UART7_Handler, osPriorityNormal, 0, 128);
   UART7_Handle = osThreadCreate(osThread(UART7_), NULL);
 
   /* definition and creation of IMUTask */
-  osThreadDef(IMUTask, StartIMUTask, osPriorityIdle, 0, 128);
+  osThreadDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -284,14 +312,16 @@ void StartDefaultTask(void const * argument)
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
 
-	for(i=0;i<18;i++) {
+	for(i = 0; i < 18; i++) {
         /* Configure motor to return status packets only for read commands */
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
         osDelay(10);
         Dynamixel_SetReturnDelayTime(arrDynamixel[i], 2);
         osDelay(10);
         Dynamixel_TorqueEnable(arrDynamixel[i], 1);
+        osDelay(10);
 		AX12A_SetComplianceSlope(arrDynamixel[i], 7);
+		osDelay(10);
 		(Motorcmd[i]).motorHandle = arrDynamixel[i];
 		(Motorcmd[i]).type = cmdWRITE;
 		(Motorcmd[i]).velocity = 10;
@@ -347,7 +377,7 @@ void StartDefaultTask(void const * argument)
       	  }
       	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
       }
-      osDelay(10);
+      osDelay(CONTROL_CYCLE_TIME);
     }
   }
 
@@ -360,19 +390,22 @@ void UART1_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART1_Handler */
   /* Infinite loop */
-  UARTcmd 	cmdMessage;
+  UARTcmd cmdMessage;
   for(;;)
 	{
-	  while(xQueueReceive(UART1_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART1_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART1_Handler */
@@ -383,19 +416,22 @@ void UART2_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART2_Handler */
   /* Infinite loop */
-  UARTcmd 	cmdMessage;
+  UARTcmd cmdMessage;
   for(;;)
 	{
-	  while(xQueueReceive(UART2_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART2_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART2_Handler */
@@ -406,19 +442,22 @@ void UART4_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART4_Handler */
   /* Infinite loop */
-  UARTcmd 	cmdMessage;
+  UARTcmd cmdMessage;
   for(;;)
   {
-	  while(xQueueReceive(UART4_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART4_Handler */
@@ -429,19 +468,22 @@ void UART5_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART5_Handler */
   /* Infinite loop */
-	  UARTcmd 	cmdMessage;
+  UARTcmd cmdMessage;
   for(;;)
   {
-	  while(xQueueReceive(UART5_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART5_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART5TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART5TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART5_Handler */
@@ -452,19 +494,22 @@ void UART7_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART7_Handler */
   /* Infinite loop */
-  UARTcmd 	cmdMessage;
+  UARTcmd cmdMessage;
   for(;;)
   {
-	  while(xQueueReceive(UART7_reqHandle,&(cmdMessage),portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART7_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle,&(cmdMessage.motorHandle),0);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle,cmdMessage.position);
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle,cmdMessage.velocity);
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART7TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART7TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART7_Handler */
@@ -475,19 +520,37 @@ void StartIMUTask(void const * argument)
 {
   /* USER CODE BEGIN StartIMUTask */
 
-	//MPU6050_10sec_calibration(&IMUdata);
   /* Infinite loop */
   for(;;)
   {
-	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
-	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
-	//xQueueSend(IMUQueueHandle,&IMUdata,0); //This is to send data to Lukas later on
+	osDelay(10);
+//	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
+//	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+//	xQueueSend(IMUQueueHandle,&IMUdata,0); //This is to send data to Lukas later on
   }
   /* USER CODE END StartIMUTask */
 }
 
 /* USER CODE BEGIN Application */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 
+	BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+	if(huart == &huart1){
+        xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart2){
+		xSemaphoreGiveFromISR(semUART2TxHandle, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart4){
+		xSemaphoreGiveFromISR(semUART4TxHandle, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart5){
+		xSemaphoreGiveFromISR(semUART5TxHandle, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart7){
+		xSemaphoreGiveFromISR(semUART7TxHandle, &xHigherPriorityTaskWoken);
+	}
+}
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
