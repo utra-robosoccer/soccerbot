@@ -144,6 +144,8 @@ const double motorPosArr[12][1001] = {
 };
 
 #define CONTROL_CYCLE_TIME 10 // Control cycle time in milliseconds
+
+uint8_t setupIsDone = 0;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -353,6 +355,8 @@ void StartDefaultTask(void const * argument)
 	MPU6050_set_LPF(&IMUdata, lpf);
 	MPU6050_manually_set_offsets(&IMUdata);
 
+	setupIsDone = 1;
+
 	while(1){
 	  // Infinite loop
       i = 0;
@@ -400,7 +404,7 @@ void UART1_Handler(void const * argument)
 		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
-	  else if(cmdMessage.type == cmdWRITE) {
+	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
@@ -534,21 +538,23 @@ void StartIMUTask(void const * argument)
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 
-	BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-	if(huart == &huart1){
-        xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart2){
-		xSemaphoreGiveFromISR(semUART2TxHandle, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart4){
-		xSemaphoreGiveFromISR(semUART4TxHandle, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart5){
-		xSemaphoreGiveFromISR(semUART5TxHandle, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart7){
-		xSemaphoreGiveFromISR(semUART7TxHandle, &xHigherPriorityTaskWoken);
+	if(setupIsDone == 1){
+		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+		if(huart == &huart1){
+			xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
+		}
+		else if(huart == &huart2){
+			xSemaphoreGiveFromISR(semUART2TxHandle, &xHigherPriorityTaskWoken);
+		}
+		else if(huart == &huart4){
+			xSemaphoreGiveFromISR(semUART4TxHandle, &xHigherPriorityTaskWoken);
+		}
+		else if(huart == &huart5){
+			xSemaphoreGiveFromISR(semUART5TxHandle, &xHigherPriorityTaskWoken);
+		}
+		else if(huart == &huart7){
+			xSemaphoreGiveFromISR(semUART7TxHandle, &xHigherPriorityTaskWoken);
+		}
 	}
 }
 /* USER CODE END Application */
