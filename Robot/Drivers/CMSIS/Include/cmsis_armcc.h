@@ -1,26 +1,36 @@
 /**************************************************************************//**
  * @file     cmsis_armcc.h
- * @brief    CMSIS compiler ARMCC (ARM compiler V5) header file
- * @version  V5.0.1
- * @date     03. February 2017
+ * @brief    CMSIS Cortex-M Core Function/Instruction Header File
+ * @version  V4.30
+ * @date     20. October 2015
  ******************************************************************************/
-/*
- * Copyright (c) 2009-2017 ARM Limited. All rights reserved.
- *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the License); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an AS IS BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/* Copyright (c) 2009 - 2015 ARM LIMITED
+
+   All rights reserved.
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+   - Neither the name of ARM nor the names of its contributors may be used
+     to endorse or promote products derived from this software without
+     specific prior written permission.
+   *
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+   ---------------------------------------------------------------------------*/
+
 
 #ifndef __CMSIS_ARMCC_H
 #define __CMSIS_ARMCC_H
@@ -30,76 +40,13 @@
   #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 #endif
 
-/* CMSIS compiler control architecture macros */
-#if ((defined (__TARGET_ARCH_6_M  ) && (__TARGET_ARCH_6_M   == 1)) || \
-     (defined (__TARGET_ARCH_6S_M ) && (__TARGET_ARCH_6S_M  == 1))   )
-  #define __ARM_ARCH_6M__           1
-#endif
-
-#if (defined (__TARGET_ARCH_7_M ) && (__TARGET_ARCH_7_M  == 1))
-  #define __ARM_ARCH_7M__           1
-#endif
-
-#if (defined (__TARGET_ARCH_7E_M) && (__TARGET_ARCH_7E_M == 1))
-  #define __ARM_ARCH_7EM__          1
-#endif
-
-  /* __ARM_ARCH_8M_BASE__  not applicable */
-  /* __ARM_ARCH_8M_MAIN__  not applicable */
-
-
-/* CMSIS compiler specific defines */
-#ifndef   __ASM
-  #define __ASM                     __asm
-#endif
-#ifndef   __INLINE
-  #define __INLINE                  __inline
-#endif
-#ifndef   __STATIC_INLINE
-  #define __STATIC_INLINE           static __inline
-#endif
-#ifndef   __NO_RETURN
-  #define __NO_RETURN               __declspec(noreturn)
-#endif
-#ifndef   __USED
-  #define __USED                    __attribute__((used))
-#endif
-#ifndef   __WEAK
-  #define __WEAK                    __attribute__((weak))
-#endif
-#ifndef   __UNALIGNED_UINT32
-  #define __UNALIGNED_UINT32(x)     (*((__packed uint32_t *)(x)))
-#endif
-#ifndef   __ALIGNED
-  #define __ALIGNED(x)              __attribute__((aligned(x)))
-#endif
-#ifndef   __PACKED
-  #define __PACKED                  __attribute__((packed))
-#endif
-#ifndef   __PACKED_STRUCT
-  #define __PACKED_STRUCT           __packed struct
-#endif
-
-
 /* ###########################  Core Function Access  ########################### */
 /** \ingroup  CMSIS_Core_FunctionInterface
     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
   @{
  */
 
-/**
-  \brief   Enable IRQ Interrupts
-  \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
-           Can only be executed in Privileged modes.
- */
 /* intrinsic void __enable_irq();     */
-
-
-/**
-  \brief   Disable IRQ Interrupts
-  \details Disables IRQ interrupts by setting the I-bit in the CPSR.
-           Can only be executed in Privileged modes.
- */
 /* intrinsic void __disable_irq();    */
 
 /**
@@ -234,8 +181,7 @@ __STATIC_INLINE void __set_PRIMASK(uint32_t priMask)
 }
 
 
-#if ((defined (__ARM_ARCH_7M__ ) && (__ARM_ARCH_7M__  == 1)) || \
-     (defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     )
+#if       (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U)
 
 /**
   \brief   Enable FIQ
@@ -310,14 +256,13 @@ __STATIC_INLINE uint32_t __get_FAULTMASK(void)
 __STATIC_INLINE void __set_FAULTMASK(uint32_t faultMask)
 {
   register uint32_t __regFaultMask       __ASM("faultmask");
-  __regFaultMask = (faultMask & (uint32_t)1U);
+  __regFaultMask = (faultMask & (uint32_t)1);
 }
 
-#endif /* ((defined (__ARM_ARCH_7M__ ) && (__ARM_ARCH_7M__  == 1)) || \
-           (defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     ) */
+#endif /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
 
 
-#if ((defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     )
+#if       (__CORTEX_M == 0x04U) || (__CORTEX_M == 0x07U)
 
 /**
   \brief   Get FPSCR
@@ -326,8 +271,7 @@ __STATIC_INLINE void __set_FAULTMASK(uint32_t faultMask)
  */
 __STATIC_INLINE uint32_t __get_FPSCR(void)
 {
-#if ((defined (__FPU_PRESENT) && (__FPU_PRESENT == 1U)) && \
-     (defined (__FPU_USED   ) && (__FPU_USED    == 1U))     )
+#if (__FPU_PRESENT == 1U) && (__FPU_USED == 1U)
   register uint32_t __regfpscr         __ASM("fpscr");
   return(__regfpscr);
 #else
@@ -343,16 +287,13 @@ __STATIC_INLINE uint32_t __get_FPSCR(void)
  */
 __STATIC_INLINE void __set_FPSCR(uint32_t fpscr)
 {
-#if ((defined (__FPU_PRESENT) && (__FPU_PRESENT == 1U)) && \
-     (defined (__FPU_USED   ) && (__FPU_USED    == 1U))     )
+#if (__FPU_PRESENT == 1U) && (__FPU_USED == 1U)
   register uint32_t __regfpscr         __ASM("fpscr");
   __regfpscr = (fpscr);
-#else
-  (void)fpscr;
 #endif
 }
 
-#endif /* ((defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     ) */
+#endif /* (__CORTEX_M == 0x04U) || (__CORTEX_M == 0x07U) */
 
 
 
@@ -451,7 +392,6 @@ __attribute__((section(".rev16_text"))) __STATIC_INLINE __ASM uint32_t __REV16(u
 }
 #endif
 
-
 /**
   \brief   Reverse byte order in signed short value
   \details Reverses the byte order in a signed short value with sign extension to integer.
@@ -470,8 +410,8 @@ __attribute__((section(".revsh_text"))) __STATIC_INLINE __ASM int32_t __REVSH(in
 /**
   \brief   Rotate Right in unsigned value (32 bit)
   \details Rotate Right (immediate) provides the value of the contents of a register rotated by a variable number of bits.
-  \param [in]    op1  Value to rotate
-  \param [in]    op2  Number of Bits to rotate
+  \param [in]    value  Value to rotate
+  \param [in]    value  Number of Bits to rotate
   \return               Rotated value
  */
 #define __ROR                             __ror
@@ -493,14 +433,13 @@ __attribute__((section(".revsh_text"))) __STATIC_INLINE __ASM int32_t __REVSH(in
   \param [in]    value  Value to reverse
   \return               Reversed value
  */
-#if ((defined (__ARM_ARCH_7M__ ) && (__ARM_ARCH_7M__  == 1)) || \
-     (defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     )
+#if       (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U)
   #define __RBIT                          __rbit
 #else
 __attribute__((always_inline)) __STATIC_INLINE uint32_t __RBIT(uint32_t value)
 {
   uint32_t result;
-  int32_t s = (4 /*sizeof(v)*/ * 8) - 1; /* extra shift needed at end */
+  int32_t s = 4 /*sizeof(v)*/ * 8 - 1; /* extra shift needed at end */
 
   result = value;                      /* r will be reversed bits of v; first get LSB of v */
   for (value >>= 1U; value; value >>= 1U)
@@ -524,8 +463,7 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __RBIT(uint32_t value)
 #define __CLZ                             __clz
 
 
-#if ((defined (__ARM_ARCH_7M__ ) && (__ARM_ARCH_7M__  == 1)) || \
-     (defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     )
+#if       (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U)
 
 /**
   \brief   LDR Exclusive (8 bit)
@@ -707,8 +645,7 @@ __attribute__((section(".rrx_text"))) __STATIC_INLINE __ASM uint32_t __RRX(uint3
  */
 #define __STRT(value, ptr)                __strt(value, ptr)
 
-#endif /* ((defined (__ARM_ARCH_7M__ ) && (__ARM_ARCH_7M__  == 1)) || \
-           (defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     ) */
+#endif /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
 
 /*@}*/ /* end of group CMSIS_Core_InstructionInterface */
 
@@ -719,7 +656,7 @@ __attribute__((section(".rrx_text"))) __STATIC_INLINE __ASM uint32_t __RRX(uint3
   @{
 */
 
-#if ((defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     )
+#if (__CORTEX_M >= 0x04U)  /* only for Cortex-M4 and above */
 
 #define __SADD8                           __sadd8
 #define __QADD8                           __qadd8
@@ -790,7 +727,7 @@ __attribute__((section(".rrx_text"))) __STATIC_INLINE __ASM uint32_t __RRX(uint3
 #define __SMMLA(ARG1,ARG2,ARG3)          ( (int32_t)((((int64_t)(ARG1) * (ARG2)) + \
                                                       ((int64_t)(ARG3) << 32U)     ) >> 32U))
 
-#endif /* ((defined (__ARM_ARCH_7EM__) && (__ARM_ARCH_7EM__ == 1))     ) */
+#endif /* (__CORTEX_M >= 0x04) */
 /*@} end of group CMSIS_SIMD_intrinsics */
 
 
