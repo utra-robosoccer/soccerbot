@@ -44,13 +44,11 @@ void send_goal(RobotGoal* robotGoal) {
 int open_port(void) {
 	int fd; // file description for the serial port
 
-	fd = open("/dev/ttyACM0",
+	fd = open("/dev/ttyS0",
 			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+	if (fd == -1)
+		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 
-	if (fd == -1)
-		fd = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
-	if (fd == -1)
-		fd = open("/dev/ttyACM2", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1) {
 		cout << "open_port: Unable to open /dev/ttyACM0. \n" << endl;
 		exit(1);
