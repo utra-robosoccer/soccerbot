@@ -27,7 +27,7 @@ typedef struct{
 	uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
 }Dynamixel_HandleTypeDef;
 
-#define MAX_MOTORS_PER_UART 5
+#define MAX_MOTORS_PER_UART 6
 typedef struct{
 	UART_HandleTypeDef* _UART_Handle; // UART handle in common to all motors here
 	Dynamixel_HandleTypeDef* motorHandles[MAX_MOTORS_PER_UART]; // Array of motor handles

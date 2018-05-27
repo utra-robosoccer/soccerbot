@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>D:\Users\Tyler\Documents\STM\embedded\soccer-embedded\RobotF446\\Robot</ProjectName>
+<ProjectName>D:\Users\Tyler\Documents\STM\embedded\soccer-embedded\Robot\\Robot</ProjectName>
 <ProjectNature>C</ProjectNature> 
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\Admin\STM32Cube\Repository\STM32Cube_FW_F4_V1.21.0\Drivers\CMSIS</HAL_Driver>
