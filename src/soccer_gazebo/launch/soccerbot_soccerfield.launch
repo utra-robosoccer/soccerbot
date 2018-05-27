@@ -24,6 +24,6 @@
   <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find soccer_description)/models/soccerbot_noarms/model.sdf -sdf -model soccerbot" />
 
   <!-- ros_control soccerbot launch file -->
-  <!--include file="$(find soccer_control)/launch/soccer_control.launch" /-->
+  <include file="$(find soccer_control)/launch/soccer_control.launch" />
 
 </launch>

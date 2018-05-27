@@ -53,6 +53,22 @@ soccerbot:
     type: position_controllers/JointPositionController
     joint: left_ankle_foot
     pid: {p: 100.0, i: 0.01, d: 10.0}
+  torso_right_bicep_position_controller:
+    type: position_controllers/JointPositionController
+    joint: torso_right_bicep
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  right_bicep_forearm_position_controller:
+    type: position_controllers/JointPositionController
+    joint: right_bicep_forearm
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  torso_left_bicep_position_controller:
+    type: position_controllers/JointPositionController
+    joint: torso_left_bicep
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  left_bicep_forearm_position_controller:
+    type: position_controllers/JointPositionController
+    joint: left_bicep_forearm
+    pid: {p: 100.0, i: 0.01, d: 10.0}
   torso_neck_position_controller:
     type: position_controllers/JointPositionController
     joint: torso_neck

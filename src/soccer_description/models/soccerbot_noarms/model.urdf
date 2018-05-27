@@ -1,5 +1,11 @@
 <?xml version="1.0" ?>
 <robot name="soccerbot_noarms">
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/soccerbot</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
@@ -399,188 +405,142 @@
   </link>
 	<transmission name='torso_right_hip_side'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="torso_right_hip_side">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor7">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='right_hip_side_hip_front'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="right_hip_side_hip_front">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor8">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='right_hip_front_thigh'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="right_hip_front_thigh">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor9">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='right_thigh_calve'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="right_thigh_calve">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor10">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='right_calve_ankle'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="right_calve_ankle">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor11">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='right_ankle_foot'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="right_ankle_foot">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor12">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='torso_left_hip_side'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="torso_left_hip_side">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor6">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='left_hip_side_hip_front'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="left_hip_side_hip_front">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor5">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='left_hip_front_thigh'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="left_hip_front_thigh">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor4">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='left_thigh_calve'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="left_thigh_calve">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor3">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='left_calve_ankle'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="left_calve_ankle">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor2">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='left_ankle_foot'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="left_ankle_foot">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor1">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
-		</actuator>
-	</transmission>
-	<transmission name='torso_right_bicep'>
-		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
-		<joint name="torso_right_bicep">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="motor15">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
-		</actuator>
-	</transmission>
-	<transmission name='right_bicep_forearm'>
-		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${right_bicep_forearm}</robotNamespace>
-		<joint name="torso_neck">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="motor16">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
-		</actuator>
-	</transmission>
-	<transmission name='torso_left_bicep'>
-		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
-		<joint name="torso_left_bicep">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="motor17">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
-		</actuator>
-	</transmission>
-	<transmission name='left_bicep_forearm'>
-		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
-		<joint name="left_bicep_forearm">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="motor18">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='torso_neck'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="torso_neck">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor13">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
 	<transmission name='neck_head'>
 		<type>transmission_interface/SimpleTransmission</type>
-		<robotNamespace>${name}</robotNamespace>
+		<robotNamespace>/soccerbot</robotNamespace>
 		<joint name="neck_head">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor14">
-			<hardwareInterface>PositionJointInterface</hardwareInterface>	
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>	
 		</actuator>
 	</transmission>
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/soccerbot</robotNamespace>
-      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
-    </plugin>
-  </gazebo>
 </robot>
