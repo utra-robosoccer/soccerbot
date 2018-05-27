@@ -24,15 +24,15 @@
 typedef struct {
 	uint8_t 					type;
 	Dynamixel_HandleTypeDef*	motorHandle;
-	uint16_t 					position;
-	uint16_t 					velocity;
+	float 						position;
+	float 						velocity;
 	QueueHandle_t				qHandle;
 }UARTcmd;
 
 typedef struct {
 	Dynamixel_HandleTypeDef*	motorHandle;
-	uint16_t 					position;
-	uint16_t 					velocity;
+	float 						position;
+	float 						velocity;
 }UARTrx;
 /* USER CODE END Private defines */
 
