@@ -45,12 +45,12 @@ int open_port(void) {
 	int fd; // file description for the serial port
 
 	fd = open("/dev/ttyACM0",
-			O_RDWR | O_NOCTTY | O_NDELAY);
+			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 
 	if (fd == -1)
-		fd = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NDELAY);
+		fd = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1)
-		fd = open("/dev/ttyACM2", O_RDWR | O_NOCTTY | O_NDELAY);
+		fd = open("/dev/ttyACM2", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1) {
 		cout << "open_port: Unable to open /dev/ttyACM0. \n" << endl;
 		exit(1);
@@ -71,19 +71,34 @@ int configure_port(int fd) {
 	cfsetospeed(&port_settings, B2000000);
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
+	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~CSTOPB;
 	port_settings.c_cflag &= ~CSIZE;
-	port_settings.c_cflag &= ~CRTSCTS;
 
+	port_settings.c_cflag |= CLOCAL | CREAD;
+
+	port_settings.c_iflag &= ~IGNBRK;
+	port_settings.c_iflag &= ~(IXON | IXOFF | IXANY);
 	port_settings.c_iflag &= ~IGNCR;
 	port_settings.c_iflag &= ~ICRNL;
 	port_settings.c_iflag &= ~INLCR;
 	port_settings.c_iflag &= ~INPCK;
 	port_settings.c_iflag &= ~ISTRIP;
-	port_settings.c_iflag &= ~IGNBRK;
 
+	port_settings.c_lflag = 0;
+	port_settings.c_oflag = 0;
+
+	port_settings.c_cc[VTIME]=1;
+	port_settings.c_cc[VMIN]=1;
 
 	port_settings.c_lflag &= ~(ECHONL|NOFLSH);
+
+	int mcs = 0;
+    ioctl(fd, TIOCMGET, &mcs);
+    mcs |= TIOCM_RTS;
+	ioctl(fd, TIOCMSET, &mcs);
+
+	port_settings.c_cflag &= ~CRTSCTS;
 
 	port_settings.c_cflag |= CS8;
 
@@ -175,7 +190,7 @@ void receive_loop() {
 		for(int i = 0; i < 80; ++i) {
 			// ROS_INFO("%d", robotState.message[i]);
 			if((int) robotState.message[i] != i) {
-				// ROS_INFO("Not matching %d %d", robotState.message[i], i);
+				ROS_INFO("Not matching %d %d", robotState.message[i], i);
 				dataCorrect = false;
 			}
 		}
