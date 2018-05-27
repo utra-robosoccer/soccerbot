@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=/home/vuwij/Documents/soccer-embedded/Communication/Communication/Inc
+HeaderPath=/home/vuwij/Documents/soccer-embedded/Development/Communication/Communication/Inc
 HeaderFiles=stm32l4xx_it.h;stm32l4xx_hal_conf.h;main.h;
-SourcePath=/home/vuwij/Documents/soccer-embedded/Communication/Communication/Src
+SourcePath=/home/vuwij/Documents/soccer-embedded/Development/Communication/Communication/Src
 SourceFiles=stm32l4xx_it.h;stm32l4xx_hal_conf.h;main.h;stm32l4xx_it.c;stm32l4xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
