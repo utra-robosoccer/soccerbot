@@ -1,5 +1,0 @@
-pysdf
-/home/vuwij/soccer_ws/devel/.private/pysdf/share/pysdf/cmake/pysdfConfig.cmake /home/vuwij/soccer_ws/devel/share/pysdf/cmake/pysdfConfig.cmake
-/home/vuwij/soccer_ws/devel/.private/pysdf/share/pysdf/cmake/pysdfConfig-version.cmake /home/vuwij/soccer_ws/devel/share/pysdf/cmake/pysdfConfig-version.cmake
-/home/vuwij/soccer_ws/devel/.private/pysdf/lib/pkgconfig/pysdf.pc /home/vuwij/soccer_ws/devel/lib/pkgconfig/pysdf.pc
-/home/vuwij/soccer_ws/devel/.private/pysdf/lib/python2.7/dist-packages/pysdf/__init__.py /home/vuwij/soccer_ws/devel/lib/python2.7/dist-packages/pysdf/__init__.py
