@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>D:\Users\Tyler\Documents\STM\embedded\soccer-embedded\Robot\\RTOS_H7</ProjectName>
+<ProjectName>D:\Users\Tyler\Documents\STM\embedded\soccer-embedded\RobotF446\\Robot</ProjectName>
 <ProjectNature>C</ProjectNature> 
 <CMSIS>..\Drivers\CMSIS</CMSIS>
-<HAL_Driver>C:\Users\Admin\STM32Cube\Repository\STM32Cube_FW_H7_V1.2.0\Drivers\CMSIS</HAL_Driver>
+<HAL_Driver>C:\Users\Admin\STM32Cube\Repository\STM32Cube_FW_F4_V1.21.0\Drivers\CMSIS</HAL_Driver>
 <Toolchain>SW4STM32</Toolchain>
 <Version>0</Version>
 
@@ -22,17 +22,17 @@
 
 <configs>
   <config>
-    <name>RTOS_H7</name>				
-    <device>STM32H743ZITx</device>		 
+    <name>Robot</name>				
+    <device>STM32F446RETx</device>		 
     <heapSize>0x200</heapSize>
     <stackSize>0x400</stackSize>
     
-    	<board>NUCLEO-H743ZI</board>
+    	<board>custom</board>
 			
     <usedDebug>true</usedDebug>
-    	<debugprobe>swd</debugprobe>
+    	<debugprobe></debugprobe>
     <optimization>6</optimization>
-    <icfloc>1</icfloc>
+    <icfloc>0</icfloc>
     <Adefines>
         <define></define>
     </Adefines>   
@@ -57,10 +57,10 @@
     
 	<Cincludes>
 	   <include>..\Inc</include>
-	   <include>..\Drivers\STM32H7xx_HAL_Driver\Inc</include>
-	   <include>..\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy</include>
-	   <include>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</include>
-	   <include>..\Drivers\CMSIS\Device\ST\STM32H7xx\Include</include>
+	   <include>..\Drivers\STM32F4xx_HAL_Driver\Inc</include>
+	   <include>..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy</include>
+	   <include>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F</include>
+	   <include>..\Drivers\CMSIS\Device\ST\STM32F4xx\Include</include>
 	   <include>..\Middlewares\Third_Party\FreeRTOS\Source\include</include>
 	   <include>..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS</include>
 	   <include>..\Drivers\CMSIS\Include</include>

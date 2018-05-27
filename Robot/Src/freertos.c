@@ -52,7 +52,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
-#include "stm32h7xx_hal.h"
+#include "stm32f4xx_hal.h"
 //#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
@@ -68,41 +68,27 @@
 osThreadId defaultTaskHandle;
 osThreadId UART1_Handle;
 osThreadId UART2_Handle;
+osThreadId UART3_Handle;
 osThreadId UART4_Handle;
-osThreadId UART5_Handle;
-osThreadId UART7_Handle;
+osThreadId UART6_Handle;
 osThreadId IMUTaskHandle;
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
+osMessageQId UART3_reqHandle;
 osMessageQId UART4_reqHandle;
-osMessageQId UART5_reqHandle;
-osMessageQId UART7_reqHandle;
+osMessageQId UART6_reqHandle;
 osMessageQId UART_rxHandle;
-osMessageQId IMUQueueHandle;
 osSemaphoreId semUART1TxHandle;
 osSemaphoreId semUART2TxHandle;
+osSemaphoreId semUART3TxHandle;
 osSemaphoreId semUART4TxHandle;
-osSemaphoreId semUART5TxHandle;
-osSemaphoreId semUART7TxHandle;
+osSemaphoreId semUART6TxHandle;
 
 /* USER CODE BEGIN Variables */
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
-
-osThreadId defaultTaskHandle;
-osThreadId UART1_HandlerHandle;
-osThreadId UART2_HandlerHandle;
-osThreadId UART4_HandlerHandle;
-osThreadId UART5_HandlerHandle;
-osThreadId UART7_HandlerHandle;
-osMessageQId UART1_reqHandle;
-osMessageQId UART2_reqHandle;
-osMessageQId UART4_reqHandle;
-osMessageQId UART5_reqHandle;
-osMessageQId UART7_reqHandle;
-osMessageQId UART_rxHandle;
 MPU6050_HandleTypeDef IMUdata;
-const double PI = 3.141592654;
 
+const double PI = 3.141592654;
 
 const double motorPosArr[12][1001] = {
 		{//1
@@ -152,19 +138,14 @@ uint8_t setupIsDone = 0;
 void StartDefaultTask(void const * argument);
 void UART1_Handler(void const * argument);
 void UART2_Handler(void const * argument);
+void UART3_Handler(void const * argument);
 void UART4_Handler(void const * argument);
-void UART5_Handler(void const * argument);
-void UART7_Handler(void const * argument);
+void UART6_Handler(void const * argument);
 void StartIMUTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-void UART1_Handler(void const * argument);
-void UART2_Handler(void const * argument);
-void UART4_Handler(void const * argument);
-void UART5_Handler(void const * argument);
-void UART7_Handler(void const * argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -190,17 +171,17 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(semUART2Tx);
   semUART2TxHandle = osSemaphoreCreate(osSemaphore(semUART2Tx), 1);
 
+  /* definition and creation of semUART3Tx */
+  osSemaphoreDef(semUART3Tx);
+  semUART3TxHandle = osSemaphoreCreate(osSemaphore(semUART3Tx), 1);
+
   /* definition and creation of semUART4Tx */
   osSemaphoreDef(semUART4Tx);
   semUART4TxHandle = osSemaphoreCreate(osSemaphore(semUART4Tx), 1);
 
-  /* definition and creation of semUART5Tx */
-  osSemaphoreDef(semUART5Tx);
-  semUART5TxHandle = osSemaphoreCreate(osSemaphore(semUART5Tx), 1);
-
-  /* definition and creation of semUART7Tx */
-  osSemaphoreDef(semUART7Tx);
-  semUART7TxHandle = osSemaphoreCreate(osSemaphore(semUART7Tx), 1);
+  /* definition and creation of semUART6Tx */
+  osSemaphoreDef(semUART6Tx);
+  semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -212,7 +193,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 1024);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of UART1_ */
@@ -223,17 +204,17 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(UART2_, UART2_Handler, osPriorityNormal, 0, 128);
   UART2_Handle = osThreadCreate(osThread(UART2_), NULL);
 
+  /* definition and creation of UART3_ */
+  osThreadDef(UART3_, UART3_Handler, osPriorityNormal, 0, 128);
+  UART3_Handle = osThreadCreate(osThread(UART3_), NULL);
+
   /* definition and creation of UART4_ */
-  osThreadDef(UART4_, UART4_Handler, osPriorityNormal, 0, 128);
+  osThreadDef(UART4_, UART4_Handler, osPriorityIdle, 0, 128);
   UART4_Handle = osThreadCreate(osThread(UART4_), NULL);
 
-  /* definition and creation of UART5_ */
-  osThreadDef(UART5_, UART5_Handler, osPriorityNormal, 0, 128);
-  UART5_Handle = osThreadCreate(osThread(UART5_), NULL);
-
-  /* definition and creation of UART7_ */
-  osThreadDef(UART7_, UART7_Handler, osPriorityNormal, 0, 128);
-  UART7_Handle = osThreadCreate(osThread(UART7_), NULL);
+  /* definition and creation of UART6_ */
+  osThreadDef(UART6_, UART6_Handler, osPriorityIdle, 0, 128);
+  UART6_Handle = osThreadCreate(osThread(UART6_), NULL);
 
   /* definition and creation of IMUTask */
   osThreadDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128);
@@ -241,9 +222,6 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-
-  //osThreadDef(IMUtask, startIMUtask, osPriorityNormal, 0, 128);
-  //IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* Create the queue(s) */
@@ -255,30 +233,24 @@ void MX_FREERTOS_Init(void) {
   osMessageQDef(UART2_req, 20, UARTcmd);
   UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
 
+  /* definition and creation of UART3_req */
+  osMessageQDef(UART3_req, 20, UARTcmd);
+  UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
+
   /* definition and creation of UART4_req */
   osMessageQDef(UART4_req, 20, UARTcmd);
   UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
 
-  /* definition and creation of UART5_req */
-  osMessageQDef(UART5_req, 20, UARTcmd);
-  UART5_reqHandle = osMessageCreate(osMessageQ(UART5_req), NULL);
-
-  /* definition and creation of UART7_req */
-  osMessageQDef(UART7_req, 20, UARTcmd);
-  UART7_reqHandle = osMessageCreate(osMessageQ(UART7_req), NULL);
+  /* definition and creation of UART6_req */
+  osMessageQDef(UART6_req, 20, UARTcmd);
+  UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
 
   /* definition and creation of UART_rx */
-  osMessageQDef(UART_rx, 20, UARTrx);
+  osMessageQDef(UART_rx, 20, UARTcmd);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
-  /* definition and creation of IMUQueue */
-  osMessageQDef(IMUQueue, 20, MPU6050_HandleTypeDef);
-  IMUQueueHandle = osMessageCreate(osMessageQ(IMUQueue), NULL);
-
   /* USER CODE BEGIN RTOS_QUEUES */
-  //osMessageQDef(IMUqueue, 16, uint16_t);
-  //	  IMUqueueHandle = osMessageCreate(osMessageQ(IMUqueue), NULL);
-
+  /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 }
 
@@ -294,13 +266,13 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor3, 3, &huart2, GPIOD, GPIO_PIN_7, AX12ATYPE);
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);		//COMPILING THIS LINE WITH ID 6 CAUSES HARDFAULT - TO BE DIAGNOSED
-	Dynamixel_Init(&Motor7, 7, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
-	Dynamixel_Init(&Motor8, 8, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
-	Dynamixel_Init(&Motor9, 9, &huart7, GPIOB, GPIO_PIN_10, AX12ATYPE);
-	Dynamixel_Init(&Motor10, 10, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor11, 11, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
-	Dynamixel_Init(&Motor12, 12, &huart5, GPIOB, GPIO_PIN_0, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_15, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
+	Dynamixel_Init(&Motor8, 8, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
+	Dynamixel_Init(&Motor9, 9, &huart6, GPIOB, GPIO_PIN_10, AX12ATYPE); // Changed from huart7
+	Dynamixel_Init(&Motor10, 10, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
+	Dynamixel_Init(&Motor11, 11, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
+	Dynamixel_Init(&Motor12, 12, &huart3, GPIOB, GPIO_PIN_0, AX12ATYPE); // Changed from huart5
 	Dynamixel_Init(&Motor13, 13, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
 	Dynamixel_Init(&Motor14, 14, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
 	Dynamixel_Init(&Motor15, 15, &huart4, GPIOB, GPIO_PIN_0, AX12ATYPE);
@@ -335,12 +307,12 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[3]).qHandle = UART1_reqHandle;
 	(Motorcmd[4]).qHandle = UART1_reqHandle;
 	(Motorcmd[5]).qHandle = UART1_reqHandle;
-	(Motorcmd[6]).qHandle = UART7_reqHandle;
-	(Motorcmd[7]).qHandle = UART7_reqHandle;
-	(Motorcmd[8]).qHandle = UART7_reqHandle;
-	(Motorcmd[9]).qHandle = UART5_reqHandle;
-	(Motorcmd[10]).qHandle = UART5_reqHandle;
-	(Motorcmd[11]).qHandle = UART5_reqHandle;
+	(Motorcmd[6]).qHandle = UART6_reqHandle; // Changed from huart7
+	(Motorcmd[7]).qHandle = UART6_reqHandle; // Changed from huart7
+	(Motorcmd[8]).qHandle = UART6_reqHandle; // Changed from huart7
+	(Motorcmd[9]).qHandle = UART3_reqHandle; // Changed from huart5
+	(Motorcmd[10]).qHandle = UART3_reqHandle; // Changed from huart5
+	(Motorcmd[11]).qHandle = UART3_reqHandle; // Changed from huart5
 	(Motorcmd[12]).qHandle = UART4_reqHandle;
 	(Motorcmd[13]).qHandle = UART4_reqHandle;
 	(Motorcmd[14]).qHandle = UART4_reqHandle;
@@ -349,16 +321,15 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[17]).qHandle = UART4_reqHandle;
 
 	// IMU Initialization
-	uint8_t lpf=4;
 	IMUdata._I2C_Handle = &hi2c1;
 	MPU6050_init(&IMUdata);
-	MPU6050_set_LPF(&IMUdata, lpf);
+	MPU6050_set_LPF(&IMUdata, 4);
 	MPU6050_manually_set_offsets(&IMUdata);
 
 	setupIsDone = 1;
 
+	/* Infinite loop */
 	while(1){
-	  // Infinite loop
       i = 0;
 	  j = 0;
       for(j = 0; j < size; j++){
@@ -384,8 +355,6 @@ void StartDefaultTask(void const * argument)
       osDelay(CONTROL_CYCLE_TIME);
     }
   }
-
-  /* Infinite loop */
   /* USER CODE END StartDefaultTask */
 }
 
@@ -441,6 +410,32 @@ void UART2_Handler(void const * argument)
   /* USER CODE END UART2_Handler */
 }
 
+/* UART3_Handler function */
+void UART3_Handler(void const * argument)
+{
+  /* USER CODE BEGIN UART3_Handler */
+  /* Infinite loop */
+  UARTcmd cmdMessage;
+  for(;;)
+	{
+	  while(xQueueReceive(UART3_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  if(cmdMessage.type == cmdREAD) {
+		  //SEND READ COMMAND TO MOTOR
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
+		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+	  }
+	  else if(cmdMessage.type == cmdWRITE) {
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+
+		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
+		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+	  }
+  }
+  /* USER CODE END UART3_Handler */
+}
+
 /* UART4_Handler function */
 void UART4_Handler(void const * argument)
 {
@@ -448,7 +443,7 @@ void UART4_Handler(void const * argument)
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
-  {
+	{
 	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
@@ -467,15 +462,15 @@ void UART4_Handler(void const * argument)
   /* USER CODE END UART4_Handler */
 }
 
-/* UART5_Handler function */
-void UART5_Handler(void const * argument)
+/* UART6_Handler function */
+void UART6_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART5_Handler */
+  /* USER CODE BEGIN UART6_Handler */
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
-  {
-	  while(xQueueReceive(UART5_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	{
+	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -484,53 +479,25 @@ void UART5_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART5TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 
 		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART5TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
-  /* USER CODE END UART5_Handler */
-}
-
-/* UART7_Handler function */
-void UART7_Handler(void const * argument)
-{
-  /* USER CODE BEGIN UART7_Handler */
-  /* Infinite loop */
-  UARTcmd cmdMessage;
-  for(;;)
-  {
-	  while(xQueueReceive(UART7_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART7TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-		  xSemaphoreTake(semUART7TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-	  }
-  }
-  /* USER CODE END UART7_Handler */
+  /* USER CODE END UART6_Handler */
 }
 
 /* StartIMUTask function */
 void StartIMUTask(void const * argument)
 {
   /* USER CODE BEGIN StartIMUTask */
-
   /* Infinite loop */
   for(;;)
   {
-	osDelay(10);
+    osDelay(10);
 //	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
 //	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
-//	xQueueSend(IMUQueueHandle,&IMUdata,0); //This is to send data to Lukas later on
   }
   /* USER CODE END StartIMUTask */
 }
@@ -546,14 +513,14 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 		else if(huart == &huart2){
 			xSemaphoreGiveFromISR(semUART2TxHandle, &xHigherPriorityTaskWoken);
 		}
+		else if(huart == &huart3){
+			xSemaphoreGiveFromISR(semUART3TxHandle, &xHigherPriorityTaskWoken);
+		}
 		else if(huart == &huart4){
 			xSemaphoreGiveFromISR(semUART4TxHandle, &xHigherPriorityTaskWoken);
 		}
-		else if(huart == &huart5){
-			xSemaphoreGiveFromISR(semUART5TxHandle, &xHigherPriorityTaskWoken);
-		}
-		else if(huart == &huart7){
-			xSemaphoreGiveFromISR(semUART7TxHandle, &xHigherPriorityTaskWoken);
+		else if(huart == &huart6){
+			xSemaphoreGiveFromISR(semUART6TxHandle, &xHigherPriorityTaskWoken);
 		}
 	}
 }

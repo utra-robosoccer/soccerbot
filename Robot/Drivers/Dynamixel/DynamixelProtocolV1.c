@@ -963,9 +963,9 @@ void Dynamixel_SyncWritePosition(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteB
 
 	if(theUART == &huart1){ arrIdx = 0; }
 	else if(theUART == &huart2){ arrIdx = 1; }
-	else if(theUART == &huart4){ arrIdx = 2; }
-	else if(theUART == &huart5){ arrIdx = 3; }
-	else if(theUART == &huart7){ arrIdx = 4; }
+	else if(theUART == &huart3){ arrIdx = 2; }
+	else if(theUART == &huart4){ arrIdx = 3; }
+	else if(theUART == &huart6){ arrIdx = 4; }
 	else{
 		// If we are here, then a UART that is not supported by the robot is attempting to be used
 		return;
@@ -1035,9 +1035,9 @@ void Dynamixel_SyncWritePositionAndVelocity(Dynamixel_HandleTypeDef* hdynamixel,
 
 	if(theUART == &huart1){ arrIdx = 0; }
 	else if(theUART == &huart2){ arrIdx = 1; }
-	else if(theUART == &huart4){ arrIdx = 2; }
-	else if(theUART == &huart5){ arrIdx = 3; }
-	else if(theUART == &huart7){ arrIdx = 4; }
+	else if(theUART == &huart3){ arrIdx = 2; }
+	else if(theUART == &huart4){ arrIdx = 3; }
+	else if(theUART == &huart6){ arrIdx = 4; }
 	else{
 		// If we are here, then a UART that is not supported by the robot is attempting to be used
 		return;
