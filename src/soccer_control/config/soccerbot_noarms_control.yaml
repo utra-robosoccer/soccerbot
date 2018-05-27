@@ -60,5 +60,5 @@ soccerbot:
   neck_head_position_controller:
     type: position_controllers/JointPositionController
     joint: neck_head
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 10000000.0, i: 0.01, d: 10.0}
 

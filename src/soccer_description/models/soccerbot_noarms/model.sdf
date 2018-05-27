@@ -23,7 +23,7 @@
         <pose frame=''>-0.076 -0.05 -0.0725 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Torso.stl</uri>
+            <uri>model://soccer_description/meshes/Torso.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -177,7 +177,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Head.stl</uri>
+            <uri>model://soccer_description/meshes/Head.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -276,7 +276,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Ankle.stl</uri>
+            <uri>model://soccer_description/meshes/Left Ankle.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -375,7 +375,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Calve.stl</uri>
+            <uri>model://soccer_description/meshes/Left Calve.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -474,7 +474,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Foot.stl</uri>
+            <uri>model://soccer_description/meshes/Left Foot.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -573,7 +573,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Hip Front.stl</uri>
+            <uri>model://soccer_description/meshes/Left Hip Front.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -672,7 +672,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Hip Side.stl</uri>
+            <uri>model://soccer_description/meshes/Left Hip Side.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -771,7 +771,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Left Thigh.stl</uri>
+            <uri>model://soccer_description/meshes/Left Thigh.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -870,7 +870,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Neck.stl</uri>
+            <uri>model://soccer_description/meshes/Neck.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -969,7 +969,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right Ankle.stl</uri>
+            <uri>model://soccer_description/meshes/Right Ankle.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -1068,7 +1068,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right Calve.stl</uri>
+            <uri>model://soccer_description/meshes/Right Calve.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -1167,7 +1167,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right foot.stl</uri>
+            <uri>model://soccer_description/meshes/Right foot.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -1266,7 +1266,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right Hip Front.stl</uri>
+            <uri>model://soccer_description/meshes/Right Hip Front.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -1365,7 +1365,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right Hip Side.stl</uri>
+            <uri>model://soccer_description/meshes/Right Hip Side.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -1464,7 +1464,7 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://meshes/Right Thigh.stl</uri>
+            <uri>model://soccer_description/meshes/Right Thigh.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -2020,6 +2020,10 @@
         </ode>
       </physics>
     </joint>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/soccerbot</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>
