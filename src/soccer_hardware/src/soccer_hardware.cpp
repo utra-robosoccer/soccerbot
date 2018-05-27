@@ -26,7 +26,7 @@ typedef struct robotGoal {
 
 typedef struct robotstate {
 	uint32_t id;
-	char message[20];
+	char message[80];
 } RobotState;
 
 RobotState robotState;
@@ -67,8 +67,8 @@ int open_port(void) {
 int configure_port(int fd) {
 	struct termios port_settings;     // structure to store the port settings in
 
-	cfsetispeed(&port_settings, B115200);    // set baud rates
-	cfsetospeed(&port_settings, B115200);
+	cfsetispeed(&port_settings, B2000000);    // set baud rates
+	cfsetospeed(&port_settings, B2000000);
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~CSTOPB;
@@ -172,7 +172,7 @@ void receive_loop() {
 
 		// Checking the correctness
 		bool dataCorrect = true;
-		for(int i = 0; i < 20; ++i) {
+		for(int i = 0; i < 80; ++i) {
 			// ROS_INFO("%d", robotState.message[i]);
 			if((int) robotState.message[i] != i) {
 				// ROS_INFO("Not matching %d %d", robotState.message[i], i);
