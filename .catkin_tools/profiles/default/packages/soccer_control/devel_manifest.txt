@@ -1,4 +1,0 @@
-soccer_control
-/home/vuwij/soccer_ws/devel/.private/soccer_control/share/soccer_control/cmake/soccer_controlConfig-version.cmake /home/vuwij/soccer_ws/devel/share/soccer_control/cmake/soccer_controlConfig-version.cmake
-/home/vuwij/soccer_ws/devel/.private/soccer_control/share/soccer_control/cmake/soccer_controlConfig.cmake /home/vuwij/soccer_ws/devel/share/soccer_control/cmake/soccer_controlConfig.cmake
-/home/vuwij/soccer_ws/devel/.private/soccer_control/lib/pkgconfig/soccer_control.pc /home/vuwij/soccer_ws/devel/lib/pkgconfig/soccer_control.pc

@@ -1,5 +1,0 @@
-soccer_hardware
-/home/vuwij/soccer_ws/devel/.private/soccer_hardware/share/soccer_hardware/cmake/soccer_hardwareConfig.cmake /home/vuwij/soccer_ws/devel/share/soccer_hardware/cmake/soccer_hardwareConfig.cmake
-/home/vuwij/soccer_ws/devel/.private/soccer_hardware/share/soccer_hardware/cmake/soccer_hardwareConfig-version.cmake /home/vuwij/soccer_ws/devel/share/soccer_hardware/cmake/soccer_hardwareConfig-version.cmake
-/home/vuwij/soccer_ws/devel/.private/soccer_hardware/lib/pkgconfig/soccer_hardware.pc /home/vuwij/soccer_ws/devel/lib/pkgconfig/soccer_hardware.pc
-/home/vuwij/soccer_ws/devel/.private/soccer_hardware/lib/soccer_hardware/soccer_hardware /home/vuwij/soccer_ws/devel/lib/soccer_hardware/soccer_hardware
