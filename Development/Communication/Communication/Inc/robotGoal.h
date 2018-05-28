@@ -13,7 +13,7 @@
 
 typedef struct robot_goal{
 	uint32_t id;
-	char msg[18];
+	char msg[80];
 } RobotGoal;
 
 #endif /* ROBOTGOAL_H_ */
