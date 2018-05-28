@@ -887,12 +887,12 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 ////			HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
 ////		}
 //		if(hdynamixel -> _UART_Handle == &huart6){
-//			HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
+//			HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
 //		}
 //		else{
-//			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
-//		}
 		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
+//		}
+
 	}
 }
 
