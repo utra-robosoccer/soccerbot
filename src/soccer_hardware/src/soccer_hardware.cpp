@@ -20,8 +20,10 @@ ros::NodeHandle* nh;
 int fd;
 
 typedef struct robotGoal {
+	uint32_t startSeq;
 	uint32_t id;
 	char message[20];
+	uint32_t endSeq;
 } RobotGoal;
 
 typedef struct robotstate {
@@ -32,19 +34,10 @@ typedef struct robotstate {
 RobotState robotState;
 RobotGoal robotGoal;
 
-void send_goal(RobotGoal* robotGoal) {
-	// Encapsulates the data into a packet
-	int wlen = write(fd, robotGoal, sizeof(RobotGoal));
-	if (wlen != sizeof(RobotGoal)) {
-		printf("Error from write: %d, %d\n", wlen, errno);
-	}
-	tcflush(fd, TCOFLUSH);
-}
-
 int open_port(void) {
 	int fd; // file description for the serial port
 
-	fd = open("/dev/ttyS0",
+	fd = open("/dev/ttyTH2",
 			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1)
 		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
@@ -56,17 +49,18 @@ int open_port(void) {
 
 	fcntl(fd, F_SETFL, 0);
 
-	tcflush(fd, TCIOFLUSH);
 	cout << "Opened Port" << endl;
 
 	return (fd);
 } //open_port
 
 int configure_port(int fd) {
+	tcflush(fd, TCIOFLUSH);
+
 	struct termios port_settings;     // structure to store the port settings in
 
-	cfsetispeed(&port_settings, B2000000);    // set baud rates
-	cfsetospeed(&port_settings, B2000000);
+	cfsetispeed(&port_settings, B1000000);    // set baud rates
+	cfsetospeed(&port_settings, B1000000);
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
@@ -104,30 +98,11 @@ int configure_port(int fd) {
 
 	cout << "Configured Port" << endl;
 	return (fd);
-
 }
 
-void send_to_hardware(ros::Publisher hardware_publisher) {
-	memset(robotState.message, 0, strlen(robotState.message));
-	// Send Goal
-	// while (strcmp(robotState.message, "ACK") || robotGoal.id != robotState.id) {
-	// 	tcflush(fd, TCIOFLUSH);
-	// 	// send_goal(robotGoalPtr);
-	// 	cout << "Sending Message " << robotGoal.id << endl;
-
-	// 	usleep(200000);
-	// 	// robotState = receive_state();
-	// 	cout << "Receiving Message " << robotState.id << endl;
-
-	// 	if(strcmp(robotState.message, "Done")){
-	// 		successcall.message = MoveType::success;
-	// 		hardware_publisher.publish(successcall);
-	// 		break;
-	// 	};
-	// }
-
-	cout << robotState.id << " " << robotState.message << endl;
-	robotGoal.id++;
+void send_state() {
+	write(fd, &robotGoal, sizeof(RobotGoal));
+	tcdrain(fd);
 }
 
 int max_buf_size = 128;
@@ -201,18 +176,6 @@ void receive_loop() {
 	}
 }
 
-// void receive_loop2() {
-// 	int blen;
-// 	int buf_offset = 0;
-// 	char buf[128];
-
-// 	while(1) {
-// 		int x = check_io(fd, 0, 1000, buf + buf_offset, sizeof(buf) - buf_offset, &blen);
-// 		blen += buf_offset;
-// 	}
-// }
-
-
 int main(int argc, char **argv) {
 
 	//establishConnection();
@@ -224,9 +187,13 @@ int main(int argc, char **argv) {
 
 	fd = open_port();
 	configure_port(fd);
-	tcflush(fd, TCIOFLUSH);
+
+	// while(ros::ok()) {
+	// 	send_state();
+
+	// 	ros::spinOnce();
+	// 	r.sleep();
+	// }
 
 	receive_loop();
-
-	ros::spin();
 }
