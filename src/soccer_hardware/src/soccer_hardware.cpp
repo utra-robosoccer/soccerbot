@@ -37,11 +37,7 @@ RobotGoal robotGoal;
 int open_port(void) {
 	int fd; // file description for the serial port
 
-<<<<<<< HEAD
-	fd = open("/dev/ttyTH2",
-=======
 	fd = open("/dev/ttyTHS2",
->>>>>>> 04b17ee8a8a117c9e7eccf450f69a642f501cbad
 			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1)
 		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
@@ -63,13 +59,8 @@ int configure_port(int fd) {
 
 	struct termios port_settings;     // structure to store the port settings in
 
-<<<<<<< HEAD
 	cfsetispeed(&port_settings, B1000000);    // set baud rates
 	cfsetospeed(&port_settings, B1000000);
-=======
-	cfsetispeed(&port_settings, B4000000);    // set baud rates
-	cfsetospeed(&port_settings, B4000000);
->>>>>>> 04b17ee8a8a117c9e7eccf450f69a642f501cbad
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
