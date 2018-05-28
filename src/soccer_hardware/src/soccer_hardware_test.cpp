@@ -13,16 +13,11 @@
 #include <sys/select.h>
 #include <ros/ros.h>
 #include <ros/console.h>
-#include <soccer_msgs/RobotGoal.h>
-#include <soccer_msgs/RobotState.h>
 
 using namespace std;
 using namespace ros;
 ros::NodeHandle* nh;
 int fd;
-
-ros::Subscriber send_to_robot;
-ros::Publisher receive_from_robot;
 
 typedef struct robotGoal {
 	uint32_t startSeq;
@@ -105,77 +100,81 @@ int configure_port(int fd) {
 	return (fd);
 }
 
-void send_goal() {
-	ROS_INFO("Sending To Robot");
+void send_state() {
+	ROS_INFO("Send State");
 	write(fd, &robotGoal, sizeof(RobotGoal));
 	tcdrain(fd);
 }
 
 int max_buf_size = 128;
 
-int totalSentPackets = 0;
-int totalFailedPackets = 0;
-
 void receive_loop() {
-	unsigned char robotStateData[sizeof(RobotState)];
-	unsigned char *robotStateDataPtr = robotStateData;
-	int totalBytesRead = 0;
 
-	int startseqcount = 0;
+	int totalSentPackets = 0;
+	int totalFailedPackets = 0;
 
-	unsigned char m_buf[max_buf_size];
+	while(1) {
 
-	while (1) {
-		ros::spinOnce();
+		unsigned char robotStateData[sizeof(RobotState)];
+		unsigned char *robotStateDataPtr = robotStateData;
+		int totalBytesRead = 0;
 
-		int bytesRead = read(fd, m_buf, max_buf_size);
+		int startseqcount = 0;
 
-		if(bytesRead < 0) continue;
+		unsigned char m_buf[max_buf_size];
 
-		for (int x = 0; x < bytesRead; ++x) {
-			// Start reading
-			if(startseqcount == 4) {
-				*robotStateDataPtr = m_buf[x];
-				robotStateDataPtr++;
-				totalBytesRead++;
-				if(totalBytesRead == sizeof(RobotState))
-					break;
+		while (1) {
+
+			int bytesRead = read(fd, m_buf, max_buf_size);
+
+			if(bytesRead < 0) continue;
+
+			for (int x = 0; x < bytesRead; ++x) {
+				// Start reading
+				if(startseqcount == 4) {
+					*robotStateDataPtr = m_buf[x];
+					robotStateDataPtr++;
+					totalBytesRead++;
+					if(totalBytesRead == sizeof(RobotState))
+						break;
+				}
+				else {
+					ROS_INFO(".");
+					if(m_buf[x] == 255)
+						startseqcount++;
+					else
+						startseqcount = 0;
+				}
 			}
-			else {
-				if(m_buf[x] == 255)
-					startseqcount++;
-				else
-					startseqcount = 0;
+
+			if(totalBytesRead == sizeof(RobotState))
+				break;
+		}
+
+		memset(&robotState, 0, sizeof(RobotState));
+		memcpy(&robotState, robotStateData, sizeof(RobotState));
+
+		ROS_INFO("DATA");
+		for (int i = 0; i < sizeof(RobotState); ++i) {
+			ROS_INFO("%d", robotStateData[i]);
+		}
+
+		// Checking the correctness
+		bool dataCorrect = true;
+		for(int i = 0; i < 80; ++i) {
+			// ROS_INFO("%d", robotState.message[i]);
+			if((int) robotState.message[i] != i) {
+				ROS_INFO("Not matching %d %d", robotState.message[i], i);
+				dataCorrect = false;
 			}
 		}
 
-		if(totalBytesRead == sizeof(RobotState))
-			break;
+		totalSentPackets++;
+		if(!dataCorrect)
+			totalFailedPackets++;
+		tcflush(fd, TCIOFLUSH);
+		ROS_INFO("%d/%d Failed", totalFailedPackets, totalSentPackets);
 	}
-
-	memset(&robotState, 0, sizeof(RobotState));
-	memcpy(&robotState, robotStateData, sizeof(RobotState));
-
-	ROS_INFO("Recieved data");
-
-	tcflush(fd, TCIOFLUSH);
-
-	soccer_msgs::RobotState state;
-	for(int i = 0; i < 20; ++i) {
-		char* ptr = &robotState.message[i * 4];
-		state.joint_angles[i] = (float) *ptr;
-	}
-	receive_from_robot.publish(state);
-}
-
-void send_to_robotCallback(const soccer_msgs::RobotGoal::ConstPtr& msg)
-{
-	for(int i = 0; i < 20; ++i) {
-		char* ptr = &robotGoal.message[i * 4];
-		*ptr = msg->trajectories[i];
-	}
-
-	send_goal();
 }
 
 int main(int argc, char **argv) {
@@ -192,13 +191,19 @@ int main(int argc, char **argv) {
 
 	robotGoal.startSeq = UINT32_MAX;
 	robotGoal.endSeq = 0;
-
-	send_to_robot = n.subscribe("robotGoal", 1, send_to_robotCallback);
-	receive_from_robot = n.advertise<soccer_msgs::RobotState>("robotState", 1);
+	robotGoal.id = 0;
+	for(int i = 0; i < 80; ++i) {
+		robotGoal.message[i] = i;
+	}
 
 	while(ros::ok()) {
-		receive_loop();
+		send_state();
 
+		robotGoal.id++;
+
+		ros::spinOnce();
 		r.sleep();
 	}
+
+	receive_loop();
 }
