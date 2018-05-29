@@ -101,23 +101,44 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  Dynamixel_HandleTypeDef motor15;
-  Dynamixel_Init(&motor15, 15, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE); // Test UART 1
-//  Dynamixel_Init(&motor15, 15, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE); // Test UART 2
-//  Dynamixel_Init(&motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE); // Test UART 3
-//  Dynamixel_Init(&motor15, 15, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE); // Test UART 4
-//  Dynamixel_Init(&motor15, 15, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE); // Test UART 6
+  Dynamixel_HandleTypeDef Motor1, Motor2, Motor3, Motor4, Motor5, Motor6, Motor7, Motor8, Motor9, Motor10, Motor11, Motor12;
+	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+//	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//	Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//	Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//	Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 
-  Dynamixel_SetStatusReturnLevel(&motor15, 1);
-  HAL_Delay(10);
 
-  /* Set minimum delay return time (2 microseconds). */
-  Dynamixel_SetReturnDelayTime(&motor15, 2);
-  HAL_Delay(10);
+	uint8_t numMotors = 12;
+	Dynamixel_HandleTypeDef* arrDynamixel[12] = {&Motor1,&Motor2,&Motor3,&Motor4,
+			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12};
 
-  /* Impress current to motor to enable torque. */
-  Dynamixel_TorqueEnable(&motor15, 1);
-  HAL_Delay(10);
+
+  for(uint8_t i = 0; i < numMotors; i++){
+	  Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
+	  HAL_Delay(10);
+
+	  /* Set minimum delay return time (2 microseconds). */
+	  Dynamixel_SetReturnDelayTime(arrDynamixel[i], 2);
+	  HAL_Delay(10);
+
+	  /* Impress current to motor to enable torque. */
+	  Dynamixel_TorqueEnable(arrDynamixel[i], 1);
+	  HAL_Delay(10);
+  }
 
   /* USER CODE END 2 */
 
@@ -126,10 +147,14 @@ int main(void)
   while (1)
   {
 
-  Dynamixel_SetGoalPosition(&motor15, 160);
-  HAL_Delay(1000);
-  Dynamixel_SetGoalPosition(&motor15, 140);
-  HAL_Delay(1000);
+	  for(uint8_t i = 0; i < numMotors; i++){
+		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
+	  }
+	  HAL_Delay(1000);
+//	  for(uint8_t i = 0; i < 5; i++){
+//		  Dynamixel_SetGoalPosition(arrDynamixel[i], 150);
+//	  }
+//	  HAL_Delay(1000);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
