@@ -74,6 +74,7 @@ osThreadId UART4_Handle;
 osThreadId UART6_Handle;
 osThreadId IMUTaskHandle;
 osThreadId rxTaskHandle;
+osThreadId txTaskHandle;
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
 osMessageQId UART3_reqHandle;
@@ -154,6 +155,7 @@ void UART4_Handler(void const * argument);
 void UART6_Handler(void const * argument);
 void StartIMUTask(void const * argument);
 void StartRxTask(void const * argument);
+void StartTxTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -246,8 +248,12 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of rxTask */
-  osThreadDef(rxTask, StartRxTask, osPriorityRealtime, 0, 512);
+  osThreadDef(rxTask, StartRxTask, osPriorityIdle, 0, 512);
   rxTaskHandle = osThreadCreate(osThread(rxTask), NULL);
+
+  /* definition and creation of txTask */
+  osThreadDef(txTask, StartTxTask, osPriorityRealtime, 0, 128);
+  txTaskHandle = osThreadCreate(osThread(txTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -350,25 +356,63 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[17]).qHandle = UART3_reqHandle;
 
 	// IMU Initialization
-	IMUdata._I2C_Handle = &hi2c1;
-	MPU6050_init(&IMUdata);
-	MPU6050_set_LPF(&IMUdata, 4);
-	MPU6050_manually_set_offsets(&IMUdata);
+//	IMUdata._I2C_Handle = &hi2c1;
+//	MPU6050_init(&IMUdata);
+//	MPU6050_set_LPF(&IMUdata, 4);
+//	MPU6050_manually_set_offsets(&IMUdata);
 
 	setupIsDone = 1;
+
+
+//	// UNCOMMENT TO ITERATE THROUGH JOINT TRAJECTORIES FROM MCU
+//	int size = 1001;
+//	while(1){
+//      int i = 0;
+//	  int j = 0;
+//      for(j = 0; j < size; j++){
+//		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+//			  switch(i){
+//				  case MOTOR1:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 1;
+//								  break;
+//				  case MOTOR2:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
+//								  break;
+//				  case MOTOR3:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 1;
+//								  break;
+//				  case MOTOR4:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 2;
+//								  break;
+//				  case MOTOR5:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 0;
+//								  break;
+//				  case MOTOR6:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 0;
+//								  break;
+//				  case MOTOR7:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 0;
+//								  break;
+//				  case MOTOR8:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 3;
+//								  break;
+//				  case MOTOR9:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 0;
+//								  break;
+//				  case MOTOR10:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 4;
+//								  break;
+//				  case MOTOR11:   (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 1;
+//								  break;
+//				  case MOTOR12:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
+//								  break;
+//			  }
+//      	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+//        }
+//      osDelay(CONTROL_CYCLE_TIME);
+//       }
+//	}
+
 
 	/* Infinite loop */
 	uint8_t i;
 	float positions[12];
 	while(1){
-		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
+//		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
 
-		// TODO: do we need this mutex?
-		xSemaphoreTake(mutexRobotGoalHandle, portMAX_DELAY);
 		for(i = 0; i < 12; i++){
             memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
 		}
-		xSemaphoreGive(mutexRobotGoalHandle);
 
 		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
@@ -400,6 +444,10 @@ void StartDefaultTask(void const * argument)
 		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
         }
     }
+
+	for(;;){
+		osDelay(10);
+	}
   /* USER CODE END StartDefaultTask */
 }
 
@@ -547,6 +595,18 @@ void StartIMUTask(void const * argument)
   /* USER CODE END StartIMUTask */
 }
 
+/* StartTxTask function */
+void StartTxTask(void const * argument)
+{
+  /* USER CODE BEGIN StartTxTask */
+  /* Infinite loop */
+  for(;;)
+  {
+	  HAL_UART_Transmit(&huart5, (uint8_t*) &robotState, sizeof(RobotState), 10);
+	  osDelay(pdMS_TO_TICKS(10));
+  }
+  /* USER CODE END StartTxTask */
+}
 
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){

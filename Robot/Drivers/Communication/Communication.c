@@ -28,8 +28,7 @@ static volatile RobotState *robotStatePtr;
 /*********************************** Externs **********************************/
 extern UART_HandleTypeDef huart5;
 extern osSemaphoreId semPCRxBuffHandle;
-extern osSemaphoreId semControlTaskHandle;
-extern osMutexId mutexRobotGoalHandle;
+//extern osSemaphoreId semControlTaskHandle;
 
 
 /******************************** Functions ************************************/
@@ -52,51 +51,46 @@ void Comm_Init(volatile RobotGoal* robotGoal, volatile RobotState* robotState){
 void StartRxTask(void const * argument)
 {
   /* USER CODE BEGIN StartRxTask */
+//  xSemaphoreTake(semPCRxBuffHandle, portMAX_DELAY);
   /* Infinite loop */
   for(;;)
   {
 	  HAL_UART_Receive_IT(&huart5, (uint8_t *) &buf, sizeof(buf));
-	  xSemaphoreTake(semPCRxBuffHandle, portMAX_DELAY);
-
-	  for(uint8_t i = 0; i < sizeof(buf); ++i) {
-			if(startSeqCount == 4) {
-				*robotGoalDataPtr = buf[i];
-				robotGoalDataPtr++;
-				totalBytesRead++;
-
-				if(totalBytesRead == sizeof(RobotGoal)) {
-					// Process RobotGoal here
-
-					// TODO: do we need this mutex?
-					xSemaphoreTake(mutexRobotGoalHandle, portMAX_DELAY);
-					memcpy(&robotGoal, &robotGoalData, sizeof(RobotGoal));
-					xSemaphoreGive(mutexRobotGoalHandle);
-
-					robotGoalDataPtr = robotGoalData;
-					startSeqCount = 0;
-					totalBytesRead = 0;
-
-					xSemaphoreGive(semControlTaskHandle);
-					continue;
-				}
-			}
-			else {
-				if(buf[i] == 0xFF)
-					startSeqCount++;
-				else
-					startSeqCount = 0;
-			}
-		}
-
-		HAL_UART_AbortReceive_IT(&huart5);
-		HAL_UART_Receive_IT(&huart5, (uint8_t *) &buf, sizeof(buf));
+//	  xSemaphoreTake(semPCRxBuffHandle, portMAX_DELAY);
   }
   /* USER CODE END StartRxTask */
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5){
-		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-		xSemaphoreGiveFromISR(semPCRxBuffHandle, &xHigherPriorityTaskWoken);
+//		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+//		xSemaphoreGiveFromISR(semPCRxBuffHandle, &xHigherPriorityTaskWoken);
+		  for(uint8_t i = 0; i < sizeof(buf); ++i) {
+				if(startSeqCount == 4) {
+					*robotGoalDataPtr = buf[i];
+					robotGoalDataPtr++;
+					totalBytesRead++;
+
+					if(totalBytesRead == sizeof(RobotGoal)) {
+						// Process RobotGoal here
+
+						memcpy(&robotGoal, &robotGoalData, sizeof(RobotGoal));
+
+						robotGoalDataPtr = robotGoalData;
+						startSeqCount = 0;
+						totalBytesRead = 0;
+
+	//					xSemaphoreGive(semControlTaskHandle);
+						continue;
+					}
+				}
+				else {
+					if(buf[i] == 0xFF)
+						startSeqCount++;
+					else
+						startSeqCount = 0;
+				}
+			}
+		  HAL_UART_Receive_IT(&huart5, (uint8_t *) &buf, sizeof(buf));
 	}
 }
