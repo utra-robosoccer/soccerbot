@@ -161,9 +161,15 @@ void receive_loop() {
 	tcflush(fd, TCIOFLUSH);
 
 	soccer_msgs::RobotState state;
+
+	// for(int i = 0; i < 80; ++i) {
+	// 	cout << (int) robotState.message[i] << " ";
+	// }
+	// cout << endl;
+
 	for(int i = 0; i < 20; ++i) {
 		char* ptr = &robotState.message[i * 4];
-		state.joint_angles[i] = (float) *ptr;
+		memcpy(&state.joint_angles[i], ptr, 4);
 	}
 	receive_from_robot.publish(state);
 }
@@ -172,8 +178,14 @@ void send_to_robotCallback(const soccer_msgs::RobotGoal::ConstPtr& msg)
 {
 	for(int i = 0; i < 20; ++i) {
 		char* ptr = &robotGoal.message[i * 4];
-		*ptr = msg->trajectories[i];
+		memcpy(ptr, &msg->trajectories[i], 4);
 	}
+
+	cout << "Sending data" << endl;
+	// for(int i = 0; i < 80; ++i) {
+	// 	cout << (int) robotGoal.message[i] << " ";
+	// }
+	// cout << endl;
 
 	send_goal();
 }
