@@ -61,6 +61,7 @@
 #include "../Drivers/MPU6050/MPU6050.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "../Drivers/Communication/Communication.h"
 
 /* USER CODE END Includes */
 
@@ -72,20 +73,24 @@ osThreadId UART3_Handle;
 osThreadId UART4_Handle;
 osThreadId UART6_Handle;
 osThreadId IMUTaskHandle;
+osThreadId rxTaskHandle;
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
 osMessageQId UART3_reqHandle;
 osMessageQId UART4_reqHandle;
 osMessageQId UART6_reqHandle;
 osMessageQId UART_rxHandle;
+osMutexId mutexRobotGoalHandle;
 osSemaphoreId semUART1TxHandle;
 osSemaphoreId semUART2TxHandle;
 osSemaphoreId semUART3TxHandle;
 osSemaphoreId semUART4TxHandle;
 osSemaphoreId semUART6TxHandle;
+osSemaphoreId semPCRxBuffHandle;
+osSemaphoreId semControlTaskHandle;
 
 /* USER CODE BEGIN Variables */
-const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
 					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
 					   MOTOR16, MOTOR17, MOTOR18
@@ -148,6 +153,7 @@ void UART3_Handler(void const * argument);
 void UART4_Handler(void const * argument);
 void UART6_Handler(void const * argument);
 void StartIMUTask(void const * argument);
+void StartRxTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -163,6 +169,11 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
        
   /* USER CODE END Init */
+
+  /* Create the mutex(es) */
+  /* definition and creation of mutexRobotGoal */
+  osMutexDef(mutexRobotGoal);
+  mutexRobotGoalHandle = osMutexCreate(osMutex(mutexRobotGoal));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -188,6 +199,14 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of semUART6Tx */
   osSemaphoreDef(semUART6Tx);
   semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
+
+  /* definition and creation of semPCRxBuff */
+  osSemaphoreDef(semPCRxBuff);
+  semPCRxBuffHandle = osSemaphoreCreate(osSemaphore(semPCRxBuff), 1);
+
+  /* definition and creation of semControlTask */
+  osSemaphoreDef(semControlTask);
+  semControlTaskHandle = osSemaphoreCreate(osSemaphore(semControlTask), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -225,6 +244,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of IMUTask */
   osThreadDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
+
+  /* definition and creation of rxTask */
+  osThreadDef(rxTask, StartRxTask, osPriorityRealtime, 0, 512);
+  rxTaskHandle = osThreadCreate(osThread(rxTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -265,8 +288,8 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-	int size = 1001, i, j;
-	UARTcmd Motorcmd[18];
+	Comm_Init(&robotGoal, &robotState);
+
 	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
@@ -291,8 +314,8 @@ void StartDefaultTask(void const * argument)
 			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
-
-	for(i = MOTOR1; i < MOTOR18; i++) {
+	UARTcmd Motorcmd[18];
+	for(int i = MOTOR1; i < MOTOR18; i++) {
         /* Configure motor to return status packets only for read commands */
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
         osDelay(10);
@@ -335,42 +358,48 @@ void StartDefaultTask(void const * argument)
 	setupIsDone = 1;
 
 	/* Infinite loop */
+	uint8_t i;
+	float positions[12];
 	while(1){
-      i = 0;
-	  j = 0;
-      for(j = 0; j < size; j++){
-		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			  switch(i){
-				  case MOTOR1:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 1;
-								  break;
-				  case MOTOR2:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
-								  break;
-				  case MOTOR3:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 1;
-								  break;
-				  case MOTOR4:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 2;
-								  break;
-				  case MOTOR5:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 0;
-								  break;
-				  case MOTOR6:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 0;
-								  break;
-				  case MOTOR7:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 0;
-								  break;
-				  case MOTOR8:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 3;
-								  break;
-				  case MOTOR9:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 0;
-								  break;
-				  case MOTOR10:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 4;
-								  break;
-				  case MOTOR11:   (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 1;
-								  break;
-				  case MOTOR12:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
-								  break;
-			  }
-      	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
+
+		// TODO: do we need this mutex?
+		xSemaphoreTake(mutexRobotGoalHandle, portMAX_DELAY);
+		for(i = 0; i < 12; i++){
+            memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
+		}
+		xSemaphoreGive(mutexRobotGoalHandle);
+
+		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			switch(i){
+			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
+			  				 break;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			  				 break;
+			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
+			  				 break;
+			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
+			  				 break;
+			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
+			  				 break;
+			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+							 break;
+            }
+		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
         }
-      osDelay(CONTROL_CYCLE_TIME);
     }
-  }
   /* USER CODE END StartDefaultTask */
 }
 
@@ -517,6 +546,7 @@ void StartIMUTask(void const * argument)
   }
   /* USER CODE END StartIMUTask */
 }
+
 
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
