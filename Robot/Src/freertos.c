@@ -87,6 +87,7 @@ osSemaphoreId semUART3TxHandle;
 osSemaphoreId semUART4TxHandle;
 osSemaphoreId semUART6TxHandle;
 osSemaphoreId semPCRxBuffHandle;
+osSemaphoreId semControlTaskHandle;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -202,6 +203,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of semPCRxBuff */
   osSemaphoreDef(semPCRxBuff);
   semPCRxBuffHandle = osSemaphoreCreate(osSemaphore(semPCRxBuff), 1);
+
+  /* definition and creation of semControlTask */
+  osSemaphoreDef(semControlTask);
+  semControlTaskHandle = osSemaphoreCreate(osSemaphore(semControlTask), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -353,43 +358,48 @@ void StartDefaultTask(void const * argument)
 	setupIsDone = 1;
 
 	/* Infinite loop */
-	int size = 1001, i, j;
+	uint8_t i;
+	float positions[12];
 	while(1){
-      i = 0;
-	  j = 0;
-      for(j = 0; j < size; j++){
-		  for(int i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			  switch(i){
-				  case MOTOR1:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 1;
-								  break;
-				  case MOTOR2:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
-								  break;
-				  case MOTOR3:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 1;
-								  break;
-				  case MOTOR4:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 2;
-								  break;
-				  case MOTOR5:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 0;
-								  break;
-				  case MOTOR6:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 0;
-								  break;
-				  case MOTOR7:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 0;
-								  break;
-				  case MOTOR8:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 - 3;
-								  break;
-				  case MOTOR9:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 - 0;
-								  break;
-				  case MOTOR10:	  (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 4;
-								  break;
-				  case MOTOR11:   (Motorcmd[i]).position = motorPosArr[i][j]*180/PI + 150 + 1;
-								  break;
-				  case MOTOR12:	  (Motorcmd[i]).position = -1*motorPosArr[i][j]*180/PI + 150 + 3;
-								  break;
-			  }
-      	  xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
+
+		// TODO: do we need this mutex?
+		xSemaphoreTake(mutexRobotGoalHandle, portMAX_DELAY);
+		for(i = 0; i < 12; i++){
+            memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
+		}
+		xSemaphoreGive(mutexRobotGoalHandle);
+
+		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			switch(i){
+			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
+			  				 break;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			  				 break;
+			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
+			  				 break;
+			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
+			  				 break;
+			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
+			  				 break;
+			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+							 break;
+            }
+		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
         }
-      osDelay(CONTROL_CYCLE_TIME);
     }
-  }
   /* USER CODE END StartDefaultTask */
 }
 
@@ -536,6 +546,7 @@ void StartIMUTask(void const * argument)
   }
   /* USER CODE END StartIMUTask */
 }
+
 
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
