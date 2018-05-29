@@ -24,6 +24,15 @@
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "src/soccer_description/models/soccerbot/model.urdf",
+			"settings":
+			{
+				"buffer_size": 25775,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -58,7 +67,12 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws"
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws",
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws/src",
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws/src/soccer_description",
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws/src/soccer_description/models",
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws/src/soccer_description/models/soccerbot",
+		"/Users/vuwij/Google Drive/Documents/2018 May/UTRA RoboSoccer/3. Software/soccer_ws/src/soccer_description/models/soccerbot_noarms"
 	],
 	"file_history":
 	[
@@ -115,7 +129,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -145,7 +159,7 @@
 						"translation.y": 29832.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -161,8 +175,8 @@
 						"selection":
 						[
 							[
-								21583,
-								21583
+								21698,
+								21465
 							]
 						],
 						"settings":
@@ -173,6 +187,36 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 8006.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/soccer_description/models/soccerbot/model.urdf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 25775,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								25534,
+								25534
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/XML/XML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 9567.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
