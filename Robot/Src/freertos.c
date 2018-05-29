@@ -73,17 +73,20 @@ osThreadId UART3_Handle;
 osThreadId UART4_Handle;
 osThreadId UART6_Handle;
 osThreadId IMUTaskHandle;
+osThreadId rxTaskHandle;
 osMessageQId UART1_reqHandle;
 osMessageQId UART2_reqHandle;
 osMessageQId UART3_reqHandle;
 osMessageQId UART4_reqHandle;
 osMessageQId UART6_reqHandle;
 osMessageQId UART_rxHandle;
+osMutexId mutexRobotGoalHandle;
 osSemaphoreId semUART1TxHandle;
 osSemaphoreId semUART2TxHandle;
 osSemaphoreId semUART3TxHandle;
 osSemaphoreId semUART4TxHandle;
 osSemaphoreId semUART6TxHandle;
+osSemaphoreId semPCRxBuffHandle;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -149,6 +152,7 @@ void UART3_Handler(void const * argument);
 void UART4_Handler(void const * argument);
 void UART6_Handler(void const * argument);
 void StartIMUTask(void const * argument);
+void StartRxTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -164,6 +168,11 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
        
   /* USER CODE END Init */
+
+  /* Create the mutex(es) */
+  /* definition and creation of mutexRobotGoal */
+  osMutexDef(mutexRobotGoal);
+  mutexRobotGoalHandle = osMutexCreate(osMutex(mutexRobotGoal));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -189,6 +198,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of semUART6Tx */
   osSemaphoreDef(semUART6Tx);
   semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
+
+  /* definition and creation of semPCRxBuff */
+  osSemaphoreDef(semPCRxBuff);
+  semPCRxBuffHandle = osSemaphoreCreate(osSemaphore(semPCRxBuff), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -226,6 +239,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of IMUTask */
   osThreadDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
+
+  /* definition and creation of rxTask */
+  osThreadDef(rxTask, StartRxTask, osPriorityRealtime, 0, 512);
+  rxTaskHandle = osThreadCreate(osThread(rxTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -292,9 +309,8 @@ void StartDefaultTask(void const * argument)
 			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
-	int size = 1001, i, j;
 	UARTcmd Motorcmd[18];
-	for(i = MOTOR1; i < MOTOR18; i++) {
+	for(int i = MOTOR1; i < MOTOR18; i++) {
         /* Configure motor to return status packets only for read commands */
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
         osDelay(10);
@@ -337,6 +353,7 @@ void StartDefaultTask(void const * argument)
 	setupIsDone = 1;
 
 	/* Infinite loop */
+	int size = 1001, i, j;
 	while(1){
       i = 0;
 	  j = 0;
