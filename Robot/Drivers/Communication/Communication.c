@@ -28,6 +28,7 @@ static volatile RobotState *robotStatePtr;
 /*********************************** Externs **********************************/
 extern UART_HandleTypeDef huart5;
 extern osSemaphoreId semPCRxBuffHandle;
+extern osSemaphoreId semControlTaskHandle;
 extern osMutexId mutexRobotGoalHandle;
 
 
@@ -65,6 +66,8 @@ void StartRxTask(void const * argument)
 
 				if(totalBytesRead == sizeof(RobotGoal)) {
 					// Process RobotGoal here
+
+					// TODO: do we need this mutex?
 					xSemaphoreTake(mutexRobotGoalHandle, portMAX_DELAY);
 					memcpy(&robotGoal, &robotGoalData, sizeof(RobotGoal));
 					xSemaphoreGive(mutexRobotGoalHandle);
@@ -72,6 +75,8 @@ void StartRxTask(void const * argument)
 					robotGoalDataPtr = robotGoalData;
 					startSeqCount = 0;
 					totalBytesRead = 0;
+
+					xSemaphoreGive(semControlTaskHandle);
 					continue;
 				}
 			}
