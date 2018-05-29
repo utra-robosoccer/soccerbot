@@ -61,6 +61,7 @@
 #include "../Drivers/MPU6050/MPU6050.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "../Drivers/Communication/Communication.h"
 
 /* USER CODE END Includes */
 
@@ -85,7 +86,7 @@ osSemaphoreId semUART4TxHandle;
 osSemaphoreId semUART6TxHandle;
 
 /* USER CODE BEGIN Variables */
-const enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
+enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
 					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
 					   MOTOR16, MOTOR17, MOTOR18
@@ -265,8 +266,8 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-	int size = 1001, i, j;
-	UARTcmd Motorcmd[18];
+	Comm_Init(&robotGoal, &robotState);
+
 	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
@@ -291,7 +292,8 @@ void StartDefaultTask(void const * argument)
 			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
-
+	int size = 1001, i, j;
+	UARTcmd Motorcmd[18];
 	for(i = MOTOR1; i < MOTOR18; i++) {
         /* Configure motor to return status packets only for read commands */
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
