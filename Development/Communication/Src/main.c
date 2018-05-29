@@ -149,6 +149,7 @@ int main(void)
 		}
 
 		send_state(robotStatePtr);
+		HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
 		HAL_Delay(10);
 	}
   /* USER CODE END 3 */
@@ -296,6 +297,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart2) {
+		HAL_UART_AbortReceive_IT(&huart2);
 
 		for(int i = 0; i < sizeof(buf); ++i) {
 			if(startSeqCount == 4) {
@@ -306,7 +308,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 				if(totalBytesRead == sizeof(RobotGoal)) {
 
 					// Process RobotGoal here
-					memcpy(&robotGoal, &robotGoalData, sizeof(RobotGoal));
+					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
 
 					robotGoalDataPtr = robotGoalData;
 					startSeqCount = 0;
@@ -322,7 +324,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 			}
 		}
 
-		HAL_UART_AbortReceive_IT(&huart2);
+
 		HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
 	}
 }
