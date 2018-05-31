@@ -64,6 +64,7 @@ UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
 DMA_HandleTypeDef hdma_uart4_tx;
+DMA_HandleTypeDef hdma_uart5_tx;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_tx;
 DMA_HandleTypeDef hdma_usart3_tx;
@@ -256,6 +257,25 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    /* UART5 DMA Init */
+    /* UART5_TX Init */
+    hdma_uart5_tx.Instance = DMA1_Stream7;
+    hdma_uart5_tx.Init.Channel = DMA_CHANNEL_4;
+    hdma_uart5_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    hdma_uart5_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_uart5_tx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_uart5_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_uart5_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_uart5_tx.Init.Mode = DMA_NORMAL;
+    hdma_uart5_tx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_uart5_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    if (HAL_DMA_Init(&hdma_uart5_tx) != HAL_OK)
+    {
+      _Error_Handler(__FILE__, __LINE__);
+    }
+
+    __HAL_LINKDMA(uartHandle,hdmatx,hdma_uart5_tx);
 
     /* UART5 interrupt Init */
     HAL_NVIC_SetPriority(UART5_IRQn, 5, 0);
@@ -494,6 +514,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_12);
 
     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
+
+    /* UART5 DMA DeInit */
+    HAL_DMA_DeInit(uartHandle->hdmatx);
 
     /* UART5 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART5_IRQn);

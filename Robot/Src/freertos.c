@@ -52,12 +52,12 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
+#include <stdint.h>
+#include <stdbool.h>
 #include "stm32f4xx_hal.h"
-//#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 #include "i2c.h"
-//#include "tim.h"
 #include "../Drivers/MPU6050/MPU6050.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
@@ -111,6 +111,9 @@ osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId UART_rxHandle;
 uint8_t UART_rxBuffer[ 20 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART_rxControlBlock;
+osMessageQId IMUQueueHandle;
+uint8_t IMUQueueBuffer[ 20 * sizeof( uint32_t ) ];
+osStaticMessageQDef_t IMUQueueControlBlock;
 osSemaphoreId semUART1TxHandle;
 osStaticSemaphoreDef_t semUART1TxControlBlock;
 osSemaphoreId semUART2TxHandle;
@@ -121,16 +124,18 @@ osSemaphoreId semUART4TxHandle;
 osStaticSemaphoreDef_t semUART4TxControlBlock;
 osSemaphoreId semUART6TxHandle;
 osStaticSemaphoreDef_t semUART6TxControlBlock;
-osSemaphoreId semPCRxBuffHandle;
-osStaticSemaphoreDef_t semPCRxBuffControlBlock;
 osSemaphoreId semControlTaskHandle;
 osStaticSemaphoreDef_t semControlTaskControlBlock;
+osSemaphoreId semPCTxHandle;
+osStaticSemaphoreDef_t semPCTxControlBlock;
+osSemaphoreId semPCRxHandle;
+osStaticSemaphoreDef_t semPCRxControlBlock;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
-					   MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
-					   MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
-					   MOTOR16, MOTOR17, MOTOR18
+				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
+				 MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
+				 MOTOR16, MOTOR17, MOTOR18
 };
 
 Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
@@ -179,7 +184,7 @@ const double motorPosArr[12][1001] = {
 
 #define CONTROL_CYCLE_TIME 10 // Control cycle time in milliseconds
 
-uint8_t setupIsDone = 0;
+bool setupIsDone = false;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -249,13 +254,17 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreStaticDef(semUART6Tx, &semUART6TxControlBlock);
   semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
 
-  /* definition and creation of semPCRxBuff */
-  osSemaphoreStaticDef(semPCRxBuff, &semPCRxBuffControlBlock);
-  semPCRxBuffHandle = osSemaphoreCreate(osSemaphore(semPCRxBuff), 1);
-
   /* definition and creation of semControlTask */
   osSemaphoreStaticDef(semControlTask, &semControlTaskControlBlock);
   semControlTaskHandle = osSemaphoreCreate(osSemaphore(semControlTask), 1);
+
+  /* definition and creation of semPCTx */
+  osSemaphoreStaticDef(semPCTx, &semPCTxControlBlock);
+  semPCTxHandle = osSemaphoreCreate(osSemaphore(semPCTx), 1);
+
+  /* definition and creation of semPCRx */
+  osSemaphoreStaticDef(semPCRx, &semPCRxControlBlock);
+  semPCRxHandle = osSemaphoreCreate(osSemaphore(semPCRx), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -331,6 +340,10 @@ void MX_FREERTOS_Init(void) {
   osMessageQStaticDef(UART_rx, 20, UARTcmd, UART_rxBuffer, &UART_rxControlBlock);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
+  /* definition and creation of IMUQueue */
+  osMessageQStaticDef(IMUQueue, 20, uint32_t, IMUQueueBuffer, &IMUQueueControlBlock);
+  IMUQueueHandle = osMessageCreate(osMessageQ(IMUQueue), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -341,8 +354,6 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-	Comm_Init(&robotGoal, &robotState);
-
 	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
@@ -409,13 +420,25 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[16]).qHandle = UART3_reqHandle;
 	(Motorcmd[17]).qHandle = UART3_reqHandle;
 
-	// IMU Initialization
-//	IMUdata._I2C_Handle = &hi2c1;
-//	MPU6050_init(&IMUdata);
-//	MPU6050_set_LPF(&IMUdata, 4);
-//	MPU6050_manually_set_offsets(&IMUdata);
+	// IMU initialization
+	IMUdata._I2C_Handle = &hi2c1;
+	MPU6050_init(&IMUdata);
+	MPU6050_manually_set_offsets(&IMUdata);
+	MPU6050_set_LPF(&IMUdata, 4);
 
-	setupIsDone = 1;
+	// Comm initialization
+	Comm_Init(&robotGoal, &robotState);
+
+	// Set setupIsDone and unblock the higher-priority tasks
+	setupIsDone = true;
+	xTaskNotify(rxTaskHandle, 1UL, eNoAction);
+	xTaskNotify(txTaskHandle, 1UL, eNoAction);
+	xTaskNotify(UART1_Handle, 1UL, eNoAction);
+	xTaskNotify(UART2_Handle, 1UL, eNoAction);
+	xTaskNotify(UART3_Handle, 1UL, eNoAction);
+	xTaskNotify(UART4_Handle, 1UL, eNoAction);
+	xTaskNotify(UART6_Handle, 1UL, eNoAction);
+	xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
 
 //	// UNCOMMENT TO ITERATE THROUGH JOINT TRAJECTORIES FROM MCU
 //	int size = 1001;
@@ -455,7 +478,6 @@ void StartDefaultTask(void const * argument)
 //      osDelay(CONTROL_CYCLE_TIME);
 //       }
 //	}
-
 
 	/* Infinite loop */
 	uint8_t i;
@@ -504,6 +526,10 @@ void StartDefaultTask(void const * argument)
 void UART1_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART1_Handler */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
@@ -530,6 +556,10 @@ void UART1_Handler(void const * argument)
 void UART2_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART2_Handler */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
@@ -556,6 +586,10 @@ void UART2_Handler(void const * argument)
 void UART3_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART3_Handler */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
@@ -582,6 +616,10 @@ void UART3_Handler(void const * argument)
 void UART4_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART4_Handler */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
@@ -608,6 +646,10 @@ void UART4_Handler(void const * argument)
 void UART6_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART6_Handler */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   UARTcmd cmdMessage;
   for(;;)
@@ -634,12 +676,18 @@ void UART6_Handler(void const * argument)
 void StartIMUTask(void const * argument)
 {
   /* USER CODE BEGIN StartIMUTask */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
+//  float dataToSend[6] = {0}; // Populate this with IMU data to send in the queue by copy
   for(;;)
   {
-    osDelay(10);
-//	MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
-//	MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+      osDelay(10);
+//	  MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
+//	  MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+//    xQueueSend(&IMUQueueHandle, (uint32_t*)dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
 }
@@ -648,11 +696,13 @@ void StartIMUTask(void const * argument)
 void StartRxTask(void const * argument)
 {
   /* USER CODE BEGIN StartRxTask */
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   for(;;)
   {
 	  HAL_UART_Receive_IT(&huart5, (uint8_t *) &buf, sizeof(buf));
-	  xSemaphoreTake(semPCRxBuffHandle, portMAX_DELAY);
+	  xSemaphoreTake(semPCRxHandle, portMAX_DELAY);
   }
   /* USER CODE END StartRxTask */
 }
@@ -661,10 +711,17 @@ void StartRxTask(void const * argument)
 void StartTxTask(void const * argument)
 {
   /* USER CODE BEGIN StartTxTask */
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
   /* Infinite loop */
   for(;;)
   {
 	  // TODO: Implement actual TX task, and use DMA/IT I/O
+	  // Queue sets would be useful here for synchronizing positions
+	  // being read from multiple threads. It seems this can't be done
+	  // from Cube, but if you go into FreeRTOS.h and set the configUSE for
+	  // queue sets to 1, the APIs become available. You just need to make sure
+	  // you do this every time you regenerate code from Cube.
 	  HAL_UART_Transmit(&huart5, (uint8_t*) &robotState, sizeof(RobotState), 10);
 	  osDelay(pdMS_TO_TICKS(10));
   }
@@ -673,9 +730,11 @@ void StartTxTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
-
-	if(setupIsDone == 1){
+	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+		if(huart == &huart5){
+			xSemaphoreGiveFromISR(semPCTxHandle, &xHigherPriorityTaskWoken);
+		}
 		if(huart == &huart1){
 			xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
 		}

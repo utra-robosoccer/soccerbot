@@ -27,7 +27,7 @@ static volatile RobotState *robotStatePtr;
 
 /*********************************** Externs **********************************/
 extern UART_HandleTypeDef huart5;
-extern osSemaphoreId semPCRxBuffHandle;
+extern osSemaphoreId semPCRxHandle;
 extern osSemaphoreId semControlTaskHandle;
 
 
@@ -88,6 +88,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 
 		// Callback processing done; wake the RX task to start the next reception
 		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-		xSemaphoreGiveFromISR(semPCRxBuffHandle, &xHigherPriorityTaskWoken);
+		xSemaphoreGiveFromISR(semPCRxHandle, &xHigherPriorityTaskWoken);
 	}
 }
