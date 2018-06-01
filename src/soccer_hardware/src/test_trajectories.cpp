@@ -20,7 +20,21 @@ int main(int argc, char **argv) {
 	nh = &n;
 
 	string filename = "../src/soccer_hardware/trajectories/" + TRAJECTORY_FILE;
+	if(argc == 2) {
+		string str(argv[1]);
+		filename = "../src/soccer_hardware/trajectories/" + str;
+	}
+
 	ifstream trajectory_file(filename, std::ifstream::in);
+	if(!trajectory_file.is_open()) {
+		trajectory_file.open("../../" + filename, std::ifstream::in);
+	}
+	if(!trajectory_file.is_open()) {
+		trajectory_file.open("../" + filename, std::ifstream::in);
+	}
+	if(!trajectory_file.is_open()) {
+		trajectory_file.open("src/" + filename, std::ifstream::in);
+	}
 	if(!trajectory_file.is_open()) {
 		cout << "Could not open file" << filename << endl;
 		exit(1);
