@@ -18,9 +18,9 @@
 
 
 /******************************* Public Variables *******************************/
-extern volatile RobotGoal robotGoal;
-extern volatile RobotState robotState;
-extern volatile uint8_t buf[10];
+extern RobotGoal robotGoal;
+extern RobotState robotState;
+extern uint8_t buf[21];
 
 
 /***************************** Function prototypes ****************************/
