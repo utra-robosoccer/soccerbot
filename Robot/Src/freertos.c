@@ -483,11 +483,18 @@ void StartDefaultTask(void const * argument)
 	uint8_t i;
 	float positions[12];
 	while(1){
-		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
+		xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+//		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
 
 		for(i = 0; i < 12; i++){
-            memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
+			uint8_t* ptr = &positions[i];
+			for(uint8_t j = 0; j < 4; j++){
+				*ptr = robotGoal.msg[i * 4 + 3 - j];
+				ptr++;
+			}
+//            memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
 		}
+		continue;
 
 		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
@@ -690,21 +697,6 @@ void StartIMUTask(void const * argument)
 //    xQueueSend(&IMUQueueHandle, (uint32_t*)dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
-}
-
-/* StartRxTask function */
-void StartRxTask(void const * argument)
-{
-  /* USER CODE BEGIN StartRxTask */
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-
-  /* Infinite loop */
-  for(;;)
-  {
-	  HAL_UART_Receive_IT(&huart5, (uint8_t *) &buf, sizeof(buf));
-	  xSemaphoreTake(semPCRxHandle, portMAX_DELAY);
-  }
-  /* USER CODE END StartRxTask */
 }
 
 /* StartTxTask function */
