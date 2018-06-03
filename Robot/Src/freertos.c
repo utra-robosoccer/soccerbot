@@ -114,6 +114,8 @@ osStaticMessageQDef_t UART_rxControlBlock;
 osMessageQId IMUQueueHandle;
 uint8_t IMUQueueBuffer[ 20 * sizeof( uint32_t ) ];
 osStaticMessageQDef_t IMUQueueControlBlock;
+osMutexId PCUARTHandle;
+osStaticMutexDef_t PCUARTControlBlock;
 osSemaphoreId semUART1TxHandle;
 osStaticSemaphoreDef_t semUART1TxControlBlock;
 osSemaphoreId semUART2TxHandle;
@@ -124,12 +126,6 @@ osSemaphoreId semUART4TxHandle;
 osStaticSemaphoreDef_t semUART4TxControlBlock;
 osSemaphoreId semUART6TxHandle;
 osStaticSemaphoreDef_t semUART6TxControlBlock;
-osSemaphoreId semControlTaskHandle;
-osStaticSemaphoreDef_t semControlTaskControlBlock;
-osSemaphoreId semPCTxHandle;
-osStaticSemaphoreDef_t semPCTxControlBlock;
-osSemaphoreId semPCRxHandle;
-osStaticSemaphoreDef_t semPCRxControlBlock;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -229,6 +225,11 @@ void MX_FREERTOS_Init(void) {
        
   /* USER CODE END Init */
 
+  /* Create the mutex(es) */
+  /* definition and creation of PCUART */
+  osMutexStaticDef(PCUART, &PCUARTControlBlock);
+  PCUARTHandle = osMutexCreate(osMutex(PCUART));
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -253,18 +254,6 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of semUART6Tx */
   osSemaphoreStaticDef(semUART6Tx, &semUART6TxControlBlock);
   semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
-
-  /* definition and creation of semControlTask */
-  osSemaphoreStaticDef(semControlTask, &semControlTaskControlBlock);
-  semControlTaskHandle = osSemaphoreCreate(osSemaphore(semControlTask), 1);
-
-  /* definition and creation of semPCTx */
-  osSemaphoreStaticDef(semPCTx, &semPCTxControlBlock);
-  semPCTxHandle = osSemaphoreCreate(osSemaphore(semPCTx), 1);
-
-  /* definition and creation of semPCRx */
-  osSemaphoreStaticDef(semPCRx, &semPCRxControlBlock);
-  semPCRxHandle = osSemaphoreCreate(osSemaphore(semPCRx), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -705,6 +694,8 @@ void StartTxTask(void const * argument)
   /* USER CODE BEGIN StartTxTask */
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
+  HAL_StatusTypeDef status;
+
   /* Infinite loop */
   for(;;)
   {
@@ -714,8 +705,14 @@ void StartTxTask(void const * argument)
 	  // from Cube, but if you go into FreeRTOS.h and set the configUSE for
 	  // queue sets to 1, the APIs become available. You just need to make sure
 	  // you do this every time you regenerate code from Cube.
-	  HAL_UART_Transmit(&huart5, (uint8_t*) &robotState, sizeof(RobotState), 10);
-	  osDelay(pdMS_TO_TICKS(10));
+	  do{
+	      xSemaphoreTake(PCUARTHandle, 1);
+	      status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*) &robotState, sizeof(RobotState));
+	      xSemaphoreGive(PCUARTHandle);
+	  }while(status != HAL_OK);
+
+	  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+//	  osDelay(pdMS_TO_TICKS(10));
   }
   /* USER CODE END StartTxTask */
 }
@@ -725,7 +722,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
 		if(huart == &huart5){
-			xSemaphoreGiveFromISR(semPCTxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(rxTaskHandle, 1UL, eNoAction,
+							&xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
 			xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
