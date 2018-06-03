@@ -9,22 +9,21 @@
 #include "Communication.h"
 
 /******************************* Public Variables *******************************/
-RobotGoal robotGoal;
-RobotState robotState;
+volatile RobotGoal robotGoal;
+volatile RobotState robotState;
 
 /******************************* Private Variables ******************************/
-static RobotGoal *robotGoalPtr;
-static uint8_t robotGoalData[sizeof(RobotGoal)];
-static uint8_t *robotGoalDataPtr;
-uint8_t buf[21];
-static uint8_t startSeqCount;
-static uint8_t totalBytesRead;
-static RobotState *robotStatePtr;
+static volatile RobotGoal *robotGoalPtr;
+static volatile uint8_t robotGoalData[sizeof(RobotGoal)];
+static volatile uint8_t *robotGoalDataPtr;
+volatile uint8_t buf[21];
+static volatile uint8_t startSeqCount;
+static volatile uint8_t totalBytesRead;
+static volatile RobotState *robotStatePtr;
 
 /*********************************** Externs **********************************/
 extern UART_HandleTypeDef huart5;
-extern osSemaphoreId semPCRxHandle;
-extern osSemaphoreId semControlTaskHandle;
+extern osMutexId PCUARTHandle;
 extern osThreadId rxTaskHandle;
 extern osThreadId defaultTaskHandle;
 
@@ -49,17 +48,17 @@ void StartRxTask(void const * argument) {
 	/* USER CODE BEGIN StartRxTask */
 	xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-	HAL_UART_Receive_IT(&huart5, (uint8_t *) buf, sizeof(buf));
+	HAL_StatusTypeDef status;
+
 	/* Infinite loop */
 	for (;;) {
-		HAL_UART_Receive_IT(&huart5, (uint8_t *) buf, sizeof(buf));
-		osDelay(100);
-	}
-	/* USER CODE END StartRxTask */
-}
+		do{
+			xSemaphoreTake(PCUARTHandle, 1);
+			status = HAL_UART_Receive_IT(&huart5, (uint8_t *) buf, sizeof(buf));
+			xSemaphoreGive(PCUARTHandle);
+		}while(status != HAL_OK);
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	if (huart == &huart5) {
+		xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
 		for (uint8_t i = 0; i < sizeof(buf); ++i) {
 			if (startSeqCount == 4) {
@@ -83,13 +82,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 					startSeqCount = 0;
 					totalBytesRead = 0;
 
-					//					xSemaphoreGive(semControlTaskHandle);
 					BaseType_t xHigherPriorityTaskWoken = pdTRUE;
 					xTaskNotifyFromISR(defaultTaskHandle, 1UL, eNoAction,
 							&xHigherPriorityTaskWoken);
 					continue;
 				}
-			} else {
+			}else{
 				// This control block is used to verify that the data header is in tact
 				if (buf[i] == 0xFF) {
 					startSeqCount++;
@@ -99,4 +97,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 			}
 		}
 	}
+	/* USER CODE END StartRxTask */
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+	if (huart == &huart5) {
+		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+		xTaskNotifyFromISR(rxTaskHandle, 1UL, eNoAction,
+				&xHigherPriorityTaskWoken);
+	}
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+     static volatile error = HAL_UART_GetError(huart);
 }
