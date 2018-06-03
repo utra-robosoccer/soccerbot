@@ -1,149 +1,19 @@
 <?xml version="1.0" ?>
-<robot name="soccerbot">
+<robot name="soccerbot_noarms">
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/soccerbot</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
-  <joint name="head_camera" type="fixed">
-    <parent link="head"/>
-    <child link="camera"/>
-    <origin rpy="2.35619 -1.57079  2.35619" xyz="0      0.0699  0.1"/>
-    <axis xyz="0  0  0"/>
-    <limit effort="0" lower="0" upper="0" velocity="0"/>
-  </joint>
-  <joint name="left_ankle_foot" type="revolute">
-    <parent link="left_ankle"/>
-    <child link="left_foot"/>
-    <origin rpy="0  0  0" xyz="0  0  0"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="left_bicep_forearm" type="revolute">
-    <parent link="left_bicep"/>
-    <child link="left_forearm"/>
-    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
-    <axis xyz="0 -1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="left_calve_ankle" type="revolute">
-    <parent link="left_calve"/>
-    <child link="left_ankle"/>
-    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
-    <axis xyz="0.00000000e+00   1.00000000e+00   6.00000000e-05"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="left_hip_front_thigh" type="revolute">
-    <parent link="left_hip_front"/>
-    <child link="left_thigh"/>
-    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="left_hip_side_hip_front" type="revolute">
-    <parent link="left_hip_side"/>
-    <child link="left_hip_front"/>
-    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="left_thigh_calve" type="revolute">
-    <parent link="left_thigh"/>
-    <child link="left_calve"/>
-    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="neck_head" type="revolute">
-    <parent link="neck"/>
-    <child link="head"/>
-    <origin rpy="1.00000000e-05   1.00000000e-05   0.00000000e+00" xyz="0     0.022  0"/>
-    <axis xyz="0  0  1"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_ankle_foot" type="revolute">
-    <parent link="right_ankle"/>
-    <child link="right_foot"/>
-    <origin rpy="0  0  0" xyz="0  0  0"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_bicep_forearm" type="revolute">
-    <parent link="right_bicep"/>
-    <child link="right_forearm"/>
-    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_calve_ankle" type="revolute">
-    <parent link="right_calve"/>
-    <child link="right_ankle"/>
-    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
-    <axis xyz="0.00000000e+00   1.00000000e+00   6.00000000e-05"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_hip_front_thigh" type="revolute">
-    <parent link="right_hip_front"/>
-    <child link="right_thigh"/>
-    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_hip_side_hip_front" type="revolute">
-    <parent link="right_hip_side"/>
-    <child link="right_hip_front"/>
-    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="right_thigh_calve" type="revolute">
-    <parent link="right_thigh"/>
-    <child link="right_calve"/>
-    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="torso_left_bicep" type="revolute">
-    <parent link="torso"/>
-    <child link="left_bicep"/>
-    <origin rpy="1.5708  0      0" xyz="0      -0.076    0.34767"/>
-    <axis xyz="0 -1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="torso_left_hip_side" type="revolute">
-    <parent link="torso"/>
-    <child link="left_hip_side"/>
-    <origin rpy="1.5708  0      1.5708" xyz="0      -0.03149  0.197"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="torso_neck" type="revolute">
-    <parent link="torso"/>
-    <child link="neck"/>
-    <origin rpy="1.57079  0       1.57079" xyz="0       0       0.37391"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="torso_right_bicep" type="revolute">
-    <parent link="torso"/>
-    <child link="right_bicep"/>
-    <origin rpy="1.5708  0      0" xyz="0       0.076    0.34767"/>
-    <axis xyz="0  1  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
-  <joint name="torso_right_hip_side" type="revolute">
-    <parent link="torso"/>
-    <child link="right_hip_side"/>
-    <origin rpy="1.5708  0      1.5708" xyz="0       0.03149  0.197"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="-1.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="-1.0"/>
-  </joint>
+
+  <!-- Links -->
+  <link name="base_link" />
   <link name="torso">
     <inertial>
       <mass value="1"/>
       <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
-      <inertia ixx="0.003149" ixy="0.000127" ixz="0.000124" iyy="0.004988" iyz="8.9e-05" izz="0.003395"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
     </inertial>
     <collision name="collision">
       <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
@@ -154,7 +24,7 @@
     <visual name="visual">
       <origin rpy="-0.03771  1.57079  1.53308" xyz="0.05    -0.07249  0.37741"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Torso.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Torso.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -165,6 +35,45 @@
       <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
     </inertial>
   </link>
+  <gazebo reference="camera">
+    <sensor name='main_camera' type='camera'>
+      <update_rate>30</update_rate>
+      <camera name='__default__'>
+        <horizontal_fov>1.39626</horizontal_fov>
+        <image>
+          <width>320</width>
+          <height>240</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>1</near>
+          <far>100</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <always_on>1</always_on>
+      <visualize>1</visualize>
+      <plugin name='camera_controller' filename='libgazebo_ros_camera.so'>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>soccerbot/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
   <link name="head">
     <inertial>
       <mass value="1"/>
@@ -180,7 +89,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Head.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Head.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -199,26 +108,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Ankle.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-  </link>
-  <link name="left_bicep">
-    <inertial>
-      <mass value="1"/>
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
-    </inertial>
-    <collision name="collision">
-      <origin rpy="0  0  0" xyz="0     -0.04    0.0225"/>
-      <geometry>
-        <box size="0.04 0.103 0.045"/>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Bicep.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Ankle.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -237,7 +127,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0     -0.0827  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Calve.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Calve.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -256,26 +146,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Foot.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-  </link>
-  <link name="left_forearm">
-    <inertial>
-      <mass value="1"/>
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
-    </inertial>
-    <collision name="collision">
-      <origin rpy="0  0  0" xyz="-0.0055 -0.049   0.0265"/>
-      <geometry>
-        <box size="0.035 0.124 0.049"/>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Forearm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Foot.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -294,7 +165,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Hip Front.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Hip Front.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -313,7 +184,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Hip Side.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Hip Side.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -332,7 +203,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Left Thigh.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Left Thigh.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -351,7 +222,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Neck.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Neck.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -370,26 +241,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Ankle.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-  </link>
-  <link name="right_bicep">
-    <inertial>
-      <mass value="1"/>
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
-    </inertial>
-    <collision name="collision">
-      <origin rpy="0  0  0" xyz="0     -0.04   -0.0225"/>
-      <geometry>
-        <box size="0.04 0.103 0.045"/>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Bicep.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right Ankle.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -408,7 +260,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0     -0.0827  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Calve.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right Calve.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -427,26 +279,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right foot.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-  </link>
-  <link name="right_forearm">
-    <inertial>
-      <mass value="1"/>
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
-    </inertial>
-    <collision name="collision">
-      <origin rpy="0  0  0" xyz="-0.0055 -0.049  -0.0265"/>
-      <geometry>
-        <box size="0.035 0.124 0.049"/>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <origin rpy="0  0  0" xyz="0  0  0"/>
-      <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Forearm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right foot.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -465,7 +298,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Hip Front.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right Hip Front.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -484,7 +317,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Hip Side.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right Hip Side.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -503,188 +336,425 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_gazebo/models/meshes/Right Thigh.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/Right Thigh.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
-  <transmission name='torso_right_hip_side'>
+  <link name="right_bicep">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0  0  0" xyz="0     -0.04   -0.0225"/>
+      <geometry>
+        <box size="0.04 0.103 0.045"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <geometry>
+        <mesh filename="package://soccer_description/meshes/Right Bicep.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="left_bicep">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0  0  0" xyz="0     -0.04    0.0225"/>
+      <geometry>
+        <box size="0.04 0.103 0.045"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <geometry>
+        <mesh filename="package://soccer_description/meshes/Left Bicep.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="left_forearm">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0  0  0" xyz="-0.0055 -0.049   0.0265"/>
+      <geometry>
+        <box size="0.035 0.124 0.049"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <geometry>
+        <mesh filename="package://soccer_description/meshes/Left Forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="right_forearm">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0  0  0" xyz="-0.0055 -0.049  -0.0265"/>
+      <geometry>
+        <box size="0.035 0.124 0.049"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <geometry>
+        <mesh filename="package://soccer_description/meshes/Right Forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <!-- Joints -->
+  <joint name="head_camera" type="fixed">
+    <parent link="head"/>
+    <child link="camera"/>
+    <origin rpy="2.35619 -1.57079  2.35619" xyz="0      0.0699  0.07"/>
+    <axis xyz="0  0  0"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <joint name="left_ankle_foot" type="revolute">
+    <parent link="left_ankle"/>
+    <child link="left_foot"/>
+    <origin rpy="0  0  0" xyz="0  0  0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="left_calve_ankle" type="revolute">
+    <parent link="left_calve"/>
+    <child link="left_ankle"/>
+    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="left_hip_front_thigh" type="revolute">
+    <parent link="left_hip_front"/>
+    <child link="left_thigh"/>
+    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="left_hip_side_hip_front" type="revolute">
+    <parent link="left_hip_side"/>
+    <child link="left_hip_front"/>
+    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="left_thigh_calve" type="revolute">
+    <parent link="left_thigh"/>
+    <child link="left_calve"/>
+    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="neck_head" type="revolute">
+    <parent link="neck"/>
+    <child link="head"/>
+    <origin rpy="1.00000000e-05   1.00000000e-05   0.00000000e+00" xyz="0     0.022  0"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_ankle_foot" type="revolute">
+    <parent link="right_ankle"/>
+    <child link="right_foot"/>
+    <origin rpy="0  0  0" xyz="0  0  0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_calve_ankle" type="revolute">
+    <parent link="right_calve"/>
+    <child link="right_ankle"/>
+    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_hip_front_thigh" type="revolute">
+    <parent link="right_hip_front"/>
+    <child link="right_thigh"/>
+    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_hip_side_hip_front" type="revolute">
+    <parent link="right_hip_side"/>
+    <child link="right_hip_front"/>
+    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_thigh_calve" type="revolute">
+    <parent link="right_thigh"/>
+    <child link="right_calve"/>
+    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="torso_left_hip_side" type="revolute">
+    <parent link="torso"/>
+    <child link="left_hip_side"/>
+    <origin rpy="1.5708  0      1.5708" xyz="0      -0.03149  0.197"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="torso_neck" type="revolute">
+    <parent link="torso"/>
+    <child link="neck"/>
+    <origin rpy="1.57079  0       1.57079" xyz="0       0       0.37391"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="torso_right_hip_side" type="revolute">
+    <parent link="torso"/>
+    <child link="right_hip_side"/>
+    <origin rpy="1.5708  0      1.5708" xyz="0       0.03149  0.197"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="base_link_torso" type="fixed">
+    <parent link="base_link"/>
+    <child link="torso"/>
+    <origin rpy="0  0 0" xyz="0 0 0"/>
+    <axis xyz="1  0  0"/>
+  </joint>
+  <joint name="left_bicep_forearm" type="revolute">
+    <parent link="left_bicep"/>
+    <child link="left_forearm"/>
+    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
+    <axis xyz="0 -1  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="right_bicep_forearm" type="revolute">
+    <parent link="right_bicep"/>
+    <child link="right_forearm"/>
+    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
+    <axis xyz="0  1  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="torso_left_bicep" type="revolute">
+    <parent link="torso"/>
+    <child link="left_bicep"/>
+    <origin rpy="1.5708  0      0" xyz="0      -0.076    0.34767"/>
+    <axis xyz="0 -1  0"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+  <joint name="torso_right_bicep" type="revolute">
+    <parent link="torso"/>
+    <child link="right_bicep"/>
+    <origin rpy="1.5708  0      0" xyz="0       0.076    0.34767"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+  </joint>
+
+  <!-- Transmission -->
+  <transmission name="torso_right_hip_side">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="torso_right_hip_side">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor7">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='right_hip_side_hip_front'>
+  
+  <transmission name="right_hip_side_hip_front">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="right_hip_side_hip_front">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor8">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='right_hip_front_thigh'>
+  
+  <transmission name="right_hip_front_thigh">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="right_hip_front_thigh">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor9">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='right_thigh_calve'>
+  
+  <transmission name="right_thigh_calve">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="right_thigh_calve">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor10">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='right_calve_ankle'>
+  
+  <transmission name="right_calve_ankle">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="right_calve_ankle">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor11">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='right_ankle_foot'>
+  
+  <transmission name="right_ankle_foot">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="right_ankle_foot">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor12">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='torso_left_hip_side'>
+  
+  <transmission name="torso_left_hip_side">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="torso_left_hip_side">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor6">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='left_hip_side_hip_front'>
+  
+  <transmission name="left_hip_side_hip_front">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="left_hip_side_hip_front">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor5">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='left_hip_front_thigh'>
+  
+  <transmission name="left_hip_front_thigh">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="left_hip_front_thigh">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor4">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='left_thigh_calve'>
+  
+  <transmission name="left_thigh_calve">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="left_thigh_calve">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor3">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>  
     </actuator>
   </transmission>
-  <transmission name='left_calve_ankle'>
+  
+  <transmission name="left_calve_ankle">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="left_calve_ankle">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor2">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='left_ankle_foot'>
+  
+  <transmission name="left_ankle_foot">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="left_ankle_foot">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor1">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='torso_right_bicep'>
+  
+  <transmission name="torso_neck">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
-    <joint name="torso_right_bicep">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor15">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
-    </actuator>
-  </transmission>
-  <transmission name='right_bicep_forearm'>
-    <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${right_bicep_forearm}</robotNamespace>
     <joint name="torso_neck">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor16">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
-    </actuator>
-  </transmission>
-  <transmission name='torso_left_bicep'>
-    <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
-    <joint name="torso_left_bicep">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor17">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
-    </actuator>
-  </transmission>
-  <transmission name='left_bicep_forearm'>
-    <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
-    <joint name="left_bicep_forearm">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor18">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
-    </actuator>
-  </transmission>
-  <transmission name='torso_neck'>
-    <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
-    <joint name="torso_neck">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor13">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name='neck_head'>
+  
+  <transmission name="neck_head">
     <type>transmission_interface/SimpleTransmission</type>
-    <robotNamespace>${name}</robotNamespace>
     <joint name="neck_head">
-      <hardwareInterface>hardware_interface/hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor14">
-      <hardwareInterface>hardware_interface/hardware_interface/PositionJointInterface</hardwareInterface> 
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+
+  <transmission name="torso_right_bicep">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_right_bicep">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor15">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="right_bicep_forearm">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_bicep_forearm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor16">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="torso_left_bicep">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_left_bicep">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor17">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="left_bicep_forearm">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_bicep_forearm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor18">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
 </robot>

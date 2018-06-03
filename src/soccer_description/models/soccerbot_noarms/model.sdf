@@ -1,6 +1,8 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name='soccerbot_noarms'>
+    <link name='base_link'>
+    </link>
     <link name='torso'>
       <inertial>
         <mass>1</mass>
@@ -1541,6 +1543,10 @@
         </surface>
       </collision>
     </link>
+    <joint name='base_link_torso' type='fixed'>
+      <parent>base_link</parent>
+      <child>torso</child>
+    </joint>
     <joint name='head_camera' type='fixed'>
       <parent>head</parent>
       <child>camera</child>

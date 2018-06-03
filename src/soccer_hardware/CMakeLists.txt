@@ -88,6 +88,10 @@ add_executable(test_trajectories src/test_trajectories.cpp)
 add_dependencies(test_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(test_trajectories ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(draw_trajectories src/draw_trajectories.cpp)
+add_dependencies(draw_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(draw_trajectories ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 #############
 ## Install ##
 #############
