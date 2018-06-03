@@ -7,3 +7,4 @@ src/darknet_ros/darknet_ros/weights/yolo.weights
 src/darknet_ros/weights/yolo.weights
 src/darknet_ros/darknet_ros/yolo_network_config/weights/tiny-yolo-voc.weights
 .catkin_tools/
+src/soccerbot/
