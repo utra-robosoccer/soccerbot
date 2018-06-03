@@ -45,8 +45,11 @@ int open_port(void) {
 	fd = open("/dev/ttyTHS2",
 			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1)
+		fd = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+	if (fd == -1)
 		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
-
+	if (fd == -1)
+		fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if (fd == -1) {
 		cout << "open_port: Unable to open /dev/ttyACM0. \n" << endl;
 		exit(1);
@@ -162,10 +165,10 @@ void receive_loop() {
 
 	soccer_msgs::RobotState state;
 
-	// for(int i = 0; i < 80; ++i) {
-	// 	cout << (int) robotState.message[i] << " ";
-	// }
-	// cout << endl;
+	for(int i = 0; i < 80; ++i) {
+		cout << (int) robotState.message[i] << " ";
+	}
+	cout << endl;
 
 	for(int i = 0; i < 20; ++i) {
 		char* ptr = &robotState.message[i * 4];

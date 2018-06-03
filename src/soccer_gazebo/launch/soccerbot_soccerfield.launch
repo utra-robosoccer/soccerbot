@@ -1,11 +1,12 @@
 <launch>
-
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
-  <arg name="paused" default="false"/>
+  <arg name="paused" default="true"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
+
+  <env name="GAZEBO_MODEL_PATH" value="$(find soccer_description)"/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -18,10 +19,10 @@
   </include>
 
   <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description" textfile="$(find soccer_description)/models/soccerbot_noarms/model.urdf" />
+  <param name="robot_description" textfile="$(find soccer_description)/models/soccerbot/model.urdf" />
 
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find soccer_description)/models/soccerbot_noarms/model.sdf -sdf -model soccerbot" />
+  <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+  args="-urdf -model soccerbot -param robot_description"/>
 
   <!-- ros_control soccerbot launch file -->
   <include file="$(find soccer_control)/launch/soccer_control.launch" />
