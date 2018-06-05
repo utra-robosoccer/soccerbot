@@ -704,14 +704,24 @@ void StartTxTask(void const * argument)
 	  // being read from multiple threads. It seems this can't be done
 	  // from Cube, but if you go into FreeRTOS.h and set the configUSE for
 	  // queue sets to 1, the APIs become available. You just need to make sure
-	  // you do this every time you regenerate code from Cube.
+	  // you do this every time you regenerate code from Cube. Can also use a
+	  // similar structure with task notifications as the implementation.
 	  do{
+	      // This do-while loop with the mutex inside of it makes calls to the UART module
+	      // responsible for PC communication atomic. This attempts to solve the following
+	      // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
+	      // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+	      // returns immediately when it detects that the uart module is already locked. Then
+	      // the RX thread blocks itself and never wakes up since a RX transfer was never
+	      // initialized.
 	      xSemaphoreTake(PCUARTHandle, 1);
 	      status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*) &robotState, sizeof(RobotState));
 	      xSemaphoreGive(PCUARTHandle);
 	  }while(status != HAL_OK);
 
-	  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+	  // Wait until notified from ISR. Clear no bits on entry in case the notification
+	  // came while a higher priority task was executing.
+	  xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 //	  osDelay(pdMS_TO_TICKS(10));
   }
   /* USER CODE END StartTxTask */
