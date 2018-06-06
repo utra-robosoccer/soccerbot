@@ -125,7 +125,7 @@ int main(void)
 	robotState.start_seq = UINT32_MAX;
 	robotState.end_seq = 0;
 
-	HAL_UART_Receive_IT(&huart5, (unsigned char *) &buf, sizeof(buf));
+	HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
 
   /* USER CODE END 2 */
 
@@ -138,8 +138,8 @@ int main(void)
 		}
 
 		send_state(robotStatePtr);
-		HAL_UART_Receive_IT(&huart5, (unsigned char *) &buf, sizeof(buf));
-		HAL_Delay(10);
+		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
+		HAL_Delay(1000);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -203,9 +203,11 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
-		HAL_UART_AbortReceive_IT(&huart5);
+
+		HAL_UART_Abort_IT(&huart5);
 
 		for (int i = 0; i < sizeof(buf); ++i) {
 			if (startSeqCount == 4) {
@@ -231,7 +233,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 			}
 		}
 
-		HAL_UART_Receive_IT(&huart5, (unsigned char *) &buf, sizeof(buf));
+		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
 	}
 }
 /* USER CODE END 4 */
