@@ -59,8 +59,8 @@ int configure_port(int fd) {
 
 	struct termios port_settings;     // structure to store the port settings in
 
-	cfsetispeed(&port_settings, B1000000);    // set baud rates
-	cfsetospeed(&port_settings, B1000000);
+	cfsetispeed(&port_settings, B115200);    // set baud rates
+	cfsetospeed(&port_settings, B115200);
 
 	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
@@ -104,6 +104,7 @@ void send_state() {
 	ROS_INFO("Send State");
 	write(fd, &robotGoal, sizeof(RobotGoal));
 	tcdrain(fd);
+	tcflush(fd, TCIOFLUSH);
 }
 
 int max_buf_size = 128;

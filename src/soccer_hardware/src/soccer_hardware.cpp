@@ -43,19 +43,21 @@ int open_port(void) {
 	int fd; // file description for the serial port
 
 	fd = open("/dev/ttyTHS2",
-			O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+			O_RDWR | O_NONBLOCK);
 	if (fd == -1)
-		fd = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+		fd = open("/dev/ttyACM2", O_RDWR | O_NONBLOCK);
 	if (fd == -1)
-		fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+		fd = open("/dev/ttyACM1", O_RDWR | O_NONBLOCK);
 	if (fd == -1)
-		fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+		fd = open("/dev/ttyACM0", O_RDWR | O_NONBLOCK);
+	if (fd == -1)
+		fd = open("/dev/ttyUSB0", O_RDWR | O_NONBLOCK);
 	if (fd == -1) {
 		cout << "open_port: Unable to open /dev/ttyACM0. \n" << endl;
 		exit(1);
 	}
 
-	fcntl(fd, F_SETFL, 0);
+	tcflush(fd, TCIOFLUSH);
 
 	cout << "Opened Port" << endl;
 
@@ -63,33 +65,38 @@ int open_port(void) {
 } //open_port
 
 int configure_port(int fd) {
-	tcflush(fd, TCIOFLUSH);
-
 	struct termios port_settings;     // structure to store the port settings in
 
 	cfsetispeed(&port_settings, B1000000);    // set baud rates
 	cfsetospeed(&port_settings, B1000000);
 
-	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
-	port_settings.c_cflag &= ~PARODD;    // set no parity, stop bits, data bits
-	port_settings.c_cflag &= ~CSTOPB;
-	port_settings.c_cflag &= ~CSIZE;
+	port_settings.c_cflag = ((port_settings.c_cflag & ~CSIZE) | CS8);
 
 	port_settings.c_cflag |= CLOCAL | CREAD;
 
-	port_settings.c_iflag &= ~IGNBRK;
+
+	port_settings.c_cflag &= ~(PARENB | PARODD);    // set no parity, stop bits, data bits
+
+	port_settings.c_cflag &= ~CRTSCTS;
+
+	port_settings.c_cflag &= ~CSTOPB;
+	
+
+	port_settings.c_iflag = IGNBRK;
+
 	port_settings.c_iflag &= ~(IXON | IXOFF | IXANY);
-	port_settings.c_iflag &= ~IGNCR;
-	port_settings.c_iflag &= ~ICRNL;
-	port_settings.c_iflag &= ~INLCR;
-	port_settings.c_iflag &= ~INPCK;
-	port_settings.c_iflag &= ~ISTRIP;
 
 	port_settings.c_lflag = 0;
 	port_settings.c_oflag = 0;
 
 	port_settings.c_cc[VTIME]=1;
 	port_settings.c_cc[VMIN]=1;
+
+	// port_settings.c_iflag &= ~IGNCR;
+	// port_settings.c_iflag &= ~ICRNL;
+	// port_settings.c_iflag &= ~INLCR;
+	// port_settings.c_iflag &= ~INPCK;
+	// port_settings.c_iflag &= ~ISTRIP;
 
 	port_settings.c_lflag &= ~(ECHONL|NOFLSH);
 
@@ -100,18 +107,11 @@ int configure_port(int fd) {
 
 	port_settings.c_cflag &= ~CRTSCTS;
 
-	port_settings.c_cflag |= CS8;
 
 	tcsetattr(fd, TCSANOW, &port_settings);    // apply the settings to the port
 
 	cout << "Configured Port" << endl;
 	return (fd);
-}
-
-void send_goal() {
-	ROS_INFO("Sending To Robot");
-	write(fd, &robotGoal, sizeof(RobotGoal));
-	tcdrain(fd);
 }
 
 int max_buf_size = 128;
@@ -161,36 +161,46 @@ void receive_loop() {
 
 	ROS_INFO("Recieved data");
 
-	tcflush(fd, TCIOFLUSH);
-
 	soccer_msgs::RobotState state;
-
-	for(int i = 0; i < 80; ++i) {
-		cout << (int) robotState.message[i] << " ";
-	}
-	cout << endl;
 
 	for(int i = 0; i < 20; ++i) {
 		char* ptr = &robotState.message[i * 4];
 		memcpy(&state.joint_angles[i], ptr, 4);
 	}
+
+	for(int i = 0; i < 80; ++i) {
+		printf("%x ", (unsigned) robotState.message[i] & 0xff);
+	}
+	cout << endl;
+
 	receive_from_robot.publish(state);
 }
+
+int id = 0;
 
 void send_to_robotCallback(const soccer_msgs::RobotGoal::ConstPtr& msg)
 {
 	for(int i = 0; i < 20; ++i) {
+		float f = msg->trajectories[i];
 		char* ptr = &robotGoal.message[i * 4];
-		memcpy(ptr, &msg->trajectories[i], 4);
+		memcpy(ptr, &f, 4);
 	}
 
-	cout << "Sending data" << endl;
-	// for(int i = 0; i < 80; ++i) {
-	// 	cout << (int) robotGoal.message[i] << " ";
-	// }
-	// cout << endl;
+	robotGoal.id = ++id;
 
-	send_goal();
+	ROS_INFO("Sending To Robot");
+	for(int i = 0; i < 80; ++i) {
+		printf("%x ", (unsigned) robotGoal.message[i] & 0xff);
+	}
+	cout << endl;
+
+	char buf[sizeof(RobotGoal)];
+	memcpy(buf, &robotGoal, sizeof(RobotGoal));
+	for(int i = 0; i < sizeof(RobotGoal); ++i) {
+		unsigned s[1];
+    	s[0] = buf[i];
+		write(fd, s, 1);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -200,7 +210,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle n;
 	nh = &n;
 
-	ros::Rate r(100); // 100 Hz
+	ros::Rate r(1); // 100 Hz
 
 	fd = open_port();
 	configure_port(fd);
