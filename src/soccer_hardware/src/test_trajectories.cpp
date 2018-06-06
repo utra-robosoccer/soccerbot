@@ -43,11 +43,14 @@ int main(int argc, char **argv) {
 
 	string line;
 
-	ros::Rate r(100); // 100 Hz
+	ros::Rate r(1); // 100 Hz
 
 	test_trajectories = n.advertise<soccer_msgs::RobotGoal>("robotGoal", 1);
 
 	float angles[20];
+	for(int i = 0; i < 20; ++i) {
+		angles[i] = 0;
+	}
 
 	while(ros::ok()) {
 		getline(trajectory_file, line);

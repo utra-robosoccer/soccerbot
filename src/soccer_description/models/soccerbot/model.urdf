@@ -533,21 +533,21 @@
     <parent link="left_bicep"/>
     <child link="left_forearm"/>
     <origin rpy="0  0  0" xyz="0   -0.08  0"/>
-    <axis xyz="0 -1  0"/>
+    <axis xyz="0 0 1"/>
     <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_bicep_forearm" type="revolute">
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
     <origin rpy="0  0  0" xyz="0   -0.08  0"/>
-    <axis xyz="0  1  0"/>
+    <axis xyz="0 0 1"/>
     <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_left_bicep" type="revolute">
     <parent link="torso"/>
     <child link="left_bicep"/>
     <origin rpy="1.5708  0      0" xyz="0      -0.076    0.34767"/>
-    <axis xyz="0 -1  0"/>
+    <axis xyz="0 0 1"/>
     <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_right_bicep" type="revolute">
