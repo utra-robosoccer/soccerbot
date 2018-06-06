@@ -129,7 +129,7 @@ int main(void)
 	robotState.start_seq = UINT32_MAX;
 	robotState.end_seq = 0;
 
-	HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
+	HAL_UART_Receive_IT(&huart2, (unsigned char *) buf, sizeof(buf));
 
   /* USER CODE END 2 */
 
@@ -149,7 +149,7 @@ int main(void)
 		}
 
 		send_state(robotStatePtr);
-		HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
+		HAL_UART_Receive_IT(&huart2, (unsigned char *) buf, sizeof(buf));
 		HAL_Delay(10);
 	}
   /* USER CODE END 3 */
