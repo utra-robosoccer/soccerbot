@@ -66,6 +66,8 @@ unsigned totalBytesRead;
 
 RobotState robotState, *robotStatePtr;
 
+#define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
+#define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,7 +112,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_UART5_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  	__DYNAMIXEL_RECEIVE(GPIOA, GPIO_PIN_4);
 
 	// Receiving
 	robotGoal.id = 0;
@@ -125,7 +129,11 @@ int main(void)
 	robotState.start_seq = UINT32_MAX;
 	robotState.end_seq = 0;
 
+<<<<<<< HEAD
 	HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
+=======
+	HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
+>>>>>>> 63065ed700994597fa8c098d8f61d2bbc26774ab
 
   /* USER CODE END 2 */
 
@@ -138,8 +146,13 @@ int main(void)
 		}
 
 		send_state(robotStatePtr);
+<<<<<<< HEAD
 		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
 		HAL_Delay(1000);
+=======
+		HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
+		HAL_Delay(10);
+>>>>>>> 63065ed700994597fa8c098d8f61d2bbc26774ab
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -205,9 +218,14 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+<<<<<<< HEAD
 	if (huart == &huart5) {
 
 		HAL_UART_Abort_IT(&huart5);
+=======
+	if (huart == &huart2) {
+		HAL_UART_AbortReceive_IT(&huart2);
+>>>>>>> 63065ed700994597fa8c098d8f61d2bbc26774ab
 
 		for (int i = 0; i < sizeof(buf); ++i) {
 			if (startSeqCount == 4) {
@@ -233,7 +251,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 			}
 		}
 
+<<<<<<< HEAD
 		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
+=======
+		HAL_UART_Receive_IT(&huart2, (unsigned char *) &buf, sizeof(buf));
+>>>>>>> 63065ed700994597fa8c098d8f61d2bbc26774ab
 	}
 }
 /* USER CODE END 4 */
