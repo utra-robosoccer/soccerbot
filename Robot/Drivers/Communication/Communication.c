@@ -53,12 +53,23 @@ void StartRxTask(void const * argument) {
 	/* Infinite loop */
 	for (;;) {
 		do{
+			// This do-while loop with the mutex inside of it makes calls to the UART module
+			// responsible for PC communication atomic. This attempts to solve the following
+			// scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
+			// when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+			// returns immediately when it detects that the uart module is already locked. Then
+			// the RX thread blocks itself and never wakes up since a RX transfer was never
+			// initialized.
 			xSemaphoreTake(PCUARTHandle, 1);
 			status = HAL_UART_Receive_IT(&huart5, (uint8_t *) buf, sizeof(buf));
 			xSemaphoreGive(PCUARTHandle);
 		}while(status != HAL_OK);
 
-		xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+		// Wait until notified from ISR. Clear no bits on entry in case the notification
+		// comes before this statement is executed (which is rather unlikely as long as
+		// this task has the highest priority, but overall this is a better decision in
+		// case priorities are changed in the future and someone forgets about this.
+		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 
 		for (uint8_t i = 0; i < sizeof(buf); ++i) {
 			if (startSeqCount == 4) {
