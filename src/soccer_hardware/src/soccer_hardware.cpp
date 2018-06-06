@@ -128,6 +128,8 @@ void receive_loop() {
 
 	unsigned char m_buf[max_buf_size];
 
+	tcflush(fd, TCIOFLUSH);
+	
 	while (1) {
 		ros::spinOnce();
 
@@ -196,11 +198,9 @@ void send_to_robotCallback(const soccer_msgs::RobotGoal::ConstPtr& msg)
 
 	char buf[sizeof(RobotGoal)];
 	memcpy(buf, &robotGoal, sizeof(RobotGoal));
-	for(int i = 0; i < sizeof(RobotGoal); ++i) {
-		unsigned s[1];
-    	s[0] = buf[i];
-		write(fd, s, 1);
-	}
+
+	tcflush(fd, TCIOFLUSH);
+	write(fd, &robotGoal, sizeof(RobotGoal));
 }
 
 int main(int argc, char **argv) {
