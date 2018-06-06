@@ -140,9 +140,6 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 
-		ledState = !ledState;
-		HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, ledState);
-
 		robotState.id = robotGoal.id;
 		for(int i = 0; i < 80; ++i) {
 			robotState.msg[i] = robotGoal.msg[i];
@@ -309,6 +306,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 
 					// Process RobotGoal here
 					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+
+					ledState = !ledState;
+					HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, ledState);
 
 					robotGoalDataPtr = robotGoalData;
 					startSeqCount = 0;
