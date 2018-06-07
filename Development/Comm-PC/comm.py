@@ -14,18 +14,26 @@ import struct
 from datetime import datetime
 from prettytable import PrettyTable
 
-def rxDecoder(raw):
+def rxDecoder(raw, decodeHeader=True):
     ''' Decodes raw bytes received from the microcontroller. As per the agreed
         upon protocol, the first 4 bytes are for a header while the remaining
         80 bytes contain floats for each motor.
     '''
     motors = list()
-    header = struct.unpack('<L',raw[0:4])[0]
-    for i in range(12):
-        # Here, we only unpack for 12 motors since that's all we have connected
-        # in our current setup
-        motors.append(struct.unpack('<f',raw[8 + i * 4:12 + i * 4])[0])
-    return (header, motors)
+    
+    if(decodeHeader):
+        header = struct.unpack('<L',raw[0:4])[0]
+        for i in range(12):
+            # Here, we only unpack for 12 motors since that's all we have connected
+            # in our current setup
+            motors.append(struct.unpack('<f',raw[8 + i * 4:12 + i * 4])[0])
+        return (header, motors)
+    else:
+        for i in range(12):
+            # Here, we only unpack for 12 motors since that's all we have connected
+            # in our current setup
+            motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
+            return motors
     
 def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
@@ -67,6 +75,7 @@ def printAsAngles(vec1, vec2):
     
     print(t)
     
+# TODO: Test (this function is not safe to use yet)
 def receivePacketFromMCU():
     ''' Receives 80 bytes of the MCU provided that there is a valid 4-byte 
         header attached to the front. Returns the list of data interpreted as
@@ -75,7 +84,7 @@ def receivePacketFromMCU():
     BUFF_SIZE = 23 # Some factor of 92
     totalBytesRead = 0
     startSeqCount = 0
-    buff = list()
+    buff = bytes(''.encode())
     
     while(True):
         while(ser.in_waiting < BUFF_SIZE):
@@ -84,7 +93,7 @@ def receivePacketFromMCU():
         
         for i in range(BUFF_SIZE):
             if(startSeqCount == 4):
-                buff.append(struct.unpack('<f',rawData[i * 4:4 + i * 4])[0])
+                buff = buff + rawData[i * 4:4 + i * 4]
                 totalBytesRead = totalBytesRead + 1
                 if(totalBytesRead == 84):
                     break
@@ -122,8 +131,7 @@ if __name__ == "__main__":
                 
                 (header, recvAngles) = rxDecoder(rawData)
                 
-                #recvAngles = np.array(receivePacketFromMCU()).reshape(angles.shape) # Can use this instead of the above 4 lines after receivePacketFromMCU is implemented and tested
-                
+                    # Forward to control application
                 if(numTransfers % 50 == 0):
                     logString("Header matches sequence: " + 
                                 str(header == 0xFFFFFFFF)
@@ -131,7 +139,14 @@ if __name__ == "__main__":
                     printAsAngles(angles, 
                                 np.array(recvAngles).reshape(angles.shape)
                         )
-                    
+                        
                 if(header == 0xFFFFFFFF):
                     continue
-                    # Forward to control application
+                
+                # recvAngles = rxDecoder(receivePacketFromMCU())
+                # 
+                # if(numTransfers % 50 == 0):
+                #     logString("Received valid data")
+                #     printAsAngles(angles, 
+                #                 np.array(recvAngles).reshape(angles.shape)
+                #         )
