@@ -20,13 +20,14 @@ def rxDecoder(raw):
         80 bytes contain floats for each motor.
     '''
     motors = list()
-    header = struct.unpack('<H',raw[0:4])[0]
+    header = struct.unpack('<L',raw[0:4])[0]
     for i in range(12):
         # Here, we only unpack for 12 motors since that's all we have connected
         # in our current setup
         motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
     return (header, motors)
     
+
 def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
     '''
@@ -41,7 +42,7 @@ def vec2bytes(vec):
     ''' Transforms a numpy vector to a byte array, with entries interpreted as
         32-bit floats.
     '''
-    byteArr=''
+    byteArr=bytes(''.encode())
     for element in vec:
         byteArr = byteArr + struct.pack('f', element)
     return byteArr
@@ -58,6 +59,8 @@ def printAsAngles(vec1, vec2):
     
     print(t)
 
+#os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
+
 if __name__ == "__main__":
     logString("Starting PC-side application")
     
@@ -68,28 +71,27 @@ if __name__ == "__main__":
         
         numTransfers = 0
         while(ser.isOpen()):
-            try:
-                for i in range(walking.shape[1]):
-                    angles = walking[:, i:i+1]
-                    serial.write(vec2bytes(angles))
+            for i in range(walking.shape[1]):
+                angles = walking[:, i:i+1]
+                ser.write(struct.pack('L', 0xFFFFFFFF))
+                ser.write(vec2bytes(angles))
+                
+                numTransfers = numTransfers + 1
                     
-                    numTransfers = numTransfers + 1
-                        
-                    while(ser.in_waiting < 84):
-                        time.sleep(0.001)
-                    rawData = ser.read(84)
+                while(ser.in_waiting < 84):
+                    time.sleep(0.001)
+                rawData = ser.read(84)
+                
+                (header, recvAngles) = rxDecoder(rawData)
+                
+                if(numTransfers % 50 == 0):
+                    logString("Header matches sequence: " + 
+                                str(header == 0xFFFFFFFF)
+                        )
+                    printAsAngles(angles, 
+                                np.array(recvAngles).reshape(angles.shape)
+                        )
                     
-                    (header, recvAngles) = rxDecoder(rawData)
-                    
-                    if(numTransfers % 50 == 0):
-                        logString("Header matches sequence: " + 
-                                  str(header == 0xFFFFFFFF)
-                            )
-                        printAsAngles(angles, recvAngles)
-                        
-                    if(header == 0xFFFFFFFF):
-                        # Forward to control application
-                    
-            except:
-                # Connection lost, or something else went wrong
-                ser.close()
+                if(header == 0xFFFFFFFF):
+                    continue
+                    # Forward to control application
