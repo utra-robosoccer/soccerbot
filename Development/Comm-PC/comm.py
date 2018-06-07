@@ -22,6 +22,8 @@ def rxDecoder(raw):
     motors = list()
     header = struct.unpack('<H',raw[0:4])[0]
     for i in range(12):
+        # Here, we only unpack for 12 motors since that's all we have connected
+        # in our current setup
         motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
     return (header, motors)
     
@@ -70,6 +72,7 @@ if __name__ == "__main__":
                 for i in range(walking.shape[1]):
                     angles = walking[:, i:i+1]
                     serial.write(vec2bytes(angles))
+                    
                     numTransfers = numTransfers + 1
                         
                     while(ser.in_waiting < 84):
@@ -83,9 +86,10 @@ if __name__ == "__main__":
                                   str(header == 0xFFFFFFFF)
                             )
                         printAsAngles(angles, recvAngles)
+                        
+                    if(header == 0xFFFFFFFF):
+                        # Forward to control application
                     
             except:
+                # Connection lost, or something else went wrong
                 ser.close()
-        
-        
-        
