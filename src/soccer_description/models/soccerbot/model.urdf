@@ -11,9 +11,9 @@
   <link name="base_link" />
   <link name="torso">
     <inertial>
-      <mass value="1"/>
+      <mass value="1.140687"/>
       <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
-      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+      <inertia ixx="0.16667" ixy="0" ixz="0" iyy="0.16667" iyz="0" izz="0.16667"/>
     </inertial>
     <collision name="collision">
       <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
