@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN Includes */     
 #include "stm32f7xx_hal.h"
-#include "MPU6050.h"
+#include "../Drivers/MPU6050/MPU6050.h"
 #include "usart.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -124,13 +124,14 @@ void StartDefaultTask(void const * argument)
     MPU6050_HandleTypeDef IMUdata;
     MPU6050_HandleTypeDef prevIMUdata;
     IMUdata._I2C_Handle = &hi2c2;
-    prevIMUdata._I2C_Handle = &hi2c2;
+    //prevIMUdata._I2C_Handle = &hi2c2;
     MPU6050_init(&IMUdata);
-    MPU6050_init(&prevIMUdata);
+    //MPU6050_init(&prevIMUdata);
 
-    //MPU6050_manually_set_offsets(&IMUdata);
+    MPU6050_manually_set_offsets(&IMUdata);
+
     MPU6050_set_LPF(&IMUdata, lpf);
-    MPU6050_10sec_calibration(&IMUdata);
+    //MPU6050_10sec_calibration(&IMUdata);
 	for(;;)
   {
 
