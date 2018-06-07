@@ -36,7 +36,7 @@ void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_PWR_MGMT_2, 0);
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
 	sMPU6050 -> _Sample_Rate = 8000/ (1+ MPU6050_CLOCK_DIV_296);
-	sMPU6050 -> _X_ACCEL_OFFSET=69.1;
+	sMPU6050 -> _X_ACCEL_OFFSET=0;
 	sMPU6050 -> _Y_ACCEL_OFFSET=0;
 	sMPU6050 -> _Z_ACCEL_OFFSET=0;
 
@@ -61,7 +61,7 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
 
 	sMPU6050 -> _X_ACCEL_OFFSET= -520/((float)IMU_ACC_CONVERSION);
 	sMPU6050 -> _Y_ACCEL_OFFSET=-830/((float)IMU_ACC_CONVERSION);
-	sMPU6050 -> _Z_ACCEL_OFFSET=16315/((float)IMU_ACC_CONVERSION) - 9.81;
+	sMPU6050 -> _Z_ACCEL_OFFSET=16315/((float)IMU_ACC_CONVERSION) + 9.81;
 
 	sMPU6050 -> _X_GYRO_OFFSET= 240/((float)IMU_GY_CONVERSION);
 	sMPU6050 -> _Y_GYRO_OFFSET= -760/((float)IMU_GY_CONVERSION);
@@ -100,19 +100,6 @@ void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
 	sMPU6050 ->_Y_GYRO = Y;
 	sMPU6050 ->_Z_GYRO = Z;
 
-	/*************The following part modifies outputs for printing prpose**********/
-	X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	Sign_X_Gyro = (output_buffer[0] >> 7) ? '-' : '+';
-	Sign_Y_Gyro = (output_buffer[2] >> 7) ? '-' : '+';
-	Sign_Z_Gyro = (output_buffer[4] >> 7) ? '-' : '+';
-	Gyro_X = X/131;
-	Gyro_Y = Y/131;
-	Gyro_Z = Z/131;
-	Rem_X_Gyro = (int)(X % 131)*10;
-	Rem_Y_Gyro = (int)(Y % 131)*10;
-	Rem_Z_Gyro = (int)(Z % 131)*10;
 }
 
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
@@ -121,9 +108,9 @@ void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	uint16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
 	uint16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	sMPU6050 ->_X_GYRO = X-(sMPU6050 ->_X_GYRO_OFFSET);
-	sMPU6050 ->_Y_GYRO = Y-(sMPU6050 ->_Y_GYRO_OFFSET);
-	sMPU6050 ->_Z_GYRO = Z-(sMPU6050 ->_Z_GYRO_OFFSET);
+	sMPU6050 ->_X_GYRO = X/IMU_GY_CONVERSION-(sMPU6050 ->_X_GYRO_OFFSET);
+	sMPU6050 ->_Y_GYRO = Y/IMU_GY_CONVERSION-(sMPU6050 ->_Y_GYRO_OFFSET);
+	sMPU6050 ->_Z_GYRO = Z/IMU_GY_CONVERSION-(sMPU6050 ->_Z_GYRO_OFFSET);
 
 
 }
@@ -143,15 +130,15 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	uint16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
 	uint16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
 	uint16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-	sMPU6050 ->_X_ACCEL = X_A-(sMPU6050 ->_X_ACCEL_OFFSET);
-	sMPU6050 ->_Y_ACCEL = Y_A-(sMPU6050 ->_Y_ACCEL_OFFSET);
-	sMPU6050 ->_Z_ACCEL = Z_A;//-(sMPU6050 ->_Z_ACCEL_OFFSET);
+	sMPU6050 ->_X_ACCEL = X_A/IMU_ACC_CONVERSION-(sMPU6050 ->_X_ACCEL_OFFSET);
+	sMPU6050 ->_Y_ACCEL = Y_A/IMU_ACC_CONVERSION-(sMPU6050 ->_Y_ACCEL_OFFSET);
+	sMPU6050 ->_Z_ACCEL = Z_A/IMU_ACC_CONVERSION-(sMPU6050 ->_Z_ACCEL_OFFSET);
 
 	//Now find angles: consult pg 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
 	// for a sketch of what each angle means
-	int X= sMPU6050 ->_X_ACCEL;
-	int Y=sMPU6050 ->_Y_ACCEL;
-	int Z=sMPU6050 -> _Z_ACCEL;
+	float X=sMPU6050 -> _X_ACCEL;
+	float Y=sMPU6050 -> _Y_ACCEL;
+	float Z=sMPU6050 -> _Z_ACCEL;
 	float pitch, roll;
 	pitch = atan2(Y, Z) * 180/M_PI;
 	roll = atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
