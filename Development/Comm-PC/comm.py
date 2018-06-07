@@ -32,7 +32,7 @@ def logString(userMsg):
     '''
     print(datetime.now().strftime('%H.%M.%S.%f') + " " + userMsg)
 
-def sendBytesToMCU(bytes):
+def sendPacketToMCU(bytes):
     ''' Sends bytes to the MCU with the header sequence attached.
     '''
     header = struct.pack('L', 0xFFFFFFFF)
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
                 angles = walking[:, i:i+1]
-                sendBytesToMCU(vec2bytes(angles))
+                sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
                     
