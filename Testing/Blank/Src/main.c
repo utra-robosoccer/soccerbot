@@ -55,16 +55,16 @@
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-RobotGoal robotGoal, *robotGoalPtr;
-unsigned char robotGoalData[sizeof(RobotGoal)];
-unsigned char *robotGoalDataPtr;
+volatile RobotGoal robotGoal, *robotGoalPtr;
+volatile unsigned char robotGoalData[sizeof(RobotGoal)];
+volatile unsigned char *robotGoalDataPtr;
 
-unsigned char buf[10];
+volatile unsigned char buf[23];
 
-unsigned startSeqCount;
-unsigned totalBytesRead;
+volatile unsigned startSeqCount;
+volatile unsigned totalBytesRead;
 
-RobotState robotState, *robotStatePtr;
+volatile RobotState robotState, *robotStatePtr;
 
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
@@ -79,7 +79,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+volatile uint8_t flag;
 /* USER CODE END 0 */
 
 /**
@@ -114,6 +114,12 @@ int main(void)
   MX_UART5_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
+//  uint8_t buff[84];
+//  while(1){
+//	  HAL_UART_Receive(&huart5, buff, sizeof(buff), 100);
+//	  HAL_UART_Transmit(&huart5, buff, sizeof(buff), 100);
+//  }
   	__DYNAMIXEL_RECEIVE(GPIOA, GPIO_PIN_4);
 
 	// Receiving
@@ -129,21 +135,20 @@ int main(void)
 	robotState.start_seq = UINT32_MAX;
 	robotState.end_seq = 0;
 
-	HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
+		flag = 0;
+		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
+		while(!flag);
+
 		robotState.id = robotGoal.id;
 		for (int i = 0; i < 80; ++i) {
 			robotState.msg[i] = robotGoal.msg[i];
 		}
-
-		send_state(robotStatePtr);
-		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
-		HAL_Delay(1000);
+		HAL_UART_Transmit(&huart5, (uint8_t *)robotStatePtr, sizeof(RobotState), 100);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -210,9 +215,8 @@ void SystemClock_Config(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
-		HAL_UART_Abort_IT(&huart5);
-
-		for (int i = 0; i < sizeof(buf); ++i) {
+//		HAL_UART_Abort_IT(&huart5);
+		for (int i = 0; i < sizeof(buf); i++) {
 			if (startSeqCount == 4) {
 				*robotGoalDataPtr = buf[i];
 				robotGoalDataPtr++;
@@ -226,6 +230,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 					robotGoalDataPtr = robotGoalData;
 					startSeqCount = 0;
 					totalBytesRead = 0;
+					flag = 1;
 					continue;
 				}
 			} else {
