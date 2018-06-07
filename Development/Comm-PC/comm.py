@@ -27,16 +27,16 @@ def rxDecoder(raw):
         motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
     return (header, motors)
     
-
 def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
     '''
     print(datetime.now().strftime('%H.%M.%S.%f') + " " + userMsg)
 
-def sendStrToMCU(msg):
-    ''' Sends the desired string to the microcontroller.
+def sendBytesToMCU(bytes):
+    ''' Sends bytes to the MCU with the header sequence attached.
     '''
-    ser.write(bytes(msg.encode()))
+    header = struct.pack('L', 0xFFFFFFFF)
+    ser.write(header + bytes)
     
 def vec2bytes(vec):
     ''' Transforms a numpy vector to a byte array, with entries interpreted as
@@ -73,8 +73,7 @@ if __name__ == "__main__":
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
                 angles = walking[:, i:i+1]
-                ser.write(struct.pack('L', 0xFFFFFFFF))
-                ser.write(vec2bytes(angles))
+                sendBytesToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
                     
