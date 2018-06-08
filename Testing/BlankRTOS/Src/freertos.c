@@ -208,9 +208,13 @@ void StartRx(void const * argument)
 
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-		}while((notification & 0x80) != 0x80);
+		}while(((notification & 0x80) != 0x80) &&
+				((notification & 0x20) != 0x20)
+			);
 
-		xTaskNotify(defaultTaskHandle, 0x40, eSetBits);
+		if((notification & 0x20) == 0x20){
+			xTaskNotify(defaultTaskHandle, 0x40, eSetBits);
+		}
   }
   /* USER CODE END StartRx */
 }
@@ -240,6 +244,7 @@ void StartTx(void const * argument)
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	uint32_t notificationValue = 0x80;
 	if (huart == &huart5) {
 		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
 			if (startSeqCount == 4) {
@@ -256,7 +261,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 					startSeqCount = 0;
 					totalBytesRead = 0;
 
-					//xTaskNotifyFromISR(defaultTaskHandle, 0x40, eSetBits, &xHigherPriorityTaskWoken);
+					notificationValue = 0x20;
 					continue;
 				}
 			} else {
@@ -266,7 +271,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 					startSeqCount = 0;
 			}
 		}
-		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(rxHandle, notificationValue, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
