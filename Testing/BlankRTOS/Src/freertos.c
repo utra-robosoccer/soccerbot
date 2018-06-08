@@ -207,9 +207,7 @@ void StartRx(void const * argument)
   {
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-		}while(((notification & 0x80) != 0x80) &&
-				((notification & 0x20) != 0x20)
-			);
+		}while((notification & 0x80) != 0x80);
 
 		HAL_UART_Receive_DMA(&huart5, buffRx, sizeof(buffRx));
 
