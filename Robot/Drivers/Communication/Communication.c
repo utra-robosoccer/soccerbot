@@ -64,7 +64,7 @@ void StartRxTask(void const * argument) {
 			// the RX thread blocks itself and never wakes up since a RX transfer was never
 			// initialized.
 			xSemaphoreTake(PCUARTHandle, 1);
-			status = HAL_UART_Receive_IT(&huart5, (uint8_t*)buf, sizeof(buf));
+			status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buf, sizeof(buf));
 			xSemaphoreGive(PCUARTHandle);
 		}while(status != HAL_OK);
 
@@ -73,8 +73,8 @@ void StartRxTask(void const * argument) {
 		// this task has the highest priority, but overall this is a better decision in
 		// case priorities are changed in the future and someone forgets about this.
 		do{
-			xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
-		}while((notification & 0x40) != 0x40);
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
 
 		for (uint8_t i = 0; i < sizeof(buf); i++) {
 			if (startSeqCount == 4) {
@@ -116,9 +116,10 @@ void StartRxTask(void const * argument) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
-		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-		xTaskNotifyFromISR(rxTaskHandle, 0x40, eSetBits,
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xTaskNotifyFromISR(rxTaskHandle, 0x80, eSetBits,
 				&xHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 }
 

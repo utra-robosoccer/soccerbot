@@ -85,7 +85,8 @@ volatile RobotState robotState, *robotStatePtr;
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
 
-volatile uint8_t buff[92];
+volatile uint8_t buffRx[92];
+volatile uint8_t buffTx[92];
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -177,10 +178,22 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
 
+	uint32_t notification;
   /* Infinite loop */
   for(;;)
   {
-	  osDelay(1);
+	  // This simulates waiting on new trajectories to be received
+      do{
+          xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+      }while((notification & 0x40) != 0x40);
+
+      // This simulates acquiring new present positions
+	  for(uint8_t i = 0; i < 92; i++){
+		  buffTx[i] = buffRx[i];
+	  }
+
+	  // This simulates telling the TX task there is data to send
+	  xTaskNotify(txHandle, 0x40, eSetBits);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -193,13 +206,13 @@ void StartRx(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		HAL_UART_Receive_DMA(&huart5, buff, sizeof(buff));
+		HAL_UART_Receive_DMA(&huart5, buffRx, sizeof(buffRx));
 
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
 		}while((notification & 0x80) != 0x80);
 
-		xTaskNotify(txHandle, 0x40, eSetBits);
+		xTaskNotify(defaultTaskHandle, 0x40, eSetBits);
   }
   /* USER CODE END StartRx */
 }
@@ -217,7 +230,7 @@ void StartTx(void const * argument)
 		xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
 	}while((notification & 0x40) != 0x40);
 
-	HAL_UART_Transmit_DMA(&huart5, buff, sizeof(buff));
+	HAL_UART_Transmit_DMA(&huart5, buffTx, sizeof(buffTx));
 
 	do{
 		xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
@@ -228,14 +241,13 @@ void StartTx(void const * argument)
 
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	if (huart == &huart5) {
+	if(huart == &huart5){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
 //	if (huart == &huart5) {
-////		HAL_UART_Abort_IT(&huart5);
 //		for (int i = 0; i < sizeof(buf); i++) {
 //			if (startSeqCount == 4) {
 //				*robotGoalDataPtr = buf[i];
@@ -260,8 +272,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 //					startSeqCount = 0;
 //			}
 //		}
+//		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+//		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 //
-//		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
+//		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 //	}
 }
 
