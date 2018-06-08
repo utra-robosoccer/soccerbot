@@ -472,8 +472,7 @@ void StartDefaultTask(void const * argument)
 	uint8_t i;
 	float positions[12];
 	while(1){
-		xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-//		xSemaphoreTake(semControlTaskHandle, portMAX_DELAY);
+		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 
 		for(i = 0; i < 12; i++){
 			uint8_t* ptr = &positions[i];
@@ -481,9 +480,7 @@ void StartDefaultTask(void const * argument)
 				*ptr = robotGoal.msg[i * 4 + 3 - j];
 				ptr++;
 			}
-//            memcpy(&positions[i], &robotGoal.msg[i * 4], 4);
 		}
-		continue;
 
 		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
@@ -514,6 +511,13 @@ void StartDefaultTask(void const * argument)
             }
 		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
         }
+
+		// Simulate acquiring position data
+		robotState.id = robotGoal.id;
+		for (int i = 0; i < 80; ++i) {
+			robotState.msg[i] = robotGoal.msg[i];
+		}
+		xTaskNotify(txTaskHandle, 0x80, eSetBits); // Notify TX task that there are angles it can transmit
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -696,9 +700,15 @@ void StartTxTask(void const * argument)
 
   HAL_StatusTypeDef status;
 
+  uint32_t notification;
+
   /* Infinite loop */
   for(;;)
   {
+	  do{
+		  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+	  }while((notification & 0x80) != 0x80);
+
 	  // TODO: Implement actual TX task, and use DMA/IT I/O
 	  // Queue sets would be useful here for synchronizing positions
 	  // being read from multiple threads. It seems this can't be done
@@ -715,13 +725,15 @@ void StartTxTask(void const * argument)
 	      // the RX thread blocks itself and never wakes up since a RX transfer was never
 	      // initialized.
 	      xSemaphoreTake(PCUARTHandle, 1);
-	      status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*) &robotState, sizeof(RobotState));
+	      status = HAL_UART_Transmit_IT(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
 	      xSemaphoreGive(PCUARTHandle);
 	  }while(status != HAL_OK);
 
 	  // Wait until notified from ISR. Clear no bits on entry in case the notification
 	  // came while a higher priority task was executing.
-	  xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
+	  do{
+		  xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+	  }while((notification & 0x40) != 0x40);
 //	  osDelay(pdMS_TO_TICKS(10));
   }
   /* USER CODE END StartTxTask */
@@ -732,7 +744,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
 		if(huart == &huart5){
-			xTaskNotifyFromISR(rxTaskHandle, 1UL, eNoAction,
+			xTaskNotifyFromISR(txTaskHandle, 0x40, eSetBits,
 							&xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
