@@ -18,11 +18,7 @@
 
 
 /******************************* Public Variables *******************************/
-extern volatile RobotGoal robotGoal;
-extern volatile RobotState robotState;
-
-
-/***************************** Function prototypes ****************************/
-void Comm_Init(volatile RobotGoal* robotGoal, volatile RobotState* robotState);
+extern RobotGoal robotGoal;
+extern RobotState robotState;
 
 #endif /* COMMUNICATION_COMMUNICATION_H_ */

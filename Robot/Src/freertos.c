@@ -181,6 +181,11 @@ const double motorPosArr[12][1001] = {
 #define CONTROL_CYCLE_TIME 10 // Control cycle time in milliseconds
 
 bool setupIsDone = false;
+
+static volatile uint32_t error;
+
+#define NOTIFIED_FROM_ISR 0x80
+#define NOTIFIED_FROM_TASK 0x40
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -415,9 +420,6 @@ void StartDefaultTask(void const * argument)
 	MPU6050_manually_set_offsets(&IMUdata);
 	MPU6050_set_LPF(&IMUdata, 4);
 
-	// Comm initialization
-	Comm_Init(&robotGoal, &robotState);
-
 	// Set setupIsDone and unblock the higher-priority tasks
 	setupIsDone = true;
 	xTaskNotify(rxTaskHandle, 1UL, eNoAction);
@@ -482,42 +484,42 @@ void StartDefaultTask(void const * argument)
 			}
 		}
 
-//		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-//			switch(i){
-//			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
-//			  				 break;
-//			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
-//			  				 break;
-//			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
-//			  				 break;
-//			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
-//			  				 break;
-//			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
-//			  				 break;
-//			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
-//			  				 break;
-//			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
-//			  				 break;
-//			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
-//			  				 break;
-//			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
-//			  				 break;
-//			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
-//			  				 break;
-//			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
-//			  				 break;
-//			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
-//							 break;
-//            }
+		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+			switch(i){
+			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
+			  				 break;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			  				 break;
+			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
+			  				 break;
+			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
+			  				 break;
+			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
+			  				 break;
+			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
+			  				 break;
+			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
+			  				 break;
+			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
+			  				 break;
+			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+							 break;
+            }
 //		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
-//        }
+        }
 
 		// Simulate acquiring position data
 		robotState.id = robotGoal.id;
 		for (int i = 0; i < 80; ++i) {
 			robotState.msg[i] = robotGoal.msg[i];
 		}
-		xTaskNotify(txTaskHandle, 0x40, eSetBits); // Notify TX task that there are angles it can transmit
+		xTaskNotify(txTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Notify TX task that there are angles it can transmit
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -538,15 +540,11 @@ void UART1_Handler(void const * argument)
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-//		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-//		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART1_Handler */
@@ -568,15 +566,11 @@ void UART2_Handler(void const * argument)
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-//		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-//		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART2_Handler */
@@ -598,15 +592,11 @@ void UART3_Handler(void const * argument)
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-//		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-//		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART3_Handler */
@@ -628,15 +618,11 @@ void UART4_Handler(void const * argument)
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-//		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-//		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART4_Handler */
@@ -658,15 +644,11 @@ void UART6_Handler(void const * argument)
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  //Dynamixel_GetVelocity(cmdMessage.motorHandle);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-//		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
-
-		  Dynamixel_SetGoalVelocity(cmdMessage.motorHandle, cmdMessage.velocity);
-//		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
 	  }
   }
   /* USER CODE END UART6_Handler */
@@ -692,6 +674,95 @@ void StartIMUTask(void const * argument)
   /* USER CODE END StartIMUTask */
 }
 
+/* StartRxTask function */
+void StartRxTask(void const * argument) {
+	/* USER CODE BEGIN StartRxTask */
+	uint8_t robotGoalData[sizeof(RobotGoal)];
+	uint8_t *robotGoalDataPtr;
+	uint8_t buffRx[92];
+	uint8_t startSeqCount;
+	uint8_t totalBytesRead;
+
+	// Receiving
+	robotGoal.id = 0;
+	robotGoalDataPtr = robotGoalData;
+	startSeqCount = 0;
+	totalBytesRead = 0;
+
+	// Sending
+	robotState.id = 0;
+	robotState.start_seq = UINT32_MAX;
+	robotState.end_seq = 0;
+
+	xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
+	HAL_StatusTypeDef status;
+
+	uint32_t notification;
+
+	HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+
+	/* Infinite loop */
+	for (;;) {
+		// Wait until notified from ISR. Clear no bits on entry in case the notification
+		// comes before this statement is executed (which is rather unlikely as long as
+		// this task has the highest priority, but overall this is a better decision in
+		// case priorities are changed in the future and someone forgets about this.
+		do{
+			xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+
+		do{
+			// This do-while loop with the mutex inside of it makes calls to the UART module
+			// responsible for PC communication atomic. This attempts to solve the following
+			// scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
+			// when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+			// returns immediately when it detects that the uart module is already locked. Then
+			// the RX thread blocks itself and never wakes up since a RX transfer was never
+			// initialized.
+			xSemaphoreTake(PCUARTHandle, 1);
+			status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+			xSemaphoreGive(PCUARTHandle);
+		}while(status != HAL_OK);
+
+		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
+			if (startSeqCount == 4) {
+				// This control block is entered when the header sequence of
+				// 0xFFFFFFFF has been received; thus we know the data we
+				// receive will be in tact
+
+				*robotGoalDataPtr = buffRx[i];
+				robotGoalDataPtr++;
+				totalBytesRead++;
+
+				if (totalBytesRead == sizeof(RobotGoal)) {
+					// If, after the last couple of receive interrupts, we have
+					// received sizeof(RobotGoal) bytes, then we copy the data
+					// buffer into the robotGoal structure and wake the control
+					// thread to distribute states to each actuator
+					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+
+					// Reset the variables to help with reception of a RobotGoal
+					robotGoalDataPtr = robotGoalData;
+					startSeqCount = 0;
+					totalBytesRead = 0;
+
+					xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+					continue;
+				}
+			}else{
+				// This control block is used to verify that the data header is in tact
+				if (buffRx[i] == 0xFF) {
+					startSeqCount++;
+				} else {
+					startSeqCount = 0;
+				}
+			}
+		}
+	}
+	/* USER CODE END StartRxTask */
+}
+
 /* StartTxTask function */
 void StartTxTask(void const * argument)
 {
@@ -706,8 +777,8 @@ void StartTxTask(void const * argument)
   for(;;)
   {
 	  do{
-		  xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
-	  }while((notification & 0x40) != 0x40);
+		  xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
 
 	  // TODO: Implement actual TX task, and use DMA/IT I/O
 	  // Queue sets would be useful here for synchronizing positions
@@ -732,8 +803,8 @@ void StartTxTask(void const * argument)
 	  // Wait until notified from ISR. Clear no bits on entry in case the notification
 	  // came while a higher priority task was executing.
 	  do{
-		  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-	  }while((notification & 0x80) != 0x80);
+		  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+	  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
   }
   /* USER CODE END StartTxTask */
 }
@@ -743,7 +814,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		if(huart == &huart5){
-			xTaskNotifyFromISR(txTaskHandle, 0x80, eSetBits,
+			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_ISR, eSetBits,
 							&xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
@@ -764,6 +835,21 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+	if (huart == &huart5) {
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_ISR, eSetBits,
+				&xHigherPriorityTaskWoken);
+
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+     error = HAL_UART_GetError(huart);
 }
 /* USER CODE END Application */
 
