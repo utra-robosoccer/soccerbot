@@ -482,42 +482,42 @@ void StartDefaultTask(void const * argument)
 			}
 		}
 
-		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			switch(i){
-			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
-			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
-			  				 break;
-			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
-			  				 break;
-			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
-			  				 break;
-			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
-			  				 break;
-			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
-			  				 break;
-			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
-			  				 break;
-			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
-			  				 break;
-			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
-			  				 break;
-			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
-			  				 break;
-			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
-			  				 break;
-			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
-							 break;
-            }
-		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
-        }
+//		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+//			switch(i){
+//			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
+//			  				 break;
+//			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+//			  				 break;
+//			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
+//			  				 break;
+//			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
+//			  				 break;
+//			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
+//			  				 break;
+//			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
+//			  				 break;
+//			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
+//			  				 break;
+//			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
+//			  				 break;
+//			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
+//			  				 break;
+//			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
+//			  				 break;
+//			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
+//			  				 break;
+//			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+//							 break;
+//            }
+//		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+//        }
 
 		// Simulate acquiring position data
 		robotState.id = robotGoal.id;
 		for (int i = 0; i < 80; ++i) {
 			robotState.msg[i] = robotGoal.msg[i];
 		}
-		xTaskNotify(txTaskHandle, 0x80, eSetBits); // Notify TX task that there are angles it can transmit
+		xTaskNotify(txTaskHandle, 0x40, eSetBits); // Notify TX task that there are angles it can transmit
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -706,8 +706,8 @@ void StartTxTask(void const * argument)
   for(;;)
   {
 	  do{
-		  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-	  }while((notification & 0x80) != 0x80);
+		  xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+	  }while((notification & 0x40) != 0x40);
 
 	  // TODO: Implement actual TX task, and use DMA/IT I/O
 	  // Queue sets would be useful here for synchronizing positions
@@ -725,15 +725,15 @@ void StartTxTask(void const * argument)
 	      // the RX thread blocks itself and never wakes up since a RX transfer was never
 	      // initialized.
 	      xSemaphoreTake(PCUARTHandle, 1);
-	      status = HAL_UART_Transmit_IT(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
+	      status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
 	      xSemaphoreGive(PCUARTHandle);
 	  }while(status != HAL_OK);
 
 	  // Wait until notified from ISR. Clear no bits on entry in case the notification
 	  // came while a higher priority task was executing.
 	  do{
-		  xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
-	  }while((notification & 0x40) != 0x40);
+		  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+	  }while((notification & 0x80) != 0x80);
 //	  osDelay(pdMS_TO_TICKS(10));
   }
   /* USER CODE END StartTxTask */
@@ -742,9 +742,9 @@ void StartTxTask(void const * argument)
 /* USER CODE BEGIN Application */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
-		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		if(huart == &huart5){
-			xTaskNotifyFromISR(txTaskHandle, 0x40, eSetBits,
+			xTaskNotifyFromISR(txTaskHandle, 0x80, eSetBits,
 							&xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
@@ -762,6 +762,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 		else if(huart == &huart6){
 			xSemaphoreGiveFromISR(semUART6TxHandle, &xHigherPriorityTaskWoken);
 		}
+
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 }
 /* USER CODE END Application */
