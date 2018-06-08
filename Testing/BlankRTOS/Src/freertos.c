@@ -84,7 +84,6 @@ volatile RobotState robotState, *robotStatePtr;
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
 
 volatile uint8_t buffRx[92];
-volatile uint8_t buffTx[92];
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -201,19 +200,43 @@ void StartRx(void const * argument)
 {
   /* USER CODE BEGIN StartRx */
 	uint32_t notification;
+
+	HAL_UART_Receive_DMA(&huart5, buffRx, sizeof(buffRx));
   /* Infinite loop */
   for(;;)
   {
-		HAL_UART_Receive_DMA(&huart5, buffRx, sizeof(buffRx));
-
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
 		}while(((notification & 0x80) != 0x80) &&
 				((notification & 0x20) != 0x20)
 			);
 
-		if((notification & 0x20) == 0x20){
-			xTaskNotify(defaultTaskHandle, 0x40, eSetBits);
+		HAL_UART_Receive_DMA(&huart5, buffRx, sizeof(buffRx));
+
+		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
+			if (startSeqCount == 4) {
+				*robotGoalDataPtr = buffRx[i];
+				robotGoalDataPtr++;
+				totalBytesRead++;
+
+				if (totalBytesRead == sizeof(RobotGoal)) {
+
+					// Process RobotGoal here
+					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+
+					robotGoalDataPtr = robotGoalData;
+					startSeqCount = 0;
+					totalBytesRead = 0;
+
+					xTaskNotify(defaultTaskHandle, 0x40, eSetBits);
+					continue;
+				}
+			} else {
+				if (buffRx[i] == 255)
+					startSeqCount++;
+				else
+					startSeqCount = 0;
+			}
 		}
   }
   /* USER CODE END StartRx */
@@ -244,34 +267,8 @@ void StartTx(void const * argument)
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	uint32_t notificationValue = 0x80;
 	if (huart == &huart5) {
-		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
-			if (startSeqCount == 4) {
-				*robotGoalDataPtr = buffRx[i];
-				robotGoalDataPtr++;
-				totalBytesRead++;
-
-				if (totalBytesRead == sizeof(RobotGoal)) {
-
-					// Process RobotGoal here
-					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-
-					robotGoalDataPtr = robotGoalData;
-					startSeqCount = 0;
-					totalBytesRead = 0;
-
-					notificationValue = 0x20;
-					continue;
-				}
-			} else {
-				if (buffRx[i] == 255)
-					startSeqCount++;
-				else
-					startSeqCount = 0;
-			}
-		}
-		xTaskNotifyFromISR(rxHandle, notificationValue, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
