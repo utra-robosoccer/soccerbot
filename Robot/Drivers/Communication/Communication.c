@@ -16,7 +16,7 @@ volatile RobotState robotState;
 static volatile RobotGoal *robotGoalPtr;
 static volatile uint8_t robotGoalData[sizeof(RobotGoal)];
 static volatile uint8_t *robotGoalDataPtr;
-static volatile uint8_t buf[23];
+static volatile uint8_t buffRx[92];
 static volatile uint8_t startSeqCount;
 static volatile uint8_t totalBytesRead;
 static volatile RobotState *robotStatePtr;
@@ -53,8 +53,18 @@ void StartRxTask(void const * argument) {
 
 	uint32_t notification;
 
+	HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+
 	/* Infinite loop */
 	for (;;) {
+		// Wait until notified from ISR. Clear no bits on entry in case the notification
+		// comes before this statement is executed (which is rather unlikely as long as
+		// this task has the highest priority, but overall this is a better decision in
+		// case priorities are changed in the future and someone forgets about this.
+		do{
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
+
 		do{
 			// This do-while loop with the mutex inside of it makes calls to the UART module
 			// responsible for PC communication atomic. This attempts to solve the following
@@ -64,25 +74,17 @@ void StartRxTask(void const * argument) {
 			// the RX thread blocks itself and never wakes up since a RX transfer was never
 			// initialized.
 			xSemaphoreTake(PCUARTHandle, 1);
-			status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buf, sizeof(buf));
+			status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
 			xSemaphoreGive(PCUARTHandle);
 		}while(status != HAL_OK);
 
-		// Wait until notified from ISR. Clear no bits on entry in case the notification
-		// comes before this statement is executed (which is rather unlikely as long as
-		// this task has the highest priority, but overall this is a better decision in
-		// case priorities are changed in the future and someone forgets about this.
-		do{
-			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-		}while((notification & 0x80) != 0x80);
-
-		for (uint8_t i = 0; i < sizeof(buf); i++) {
+		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
 			if (startSeqCount == 4) {
 				// This control block is entered when the header sequence of
 				// 0xFFFFFFFF has been received; thus we know the data we
 				// receive will be in tact
 
-				*robotGoalDataPtr = buf[i];
+				*robotGoalDataPtr = buffRx[i];
 				robotGoalDataPtr++;
 				totalBytesRead++;
 
@@ -98,12 +100,12 @@ void StartRxTask(void const * argument) {
 					startSeqCount = 0;
 					totalBytesRead = 0;
 
-					xTaskNotify(defaultTaskHandle, 1UL, eNoAction);
+					xTaskNotify(defaultTaskHandle, 0x40, eSetBits); // Wake control task
 					continue;
 				}
 			}else{
 				// This control block is used to verify that the data header is in tact
-				if (buf[i] == 0xFF) {
+				if (buffRx[i] == 0xFF) {
 					startSeqCount++;
 				} else {
 					startSeqCount = 0;
@@ -119,6 +121,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		xTaskNotifyFromISR(rxTaskHandle, 0x80, eSetBits,
 				&xHigherPriorityTaskWoken);
+
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 }

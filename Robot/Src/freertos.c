@@ -734,7 +734,6 @@ void StartTxTask(void const * argument)
 	  do{
 		  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
 	  }while((notification & 0x80) != 0x80);
-//	  osDelay(pdMS_TO_TICKS(10));
   }
   /* USER CODE END StartTxTask */
 }
