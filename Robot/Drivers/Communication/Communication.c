@@ -16,10 +16,11 @@ volatile RobotState robotState;
 static volatile RobotGoal *robotGoalPtr;
 static volatile uint8_t robotGoalData[sizeof(RobotGoal)];
 static volatile uint8_t *robotGoalDataPtr;
-volatile uint8_t buf[21];
+static volatile uint8_t buf[23];
 static volatile uint8_t startSeqCount;
 static volatile uint8_t totalBytesRead;
 static volatile RobotState *robotStatePtr;
+static volatile uint32_t error;
 
 /*********************************** Externs **********************************/
 extern UART_HandleTypeDef huart5;
@@ -50,6 +51,8 @@ void StartRxTask(void const * argument) {
 
 	HAL_StatusTypeDef status;
 
+	uint32_t notification;
+
 	/* Infinite loop */
 	for (;;) {
 		do{
@@ -61,7 +64,7 @@ void StartRxTask(void const * argument) {
 			// the RX thread blocks itself and never wakes up since a RX transfer was never
 			// initialized.
 			xSemaphoreTake(PCUARTHandle, 1);
-			status = HAL_UART_Receive_IT(&huart5, (uint8_t *) buf, sizeof(buf));
+			status = HAL_UART_Receive_IT(&huart5, (uint8_t*)buf, sizeof(buf));
 			xSemaphoreGive(PCUARTHandle);
 		}while(status != HAL_OK);
 
@@ -69,9 +72,11 @@ void StartRxTask(void const * argument) {
 		// comes before this statement is executed (which is rather unlikely as long as
 		// this task has the highest priority, but overall this is a better decision in
 		// case priorities are changed in the future and someone forgets about this.
-		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
+		do{
+			xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+		}while((notification & 0x40) != 0x40);
 
-		for (uint8_t i = 0; i < sizeof(buf); ++i) {
+		for (uint8_t i = 0; i < sizeof(buf); i++) {
 			if (startSeqCount == 4) {
 				// This control block is entered when the header sequence of
 				// 0xFFFFFFFF has been received; thus we know the data we
@@ -93,9 +98,7 @@ void StartRxTask(void const * argument) {
 					startSeqCount = 0;
 					totalBytesRead = 0;
 
-					BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-					xTaskNotifyFromISR(defaultTaskHandle, 1UL, eNoAction,
-							&xHigherPriorityTaskWoken);
+					xTaskNotify(defaultTaskHandle, 1UL, eNoAction);
 					continue;
 				}
 			}else{
@@ -114,12 +117,12 @@ void StartRxTask(void const * argument) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
 		BaseType_t xHigherPriorityTaskWoken = pdTRUE;
-		xTaskNotifyFromISR(rxTaskHandle, 1UL, eNoAction,
+		xTaskNotifyFromISR(rxTaskHandle, 0x40, eSetBits,
 				&xHigherPriorityTaskWoken);
 	}
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-     static volatile error = HAL_UART_GetError(huart);
+     error = HAL_UART_GetError(huart);
 }
