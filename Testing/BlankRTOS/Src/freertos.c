@@ -63,6 +63,12 @@
 osThreadId defaultTaskHandle;
 uint32_t defaultTaskBuffer[ 128 ];
 osStaticThreadDef_t defaultTaskControlBlock;
+osThreadId rxHandle;
+uint32_t rxBuffer[ 128 ];
+osStaticThreadDef_t rxControlBlock;
+osThreadId txHandle;
+uint32_t txBuffer[ 128 ];
+osStaticThreadDef_t txControlBlock;
 
 /* USER CODE BEGIN Variables */
 volatile RobotGoal robotGoal, *robotGoalPtr;
@@ -78,10 +84,14 @@ volatile RobotState robotState, *robotStatePtr;
 
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
+
+volatile uint8_t buff[92];
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
+void StartRx(void const * argument);
+void StartTx(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -111,7 +121,20 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-       
+  	__DYNAMIXEL_RECEIVE(GPIOA, GPIO_PIN_4);
+
+	// Receiving
+	robotGoal.id = 0;
+	robotGoalPtr = &robotGoal;
+	robotGoalDataPtr = robotGoalData;
+	startSeqCount = 0;
+	totalBytesRead = 0;
+
+	// Sending
+	robotState.id = 0;
+	robotStatePtr = &robotState;
+	robotState.start_seq = UINT32_MAX;
+	robotState.end_seq = 0;
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -131,6 +154,14 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* definition and creation of rx */
+  osThreadStaticDef(rx, StartRx, osPriorityRealtime, 0, 128, rxBuffer, &rxControlBlock);
+  rxHandle = osThreadCreate(osThread(rx), NULL);
+
+  /* definition and creation of tx */
+  osThreadStaticDef(tx, StartTx, osPriorityHigh, 0, 128, txBuffer, &txControlBlock);
+  txHandle = osThreadCreate(osThread(tx), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -146,54 +177,60 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
 
-  	__DYNAMIXEL_RECEIVE(GPIOA, GPIO_PIN_4);
+  /* Infinite loop */
+  for(;;)
+  {
+	  osDelay(1);
+  }
+  /* USER CODE END StartDefaultTask */
+}
 
-	// Receiving
-	robotGoal.id = 0;
-	robotGoalPtr = &robotGoal;
-	robotGoalDataPtr = robotGoalData;
-	startSeqCount = 0;
-	totalBytesRead = 0;
-
-	// Sending
-	robotState.id = 0;
-	robotStatePtr = &robotState;
-	robotState.start_seq = UINT32_MAX;
-	robotState.end_seq = 0;
-
-	uint8_t buff[92];
-
+/* StartRx function */
+void StartRx(void const * argument)
+{
+  /* USER CODE BEGIN StartRx */
 	uint32_t notification;
   /* Infinite loop */
   for(;;)
   {
 		HAL_UART_Receive_DMA(&huart5, buff, sizeof(buff));
+
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
 		}while((notification & 0x80) != 0x80);
 
-		HAL_UART_Transmit_DMA(&huart5, buff, sizeof(buff));
-		do{
-			xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
-		}while((notification & 0x40) != 0x40);
-//		flag = 0;
-//		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
-//		while(!flag);
-//
-//		robotState.id = robotGoal.id;
-//		for (int i = 0; i < 80; ++i) {
-//			robotState.msg[i] = robotGoal.msg[i];
-//		}
-//		HAL_UART_Transmit(&huart5, (uint8_t *)robotStatePtr, sizeof(RobotState), 100);
+		xTaskNotify(txHandle, 0x40, eSetBits);
   }
-  /* USER CODE END StartDefaultTask */
+  /* USER CODE END StartRx */
+}
+
+/* StartTx function */
+void StartTx(void const * argument)
+{
+  /* USER CODE BEGIN StartTx */
+
+	uint32_t notification;
+  /* Infinite loop */
+  for(;;)
+  {
+	do{
+		xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+	}while((notification & 0x40) != 0x40);
+
+	HAL_UART_Transmit_DMA(&huart5, buff, sizeof(buff));
+
+	do{
+		xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+	}while((notification & 0x80) != 0x80);
+  }
+  /* USER CODE END StartTx */
 }
 
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
@@ -231,7 +268,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
 	if (huart == &huart5) {
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		xTaskNotifyFromISR(defaultTaskHandle, 0x40, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(txHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
