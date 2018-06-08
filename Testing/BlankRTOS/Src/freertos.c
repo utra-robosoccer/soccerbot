@@ -78,8 +78,6 @@ volatile RobotState robotState, *robotStatePtr;
 
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
-
-volatile uint8_t flagRx, flagTx;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -164,15 +162,20 @@ void StartDefaultTask(void const * argument)
 	robotState.end_seq = 0;
 
 	uint8_t buff[92];
+
+	uint32_t notification;
   /* Infinite loop */
   for(;;)
   {
-	    flagRx = 0;
 		HAL_UART_Receive_DMA(&huart5, buff, sizeof(buff));
-		while(!flagRx);
-		flagTx = 0;
+		do{
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
+
 		HAL_UART_Transmit_DMA(&huart5, buff, sizeof(buff));
-		while(!flagTx);
+		do{
+			xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
+		}while((notification & 0x40) != 0x40);
 //		flag = 0;
 //		HAL_UART_Receive_IT(&huart5, (unsigned char *) buf, sizeof(buf));
 //		while(!flag);
@@ -189,7 +192,10 @@ void StartDefaultTask(void const * argument)
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	if (huart == &huart5) {
-		flagRx = 1;
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
 //	if (huart == &huart5) {
 ////		HAL_UART_Abort_IT(&huart5);
@@ -224,7 +230,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
 	if (huart == &huart5) {
-		flagTx = 1;
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xTaskNotifyFromISR(defaultTaskHandle, 0x40, eSetBits, &xHigherPriorityTaskWoken);
+
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
 }
 /* USER CODE END Application */
