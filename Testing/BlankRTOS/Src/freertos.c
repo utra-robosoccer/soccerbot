@@ -75,8 +75,6 @@ volatile RobotGoal robotGoal, *robotGoalPtr;
 volatile unsigned char robotGoalData[sizeof(RobotGoal)];
 volatile unsigned char *robotGoalDataPtr;
 
-volatile unsigned char buf[23];
-
 volatile unsigned startSeqCount;
 volatile unsigned totalBytesRead;
 
@@ -188,8 +186,8 @@ void StartDefaultTask(void const * argument)
       }while((notification & 0x40) != 0x40);
 
       // This simulates acquiring new present positions
-	  for(uint8_t i = 0; i < 92; i++){
-		  buffTx[i] = buffRx[i];
+	  for(uint8_t i = 0; i < 80; i++){
+		  robotState.msg[i] = robotGoal.msg[i];
 	  }
 
 	  // This simulates telling the TX task there is data to send
@@ -230,7 +228,7 @@ void StartTx(void const * argument)
 		xTaskNotifyWait(0, 0x40, &notification, portMAX_DELAY);
 	}while((notification & 0x40) != 0x40);
 
-	HAL_UART_Transmit_DMA(&huart5, buffTx, sizeof(buffTx));
+	HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
 
 	do{
 		xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
@@ -241,42 +239,37 @@ void StartTx(void const * argument)
 
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	if(huart == &huart5){
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	if (huart == &huart5) {
+		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
+			if (startSeqCount == 4) {
+				*robotGoalDataPtr = buffRx[i];
+				robotGoalDataPtr++;
+				totalBytesRead++;
+
+				if (totalBytesRead == sizeof(RobotGoal)) {
+
+					// Process RobotGoal here
+					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+
+					robotGoalDataPtr = robotGoalData;
+					startSeqCount = 0;
+					totalBytesRead = 0;
+
+					//xTaskNotifyFromISR(defaultTaskHandle, 0x40, eSetBits, &xHigherPriorityTaskWoken);
+					continue;
+				}
+			} else {
+				if (buffRx[i] == 255)
+					startSeqCount++;
+				else
+					startSeqCount = 0;
+			}
+		}
 		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
-//	if (huart == &huart5) {
-//		for (int i = 0; i < sizeof(buf); i++) {
-//			if (startSeqCount == 4) {
-//				*robotGoalDataPtr = buf[i];
-//				robotGoalDataPtr++;
-//				totalBytesRead++;
-//
-//				if (totalBytesRead == sizeof(RobotGoal)) {
-//
-//					// Process RobotGoal here
-//					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-//
-//					robotGoalDataPtr = robotGoalData;
-//					startSeqCount = 0;
-//					totalBytesRead = 0;
-//					flag = 1;
-//					continue;
-//				}
-//			} else {
-//				if (buf[i] == 255)
-//					startSeqCount++;
-//				else
-//					startSeqCount = 0;
-//			}
-//		}
-//		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-//		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
-//
-//		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-//	}
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
