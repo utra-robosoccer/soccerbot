@@ -911,6 +911,10 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 
 	/* Clear array for reception. */
 	uint8_t ID = hdynamixel -> _ID;
+	if(ID == BROADCAST_ID){
+		ID = 0;
+	}
+
 	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
 		arrReceive[ID][i] = 0;
 	}
