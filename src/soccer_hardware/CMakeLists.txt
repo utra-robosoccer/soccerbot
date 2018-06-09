@@ -22,7 +22,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -76,9 +77,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(soccer_hardware src/soccer_hardware.cpp)
-add_dependencies(soccer_hardware ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(soccer_hardware ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+# add_executable(soccer_hardware src/soccer_hardware.cpp)
+# add_dependencies(soccer_hardware ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# target_link_libraries(soccer_hardware ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(soccer_hardware_test src/soccer_hardware_test.cpp)
 add_dependencies(soccer_hardware_test ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -91,6 +92,10 @@ target_link_libraries(test_trajectories ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_executable(draw_trajectories src/draw_trajectories.cpp)
 add_dependencies(draw_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(draw_trajectories ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+catkin_install_python(PROGRAMS nodes/soccer_hardware.py
+                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 
 #############
 ## Install ##
