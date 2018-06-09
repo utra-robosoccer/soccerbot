@@ -68,9 +68,9 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
 	sMPU6050 -> _Y_ACCEL_OFFSET= (-767.5 * g / ACC_RANGE);
 	sMPU6050 -> _Z_ACCEL_OFFSET= ((16324 * g / ACC_RANGE) - 9.81);
 
-	sMPU6050 -> _X_GYRO_OFFSET= 240/((float)IMU_GY_CONVERSION);
-	sMPU6050 -> _Y_GYRO_OFFSET= -760/((float)IMU_GY_CONVERSION);
-	sMPU6050 -> _Z_GYRO_OFFSET= -150/((float)IMU_GY_CONVERSION);
+	sMPU6050 -> _X_GYRO_OFFSET= (float)240/IMU_GY_RANGE;
+	sMPU6050 -> _Y_GYRO_OFFSET= (float)-760/IMU_GY_RANGE;
+	sMPU6050 -> _Z_GYRO_OFFSET= (float)-130/IMU_GY_RANGE;
 }
 
 void MPU6050_Clear_Int(MPU6050_HandleTypeDef *sMPU6050){
@@ -113,9 +113,11 @@ void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
 	int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	sMPU6050 ->_X_GYRO = X/IMU_GY_CONVERSION-(sMPU6050 ->_X_GYRO_OFFSET);
-	sMPU6050 ->_Y_GYRO = Y/IMU_GY_CONVERSION-(sMPU6050 ->_Y_GYRO_OFFSET);
-	sMPU6050 ->_Z_GYRO = Z/IMU_GY_CONVERSION-(sMPU6050 ->_Z_GYRO_OFFSET);
+
+
+	sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
+	sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
+	sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
 
 
 }
