@@ -22,7 +22,7 @@ char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 
 /**********************************Communication********************************/
 #define I2C	3
-//#define UART_Handle	2
+#define UART_Handle	2
 /*********************************** Types ************************************/
 typedef struct{
 	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
@@ -30,20 +30,20 @@ typedef struct{
 	uint8_t					_Sample_Rate;
 	UART_HandleTypeDef*		_UART_Handle;
 	I2C_HandleTypeDef* 		_I2C_Handle;
-	int16_t				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
-	int16_t				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
-	int16_t				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
-	int16_t				_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
-	int16_t				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
-	int16_t				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
+	float				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
+	float				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
+	float				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
+	float				_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
+	float				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
+	float				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
 
 	//offsets:
-	int16_t				_X_GYRO_OFFSET;
-	int16_t				_Y_GYRO_OFFSET;
-	int16_t				_Z_GYRO_OFFSET;
-	int16_t				_X_ACCEL_OFFSET;
-	int16_t				_Y_ACCEL_OFFSET;
-	int16_t				_Z_ACCEL_OFFSET;
+	float				_X_GYRO_OFFSET;
+	float				_Y_GYRO_OFFSET;
+	float				_Z_GYRO_OFFSET;
+	float				_X_ACCEL_OFFSET;
+	float				_Y_ACCEL_OFFSET;
+	float				_Z_ACCEL_OFFSET;
 
 	//angles in degrees (calculated using _Z_ACCEL_OFFSET)
 	//see page 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
@@ -55,9 +55,7 @@ typedef struct{
 }MPU6050_HandleTypeDef;
 /****************Function Definition********************************/
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
-void MPU6050_READ_DATA_DMA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
-void MPU6050_WRITE_REG_IT(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
 void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf);
 uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
 void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
@@ -70,9 +68,7 @@ void MPU6050_Get_Val_Accel();
 void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75
@@ -109,6 +105,12 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
 #define MPU6050_RA_INT_ENABLE       0x38
 #define MPU6050_RA_DMP_INT_STATUS   0x39
 #define MPU6050_RA_INT_STATUS       0x3A
+
+//since we are using the 0 setting for MPU6050_RA_GYRO_CONFIG, we define :
+#define IMU_GY_RANGE				131 // divide by this to get degrees per second
+//since we are using the 0 setting for MPU6050_RA_ACCEL_CONFIG, we define :
+
+#define ACC_RANGE 					16384 //divide to get in units of g
 
 /*************Output****************************/
 #define MPU6050_RA_ACCEL_XOUT_H     0x3B
