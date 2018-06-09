@@ -128,13 +128,20 @@ void StartDefaultTask(void const * argument)
 
 	for(;;)
   {
-		//MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+		MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
 		MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
 
 		//HAL_UART_Transmit(&huart3, IMUdata._Z_ACCEL, 2, 10);
 		//HAL_UART_Transmit(&huart3, &test, 1, 10);
 
-		osDelay(200);
+		//osDelay(200);
+
+
+		TickType_t myTicks;
+		myTicks = xTaskGetTickCount();
+//		HAL_UART_Transmit(&huart3, myTicks, 4, 10);
+//		HAL_UART_Transmit(&huart3, "\n", 1, 10);
+
   }
   /* USER CODE END StartDefaultTask */
 }

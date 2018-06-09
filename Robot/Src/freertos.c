@@ -666,10 +666,11 @@ void StartIMUTask(void const * argument)
 //  float dataToSend[6] = {0}; // Populate this with IMU data to send in the queue by copy
   for(;;)
   {
-      osDelay(10);
-//	  MPU6050_Read_Accelerometer_Withoffset(&IMUdata); // also updates angles
-//	  MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+      //note that it takes <1 ms total for the sensor to read both accel and gyro
+      MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
 //    xQueueSend(&IMUQueueHandle, (uint32_t*)dataToSend, 0);
+      osDelay(2); // 2 ms > 1ms
   }
   /* USER CODE END StartIMUTask */
 }
