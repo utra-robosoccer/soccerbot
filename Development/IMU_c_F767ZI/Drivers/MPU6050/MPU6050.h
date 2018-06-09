@@ -109,7 +109,9 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
 //since we are using the 0 setting for MPU6050_RA_GYRO_CONFIG, we define :
 #define IMU_GY_CONVERSION			131 // divide by this to get degrees per second
 //since we are using the 0 setting for MPU6050_RA_ACCEL_CONFIG, we define :
-#define IMU_ACC_CONVERSION 			16384 // divide by this to get g
+
+#define ACC_RANGE 					16384
+#define IMU_ACC_CONVERSION 			9.81f / 16384 // divide by this to get m/s^2
 
 /*************Output****************************/
 #define MPU6050_RA_ACCEL_XOUT_H     0x3B
