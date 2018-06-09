@@ -476,10 +476,10 @@ void StartDefaultTask(void const * argument)
 	while(1){
 		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 
-		for(i = 0; i < 12; i++){
+		for(uint8_t i = 0; i < 12; i++){
 			uint8_t* ptr = &positions[i];
 			for(uint8_t j = 0; j < 4; j++){
-				*ptr = robotGoal.msg[i * 4 + 3 - j];
+				*ptr = robotGoal.msg[i * 4 + j];
 				ptr++;
 			}
 		}
