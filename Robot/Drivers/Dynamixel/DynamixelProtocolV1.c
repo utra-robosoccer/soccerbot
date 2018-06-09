@@ -870,6 +870,11 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 	if(numArgs <= 3){
 		/* Do assignments and computations. */
 		uint8_t ID = hdynamixel -> _ID;
+		if(ID == BROADCAST_ID){
+			ID = 0; // Since we use the ID as an index into arrTransmit, and since the
+			        // broadcast ID is so large in magnitude compared to the other IDs,
+					// we do this so that arrTransmit can be kept small.
+		}
 		arrTransmit[ID][3] = 2 + numArgs; // Length of message following length argument (arguments & checksum)
 
 		for(uint8_t i = 0; i < numArgs; i ++){
