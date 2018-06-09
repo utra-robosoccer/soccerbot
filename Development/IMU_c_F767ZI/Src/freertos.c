@@ -119,24 +119,16 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-	int8_t test=5;
-	uint8_t lpf=3;
+	uint8_t lpf=4;
     MPU6050_HandleTypeDef IMUdata;
-   // MPU6050_HandleTypeDef prevIMUdata;
     IMUdata._I2C_Handle = &hi2c2;
-    //prevIMUdata._I2C_Handle = &hi2c2;
     MPU6050_init(&IMUdata);
-    //MPU6050_init(&prevIMUdata);
-
     MPU6050_manually_set_offsets(&IMUdata);
-
     MPU6050_set_LPF(&IMUdata, lpf);
-    //MPU6050_10sec_calibration(&IMUdata);
+
 	for(;;)
   {
-
-		//prevIMUdata=IMUdata;
-		MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+		//MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
 		MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
 
 		//HAL_UART_Transmit(&huart3, IMUdata._Z_ACCEL, 2, 10);

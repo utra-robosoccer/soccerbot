@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 
+const float g = 9.81;
 
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
 	/* Reads data stored in sensor output registers and stores data into a buffer
@@ -30,6 +31,7 @@ uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
 
 
 void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
+	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_ACCEL_CONFIG, 0);
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_GYRO_CONFIG, 0);
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_PWR_MGMT_1, 0);
@@ -59,18 +61,21 @@ void MPU6050_RESET_SENSOR_REG(MPU6050_HandleTypeDef *sMPU6050){
 
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
 
-	sMPU6050 -> _X_ACCEL_OFFSET= -520/((float)IMU_ACC_CONVERSION);
-	sMPU6050 -> _Y_ACCEL_OFFSET=-830/((float)IMU_ACC_CONVERSION);
-	sMPU6050 -> _Z_ACCEL_OFFSET=16315/((float)IMU_ACC_CONVERSION) + 9.81;
+	//the extra - signs are because the sensor reads upright position as large positive Z accel
 
-	sMPU6050 -> _X_GYRO_OFFSET= 240/((float)IMU_GY_CONVERSION);
-	sMPU6050 -> _Y_GYRO_OFFSET= -760/((float)IMU_GY_CONVERSION);
-	sMPU6050 -> _Z_GYRO_OFFSET= -150/((float)IMU_GY_CONVERSION);
+
+	sMPU6050 -> _X_ACCEL_OFFSET= (-714.25 * g / ACC_RANGE);
+	sMPU6050 -> _Y_ACCEL_OFFSET= (-767.5 * g / ACC_RANGE);
+	sMPU6050 -> _Z_ACCEL_OFFSET= ((16324 * g / ACC_RANGE) - 9.81);
+
+	sMPU6050 -> _X_GYRO_OFFSET= (float)240/IMU_GY_RANGE;
+	sMPU6050 -> _Y_GYRO_OFFSET= (float)-760/IMU_GY_RANGE;
+	sMPU6050 -> _Z_GYRO_OFFSET= (float)-130/IMU_GY_RANGE;
 }
 
 void MPU6050_Clear_Int(MPU6050_HandleTypeDef *sMPU6050){
 	/* Disables all interrupts
-	   Register address： 38
+	   Register address 38
 	   Returns : None
 	 */
 	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 0);
@@ -93,9 +98,9 @@ void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
 	  Returns : None*/
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
-	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	uint16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	uint16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+	int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
 	sMPU6050 ->_X_GYRO = X;
 	sMPU6050 ->_Y_GYRO = Y;
 	sMPU6050 ->_Z_GYRO = Z;
@@ -105,34 +110,37 @@ void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	uint8_t output_buffer[6];
 	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
-	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	uint16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	uint16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	sMPU6050 ->_X_GYRO = X/IMU_GY_CONVERSION-(sMPU6050 ->_X_GYRO_OFFSET);
-	sMPU6050 ->_Y_GYRO = Y/IMU_GY_CONVERSION-(sMPU6050 ->_Y_GYRO_OFFSET);
-	sMPU6050 ->_Z_GYRO = Z/IMU_GY_CONVERSION-(sMPU6050 ->_Z_GYRO_OFFSET);
+	int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+
+
+	sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
+	sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
+	sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
 
 
 }
 
 void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 
-	//IMPORTANT: IN THE UPRIGHT POSITION, ALL 6 CALIBRATED POSITIONS SHOULD BE 0
-	// (because even though there is some acceleration from gravity, this is just the reference.)
-
-	//Also, this function updates the angles in the struct. It is also important that the offsets
-	// are calibrated before calling this since angle conversions use the peak value of the z
-	// acceleration, ie. _Z_GYRO_OFFSET
-
 	uint8_t output_buffer[6];
-	//Get the raw values
 	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-	uint16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-	uint16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-	uint16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-	sMPU6050 ->_X_ACCEL = X_A/IMU_ACC_CONVERSION-(sMPU6050 ->_X_ACCEL_OFFSET);
-	sMPU6050 ->_Y_ACCEL = Y_A/IMU_ACC_CONVERSION-(sMPU6050 ->_Y_ACCEL_OFFSET);
-	sMPU6050 ->_Z_ACCEL = Z_A/IMU_ACC_CONVERSION-(sMPU6050 ->_Z_ACCEL_OFFSET);
+	int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+	int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+	int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+//	///testing:
+//	float testx=X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET);
+//	float testy=Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET);
+//	float testz=Z_A * g / ACC_RANGE;//-(sMPU6050 ->_Z_ACCEL_OFFSET);
+//	float testz1 = Z_A / ACC_RANGE * g;
+//	//float testz=Z_A/(16384/9.81);
+//	////
+
+	sMPU6050 ->_X_ACCEL = -( X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET));
+	sMPU6050 ->_Y_ACCEL = -(Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET));
+	sMPU6050 ->_Z_ACCEL = -(Z_A * g / ACC_RANGE-(sMPU6050 ->_Z_ACCEL_OFFSET));
 
 	//Now find angles: consult pg 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
 	// for a sketch of what each angle means
