@@ -7,6 +7,15 @@
     </plugin>
   </gazebo>
 
+  <!-- Joint to keep the robot up in midair -->
+  <link name="world" />
+  <joint name="world_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin rpy="0  0 0" xyz="0 0 0"/>
+    <axis xyz="1  0  0"/>
+  </joint>
+
   <!-- Links -->
   <link name="base_link" />
   <link name="torso">
@@ -423,6 +432,7 @@
     <child link="camera"/>
     <origin rpy="2.35619 -1.57079  2.35619" xyz="0      0.0699  0.07"/>
     <axis xyz="0  0  0"/>
+    <dynamics damping="0.0" friction="2000.0" />
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
   <joint name="left_ankle_foot" type="revolute">
@@ -430,98 +440,112 @@
     <child link="left_foot"/>
     <origin rpy="0  0  0" xyz="0  0  0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="left_calve_ankle" type="revolute">
     <parent link="left_calve"/>
     <child link="left_ankle"/>
     <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="left_hip_front_thigh" type="revolute">
     <parent link="left_hip_front"/>
     <child link="left_thigh"/>
     <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
     <axis xyz="0  0  1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="left_hip_side_hip_front" type="revolute">
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
     <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
     <axis xyz="1  0  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="left_thigh_calve" type="revolute">
     <parent link="left_thigh"/>
     <child link="left_calve"/>
     <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
     <axis xyz="0  0  1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="neck_head" type="revolute">
     <parent link="neck"/>
     <child link="head"/>
     <origin rpy="1.00000000e-05   1.00000000e-05   0.00000000e+00" xyz="0     0.022  0"/>
     <axis xyz="1  0  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_ankle_foot" type="revolute">
     <parent link="right_ankle"/>
     <child link="right_foot"/>
     <origin rpy="0  0  0" xyz="0  0  0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_calve_ankle" type="revolute">
     <parent link="right_calve"/>
     <child link="right_ankle"/>
     <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_hip_front_thigh" type="revolute">
     <parent link="right_hip_front"/>
     <child link="right_thigh"/>
     <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
     <axis xyz="0  0  1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_hip_side_hip_front" type="revolute">
     <parent link="right_hip_side"/>
     <child link="right_hip_front"/>
     <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
     <axis xyz="1  0  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_thigh_calve" type="revolute">
     <parent link="right_thigh"/>
     <child link="right_calve"/>
     <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
     <axis xyz="0  0  1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_left_hip_side" type="revolute">
     <parent link="torso"/>
     <child link="left_hip_side"/>
     <origin rpy="1.5708  0      1.5708" xyz="0      -0.03149  0.197"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <axis xyz="0  1  0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_neck" type="revolute">
     <parent link="torso"/>
     <child link="neck"/>
     <origin rpy="1.57079  0       1.57079" xyz="0       0       0.37391"/>
     <axis xyz="0  1  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_right_hip_side" type="revolute">
     <parent link="torso"/>
     <child link="right_hip_side"/>
     <origin rpy="1.5708  0      1.5708" xyz="0       0.03149  0.197"/>
-    <axis xyz="1  0  0"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <axis xyz="0  1  0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="base_link_torso" type="fixed">
     <parent link="base_link"/>
@@ -534,28 +558,32 @@
     <child link="left_forearm"/>
     <origin rpy="0  0  0" xyz="0   -0.08  0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_bicep_forearm" type="revolute">
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
     <origin rpy="0  0  0" xyz="0   -0.08  0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_left_bicep" type="revolute">
     <parent link="torso"/>
     <child link="left_bicep"/>
     <origin rpy="1.5708  0      0" xyz="0      -0.076    0.34767"/>
     <axis xyz="0 0 1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_right_bicep" type="revolute">
     <parent link="torso"/>
     <child link="right_bicep"/>
     <origin rpy="1.5708  0      0" xyz="0       0.076    0.34767"/>
     <axis xyz="0  0  1"/>
-    <limit effort="30.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
+    <dynamics damping="0.0" friction="2000.0" />
+    <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
 
   <!-- Transmission -->
