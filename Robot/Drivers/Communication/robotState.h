@@ -11,10 +11,10 @@
 typedef struct robot_state {
 	uint32_t start_seq;
 	uint32_t id;
-	char msg[80 + 24];
+	char msg[80];
 	uint32_t end_seq;
 } RobotState;
 
-#define ROBOT_STATE_MPU_DATA_OFFSET 80
+#define ROBOT_STATE_MPU_DATA_OFFSET 48
 
 #endif /* ROBOTSTATE_H_ */

@@ -408,15 +408,18 @@ void StartDefaultTask(void const * argument)
 			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9 //||i == MOTOR10
 			   )
 			{
-				xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+				Motorcmd[i].type = cmdWRITE;
+				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+				Motorcmd[i].type = cmdREAD;
+				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 			}
         }
 
 		// Simulate acquiring position data from motors
 		robotState.id = robotGoal.id;
-		for (int i = 0; i < 80; ++i) {
-			robotState.msg[i] = robotGoal.msg[i];
-		}
+//		for (int i = 0; i < 80; ++i) {
+//			robotState.msg[i] = robotGoal.msg[i];
+//		}
 
 		// Notify TX task that there are angles it can transmit
 		xTaskNotify(txTaskHandle, NOTIFIED_FROM_TASK, eSetBits);
@@ -442,13 +445,18 @@ void UART1_Handler(void const * argument)
 	{
 	  while(xQueueReceive(UART1_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  // Simulate acquiring sensor data
+		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
 
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  // TODO: get reading to work
+//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+//
+//		  do{
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  dataToSend.pData = cmdMessage.motorHandle;
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
@@ -480,13 +488,18 @@ void UART2_Handler(void const * argument)
 	{
 	  while(xQueueReceive(UART2_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  // Simulate acquiring sensor data
+		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
 
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  // TODO: get reading to work
+//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+//
+//		  do{
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  dataToSend.pData = cmdMessage.motorHandle;
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
@@ -518,13 +531,18 @@ void UART3_Handler(void const * argument)
 	{
 	  while(xQueueReceive(UART3_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  // Simulate acquiring sensor data
+		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
 
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  // TODO: get reading to work
+//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+//
+//		  do{
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  dataToSend.pData = cmdMessage.motorHandle;
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
@@ -556,13 +574,18 @@ void UART4_Handler(void const * argument)
 	{
 	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  // Simulate acquiring sensor data
+		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
 
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  // TODO: get reading to work
+//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+//
+//		  do{
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  dataToSend.pData = cmdMessage.motorHandle;
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
@@ -594,13 +617,18 @@ void UART6_Handler(void const * argument)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  // Simulate acquiring sensor data
+		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
 
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  // TODO: get reading to work
+//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+//
+//		  do{
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  dataToSend.pData = cmdMessage.motorHandle;
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
@@ -629,14 +657,12 @@ void StartIMUTask(void const * argument)
   for(;;)
   {
       // Note that it takes <1 ms total for the sensor to read both accel and gyro
-	  // TODO: test the IT functionality for the IMU
-
 	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
 	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
-	  //dataToSend.pData = &IMUdata;
-	  //xQueueSend(UART_rxHandle, &dataToSend, 0);
-      osDelay(2); // 2 ms > 1ms
+	  dataToSend.pData = &IMUdata;
+	  xQueueSend(UART_rxHandle, &dataToSend, 0);
+      osDelay(pdMS_TO_TICKS(1));
   }
   /* USER CODE END StartIMUTask */
 }
@@ -740,45 +766,57 @@ void StartTxTask(void const * argument)
   TXData_t receivedData;
   Dynamixel_HandleTypeDef* motorPtr = NULL;
   MPU6050_HandleTypeDef* imuPtr = NULL;
+  char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
 
   HAL_StatusTypeDef status;
   uint32_t notification;
+  uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
+
+  // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
+  // be ready for this once all 18 motors can be ready from.
+  uint32_t NOTIFICATION_MASK = 0x80000000;
+  for(uint8_t i = 1; i <= 12; i++){
+	  NOTIFICATION_MASK |= (1 << i);
+  }
 
   /* Infinite loop */
   for(;;)
   {
-	  do{
-		  xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+	  // TODO: Test this
+	  while(dataReadyFlags != NOTIFICATION_MASK){
+		  while(xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY) != pdTRUE);
 
-	  // TODO: Implement actual TX task queue receive
-//#define  newuartstuffready 0 // Uncomment this when new stuff is done
-#ifdef newuartstuffready
-	  xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY);
+		  switch(receivedData.eDataType){
+			  case eMotorData:
+				  motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
 
-	  switch(receivedData.eTXData_t){
-		  case eMotorData:
-			  motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
+				  if(motorPtr == NULL){ break; }
 
-			  if(motorPtr == NULL){ break; }
+				  // Validate data and store it in robotState
+				  if(motorPtr->_ID <= NUM_MOTORS){
+					  // Copy sensor data for this motor into its section of robotState.msg
+					  memcpy(&robotState.msg[4 * motorPtr->_ID], &(motorPtr->_lastPosition), sizeof(float));
 
-			  // Validate data and store it in robotState
-			  if(motorPtr->_id <= NUM_MOTORS){
-				  memcpy(&robotState.msg[4 * motorPtr->_id], &(motorPtr->_lastPosition, sizeof(float));
-			  }
-			  break;
-		  case eIMUData:
-			  imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
+					  // Set flag indicating the motor with this id has reported in with position data
+					  dataReadyFlags |= (1 << motorPtr->_ID);
+				  }
+				  break;
+			  case eIMUData:
+				  imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
 
-			  if(imuPtr == NULL){ break; }
+				  if(imuPtr == NULL){ break; }
 
-			  // TODO: copy data into robotState.msg
+				  // Copy sensor data into the IMU data section of robotState.msg
+				  memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
 
-			  break;
-		  default:
-			  break;
+				  // Set flag indicating IMU data has reported in
+				  dataReadyFlags |= 0x80000000;
+				  break;
+			  default:
+				  break;
+		  }
 	  }
-#endif
+	  dataReadyFlags = 0; // Clear all flags
 
 	  do{
 	      // This do-while loop with the mutex inside of it makes calls to the UART module
