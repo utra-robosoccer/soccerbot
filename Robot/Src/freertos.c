@@ -637,6 +637,9 @@ void StartIMUTask(void const * argument)
 //      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
 //	  dataToSend.pData = &IMUdata;
 //    xQueueSend(UART_rxHandle, &dataToSend, 0);
+
+	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
+
       osDelay(2); // 2 ms > 1ms
   }
   /* USER CODE END StartIMUTask */
@@ -782,6 +785,16 @@ void StartTxTask(void const * argument)
 }
 
 /* USER CODE BEGIN Application */
+
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	// This callback runs after the interrupt data transfer from the sensor to the mcu is finished
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xTaskNotifyFromISR(IMUTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;

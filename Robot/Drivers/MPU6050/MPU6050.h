@@ -52,6 +52,7 @@ typedef struct{
 }MPU6050_HandleTypeDef;
 /****************Function Definition********************************/
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
+void MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
 void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf);
 uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
@@ -67,7 +68,7 @@ void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75

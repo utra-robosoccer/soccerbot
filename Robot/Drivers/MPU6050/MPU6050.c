@@ -15,6 +15,17 @@ void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_
 	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
 }
 
+void MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
+	/* Reads data stored in sensor output registers and stores data into a buffer using IT
+
+	   Parameters: Reg_addr: address of register required to be read from
+	   	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
+		 		      	  	  the user.
+	*/
+
+	while(HAL_I2C_Mem_Read_IT(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6) != HAL_OK);
+}
+
 
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
 	/* Write one-byte to sensor register
@@ -118,8 +129,19 @@ void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
 	sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
 	sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
+}
+
+void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
+	uint8_t output_buffer[6];
+	MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
+	int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+	int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+	int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
 
 
+	sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
+	sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
+	sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
 }
 
 void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
@@ -130,13 +152,32 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 	int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
 	int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-//	///testing:
-//	float testx=X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET);
-//	float testy=Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET);
-//	float testz=Z_A * g / ACC_RANGE;//-(sMPU6050 ->_Z_ACCEL_OFFSET);
-//	float testz1 = Z_A / ACC_RANGE * g;
-//	//float testz=Z_A/(16384/9.81);
-//	////
+	sMPU6050 ->_X_ACCEL = -( X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET));
+	sMPU6050 ->_Y_ACCEL = -(Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET));
+	sMPU6050 ->_Z_ACCEL = -(Z_A * g / ACC_RANGE-(sMPU6050 ->_Z_ACCEL_OFFSET));
+
+	//Now find angles: consult pg 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
+	// for a sketch of what each angle means
+	float X=sMPU6050 -> _X_ACCEL;
+	float Y=sMPU6050 -> _Y_ACCEL;
+	float Z=sMPU6050 -> _Z_ACCEL;
+	float pitch, roll;
+	pitch = atan2(Y, Z) * 180/M_PI;
+	roll = atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
+	sMPU6050 ->_ROLL = pitch;
+	sMPU6050 ->_PITCH= roll;
+}
+
+void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
+
+	uint8_t output_buffer[6];
+	MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+	do{
+		xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+	int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+	int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+	int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
 	sMPU6050 ->_X_ACCEL = -( X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET));
 	sMPU6050 ->_Y_ACCEL = -(Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET));
