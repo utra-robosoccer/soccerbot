@@ -151,6 +151,11 @@ int main(void)
 //  //Dynamixel_SetID(&Motor, 10);
 //  flinch(&Motor);
 
+  Dynamixel_HandleTypeDef Motor;
+  Dynamixel_Init(&Motor, BROADCAST_ID, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+  flinch(&Motor);
+  while(1);
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

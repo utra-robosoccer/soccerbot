@@ -14,22 +14,32 @@
 
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
-#define cmdREAD			0
-#define cmdWRITE		1
+//#define cmdREAD			0
+//#define cmdWRITE		1
+
+typedef enum{
+	cmdREAD,
+	cmdWRITE
+}eUARTcmd_t;
 
 typedef struct {
-	uint8_t 					type;
+	eUARTcmd_t 					type;
 	Dynamixel_HandleTypeDef*	motorHandle;
 	float 						position;
 	float 						velocity;
 	QueueHandle_t				qHandle;
 }UARTcmd;
 
+typedef enum{
+	eMotorPosition,
+	eIMUAccel,
+	eIMUGyro
+}eTXData_t;
+
 typedef struct {
-	Dynamixel_HandleTypeDef*	motorHandle;
-	float 						position;
-	float 						velocity;
-}UARTrx;
+	eTXData_t eDataType; // Tells the receiving task what the data is
+	void* pData; // Points to the container for the data
+}xTXData_t;
 
 void _Error_Handler(char *, int);
 
