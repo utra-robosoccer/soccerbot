@@ -111,21 +111,8 @@ osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId UART_rxHandle;
 uint8_t UART_rxBuffer[ 20 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART_rxControlBlock;
-osMessageQId IMUQueueHandle;
-uint8_t IMUQueueBuffer[ 20 * sizeof( uint32_t ) ];
-osStaticMessageQDef_t IMUQueueControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
-osSemaphoreId semUART1TxHandle;
-osStaticSemaphoreDef_t semUART1TxControlBlock;
-osSemaphoreId semUART2TxHandle;
-osStaticSemaphoreDef_t semUART2TxControlBlock;
-osSemaphoreId semUART3TxHandle;
-osStaticSemaphoreDef_t semUART3TxControlBlock;
-osSemaphoreId semUART4TxHandle;
-osStaticSemaphoreDef_t semUART4TxControlBlock;
-osSemaphoreId semUART6TxHandle;
-osStaticSemaphoreDef_t semUART6TxControlBlock;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -239,27 +226,6 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
-  /* Create the semaphores(s) */
-  /* definition and creation of semUART1Tx */
-  osSemaphoreStaticDef(semUART1Tx, &semUART1TxControlBlock);
-  semUART1TxHandle = osSemaphoreCreate(osSemaphore(semUART1Tx), 1);
-
-  /* definition and creation of semUART2Tx */
-  osSemaphoreStaticDef(semUART2Tx, &semUART2TxControlBlock);
-  semUART2TxHandle = osSemaphoreCreate(osSemaphore(semUART2Tx), 1);
-
-  /* definition and creation of semUART3Tx */
-  osSemaphoreStaticDef(semUART3Tx, &semUART3TxControlBlock);
-  semUART3TxHandle = osSemaphoreCreate(osSemaphore(semUART3Tx), 1);
-
-  /* definition and creation of semUART4Tx */
-  osSemaphoreStaticDef(semUART4Tx, &semUART4TxControlBlock);
-  semUART4TxHandle = osSemaphoreCreate(osSemaphore(semUART4Tx), 1);
-
-  /* definition and creation of semUART6Tx */
-  osSemaphoreStaticDef(semUART6Tx, &semUART6TxControlBlock);
-  semUART6TxHandle = osSemaphoreCreate(osSemaphore(semUART6Tx), 1);
-
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -334,10 +300,6 @@ void MX_FREERTOS_Init(void) {
   osMessageQStaticDef(UART_rx, 20, UARTcmd, UART_rxBuffer, &UART_rxControlBlock);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
-  /* definition and creation of IMUQueue */
-  osMessageQStaticDef(IMUQueue, 20, uint32_t, IMUQueueBuffer, &IMUQueueControlBlock);
-  IMUQueueHandle = osMessageCreate(osMessageQ(IMUQueue), NULL);
-
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -354,7 +316,8 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+//	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
 	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
@@ -373,7 +336,7 @@ void StartDefaultTask(void const * argument)
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
 	UARTcmd Motorcmd[18];
-	for(int i = MOTOR1; i < MOTOR18; i++) {
+	for(uint8_t i = MOTOR1; i < MOTOR18; i++) {
         // Configure motor to return status packets only for read commands
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
         osDelay(10);
@@ -488,7 +451,7 @@ void StartDefaultTask(void const * argument)
 			switch(i){
 			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
 			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3 + 55;
 			  				 break;
 			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
 			  				 break;
@@ -511,7 +474,9 @@ void StartDefaultTask(void const * argument)
 			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 							 break;
             }
-//		    xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+			if(i == MOTOR1 || i == MOTOR4 || i == MOTOR7 ){
+				xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
+			}
         }
 
 		// Simulate acquiring position data
@@ -534,17 +499,23 @@ void UART1_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  uint32_t notification;
+
   for(;;)
 	{
 	  while(xQueueReceive(UART1_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART1TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART1_Handler */
@@ -560,17 +531,23 @@ void UART2_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  uint32_t notification;
+
   for(;;)
 	{
 	  while(xQueueReceive(UART2_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART2TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART2_Handler */
@@ -586,17 +563,23 @@ void UART3_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  uint32_t notification;
+
   for(;;)
 	{
 	  while(xQueueReceive(UART3_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART3TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART3_Handler */
@@ -612,17 +595,23 @@ void UART4_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  uint32_t notification;
+
   for(;;)
 	{
 	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART4TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART4_Handler */
@@ -638,17 +627,24 @@ void UART6_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  uint32_t notification;
+
   for(;;)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-		  xSemaphoreTake(semUART6TxHandle, pdMS_TO_TICKS(CONTROL_CYCLE_TIME / 2));
+		  do{
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART6_Handler */
@@ -666,10 +662,11 @@ void StartIMUTask(void const * argument)
 //  float dataToSend[6] = {0}; // Populate this with IMU data to send in the queue by copy
   for(;;)
   {
-      //note that it takes <1 ms total for the sensor to read both accel and gyro
-      MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
-      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
-//    xQueueSend(&IMUQueueHandle, (uint32_t*)dataToSend, 0);
+      // Note that it takes <1 ms total for the sensor to read both accel and gyro
+	  // TODO: make the data acquisition functions for the IMU nonblocking
+//      MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
+//      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
+//    xQueueSend(UART_rxHandle, (uint32_t*)dataToSend, 0);
       osDelay(2); // 2 ms > 1ms
   }
   /* USER CODE END StartIMUTask */
@@ -816,37 +813,48 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		if(huart == &huart5){
-			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_ISR, eSetBits,
-							&xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
-			xSemaphoreGiveFromISR(semUART1TxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart2){
-			xSemaphoreGiveFromISR(semUART2TxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart3){
-			xSemaphoreGiveFromISR(semUART3TxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart4){
-			xSemaphoreGiveFromISR(semUART4TxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart6){
-			xSemaphoreGiveFromISR(semUART6TxHandle, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
-
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (huart == &huart5) {
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_ISR, eSetBits,
-				&xHigherPriorityTaskWoken);
-
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
+	if(huart == &huart1){
+		xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart2){
+		xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart3){
+		xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart4){
+		xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	else if(huart == &huart6){
+		xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
