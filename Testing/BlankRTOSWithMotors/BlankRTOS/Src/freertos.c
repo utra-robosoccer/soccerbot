@@ -186,27 +186,24 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-//	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-//	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-//	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-	Dynamixel_Init(&Motor9, 14, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-//	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
-	/*
+	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
 	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
 	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
-
 	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	*/
 
 
 	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
@@ -255,7 +252,7 @@ void StartDefaultTask(void const * argument)
 //	(Motorcmd[16]).qHandle = UART3_reqHandle;
 //	(Motorcmd[17]).qHandle = UART3_reqHandle;
 
-  uint32_t notification;
+  uint32_t notification = 0;
   /* Infinite loop */
   float positions[12];
   for(;;)
@@ -302,12 +299,17 @@ void StartDefaultTask(void const * argument)
 							 break;
             }
         }
-		Dynamixel_SetGoalPosition(&Motor9, Motorcmd[MOTOR9].position);
 		Dynamixel_GetPosition(&Motor9);
-
 		for(uint8_t i = MOTOR1; i < MOTOR12; i++){
 			strcpy(&robotState.msg[i * 4], &(arrDynamixel[i]->_lastPosition));
 		}
+		Dynamixel_SetGoalPosition(&Motor9, Motorcmd[MOTOR9].position);
+		do{
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
+
+	    memcpy(robotState.msg, robotGoal.msg, sizeof(robotGoal.msg));
+
 	  // This simulates telling the TX task there is data to send
 	  xTaskNotify(txHandle, 0x40, eSetBits);
   }
@@ -385,18 +387,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (huart == &huart5) {
 		xTaskNotifyFromISR(rxHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
-
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (huart == &huart5) {
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		xTaskNotifyFromISR(txHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
-
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
+	if(huart == &huart4){
+//		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+	}
+//	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /* USER CODE END Application */
 
