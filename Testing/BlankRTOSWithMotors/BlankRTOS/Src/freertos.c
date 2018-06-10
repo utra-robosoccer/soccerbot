@@ -279,15 +279,15 @@ void StartDefaultTask(void const * argument)
 		(Motorcmd[i]).velocity = 10;
 	}
 
-//	(Motorcmd[0]).qHandle = UART6_reqHandle;
-//	(Motorcmd[1]).qHandle = UART6_reqHandle;
-//	(Motorcmd[2]).qHandle = UART6_reqHandle;
+	(Motorcmd[0]).qHandle = UART6_reqHandle;
+	(Motorcmd[1]).qHandle = UART6_reqHandle;
+	(Motorcmd[2]).qHandle = UART6_reqHandle;
 	(Motorcmd[3]).qHandle = UART1_reqHandle;
 	(Motorcmd[4]).qHandle = UART1_reqHandle;
 	(Motorcmd[5]).qHandle = UART1_reqHandle;
-//	(Motorcmd[6]).qHandle = UART4_reqHandle;
-//	(Motorcmd[7]).qHandle = UART4_reqHandle;
-//	(Motorcmd[8]).qHandle = UART4_reqHandle;
+	(Motorcmd[6]).qHandle = UART4_reqHandle;
+	(Motorcmd[7]).qHandle = UART4_reqHandle;
+	(Motorcmd[8]).qHandle = UART4_reqHandle;
 //	(Motorcmd[9]).qHandle = UART2_reqHandle;
 //	(Motorcmd[10]).qHandle = UART2_reqHandle;
 //	(Motorcmd[11]).qHandle = UART2_reqHandle;
@@ -344,7 +344,7 @@ void StartDefaultTask(void const * argument)
 			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 							 break;
             }
-			if(i == MOTOR4){
+			if(i == MOTOR1 || i == MOTOR4 || i == MOTOR7){
 				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 			}
         }
@@ -352,38 +352,6 @@ void StartDefaultTask(void const * argument)
 //		for(uint8_t i = MOTOR1; i < MOTOR12; i++){
 //			strcpy(&robotState.msg[i * 4], &(arrDynamixel[i]->_lastPosition));
 //		}
-
-////#define NONBLOCKING 0 // uncomment this to compile the code for synchronization with interrupts
-//#define NONBLOCKING_PAR 0 // uncomment this to compile code for concurrent writing + synchronization with interrupts
-//
-//		//SEQUENTIAL WRITING -- write to the 3 motors, 1 after another
-//		Dynamixel_SetGoalPosition(&Motor1, Motorcmd[MOTOR1].position);
-//#ifdef NONBLOCKING
-//		do{
-//			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-//		}while((notification & 0x80) != 0x80);
-//#endif
-//		Dynamixel_SetGoalPosition(&Motor7, Motorcmd[MOTOR2].position);
-//#ifdef NONBLOCKING
-//		do{
-//			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
-//		}while((notification & 0x80) != 0x80);
-//#endif
-//
-//		// PARALLEL WRITING -- write to the 3 motors in parallel.
-//#ifdef NONBLOCKING_PAR
-//		uint8_t ready = 0;
-//		do{
-//			xTaskNotifyWait(0, 0, &notification, portMAX_DELAY);
-//			if((notification & 0x81) == 0x81){
-//				ready++;
-//			}
-//			if((notification & 0x82) == 0x82){
-//				ready++;
-//			}
-//			xTaskNotifyStateClear(defaultTaskHandle);
-//		}while(ready < 2);
-//#endif
 
 		// This simulates getting positions
 	    memcpy(robotState.msg, robotGoal.msg, sizeof(robotGoal.msg));
@@ -485,10 +453,19 @@ void StartUART1(void const * argument)
 void StartUART6(void const * argument)
 {
   /* USER CODE BEGIN StartUART6 */
+  UARTcmd cmdMessage;
+  uint32_t notification;
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  if(cmdMessage.type == cmdWRITE){
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  do{
+			  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		  }while((notification & 0x80) != 0x80);
+	  }
   }
   /* USER CODE END StartUART6 */
 }
@@ -497,10 +474,19 @@ void StartUART6(void const * argument)
 void StartUART4(void const * argument)
 {
   /* USER CODE BEGIN StartUART4 */
+  UARTcmd cmdMessage;
+  uint32_t notification;
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  if(cmdMessage.type == cmdWRITE){
+		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+		  do{
+			  xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		  }while((notification & 0x80) != 0x80);
+	  }
   }
   /* USER CODE END StartUART4 */
 }
@@ -526,13 +512,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
 		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	if(huart == &huart4){
-		xTaskNotifyFromISR(defaultTaskHandle, 0x81, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART4_Handle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	if (huart == &huart5) {
 		xTaskNotifyFromISR(txHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	if(huart == &huart6){
-		xTaskNotifyFromISR(defaultTaskHandle, 0x82, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART6_Handle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
