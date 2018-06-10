@@ -436,6 +436,8 @@ void UART1_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
   uint32_t notification;
 
   for(;;)
@@ -443,13 +445,17 @@ void UART1_Handler(void const * argument)
 	  while(xQueueReceive(UART1_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+
+		  dataToSend.pData = cmdMessage.motorHandle;
+		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
@@ -468,6 +474,8 @@ void UART2_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
   uint32_t notification;
 
   for(;;)
@@ -475,13 +483,17 @@ void UART2_Handler(void const * argument)
 	  while(xQueueReceive(UART2_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+
+		  dataToSend.pData = cmdMessage.motorHandle;
+		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
@@ -500,6 +512,8 @@ void UART3_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
   uint32_t notification;
 
   for(;;)
@@ -507,13 +521,17 @@ void UART3_Handler(void const * argument)
 	  while(xQueueReceive(UART3_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+
+		  dataToSend.pData = cmdMessage.motorHandle;
+		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
@@ -532,6 +550,8 @@ void UART4_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
   uint32_t notification;
 
   for(;;)
@@ -539,13 +559,17 @@ void UART4_Handler(void const * argument)
 	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+
+		  dataToSend.pData = cmdMessage.motorHandle;
+		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
@@ -564,21 +588,26 @@ void UART6_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
   uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
-		  //SEND READ COMMAND TO MOTOR
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-		  xQueueSend(UART_rxHandle, &(cmdMessage.motorHandle), 0);
+
+		  dataToSend.pData = cmdMessage.motorHandle;
+		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
+
 		  do{
 			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
@@ -596,14 +625,18 @@ void StartIMUTask(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-//  float dataToSend[6] = {0}; // Populate this with IMU data to send in the queue by copy
+  TXData_t dataToSend;
+  dataToSend.eDataType = eIMUData;
+  uint32_t notification;
+
   for(;;)
   {
       // Note that it takes <1 ms total for the sensor to read both accel and gyro
 	  // TODO: make the data acquisition functions for the IMU nonblocking
 //      MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
 //      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
-//    xQueueSend(UART_rxHandle, (uint32_t*)dataToSend, 0);
+//	  dataToSend.pData = &IMUdata;
+//    xQueueSend(UART_rxHandle, &dataToSend, 0);
       osDelay(2); // 2 ms > 1ms
   }
   /* USER CODE END StartIMUTask */
@@ -706,7 +739,7 @@ void StartTxTask(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   HAL_StatusTypeDef status;
-
+  TXData_t receivedData;
   uint32_t notification;
 
   /* Infinite loop */
@@ -716,13 +749,16 @@ void StartTxTask(void const * argument)
 		  xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
 	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
 
-	  // TODO: Implement actual TX task, and use DMA/IT I/O
-	  // Queue sets would be useful here for synchronizing positions
-	  // being read from multiple threads. It seems this can't be done
-	  // from Cube, but if you go into FreeRTOS.h and set the configUSE for
-	  // queue sets to 1, the APIs become available. You just need to make sure
-	  // you do this every time you regenerate code from Cube. Can also use a
-	  // similar structure with task notifications as the implementation.
+	  // TODO: Implement actual TX task queue receive
+//#define  newuartstuffready 0 // Uncomment this when new stuff is done
+#ifdef newuartstuffready
+	  xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY);
+
+	  switch(receivedData.eTXData_t){
+
+	  }
+#endif
+
 	  do{
 	      // This do-while loop with the mutex inside of it makes calls to the UART module
 	      // responsible for PC communication atomic. This attempts to solve the following

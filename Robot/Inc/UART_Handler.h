@@ -31,15 +31,14 @@ typedef struct {
 }UARTcmd;
 
 typedef enum{
-	eMotorPosition,
-	eIMUAccel,
-	eIMUGyro
+	eMotorData,
+	eIMUData
 }eTXData_t;
 
 typedef struct {
 	eTXData_t eDataType; // Tells the receiving task what the data is
 	void* pData; // Points to the container for the data
-}xTXData_t;
+}TXData_t;
 
 void _Error_Handler(char *, int);
 
