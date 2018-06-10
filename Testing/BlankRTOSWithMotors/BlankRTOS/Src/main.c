@@ -111,7 +111,45 @@ int main(void)
   MX_UART5_Init();
   MX_USART2_UART_Init();
   MX_UART4_Init();
+  MX_USART1_UART_Init();
+  MX_USART3_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
+
+/* ASCII CIRCUIT     _
+ *  o   ------     3|_|D     LU
+ *           ___             LD
+ *   ||     |mcu|   o  ||    HH
+ * ____     |___|      ||    RU
+ *   o  ===   ===   ===      RD
+ */
+//  Dynamixel_HandleTypeDef Motor;
+//
+//  // LU - UART1
+//  Dynamixel_Init(&Motor, BROADCAST_ID, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+//  //Dynamixel_SetID(&Motor, 4);
+//  flinch(&Motor);
+//
+//  // LD - UART6
+//  Dynamixel_Init(&Motor, BROADCAST_ID, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+//  //Dynamixel_SetID(&Motor, 1);
+//  flinch(&Motor);
+//
+//  // HH - USART3
+//  Dynamixel_Init(&Motor, BROADCAST_ID, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//  //Dynamixel_SetID(&Motor, 18);
+//  flinch(&Motor);
+//
+//  // RU - UART4
+//  Dynamixel_Init(&Motor, BROADCAST_ID, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+//  //Dynamixel_SetID(&Motor, 7);
+//  Dynamixel_TorqueEnable(&Motor, 1);
+//  flinch(&Motor);
+//
+//  // RD - UART2
+//  Dynamixel_Init(&Motor, BROADCAST_ID, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+//  //Dynamixel_SetID(&Motor, 10);
+//  flinch(&Motor);
 
   /* USER CODE END 2 */
 
@@ -190,7 +228,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void flinch(Dynamixel_HandleTypeDef* Motor){
+	  HAL_Delay(100);
+	  Dynamixel_SetGoalPosition(Motor, 140.0);
+	  HAL_Delay(500);
+	  Dynamixel_SetGoalPosition(Motor, 150.0);
+	  HAL_Delay(1000);
+}
 /* USER CODE END 4 */
 
 /**
