@@ -121,7 +121,11 @@ enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR16, MOTOR17, MOTOR18
 };
 
-Dynamixel_HandleTypeDef Motor1,Motor2,Motor3,Motor4,Motor5,Motor6,Motor7,Motor8,Motor9,Motor10,Motor11,Motor12,Motor13,Motor14,Motor15,Motor16,Motor17,Motor18;
+Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
+						Motor6, Motor7, Motor8, Motor9, Motor10,
+						Motor11, Motor12, Motor13, Motor14, Motor15,
+						Motor16, Motor17, Motor18;
+
 MPU6050_HandleTypeDef IMUdata;
 
 const double PI = 3.141592654;
@@ -478,10 +482,12 @@ void StartDefaultTask(void const * argument)
 			  				 break;
 			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 							 break;
+			    default:
+			    	break;
             }
 			if(i == MOTOR1 || i == MOTOR2 || i == MOTOR3 ||
 			   i == MOTOR4 || i == MOTOR5 || i == MOTOR6 ||
-			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9
+			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9 //||i == MOTOR10
 			   )
 			{
 				xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
