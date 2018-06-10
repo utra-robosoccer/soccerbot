@@ -629,14 +629,13 @@ void StartIMUTask(void const * argument)
   for(;;)
   {
       // Note that it takes <1 ms total for the sensor to read both accel and gyro
-	  // TODO: make the data acquisition functions for the IMU nonblocking
-//      MPU6050_Read_Accelerometer_Withoffset(&IMUdata); //also updates angles
-//      MPU6050_Read_Gyroscope_Withoffset(&IMUdata);
-//	  dataToSend.pData = &IMUdata;
-//    xQueueSend(UART_rxHandle, &dataToSend, 0);
+	  // TODO: test the IT functionality for the IMU
 
 	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
+	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
+	  //dataToSend.pData = &IMUdata;
+	  //xQueueSend(UART_rxHandle, &dataToSend, 0);
       osDelay(2); // 2 ms > 1ms
   }
   /* USER CODE END StartIMUTask */
