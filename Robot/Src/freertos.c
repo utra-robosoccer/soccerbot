@@ -676,8 +676,9 @@ void StartIMUTask(void const * argument)
 }
 
 /* StartRxTask function */
-void StartRxTask(void const * argument) {
-	/* USER CODE BEGIN StartRxTask */
+void StartRxTask(void const * argument)
+{
+  /* USER CODE BEGIN StartRxTask */
 	uint8_t robotGoalData[sizeof(RobotGoal)];
 	uint8_t *robotGoalDataPtr;
 	uint8_t buffRx[92];
@@ -761,7 +762,7 @@ void StartRxTask(void const * argument) {
 			}
 		}
 	}
-	/* USER CODE END StartRxTask */
+  /* USER CODE END StartRxTask */
 }
 
 /* StartTxTask function */

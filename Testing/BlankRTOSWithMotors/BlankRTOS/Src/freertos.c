@@ -71,6 +71,24 @@ osStaticThreadDef_t rxControlBlock;
 osThreadId txHandle;
 uint32_t txBuffer[ 128 ];
 osStaticThreadDef_t txControlBlock;
+osThreadId UART1_Handle;
+uint32_t UART1_Buffer[ 128 ];
+osStaticThreadDef_t UART1_ControlBlock;
+osThreadId UART6_Handle;
+uint32_t UART6_Buffer[ 128 ];
+osStaticThreadDef_t UART6_ControlBlock;
+osThreadId UART4_Handle;
+uint32_t UART4_Buffer[ 128 ];
+osStaticThreadDef_t UART4_ControlBlock;
+osMessageQId UART1_reqHandle;
+uint8_t UART1_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+osStaticMessageQDef_t UART1_reqControlBlock;
+osMessageQId UART4_reqHandle;
+uint8_t UART4_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+osStaticMessageQDef_t UART4_reqControlBlock;
+osMessageQId UART6_reqHandle;
+uint8_t UART6_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+osStaticMessageQDef_t UART6_reqControlBlock;
 
 /* USER CODE BEGIN Variables */
 volatile RobotGoal robotGoal, *robotGoalPtr;
@@ -102,6 +120,9 @@ volatile UARTcmd Motorcmd[18];
 void StartDefaultTask(void const * argument);
 void StartRx(void const * argument);
 void StartTx(void const * argument);
+void StartUART1(void const * argument);
+void StartUART6(void const * argument);
+void StartUART4(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -161,7 +182,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of rx */
@@ -172,9 +193,34 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(tx, StartTx, osPriorityHigh, 0, 128, txBuffer, &txControlBlock);
   txHandle = osThreadCreate(osThread(tx), NULL);
 
+  /* definition and creation of UART1_ */
+  osThreadStaticDef(UART1_, StartUART1, osPriorityNormal, 0, 128, UART1_Buffer, &UART1_ControlBlock);
+  UART1_Handle = osThreadCreate(osThread(UART1_), NULL);
+
+  /* definition and creation of UART6_ */
+  osThreadStaticDef(UART6_, StartUART6, osPriorityNormal, 0, 128, UART6_Buffer, &UART6_ControlBlock);
+  UART6_Handle = osThreadCreate(osThread(UART6_), NULL);
+
+  /* definition and creation of UART4_ */
+  osThreadStaticDef(UART4_, StartUART4, osPriorityNormal, 0, 128, UART4_Buffer, &UART4_ControlBlock);
+  UART4_Handle = osThreadCreate(osThread(UART4_), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
+
+  /* Create the queue(s) */
+  /* definition and creation of UART1_req */
+  osMessageQStaticDef(UART1_req, 20, UARTcmd, UART1_reqBuffer, &UART1_reqControlBlock);
+  UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
+
+  /* definition and creation of UART4_req */
+  osMessageQStaticDef(UART4_req, 20, UARTcmd, UART4_reqBuffer, &UART4_reqControlBlock);
+  UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
+
+  /* definition and creation of UART6_req */
+  osMessageQStaticDef(UART6_req, 20, UARTcmd, UART6_reqBuffer, &UART6_reqControlBlock);
+  UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -192,7 +238,7 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
+	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
 	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
@@ -275,7 +321,7 @@ void StartDefaultTask(void const * argument)
 			switch(i){
 			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
 			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3 + 55;
 			  				 break;
 			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
 			  				 break;
@@ -299,15 +345,53 @@ void StartDefaultTask(void const * argument)
 							 break;
             }
         }
-		Dynamixel_GetPosition(&Motor9);
-		for(uint8_t i = MOTOR1; i < MOTOR12; i++){
-			strcpy(&robotState.msg[i * 4], &(arrDynamixel[i]->_lastPosition));
-		}
-		Dynamixel_SetGoalPosition(&Motor9, Motorcmd[MOTOR9].position);
+//		Dynamixel_GetPosition(&Motor9);
+//		for(uint8_t i = MOTOR1; i < MOTOR12; i++){
+//			strcpy(&robotState.msg[i * 4], &(arrDynamixel[i]->_lastPosition));
+//		}
+
+//#define NONBLOCKING 0 // uncomment this to compile the code for synchronization with interrupts
+#define NONBLOCKING_PAR 0 // uncomment this to compile code for concurrent writing + synchronization with interrupts
+
+		//SEQUENTIAL WRITING -- write to the 3 motors, 1 after another
+		Dynamixel_SetGoalPosition(&Motor1, Motorcmd[MOTOR1].position);
+#ifdef NONBLOCKING
 		do{
 			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
 		}while((notification & 0x80) != 0x80);
+#endif
+		Dynamixel_SetGoalPosition(&Motor7, Motorcmd[MOTOR2].position);
+#ifdef NONBLOCKING
+		do{
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
+#endif
+		Dynamixel_SetGoalPosition(&Motor4, Motorcmd[MOTOR3].position);
+#ifdef NONBLOCKING
+		do{
+			xTaskNotifyWait(0, 0x80, &notification, portMAX_DELAY);
+		}while((notification & 0x80) != 0x80);
+#endif
 
+		// PARALLEL WRITING -- write to the 3 motors in parallel.
+#ifdef NONBLOCKING_PAR
+		uint8_t ready = 0;
+		do{
+			xTaskNotifyWait(0, 0, &notification, portMAX_DELAY);
+			if((notification & 0x80) == 0x80){
+				ready++;
+			}
+			if((notification & 0x81) == 0x81){
+				ready++;
+			}
+			if((notification & 0x82) == 0x82){
+				ready++;
+			}
+			xTaskNotifyStateClear(defaultTaskHandle);
+		}while(ready < 3);
+#endif
+
+		// This simulates getting positions
 	    memcpy(robotState.msg, robotGoal.msg, sizeof(robotGoal.msg));
 
 	  // This simulates telling the TX task there is data to send
@@ -382,6 +466,42 @@ void StartTx(void const * argument)
   /* USER CODE END StartTx */
 }
 
+/* StartUART1 function */
+void StartUART1(void const * argument)
+{
+  /* USER CODE BEGIN StartUART1 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartUART1 */
+}
+
+/* StartUART6 function */
+void StartUART6(void const * argument)
+{
+  /* USER CODE BEGIN StartUART6 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartUART6 */
+}
+
+/* StartUART4 function */
+void StartUART4(void const * argument)
+{
+  /* USER CODE BEGIN StartUART4 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartUART4 */
+}
+
 /* USER CODE BEGIN Application */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -393,13 +513,25 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart){
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	if(huart == &huart1){
+		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	if(huart == &huart2){
+		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	if(huart == &huart3){
+		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+	}
+	if(huart == &huart4){
+		xTaskNotifyFromISR(defaultTaskHandle, 0x81, eSetBits, &xHigherPriorityTaskWoken);
+	}
 	if (huart == &huart5) {
 		xTaskNotifyFromISR(txHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
 	}
-	if(huart == &huart4){
-//		xTaskNotifyFromISR(defaultTaskHandle, 0x80, eSetBits, &xHigherPriorityTaskWoken);
+	if(huart == &huart6){
+		xTaskNotifyFromISR(defaultTaskHandle, 0x82, eSetBits, &xHigherPriorityTaskWoken);
 	}
-//	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /* USER CODE END Application */
 
