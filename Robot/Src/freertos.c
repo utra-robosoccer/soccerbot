@@ -358,24 +358,24 @@ void StartDefaultTask(void const * argument)
 		(Motorcmd[i]).velocity = 10;
 	}
 
-	(Motorcmd[0]).qHandle = UART6_reqHandle;
-	(Motorcmd[1]).qHandle = UART6_reqHandle;
-	(Motorcmd[2]).qHandle = UART6_reqHandle;
-	(Motorcmd[3]).qHandle = UART1_reqHandle;
-	(Motorcmd[4]).qHandle = UART1_reqHandle;
-	(Motorcmd[5]).qHandle = UART1_reqHandle;
-	(Motorcmd[6]).qHandle = UART4_reqHandle;
-	(Motorcmd[7]).qHandle = UART4_reqHandle;
-	(Motorcmd[8]).qHandle = UART4_reqHandle;
-	(Motorcmd[9]).qHandle = UART2_reqHandle;
-	(Motorcmd[10]).qHandle = UART2_reqHandle;
-	(Motorcmd[11]).qHandle = UART2_reqHandle;
-	(Motorcmd[12]).qHandle = UART3_reqHandle;
-	(Motorcmd[13]).qHandle = UART3_reqHandle;
-	(Motorcmd[14]).qHandle = UART3_reqHandle;
-	(Motorcmd[15]).qHandle = UART3_reqHandle;
-	(Motorcmd[16]).qHandle = UART3_reqHandle;
-	(Motorcmd[17]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR1]).qHandle = UART6_reqHandle;
+	(Motorcmd[MOTOR2]).qHandle = UART6_reqHandle;
+	(Motorcmd[MOTOR3]).qHandle = UART6_reqHandle;
+	(Motorcmd[MOTOR4]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR5]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR6]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR7]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR8]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR9]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR10]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR11]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR12]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
+	(Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
 
 	// IMU initialization
 	IMUdata._I2C_Handle = &hi2c1;
@@ -437,8 +437,11 @@ void StartDefaultTask(void const * argument)
 	uint8_t i;
 	float positions[12];
 	while(1){
+		// Wait until notified by the PC RX task (i.e. until a new RobotGoal
+		// is received)
 		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 
+		// Convert raw bytes from robotGoal received from PC into floats
 		for(uint8_t i = 0; i < 12; i++){
 			uint8_t* ptr = &positions[i];
 			for(uint8_t j = 0; j < 4; j++){
@@ -447,6 +450,8 @@ void StartDefaultTask(void const * argument)
 			}
 		}
 
+		// Send each goal position to the queue, where the UART handler
+		// thread that's listening will receive it and send it to the motor
 		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
 			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
@@ -474,17 +479,23 @@ void StartDefaultTask(void const * argument)
 			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 							 break;
             }
-			if(i == MOTOR1 || i == MOTOR4 || i == MOTOR7 ){
+			if(i == MOTOR1 || i == MOTOR2 || i == MOTOR3 ||
+			   i == MOTOR4 || i == MOTOR5 || i == MOTOR6 ||
+			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9
+			   )
+			{
 				xQueueSend((Motorcmd[i]).qHandle, &(Motorcmd[i]), 0);
 			}
         }
 
-		// Simulate acquiring position data
+		// Simulate acquiring position data from motors
 		robotState.id = robotGoal.id;
 		for (int i = 0; i < 80; ++i) {
 			robotState.msg[i] = robotGoal.msg[i];
 		}
-		xTaskNotify(txTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Notify TX task that there are angles it can transmit
+
+		// Notify TX task that there are angles it can transmit
+		xTaskNotify(txTaskHandle, NOTIFIED_FROM_TASK, eSetBits);
     }
   /* USER CODE END StartDefaultTask */
 }
