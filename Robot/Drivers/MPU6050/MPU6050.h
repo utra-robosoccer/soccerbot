@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sharedMacros.h"
+
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
 float acc_X;

@@ -171,6 +171,8 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
 
 	uint8_t output_buffer[6];
+	uint32_t notification;
+
 	MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
 	do{
 		xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);

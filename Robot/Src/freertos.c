@@ -59,6 +59,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "../Drivers/MPU6050/MPU6050.h"
+#include "sharedMacros.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
@@ -115,9 +116,6 @@ osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
 
 /* USER CODE BEGIN Variables */
-#define NOTIFIED_FROM_ISR 0x80
-#define NOTIFIED_FROM_TASK 0x40
-
 const double PI = 3.141592654;
 
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -627,7 +625,6 @@ void StartIMUTask(void const * argument)
   /* Infinite loop */
   TXData_t dataToSend;
   dataToSend.eDataType = eIMUData;
-  uint32_t notification;
 
   for(;;)
   {
@@ -741,8 +738,11 @@ void StartTxTask(void const * argument)
   /* USER CODE BEGIN StartTxTask */
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  HAL_StatusTypeDef status;
   TXData_t receivedData;
+  Dynamixel_HandleTypeDef* motorPtr = NULL;
+  MPU6050_HandleTypeDef* imuPtr = NULL;
+
+  HAL_StatusTypeDef status;
   uint32_t notification;
 
   /* Infinite loop */
@@ -758,7 +758,26 @@ void StartTxTask(void const * argument)
 	  xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY);
 
 	  switch(receivedData.eTXData_t){
+		  case eMotorData:
+			  motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
 
+			  if(motorPtr == NULL){ break; }
+
+			  // Validate data and store it in robotState
+			  if(motorPtr->_id <= NUM_MOTORS){
+				  memcpy(&robotState.msg[4 * motorPtr->_id], &(motorPtr->_lastPosition, sizeof(float));
+			  }
+			  break;
+		  case eIMUData:
+			  imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
+
+			  if(imuPtr == NULL){ break; }
+
+			  // TODO: copy data into robotState.msg
+
+			  break;
+		  default:
+			  break;
 	  }
 #endif
 
