@@ -20,9 +20,6 @@ char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
 
-/**********************************Communication********************************/
-#define I2C	3
-#define UART_Handle	2
 /*********************************** Types ************************************/
 typedef struct{
 	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
@@ -70,6 +67,8 @@ void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
+void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
