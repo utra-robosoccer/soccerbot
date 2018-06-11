@@ -123,11 +123,12 @@ int main(void)
  * ____     |___|      ||    RU
  *   o  ===   ===   ===      RD
  */
-//  Dynamixel_HandleTypeDef Motor;
+  Dynamixel_HandleTypeDef Motor;
 //
 //  // LU - UART1
 //  Dynamixel_Init(&Motor, BROADCAST_ID, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 //  //Dynamixel_SetID(&Motor, 4);
+//  HAL_Delay(100);
 //  flinch(&Motor);
 //
 //  // LD - UART6
@@ -150,6 +151,8 @@ int main(void)
 //  Dynamixel_Init(&Motor, BROADCAST_ID, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
 //  //Dynamixel_SetID(&Motor, 10);
 //  flinch(&Motor);
+
+//  while(1);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

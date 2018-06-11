@@ -121,6 +121,7 @@ if __name__ == "__main__":
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
                 angles = walking[:, i:i+1]
+                t1 = datetime.now()
                 sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
@@ -128,17 +129,20 @@ if __name__ == "__main__":
                 while(ser.in_waiting < 92):
                     time.sleep(0.001)
                 rawData = ser.read(92)
+                t2 = datetime.now()
                 
                 (header, recvAngles) = rxDecoder(rawData)
                 
                     # Forward to control application
                 if(numTransfers % 50 == 0):
+                    print('\n')
                     logString("Header matches sequence: " + 
                                 str(header == 0xFFFFFFFF)
                         )
                     printAsAngles(angles, 
                                 np.array(recvAngles).reshape(angles.shape)
                         )
+                    print("Time delta: " + str((t2 - t1)))
                         
                 if(header == 0xFFFFFFFF):
                     continue

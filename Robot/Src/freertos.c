@@ -92,25 +92,25 @@ osThreadId rxTaskHandle;
 uint32_t rxTaskBuffer[ 512 ];
 osStaticThreadDef_t rxTaskControlBlock;
 osThreadId txTaskHandle;
-uint32_t txTaskBuffer[ 128 ];
+uint32_t txTaskBuffer[ 512 ];
 osStaticThreadDef_t txTaskControlBlock;
 osMessageQId UART1_reqHandle;
-uint8_t UART1_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART1_reqControlBlock;
 osMessageQId UART2_reqHandle;
-uint8_t UART2_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART2_reqControlBlock;
 osMessageQId UART3_reqHandle;
-uint8_t UART3_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART3_reqControlBlock;
 osMessageQId UART4_reqHandle;
-uint8_t UART4_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART4_reqControlBlock;
 osMessageQId UART6_reqHandle;
-uint8_t UART6_reqBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId UART_rxHandle;
-uint8_t UART_rxBuffer[ 20 * sizeof( UARTcmd ) ];
+uint8_t UART_rxBuffer[ 32 * sizeof( UARTcmd ) ];
 osStaticMessageQDef_t UART_rxControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
@@ -228,7 +228,7 @@ void MX_FREERTOS_Init(void) {
   rxTaskHandle = osThreadCreate(osThread(rxTask), NULL);
 
   /* definition and creation of txTask */
-  osThreadStaticDef(txTask, StartTxTask, osPriorityHigh, 0, 128, txTaskBuffer, &txTaskControlBlock);
+  osThreadStaticDef(txTask, StartTxTask, osPriorityHigh, 0, 512, txTaskBuffer, &txTaskControlBlock);
   txTaskHandle = osThreadCreate(osThread(txTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -237,27 +237,27 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of UART1_req */
-  osMessageQStaticDef(UART1_req, 20, UARTcmd, UART1_reqBuffer, &UART1_reqControlBlock);
+  osMessageQStaticDef(UART1_req, 16, UARTcmd, UART1_reqBuffer, &UART1_reqControlBlock);
   UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
 
   /* definition and creation of UART2_req */
-  osMessageQStaticDef(UART2_req, 20, UARTcmd, UART2_reqBuffer, &UART2_reqControlBlock);
+  osMessageQStaticDef(UART2_req, 16, UARTcmd, UART2_reqBuffer, &UART2_reqControlBlock);
   UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
 
   /* definition and creation of UART3_req */
-  osMessageQStaticDef(UART3_req, 20, UARTcmd, UART3_reqBuffer, &UART3_reqControlBlock);
+  osMessageQStaticDef(UART3_req, 16, UARTcmd, UART3_reqBuffer, &UART3_reqControlBlock);
   UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
 
   /* definition and creation of UART4_req */
-  osMessageQStaticDef(UART4_req, 20, UARTcmd, UART4_reqBuffer, &UART4_reqControlBlock);
+  osMessageQStaticDef(UART4_req, 16, UARTcmd, UART4_reqBuffer, &UART4_reqControlBlock);
   UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
 
   /* definition and creation of UART6_req */
-  osMessageQStaticDef(UART6_req, 20, UARTcmd, UART6_reqBuffer, &UART6_reqControlBlock);
+  osMessageQStaticDef(UART6_req, 16, UARTcmd, UART6_reqBuffer, &UART6_reqControlBlock);
   UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
 
   /* definition and creation of UART_rx */
-  osMessageQStaticDef(UART_rx, 20, UARTcmd, UART_rxBuffer, &UART_rxControlBlock);
+  osMessageQStaticDef(UART_rx, 32, UARTcmd, UART_rxBuffer, &UART_rxControlBlock);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -357,7 +357,7 @@ void StartDefaultTask(void const * argument)
 
 	/* Infinite loop */
 	uint8_t i;
-	float positions[12];
+	float positions[18];
 	while(1){
 		// Wait until notified by the PC RX task (i.e. until a new RobotGoal
 		// is received)
@@ -405,7 +405,7 @@ void StartDefaultTask(void const * argument)
             }
 			if(i == MOTOR1 || i == MOTOR2 || i == MOTOR3 ||
 			   i == MOTOR4 || i == MOTOR5 || i == MOTOR6 ||
-			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9 //||i == MOTOR10
+			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9
 			   )
 			{
 				Motorcmd[i].type = cmdWRITE;
@@ -413,16 +413,12 @@ void StartDefaultTask(void const * argument)
 				Motorcmd[i].type = cmdREAD;
 				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 			}
+//			if(i == MOTOR10 || i == MOTOR11 || i == MOTOR12){
+//				Motorcmd[i].type = cmdREAD;
+//				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//			}
         }
-
-		// Simulate acquiring position data from motors
 		robotState.id = robotGoal.id;
-//		for (int i = 0; i < 80; ++i) {
-//			robotState.msg[i] = robotGoal.msg[i];
-//		}
-
-		// Notify TX task that there are angles it can transmit
-		xTaskNotify(txTaskHandle, NOTIFIED_FROM_TASK, eSetBits);
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -443,10 +439,11 @@ void UART1_Handler(void const * argument)
 
   for(;;)
 	{
-	  while(xQueueReceive(UART1_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
+		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -486,10 +483,11 @@ void UART2_Handler(void const * argument)
 
   for(;;)
 	{
-	  while(xQueueReceive(UART2_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
+		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -529,10 +527,11 @@ void UART3_Handler(void const * argument)
 
   for(;;)
 	{
-	  while(xQueueReceive(UART3_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
+		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -572,10 +571,11 @@ void UART4_Handler(void const * argument)
 
   for(;;)
 	{
-	  while(xQueueReceive(UART4_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
+		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -615,10 +615,11 @@ void UART6_Handler(void const * argument)
 
   for(;;)
 	{
-	  while(xQueueReceive(UART6_reqHandle, &(cmdMessage), portMAX_DELAY) != pdTRUE);
+	  while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  dataToSend.pData = robotGoal.msg[4 * (cmdMessage.motorHandle->_ID - 1)];
+		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
@@ -654,15 +655,22 @@ void StartIMUTask(void const * argument)
   TXData_t dataToSend;
   dataToSend.eDataType = eIMUData;
 
+  uint32_t notification;
+
   for(;;)
   {
-      // Note that it takes <1 ms total for the sensor to read both accel and gyro
-	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
-	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+//	  do{
+//	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+//	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+//
+//      // Note that it takes <1 ms total for the sensor to read both accel and gyro
+//	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
+//	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+//
+//	  dataToSend.pData = &IMUdata;
+//	  xQueueSend(UART_rxHandle, &dataToSend, 0);
 
-	  dataToSend.pData = &IMUdata;
-	  xQueueSend(UART_rxHandle, &dataToSend, 0);
-      osDelay(pdMS_TO_TICKS(1));
+	  osDelay(2);
   }
   /* USER CODE END StartIMUTask */
 }
@@ -742,6 +750,7 @@ void StartRxTask(void const * argument)
 					totalBytesRead = 0;
 
 					xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+					xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
 					continue;
 				}
 			}else{
@@ -774,8 +783,9 @@ void StartTxTask(void const * argument)
 
   // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
   // be ready for this once all 18 motors can be ready from.
-  uint32_t NOTIFICATION_MASK = 0x80000000;
-  for(uint8_t i = 1; i <= 12; i++){
+//  uint32_t NOTIFICATION_MASK = 0x80000000;
+  uint32_t NOTIFICATION_MASK = 0x00000000;
+  for(uint8_t i = 1; i <= 9; i++){
 	  NOTIFICATION_MASK |= (1 << i);
   }
 
@@ -795,7 +805,7 @@ void StartTxTask(void const * argument)
 				  // Validate data and store it in robotState
 				  if(motorPtr->_ID <= NUM_MOTORS){
 					  // Copy sensor data for this motor into its section of robotState.msg
-					  memcpy(&robotState.msg[4 * motorPtr->_ID], &(motorPtr->_lastPosition), sizeof(float));
+					  memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)], &(motorPtr->_lastPosition), sizeof(float));
 
 					  // Set flag indicating the motor with this id has reported in with position data
 					  dataReadyFlags |= (1 << motorPtr->_ID);
