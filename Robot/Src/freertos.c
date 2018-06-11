@@ -68,7 +68,7 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
-uint32_t defaultTaskBuffer[ 128 ];
+uint32_t defaultTaskBuffer[ 512 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId UART1_Handle;
 uint32_t UART1_Buffer[ 128 ];
@@ -196,7 +196,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 512, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of UART1_ */
@@ -403,20 +403,10 @@ void StartDefaultTask(void const * argument)
 			    default:
 			    	break;
             }
-			if(i == MOTOR1 || i == MOTOR2 || i == MOTOR3 ||
-			   i == MOTOR4 || i == MOTOR5 || i == MOTOR6 ||
-			   i == MOTOR7 || i == MOTOR8 || i == MOTOR9
-			   )
-			{
-				Motorcmd[i].type = cmdWRITE;
-				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-				Motorcmd[i].type = cmdREAD;
-				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-			}
-//			if(i == MOTOR10 || i == MOTOR11 || i == MOTOR12){
-//				Motorcmd[i].type = cmdREAD;
-//				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-//			}
+			Motorcmd[i].type = cmdWRITE;
+			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+			Motorcmd[i].type = cmdREAD;
+			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
         }
 		robotState.id = robotGoal.id;
     }
