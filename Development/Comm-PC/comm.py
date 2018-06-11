@@ -20,6 +20,7 @@ def rxDecoder(raw, decodeHeader=True):
         80 bytes contain floats for each motor.
     '''
     motors = list()
+    imu = list()
     
     if(decodeHeader):
         header = struct.unpack('<L',raw[0:4])[0]
@@ -27,13 +28,19 @@ def rxDecoder(raw, decodeHeader=True):
             # Here, we only unpack for 12 motors since that's all we have connected
             # in our current setup
             motors.append(struct.unpack('<f',raw[8 + i * 4:12 + i * 4])[0])
-        return (header, motors)
+        for i in range(6):
+            # Unpack IMU Data
+            imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
+        return (header, motors, imu)
     else:
         for i in range(12):
             # Here, we only unpack for 12 motors since that's all we have connected
             # in our current setup
             motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
-            return motors
+        for i in range(6):
+            # Unpack IMU Data
+            imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
+        return (motors, imu)
     
 def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
@@ -74,6 +81,20 @@ def printAsAngles(vec1, vec2):
         t.add_row([str(i + 1), str(vec1[i][0]), str(vec2[i][0])])
     
     print(t)
+
+def printAsIMUData(vec1):
+    ''' Prints out a numpy vector interpreted as data from the IMU, in the
+        order X-gyro, Y-gyro, Z-gyro, X-accel, Y-accel, Z-accel.
+    '''
+    
+    t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
+    
+    t.add_row(["X", str(vec1[0][0]), str(vec1[3][0])])
+    t.add_row(["Y", str(vec1[1][0]), str(vec1[4][0])])
+    t.add_row(["Z", str(vec1[2][0]), str(vec1[5][0])])
+    
+    print(t)
+    
     
 # TODO: Test (this function is not safe to use yet)
 def receivePacketFromMCU():
@@ -121,17 +142,18 @@ if __name__ == "__main__":
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
                 angles = walking[:, i:i+1]
-                t1 = datetime.now()
+                t1 = datetime.now() # Start tracking time
                 sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
                     
                 while(ser.in_waiting < 92):
+                    #pass
                     time.sleep(0.001)
                 rawData = ser.read(92)
-                t2 = datetime.now()
+                t2 = datetime.now() # Finish tracking time
                 
-                (header, recvAngles) = rxDecoder(rawData)
+                (header, recvAngles, recvIMUData) = rxDecoder(rawData)
                 
                     # Forward to control application
                 if(numTransfers % 50 == 0):
@@ -142,12 +164,13 @@ if __name__ == "__main__":
                     printAsAngles(angles, 
                                 np.array(recvAngles).reshape(angles.shape)
                         )
+                    printAsIMUData(np.array(recvIMUData).reshape((6, 1)))
                     print("Time delta: " + str((t2 - t1)))
                         
                 if(header == 0xFFFFFFFF):
                     continue
                 
-                # recvAngles = rxDecoder(receivePacketFromMCU())
+                # (recvAngles, recvIMUData) = rxDecoder(receivePacketFromMCU())
                 # 
                 # if(numTransfers % 50 == 0):
                 #     logString("Received valid data")

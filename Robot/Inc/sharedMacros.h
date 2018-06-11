@@ -11,4 +11,6 @@
 #define NOTIFIED_FROM_ISR 0x80
 #define NOTIFIED_FROM_TASK 0x40
 
+#define MAX_DELAY_TIME 2 // Timeout, in milliseconds. Used in blocking statements
+
 #endif /* SHAREDMACROS_H_ */

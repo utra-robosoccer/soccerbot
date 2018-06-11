@@ -449,7 +449,7 @@ void UART1_Handler(void const * argument)
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 //
 //		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 //		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 //
 //		  dataToSend.pData = cmdMessage.motorHandle;
@@ -460,7 +460,7 @@ void UART1_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 
 		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
@@ -493,7 +493,7 @@ void UART2_Handler(void const * argument)
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 //
 //		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 //		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 //
 //		  dataToSend.pData = cmdMessage.motorHandle;
@@ -504,7 +504,7 @@ void UART2_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 
 		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
@@ -537,7 +537,7 @@ void UART3_Handler(void const * argument)
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 //
 //		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 //		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 //
 //		  dataToSend.pData = cmdMessage.motorHandle;
@@ -548,7 +548,7 @@ void UART3_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 
 		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
@@ -581,7 +581,7 @@ void UART4_Handler(void const * argument)
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 //
 //		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 //		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 //
 //		  dataToSend.pData = cmdMessage.motorHandle;
@@ -592,7 +592,7 @@ void UART4_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 
 		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
@@ -625,7 +625,7 @@ void UART6_Handler(void const * argument)
 //		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 //
 //		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 //		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 //
 //		  dataToSend.pData = cmdMessage.motorHandle;
@@ -636,7 +636,7 @@ void UART6_Handler(void const * argument)
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 
 		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
+			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
@@ -659,18 +659,16 @@ void StartIMUTask(void const * argument)
 
   for(;;)
   {
-//	  do{
-//	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-//	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
-//
-//      // Note that it takes <1 ms total for the sensor to read both accel and gyro
-//	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); //also updates angles
-//	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-//
-//	  dataToSend.pData = &IMUdata;
-//	  xQueueSend(UART_rxHandle, &dataToSend, 0);
+	  do{
+	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
 
-	  osDelay(2);
+      // Note that it takes < 1 ms total for the sensor to read both accel and gyro
+	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
+	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+
+	  dataToSend.pData = &IMUdata;
+	  xQueueSend(UART_rxHandle, &dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
 }
@@ -783,8 +781,7 @@ void StartTxTask(void const * argument)
 
   // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
   // be ready for this once all 18 motors can be ready from.
-//  uint32_t NOTIFICATION_MASK = 0x80000000;
-  uint32_t NOTIFICATION_MASK = 0x00000000;
+  uint32_t NOTIFICATION_MASK = 0x80000000;
   for(uint8_t i = 1; i <= 9; i++){
 	  NOTIFICATION_MASK |= (1 << i);
   }
@@ -793,7 +790,7 @@ void StartTxTask(void const * argument)
   for(;;)
   {
 	  // TODO: Test this
-	  while(dataReadyFlags != NOTIFICATION_MASK){
+	  while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
 		  while(xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY) != pdTRUE);
 
 		  switch(receivedData.eDataType){

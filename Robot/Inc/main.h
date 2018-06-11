@@ -68,8 +68,6 @@
 #define U3_DIR_GPIO_Port GPIOB
 #define U6_DIR_Pin GPIO_PIN_8
 #define U6_DIR_GPIO_Port GPIOC
-#define LED_Pin GPIO_PIN_9
-#define LED_GPIO_Port GPIOC
 #define U1_DIR_Pin GPIO_PIN_8
 #define U1_DIR_GPIO_Port GPIOA
 
