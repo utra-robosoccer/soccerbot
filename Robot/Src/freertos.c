@@ -451,10 +451,6 @@ void UART1_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE){
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART1_Handler */
@@ -495,10 +491,6 @@ void UART2_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART2_Handler */
@@ -539,10 +531,6 @@ void UART3_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART3_Handler */
@@ -583,10 +571,6 @@ void UART4_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART4_Handler */
@@ -627,10 +611,6 @@ void UART6_Handler(void const * argument)
 	  }
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-
-		  do{
-			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 	  }
   }
   /* USER CODE END UART6_Handler */
