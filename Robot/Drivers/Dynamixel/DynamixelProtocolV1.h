@@ -33,6 +33,10 @@
 #include "MX28/MX28.h"
 #include "AX12A/AX12A.h"
 
+/* Others */
+#include "sharedMacros.h"
+#include "cmsis_os.h"
+
 /*********************************** Macros ***********************************/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) // Set data direction pin high (TX)
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) // Set data direction pin low (RX)
