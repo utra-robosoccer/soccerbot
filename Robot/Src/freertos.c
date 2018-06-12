@@ -437,7 +437,6 @@ void UART1_Handler(void const * argument)
 //		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
 //		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  // TODO: get reading to work
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  dataToSend.pData = cmdMessage.motorHandle;
 
@@ -471,7 +470,6 @@ void UART2_Handler(void const * argument)
 //		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
 //		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  // TODO: get reading to work
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  dataToSend.pData = cmdMessage.motorHandle;
 
@@ -505,7 +503,6 @@ void UART3_Handler(void const * argument)
 //		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
 //		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  // TODO: get reading to work
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  dataToSend.pData = cmdMessage.motorHandle;
 
@@ -539,7 +536,6 @@ void UART4_Handler(void const * argument)
 //		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
 //		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  // TODO: get reading to work
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  dataToSend.pData = cmdMessage.motorHandle;
 
@@ -573,7 +569,6 @@ void UART6_Handler(void const * argument)
 //		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
 //		  dataToSend.pData = cmdMessage.motorHandle;
 
-		  // TODO: get reading to work
 		  Dynamixel_GetPosition(cmdMessage.motorHandle);
 		  dataToSend.pData = cmdMessage.motorHandle;
 
