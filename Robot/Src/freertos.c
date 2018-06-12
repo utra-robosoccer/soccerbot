@@ -428,24 +428,18 @@ void UART1_Handler(void const * argument)
   UARTcmd cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
-  uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-		  dataToSend.pData = cmdMessage.motorHandle;
+//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
-//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-//
-//		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-//
-//		  dataToSend.pData = cmdMessage.motorHandle;
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
@@ -468,24 +462,18 @@ void UART2_Handler(void const * argument)
   UARTcmd cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
-  uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-		  dataToSend.pData = cmdMessage.motorHandle;
+//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
-//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-//
-//		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-//
-//		  dataToSend.pData = cmdMessage.motorHandle;
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
@@ -508,24 +496,18 @@ void UART3_Handler(void const * argument)
   UARTcmd cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
-  uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-		  dataToSend.pData = cmdMessage.motorHandle;
+//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
-//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-//
-//		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-//
-//		  dataToSend.pData = cmdMessage.motorHandle;
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
@@ -548,24 +530,18 @@ void UART4_Handler(void const * argument)
   UARTcmd cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
-  uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-		  dataToSend.pData = cmdMessage.motorHandle;
+//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
-//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-//
-//		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-//
-//		  dataToSend.pData = cmdMessage.motorHandle;
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }
@@ -588,24 +564,18 @@ void UART6_Handler(void const * argument)
   UARTcmd cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
-  uint32_t notification;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
 	  if(cmdMessage.type == cmdREAD) {
 		  // Simulate acquiring sensor data
-		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-		  dataToSend.pData = cmdMessage.motorHandle;
+//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
+//		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  // TODO: get reading to work
-//		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-//
-//		  do{
-//			  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-//		  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-//
-//		  dataToSend.pData = cmdMessage.motorHandle;
+		  Dynamixel_GetPosition(cmdMessage.motorHandle);
+		  dataToSend.pData = cmdMessage.motorHandle;
 
 		  xQueueSend(UART_rxHandle, &dataToSend, 0);
 	  }

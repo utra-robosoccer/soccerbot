@@ -982,7 +982,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			do{
 					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 					if(status != pdTRUE){
-						return hdynamixel -> _lastPosition;
+						return -1;
 					}
 			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 			break;
@@ -994,7 +994,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			do{
 					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 					if(status != pdTRUE){
-						return hdynamixel -> _lastPosition;
+						return -1;
 					}
 			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 			break;
@@ -1021,7 +1021,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			do{
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 				if(status != pdTRUE){
-					return hdynamixel -> _lastPosition;
+					return -1;
 				}
 			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 			break;
@@ -1033,7 +1033,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			do{
 					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
 					if(status != pdTRUE){
-						return hdynamixel -> _lastPosition;
+						return -1;
 					}
 			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 			break;
