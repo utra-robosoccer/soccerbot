@@ -13,6 +13,9 @@
 
 
 /******************************* Public Variables *******************************/
+/* IO Type - initialized to blocking IO */
+enum IO_FLAGS IOType = IO_BLOCKING;
+
 /* Buffer for data received from motors. */
 uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
 
@@ -65,6 +68,19 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
+void Dynamixel_SetIOType(enum IO_FLAGS type) {
+	/* Sets the IO protocol to one of three options:
+	 * Blocking (Polling), Non-Blocking (Interrupt), and DMA
+	 *
+	 * Arguments: One of IO_BLOCKING, IO_NONBLOCKING, or IO_DMA
+	 *
+	 * Returns: none
+	 */
+	IOType = type;
+}
+
+
+
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	/* Sets the ID (identification number) for the current motor.
 	 * Note that the instruction will be broadcasted using the current ID.
@@ -888,9 +904,17 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 		__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 		/* Transmit. */
-		HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
-//		HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
-//		HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
+		switch(IOType) {
+			case IO_DMA:
+				HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
+				break;
+			case IO_BLOCKING:
+				HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
+				break;
+			case IO_NONBLOCKING:
+				HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
+				break;
+		}
 	}
 }
 
@@ -909,75 +933,10 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	 * Returns: a 16-bit value containing 1 or both bytes received, as applicable. The
 	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
 	 */
-
-	uint8_t ID = hdynamixel -> _ID;
-	if(ID == BROADCAST_ID){
-		ID = 0;
-	}
-
-	/* Clear array for reception. */
-	// TODO: we really don't need this since the receive function will replace the contents
-	// leaving it here for now so that we can identify invalid receptions easier though.
-	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
-		arrReceive[ID][i] = 0;
-	}
-
-	/* Do assignments and computations. */
-	arrTransmit[ID][3] = 4; // Length of message minus the obligatory bytes
-	arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
-	arrTransmit[ID][5] = readAddr; // Write address for register
-	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
-	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
-
-	// Set data direction for transmit
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	// Transmit
-	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
-
-	// Set data direction for receive
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Set the instruction back to INST_WRITE_DATA in the buffer because writing
-	 * is expected to be more common than reading. */
-	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
-
-	// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
-	if(readLength == 1){
-		HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 7, RECEIVE_TIMEOUT);
-	}
-	else{
-		HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], 8, RECEIVE_TIMEOUT);
-	}
-
-	if(readLength == 1){
-		return (uint16_t)arrReceive[ID][5];
-	}
-	else{
-		return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
-	}
-}
-
-uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
-	/* Reads data back from the motor passed in by the handle using Direct Memory Access. This process is identical
-	 * for all the getters which is why it is encapsulated in this function. Reading data
-	 * uses the READ DATA instruction, 0x02, in the motor instruction set.
-	 *
-	 * The status packet returned will be of them form:
-	 * 0xFF 0xFF ID LENGTH ERR PARAM_1...PARAM_N CHECKSUM, where N = readLength
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *			  readAddr, the address inside the motor memory table where reading is to begin
-	 *			  readLength, the number of bytes to be read. Must be either 1 or 2.
-	 *
-	 * Returns: a 16-bit value containing 1 or both bytes received, as applicable. The
-	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
-	 */
-
+	uint8_t rxPacketSize = 0;
 	BaseType_t status;
 	uint32_t notification;
 	uint8_t ID = hdynamixel -> _ID;
-
 	if(ID == BROADCAST_ID){
 		ID = 0;
 	}
@@ -996,19 +955,27 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
 	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
 
-
 	// Set data direction for transmit
 	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	// Transmit
-	HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-
-	do{
-		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		if(status != pdTRUE){
-			return hdynamixel -> _lastPosition;
-		}
-	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+	switch(IOType) {
+		case IO_DMA:
+			HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
+			do{
+					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+					if(status != pdTRUE){
+						return hdynamixel -> _lastPosition;
+					}
+				} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+			break;
+		case IO_BLOCKING:
+			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
+			break;
+		case IO_NONBLOCKING:
+			HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
+			break;
+	}
 
 	// Set data direction for receive
 	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
@@ -1019,19 +986,29 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 
 	// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
 	if(readLength == 1){
-		HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], 7);
+		rxPacketSize = 7;
 	}
 	else{
-		HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], 8);
+		rxPacketSize = 8;
 	}
 
-	do{
-		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-		if(status != pdTRUE){
-			return hdynamixel -> _lastPosition;
-		}
-	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-
+	switch(IOType) {
+		case IO_DMA:
+			HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+			do{
+				status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+				if(status != pdTRUE){
+					return hdynamixel -> _lastPosition;
+				}
+			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+			break;
+		case IO_BLOCKING:
+			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize, RECEIVE_TIMEOUT);
+			break;
+		case IO_NONBLOCKING:
+			HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+			break;
+	}
 	if(readLength == 1){
 		return (uint16_t)arrReceive[ID][5];
 	}
@@ -1039,6 +1016,88 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 		return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
 	}
 }
+//
+//uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
+//	/* Reads data back from the motor passed in by the handle using Direct Memory Access. This process is identical
+//	 * for all the getters which is why it is encapsulated in this function. Reading data
+//	 * uses the READ DATA instruction, 0x02, in the motor instruction set.
+//	 *
+//	 * The status packet returned will be of them form:
+//	 * 0xFF 0xFF ID LENGTH ERR PARAM_1...PARAM_N CHECKSUM, where N = readLength
+//	 *
+//	 * Arguments: hdynamixel, the motor handle
+//	 *			  readAddr, the address inside the motor memory table where reading is to begin
+//	 *			  readLength, the number of bytes to be read. Must be either 1 or 2.
+//	 *
+//	 * Returns: a 16-bit value containing 1 or both bytes received, as applicable. The
+//	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
+//	 */
+//
+//	BaseType_t status;
+//	uint32_t notification;
+//	uint8_t ID = hdynamixel -> _ID;
+//
+//	if(ID == BROADCAST_ID){
+//		ID = 0;
+//	}
+//
+//	/* Clear array for reception. */
+//	// TODO: we really don't need this since the receive function will replace the contents
+//	// leaving it here for now so that we can identify invalid receptions easier though.
+//	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
+//		arrReceive[ID][i] = 0;
+//	}
+//
+//	/* Do assignments and computations. */
+//	arrTransmit[ID][3] = 4; // Length of message minus the obligatory bytes
+//	arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
+//	arrTransmit[ID][5] = readAddr; // Write address for register
+//	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
+//	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
+//
+//
+//	// Set data direction for transmit
+//	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+//
+//	// Transmit
+//	HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
+//
+//	do{
+//		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+//		if(status != pdTRUE){
+//			return hdynamixel -> _lastPosition;
+//		}
+//	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//	// Set data direction for receive
+//	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+//
+//	/* Set the instruction back to INST_WRITE_DATA in the buffer because writing
+//	 * is expected to be more common than reading. */
+//	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
+//
+//	// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
+//	if(readLength == 1){
+//		HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], 7);
+//	}
+//	else{
+//		HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], 8);
+//	}
+//
+//	do{
+//		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+//		if(status != pdTRUE){
+//			return hdynamixel -> _lastPosition;
+//		}
+//	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+//
+//	if(readLength == 1){
+//		return (uint16_t)arrReceive[ID][5];
+//	}
+//	else{
+//		return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
+//	}
+//}
 
 
 
