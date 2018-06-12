@@ -76,6 +76,8 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050);
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
 
+void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
+
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
