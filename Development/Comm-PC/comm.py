@@ -78,15 +78,9 @@ def printAsAngles(vec1, vec2):
     t = PrettyTable(['Motor Number', 'Sent', 'Received'])
     
     for i in range(vec1.shape[0]):
-        t.add_row([str(i + 1), str(vec1[i][0]), str(vec2[i][0])])
+        t.add_row([str(i + 1), round(vec1[i][0], 4), round(vec2[i][0], 2)])
     
     print(t)
-    
-def float2(f):
-    ''' Returns the float passed in as a string, with 2 decimal places in the
-        representation.
-    '''
-    return '{0:.2f}'.format(f)
 
 def printAsIMUData(vec1):
     ''' Prints out a numpy vector interpreted as data from the IMU, in the
@@ -95,13 +89,12 @@ def printAsIMUData(vec1):
     
     t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
     
-    t.add_row(["X", str(vec1[0][0]), str(vec1[3][0])])
-    t.add_row(["Y", str(vec1[1][0]), str(vec1[4][0])])
-    t.add_row(["Z", str(vec1[2][0]), str(vec1[5][0])])
+    t.add_row(["X", round(vec1[0][0], 2), round(vec1[3][0], 2)])
+    t.add_row(["Y", round(vec1[1][0], 2), round(vec1[4][0], 2)])
+    t.add_row(["Z", round(vec1[2][0], 2), round(vec1[5][0], 2)])
     
     print(t)
-    
-    
+
 # TODO: Test (this function is not safe to use yet)
 def receivePacketFromMCU():
     ''' Receives 80 bytes of the MCU provided that there is a valid 4-byte 
