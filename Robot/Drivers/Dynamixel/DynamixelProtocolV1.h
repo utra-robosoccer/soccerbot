@@ -151,6 +151,7 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 // Transmission & Reception
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
+uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength);
 void Dynamixel_SyncWritePosition(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock); // TODO: test
 void Dynamixel_SyncWritePositionAndVelocity(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock); // TODO: test
 
