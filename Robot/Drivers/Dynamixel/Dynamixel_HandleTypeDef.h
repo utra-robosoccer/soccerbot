@@ -5,6 +5,7 @@
 
 /********************************** Includes **********************************/
 #include <stdint.h>
+#include <stdbool.h>
 #include "gpio.h"
 
 /*********************************** Types ************************************/
@@ -17,6 +18,8 @@ enum motorTypes_e{
 typedef struct{
 	enum motorTypes_e		_motorType;				/*!< Identifies motor as AX12A, MX28, etc.			*/
 	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
+	bool					_lastReadIsValid;		/*!< 1 -> checksum verified for last read
+	 	 	 	 	 	 	 	 	 	 	 	 	 	 0 -> checksum mismatch 						*/
 	float					_lastPosition;			/*!< Position read from motor						*/
 	float					_lastVelocity;			/*!< Velocity read from motor						*/
 	float					_lastLoad;				/*!< Load read from motor (% of max torque)			*/

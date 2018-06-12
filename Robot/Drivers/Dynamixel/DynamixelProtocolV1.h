@@ -27,6 +27,7 @@
 
 /* Types */
 #include <stdint.h>
+#include <math.h>
 
 /* Dynamixel actuators */
 #include "Dynamixel_HandleTypeDef.h"
