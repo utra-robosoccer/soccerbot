@@ -30,7 +30,7 @@ def rxDecoder(raw, decodeHeader=True):
             motors.append(struct.unpack('<f',raw[8 + i * 4:12 + i * 4])[0])
         for i in range(6):
             # Unpack IMU Data
-            imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
+            imu.append(struct.unpack('<f', raw[56 + i * 4: 60 + i * 4])[0])
         return (header, motors, imu)
     else:
         for i in range(12):
@@ -39,7 +39,7 @@ def rxDecoder(raw, decodeHeader=True):
             motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
         for i in range(6):
             # Unpack IMU Data
-            imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
+            imu.append(struct.unpack('<f', raw[56 + i * 4: 60 + i * 4])[0])
         return (motors, imu)
     
 def logString(userMsg):
@@ -81,6 +81,12 @@ def printAsAngles(vec1, vec2):
         t.add_row([str(i + 1), str(vec1[i][0]), str(vec2[i][0])])
     
     print(t)
+    
+def float2(f):
+    ''' Returns the float passed in as a string, with 2 decimal places in the
+        representation.
+    '''
+    return '{0:.2f}'.format(f)
 
 def printAsIMUData(vec1):
     ''' Prints out a numpy vector interpreted as data from the IMU, in the
