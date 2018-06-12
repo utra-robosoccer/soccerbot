@@ -710,11 +710,16 @@ void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 	uint16_t retVal = Dynamixel_DataReader(hdynamixel, REG_CURRENT_POSITION, 2);
 
 	/* Parse data and write it into motor handle. */
-	if(hdynamixel -> _motorType == AX12ATYPE){
-		hdynamixel -> _lastPosition = (float)(retVal * 300 / 1023.0);
+	if(hdynamixel->_lastReadIsValid){
+		if(hdynamixel -> _motorType == AX12ATYPE){
+			hdynamixel -> _lastPosition = (float)(retVal * 300 / 1023.0);
+		}
+		else if(hdynamixel -> _motorType == MX28TYPE){
+			hdynamixel -> _lastPosition = (float)(retVal * 300 / 4095.0);
+		}
 	}
-	else if(hdynamixel -> _motorType == MX28TYPE){
-		hdynamixel -> _lastPosition = (float)(retVal * 300 / 4095.0);
+	else{
+		hdynamixel -> _lastPosition = NAN;
 	}
 }
 
@@ -733,18 +738,23 @@ void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel){
 
 	/* Parse data and write it into motor handle. */
 	uint16_t modifier;
-	if(hdynamixel -> _isJointMode){
-		modifier = 1023;
+	if(hdynamixel->_lastReadIsValid){
+		if(hdynamixel -> _isJointMode){
+			modifier = 1023;
+		}
+		else{
+			modifier = 2047;
+		}
+
+		if(hdynamixel -> _motorType == AX12ATYPE){
+			hdynamixel -> _lastVelocity = (float)(retVal / modifier * AX12A_MAX_VELOCITY);
+		}
+		else if(hdynamixel -> _motorType == MX28TYPE){
+			hdynamixel -> _lastVelocity = (float)(retVal / modifier * MX28_MAX_VELOCITY);
+		}
 	}
 	else{
-		modifier = 2047;
-	}
-
-	if(hdynamixel -> _motorType == AX12ATYPE){
-		hdynamixel -> _lastVelocity = (float)(retVal / modifier * AX12A_MAX_VELOCITY);
-	}
-	else if(hdynamixel -> _motorType == MX28TYPE){
-		hdynamixel -> _lastVelocity = (float)(retVal / modifier * MX28_MAX_VELOCITY);
+		hdynamixel -> _lastVelocity = NAN;
 	}
 }
 
@@ -765,16 +775,21 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
 	uint16_t retVal = Dynamixel_DataReader(hdynamixel, REG_CURRENT_LOAD, 2);
 
 	/* Parse data and write it into motor handle. */
-	uint8_t isNegative = (retVal >> 9) & 0x1;
-	if(retVal > 1023){
-		retVal = retVal - 1023;
-	}
+	if(hdynamixel->_lastReadIsValid){
+		uint8_t isNegative = (retVal >> 9) & 0x1;
+		if(retVal > 1023){
+			retVal = retVal - 1023;
+		}
 
-	float retValf = (float)(retVal / 1023.0 * 100.0);
-	if(isNegative){
-		retValf *= -1;
+		float retValf = (float)(retVal / 1023.0 * 100.0);
+		if(isNegative){
+			retValf *= -1;
+		}
+		hdynamixel -> _lastLoad = retValf;
+		}
+	else{
+		hdynamixel -> _lastVelocity = NAN;
 	}
-	hdynamixel -> _lastLoad = retValf;
 }
 
 float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
@@ -789,7 +804,10 @@ float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
 	uint8_t retVal = (uint8_t)Dynamixel_DataReader(hdynamixel, REG_CURRENT_VOLTAGE, 1);
 
-	return((float)(retVal / 10.0));
+	if(hdynamixel->_lastReadIsValid){
+		return((float)(retVal / 10.0));
+	}
+	return NAN;
 }
 
 uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
@@ -952,6 +970,8 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	uint8_t rxPacketSize = 0;
 	BaseType_t status;
 	uint32_t notification;
+	uint8_t recvChecksum;
+	uint8_t computedChecksum;
 
 	uint8_t ID = hdynamixel -> _ID;
 	if(ID == BROADCAST_ID){
@@ -1038,6 +1058,17 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 			break;
 	}
+
+	// Check data integrity and place this flag in a field the application can read
+	recvChecksum = arrReceive[ID][rxPacketSize - 1];
+	computedChecksum = Dynamixel_ComputeChecksum(arrReceive[ID], rxPacketSize);
+	if(computedChecksum == recvChecksum){
+		hdynamixel -> _lastReadIsValid = true;
+	}
+	else{
+		hdynamixel -> _lastReadIsValid = false;
+	}
+
 	if(readLength == 1){
 		return (uint16_t)arrReceive[ID][5];
 	}
@@ -1392,6 +1423,7 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	/* Set fields in motor handle. */
 	hdynamixel -> _motorType = motorType;		// Identifies the type of actuator; used in certain functions
 	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
+	hdynamixel -> _lastReadIsValid = false;		// By default, don't trust the "_last*" fields below until their integrity is vouched for by the DataReader
 	hdynamixel -> _lastPosition = -1; 			// In future, could initialize this accurately
 	hdynamixel -> _lastVelocity = -1; 			// In future, could initialize this accurately
 	hdynamixel -> _lastLoad = -1; 				// In future, could initialize this accurately

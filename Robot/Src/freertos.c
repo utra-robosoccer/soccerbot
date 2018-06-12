@@ -54,6 +54,7 @@
 /* USER CODE BEGIN Includes */     
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 #include "stm32f4xx_hal.h"
 #include "usart.h"
 #include "gpio.h"
@@ -411,7 +412,6 @@ void StartDefaultTask(void const * argument)
 			Motorcmd[i].type = cmdREAD;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
         }
-		robotState.id = robotGoal.id;
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -679,6 +679,7 @@ void StartRxTask(void const * argument)
 					// buffer into the robotGoal structure and wake the control
 					// thread to distribute states to each actuator
 					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+					robotState.id = robotGoal.id;
 
 					// Reset the variables to help with reception of a RobotGoal
 					robotGoalDataPtr = robotGoalData;
