@@ -910,12 +910,12 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
 	 */
 
-	/* Clear array for reception. */
 	uint8_t ID = hdynamixel -> _ID;
 	if(ID == BROADCAST_ID){
 		ID = 0;
 	}
 
+	/* Clear array for reception. */
 	// TODO: we really don't need this since the receive function will replace the contents
 	// leaving it here for now so that we can identify invalid receptions easier though.
 	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
@@ -974,12 +974,15 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
 	 */
 
-	/* Clear array for reception. */
+	BaseType_t status;
+	uint32_t notification;
 	uint8_t ID = hdynamixel -> _ID;
+
 	if(ID == BROADCAST_ID){
 		ID = 0;
 	}
 
+	/* Clear array for reception. */
 	// TODO: we really don't need this since the receive function will replace the contents
 	// leaving it here for now so that we can identify invalid receptions easier though.
 	for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
@@ -1002,6 +1005,9 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 
 	do{
 		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+		if(status != pdTRUE){
+			return hdynamixel -> _lastPosition;
+		}
 	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 
 	// Set data direction for receive
@@ -1021,6 +1027,9 @@ uint16_t Dynamixel_DataReader_DMA(Dynamixel_HandleTypeDef* hdynamixel, uint8_t r
 
 	do{
 		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+		if(status != pdTRUE){
+			return hdynamixel -> _lastPosition;
+		}
 	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
 
 	if(readLength == 1){
