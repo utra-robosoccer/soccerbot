@@ -271,7 +271,7 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
 
-	Dynamixel_SetIOType(IO_BLOCKING);	//Configure IO
+	Dynamixel_SetIOType(IO_DMA);	//Configure IO
 
 	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);

@@ -110,12 +110,12 @@
 #define MAX_PUNCH             1023	// Maximum punch (proportional to minimum current)
 #define MIN_PUNCH             0		// Minimum punch (proportional to minimum current)
 
-/******************************* I/O Type *******************************/
+/********************************* I/O Type ***********************************/
 enum IO_FLAGS{IO_DMA, IO_BLOCKING, IO_NONBLOCKING};
 
 extern enum IO_FLAGS IOType;
 
-/******************************* Public Variables *******************************/
+/****************************** Public Variables ******************************/
 /* Buffer for data received from motors. */
 extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
 
