@@ -274,19 +274,18 @@ void StartDefaultTask(void const * argument)
 
 	Dynamixel_SetIOType(IO_DMA);	//Configure IO
 
-	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-//	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+	Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor10, 10, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor9, 9, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor8, 8, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor7, 7, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+	Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+	Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+	Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+	Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+	Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
 	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
