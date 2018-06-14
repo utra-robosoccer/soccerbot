@@ -112,7 +112,7 @@
 #define MIN_PUNCH             0		// Minimum punch (proportional to minimum current)
 
 /********************************* I/O Type ***********************************/
-enum IO_FLAGS{IO_DMA, IO_BLOCKING, IO_NONBLOCKING};
+enum IO_FLAGS{IO_DMA, IO_POLL, IO_IT};
 
 extern enum IO_FLAGS IOType;
 
