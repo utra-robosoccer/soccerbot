@@ -19,7 +19,7 @@
   </include>
 
   <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description" textfile="$(find soccer_description)/models/soccerbot/model.urdf" />
+  <param name="robot_description" textfile="$(find soccer_description)/models/soccerbot v3/model.urdf" />
 
   <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
   args="-urdf -model soccerbot -param robot_description -z 0.1"/>
