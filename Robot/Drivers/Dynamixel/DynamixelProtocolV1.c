@@ -1002,10 +1002,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		rxPacketSize = 8;
 	}
 
-	// Transmit
-	//Interrupt-based reception flow:
-	//Call Receive, Call Transmit, Block on Transmit, Block on Receive
-	//Hopefully avoids synchronization problems
+	// Transmit + Receive
 	switch(IOType) {
 		case IO_DMA:
 			// Set data direction for receive
@@ -1016,7 +1013,6 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 				if(status != pdTRUE){
 					hdynamixel -> _lastReadIsValid = false;
-					HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
 					HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
 					return -1;
 				}
@@ -1049,7 +1045,6 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 					status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 					if(status != pdTRUE){
 						hdynamixel -> _lastReadIsValid = false;
-						HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
 						HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
 						return -1;
 					}
