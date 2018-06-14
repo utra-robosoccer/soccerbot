@@ -21,17 +21,17 @@
   <link name="torso">
     <inertial>
       <mass value="1140.687"/>
-      <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
+      <origin rpy="1.5708 0 1.5708" xyz="0 0 0"/>
       <inertia ixx="3.39" ixy="0" ixz="0" iyy="0.088" iyz="0" izz="4.980"/>
     </inertial>
     <collision name="collision">
-      <origin rpy="-0.03771  1.57079  1.53308" xyz="0       0       0.30141"/>
+      <origin rpy="1.5708 0 1.5708" xyz="0 0 -0.052"/>
       <geometry>
-        <box size="0.152 0.1 0.145"/>
+        <box size="0.152 0.145 0.130"/>
       </geometry>
     </collision>
     <visual name="visual">
-      <origin rpy="-0.03771  1.57079  1.53308" xyz="0.05    -0.07249  0.37741"/>
+      <origin rpy="1.5708 0 1.5708" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://soccer_description/meshes/soccerbot v4/Torso.stl" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -134,7 +134,7 @@
       </geometry>
     </collision>
     <visual name="visual">
-      <origin rpy="0  0  0" xyz="0     -0.0827  0"/>
+      <origin rpy="0  0  0" xyz="0 -0.0827  0"/>
       <geometry>
         <mesh filename="package://soccer_description/meshes/soccerbot v4/Left Calve.stl" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -288,7 +288,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="package://soccer_description/meshes/soccerbot v4/Right foot.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://soccer_description/meshes/soccerbot v4/Right Foot.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
@@ -430,7 +430,7 @@
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
-    <origin rpy="2.35619 -1.57079  2.35619" xyz="0      0.0699  0.07"/>
+    <origin rpy="2.35619 -1.57079 2.35619" xyz="0      0.0699  0.07"/>
     <axis xyz="0  0  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="0" lower="0" upper="0" velocity="0"/>
@@ -438,7 +438,7 @@
   <joint name="left_ankle_foot" type="revolute">
     <parent link="left_ankle"/>
     <child link="left_foot"/>
-    <origin rpy="0  0  0" xyz="0  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -446,7 +446,7 @@
   <joint name="left_calve_ankle" type="revolute">
     <parent link="left_calve"/>
     <child link="left_ankle"/>
-    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
+    <origin rpy="0 0 0" xyz="0 -0.0827 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -454,7 +454,7 @@
   <joint name="left_hip_front_thigh" type="revolute">
     <parent link="left_hip_front"/>
     <child link="left_thigh"/>
-    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="0  0  1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -462,7 +462,7 @@
   <joint name="left_hip_side_hip_front" type="revolute">
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
-    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1  0  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -470,7 +470,7 @@
   <joint name="left_thigh_calve" type="revolute">
     <parent link="left_thigh"/>
     <child link="left_calve"/>
-    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
+    <origin rpy="0 0 0" xyz="0 -0.09290  0"/>
     <axis xyz="0  0  1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -478,15 +478,15 @@
   <joint name="neck_head" type="revolute">
     <parent link="neck"/>
     <child link="head"/>
-    <origin rpy="1.00000000e-05   1.00000000e-05   0.00000000e+00" xyz="0     0.022  0"/>
-    <axis xyz="1  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0.022 0"/>
+    <axis xyz="1 0 0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_ankle_foot" type="revolute">
     <parent link="right_ankle"/>
     <child link="right_foot"/>
-    <origin rpy="0  0  0" xyz="0  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -494,7 +494,7 @@
   <joint name="right_calve_ankle" type="revolute">
     <parent link="right_calve"/>
     <child link="right_ankle"/>
-    <origin rpy="-6.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0     -0.0827  0"/>
+    <origin rpy="0 0 0" xyz="0 -0.0827 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -502,31 +502,31 @@
   <joint name="right_hip_front_thigh" type="revolute">
     <parent link="right_hip_front"/>
     <child link="right_thigh"/>
-    <origin rpy="1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0  0  0"/>
-    <axis xyz="0  0  1"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_hip_side_hip_front" type="revolute">
     <parent link="right_hip_side"/>
     <child link="right_hip_front"/>
-    <origin rpy="-2.3562  -1.57079  2.35619" xyz="0  0  0"/>
-    <axis xyz="-1  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="-1 0 0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="right_thigh_calve" type="revolute">
     <parent link="right_thigh"/>
     <child link="right_calve"/>
-    <origin rpy="-1.00000000e-05   0.00000000e+00   0.00000000e+00" xyz="0      -0.08897  0"/>
-    <axis xyz="0  0  1"/>
+    <origin rpy="0 0 0" xyz="0 -0.0929 0"/>
+    <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
   </joint>
   <joint name="torso_left_hip_side" type="revolute">
     <parent link="torso"/>
     <child link="left_hip_side"/>
-    <origin rpy="1.5708  0      1.5708" xyz="0      -0.03149  0.197"/>
+    <origin rpy="1.5708 0 1.5708" xyz="0.0135 -0.035 -0.156"/>
     <axis xyz="0  -1  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -534,7 +534,7 @@
   <joint name="torso_neck" type="revolute">
     <parent link="torso"/>
     <child link="neck"/>
-    <origin rpy="1.57079  0       1.57079" xyz="0       0       0.37391"/>
+    <origin rpy="1.57079 0 1.57079" xyz="0.024 0 0.08275"/>
     <axis xyz="0  1  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -542,7 +542,7 @@
   <joint name="torso_right_hip_side" type="revolute">
     <parent link="torso"/>
     <child link="right_hip_side"/>
-    <origin rpy="1.5708  0      1.5708" xyz="0       0.03149  0.197"/>
+    <origin rpy="1.5708 0 1.5708" xyz="0.0135 0.035 -0.156"/>
     <axis xyz="0  -1  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="31000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -550,13 +550,13 @@
   <joint name="base_link_torso" type="fixed">
     <parent link="base_link"/>
     <child link="torso"/>
-    <origin rpy="0  0 0" xyz="0 0 0"/>
-    <axis xyz="1  0  0"/>
+    <origin rpy="0 0 0" xyz="0 0 0.3536"/>
+    <axis xyz="1 0 0"/>
   </joint>
   <joint name="left_bicep_forearm" type="revolute">
     <parent link="left_bicep"/>
     <child link="left_forearm"/>
-    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
+    <origin rpy="0 0 0" xyz="0 -0.08 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -564,7 +564,7 @@
   <joint name="right_bicep_forearm" type="revolute">
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
-    <origin rpy="0  0  0" xyz="0   -0.08  0"/>
+    <origin rpy="0 0 0" xyz="0 -0.08 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -572,7 +572,7 @@
   <joint name="torso_left_bicep" type="revolute">
     <parent link="torso"/>
     <child link="left_bicep"/>
-    <origin rpy="1.5708  0      0" xyz="0      -0.076    0.34767"/>
+    <origin rpy="1.5708 0 0" xyz="0 -0.0775 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
@@ -580,7 +580,7 @@
   <joint name="torso_right_bicep" type="revolute">
     <parent link="torso"/>
     <child link="right_bicep"/>
-    <origin rpy="1.5708  0      0" xyz="0       0.076    0.34767"/>
+    <origin rpy="1.5708 0 0" xyz="0 0.0775 0"/>
     <axis xyz="0  0  1"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="15000.0" lower="-1.79769e+308" upper="1.79769e+308" velocity="1.0"/>
