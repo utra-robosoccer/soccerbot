@@ -142,11 +142,11 @@ void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
 	}
 
 	do{
-		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+		status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
 		if(status != pdTRUE){
 			return;
 		}
-	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+	}while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
 	int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
 	int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
@@ -193,11 +193,11 @@ void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
 	}
 
 	do{
-		status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+		status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
 		if(status != pdTRUE){
 			return;
 		}
-	}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+	}while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
 	int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
 	int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
