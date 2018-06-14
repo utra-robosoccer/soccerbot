@@ -274,19 +274,19 @@ void StartDefaultTask(void const * argument)
 
 	Dynamixel_SetIOType(IO_DMA);	//Configure IO
 
-	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
 	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
 //	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
-	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
-	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
-	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, AX12ATYPE);
+	Dynamixel_Init(&Motor8, 8, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+	Dynamixel_Init(&Motor9, 9, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+	Dynamixel_Init(&Motor10, 10, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+	Dynamixel_Init(&Motor11, 11, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+	Dynamixel_Init(&Motor12, 12, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
 	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
@@ -306,7 +306,7 @@ void StartDefaultTask(void const * argument)
         osDelay(10);
 
         // Configure motor to return status packets with minimal latency
-        Dynamixel_SetReturnDelayTime(arrDynamixel[i], 2);
+        Dynamixel_SetReturnDelayTime(arrDynamixel[i], 100);
         osDelay(10);
 
         // Enable motor torque
@@ -409,8 +409,10 @@ void StartDefaultTask(void const * argument)
             }
 			Motorcmd[i].type = cmdWRITE;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//			if (i == MOTOR5 || i == MOTOR4) {
 			Motorcmd[i].type = cmdREAD;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//			}
         }
     }
   /* USER CODE END StartDefaultTask */
@@ -647,8 +649,8 @@ void StartRxTask(void const * argument)
 		// this task has the highest priority, but overall this is a better decision in
 		// case priorities are changed in the future and someone forgets about this.
 		do{
-			xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-		}while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+			xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
+		}while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
 		do{
 			// This do-while loop with the mutex inside of it makes calls to the UART module
@@ -780,8 +782,8 @@ void StartTxTask(void const * argument)
 	  // Wait until notified from ISR. Clear no bits on entry in case the notification
 	  // came while a higher priority task was executing.
 	  do{
-		  xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+		  xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
+	  }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
   }
   /* USER CODE END StartTxTask */
 }
@@ -792,7 +794,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	// This callback runs after the interrupt data transfer from the sensor to the mcu is finished
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xTaskNotifyFromISR(IMUTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+	xTaskNotifyFromISR(IMUTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
@@ -801,22 +803,22 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		if(huart == &huart5){
-			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		if(huart == &huart1){
-			xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart2){
-			xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart3){
-			xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart4){
-			xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		else if(huart == &huart6){
-			xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+			xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
@@ -825,22 +827,22 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (huart == &huart5) {
-		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	if(huart == &huart1){
-		xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	else if(huart == &huart2){
-		xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	else if(huart == &huart3){
-		xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	else if(huart == &huart4){
-		xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	else if(huart == &huart6){
-		xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_ISR, eSetBits, &xHigherPriorityTaskWoken);
+		xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
 	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
