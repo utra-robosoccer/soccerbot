@@ -54,7 +54,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32h7xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "main.h"
 
 /* USER CODE BEGIN Includes */

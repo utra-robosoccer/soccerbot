@@ -2,30 +2,43 @@
 #ifndef __UART_HANDLER_H
 #define __UART_HANDLER_H
 
+#ifdef stm32f4xx_hal
+	#include "stm32f4xx_hal.h"
+	#include "stm32f4xx_hal_conf.h"
+#endif
 
-/********************************** Includes **********************************/
-#include "stm32h7xx_hal.h"
-#include "../Drivers/Motors/AX12A/AX12A.h"
+#ifdef stm32h7xx_hal
+	#include "stm32h7xx_hal.h"
+	#include "stm32h7xx_hal_conf.h"
+#endif
 
+#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 
-/* USER CODE BEGIN Private defines */
-#define cmdREAD			0
-#define cmdWRITE		1
+//#define cmdREAD			0
+//#define cmdWRITE		1
+
+typedef enum{
+	cmdREAD,
+	cmdWRITE
+}eUARTcmd_t;
 
 typedef struct {
-	uint8_t 					type;
+	eUARTcmd_t 					type;
 	Dynamixel_HandleTypeDef*	motorHandle;
-	uint16_t 					position;
-	uint16_t 					velocity;
+	float 						position;
+	float 						velocity;
 	QueueHandle_t				qHandle;
 }UARTcmd;
 
+typedef enum{
+	eMotorData,
+	eIMUData
+}eTXData_t;
+
 typedef struct {
-	Dynamixel_HandleTypeDef*	motorHandle;
-	uint16_t 					position;
-	uint16_t 					velocity;
-}UARTrx;
-/* USER CODE END Private defines */
+	eTXData_t eDataType; // Tells the receiving task what the data is
+	void* pData; // Points to the container for the data
+}TXData_t;
 
 void _Error_Handler(char *, int);
 
