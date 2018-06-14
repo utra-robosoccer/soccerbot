@@ -95,3 +95,4 @@ tmp/
 **/Debug/
 RemoteSystemsTempFiles/
 .metadata/
+Robot/.settings/language.settings.xml

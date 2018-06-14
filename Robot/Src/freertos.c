@@ -277,8 +277,8 @@ void StartDefaultTask(void const * argument)
 	Dynamixel_Init(&Motor1, 1, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor2, 2, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor3, 3, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
-	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, AX12ATYPE);
+	Dynamixel_Init(&Motor4, 4, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+	Dynamixel_Init(&Motor5, 5, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor6, 6, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
 //	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, AX12ATYPE);
 	Dynamixel_Init(&Motor7, 7, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
