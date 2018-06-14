@@ -6,6 +6,7 @@ Contains development folders for ongoing projects. Examples include rewriting ou
 
 # Robot
 Contains the program controlling the embedded systems of the robot.
+
 Motor libraries: Dynamixel AX-12A, Dynamixel MX-28
 Sensor libraries: MPU6050
 
