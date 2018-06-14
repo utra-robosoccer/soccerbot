@@ -14,7 +14,7 @@
 
 /******************************* Public Variables *******************************/
 /* IO Type - initialized to blocking IO */
-enum IO_FLAGS IOType = IO_BLOCKING;
+enum IO_FLAGS IOType = IO_POLL;
 
 /* Buffer for data received from motors. */
 uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
@@ -72,7 +72,7 @@ void Dynamixel_SetIOType(enum IO_FLAGS type) {
 	/* Sets the IO protocol to one of three options:
 	 * Blocking (Polling), Non-Blocking (Interrupt), and DMA
 	 *
-	 * Arguments: One of IO_BLOCKING, IO_NONBLOCKING, or IO_DMA
+	 * Arguments: One of IO_POLL, IO_IT, or IO_DMA
 	 *
 	 * Returns: none
 	 */
@@ -913,7 +913,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 					// we do this so that arrTransmit can be kept small.
 		}
 		arrTransmit[ID][3] = 2 + numArgs; // Length of message following length argument (arguments & checksum)
-
+		arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 		for(uint8_t i = 0; i < numArgs; i ++){
 			arrTransmit[ID][5 + i] = args[i];
 		}
@@ -929,23 +929,23 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 			case IO_DMA:
 				HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
 				do{
-						status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+						status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 						if(status != pdTRUE){
 							return;
 						}
-				} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+				} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 				break;
-			case IO_BLOCKING:
+			case IO_POLL:
 				HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
 				break;
-			case IO_NONBLOCKING:
+			case IO_IT:
 				HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
 				do{
-						status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+						status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 						if(status != pdTRUE){
 							return;
 						}
-				} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+				} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 				break;
 		}
 	}
@@ -992,42 +992,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
 	arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
 
-	// Set data direction for transmit
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-	// Transmit
-	switch(IOType) {
-		case IO_DMA:
-			HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-			do{
-					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-					if(status != pdTRUE){
-						hdynamixel -> _lastReadIsValid = false;
-						return -1;
-					}
-			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-			break;
-		case IO_BLOCKING:
-			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
-			break;
-		case IO_NONBLOCKING:
-			HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-			do{
-					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
-					if(status != pdTRUE){
-						hdynamixel -> _lastReadIsValid = false;
-						return -1;
-					}
-			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
-			break;
-	}
-
-	// Set data direction for receive
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-	/* Set the instruction back to INST_WRITE_DATA in the buffer because writing
-	 * is expected to be more common than reading. */
-	arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
 
 	// Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
 	if(readLength == 1){
@@ -1037,29 +1002,62 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		rxPacketSize = 8;
 	}
 
+	// Set data direction for transmit
+	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+	// Transmit + Receive
 	switch(IOType) {
 		case IO_DMA:
-			HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+			HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
 			do{
-				status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+				status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 				if(status != pdTRUE){
 					hdynamixel -> _lastReadIsValid = false;
+					HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
 					return -1;
 				}
-			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+
+			// Set data direction for receive
+			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+			do{
+				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+				if(status != pdTRUE){
+					hdynamixel -> _lastReadIsValid = false;
+					HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
+					return -1;
+				}
+			} while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 			break;
-		case IO_BLOCKING:
+
+		case IO_POLL:
+			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
+
+			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize, RECEIVE_TIMEOUT);
 			break;
-		case IO_NONBLOCKING:
-			HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+		case IO_IT:
+			HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
 			do{
-					status = xTaskNotifyWait(0, NOTIFIED_FROM_ISR, &notification, MAX_DELAY_TIME);
+					status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
 					if(status != pdTRUE){
 						hdynamixel -> _lastReadIsValid = false;
+						HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
 						return -1;
 					}
-			} while((notification & NOTIFIED_FROM_ISR) != NOTIFIED_FROM_ISR);
+			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+
+			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
+			do{
+				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+				if(status != pdTRUE){
+					hdynamixel -> _lastReadIsValid = false;
+					HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
+					return -1;
+				}
+			} while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 			break;
 	}
 
