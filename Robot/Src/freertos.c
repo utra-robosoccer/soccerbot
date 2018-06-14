@@ -409,10 +409,8 @@ void StartDefaultTask(void const * argument)
             }
 			Motorcmd[i].type = cmdWRITE;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-//			if (i == MOTOR5 || i == MOTOR4) {
 			Motorcmd[i].type = cmdREAD;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-//			}
         }
     }
   /* USER CODE END StartDefaultTask */
