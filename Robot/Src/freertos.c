@@ -409,8 +409,10 @@ void StartDefaultTask(void const * argument)
             }
 			Motorcmd[i].type = cmdWRITE;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//			if (i == MOTOR5 || i == MOTOR4) {
 			Motorcmd[i].type = cmdREAD;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//			}
         }
     }
   /* USER CODE END StartDefaultTask */
@@ -544,7 +546,6 @@ void UART4_Handler(void const * argument)
 	  else if(cmdMessage.type == cmdWRITE) {
 		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
 	  }
-	  osDelay(10);
   }
   /* USER CODE END UART4_Handler */
 }
