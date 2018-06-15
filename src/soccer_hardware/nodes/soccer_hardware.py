@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Created June 6 2018
@@ -21,6 +20,7 @@ def rxDecoder(raw, decodeHeader=True):
         80 bytes contain floats for each motor.
     '''
     motors = list()
+    imu = list()
     
     if(decodeHeader):
         header = struct.unpack('<L',raw[0:4])[0]
@@ -28,13 +28,19 @@ def rxDecoder(raw, decodeHeader=True):
             # Here, we only unpack for 12 motors since that's all we have connected
             # in our current setup
             motors.append(struct.unpack('<f',raw[8 + i * 4:12 + i * 4])[0])
-        return (header, motors)
+        for i in range(6):
+            # Unpack IMU Data
+            imu.append(struct.unpack('<f', raw[56 + i * 4: 60 + i * 4])[0])
+        return (header, motors, imu)
     else:
         for i in range(12):
             # Here, we only unpack for 12 motors since that's all we have connected
             # in our current setup
             motors.append(struct.unpack('<f',raw[4 + i * 4:8 + i * 4])[0])
-            return motors
+        for i in range(6):
+            # Unpack IMU Data
+            imu.append(struct.unpack('<f', raw[56 + i * 4: 60 + i * 4])[0])
+        return (motors, imu)
     
 def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
@@ -72,10 +78,23 @@ def printAsAngles(vec1, vec2):
     t = PrettyTable(['Motor Number', 'Sent', 'Received'])
     
     for i in range(vec1.shape[0]):
-        t.add_row([str(i + 1), str(vec1[i][0]), str(vec2[i][0])])
+        t.add_row([str(i + 1), round(vec1[i][0], 4), round(vec2[i][0], 2)])
     
     print(t)
+
+def printAsIMUData(vec1):
+    ''' Prints out a numpy vector interpreted as data from the IMU, in the
+        order X-gyro, Y-gyro, Z-gyro, X-accel, Y-accel, Z-accel.
+    '''
     
+    t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
+    
+    t.add_row(["X", round(vec1[0][0], 2), round(vec1[3][0], 2)])
+    t.add_row(["Y", round(vec1[1][0], 2), round(vec1[4][0], 2)])
+    t.add_row(["Z", round(vec1[2][0], 2), round(vec1[5][0], 2)])
+    
+    print(t)
+
 # TODO: Test (this function is not safe to use yet)
 def receivePacketFromMCU():
     ''' Receives 80 bytes of the MCU provided that there is a valid 4-byte 
@@ -110,42 +129,47 @@ def receivePacketFromMCU():
 #os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
 
 if __name__ == "__main__":
-    print(os.getcwd())
-    os.chdir('/home/vuwij/soccer_ws/src/soccer_hardware/nodes/')
+    os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
     logString("Starting PC-side application")
     
-    walking = np.loadtxt(open("../trajectories/walking.csv", "rb"), delimiter=",", skiprows=0)
+    walking = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
     
-    with serial.Serial('ttyACM0',230400,timeout=100) as ser:
+    with serial.Serial('COM7',230400,timeout=100) as ser:
         logString("Opened port " + ser.name)
         
         numTransfers = 0
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
                 angles = walking[:, i:i+1]
+                t1 = datetime.now() # Start tracking time
                 sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
                     
                 while(ser.in_waiting < 92):
+                    #pass
                     time.sleep(0.001)
                 rawData = ser.read(92)
+                t2 = datetime.now() # Finish tracking time
                 
-                (header, recvAngles) = rxDecoder(rawData)
+                (header, recvAngles, recvIMUData) = rxDecoder(rawData)
                 
                     # Forward to control application
                 if(numTransfers % 50 == 0):
+                    print('\n')
                     logString("Header matches sequence: " + 
                                 str(header == 0xFFFFFFFF)
                         )
                     printAsAngles(angles, 
                                 np.array(recvAngles).reshape(angles.shape)
                         )
+                    printAsIMUData(np.array(recvIMUData).reshape((6, 1)))
+                    print("Time delta: " + str((t2 - t1)))
                         
                 if(header == 0xFFFFFFFF):
                     continue
                 
-                # recvAngles = rxDecoder(receivePacketFromMCU())
+                # (recvAngles, recvIMUData) = rxDecoder(receivePacketFromMCU())
                 # 
                 # if(numTransfers % 50 == 0):
                 #     logString("Received valid data")
