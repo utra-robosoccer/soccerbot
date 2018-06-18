@@ -322,18 +322,18 @@ void StartDefaultTask(void const * argument)
 		(Motorcmd[i]).velocity = 10;
 	}
 
-	(Motorcmd[MOTOR1]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR2]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR3]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR4]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR5]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR6]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR7]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR8]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR9]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR10]).qHandle = UART2_reqHandle;
-	(Motorcmd[MOTOR11]).qHandle = UART2_reqHandle;
-	(Motorcmd[MOTOR12]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR2]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR3]).qHandle = UART2_reqHandle;
+	(Motorcmd[MOTOR4]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR5]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR6]).qHandle = UART4_reqHandle;
+	(Motorcmd[MOTOR7]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR8]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR9]).qHandle = UART1_reqHandle;
+	(Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
+	(Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
+	(Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
 	(Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
 	(Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
 	(Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
@@ -367,7 +367,7 @@ void StartDefaultTask(void const * argument)
 		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
 
 		// Convert raw bytes from robotGoal received from PC into floats
-		for(uint8_t i = 0; i < 12; i++){
+		for(uint8_t i = 0; i < 18; i++){
 			uint8_t* ptr = (uint8_t*)&positions[i];
 			for(uint8_t j = 0; j < 4; j++){
 				*ptr = robotGoal.msg[i * 4 + j];
@@ -377,11 +377,11 @@ void StartDefaultTask(void const * argument)
 
 		// Send each goal position to the queue, where the UART handler
 		// thread that's listening will receive it and send it to the motor
-		for(i = MOTOR1; i <= MOTOR12; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+		for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
 			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
 			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3 + 55;
+			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 			  				 break;
 			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
 			  				 break;
@@ -403,13 +403,31 @@ void StartDefaultTask(void const * argument)
 			  				 break;
 			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
 							 break;
+				// TODO
+			    case MOTOR13: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
+			    case MOTOR14: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
+			    case MOTOR15: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
+			    case MOTOR16: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
+			    case MOTOR17: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
+			    case MOTOR18: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    			 break;
 			    default:
 			    	break;
             }
+
 			Motorcmd[i].type = cmdWRITE;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-			Motorcmd[i].type = cmdREAD;
-			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+
+			// Only read from legs
+			if(i <= MOTOR12){
+				Motorcmd[i].type = cmdREAD;
+				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+			}
         }
     }
   /* USER CODE END StartDefaultTask */
