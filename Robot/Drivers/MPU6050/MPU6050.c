@@ -1,5 +1,4 @@
 #include "MPU6050.h"
-#include "Freertos.h"
 #include <math.h>
 #include <stdio.h>
 
