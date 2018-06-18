@@ -19,6 +19,7 @@ def rxDecoder(raw, decodeHeader=True):
         upon protocol, the first 4 bytes are for a header while the remaining
         80 bytes contain floats for each motor.
     '''
+    
     motors = list()
     imu = list()
     
@@ -132,7 +133,6 @@ def receiveWithChecks():
     '''
     (recvAngles, recvIMUData) = rxDecoder(receivePacketFromMCU(),
                                             decodeHeader=False)
-    t2 = datetime.now() # Finish tracking time
     
     if(numTransfers % 50 == 0):
         print('\n')
@@ -141,7 +141,6 @@ def receiveWithChecks():
                     np.array(recvAngles).reshape((12, 1))
             )
         printAsIMUData(np.array(recvIMUData).reshape((6, 1)))
-        print("Time delta: " + str((t2 - t1)))
         
 def receiveWithoutChecks():
     ''' Receives a packet from the MCU by completely trusting the data integrity
@@ -151,10 +150,8 @@ def receiveWithoutChecks():
     while(ser.in_waiting < 92):
         time.sleep(0.001)
     rawData = ser.read(92)
-    t2 = datetime.now() # Finish tracking time
                     
     (header, recvAngles, recvIMUData) = rxDecoder(rawData)
-    t2 = datetime.now() # Finish tracking time
     
     if(numTransfers % 50 == 0):
         print('\n')
@@ -165,7 +162,6 @@ def receiveWithoutChecks():
                     np.array(recvAngles).reshape((12,1))
             )
         printAsIMUData(np.array(recvIMUData).reshape((6, 1)))
-        print("Time delta: " + str((t2 - t1)))
            
     # Forward to control application
     # if(header == 0xFFFFFFFF):
@@ -176,7 +172,7 @@ if __name__ == "__main__":
     os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
     logString("Starting PC-side application")
     
-    walking = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
+    trajectory = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
     
     # with serial.Serial('/dev/ttyACM0',230400,timeout=100) as ser:
     with serial.Serial('COM7',230400,timeout=100) as ser:
@@ -184,11 +180,10 @@ if __name__ == "__main__":
         
         numTransfers = 0
         while(ser.isOpen()):
-            for i in range(walking.shape[1]):
-                #dummy=input('')
-                #angles = walking[:, i:i+1]
-                angles = np.zeros((18, 1))
-                t1 = datetime.now() # Start tracking time
+            for i in range(trajectory.shape[1]):
+                dummy=input('') # Uncomment this if you want to step through the trajectories via user input
+                angles = trajectory[:, i:i+1]
+                #angles = np.zeros((18, 1))
                 sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
