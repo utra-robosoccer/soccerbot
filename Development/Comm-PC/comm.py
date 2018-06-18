@@ -149,7 +149,6 @@ def receiveWithoutChecks():
         a data readout every so often.
     '''
     while(ser.in_waiting < 92):
-        #pass
         time.sleep(0.001)
     rawData = ser.read(92)
     t2 = datetime.now() # Finish tracking time
@@ -163,7 +162,6 @@ def receiveWithoutChecks():
                     str(header == 0xFFFFFFFF)
             )
         printAsAngles(angles[0:12], 
-                    #np.array(recvAngles).reshape(angles.shape)
                     np.array(recvAngles).reshape((12,1))
             )
         printAsIMUData(np.array(recvIMUData).reshape((6, 1)))
