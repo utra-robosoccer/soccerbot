@@ -719,7 +719,7 @@ void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 		}
 	}
 	else{
-		hdynamixel -> _lastPosition = NAN;
+		hdynamixel -> _lastPosition = INFINITY;
 	}
 }
 
@@ -754,7 +754,7 @@ void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel){
 		}
 	}
 	else{
-		hdynamixel -> _lastVelocity = NAN;
+		hdynamixel -> _lastVelocity = INFINITY;
 	}
 }
 
@@ -788,7 +788,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
 		hdynamixel -> _lastLoad = retValf;
 		}
 	else{
-		hdynamixel -> _lastVelocity = NAN;
+		hdynamixel -> _lastVelocity = INFINITY;
 	}
 }
 
@@ -807,7 +807,7 @@ float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
 	if(hdynamixel->_lastReadIsValid){
 		return((float)(retVal / 10.0));
 	}
-	return NAN;
+	return INFINITY;
 }
 
 uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
