@@ -40,10 +40,10 @@ def logString(userMsg):
 def sendPacketToMCU(byteStream):
     ''' Sends bytes to the MCU with the header sequence attached.
     '''
-    header = struct.pack('L', 0xFFFFFFFF)
-    id = struct.pack('I', 0x1234)
+    header = struct.pack('<L', 0xFFFFFFFF)
+    id = struct.pack('<I', 0x1234)
     padding = bytes(''.encode())
-    footer = struct.pack('L', 0x00000000)
+    footer = struct.pack('<L', 0x00000000)
     
     numBytes = len(byteStream)
     if(numBytes < 80):
