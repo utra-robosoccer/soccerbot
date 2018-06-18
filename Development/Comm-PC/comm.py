@@ -187,6 +187,7 @@ if __name__ == "__main__":
         numTransfers = 0
         while(ser.isOpen()):
             for i in range(walking.shape[1]):
+                #dummy=input('')
                 #angles = walking[:, i:i+1]
                 angles = np.zeros((18, 1))
                 t1 = datetime.now() # Start tracking time
