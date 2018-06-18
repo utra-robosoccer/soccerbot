@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created June 6 2018
-
-Author: Tyler
-"""
 
 import serial
 import serial.tools.list_ports
@@ -126,15 +121,13 @@ def receivePacketFromMCU():
             break
     return buff
 
-#os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
-
 if __name__ == "__main__":
-    os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
+    os.chdir('/home/vuwij/soccer_ws/src/soccer_hardware/trajectories')
     logString("Starting PC-side application")
     
     walking = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
     
-    with serial.Serial('COM7',230400,timeout=100) as ser:
+    with serial.Serial('/dev/ttyACM2',230400,timeout=100) as ser:
         logString("Opened port " + ser.name)
         
         numTransfers = 0
