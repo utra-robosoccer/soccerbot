@@ -1,0 +1,15 @@
+char[4] header
+uint16 protocol_version
+uint8 packetNum
+uint8 playersPerTeam
+uint8 gameType
+uint8 state
+uint8 firsthalf
+uint8 kickoffTeam
+uint8 secondaryState
+char[4] secondaryStateInfo
+uint8 dropInTeam
+uint16 dropInTime
+uint16 secsRemaining
+uint16 secondaryTime
+team_communication/teamInfo[2] Teams

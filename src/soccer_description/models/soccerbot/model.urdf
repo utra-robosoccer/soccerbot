@@ -21,7 +21,7 @@
   <link name="torso">
     <inertial>
       <mass value="1219.727"/>
-      <origin rpy="1.57 0 1.57" xyz="0 0 0"/>
+      <origin rpy="1.57 0 1.57" xyz="0 0 -0.052"/>
       <inertia ixx="8.01" ixy="0.075" ixz="0.032" iyy="3.08" iyz="0.708" izz="8.75"/>
     </inertial>
     <collision name="collision">
@@ -87,7 +87,7 @@
       <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
         <topicName>soccerbot/imu</topicName>
         <bodyName>imu_link</bodyName>
-        <updateRateHZ>10.0</updateRateHZ>
+        <updateRateHZ>50.0</updateRateHZ>
         <gaussianNoise>0.0</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
@@ -164,6 +164,7 @@
       <geometry>
         <box size="0.09 0.03674 0.07"/>
       </geometry>
+      <contact_coefficients mu ="100.0" />
     </collision>
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
@@ -297,6 +298,7 @@
       <geometry>
         <box size="0.09 0.03674 0.07"/>
       </geometry>
+      <contact_coefficients mu ="100.0" />
     </collision>
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
@@ -409,7 +411,7 @@
     <collision name="collision">
       <origin rpy="0  0  0" xyz="-0.0055 -0.049   0.0265"/>
       <geometry>
-        <box size="0.035 0.124 0.049"/>
+        <box size="0.035 0.204 0.049"/>
       </geometry>
     </collision>
     <visual name="visual">
@@ -428,7 +430,7 @@
     <collision name="collision">
       <origin rpy="0  0  0" xyz="-0.0055 -0.049  -0.0265"/>
       <geometry>
-        <box size="0.035 0.124 0.049"/>
+        <box size="0.035 0.204 0.049"/>
       </geometry>
     </collision>
     <visual name="visual">
@@ -443,7 +445,7 @@
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
-    <origin rpy="0 -1.5708 1.5708" xyz="0 0.0699  0.07"/>
+    <origin rpy="0 -1.5708 -1.5708" xyz="0 0.0699  0.07"/>
     <axis xyz="0  0  0"/>
     <dynamics damping="0.0" friction="2000.0" />
     <limit effort="0" lower="0" upper="0" velocity="0"/>
