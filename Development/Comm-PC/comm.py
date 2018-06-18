@@ -174,11 +174,13 @@ def receiveWithoutChecks():
     #     # TODO
 
 if __name__ == "__main__":
+    #os.chdir('/home/shahryar/soccer-embedded/Development/Comm-PC')
     os.chdir('D:/users/tyler/documents/stm/embedded/soccer-embedded/development/comm-pc')
     logString("Starting PC-side application")
     
     walking = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
     
+    # with serial.Serial('/dev/ttyACM0',230400,timeout=100) as ser:
     with serial.Serial('COM7',230400,timeout=100) as ser:
         logString("Opened port " + ser.name)
         
