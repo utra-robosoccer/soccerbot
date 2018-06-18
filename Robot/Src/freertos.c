@@ -271,8 +271,7 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-
-	Dynamixel_SetIOType(IO_DMA);	//Configure IO
+	Dynamixel_SetIOType(IO_DMA); // Configure IO
 
 	Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
@@ -302,20 +301,18 @@ void StartDefaultTask(void const * argument)
 	for(uint8_t i = MOTOR1; i < MOTOR18; i++) {
         // Configure motor to return status packets only for read commands
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
-        osDelay(10);
 
         // Configure motor to return status packets with minimal latency
         Dynamixel_SetReturnDelayTime(arrDynamixel[i], 100);
-        osDelay(10);
 
         // Enable motor torque
         Dynamixel_TorqueEnable(arrDynamixel[i], 1);
-        osDelay(10);
 
         // Set compliance slope such that it has torque setting 7
         // (affects torque near the goal position)
-		AX12A_SetComplianceSlope(arrDynamixel[i], 7);
-		osDelay(10);
+        if(arrDynamixel[i]->_motorType == AX12ATYPE){
+        	AX12A_SetComplianceSlope(arrDynamixel[i], 7);
+        }
 
 		(Motorcmd[i]).motorHandle = arrDynamixel[i];
 		(Motorcmd[i]).type = cmdWRITE;
@@ -361,10 +358,9 @@ void StartDefaultTask(void const * argument)
 	/* Infinite loop */
 	uint8_t i;
 	float positions[18];
+	uint32_t notification;
 	while(1){
-		// Wait until notified by the PC RX task (i.e. until a new RobotGoal
-		// is received)
-		xTaskNotifyWait(0, UINT32_MAX, NULL, portMAX_DELAY);
+		xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
 
 		// Convert raw bytes from robotGoal received from PC into floats
 		for(uint8_t i = 0; i < 18; i++){
@@ -379,29 +375,29 @@ void StartDefaultTask(void const * argument)
 		// thread that's listening will receive it and send it to the motor
 		for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
-			    case MOTOR1: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 1;
+			    case MOTOR1: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 1;
 			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			    case MOTOR2: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 3;
 			  				 break;
-			    case MOTOR3: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
+			    case MOTOR3: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
 			  				 break;
-			    case MOTOR4: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 2;
+			    case MOTOR4: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 2;
 			  				 break;
-			    case MOTOR5: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
+			    case MOTOR5: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
 			  				 break;
-			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
+			    case MOTOR6: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
 			  				 break;
-			    case MOTOR7: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 0;
+			    case MOTOR7: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 0;
 			  				 break;
-			    case MOTOR8: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 3;
+			    case MOTOR8: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 3;
 			  				 break;
-			    case MOTOR9: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 - 0;
+			    case MOTOR9: (Motorcmd[i]).position = positions[i]*180/PI + 150 - 0;
 			  				 break;
-			    case MOTOR10: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 4;
+			    case MOTOR10: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 4;
 			  				 break;
-			    case MOTOR11: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 1;
+			    case MOTOR11: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 1;
 			  				 break;
-			    case MOTOR12: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150 + 3;
+			    case MOTOR12: (Motorcmd[i]).position = positions[i]*180/PI + 150 + 3;
 							 break;
 				// TODO
 			    case MOTOR13: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
