@@ -358,9 +358,8 @@ void StartDefaultTask(void const * argument)
 	/* Infinite loop */
 	uint8_t i;
 	float positions[18];
-	uint32_t notification;
 	while(1){
-		xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+		xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
 
 		// Convert raw bytes from robotGoal received from PC into floats
 		for(uint8_t i = 0; i < 18; i++){
