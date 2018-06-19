@@ -384,7 +384,7 @@ void StartDefaultTask(void const * argument)
 			  				 break;
 			    case MOTOR5: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR6: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
 			  				 break;
 			    case MOTOR7: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
 			  				 break;
@@ -398,17 +398,17 @@ void StartDefaultTask(void const * argument)
 			  				 break;
 			    case MOTOR12: (Motorcmd[i]).position = positions[i]*180/PI + 150;
 							 break;
-			    case MOTOR13: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR13: (Motorcmd[i]).position = positions[i]*180/PI + 150; // Left shoulder
 			    			 break;
-			    case MOTOR14: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR14: (Motorcmd[i]).position = positions[i]*180/PI + 60; // Left elbow
 			    			 break;
-			    case MOTOR15: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR15: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Right shoulder
 			    			 break;
-			    case MOTOR16: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR16: (Motorcmd[i]).position = -1*positions[i]*180/PI + 240; // Right elbow
 			    			 break;
-			    case MOTOR17: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR17: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Neck pan
 			    			 break;
-			    case MOTOR18: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR18: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Neck tilt
 			    			 break;
 			    default:
 			    	break;
