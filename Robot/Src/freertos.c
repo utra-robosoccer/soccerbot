@@ -271,7 +271,7 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-	Dynamixel_SetIOType(IO_DMA); // Configure IO
+	Dynamixel_SetIOType(IO_POLL); // Configure IO
 
 	Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
 	Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
@@ -336,6 +336,8 @@ void StartDefaultTask(void const * argument)
 	(Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
 	(Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
 	(Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
+
+	Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
 
 	// IMU initialization
 	IMUdata._I2C_Handle = &hi2c1;
