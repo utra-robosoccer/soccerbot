@@ -96,22 +96,22 @@ osThreadId txTaskHandle;
 uint32_t txTaskBuffer[ 512 ];
 osStaticThreadDef_t txTaskControlBlock;
 osMessageQId UART1_reqHandle;
-uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd ) ];
+uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART1_reqControlBlock;
 osMessageQId UART2_reqHandle;
-uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd ) ];
+uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART2_reqControlBlock;
 osMessageQId UART3_reqHandle;
-uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd ) ];
+uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART3_reqControlBlock;
 osMessageQId UART4_reqHandle;
-uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd ) ];
+uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART4_reqControlBlock;
 osMessageQId UART6_reqHandle;
-uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd ) ];
+uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId UART_rxHandle;
-uint8_t UART_rxBuffer[ 32 * sizeof( UARTcmd ) ];
+uint8_t UART_rxBuffer[ 32 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART_rxControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
@@ -238,27 +238,27 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of UART1_req */
-  osMessageQStaticDef(UART1_req, 16, UARTcmd, UART1_reqBuffer, &UART1_reqControlBlock);
+  osMessageQStaticDef(UART1_req, 16, UARTcmd_t, UART1_reqBuffer, &UART1_reqControlBlock);
   UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
 
   /* definition and creation of UART2_req */
-  osMessageQStaticDef(UART2_req, 16, UARTcmd, UART2_reqBuffer, &UART2_reqControlBlock);
+  osMessageQStaticDef(UART2_req, 16, UARTcmd_t, UART2_reqBuffer, &UART2_reqControlBlock);
   UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
 
   /* definition and creation of UART3_req */
-  osMessageQStaticDef(UART3_req, 16, UARTcmd, UART3_reqBuffer, &UART3_reqControlBlock);
+  osMessageQStaticDef(UART3_req, 16, UARTcmd_t, UART3_reqBuffer, &UART3_reqControlBlock);
   UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
 
   /* definition and creation of UART4_req */
-  osMessageQStaticDef(UART4_req, 16, UARTcmd, UART4_reqBuffer, &UART4_reqControlBlock);
+  osMessageQStaticDef(UART4_req, 16, UARTcmd_t, UART4_reqBuffer, &UART4_reqControlBlock);
   UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
 
   /* definition and creation of UART6_req */
-  osMessageQStaticDef(UART6_req, 16, UARTcmd, UART6_reqBuffer, &UART6_reqControlBlock);
+  osMessageQStaticDef(UART6_req, 16, UARTcmd_t, UART6_reqBuffer, &UART6_reqControlBlock);
   UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
 
   /* definition and creation of UART_rx */
-  osMessageQStaticDef(UART_rx, 32, UARTcmd, UART_rxBuffer, &UART_rxControlBlock);
+  osMessageQStaticDef(UART_rx, 32, UARTcmd_t, UART_rxBuffer, &UART_rxControlBlock);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -297,7 +297,7 @@ void StartDefaultTask(void const * argument)
 			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
 			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
-	UARTcmd Motorcmd[18];
+	UARTcmd_t Motorcmd[18];
 	for(uint8_t i = MOTOR1; i <= MOTOR18; i++) {
         // Configure motor to return status packets only for read commands
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
@@ -308,15 +308,14 @@ void StartDefaultTask(void const * argument)
         // Enable motor torque
         Dynamixel_TorqueEnable(arrDynamixel[i], 1);
 
-        // Set compliance slope such that it has torque setting 7
-        // (affects torque near the goal position)
+        // Settings for torque near goal position, and acceptable error (AX12A only)
         if(arrDynamixel[i]->_motorType == AX12ATYPE){
         	AX12A_SetComplianceSlope(arrDynamixel[i], 7);
+        	// AX12A_SetComplianceMargin(arrDynamixel[i], 7);
         }
 
 		(Motorcmd[i]).motorHandle = arrDynamixel[i];
-		(Motorcmd[i]).type = cmdWRITE;
-		(Motorcmd[i]).velocity = 10;
+		(Motorcmd[i]).type = cmdWritePosition;
 	}
 
 	(Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
@@ -356,12 +355,13 @@ void StartDefaultTask(void const * argument)
 	xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
 
 	/* Infinite loop */
+	uint32_t numIterations = 0;
 	uint8_t i;
 	float positions[18];
 	while(1){
 		xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
 
-		// Convert raw bytes from robotGoal received from PC into +9floats
+		// Convert raw bytes from robotGoal received from PC into floats
 		for(uint8_t i = 0; i < 18; i++){
 			uint8_t* ptr = (uint8_t*)&positions[i];
 			for(uint8_t j = 0; j < 4; j++){
@@ -370,59 +370,70 @@ void StartDefaultTask(void const * argument)
 			}
 		}
 
+		if(numIterations % 100 == 0){
+			// Every 100 iterations, assert torque enable
+			for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
+				Motorcmd[i].type = cmdWriteTorque;
+				Motorcmd[i].value = 1; // Enable
+				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+			}
+		}
+
 		// Send each goal position to the queue, where the UART handler
 		// thread that's listening will receive it and send it to the motor
 		for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
 			switch(i){
-			    case MOTOR1: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR2: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR3: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR4: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR5: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR6: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR7: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR8: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR9: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR10: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR11: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150;
+			    case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
 			  				 break;
-			    case MOTOR12: (Motorcmd[i]).position = positions[i]*180/PI + 150;
+			    case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
 							 break;
-			    case MOTOR13: (Motorcmd[i]).position = positions[i]*180/PI + 150; // Left shoulder
+			    case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
 			    			 break;
-			    case MOTOR14: (Motorcmd[i]).position = positions[i]*180/PI + 60; // Left elbow
+			    case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
 			    			 break;
-			    case MOTOR15: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Right shoulder
+			    case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
 			    			 break;
-			    case MOTOR16: (Motorcmd[i]).position = -1*positions[i]*180/PI + 240; // Right elbow
+			    case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
 			    			 break;
-			    case MOTOR17: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Neck pan
+			    case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
 			    			 break;
-			    case MOTOR18: (Motorcmd[i]).position = -1*positions[i]*180/PI + 150; // Neck tilt
+			    case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
 			    			 break;
 			    default:
 			    	break;
             }
 
-			Motorcmd[i].type = cmdWRITE;
+			Motorcmd[i].type = cmdWritePosition;
 			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 
 			// Only read from legs
 			if(i <= MOTOR12){
-				Motorcmd[i].type = cmdREAD;
+				Motorcmd[i].type = cmdReadPosition;
 				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 			}
         }
+
+		numIterations++;
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -436,26 +447,14 @@ void UART1_Handler(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-  UARTcmd cmdMessage;
+  UARTcmd_t cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  // Simulate acquiring sensor data
-//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-//		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  xQueueSend(UART_rxHandle, &dataToSend, 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE){
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-	  }
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART1_Handler */
 }
@@ -469,26 +468,14 @@ void UART2_Handler(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-  UARTcmd cmdMessage;
+  UARTcmd_t cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  // Simulate acquiring sensor data
-//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-//		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  xQueueSend(UART_rxHandle, &dataToSend, 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-	  }
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART2_Handler */
 }
@@ -502,26 +489,14 @@ void UART3_Handler(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-  UARTcmd cmdMessage;
+  UARTcmd_t cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  // Simulate acquiring sensor data
-//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-//		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  xQueueSend(UART_rxHandle, &dataToSend, 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-	  }
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART3_Handler */
 }
@@ -535,26 +510,14 @@ void UART4_Handler(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-  UARTcmd cmdMessage;
+  UARTcmd_t cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  // Simulate acquiring sensor data
-//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-//		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  xQueueSend(UART_rxHandle, &dataToSend, 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-	  }
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART4_Handler */
 }
@@ -568,26 +531,14 @@ void UART6_Handler(void const * argument)
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
   /* Infinite loop */
-  UARTcmd cmdMessage;
+  UARTcmd_t cmdMessage;
   TXData_t dataToSend;
   dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  if(cmdMessage.type == cmdREAD) {
-		  // Simulate acquiring sensor data
-//		  cmdMessage.motorHandle->_lastPosition = cmdMessage.position;
-//		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  Dynamixel_GetPosition(cmdMessage.motorHandle);
-		  dataToSend.pData = cmdMessage.motorHandle;
-
-		  xQueueSend(UART_rxHandle, &dataToSend, 0);
-	  }
-	  else if(cmdMessage.type == cmdWRITE) {
-		  Dynamixel_SetGoalPosition(cmdMessage.motorHandle, cmdMessage.position);
-	  }
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART6_Handler */
 }
