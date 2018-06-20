@@ -310,8 +310,8 @@ void StartDefaultTask(void const * argument)
 
         // Settings for torque near goal position, and acceptable error (AX12A only)
         if(arrDynamixel[i]->_motorType == AX12ATYPE){
-        	AX12A_SetComplianceSlope(arrDynamixel[i], 7);
-        	// AX12A_SetComplianceMargin(arrDynamixel[i], 7);
+        	AX12A_SetComplianceSlope(arrDynamixel[i], 5); // 4 vibrates; 7 is too loose
+        	AX12A_SetComplianceMargin(arrDynamixel[i], 1);
         }
 
 		(Motorcmd[i]).motorHandle = arrDynamixel[i];
