@@ -33,6 +33,6 @@ typedef struct {
 }TXData_t;
 
 /***************************** Function prototypes ****************************/
-void UART_ProcessEvent(UARTcmd_t* cmdPtr);
+void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend);
 
 #endif /* __UART_HANDLER_H */
