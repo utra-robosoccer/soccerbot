@@ -136,6 +136,7 @@ void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
 	BaseType_t status;
 
 	if(MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+		// Try fix for flag bit silicon bug
 		generateClocks(1, 1);
 		return;
 	}
@@ -187,6 +188,7 @@ void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
 	BaseType_t status;
 
 	if(MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer) != HAL_OK){
+		// Try fix for flag bit silicon bug
 		generateClocks(1, 1);
 		return;
 	}
