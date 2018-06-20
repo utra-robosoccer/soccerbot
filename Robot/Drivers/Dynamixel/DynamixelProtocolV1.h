@@ -101,10 +101,8 @@
 #define MAX_PUNCH             1023	// Maximum punch (proportional to minimum current)
 #define MIN_PUNCH             0		// Minimum punch (proportional to minimum current)
 
-/********************************* I/O Type ***********************************/
-enum IO_FLAGS{IO_DMA, IO_POLL, IO_IT};
-
-extern enum IO_FLAGS IOType;
+/*************************** Library configuration ****************************/
+ enum IO_FLAGS{IO_DMA, IO_POLL, IO_IT};
 
 /****************************** Public Variables ******************************/
 /* Buffer for data received from motors. */
@@ -160,8 +158,11 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, ui
 void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel);
 int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel);
 
-// Setup
+// Library configuration
 void Dynamixel_SetIOType(enum IO_FLAGS type);
+enum IO_FLAGS Dynamixel_GetIOType();
+
+// Setup
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef* UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType);
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
