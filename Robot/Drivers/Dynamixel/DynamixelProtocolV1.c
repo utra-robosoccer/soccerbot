@@ -68,19 +68,6 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 /*								 											   */
 /*								 											   */
 /*******************************************************************************/
-void Dynamixel_SetIOType(enum IO_FLAGS type) {
-	/* Sets the IO protocol to one of three options:
-	 * Blocking (Polling), Non-Blocking (Interrupt), and DMA
-	 *
-	 * Arguments: One of IO_POLL, IO_IT, or IO_DMA
-	 *
-	 * Returns: none
-	 */
-	IOType = type;
-}
-
-
-
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	/* Sets the ID (identification number) for the current motor.
 	 * Note that the instruction will be broadcasted using the current ID.
@@ -372,7 +359,6 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, float maxTorque
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-// TODO: Test
 void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data){
 	/* Sets the conditions under which a status packet will be returned.
 	 *
@@ -397,7 +383,6 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-// TODO: Test
 void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data){
 	/* Sets the conditions under which the motor LED will light up.
 	 *
@@ -424,7 +409,6 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LE
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
 
-// TODO: Test
 void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data){
 	/* Sets the conditions under which the motor will turn off its torque.
 	 *
@@ -873,6 +857,42 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 	/* Return. */
 	return(hdynamixel -> _isJointMode);
+}
+
+
+
+
+/*******************************************************************************/
+/*	Library configuration functions                                            */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*								 											   */
+/*******************************************************************************/
+void Dynamixel_SetIOType(enum IO_FLAGS type) {
+	/* Sets the IO protocol to one of three options:
+	 * Blocking (Polling), Non-Blocking (Interrupt), and DMA
+	 *
+	 * Arguments: One of IO_POLL, IO_IT, or IO_DMA
+	 *
+	 * Returns: none
+	 */
+
+	IOType = type;
+}
+
+enum IO_FLAGS Dynamixel_GetIOType(){
+	/* Gets the IO protocol setting for the library
+	 *
+	 * Arguments: none
+	 *
+	 * Returns: One of IO_POLL, IO_IT, or IO_DMA
+	 */
+
+	return IOType;
 }
 
 
