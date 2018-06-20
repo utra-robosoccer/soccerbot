@@ -448,11 +448,13 @@ void UART1_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd_t cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage);
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART1_Handler */
 }
@@ -467,11 +469,13 @@ void UART2_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd_t cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage);
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART2_Handler */
 }
@@ -486,11 +490,13 @@ void UART3_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd_t cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage);
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART3_Handler */
 }
@@ -505,11 +511,13 @@ void UART4_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd_t cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage);
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART4_Handler */
 }
@@ -524,11 +532,13 @@ void UART6_Handler(void const * argument)
 
   /* Infinite loop */
   UARTcmd_t cmdMessage;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eMotorData;
 
   for(;;)
 	{
 	  while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage);
+	  UART_ProcessEvent(&cmdMessage, &dataToSend);
   }
   /* USER CODE END UART6_Handler */
 }
