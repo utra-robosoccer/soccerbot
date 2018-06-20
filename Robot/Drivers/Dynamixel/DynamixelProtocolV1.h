@@ -11,16 +11,6 @@
 #define __DYNAMIXEL_PROTOCOL_V1_H__
 
 /********************************** Includes **********************************/
-#ifdef stm32f4xx_hal
-	#include "stm32f4xx_hal.h"
-	#include "stm32f4xx_hal_conf.h"
-#endif
-
-#ifdef stm32h7xx_hal
-	#include "stm32h7xx_hal.h"
-	#include "stm32h7xx_hal_conf.h"
-#endif
-
 /* I/O */
 #include "gpio.h"
 #include "usart.h"
