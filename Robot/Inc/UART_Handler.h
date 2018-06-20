@@ -2,34 +2,26 @@
 #ifndef __UART_HANDLER_H
 #define __UART_HANDLER_H
 
-#ifdef stm32f4xx_hal
-	#include "stm32f4xx_hal.h"
-	#include "stm32f4xx_hal_conf.h"
-#endif
-
-#ifdef stm32h7xx_hal
-	#include "stm32h7xx_hal.h"
-	#include "stm32h7xx_hal_conf.h"
-#endif
-
+/********************************** Includes **********************************/
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "cmsis_os.h"
 
-//#define cmdREAD			0
-//#define cmdWRITE		1
-
+/*********************************** Types ************************************/
+// Used for sending data from the control task to the UART tasks
 typedef enum{
-	cmdREAD,
-	cmdWRITE
+	cmdReadPosition,
+	cmdWritePosition,
+	cmdWriteTorque
 }eUARTcmd_t;
 
 typedef struct {
 	eUARTcmd_t 					type;
 	Dynamixel_HandleTypeDef*	motorHandle;
-	float 						position;
-	float 						velocity;
+	float 						value;
 	QueueHandle_t				qHandle;
-}UARTcmd;
+}UARTcmd_t;
 
+// Used for sending data to the PC TX task
 typedef enum{
 	eMotorData,
 	eIMUData
@@ -40,7 +32,7 @@ typedef struct {
 	void* pData; // Points to the container for the data
 }TXData_t;
 
-void _Error_Handler(char *, int);
+/***************************** Function prototypes ****************************/
+void UART_ProcessEvent(UARTcmd_t* cmdPtr);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-#endif
+#endif /* __UART_HANDLER_H */
