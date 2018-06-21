@@ -99,7 +99,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	hdynamixel -> _ID = ID;
 }
 
-void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, long baud){
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
 	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
 	 *
 	 * Instruction register address: 0x04 (EEPROM)

@@ -117,7 +117,7 @@ extern uint8_t arrSyncWritePosition[NUM_UARTS][23];
 /***************************** Function prototypes ****************************/
 // Setters (use the WRITE DATA instruction)
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
-void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, long baud); // (EEPROM)
+void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud); // (EEPROM)
 void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, uint16_t microSec); // (EEPROM)
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAngle); // (EEPROM)
 void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAngle); // (EEPROM)
