@@ -87,7 +87,7 @@ osThreadId UART6_Handle;
 uint32_t UART6_Buffer[ 128 ];
 osStaticThreadDef_t UART6_ControlBlock;
 osThreadId IMUTaskHandle;
-uint32_t IMUTaskBuffer[ 128 ];
+uint32_t IMUTaskBuffer[ 512 ];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId rxTaskHandle;
 uint32_t rxTaskBuffer[ 512 ];
@@ -220,7 +220,7 @@ void MX_FREERTOS_Init(void) {
   UART6_Handle = osThreadCreate(osThread(UART6_), NULL);
 
   /* definition and creation of IMUTask */
-  osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128, IMUTaskBuffer, &IMUTaskControlBlock);
+  osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 512, IMUTaskBuffer, &IMUTaskControlBlock);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of rxTask */
