@@ -117,7 +117,6 @@ osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
 
 /* USER CODE BEGIN Variables */
-const double PI = 3.141592654;
 
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
@@ -559,6 +558,14 @@ void StartIMUTask(void const * argument)
 
   uint32_t notification;
 
+  MPUFilterType axFilter, ayFilter, azFilter, vxFilter, vyFilter, vzFilter;
+  MPUFilter_init(&axFilter);
+  MPUFilter_init(&ayFilter);
+  MPUFilter_init(&azFilter);
+  MPUFilter_init(&vxFilter);
+  MPUFilter_init(&vyFilter);
+  MPUFilter_init(&vzFilter);
+
   for(;;)
   {
 	  do{
@@ -569,6 +576,26 @@ void StartIMUTask(void const * argument)
 	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
 	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
+	  // Filter
+	  MPUFilter_writeInput(&azFilter, IMUdata._Z_ACCEL);
+	  IMUdata._Z_ACCEL = MPUFilter_readOutput(&azFilter);
+
+	  MPUFilter_writeInput(&ayFilter, IMUdata._Y_ACCEL);
+	  IMUdata._Y_ACCEL = MPUFilter_readOutput(&ayFilter);
+
+	  MPUFilter_writeInput(&axFilter, IMUdata._X_ACCEL);
+	  IMUdata._X_ACCEL = MPUFilter_readOutput(&axFilter);
+
+	  MPUFilter_writeInput(&vzFilter, IMUdata._Z_GYRO);
+	  IMUdata._Z_GYRO = MPUFilter_readOutput(&vzFilter);
+
+	  MPUFilter_writeInput(&vyFilter, IMUdata._Y_GYRO);
+	  IMUdata._Y_GYRO = MPUFilter_readOutput(&vyFilter);
+
+	  MPUFilter_writeInput(&vxFilter, IMUdata._X_GYRO);
+	  IMUdata._X_GYRO = MPUFilter_readOutput(&vxFilter);
+
+	  // Send to TX thread
 	  dataToSend.pData = &IMUdata;
 	  xQueueSend(UART_rxHandle, &dataToSend, 0);
   }
