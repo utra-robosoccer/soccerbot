@@ -685,7 +685,7 @@ void StartTxTask(void const * argument)
   // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
   // be ready for this once all 18 motors can be ready from.
   uint32_t NOTIFICATION_MASK = 0x80000000;
-  for(uint8_t i = 1; i <= 9; i++){
+  for(uint8_t i = 1; i <= 12; i++){
 	  NOTIFICATION_MASK |= (1 << i);
   }
 
