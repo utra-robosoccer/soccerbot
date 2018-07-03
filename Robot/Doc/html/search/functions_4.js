@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['uart1_5fhandler',['UART1_Handler',['../freertos_8c.html#abb7badba6cdb3ff61f2dff35b5a9ff2c',1,'freertos.c']]],
-  ['uart2_5fhandler',['UART2_Handler',['../freertos_8c.html#afd685a32f5ae07a72d480671f7c646d5',1,'freertos.c']]],
-  ['uart3_5fhandler',['UART3_Handler',['../freertos_8c.html#a478be609d54754b09cd8bdaee19aaf65',1,'freertos.c']]],
-  ['uart4_5fhandler',['UART4_Handler',['../freertos_8c.html#a099b379cd3d7afbd65e8009d5bcae63f',1,'freertos.c']]],
-  ['uart6_5fhandler',['UART6_Handler',['../freertos_8c.html#aeaecd9665005d7d4414f1e30828e89a9',1,'freertos.c']]]
+  ['startdefaulttask',['StartDefaultTask',['../freertos_8c.html#a016544463b4842ced7191baf8f449cea',1,'freertos.c']]],
+  ['startimutask',['StartIMUTask',['../freertos_8c.html#a2b1b4b3fe51fe46654895c7626bf83bd',1,'freertos.c']]],
+  ['startrxtask',['StartRxTask',['../freertos_8c.html#af50979eaf2ad1b106c5514b33138a434',1,'freertos.c']]],
+  ['starttxtask',['StartTxTask',['../freertos_8c.html#abfae5c57e07c9a086f73340d2aee1a7b',1,'freertos.c']]],
+  ['systemclock_5fconfig',['SystemClock_Config',['../main_8c.html#a70af21c671abfcc773614a9a4f63d920',1,'main.c']]]
 ];

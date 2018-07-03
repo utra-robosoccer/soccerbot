@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * @file           : freertos.c
-  * @brief          : Code for freertos application
+  * @file    freertos.c
+  * @brief   Code for freertos application
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and

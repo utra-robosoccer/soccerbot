@@ -1,14 +1,12 @@
 var searchData=
 [
-  ['default_5falarm_5fled',['DEFAULT_ALARM_LED',['../_dynamixel_protocol_v1_8h.html#af37a134a4f0283038079891693436e71',1,'DynamixelProtocolV1.h']]],
-  ['default_5falarm_5fshutdown',['DEFAULT_ALARM_SHUTDOWN',['../_dynamixel_protocol_v1_8h.html#aeaa2914c1aa90c21425b783bed6fb9b8',1,'DynamixelProtocolV1.h']]],
-  ['default_5fcw_5fangle_5flimit',['DEFAULT_CW_ANGLE_LIMIT',['../_dynamixel_protocol_v1_8h.html#adff150d9aa53853e5bb79f67987ad80a',1,'DynamixelProtocolV1.h']]],
-  ['default_5feeprom_5flock',['DEFAULT_EEPROM_LOCK',['../_dynamixel_protocol_v1_8h.html#a220f88e79d1d5626fb8f90e9b9410790',1,'DynamixelProtocolV1.h']]],
-  ['default_5fid',['DEFAULT_ID',['../_dynamixel_protocol_v1_8h.html#a50f28d60b2b6da9c769708953aaa34d0',1,'DynamixelProtocolV1.h']]],
-  ['default_5fled_5fenable',['DEFAULT_LED_ENABLE',['../_dynamixel_protocol_v1_8h.html#ada73d06bf48f973ff2a9b42fc57d06fc',1,'DynamixelProtocolV1.h']]],
-  ['default_5flow_5fvoltage_5flimit',['DEFAULT_LOW_VOLTAGE_LIMIT',['../_dynamixel_protocol_v1_8h.html#a41c966dfcb7498d5b5f85e536b557827',1,'DynamixelProtocolV1.h']]],
-  ['default_5fmaximum_5ftorque',['DEFAULT_MAXIMUM_TORQUE',['../_dynamixel_protocol_v1_8h.html#a4318c76972a3e5f57f68b43d800d65ed',1,'DynamixelProtocolV1.h']]],
-  ['default_5freturn_5fdelay',['DEFAULT_RETURN_DELAY',['../_dynamixel_protocol_v1_8h.html#ab324f8dad2896523952f488311f1f675',1,'DynamixelProtocolV1.h']]],
-  ['default_5fstatus_5freturn_5flevel',['DEFAULT_STATUS_RETURN_LEVEL',['../_dynamixel_protocol_v1_8h.html#aded63c4edc004b8d50451dd2a16776f4',1,'DynamixelProtocolV1.h']]],
-  ['default_5ftorque_5fenable',['DEFAULT_TORQUE_ENABLE',['../_dynamixel_protocol_v1_8h.html#aea2e131e4c412bde90ee5b377467081b',1,'DynamixelProtocolV1.h']]]
+  ['max_5fangle',['MAX_ANGLE',['../_dynamixel_protocol_v1_8h.html#af3c82099d63a2d91d68bd62d954059c7',1,'DynamixelProtocolV1.h']]],
+  ['max_5fpunch',['MAX_PUNCH',['../_dynamixel_protocol_v1_8h.html#aaf3caf40ce946a91e713b3e982c50771',1,'DynamixelProtocolV1.h']]],
+  ['max_5ftorque',['MAX_TORQUE',['../_dynamixel_protocol_v1_8h.html#aaffdf293ef95fd884b05ac19b8f90ad3',1,'DynamixelProtocolV1.h']]],
+  ['max_5fvoltage',['MAX_VOLTAGE',['../_dynamixel_protocol_v1_8h.html#a0637861f9419cef73e2e7e6210280e4e',1,'DynamixelProtocolV1.h']]],
+  ['min_5fangle',['MIN_ANGLE',['../_dynamixel_protocol_v1_8h.html#af5cc136dbc86df89de56c3aa421c12ee',1,'DynamixelProtocolV1.h']]],
+  ['min_5fpunch',['MIN_PUNCH',['../_dynamixel_protocol_v1_8h.html#a2507baa0f08b777840f6810a878a672e',1,'DynamixelProtocolV1.h']]],
+  ['min_5ftorque',['MIN_TORQUE',['../_dynamixel_protocol_v1_8h.html#a3ab1e4fe639ae1549b40bdc0b5c1a0af',1,'DynamixelProtocolV1.h']]],
+  ['min_5fvelocity',['MIN_VELOCITY',['../_dynamixel_protocol_v1_8h.html#a5842884a999d32a2c7a8462dd6dc6c00',1,'DynamixelProtocolV1.h']]],
+  ['min_5fvoltage',['MIN_VOLTAGE',['../_dynamixel_protocol_v1_8h.html#a34badbf9acae6cc5c2eed2ab51b32d30',1,'DynamixelProtocolV1.h']]]
 ];
