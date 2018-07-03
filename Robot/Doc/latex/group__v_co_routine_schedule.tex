@@ -1,0 +1,36 @@
+\hypertarget{group__v_co_routine_schedule}{}\section{v\+Co\+Routine\+Schedule}
+\label{group__v_co_routine_schedule}\index{v\+Co\+Routine\+Schedule@{v\+Co\+Routine\+Schedule}}
+croutine. h 
+\begin{DoxyPre}
+void vCoRoutineSchedule( void );\end{DoxyPre}
+
+
+Run a co-\/routine.
+
+v\+Co\+Routine\+Schedule() executes the highest priority co-\/routine that is able to run. The co-\/routine will execute until it either blocks, yields or is preempted by a task. Co-\/routines execute cooperatively so one co-\/routine cannot be preempted by another, but can be preempted by a task.
+
+If an application comprises of both tasks and co-\/routines then v\+Co\+Routine\+Schedule should be called from the idle task (in an idle task hook).
+
+Example usage\+: 
+\begin{DoxyPre}
+// This idle task hook will schedule a co-routine each time it is called.
+// The rest of the idle task will execute between co-routine calls.
+void vApplicationIdleHook( void )
+\{
+   vCoRoutineSchedule();
+\}\end{DoxyPre}
+
+
+
+\begin{DoxyPre}// Alternatively, if you do not require any other part of the idle task to
+// execute, the idle task hook can call vCoRoutineScheduler() within an
+// infinite loop.
+void vApplicationIdleHook( void )
+\{
+   for( ;; )
+   \{
+       vCoRoutineSchedule();
+   \}
+\}
+\end{DoxyPre}
+ 

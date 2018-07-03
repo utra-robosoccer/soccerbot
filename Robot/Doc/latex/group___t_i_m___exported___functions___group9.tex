@@ -1,0 +1,51 @@
+\hypertarget{group___t_i_m___exported___functions___group9}{}\section{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9}
+\label{group___t_i_m___exported___functions___group9}\index{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9@{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___t_i_m___exported___functions___group9_ga8a3b0ad512a6e6c6157440b68d395eac}{H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback}} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\begin{DoxyCompactList}\small\item\em Period elapsed callback in non blocking mode. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga1fc39499fe9db8b7fb88005e9f107a36}\label{group___t_i_m___exported___functions___group9_ga1fc39499fe9db8b7fb88005e9f107a36}} 
+void {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+O\+C\+\_\+\+Delay\+Elapsed\+Callback} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\item 
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga77a2401a35ddd9bd0b8fc28331b81381}\label{group___t_i_m___exported___functions___group9_ga77a2401a35ddd9bd0b8fc28331b81381}} 
+void {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+I\+C\+\_\+\+Capture\+Callback} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\item 
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga07e5fc4d223b16bec2fd6bed547cf91d}\label{group___t_i_m___exported___functions___group9_ga07e5fc4d223b16bec2fd6bed547cf91d}} 
+void {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+P\+W\+M\+\_\+\+Pulse\+Finished\+Callback} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\item 
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga189577c72b1963671b26820d8161d678}\label{group___t_i_m___exported___functions___group9_ga189577c72b1963671b26820d8161d678}} 
+void {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Trigger\+Callback} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\item 
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga6f0868af383d592940700dbb52fac016}\label{group___t_i_m___exported___functions___group9_ga6f0868af383d592940700dbb52fac016}} 
+void {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Error\+Callback} (\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$htim)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{group___t_i_m___exported___functions___group9_ga8a3b0ad512a6e6c6157440b68d395eac}\label{group___t_i_m___exported___functions___group9_ga8a3b0ad512a6e6c6157440b68d395eac}} 
+\index{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9@{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9}!H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback@{H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback}}
+\index{H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback@{H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback}!T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9@{T\+I\+M\+\_\+\+Exported\+\_\+\+Functions\+\_\+\+Group9}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback()}{HAL\_TIM\_PeriodElapsedCallback()}}
+{\footnotesize\ttfamily void H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+Period\+Elapsed\+Callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} $\ast$}]{htim }\end{DoxyParamCaption})}
+
+
+
+Period elapsed callback in non blocking mode. 
+
+\begin{DoxyNote}{Note}
+This function is called when T\+I\+M1 interrupt took place, inside H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+I\+R\+Q\+Handler(). It makes a direct call to \mbox{\hyperlink{group___h_a_l___exported___functions___group2_gaba5b726bfedd013bf7bb5a51d5c4f188}{H\+A\+L\+\_\+\+Inc\+Tick()}} to increment a global variable \char`\"{}uw\+Tick\char`\"{} used as application time base. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em htim} & \+: T\+IM handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}

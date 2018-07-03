@@ -1,0 +1,57 @@
+\hypertarget{structarm__fir__interpolate__instance__q15}{}\section{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15 Struct Reference}
+\label{structarm__fir__interpolate__instance__q15}\index{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}}
+
+
+Instance structure for the Q15 F\+IR interpolator.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structarm__fir__interpolate__instance__q15_aee73cc056696e504430c53eaa9c58cf0}{L}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__fir__interpolate__instance__q15_a8f92bb07e0812f94679438cdf412b26a}{phase\+Length}}
+\item 
+q15\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__interpolate__instance__q15_a7ca181a37f714d174445f486bebce26f}{p\+Coeffs}}
+\item 
+q15\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__interpolate__instance__q15_ae29dfdb736374fcddaeaec4b7770170c}{p\+State}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the Q15 F\+IR interpolator. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__fir__interpolate__instance__q15_aee73cc056696e504430c53eaa9c58cf0}\label{structarm__fir__interpolate__instance__q15_aee73cc056696e504430c53eaa9c58cf0}} 
+\index{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}!L@{L}}
+\index{L@{L}!arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}}
+\subsubsection{\texorpdfstring{L}{L}}
+{\footnotesize\ttfamily uint8\+\_\+t L}
+
+upsample factor. \mbox{\Hypertarget{structarm__fir__interpolate__instance__q15_a7ca181a37f714d174445f486bebce26f}\label{structarm__fir__interpolate__instance__q15_a7ca181a37f714d174445f486bebce26f}} 
+\index{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}!p\+Coeffs@{p\+Coeffs}}
+\index{p\+Coeffs@{p\+Coeffs}!arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}}
+\subsubsection{\texorpdfstring{p\+Coeffs}{pCoeffs}}
+{\footnotesize\ttfamily q15\+\_\+t$\ast$ p\+Coeffs}
+
+points to the coefficient array. The array is of length L$\ast$phase\+Length. \mbox{\Hypertarget{structarm__fir__interpolate__instance__q15_a8f92bb07e0812f94679438cdf412b26a}\label{structarm__fir__interpolate__instance__q15_a8f92bb07e0812f94679438cdf412b26a}} 
+\index{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}!phase\+Length@{phase\+Length}}
+\index{phase\+Length@{phase\+Length}!arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}}
+\subsubsection{\texorpdfstring{phase\+Length}{phaseLength}}
+{\footnotesize\ttfamily uint16\+\_\+t phase\+Length}
+
+length of each polyphase filter component. \mbox{\Hypertarget{structarm__fir__interpolate__instance__q15_ae29dfdb736374fcddaeaec4b7770170c}\label{structarm__fir__interpolate__instance__q15_ae29dfdb736374fcddaeaec4b7770170c}} 
+\index{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}!p\+State@{p\+State}}
+\index{p\+State@{p\+State}!arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15@{arm\+\_\+fir\+\_\+interpolate\+\_\+instance\+\_\+q15}}
+\subsubsection{\texorpdfstring{p\+State}{pState}}
+{\footnotesize\ttfamily q15\+\_\+t$\ast$ p\+State}
+
+points to the state variable array. The array is of length block\+Size+phase\+Length-\/1. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

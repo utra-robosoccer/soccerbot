@@ -1,0 +1,135 @@
+\subsection*{Introduction }
+
+This user manual describes the C\+M\+S\+IS D\+SP software library, a suite of common signal processing functions for use on Cortex-\/M processor based devices.
+
+The library is divided into a number of functions each covering a specific category\+:
+\begin{DoxyItemize}
+\item Basic math functions
+\item Fast math functions
+\item Complex math functions
+\item Filters
+\item Matrix functions
+\item Transforms
+\item Motor control functions
+\item Statistical functions
+\item Support functions
+\item Interpolation functions
+\end{DoxyItemize}
+
+The library has separate functions for operating on 8-\/bit integers, 16-\/bit integers, 32-\/bit integer and 32-\/bit floating-\/point values.
+
+\subsection*{Using the Library }
+
+The library installer contains prebuilt versions of the libraries in the {\ttfamily Lib} folder.
+\begin{DoxyItemize}
+\item arm\+\_\+cortex\+M7lfdp\+\_\+math.\+lib (Little endian and Double Precision Floating Point Unit on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M7bfdp\+\_\+math.\+lib (Big endian and Double Precision Floating Point Unit on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M7lfsp\+\_\+math.\+lib (Little endian and Single Precision Floating Point Unit on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M7bfsp\+\_\+math.\+lib (Big endian and Single Precision Floating Point Unit on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M7l\+\_\+math.\+lib (Little endian on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M7b\+\_\+math.\+lib (Big endian on Cortex-\/\+M7)
+\item arm\+\_\+cortex\+M4lf\+\_\+math.\+lib (Little endian and Floating Point Unit on Cortex-\/\+M4)
+\item arm\+\_\+cortex\+M4bf\+\_\+math.\+lib (Big endian and Floating Point Unit on Cortex-\/\+M4)
+\item arm\+\_\+cortex\+M4l\+\_\+math.\+lib (Little endian on Cortex-\/\+M4)
+\item arm\+\_\+cortex\+M4b\+\_\+math.\+lib (Big endian on Cortex-\/\+M4)
+\item arm\+\_\+cortex\+M3l\+\_\+math.\+lib (Little endian on Cortex-\/\+M3)
+\item arm\+\_\+cortex\+M3b\+\_\+math.\+lib (Big endian on Cortex-\/\+M3)
+\item arm\+\_\+cortex\+M0l\+\_\+math.\+lib (Little endian on Cortex-\/\+M0 / Cortex\+M0+)
+\item arm\+\_\+cortex\+M0b\+\_\+math.\+lib (Big endian on Cortex-\/\+M0 / Cortex\+M0+)
+\end{DoxyItemize}
+
+The library functions are declared in the public file {\ttfamily \mbox{\hyperlink{arm__math_8h_source}{arm\+\_\+math.\+h}}} which is placed in the {\ttfamily Include} folder. Simply include this file and link the appropriate library in the application and begin calling the library functions. The Library supports single public header file {\ttfamily  \mbox{\hyperlink{arm__math_8h_source}{arm\+\_\+math.\+h}}} for Cortex-\/\+M7/\+M4/\+M3/\+M0/\+M0+ with little endian and big endian. Same header file will be used for floating point unit(\+F\+P\+U) variants. Define the appropriate pre processor M\+A\+C\+RO A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M7 or A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M4 or A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M3 or A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M0 or A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M0\+P\+L\+US depending on the target processor in the application.
+
+\subsection*{Examples }
+
+The library ships with a number of examples which demonstrate how to use the library functions.
+
+\subsection*{Toolchain Support }
+
+The library has been developed and tested with M\+D\+K-\/\+A\+RM version 5.\+14.\+0.\+0 The library is being tested in G\+CC and I\+AR toolchains and updates on this activity will be made available shortly.
+
+\subsection*{Building the Library }
+
+The library installer contains a project file to re build libraries on M\+D\+K-\/\+A\+RM Tool chain in the {\ttfamily C\+M\+S\+IS\textbackslash{}D\+S\+P\+\_\+\+Lib\textbackslash{}Source\textbackslash{}A\+RM} folder.
+\begin{DoxyItemize}
+\item arm\+\_\+cortex\+M\+\_\+math.\+uvprojx
+\end{DoxyItemize}
+
+The libraries can be built by opening the arm\+\_\+cortex\+M\+\_\+math.\+uvprojx project in M\+D\+K-\/\+A\+RM, selecting a specific target, and defining the optional pre processor M\+A\+C\+R\+Os detailed above.
+
+\subsection*{Pre-\/processor Macros }
+
+Each library project have differant pre-\/processor macros.
+
+
+\begin{DoxyItemize}
+\item U\+N\+A\+L\+I\+G\+N\+E\+D\+\_\+\+S\+U\+P\+P\+O\+R\+T\+\_\+\+D\+I\+S\+A\+B\+LE\+:
+\end{DoxyItemize}
+
+Define macro U\+N\+A\+L\+I\+G\+N\+E\+D\+\_\+\+S\+U\+P\+P\+O\+R\+T\+\_\+\+D\+I\+S\+A\+B\+LE, If the silicon does not support unaligned memory access
+
+
+\begin{DoxyItemize}
+\item A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+B\+I\+G\+\_\+\+E\+N\+D\+I\+AN\+:
+\end{DoxyItemize}
+
+Define macro A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+B\+I\+G\+\_\+\+E\+N\+D\+I\+AN to build the library for big endian targets. By default library builds for little endian targets.
+
+
+\begin{DoxyItemize}
+\item A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+M\+A\+T\+R\+I\+X\+\_\+\+C\+H\+E\+CK\+:
+\end{DoxyItemize}
+
+Define macro A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+M\+A\+T\+R\+I\+X\+\_\+\+C\+H\+E\+CK for checking on the input and output sizes of matrices
+
+
+\begin{DoxyItemize}
+\item A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+R\+O\+U\+N\+D\+I\+NG\+:
+\end{DoxyItemize}
+
+Define macro A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+R\+O\+U\+N\+D\+I\+NG for rounding on support functions
+
+
+\begin{DoxyItemize}
+\item A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+Mx\+:
+\end{DoxyItemize}
+
+Define macro A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M4 for building the library on Cortex-\/\+M4 target, A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M3 for building library on Cortex-\/\+M3 target and A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M0 for building library on Cortex-\/\+M0 target, A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M0\+P\+L\+US for building library on Cortex-\/\+M0+ target, and A\+R\+M\+\_\+\+M\+A\+T\+H\+\_\+\+C\+M7 for building the library on cortex-\/\+M7.
+
+
+\begin{DoxyItemize}
+\item \+\_\+\+\_\+\+F\+P\+U\+\_\+\+P\+R\+E\+S\+E\+NT\+:
+\end{DoxyItemize}
+
+Initialize macro \+\_\+\+\_\+\+F\+P\+U\+\_\+\+P\+R\+E\+S\+E\+NT = 1 when building on F\+PU supported Targets. Enable this macro for M4bf and M4lf libraries
+
+
+
+ \subsection*{C\+M\+S\+I\+S-\/\+D\+SP in A\+R\+M\+::\+C\+M\+S\+IS Pack }
+
+The following files relevant to C\+M\+S\+I\+S-\/\+D\+SP are present in the {\bfseries A\+R\+M\+::\+C\+M\+S\+IS} Pack directories\+: \tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ File/\+Folder  }&\textbf{ Content   }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ File/\+Folder  }&\textbf{ Content   }\\\cline{1-2}
+\endhead
+{\bfseries C\+M\+S\+IS\textbackslash{}Documentation\textbackslash{}D\+SP}  &This documentation   \\\cline{1-2}
+{\bfseries C\+M\+S\+IS\textbackslash{}D\+S\+P\+\_\+\+Lib}  &Software license agreement (license.\+txt)   \\\cline{1-2}
+{\bfseries C\+M\+S\+IS\textbackslash{}D\+S\+P\+\_\+\+Lib\textbackslash{}Examples}  &Example projects demonstrating the usage of the library functions   \\\cline{1-2}
+{\bfseries C\+M\+S\+IS\textbackslash{}D\+S\+P\+\_\+\+Lib\textbackslash{}Source}  &Source files for rebuilding the library   \\\cline{1-2}
+\end{longtabu}
+
+
+
+
+ \subsection*{Revision History of C\+M\+S\+I\+S-\/\+D\+SP }
+
+Please refer to Change\+Log\+\_\+pg.
+
+\subsection*{Copyright Notice }
+
+Copyright (C) 2010-\/2015 A\+RM Limited. All rights reserved. 

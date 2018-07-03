@@ -1,0 +1,32 @@
+\hypertarget{group___event_group}{}\section{Event\+Group}
+\label{group___event_group}\index{Event\+Group@{Event\+Group}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{group___event_group_handle__t}{Event\+Group\+Handle\+\_\+t}}
+\item 
+\mbox{\hyperlink{group__x_event_group_create}{x\+Event\+Group\+Create}}
+\item 
+\mbox{\hyperlink{group__x_event_group_wait_bits}{x\+Event\+Group\+Wait\+Bits}}
+\item 
+\mbox{\hyperlink{group__x_event_group_clear_bits}{x\+Event\+Group\+Clear\+Bits}}
+\item 
+\mbox{\hyperlink{group__x_event_group_clear_bits_from_i_s_r}{x\+Event\+Group\+Clear\+Bits\+From\+I\+SR}}
+\item 
+\mbox{\hyperlink{group__x_event_group_set_bits}{x\+Event\+Group\+Set\+Bits}}
+\item 
+\mbox{\hyperlink{group__x_event_group_set_bits_from_i_s_r}{x\+Event\+Group\+Set\+Bits\+From\+I\+SR}}
+\item 
+\mbox{\hyperlink{group__x_event_group_sync}{x\+Event\+Group\+Sync}}
+\item 
+\mbox{\hyperlink{group__x_event_group_get_bits}{x\+Event\+Group\+Get\+Bits}}
+\item 
+\mbox{\hyperlink{group__x_event_group_get_bits_from_i_s_r}{x\+Event\+Group\+Get\+Bits\+From\+I\+SR}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An event group is a collection of bits to which an application can assign a meaning. For example, an application may create an event group to convey the status of various C\+AN bus related events in which bit 0 might mean \char`\"{}\+A C\+A\+N
+message has been received and is ready for processing\char`\"{}, bit 1 might mean "The application has queued a message that is ready for sending onto the C\+AN network\char`\"{}, and bit 2 might mean \char`\"{}It is time to send a S\+Y\+NC message onto the C\+AN network" etc. A task can then test the bit values to see which events are active, and optionally enter the Blocked state to wait for a specified bit or a group of specified bits to be active. To continue the C\+AN bus example, a C\+AN controlling task can enter the Blocked state (and therefore not consume any processing time) until either bit 0, bit 1 or bit 2 are active, at which time the bit that was actually active would inform the task which action it had to take (process a received message, send a message, or send a S\+Y\+NC).
+
+The event groups implementation contains intelligence to avoid race conditions that would otherwise occur were an application to use a simple variable for the same purpose. This is particularly important with respect to when a bit within an event group is to be cleared, and when bits have to be set and then tested atomically -\/ as is the case where event groups are used to create a synchronisation point between multiple tasks (a \textquotesingle{}rendezvous\textquotesingle{}). 

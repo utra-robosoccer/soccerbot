@@ -1,0 +1,62 @@
+\hypertarget{group__x_semaphore_create_counting_static}{}\section{x\+Semaphore\+Create\+Counting\+Static}
+\label{group__x_semaphore_create_counting_static}\index{x\+Semaphore\+Create\+Counting\+Static@{x\+Semaphore\+Create\+Counting\+Static}}
+semphr. h 
+\begin{DoxyPre}SemaphoreHandle\_t xSemaphoreCreateCountingStatic( UBaseType\_t uxMaxCount, UBaseType\_t uxInitialCount, StaticSemaphore\_t *pxSemaphoreBuffer )\end{DoxyPre}
+
+
+Creates a new counting semaphore instance, and returns a handle by which the new counting semaphore can be referenced.
+
+In many usage scenarios it is faster and more memory efficient to use a direct to task notification in place of a counting semaphore! \href{http://www.freertos.org/RTOS-task-notifications.html}{\tt http\+://www.\+freertos.\+org/\+R\+T\+O\+S-\/task-\/notifications.\+html}
+
+Internally, within the Free\+R\+T\+OS implementation, counting semaphores use a block of memory, in which the counting semaphore structure is stored. If a counting semaphore is created using x\+Semaphore\+Create\+Counting() then the required memory is automatically dynamically allocated inside the x\+Semaphore\+Create\+Counting() function. (see \href{http://www.freertos.org/a00111.html}{\tt http\+://www.\+freertos.\+org/a00111.\+html}). If a counting semaphore is created using x\+Semaphore\+Create\+Counting\+Static() then the application writer must provide the memory. x\+Semaphore\+Create\+Counting\+Static() therefore allows a counting semaphore to be created without using any dynamic memory allocation.
+
+Counting semaphores are typically used for two things\+:
+
+1) Counting events.
+
+In this usage scenario an event handler will \textquotesingle{}give\textquotesingle{} a semaphore each time an event occurs (incrementing the semaphore count value), and a handler task will \textquotesingle{}take\textquotesingle{} a semaphore each time it processes an event (decrementing the semaphore count value). The count value is therefore the difference between the number of events that have occurred and the number that have been processed. In this case it is desirable for the initial count value to be zero.
+
+2) Resource management.
+
+In this usage scenario the count value indicates the number of resources available. To obtain control of a resource a task must first obtain a semaphore -\/ decrementing the semaphore count value. When the count value reaches zero there are no free resources. When a task finishes with the resource it \textquotesingle{}gives\textquotesingle{} the semaphore back -\/ incrementing the semaphore count value. In this case it is desirable for the initial count value to be equal to the maximum count value, indicating that all resources are free.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ux\+Max\+Count} & The maximum count value that can be reached. When the semaphore reaches this value it can no longer be \textquotesingle{}given\textquotesingle{}.\\
+\hline
+{\em ux\+Initial\+Count} & The count value assigned to the semaphore when it is created.\\
+\hline
+{\em px\+Semaphore\+Buffer} & Must point to a variable of type Static\+Semaphore\+\_\+t, which will then be used to hold the semaphore\textquotesingle{}s data structure, removing the need for the memory to be allocated dynamically.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the counting semaphore was successfully created then a handle to the created counting semaphore is returned. If px\+Semaphore\+Buffer was N\+U\+LL then N\+U\+LL is returned.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore;
+StaticSemaphore\_t xSemaphoreBuffer;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+SemaphoreHandle\_t xSemaphore = NULL;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   // Counting semaphore cannot be used before they have been created.  Create
+   // a counting semaphore using xSemaphoreCreateCountingStatic().  The max
+   // value to which the semaphore can count is 10, and the initial value
+   // assigned to the count will be 0.  The address of xSemaphoreBuffer is
+   // passed in and will be used to hold the semaphore structure, so no dynamic
+   // memory allocation will be used.
+   xSemaphore = xSemaphoreCreateCounting( 10, 0, &xSemaphoreBuffer );\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   // No memory allocation was attempted so xSemaphore cannot be NULL, so there
+   // is no need to check its value.
+\}
+\end{DoxyPre}
+ 

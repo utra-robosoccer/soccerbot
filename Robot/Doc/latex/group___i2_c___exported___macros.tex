@@ -1,0 +1,253 @@
+\hypertarget{group___i2_c___exported___macros}{}\section{I2C Exported Macros}
+\label{group___i2_c___exported___macros}\index{I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_ga74c8fd72a78882720c28448ce8bd33d8}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$State = \mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a91ba08634e08d7287940f1bc5a37eeff}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}})
+\begin{DoxyCompactList}\small\item\em Reset I2C handle state. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_gac9d8b249b06b2d30f987acc9ceebd1d9}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R2 $\vert$= (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Enable or disable the specified I2C interrupts. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga33d0c7202ae298fa3ae128c5da49d455}\label{group___i2_c___exported___macros_ga33d0c7202ae298fa3ae128c5da49d455}} 
+\#define {\bfseries \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R2 \&= ($\sim$(\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)))
+\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_ga932024bf4a259e0cdaf9e50b38e3d41a}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)~((((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R2 \& (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)) == (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)) ? S\+ET \+: R\+E\+S\+ET)
+\begin{DoxyCompactList}\small\item\em Checks if the specified I2C interrupt source is enabled or disabled. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_gafbdf01a7dc3183de7af56456cab93551}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Checks whether the specified I2C flag is set or not. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_ga933e2ea67e86db857a06b70a93be1186}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$S\+R1 = $\sim$((\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+) \& I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+M\+A\+SK))
+\begin{DoxyCompactList}\small\item\em Clears the I2C pending flags which are cleared by writing 0 in a specific bit. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_ga15a0a1a04971d44f9a1b82cab10af24f}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Clears the I2C A\+D\+DR pending flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_gae8e94c16809df16411862b11fea781db}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Clears the I2C S\+T\+O\+PF pending flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_gacff412c47b0c1d63ef3b2a07f65988b7}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R1 $\vert$=  \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga953b0d38414808db79da116842ed3262}{I2\+C\+\_\+\+C\+R1\+\_\+\+PE}})
+\begin{DoxyCompactList}\small\item\em Enable the I2C peripheral. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___i2_c___exported___macros_ga3d6a35da02ca72537a15570912c80412}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R1 \&=  $\sim$\mbox{\hyperlink{group___peripheral___registers___bits___definition_ga953b0d38414808db79da116842ed3262}{I2\+C\+\_\+\+C\+R1\+\_\+\+PE}})
+\begin{DoxyCompactList}\small\item\em Disable the I2C peripheral. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga15a0a1a04971d44f9a1b82cab10af24f}\label{group___i2_c___exported___macros_ga15a0a1a04971d44f9a1b82cab10af24f}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG}{\_\_HAL\_I2C\_CLEAR\_ADDRFLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+A\+D\+D\+R\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do}\{                                           \(\backslash\)
+    \_\_IO uint32\_t tmpreg = 0x00U;               \(\backslash\)
+    tmpreg = (\_\_HANDLE\_\_)->Instance->SR1;       \(\backslash\)
+    tmpreg = (\_\_HANDLE\_\_)->Instance->SR2;       \(\backslash\)
+    UNUSED(tmpreg);                             \(\backslash\)
+  \} \textcolor{keywordflow}{while}(0)
+\end{DoxyCode}
+
+
+Clears the I2C A\+D\+DR pending flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga933e2ea67e86db857a06b70a93be1186}\label{group___i2_c___exported___macros_ga933e2ea67e86db857a06b70a93be1186}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}{\_\_HAL\_I2C\_CLEAR\_FLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$S\+R1 = $\sim$((\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+) \& I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+M\+A\+SK))}
+
+
+
+Clears the I2C pending flags which are cleared by writing 0 in a specific bit. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+{\em \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+} & specifies the flag to clear. This parameter can be any combination of the following values\+: \begin{DoxyItemize}
+\item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+S\+M\+B\+A\+L\+E\+RT\+: S\+M\+Bus Alert flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+T\+I\+M\+E\+O\+UT\+: Timeout or Tlow error flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+P\+E\+C\+E\+RR\+: P\+EC error in reception flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+O\+VR\+: Overrun/\+Underrun flag (Slave mode) \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+AF\+: Acknowledge failure flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+A\+R\+LO\+: Arbitration lost flag (Master mode) \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+B\+E\+RR\+: Bus error flag \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_gae8e94c16809df16411862b11fea781db}\label{group___i2_c___exported___macros_gae8e94c16809df16411862b11fea781db}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG}{\_\_HAL\_I2C\_CLEAR\_STOPFLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+C\+L\+E\+A\+R\+\_\+\+S\+T\+O\+P\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do}\{                                           \(\backslash\)
+    \_\_IO uint32\_t tmpreg = 0x00U;               \(\backslash\)
+    tmpreg = (\_\_HANDLE\_\_)->Instance->SR1;       \(\backslash\)
+    (\_\_HANDLE\_\_)->Instance->CR1 |= \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga953b0d38414808db79da116842ed3262}{I2C\_CR1\_PE}};  \(\backslash\)
+    UNUSED(tmpreg);                             \(\backslash\)
+  \} \textcolor{keywordflow}{while}(0)
+\end{DoxyCode}
+
+
+Clears the I2C S\+T\+O\+PF pending flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga3d6a35da02ca72537a15570912c80412}\label{group___i2_c___exported___macros_ga3d6a35da02ca72537a15570912c80412}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE}{\_\_HAL\_I2C\_DISABLE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+D\+I\+S\+A\+B\+LE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R1 \&=  $\sim$\mbox{\hyperlink{group___peripheral___registers___bits___definition_ga953b0d38414808db79da116842ed3262}{I2\+C\+\_\+\+C\+R1\+\_\+\+PE}})}
+
+
+
+Disable the I2C peripheral. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2\+Cx where x\+: 1 or 2 to select the I2C peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_gacff412c47b0c1d63ef3b2a07f65988b7}\label{group___i2_c___exported___macros_gacff412c47b0c1d63ef3b2a07f65988b7}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE}{\_\_HAL\_I2C\_ENABLE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+LE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R1 $\vert$=  \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga953b0d38414808db79da116842ed3262}{I2\+C\+\_\+\+C\+R1\+\_\+\+PE}})}
+
+
+
+Enable the I2C peripheral. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2\+Cx where x\+: 1 or 2 to select the I2C peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_gac9d8b249b06b2d30f987acc9ceebd1d9}\label{group___i2_c___exported___macros_gac9d8b249b06b2d30f987acc9ceebd1d9}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}{\_\_HAL\_I2C\_ENABLE\_IT}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R2 $\vert$= (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+))}
+
+
+
+Enable or disable the specified I2C interrupts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+{\em \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+} & specifies the interrupt source to enable or disable. This parameter can be one of the following values\+: \begin{DoxyItemize}
+\item I2\+C\+\_\+\+I\+T\+\_\+\+B\+UF\+: Buffer interrupt enable \item I2\+C\+\_\+\+I\+T\+\_\+\+E\+VT\+: Event interrupt enable \item I2\+C\+\_\+\+I\+T\+\_\+\+E\+RR\+: Error interrupt enable \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_gafbdf01a7dc3183de7af56456cab93551}\label{group___i2_c___exported___macros_gafbdf01a7dc3183de7af56456cab93551}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}{\_\_HAL\_I2C\_GET\_FLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+((((uint8\_t)((\_\_FLAG\_\_) >> 16U)) == 0x01U)?((((\_\_HANDLE\_\_)->Instance->SR1) & ((\_\_FLAG\_\_) & I2C\_FLAG\_MASK)) 
+      == ((\_\_FLAG\_\_) & I2C\_FLAG\_MASK)): \(\backslash\)
+                                                 ((((\_\_HANDLE\_\_)->Instance->SR2) & ((\_\_FLAG\_\_) & 
+      I2C\_FLAG\_MASK)) == ((\_\_FLAG\_\_) & I2C\_FLAG\_MASK)))
+\end{DoxyCode}
+
+
+Checks whether the specified I2C flag is set or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+{\em \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+} & specifies the flag to check. This parameter can be one of the following values\+: \begin{DoxyItemize}
+\item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+S\+M\+B\+A\+L\+E\+RT\+: S\+M\+Bus Alert flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+T\+I\+M\+E\+O\+UT\+: Timeout or Tlow error flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+P\+E\+C\+E\+RR\+: P\+EC error in reception flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+O\+VR\+: Overrun/\+Underrun flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+AF\+: Acknowledge failure flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+A\+R\+LO\+: Arbitration lost flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+B\+E\+RR\+: Bus error flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+T\+XE\+: Data register empty flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+R\+X\+NE\+: Data register not empty flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+S\+T\+O\+PF\+: Stop detection flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+A\+D\+D10\+: 10-\/bit header sent flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+B\+TF\+: Byte transfer finished flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+A\+D\+DR\+: Address sent flag Address matched flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+SB\+: Start bit flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+D\+U\+A\+LF\+: Dual flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+S\+M\+B\+H\+O\+ST\+: S\+M\+Bus host header \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+S\+M\+B\+D\+E\+F\+A\+U\+LT\+: S\+M\+Bus default header \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+G\+E\+N\+C\+A\+LL\+: General call header flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+T\+RA\+: Transmitter/\+Receiver flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+B\+U\+SY\+: Bus busy flag \item I2\+C\+\_\+\+F\+L\+A\+G\+\_\+\+M\+SL\+: Master/\+Slave flag \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & new state of {\bfseries F\+L\+AG} (T\+R\+UE or F\+A\+L\+SE). \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga932024bf4a259e0cdaf9e50b38e3d41a}\label{group___i2_c___exported___macros_ga932024bf4a259e0cdaf9e50b38e3d41a}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}{\_\_HAL\_I2C\_GET\_IT\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+ }\end{DoxyParamCaption})~((((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$C\+R2 \& (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)) == (\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)) ? S\+ET \+: R\+E\+S\+ET)}
+
+
+
+Checks if the specified I2C interrupt source is enabled or disabled. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+{\em \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+} & specifies the I2C interrupt source to check. This parameter can be one of the following values\+: \begin{DoxyItemize}
+\item I2\+C\+\_\+\+I\+T\+\_\+\+B\+UF\+: Buffer interrupt enable \item I2\+C\+\_\+\+I\+T\+\_\+\+E\+VT\+: Event interrupt enable \item I2\+C\+\_\+\+I\+T\+\_\+\+E\+RR\+: Error interrupt enable \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & new state of {\bfseries I\+N\+T\+E\+R\+R\+U\+PT} (T\+R\+UE or F\+A\+L\+SE). \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___i2_c___exported___macros_ga74c8fd72a78882720c28448ce8bd33d8}\label{group___i2_c___exported___macros_ga74c8fd72a78882720c28448ce8bd33d8}} 
+\index{I2\+C Exported Macros@{I2\+C Exported Macros}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}!I2\+C Exported Macros@{I2\+C Exported Macros}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}{\_\_HAL\_I2C\_RESET\_HANDLE\_STATE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+I2\+C\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$State = \mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a91ba08634e08d7287940f1bc5a37eeff}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}})}
+
+
+
+Reset I2C handle state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the I2C Handle. This parameter can be I2C where x\+: 1, 2, or 3 to select the I2C peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}

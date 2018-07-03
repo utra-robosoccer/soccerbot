@@ -1,0 +1,81 @@
+\hypertarget{structarm__dct4__instance__f32}{}\section{arm\+\_\+dct4\+\_\+instance\+\_\+f32 Struct Reference}
+\label{structarm__dct4__instance__f32}\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+
+
+Instance structure for the floating-\/point D\+C\+T4/\+I\+D\+C\+T4 function.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__dct4__instance__f32_a37d49571fe35012087153c093705cd11}{N}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__dct4__instance__f32_afa64b1618089e35c2b55cff71cb29715}{Nby2}}
+\item 
+float32\+\_\+t \mbox{\hyperlink{structarm__dct4__instance__f32_a1bf2ed86ef2c3dd83af606bb3f520f2a}{normalize}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__dct4__instance__f32_aca581481fccdff0f557f54a3ef20d967}{p\+Twiddle}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__dct4__instance__f32_abd73b9d7fb4951ba086e4820c2a48eb0}{p\+Cos\+Factor}}
+\item 
+\mbox{\hyperlink{structarm__rfft__instance__f32}{arm\+\_\+rfft\+\_\+instance\+\_\+f32}} $\ast$ \mbox{\hyperlink{structarm__dct4__instance__f32_ad4cd7c85eea3f7c5fff4630bbd979e6a}{p\+Rfft}}
+\item 
+\mbox{\hyperlink{structarm__cfft__radix4__instance__f32}{arm\+\_\+cfft\+\_\+radix4\+\_\+instance\+\_\+f32}} $\ast$ \mbox{\hyperlink{structarm__dct4__instance__f32_ab7bd4d374a1780dea50efd3e7ac220be}{p\+Cfft}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the floating-\/point D\+C\+T4/\+I\+D\+C\+T4 function. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__dct4__instance__f32_a37d49571fe35012087153c093705cd11}\label{structarm__dct4__instance__f32_a37d49571fe35012087153c093705cd11}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!N@{N}}
+\index{N@{N}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{N}{N}}
+{\footnotesize\ttfamily uint16\+\_\+t N}
+
+length of the D\+C\+T4. \mbox{\Hypertarget{structarm__dct4__instance__f32_afa64b1618089e35c2b55cff71cb29715}\label{structarm__dct4__instance__f32_afa64b1618089e35c2b55cff71cb29715}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!Nby2@{Nby2}}
+\index{Nby2@{Nby2}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{Nby2}{Nby2}}
+{\footnotesize\ttfamily uint16\+\_\+t Nby2}
+
+half of the length of the D\+C\+T4. \mbox{\Hypertarget{structarm__dct4__instance__f32_a1bf2ed86ef2c3dd83af606bb3f520f2a}\label{structarm__dct4__instance__f32_a1bf2ed86ef2c3dd83af606bb3f520f2a}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!normalize@{normalize}}
+\index{normalize@{normalize}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{normalize}{normalize}}
+{\footnotesize\ttfamily float32\+\_\+t normalize}
+
+normalizing factor. \mbox{\Hypertarget{structarm__dct4__instance__f32_ab7bd4d374a1780dea50efd3e7ac220be}\label{structarm__dct4__instance__f32_ab7bd4d374a1780dea50efd3e7ac220be}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!p\+Cfft@{p\+Cfft}}
+\index{p\+Cfft@{p\+Cfft}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Cfft}{pCfft}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structarm__cfft__radix4__instance__f32}{arm\+\_\+cfft\+\_\+radix4\+\_\+instance\+\_\+f32}}$\ast$ p\+Cfft}
+
+points to the complex F\+FT instance. \mbox{\Hypertarget{structarm__dct4__instance__f32_abd73b9d7fb4951ba086e4820c2a48eb0}\label{structarm__dct4__instance__f32_abd73b9d7fb4951ba086e4820c2a48eb0}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!p\+Cos\+Factor@{p\+Cos\+Factor}}
+\index{p\+Cos\+Factor@{p\+Cos\+Factor}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Cos\+Factor}{pCosFactor}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+Cos\+Factor}
+
+points to the cos\+Factor table. \mbox{\Hypertarget{structarm__dct4__instance__f32_ad4cd7c85eea3f7c5fff4630bbd979e6a}\label{structarm__dct4__instance__f32_ad4cd7c85eea3f7c5fff4630bbd979e6a}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!p\+Rfft@{p\+Rfft}}
+\index{p\+Rfft@{p\+Rfft}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Rfft}{pRfft}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structarm__rfft__instance__f32}{arm\+\_\+rfft\+\_\+instance\+\_\+f32}}$\ast$ p\+Rfft}
+
+points to the real F\+FT instance. \mbox{\Hypertarget{structarm__dct4__instance__f32_aca581481fccdff0f557f54a3ef20d967}\label{structarm__dct4__instance__f32_aca581481fccdff0f557f54a3ef20d967}} 
+\index{arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}!p\+Twiddle@{p\+Twiddle}}
+\index{p\+Twiddle@{p\+Twiddle}!arm\+\_\+dct4\+\_\+instance\+\_\+f32@{arm\+\_\+dct4\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Twiddle}{pTwiddle}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+Twiddle}
+
+points to the twiddle factor table. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

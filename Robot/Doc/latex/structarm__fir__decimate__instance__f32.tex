@@ -1,0 +1,57 @@
+\hypertarget{structarm__fir__decimate__instance__f32}{}\section{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32 Struct Reference}
+\label{structarm__fir__decimate__instance__f32}\index{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}}
+
+
+Instance structure for the floating-\/point F\+IR decimator.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structarm__fir__decimate__instance__f32_ae2c8107d00d3c9942e7a20fc598edecf}{M}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__fir__decimate__instance__f32_a751941891e47f522a7f5375fe8990aac}{num\+Taps}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__decimate__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}{p\+Coeffs}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__decimate__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}{p\+State}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the floating-\/point F\+IR decimator. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__fir__decimate__instance__f32_ae2c8107d00d3c9942e7a20fc598edecf}\label{structarm__fir__decimate__instance__f32_ae2c8107d00d3c9942e7a20fc598edecf}} 
+\index{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}!M@{M}}
+\index{M@{M}!arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{M}{M}}
+{\footnotesize\ttfamily uint8\+\_\+t M}
+
+decimation factor. \mbox{\Hypertarget{structarm__fir__decimate__instance__f32_a751941891e47f522a7f5375fe8990aac}\label{structarm__fir__decimate__instance__f32_a751941891e47f522a7f5375fe8990aac}} 
+\index{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}!num\+Taps@{num\+Taps}}
+\index{num\+Taps@{num\+Taps}!arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{num\+Taps}{numTaps}}
+{\footnotesize\ttfamily uint16\+\_\+t num\+Taps}
+
+number of coefficients in the filter. \mbox{\Hypertarget{structarm__fir__decimate__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}\label{structarm__fir__decimate__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}} 
+\index{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}!p\+Coeffs@{p\+Coeffs}}
+\index{p\+Coeffs@{p\+Coeffs}!arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Coeffs}{pCoeffs}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+Coeffs}
+
+points to the coefficient array. The array is of length num\+Taps. \mbox{\Hypertarget{structarm__fir__decimate__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}\label{structarm__fir__decimate__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}} 
+\index{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}!p\+State@{p\+State}}
+\index{p\+State@{p\+State}!arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32@{arm\+\_\+fir\+\_\+decimate\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+State}{pState}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+State}
+
+points to the state variable array. The array is of length num\+Taps+block\+Size-\/1. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

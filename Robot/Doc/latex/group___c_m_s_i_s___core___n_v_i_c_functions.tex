@@ -1,0 +1,294 @@
+\hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions}{}\section{N\+V\+IC Functions}
+\label{group___c_m_s_i_s___core___n_v_i_c_functions}\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+
+
+Functions that manage interrupts and exceptions via the N\+V\+IC.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}} 
+\#define {\bfseries \+\_\+\+B\+I\+T\+\_\+\+S\+H\+I\+FT}(I\+R\+Qn)~(  ((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))         )      \&  0x03\+U\+L) $\ast$ 8\+U\+L)
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}\label{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}} 
+\#define {\bfseries \+\_\+\+S\+H\+P\+\_\+\+I\+DX}(I\+R\+Qn)~( (((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn)) \& 0x0\+F\+U\+L)-\/8\+U\+L) $>$$>$    2\+U\+L)      )
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}} 
+\#define {\bfseries \+\_\+\+I\+P\+\_\+\+I\+DX}(I\+R\+Qn)~(   (((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))                $>$$>$    2\+U\+L)      )
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}} 
+\#define {\bfseries \+\_\+\+B\+I\+T\+\_\+\+S\+H\+I\+FT}(I\+R\+Qn)~(  ((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))         )      \&  0x03\+U\+L) $\ast$ 8\+U\+L)
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}\label{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}} 
+\#define {\bfseries \+\_\+\+S\+H\+P\+\_\+\+I\+DX}(I\+R\+Qn)~( (((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn)) \& 0x0\+F\+U\+L)-\/8\+U\+L) $>$$>$    2\+U\+L)      )
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}} 
+\#define {\bfseries \+\_\+\+I\+P\+\_\+\+I\+DX}(I\+R\+Qn)~(   (((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))                $>$$>$    2\+U\+L)      )
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga53c75b28823441c6153269f0ecbed878}} 
+\#define {\bfseries \+\_\+\+B\+I\+T\+\_\+\+S\+H\+I\+FT}(I\+R\+Qn)~(  ((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))         )      \&  0x03\+U\+L) $\ast$ 8\+U\+L)
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}\label{group___c_m_s_i_s___core___n_v_i_c_functions_gaee4f7eb5d7e770ad51489dbceabb1755}} 
+\#define {\bfseries \+\_\+\+S\+H\+P\+\_\+\+I\+DX}(I\+R\+Qn)~( (((((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn)) \& 0x0\+F\+U\+L)-\/8\+U\+L) $>$$>$    2\+U\+L)      )
+\item 
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga370ec4b1751a6a889d849747df3763a9}} 
+\#define {\bfseries \+\_\+\+I\+P\+\_\+\+I\+DX}(I\+R\+Qn)~(   (((uint32\+\_\+t)(int32\+\_\+t)(I\+R\+Qn))                $>$$>$    2\+U\+L)      )
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga3349f2e3580d7ce22d6530b7294e5921}{N\+V\+I\+C\+\_\+\+Enable\+I\+RQ}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Enable External Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga260fba04ac8346855c57f091d4ee1e71}{N\+V\+I\+C\+\_\+\+Disable\+I\+RQ}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Disable External Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_gafec8042db64c0f8ed432b6c8386a05d8}{N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Get Pending Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga3ecf446519da33e1690deffbf5be505f}{N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Set Pending Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga332e10ef9605dc6eb10b9e14511930f8}{N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Clear Pending Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga2305cbd44aaad792e3a4e538bdaf14f9}{N\+V\+I\+C\+\_\+\+Set\+Priority}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn, uint32\+\_\+t priority)
+\begin{DoxyCompactList}\small\item\em Set Interrupt Priority. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga1cbaf8e6abd4aa4885828e7f24fcfeb4}{N\+V\+I\+C\+\_\+\+Get\+Priority}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Get Interrupt Priority. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga1143dec48d60a3d6f238c4798a87759c}{N\+V\+I\+C\+\_\+\+System\+Reset}} (void)
+\begin{DoxyCompactList}\small\item\em System Reset. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga77cfbb35a9d8027e392034321bed6904}{N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping}} (uint32\+\_\+t Priority\+Group)
+\begin{DoxyCompactList}\small\item\em Set Priority Grouping. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga394f7ce2ca826c0da26284d17ac6524d}{N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping}} (void)
+\begin{DoxyCompactList}\small\item\em Get Priority Grouping. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga47a0f52794068d076c9147aa3cb8d8a6}{N\+V\+I\+C\+\_\+\+Get\+Active}} (\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}} I\+R\+Qn)
+\begin{DoxyCompactList}\small\item\em Get Active Interrupt. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_gadb94ac5d892b376e4f3555ae0418ebac}{N\+V\+I\+C\+\_\+\+Encode\+Priority}} (uint32\+\_\+t Priority\+Group, uint32\+\_\+t Preempt\+Priority, uint32\+\_\+t Sub\+Priority)
+\begin{DoxyCompactList}\small\item\em Encode Priority. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga3387607fd8a1a32cccd77d2ac672dd96}{N\+V\+I\+C\+\_\+\+Decode\+Priority}} (uint32\+\_\+t Priority, uint32\+\_\+t Priority\+Group, uint32\+\_\+t $\ast$const p\+Preempt\+Priority, uint32\+\_\+t $\ast$const p\+Sub\+Priority)
+\begin{DoxyCompactList}\small\item\em Decode Priority. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions that manage interrupts and exceptions via the N\+V\+IC. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga332e10ef9605dc6eb10b9e14511930f8}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga332e10ef9605dc6eb10b9e14511930f8}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ}}
+\index{N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+R\+Q()}{NVIC\_ClearPendingIRQ()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Clear\+Pending\+I\+RQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Clear Pending Interrupt. 
+
+Clears the pending bit of an external interrupt. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & External interrupt number. Value cannot be negative. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga3387607fd8a1a32cccd77d2ac672dd96}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga3387607fd8a1a32cccd77d2ac672dd96}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Decode\+Priority@{N\+V\+I\+C\+\_\+\+Decode\+Priority}}
+\index{N\+V\+I\+C\+\_\+\+Decode\+Priority@{N\+V\+I\+C\+\_\+\+Decode\+Priority}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Decode\+Priority()}{NVIC\_DecodePriority()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Decode\+Priority (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{Priority,  }\item[{uint32\+\_\+t}]{Priority\+Group,  }\item[{uint32\+\_\+t $\ast$const}]{p\+Preempt\+Priority,  }\item[{uint32\+\_\+t $\ast$const}]{p\+Sub\+Priority }\end{DoxyParamCaption})}
+
+
+
+Decode Priority. 
+
+Decodes an interrupt priority value with a given priority group to preemptive priority value and subpriority value. In case of a conflict between priority grouping and available priority bits (\+\_\+\+\_\+\+N\+V\+I\+C\+\_\+\+P\+R\+I\+O\+\_\+\+B\+I\+TS) the smallest possible priority group is set. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Priority} & Priority value, which can be retrieved with the function \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga1cbaf8e6abd4aa4885828e7f24fcfeb4}{N\+V\+I\+C\+\_\+\+Get\+Priority()}}. \\
+\hline
+\mbox{\tt in}  & {\em Priority\+Group} & Used priority group. \\
+\hline
+\mbox{\tt out}  & {\em p\+Preempt\+Priority} & Preemptive priority value (starting from 0). \\
+\hline
+\mbox{\tt out}  & {\em p\+Sub\+Priority} & Subpriority value (starting from 0). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga260fba04ac8346855c57f091d4ee1e71}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga260fba04ac8346855c57f091d4ee1e71}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Disable\+I\+RQ@{N\+V\+I\+C\+\_\+\+Disable\+I\+RQ}}
+\index{N\+V\+I\+C\+\_\+\+Disable\+I\+RQ@{N\+V\+I\+C\+\_\+\+Disable\+I\+RQ}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Disable\+I\+R\+Q()}{NVIC\_DisableIRQ()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Disable\+I\+RQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Disable External Interrupt. 
+
+Disables a device-\/specific interrupt in the N\+V\+IC interrupt controller. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & External interrupt number. Value cannot be negative. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga3349f2e3580d7ce22d6530b7294e5921}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga3349f2e3580d7ce22d6530b7294e5921}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Enable\+I\+RQ@{N\+V\+I\+C\+\_\+\+Enable\+I\+RQ}}
+\index{N\+V\+I\+C\+\_\+\+Enable\+I\+RQ@{N\+V\+I\+C\+\_\+\+Enable\+I\+RQ}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Enable\+I\+R\+Q()}{NVIC\_EnableIRQ()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Enable\+I\+RQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Enable External Interrupt. 
+
+Enables a device-\/specific interrupt in the N\+V\+IC interrupt controller. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & External interrupt number. Value cannot be negative. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_gadb94ac5d892b376e4f3555ae0418ebac}\label{group___c_m_s_i_s___core___n_v_i_c_functions_gadb94ac5d892b376e4f3555ae0418ebac}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Encode\+Priority@{N\+V\+I\+C\+\_\+\+Encode\+Priority}}
+\index{N\+V\+I\+C\+\_\+\+Encode\+Priority@{N\+V\+I\+C\+\_\+\+Encode\+Priority}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Encode\+Priority()}{NVIC\_EncodePriority()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t N\+V\+I\+C\+\_\+\+Encode\+Priority (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{Priority\+Group,  }\item[{uint32\+\_\+t}]{Preempt\+Priority,  }\item[{uint32\+\_\+t}]{Sub\+Priority }\end{DoxyParamCaption})}
+
+
+
+Encode Priority. 
+
+Encodes the priority for an interrupt with the given priority group, preemptive priority value, and subpriority value. In case of a conflict between priority grouping and available priority bits (\+\_\+\+\_\+\+N\+V\+I\+C\+\_\+\+P\+R\+I\+O\+\_\+\+B\+I\+TS), the smallest possible priority group is set. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Priority\+Group} & Used priority group. \\
+\hline
+\mbox{\tt in}  & {\em Preempt\+Priority} & Preemptive priority value (starting from 0). \\
+\hline
+\mbox{\tt in}  & {\em Sub\+Priority} & Subpriority value (starting from 0). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Encoded priority. Value can be used in the function \mbox{\hyperlink{group___c_m_s_i_s___core___n_v_i_c_functions_ga2305cbd44aaad792e3a4e538bdaf14f9}{N\+V\+I\+C\+\_\+\+Set\+Priority()}}. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga47a0f52794068d076c9147aa3cb8d8a6}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga47a0f52794068d076c9147aa3cb8d8a6}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Get\+Active@{N\+V\+I\+C\+\_\+\+Get\+Active}}
+\index{N\+V\+I\+C\+\_\+\+Get\+Active@{N\+V\+I\+C\+\_\+\+Get\+Active}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Get\+Active()}{NVIC\_GetActive()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t N\+V\+I\+C\+\_\+\+Get\+Active (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Get Active Interrupt. 
+
+Reads the active register in N\+V\+IC and returns the active bit. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & Interrupt number. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 Interrupt status is not active. 
+
+1 Interrupt status is active. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_gafec8042db64c0f8ed432b6c8386a05d8}\label{group___c_m_s_i_s___core___n_v_i_c_functions_gafec8042db64c0f8ed432b6c8386a05d8}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ}}
+\index{N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+R\+Q()}{NVIC\_GetPendingIRQ()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t N\+V\+I\+C\+\_\+\+Get\+Pending\+I\+RQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Get Pending Interrupt. 
+
+Reads the pending register in the N\+V\+IC and returns the pending bit for the specified interrupt. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & Interrupt number. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 Interrupt status is not pending. 
+
+1 Interrupt status is pending. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga1cbaf8e6abd4aa4885828e7f24fcfeb4}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga1cbaf8e6abd4aa4885828e7f24fcfeb4}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Get\+Priority@{N\+V\+I\+C\+\_\+\+Get\+Priority}}
+\index{N\+V\+I\+C\+\_\+\+Get\+Priority@{N\+V\+I\+C\+\_\+\+Get\+Priority}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Get\+Priority()}{NVIC\_GetPriority()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t N\+V\+I\+C\+\_\+\+Get\+Priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Get Interrupt Priority. 
+
+Reads the priority of an interrupt. The interrupt number can be positive to specify an external (device specific) interrupt, or negative to specify an internal (core) interrupt. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & Interrupt number. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Interrupt Priority. Value is aligned automatically to the implemented priority bits of the microcontroller. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga394f7ce2ca826c0da26284d17ac6524d}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga394f7ce2ca826c0da26284d17ac6524d}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping@{N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping}}
+\index{N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping@{N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping()}{NVIC\_GetPriorityGrouping()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE uint32\+\_\+t N\+V\+I\+C\+\_\+\+Get\+Priority\+Grouping (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Get Priority Grouping. 
+
+Reads the priority grouping field from the N\+V\+IC Interrupt Controller. \begin{DoxyReturn}{Returns}
+Priority grouping field (S\+C\+B-\/$>$A\+I\+R\+CR \mbox{[}10\+:8\mbox{]} P\+R\+I\+G\+R\+O\+UP field). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga3ecf446519da33e1690deffbf5be505f}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga3ecf446519da33e1690deffbf5be505f}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ}}
+\index{N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ@{N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+R\+Q()}{NVIC\_SetPendingIRQ()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Set\+Pending\+I\+RQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn }\end{DoxyParamCaption})}
+
+
+
+Set Pending Interrupt. 
+
+Sets the pending bit of an external interrupt. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & Interrupt number. Value cannot be negative. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga2305cbd44aaad792e3a4e538bdaf14f9}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga2305cbd44aaad792e3a4e538bdaf14f9}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Set\+Priority@{N\+V\+I\+C\+\_\+\+Set\+Priority}}
+\index{N\+V\+I\+C\+\_\+\+Set\+Priority@{N\+V\+I\+C\+\_\+\+Set\+Priority}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Set\+Priority()}{NVIC\_SetPriority()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Set\+Priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group___peripheral__interrupt__number__definition_ga7e1129cd8a196f4284d41db3e82ad5c8}{I\+R\+Qn\+\_\+\+Type}}}]{I\+R\+Qn,  }\item[{uint32\+\_\+t}]{priority }\end{DoxyParamCaption})}
+
+
+
+Set Interrupt Priority. 
+
+Sets the priority of an interrupt. \begin{DoxyNote}{Note}
+The priority cannot be set for every core interrupt. 
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em I\+R\+Qn} & Interrupt number. \\
+\hline
+\mbox{\tt in}  & {\em priority} & Priority to set. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga77cfbb35a9d8027e392034321bed6904}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga77cfbb35a9d8027e392034321bed6904}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping@{N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping}}
+\index{N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping@{N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping()}{NVIC\_SetPriorityGrouping()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+Set\+Priority\+Grouping (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{Priority\+Group }\end{DoxyParamCaption})}
+
+
+
+Set Priority Grouping. 
+
+Sets the priority grouping field using the required unlock sequence. The parameter Priority\+Group is assigned to the field S\+C\+B-\/$>$A\+I\+R\+CR \mbox{[}10\+:8\mbox{]} P\+R\+I\+G\+R\+O\+UP field. Only values from 0..7 are used. In case of a conflict between priority grouping and available priority bits (\+\_\+\+\_\+\+N\+V\+I\+C\+\_\+\+P\+R\+I\+O\+\_\+\+B\+I\+TS), the smallest possible priority group is set. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Priority\+Group} & Priority grouping field. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{group___c_m_s_i_s___core___n_v_i_c_functions_ga1143dec48d60a3d6f238c4798a87759c}\label{group___c_m_s_i_s___core___n_v_i_c_functions_ga1143dec48d60a3d6f238c4798a87759c}} 
+\index{N\+V\+I\+C Functions@{N\+V\+I\+C Functions}!N\+V\+I\+C\+\_\+\+System\+Reset@{N\+V\+I\+C\+\_\+\+System\+Reset}}
+\index{N\+V\+I\+C\+\_\+\+System\+Reset@{N\+V\+I\+C\+\_\+\+System\+Reset}!N\+V\+I\+C Functions@{N\+V\+I\+C Functions}}
+\subsubsection{\texorpdfstring{N\+V\+I\+C\+\_\+\+System\+Reset()}{NVIC\_SystemReset()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+I\+N\+L\+I\+NE void N\+V\+I\+C\+\_\+\+System\+Reset (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+System Reset. 
+
+Initiates a system reset request to reset the M\+CU. 

@@ -1,0 +1,41 @@
+\hypertarget{group__v_semaphore_create_binary}{}\section{v\+Semaphore\+Create\+Binary}
+\label{group__v_semaphore_create_binary}\index{v\+Semaphore\+Create\+Binary@{v\+Semaphore\+Create\+Binary}}
+semphr. h 
+\begin{DoxyPre}vSemaphoreCreateBinary( SemaphoreHandle\_t xSemaphore )\end{DoxyPre}
+
+
+In many usage scenarios it is faster and more memory efficient to use a direct to task notification in place of a binary semaphore! \href{http://www.freertos.org/RTOS-task-notifications.html}{\tt http\+://www.\+freertos.\+org/\+R\+T\+O\+S-\/task-\/notifications.\+html}
+
+This old v\+Semaphore\+Create\+Binary() macro is now deprecated in favour of the x\+Semaphore\+Create\+Binary() function. Note that binary semaphores created using the v\+Semaphore\+Create\+Binary() macro are created in a state such that the first call to \textquotesingle{}take\textquotesingle{} the semaphore would pass, whereas binary semaphores created using x\+Semaphore\+Create\+Binary() are created in a state such that the the semaphore must first be \textquotesingle{}given\textquotesingle{} before it can be \textquotesingle{}taken\textquotesingle{}.
+
+{\itshape Macro} that implements a semaphore by using the existing queue mechanism. The queue length is 1 as this is a binary semaphore. The data size is 0 as we don\textquotesingle{}t want to actually store any data -\/ we just want to know if the queue is empty or full.
+
+This type of semaphore can be used for pure synchronisation between tasks or between an interrupt and a task. The semaphore need not be given back once obtained, so one task/interrupt can continuously \textquotesingle{}give\textquotesingle{} the semaphore while another continuously \textquotesingle{}takes\textquotesingle{} the semaphore. For this reason this type of semaphore does not use a priority inheritance mechanism. For an alternative that does use priority inheritance see x\+Semaphore\+Create\+Mutex().
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Semaphore} & Handle to the created semaphore. Should be of type Semaphore\+Handle\+\_\+t.\\
+\hline
+\end{DoxyParams}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore = NULL;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+   // Semaphore cannot be used before a call to vSemaphoreCreateBinary ().
+   // This is a macro so pass the variable in directly.
+   vSemaphoreCreateBinary( xSemaphore );\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   if( xSemaphore != NULL )
+   \{
+       // The semaphore was created successfully.
+       // The semaphore can now be used.
+   \}
+\}
+\end{DoxyPre}
+ 

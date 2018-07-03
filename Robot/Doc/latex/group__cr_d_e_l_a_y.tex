@@ -1,0 +1,44 @@
+\hypertarget{group__cr_d_e_l_a_y}{}\section{cr\+D\+E\+L\+AY}
+\label{group__cr_d_e_l_a_y}\index{cr\+D\+E\+L\+AY@{cr\+D\+E\+L\+AY}}
+croutine. h 
+\begin{DoxyPre}
+crDELAY( CoRoutineHandle\_t xHandle, TickType\_t xTicksToDelay );\end{DoxyPre}
+
+
+Delay a co-\/routine for a fixed period of time.
+
+cr\+D\+E\+L\+AY can only be called from the co-\/routine function itself -\/ not from within a function called by the co-\/routine function. This is because co-\/routines do not maintain their own stack.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Handle} & The handle of the co-\/routine to delay. This is the x\+Handle parameter of the co-\/routine function.\\
+\hline
+{\em x\+Tick\+To\+Delay} & The number of ticks that the co-\/routine should delay for. The actual amount of time this equates to is defined by config\+T\+I\+C\+K\+\_\+\+R\+A\+T\+E\+\_\+\+HZ (set in \mbox{\hyperlink{_free_r_t_o_s_config_8h_source}{Free\+R\+T\+O\+S\+Config.\+h}}). The constant port\+T\+I\+C\+K\+\_\+\+P\+E\+R\+I\+O\+D\+\_\+\+MS can be used to convert ticks to milliseconds.\\
+\hline
+\end{DoxyParams}
+Example usage\+: 
+\begin{DoxyPre}
+// Co-routine to be created.
+void vACoRoutine( CoRoutineHandle\_t xHandle, UBaseType\_t uxIndex )
+\{
+// Variables in co-routines must be declared static if they must maintain value across a blocking call.
+// This may not be necessary for const variables.
+// We are to delay for 200ms.
+static const xTickType xDelayTime = 200 / portTICK\_PERIOD\_MS;
+\begin{DoxyVerb}// Must start every co-routine with a call to crSTART();
+crSTART( xHandle );
+
+for( ;; )
+{
+   // Delay for 200ms.
+   crDELAY( xHandle, xDelayTime );
+
+   // Do something here.
+}
+
+// Must end every co-routine with a call to crEND();
+crEND();
+\end{DoxyVerb}
+
+\}\end{DoxyPre}
+ 

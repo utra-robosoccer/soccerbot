@@ -1,0 +1,95 @@
+\hypertarget{group___h_a_l___time_base}{}\section{H\+A\+L\+\_\+\+Time\+Base}
+\label{group___h_a_l___time_base}\index{H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{stm32f4xx__hal__def_8h_a63c0679d1cb8b8c684fbb0632743478f}{H\+A\+L\+\_\+\+Status\+Type\+Def}} \mbox{\hyperlink{group___h_a_l___time_base_ga879cdb21ef051eb81ec51c18147397d5}{H\+A\+L\+\_\+\+Init\+Tick}} (uint32\+\_\+t Tick\+Priority)
+\begin{DoxyCompactList}\small\item\em This function configures the T\+I\+M1 as a time base source. The time source is configured to have 1ms time base with a dedicated Tick interrupt priority. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___h_a_l___time_base_gaaf651af2afe688a991c657f64f8fa5f9}{H\+A\+L\+\_\+\+Suspend\+Tick}} (void)
+\begin{DoxyCompactList}\small\item\em Suspend Tick increment. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___h_a_l___time_base_ga24e0ee9dae1ec0f9d19200f5575ff790}{H\+A\+L\+\_\+\+Resume\+Tick}} (void)
+\begin{DoxyCompactList}\small\item\em Resume Tick increment. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group___h_a_l___time_base_ga25fc663547539bc49fecc0011bd76ab5}\label{group___h_a_l___time_base_ga25fc663547539bc49fecc0011bd76ab5}} 
+\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} {\bfseries htim1}
+\item 
+\mbox{\Hypertarget{group___h_a_l___time_base_gad252e5fa14fe03797c816cfb14962693}\label{group___h_a_l___time_base_gad252e5fa14fe03797c816cfb14962693}} 
+uint32\+\_\+t {\bfseries uw\+Increment\+State} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{group___h_a_l___time_base_ga879cdb21ef051eb81ec51c18147397d5}\label{group___h_a_l___time_base_ga879cdb21ef051eb81ec51c18147397d5}} 
+\index{H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}!H\+A\+L\+\_\+\+Init\+Tick@{H\+A\+L\+\_\+\+Init\+Tick}}
+\index{H\+A\+L\+\_\+\+Init\+Tick@{H\+A\+L\+\_\+\+Init\+Tick}!H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+Init\+Tick()}{HAL\_InitTick()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{stm32f4xx__hal__def_8h_a63c0679d1cb8b8c684fbb0632743478f}{H\+A\+L\+\_\+\+Status\+Type\+Def}} H\+A\+L\+\_\+\+Init\+Tick (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{Tick\+Priority }\end{DoxyParamCaption})}
+
+
+
+This function configures the T\+I\+M1 as a time base source. The time source is configured to have 1ms time base with a dedicated Tick interrupt priority. 
+
+\begin{DoxyNote}{Note}
+This function is called automatically at the beginning of program after reset by \mbox{\hyperlink{group___h_a_l___exported___functions___group1_gaecac54d350c3730e6831eb404e557dc4}{H\+A\+L\+\_\+\+Init()}} or at any time when clock is configured, by H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+Clock\+Config(). 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em Tick\+Priority} & Tick interrupt priorty. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em H\+AL} & status \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___h_a_l___time_base_ga24e0ee9dae1ec0f9d19200f5575ff790}\label{group___h_a_l___time_base_ga24e0ee9dae1ec0f9d19200f5575ff790}} 
+\index{H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}!H\+A\+L\+\_\+\+Resume\+Tick@{H\+A\+L\+\_\+\+Resume\+Tick}}
+\index{H\+A\+L\+\_\+\+Resume\+Tick@{H\+A\+L\+\_\+\+Resume\+Tick}!H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+Resume\+Tick()}{HAL\_ResumeTick()}}
+{\footnotesize\ttfamily void H\+A\+L\+\_\+\+Resume\+Tick (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Resume Tick increment. 
+
+\begin{DoxyNote}{Note}
+Enable the tick increment by Enabling T\+I\+M1 update interrupt. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___h_a_l___time_base_gaaf651af2afe688a991c657f64f8fa5f9}\label{group___h_a_l___time_base_gaaf651af2afe688a991c657f64f8fa5f9}} 
+\index{H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}!H\+A\+L\+\_\+\+Suspend\+Tick@{H\+A\+L\+\_\+\+Suspend\+Tick}}
+\index{H\+A\+L\+\_\+\+Suspend\+Tick@{H\+A\+L\+\_\+\+Suspend\+Tick}!H\+A\+L\+\_\+\+Time\+Base@{H\+A\+L\+\_\+\+Time\+Base}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+Suspend\+Tick()}{HAL\_SuspendTick()}}
+{\footnotesize\ttfamily void H\+A\+L\+\_\+\+Suspend\+Tick (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Suspend Tick increment. 
+
+\begin{DoxyNote}{Note}
+Disable the tick increment by disabling T\+I\+M1 update interrupt. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}

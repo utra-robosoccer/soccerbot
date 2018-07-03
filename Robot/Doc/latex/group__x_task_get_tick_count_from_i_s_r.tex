@@ -1,0 +1,10 @@
+\hypertarget{group__x_task_get_tick_count_from_i_s_r}{}\section{x\+Task\+Get\+Tick\+Count\+From\+I\+SR}
+\label{group__x_task_get_tick_count_from_i_s_r}\index{x\+Task\+Get\+Tick\+Count\+From\+I\+SR@{x\+Task\+Get\+Tick\+Count\+From\+I\+SR}}
+task. h 
+\begin{DoxyPre}TickType\_t xTaskGetTickCountFromISR( void );\end{DoxyPre}
+
+
+\begin{DoxyReturn}{Returns}
+The count of ticks since v\+Task\+Start\+Scheduler was called.
+\end{DoxyReturn}
+This is a version of x\+Task\+Get\+Tick\+Count() that is safe to be called from an I\+SR -\/ provided that Tick\+Type\+\_\+t is the natural word size of the microcontroller being used or interrupt nesting is either not supported or not being used. 

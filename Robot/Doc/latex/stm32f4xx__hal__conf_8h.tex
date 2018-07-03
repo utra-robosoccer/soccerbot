@@ -1,0 +1,378 @@
+\hypertarget{stm32f4xx__hal__conf_8h}{}\section{Inc/stm32f4xx\+\_\+hal\+\_\+conf.h File Reference}
+\label{stm32f4xx__hal__conf_8h}\index{Inc/stm32f4xx\+\_\+hal\+\_\+conf.\+h@{Inc/stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+
+
+H\+AL configuration file.  
+
+
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+rcc.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+gpio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+dma.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+cortex.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+flash.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+i2c.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+pwr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+tim.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+uart.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a877ae99e8c47a609ea97c888912bf75f}\label{stm32f4xx__hal__conf_8h_a877ae99e8c47a609ea97c888912bf75f}} 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a877ae99e8c47a609ea97c888912bf75f}{H\+A\+L\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}}
+\begin{DoxyCompactList}\small\item\em This is the list of modules to be used in the H\+AL driver. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a19999766418b0224871f732d800841c6}\label{stm32f4xx__hal__conf_8h_a19999766418b0224871f732d800841c6}} 
+\#define {\bfseries H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a23382b8f04b3e6db2c59dfa1ef5ea4a2}\label{stm32f4xx__hal__conf_8h_a23382b8f04b3e6db2c59dfa1ef5ea4a2}} 
+\#define {\bfseries H\+A\+L\+\_\+\+T\+I\+M\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a167269406e73327b95c3bb7b9cfe6d89}\label{stm32f4xx__hal__conf_8h_a167269406e73327b95c3bb7b9cfe6d89}} 
+\#define {\bfseries H\+A\+L\+\_\+\+U\+A\+R\+T\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a86165f80d6078719ee0715afe13febf5}\label{stm32f4xx__hal__conf_8h_a86165f80d6078719ee0715afe13febf5}} 
+\#define {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a6552186102a1131b2849ac55a582945d}\label{stm32f4xx__hal__conf_8h_a6552186102a1131b2849ac55a582945d}} 
+\#define {\bfseries H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ac3dd74314ed62ac8575e2f9f48b3ac48}\label{stm32f4xx__hal__conf_8h_ac3dd74314ed62ac8575e2f9f48b3ac48}} 
+\#define {\bfseries H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a7112575efe3740911f19a13e6b170fee}\label{stm32f4xx__hal__conf_8h_a7112575efe3740911f19a13e6b170fee}} 
+\#define {\bfseries H\+A\+L\+\_\+\+F\+L\+A\+S\+H\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ab51923c3716977d7923f49cc9d081aa8}\label{stm32f4xx__hal__conf_8h_ab51923c3716977d7923f49cc9d081aa8}} 
+\#define {\bfseries H\+A\+L\+\_\+\+P\+W\+R\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_aa9b5a3a425901e097de70092dbe31e0f}\label{stm32f4xx__hal__conf_8h_aa9b5a3a425901e097de70092dbe31e0f}} 
+\#define {\bfseries H\+A\+L\+\_\+\+C\+O\+R\+T\+E\+X\+\_\+\+M\+O\+D\+U\+L\+E\+\_\+\+E\+N\+A\+B\+L\+ED}
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_aeafcff4f57440c60e64812dddd13e7cb}{H\+S\+E\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)25000000\+U)
+\begin{DoxyCompactList}\small\item\em Adjust the value of External High Speed oscillator (H\+SE) used in your application. This value is used by the R\+CC H\+AL module to compute the system frequency (when H\+SE is used as system clock source, directly or through the P\+LL). ~\newline
+~\newline
+ \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a68ecbc9b0a1a40a1ec9d18d5e9747c4f}{H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}}~((uint32\+\_\+t)100\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_aaa8c76e274d0f6dd2cefb5d0b17fbc37}{H\+S\+I\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)16000000\+U)
+\begin{DoxyCompactList}\small\item\em Internal High Speed oscillator (H\+SI) value. This value is used by the R\+CC H\+AL module to compute the system frequency (when H\+SI is used as system clock source, directly or through the P\+LL). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a4872023e65449c0506aac3ea6bec99e9}{L\+S\+I\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)32000\+U)
+\begin{DoxyCompactList}\small\item\em Internal Low Speed oscillator (L\+SI) value. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a7bbb9d19e5189a6ccd0fb6fa6177d20d}{L\+S\+E\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)32768\+U)
+\begin{DoxyCompactList}\small\item\em External Low Speed oscillator (L\+SE) value. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a85e6fc812dc26f7161a04be2568a5462}{L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}}~((uint32\+\_\+t)5000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a8c47c935e91e70569098b41718558648}{E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)12288000\+U)
+\begin{DoxyCompactList}\small\item\em External clock source for I2S peripheral This value is used by the I2S H\+AL module to compute the I2S clock source frequency, this source is inserted directly through I2\+S\+\_\+\+C\+K\+IN pad. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_aae550dad9f96d52cfce5e539adadbbb4}{V\+D\+D\+\_\+\+V\+A\+L\+UE}}~((uint32\+\_\+t)3300\+U)
+\begin{DoxyCompactList}\small\item\em This is the H\+AL system configuration section. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_ae27809d4959b9fd5b5d974e3e1c77d2e}{T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~((uint32\+\_\+t)0\+U)
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ad048ac737242c2c2cb9f4a72953d10ce}\label{stm32f4xx__hal__conf_8h_ad048ac737242c2c2cb9f4a72953d10ce}} 
+\#define {\bfseries U\+S\+E\+\_\+\+R\+T\+OS}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a13fc0d5e7bb925385c0cc0772ba6a391}\label{stm32f4xx__hal__conf_8h_a13fc0d5e7bb925385c0cc0772ba6a391}} 
+\#define {\bfseries P\+R\+E\+F\+E\+T\+C\+H\+\_\+\+E\+N\+A\+B\+LE}~1U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a3379989d46599c7e19a43f42e9145a4a}\label{stm32f4xx__hal__conf_8h_a3379989d46599c7e19a43f42e9145a4a}} 
+\#define {\bfseries I\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N\+\_\+\+C\+A\+C\+H\+E\+\_\+\+E\+N\+A\+B\+LE}~1U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a5b4c32a40cf49b06c0d761e385949a6b}\label{stm32f4xx__hal__conf_8h_a5b4c32a40cf49b06c0d761e385949a6b}} 
+\#define {\bfseries D\+A\+T\+A\+\_\+\+C\+A\+C\+H\+E\+\_\+\+E\+N\+A\+B\+LE}~1U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ab84a2e15d360e2644ada09641513a941}\label{stm32f4xx__hal__conf_8h_ab84a2e15d360e2644ada09641513a941}} 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_ab84a2e15d360e2644ada09641513a941}{M\+A\+C\+\_\+\+A\+D\+D\+R0}}~2U
+\begin{DoxyCompactList}\small\item\em Uncomment the line below to expanse the \char`\"{}assert\+\_\+param\char`\"{} macro in the H\+AL drivers code. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a8d14266d76690c530bee01e7e5bb4099}\label{stm32f4xx__hal__conf_8h_a8d14266d76690c530bee01e7e5bb4099}} 
+\#define {\bfseries M\+A\+C\+\_\+\+A\+D\+D\+R1}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a6c5df15bec1d305ed033ad9a85ec803d}\label{stm32f4xx__hal__conf_8h_a6c5df15bec1d305ed033ad9a85ec803d}} 
+\#define {\bfseries M\+A\+C\+\_\+\+A\+D\+D\+R2}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a08a36ede83ae67498aecf54676be8fc8}\label{stm32f4xx__hal__conf_8h_a08a36ede83ae67498aecf54676be8fc8}} 
+\#define {\bfseries M\+A\+C\+\_\+\+A\+D\+D\+R3}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a41e5cb0b39ad74f0aafb83dbcecf9006}\label{stm32f4xx__hal__conf_8h_a41e5cb0b39ad74f0aafb83dbcecf9006}} 
+\#define {\bfseries M\+A\+C\+\_\+\+A\+D\+D\+R4}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a3bcc92663c42ec434f527847bbc4abc1}\label{stm32f4xx__hal__conf_8h_a3bcc92663c42ec434f527847bbc4abc1}} 
+\#define {\bfseries M\+A\+C\+\_\+\+A\+D\+D\+R5}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a0cdaf687f7a7f2dba570d5a722990786}\label{stm32f4xx__hal__conf_8h_a0cdaf687f7a7f2dba570d5a722990786}} 
+\#define {\bfseries E\+T\+H\+\_\+\+R\+X\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}~E\+T\+H\+\_\+\+M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE /$\ast$ buffer size for receive               $\ast$/
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_af83956dfc1b135c3c92ac409758b6cf4}\label{stm32f4xx__hal__conf_8h_af83956dfc1b135c3c92ac409758b6cf4}} 
+\#define {\bfseries E\+T\+H\+\_\+\+T\+X\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}~E\+T\+H\+\_\+\+M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE /$\ast$ buffer size for transmit              $\ast$/
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a62b0f224fa9c4f2e5574c9e52526f751}\label{stm32f4xx__hal__conf_8h_a62b0f224fa9c4f2e5574c9e52526f751}} 
+\#define {\bfseries E\+T\+H\+\_\+\+R\+X\+B\+U\+F\+NB}~((uint32\+\_\+t)4\+U)       /$\ast$ 4 Rx buffers of size E\+T\+H\+\_\+\+R\+X\+\_\+\+B\+U\+F\+\_\+\+S\+I\+Z\+E  $\ast$/
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a4ad07ad8fa6f8639ab8ef362390d86c7}\label{stm32f4xx__hal__conf_8h_a4ad07ad8fa6f8639ab8ef362390d86c7}} 
+\#define {\bfseries E\+T\+H\+\_\+\+T\+X\+B\+U\+F\+NB}~((uint32\+\_\+t)4\+U)       /$\ast$ 4 Tx buffers of size E\+T\+H\+\_\+\+T\+X\+\_\+\+B\+U\+F\+\_\+\+S\+I\+Z\+E  $\ast$/
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a25f014091aaba92bdd9d95d0b2f00503}\label{stm32f4xx__hal__conf_8h_a25f014091aaba92bdd9d95d0b2f00503}} 
+\#define {\bfseries D\+P83848\+\_\+\+P\+H\+Y\+\_\+\+A\+D\+D\+R\+E\+SS}~0x01U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a0ede6087f7b71403bcddb5d3a8f47ff4}\label{stm32f4xx__hal__conf_8h_a0ede6087f7b71403bcddb5d3a8f47ff4}} 
+\#define {\bfseries P\+H\+Y\+\_\+\+R\+E\+S\+E\+T\+\_\+\+D\+E\+L\+AY}~((uint32\+\_\+t)0x000000\+F\+F\+U)
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_abba7114255a2a41b81fdcb2a3702c270}\label{stm32f4xx__hal__conf_8h_abba7114255a2a41b81fdcb2a3702c270}} 
+\#define {\bfseries P\+H\+Y\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+E\+L\+AY}~((uint32\+\_\+t)0x00000\+F\+F\+F\+U)
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a9d356ada86535630c403690bef0fb887}\label{stm32f4xx__hal__conf_8h_a9d356ada86535630c403690bef0fb887}} 
+\#define {\bfseries P\+H\+Y\+\_\+\+R\+E\+A\+D\+\_\+\+TO}~((uint32\+\_\+t)0x0000\+F\+F\+F\+F\+U)
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a474bf13e28d09b667e41b151140ee39d}\label{stm32f4xx__hal__conf_8h_a474bf13e28d09b667e41b151140ee39d}} 
+\#define {\bfseries P\+H\+Y\+\_\+\+W\+R\+I\+T\+E\+\_\+\+TO}~((uint32\+\_\+t)0x0000\+F\+F\+F\+F\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a8abe1a40c71e68881ec669d59f513fdb}{P\+H\+Y\+\_\+\+B\+CR}}~((uint16\+\_\+t)0x0000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a4b8f2c29a9e74412395e1b1809666838}{P\+H\+Y\+\_\+\+B\+SR}}~((uint16\+\_\+t)0x0001\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a6f5048620b3dde8583f7f1118e9de187}{P\+H\+Y\+\_\+\+R\+E\+S\+ET}}~((uint16\+\_\+t)0x8000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a7833d885caa7e29abbebfb90a4b96f86}{P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK}}~((uint16\+\_\+t)0x4000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a5729771244f68779fc694ba819cd60a5}{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M}}~((uint16\+\_\+t)0x2100\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a1ac901a4ad405241d90a5c10104b8986}{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M}}~((uint16\+\_\+t)0x2000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a6b6254fd3dacbf1578a9d8058cd86373}{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M}}~((uint16\+\_\+t)0x0100\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a4fa7ca6faf60ee074576ebb6103f8dd4}{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M}}~((uint16\+\_\+t)0x0000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a9b7f5c8f71047ee449f21562d26b1b43}{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}}~((uint16\+\_\+t)0x1000\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a66c4b69bd08dc25b6730365d3ff740c9}{P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}}~((uint16\+\_\+t)0x0200\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_aa0b1e6d4a23470fc1ac4f9222b51f8a0}{P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN}}~((uint16\+\_\+t)0x0800\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a7d5233295134a385866eb5bdafe2162b}{P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE}}~((uint16\+\_\+t)0x0400\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a36c4dbd5f6df1f5eaefa010929ef9773}{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE}}~((uint16\+\_\+t)0x0020\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_ace209074499dbef0b97300da5bd7c707}{P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US}}~((uint16\+\_\+t)0x0004\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a057b4d3fb66548d65c291a5b41611be2}{P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON}}~((uint16\+\_\+t)0x0002\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a32b55e84d27cf298a77f54b133cd1acc}{P\+H\+Y\+\_\+\+SR}}~((uint16\+\_\+t)0x10\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a74c081bc55e9ff96bf229f44e96c6155}{P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US}}~((uint16\+\_\+t)0x0002\+U)
+\item 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_ab928f45585242fde1a8d81a2d9ed22d0}{P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US}}~((uint16\+\_\+t)0x0004\+U)
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a4c6fab687afc7ba4469b1b2d34472358}\label{stm32f4xx__hal__conf_8h_a4c6fab687afc7ba4469b1b2d34472358}} 
+\#define {\bfseries U\+S\+E\+\_\+\+S\+P\+I\+\_\+\+C\+RC}~0U
+\item 
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a631dea7b230e600555f979c62af1de21}\label{stm32f4xx__hal__conf_8h_a631dea7b230e600555f979c62af1de21}} 
+\#define \mbox{\hyperlink{stm32f4xx__hal__conf_8h_a631dea7b230e600555f979c62af1de21}{assert\+\_\+param}}(expr)~((void)0\+U)
+\begin{DoxyCompactList}\small\item\em Include module\textquotesingle{}s header file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+H\+AL configuration file. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} C\+O\+P\+Y\+R\+I\+G\+H\+T(c) 2018 S\+T\+Microelectronics\end{center} }
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+E\+RS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS OR I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY A\+ND F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED. IN NO E\+V\+E\+NT S\+H\+A\+LL T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+ER OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a8c47c935e91e70569098b41718558648}\label{stm32f4xx__hal__conf_8h_a8c47c935e91e70569098b41718558648}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE@{E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE}}
+\index{E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE@{E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE}{EXTERNAL\_CLOCK\_VALUE}}
+{\footnotesize\ttfamily \#define E\+X\+T\+E\+R\+N\+A\+L\+\_\+\+C\+L\+O\+C\+K\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)12288000\+U)}
+
+
+
+External clock source for I2S peripheral This value is used by the I2S H\+AL module to compute the I2S clock source frequency, this source is inserted directly through I2\+S\+\_\+\+C\+K\+IN pad. 
+
+Value of the External audio frequency in Hz \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a68ecbc9b0a1a40a1ec9d18d5e9747c4f}\label{stm32f4xx__hal__conf_8h_a68ecbc9b0a1a40a1ec9d18d5e9747c4f}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT@{H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}}
+\index{H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT@{H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}{HSE\_STARTUP\_TIMEOUT}}
+{\footnotesize\ttfamily \#define H\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT~((uint32\+\_\+t)100\+U)}
+
+Time out for H\+SE start up, in ms \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_aeafcff4f57440c60e64812dddd13e7cb}\label{stm32f4xx__hal__conf_8h_aeafcff4f57440c60e64812dddd13e7cb}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!H\+S\+E\+\_\+\+V\+A\+L\+UE@{H\+S\+E\+\_\+\+V\+A\+L\+UE}}
+\index{H\+S\+E\+\_\+\+V\+A\+L\+UE@{H\+S\+E\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{H\+S\+E\+\_\+\+V\+A\+L\+UE}{HSE\_VALUE}}
+{\footnotesize\ttfamily \#define H\+S\+E\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)25000000\+U)}
+
+
+
+Adjust the value of External High Speed oscillator (H\+SE) used in your application. This value is used by the R\+CC H\+AL module to compute the system frequency (when H\+SE is used as system clock source, directly or through the P\+LL). ~\newline
+~\newline
+ 
+
+Value of the External oscillator in Hz \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_aaa8c76e274d0f6dd2cefb5d0b17fbc37}\label{stm32f4xx__hal__conf_8h_aaa8c76e274d0f6dd2cefb5d0b17fbc37}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!H\+S\+I\+\_\+\+V\+A\+L\+UE@{H\+S\+I\+\_\+\+V\+A\+L\+UE}}
+\index{H\+S\+I\+\_\+\+V\+A\+L\+UE@{H\+S\+I\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{H\+S\+I\+\_\+\+V\+A\+L\+UE}{HSI\_VALUE}}
+{\footnotesize\ttfamily \#define H\+S\+I\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)16000000\+U)}
+
+
+
+Internal High Speed oscillator (H\+SI) value. This value is used by the R\+CC H\+AL module to compute the system frequency (when H\+SI is used as system clock source, directly or through the P\+LL). 
+
+Value of the Internal oscillator in Hz \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a85e6fc812dc26f7161a04be2568a5462}\label{stm32f4xx__hal__conf_8h_a85e6fc812dc26f7161a04be2568a5462}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT@{L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}}
+\index{L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT@{L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT}{LSE\_STARTUP\_TIMEOUT}}
+{\footnotesize\ttfamily \#define L\+S\+E\+\_\+\+S\+T\+A\+R\+T\+U\+P\+\_\+\+T\+I\+M\+E\+O\+UT~((uint32\+\_\+t)5000\+U)}
+
+Time out for L\+SE start up, in ms \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a7bbb9d19e5189a6ccd0fb6fa6177d20d}\label{stm32f4xx__hal__conf_8h_a7bbb9d19e5189a6ccd0fb6fa6177d20d}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!L\+S\+E\+\_\+\+V\+A\+L\+UE@{L\+S\+E\+\_\+\+V\+A\+L\+UE}}
+\index{L\+S\+E\+\_\+\+V\+A\+L\+UE@{L\+S\+E\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{L\+S\+E\+\_\+\+V\+A\+L\+UE}{LSE\_VALUE}}
+{\footnotesize\ttfamily \#define L\+S\+E\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)32768\+U)}
+
+
+
+External Low Speed oscillator (L\+SE) value. 
+
+$<$ Value of the Internal Low Speed oscillator in Hz The real value may vary depending on the variations in voltage and temperature. Value of the External Low Speed oscillator in Hz \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a4872023e65449c0506aac3ea6bec99e9}\label{stm32f4xx__hal__conf_8h_a4872023e65449c0506aac3ea6bec99e9}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!L\+S\+I\+\_\+\+V\+A\+L\+UE@{L\+S\+I\+\_\+\+V\+A\+L\+UE}}
+\index{L\+S\+I\+\_\+\+V\+A\+L\+UE@{L\+S\+I\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{L\+S\+I\+\_\+\+V\+A\+L\+UE}{LSI\_VALUE}}
+{\footnotesize\ttfamily \#define L\+S\+I\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)32000\+U)}
+
+
+
+Internal Low Speed oscillator (L\+SI) value. 
+
+L\+SI Typical Value in Hz \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a36c4dbd5f6df1f5eaefa010929ef9773}\label{stm32f4xx__hal__conf_8h_a36c4dbd5f6df1f5eaefa010929ef9773}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE@{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE}}
+\index{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE@{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE}{PHY\_AUTONEGO\_COMPLETE}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+\_\+\+C\+O\+M\+P\+L\+E\+TE~((uint16\+\_\+t)0x0020\+U)}
+
+Auto-\/\+Negotiation process completed \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a9b7f5c8f71047ee449f21562d26b1b43}\label{stm32f4xx__hal__conf_8h_a9b7f5c8f71047ee449f21562d26b1b43}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON@{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}}
+\index{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON@{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}{PHY\_AUTONEGOTIATION}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON~((uint16\+\_\+t)0x1000\+U)}
+
+Enable auto-\/negotiation function \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a8abe1a40c71e68881ec669d59f513fdb}\label{stm32f4xx__hal__conf_8h_a8abe1a40c71e68881ec669d59f513fdb}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+B\+CR@{P\+H\+Y\+\_\+\+B\+CR}}
+\index{P\+H\+Y\+\_\+\+B\+CR@{P\+H\+Y\+\_\+\+B\+CR}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+B\+CR}{PHY\_BCR}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+B\+CR~((uint16\+\_\+t)0x0000\+U)}
+
+Transceiver Basic Control Register \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a4b8f2c29a9e74412395e1b1809666838}\label{stm32f4xx__hal__conf_8h_a4b8f2c29a9e74412395e1b1809666838}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+B\+SR@{P\+H\+Y\+\_\+\+B\+SR}}
+\index{P\+H\+Y\+\_\+\+B\+SR@{P\+H\+Y\+\_\+\+B\+SR}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+B\+SR}{PHY\_BSR}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+B\+SR~((uint16\+\_\+t)0x0001\+U)}
+
+Transceiver Basic Status Register \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ab928f45585242fde1a8d81a2d9ed22d0}\label{stm32f4xx__hal__conf_8h_ab928f45585242fde1a8d81a2d9ed22d0}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US}}
+\index{P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US}{PHY\_DUPLEX\_STATUS}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+D\+U\+P\+L\+E\+X\+\_\+\+S\+T\+A\+T\+US~((uint16\+\_\+t)0x0004\+U)}
+
+P\+HY Duplex mask \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a5729771244f68779fc694ba819cd60a5}\label{stm32f4xx__hal__conf_8h_a5729771244f68779fc694ba819cd60a5}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M@{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M}}
+\index{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M@{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M}{PHY\_FULLDUPLEX\_100M}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+100M~((uint16\+\_\+t)0x2100\+U)}
+
+Set the full-\/duplex mode at 100 Mb/s \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a6b6254fd3dacbf1578a9d8058cd86373}\label{stm32f4xx__hal__conf_8h_a6b6254fd3dacbf1578a9d8058cd86373}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M@{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M}}
+\index{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M@{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M}{PHY\_FULLDUPLEX\_10M}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+E\+X\+\_\+10M~((uint16\+\_\+t)0x0100\+U)}
+
+Set the full-\/duplex mode at 10 Mb/s \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a1ac901a4ad405241d90a5c10104b8986}\label{stm32f4xx__hal__conf_8h_a1ac901a4ad405241d90a5c10104b8986}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M@{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M}}
+\index{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M@{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M}{PHY\_HALFDUPLEX\_100M}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+100M~((uint16\+\_\+t)0x2000\+U)}
+
+Set the half-\/duplex mode at 100 Mb/s \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a4fa7ca6faf60ee074576ebb6103f8dd4}\label{stm32f4xx__hal__conf_8h_a4fa7ca6faf60ee074576ebb6103f8dd4}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M@{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M}}
+\index{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M@{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M}{PHY\_HALFDUPLEX\_10M}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+H\+A\+L\+F\+D\+U\+P\+L\+E\+X\+\_\+10M~((uint16\+\_\+t)0x0000\+U)}
+
+Set the half-\/duplex mode at 10 Mb/s \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a7d5233295134a385866eb5bdafe2162b}\label{stm32f4xx__hal__conf_8h_a7d5233295134a385866eb5bdafe2162b}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE@{P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE}}
+\index{P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE@{P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE}{PHY\_ISOLATE}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+I\+S\+O\+L\+A\+TE~((uint16\+\_\+t)0x0400\+U)}
+
+Isolate P\+HY from M\+II \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a057b4d3fb66548d65c291a5b41611be2}\label{stm32f4xx__hal__conf_8h_a057b4d3fb66548d65c291a5b41611be2}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON@{P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON}}
+\index{P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON@{P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON}{PHY\_JABBER\_DETECTION}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+J\+A\+B\+B\+E\+R\+\_\+\+D\+E\+T\+E\+C\+T\+I\+ON~((uint16\+\_\+t)0x0002\+U)}
+
+Jabber condition detected \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ace209074499dbef0b97300da5bd7c707}\label{stm32f4xx__hal__conf_8h_ace209074499dbef0b97300da5bd7c707}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US}}
+\index{P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US}{PHY\_LINKED\_STATUS}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+L\+I\+N\+K\+E\+D\+\_\+\+S\+T\+A\+T\+US~((uint16\+\_\+t)0x0004\+U)}
+
+Valid link established \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a7833d885caa7e29abbebfb90a4b96f86}\label{stm32f4xx__hal__conf_8h_a7833d885caa7e29abbebfb90a4b96f86}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK@{P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK}}
+\index{P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK@{P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK}{PHY\_LOOPBACK}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+L\+O\+O\+P\+B\+A\+CK~((uint16\+\_\+t)0x4000\+U)}
+
+Select loop-\/back mode \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_aa0b1e6d4a23470fc1ac4f9222b51f8a0}\label{stm32f4xx__hal__conf_8h_aa0b1e6d4a23470fc1ac4f9222b51f8a0}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN@{P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN}}
+\index{P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN@{P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN}{PHY\_POWERDOWN}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+P\+O\+W\+E\+R\+D\+O\+WN~((uint16\+\_\+t)0x0800\+U)}
+
+Select the power down mode \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a6f5048620b3dde8583f7f1118e9de187}\label{stm32f4xx__hal__conf_8h_a6f5048620b3dde8583f7f1118e9de187}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+R\+E\+S\+ET@{P\+H\+Y\+\_\+\+R\+E\+S\+ET}}
+\index{P\+H\+Y\+\_\+\+R\+E\+S\+ET@{P\+H\+Y\+\_\+\+R\+E\+S\+ET}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+R\+E\+S\+ET}{PHY\_RESET}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+R\+E\+S\+ET~((uint16\+\_\+t)0x8000\+U)}
+
+P\+HY Reset \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a66c4b69bd08dc25b6730365d3ff740c9}\label{stm32f4xx__hal__conf_8h_a66c4b69bd08dc25b6730365d3ff740c9}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON@{P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}}
+\index{P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON@{P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON}{PHY\_RESTART\_AUTONEGOTIATION}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+R\+E\+S\+T\+A\+R\+T\+\_\+\+A\+U\+T\+O\+N\+E\+G\+O\+T\+I\+A\+T\+I\+ON~((uint16\+\_\+t)0x0200\+U)}
+
+Restart auto-\/negotiation function \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a74c081bc55e9ff96bf229f44e96c6155}\label{stm32f4xx__hal__conf_8h_a74c081bc55e9ff96bf229f44e96c6155}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US}}
+\index{P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US@{P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US}{PHY\_SPEED\_STATUS}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+S\+P\+E\+E\+D\+\_\+\+S\+T\+A\+T\+US~((uint16\+\_\+t)0x0002\+U)}
+
+P\+HY Speed mask \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_a32b55e84d27cf298a77f54b133cd1acc}\label{stm32f4xx__hal__conf_8h_a32b55e84d27cf298a77f54b133cd1acc}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!P\+H\+Y\+\_\+\+SR@{P\+H\+Y\+\_\+\+SR}}
+\index{P\+H\+Y\+\_\+\+SR@{P\+H\+Y\+\_\+\+SR}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{P\+H\+Y\+\_\+\+SR}{PHY\_SR}}
+{\footnotesize\ttfamily \#define P\+H\+Y\+\_\+\+SR~((uint16\+\_\+t)0x10\+U)}
+
+P\+HY status register Offset \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_ae27809d4959b9fd5b5d974e3e1c77d2e}\label{stm32f4xx__hal__conf_8h_ae27809d4959b9fd5b5d974e3e1c77d2e}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}
+\index{T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}{TICK\_INT\_PRIORITY}}
+{\footnotesize\ttfamily \#define T\+I\+C\+K\+\_\+\+I\+N\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY~((uint32\+\_\+t)0\+U)}
+
+tick interrupt priority \mbox{\Hypertarget{stm32f4xx__hal__conf_8h_aae550dad9f96d52cfce5e539adadbbb4}\label{stm32f4xx__hal__conf_8h_aae550dad9f96d52cfce5e539adadbbb4}} 
+\index{stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}!V\+D\+D\+\_\+\+V\+A\+L\+UE@{V\+D\+D\+\_\+\+V\+A\+L\+UE}}
+\index{V\+D\+D\+\_\+\+V\+A\+L\+UE@{V\+D\+D\+\_\+\+V\+A\+L\+UE}!stm32f4xx\+\_\+hal\+\_\+conf.\+h@{stm32f4xx\+\_\+hal\+\_\+conf.\+h}}
+\subsubsection{\texorpdfstring{V\+D\+D\+\_\+\+V\+A\+L\+UE}{VDD\_VALUE}}
+{\footnotesize\ttfamily \#define V\+D\+D\+\_\+\+V\+A\+L\+UE~((uint32\+\_\+t)3300\+U)}
+
+
+
+This is the H\+AL system configuration section. 
+
+Value of V\+DD in mv 

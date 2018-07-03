@@ -1,0 +1,47 @@
+\hypertarget{structos_event}{}\section{os\+Event Struct Reference}
+\label{structos_event}\index{os\+Event@{os\+Event}}
+
+
+{\ttfamily \#include $<$cmsis\+\_\+os.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structos_event_ad477a289f1f03ac45407b64268d707d3}\label{structos_event_ad477a289f1f03ac45407b64268d707d3}} 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{structos_event_ad477a289f1f03ac45407b64268d707d3}{status}}
+\begin{DoxyCompactList}\small\item\em status code\+: event or error information \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structos_event_ab2eda1adca1b3386a3c580215955b670}\label{structos_event_ab2eda1adca1b3386a3c580215955b670}} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>uint32\_t \mbox{\hyperlink{structos_event_a9e0a00edabf3b8a5dafff624fff7bbfc}{v}}\\
+\>\>{\em message as 32-\/bit value }\\
+\>void $\ast$ \mbox{\hyperlink{structos_event_a117104b82864d3b23ec174af6d392709}{p}}\\
+\>\>{\em message or mail as void pointer }\\
+\>int32\_t \mbox{\hyperlink{structos_event_ad0dda1bf7e74f1576261d493fba232b6}{signals}}\\
+\>\>{\em signal flags }\\
+\} \mbox{\hyperlink{structos_event_ab2eda1adca1b3386a3c580215955b670}{value}}\\
+
+\end{tabbing}\begin{DoxyCompactList}\small\item\em event value \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structos_event_a1931bb6b9ae7646b39364333917e1f12}\label{structos_event_a1931bb6b9ae7646b39364333917e1f12}} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{osMailQId}} \mbox{\hyperlink{structos_event_ac86175a4b1706bee596f3018322df26e}{mail\_id}}\\
+\>\>{\em mail id obtained by \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{osMailCreate}} }\\
+\>\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{osMessageQId}} \mbox{\hyperlink{structos_event_af394cbe21dde7377974e63af38cd87b0}{message\_id}}\\
+\>\>{\em message id obtained by \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{osMessageCreate}} }\\
+\} \mbox{\hyperlink{structos_event_a1931bb6b9ae7646b39364333917e1f12}{def}}\\
+
+\end{tabbing}\begin{DoxyCompactList}\small\item\em event definition \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Event structure contains detailed information about an event. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+event} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. However the struct may be extended at the end. 
+\end{DoxyNote}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Middlewares/\+Third\+\_\+\+Party/\+Free\+R\+T\+O\+S/\+Source/\+C\+M\+S\+I\+S\+\_\+\+R\+T\+O\+S/\mbox{\hyperlink{cmsis__os_8h}{cmsis\+\_\+os.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,91 @@
+\hypertarget{stm32f4xx_8h}{}\section{Drivers/\+C\+M\+S\+I\+S/\+Device/\+S\+T/\+S\+T\+M32\+F4xx/\+Include/stm32f4xx.h File Reference}
+\label{stm32f4xx_8h}\index{Drivers/\+C\+M\+S\+I\+S/\+Device/\+S\+T/\+S\+T\+M32\+F4xx/\+Include/stm32f4xx.\+h@{Drivers/\+C\+M\+S\+I\+S/\+Device/\+S\+T/\+S\+T\+M32\+F4xx/\+Include/stm32f4xx.\+h}}
+
+
+C\+M\+S\+IS S\+T\+M32\+F4xx Device Peripheral Access Layer Header File.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___library__configuration__section_ga84d985cb5667176091597f71ffdb9307}{S\+T\+M32\+F4}}
+\begin{DoxyCompactList}\small\item\em S\+T\+M32 Family. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___library__configuration__section_gaf867da11218022a14245b854f6be6a40}{\+\_\+\+\_\+\+S\+T\+M32\+F4xx\+\_\+\+C\+M\+S\+I\+S\+\_\+\+V\+E\+R\+S\+I\+O\+N\+\_\+\+M\+A\+IN}}~(0x02\+U)
+\begin{DoxyCompactList}\small\item\em Comment the line below if you will not use the peripherals drivers. In this case, these drivers will not be included and the application code will be based on direct access to peripherals registers. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___library__configuration__section_ga4841e20bc5159a594936808c113ae3bc}{\+\_\+\+\_\+\+S\+T\+M32\+F4xx\+\_\+\+C\+M\+S\+I\+S\+\_\+\+V\+E\+R\+S\+I\+O\+N\+\_\+\+S\+U\+B1}}~(0x06\+U)
+\item 
+\#define \mbox{\hyperlink{group___library__configuration__section_ga6ccbf6336bfb67bf4daeb05eba18a5e3}{\+\_\+\+\_\+\+S\+T\+M32\+F4xx\+\_\+\+C\+M\+S\+I\+S\+\_\+\+V\+E\+R\+S\+I\+O\+N\+\_\+\+S\+U\+B2}}~(0x02\+U)
+\item 
+\#define \mbox{\hyperlink{group___library__configuration__section_gafbd304f122892833ce0d4daa3dc4ff13}{\+\_\+\+\_\+\+S\+T\+M32\+F4xx\+\_\+\+C\+M\+S\+I\+S\+\_\+\+V\+E\+R\+S\+I\+O\+N\+\_\+\+RC}}~(0x00\+U)
+\item 
+\#define {\bfseries \+\_\+\+\_\+\+S\+T\+M32\+F4xx\+\_\+\+C\+M\+S\+I\+S\+\_\+\+V\+E\+R\+S\+I\+ON}
+\item 
+\#define {\bfseries I\+S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+A\+L\+\_\+\+S\+T\+A\+TE}(S\+T\+A\+TE)~(((S\+T\+A\+TE) == D\+I\+S\+A\+B\+LE) $\vert$$\vert$ ((S\+T\+A\+TE) == E\+N\+A\+B\+LE))
+\item 
+\#define {\bfseries S\+E\+T\+\_\+\+B\+IT}(R\+EG,  B\+IT)~((R\+EG) $\vert$= (B\+IT))
+\item 
+\#define {\bfseries C\+L\+E\+A\+R\+\_\+\+B\+IT}(R\+EG,  B\+IT)~((R\+EG) \&= $\sim$(B\+IT))
+\item 
+\#define {\bfseries R\+E\+A\+D\+\_\+\+B\+IT}(R\+EG,  B\+IT)~((R\+EG) \& (B\+IT))
+\item 
+\#define {\bfseries C\+L\+E\+A\+R\+\_\+\+R\+EG}(R\+EG)~((R\+EG) = (0x0))
+\item 
+\#define {\bfseries W\+R\+I\+T\+E\+\_\+\+R\+EG}(R\+EG,  V\+AL)~((R\+EG) = (V\+AL))
+\item 
+\#define {\bfseries R\+E\+A\+D\+\_\+\+R\+EG}(R\+EG)~((R\+EG))
+\item 
+\#define {\bfseries M\+O\+D\+I\+F\+Y\+\_\+\+R\+EG}(R\+EG,  C\+L\+E\+A\+R\+M\+A\+SK,  S\+E\+T\+M\+A\+SK)~W\+R\+I\+T\+E\+\_\+\+R\+EG((R\+EG), (((R\+E\+A\+D\+\_\+\+R\+EG(R\+EG)) \& ($\sim$(C\+L\+E\+A\+R\+M\+A\+SK))) $\vert$ (S\+E\+T\+M\+A\+SK)))
+\item 
+\#define {\bfseries P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+V\+AL}(V\+AL)~(\mbox{\hyperlink{group___c_m_s_i_s___core___instruction_interface_ga5d5bb1527e042be4a9fa5a33f65cc248}{\+\_\+\+\_\+\+C\+LZ}}(\+\_\+\+\_\+\+R\+B\+IT(V\+AL)))
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum Flag\+Status {\bfseries I\+T\+Status}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group___exported__types_ga89136caac2e14c55151f527ac02daaff}\label{group___exported__types_ga89136caac2e14c55151f527ac02daaff}} 
+enum {\bfseries Flag\+Status} \{ {\bfseries R\+E\+S\+ET} = 0U, 
+{\bfseries S\+ET} = !\+R\+E\+S\+ET
+ \}
+\item 
+\mbox{\Hypertarget{group___exported__types_gac9a7e9a35d2513ec15c3b537aaa4fba1}\label{group___exported__types_gac9a7e9a35d2513ec15c3b537aaa4fba1}} 
+enum {\bfseries Functional\+State} \{ {\bfseries D\+I\+S\+A\+B\+LE} = 0U, 
+{\bfseries E\+N\+A\+B\+LE} = !\+D\+I\+S\+A\+B\+LE
+ \}
+\item 
+\mbox{\Hypertarget{group___exported__types_ga8333b96c67f83cba354b3407fcbb6ee8}\label{group___exported__types_ga8333b96c67f83cba354b3407fcbb6ee8}} 
+enum {\bfseries Error\+Status} \{ {\bfseries E\+R\+R\+OR} = 0U, 
+{\bfseries S\+U\+C\+C\+E\+SS} = !\+E\+R\+R\+OR
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+C\+M\+S\+IS S\+T\+M32\+F4xx Device Peripheral Access Layer Header File. 
+
+\begin{DoxyAuthor}{Author}
+M\+CD Application Team The file is the unique include file that the application programmer is using in the C source code, usually in \mbox{\hyperlink{main_8c}{main.\+c}}. This file contains\+:
+\begin{DoxyItemize}
+\item Configuration section that allows to select\+:
+\begin{DoxyItemize}
+\item The S\+T\+M32\+F4xx device used in the target application
+\item To use or not the peripheral’s drivers in application code(i.\+e. code will be based on direct access to peripheral’s registers rather than drivers A\+PI), this option is controlled by \char`\"{}\#define U\+S\+E\+\_\+\+H\+A\+L\+\_\+\+D\+R\+I\+V\+E\+R\char`\"{}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyAuthor}
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} C\+O\+P\+Y\+R\+I\+G\+H\+T(c) 2017 S\+T\+Microelectronics\end{center} }
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+E\+RS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS OR I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY A\+ND F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED. IN NO E\+V\+E\+NT S\+H\+A\+LL T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+ER OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 
