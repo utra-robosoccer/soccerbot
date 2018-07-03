@@ -1,0 +1,2605 @@
+\hypertarget{cmsis__os_8h}{}\section{Middlewares/\+Third\+\_\+\+Party/\+Free\+R\+T\+O\+S/\+Source/\+C\+M\+S\+I\+S\+\_\+\+R\+T\+O\+S/cmsis\+\_\+os.h File Reference}
+\label{cmsis__os_8h}\index{Middlewares/\+Third\+\_\+\+Party/\+Free\+R\+T\+O\+S/\+Source/\+C\+M\+S\+I\+S\+\_\+\+R\+T\+O\+S/cmsis\+\_\+os.\+h@{Middlewares/\+Third\+\_\+\+Party/\+Free\+R\+T\+O\+S/\+Source/\+C\+M\+S\+I\+S\+\_\+\+R\+T\+O\+S/cmsis\+\_\+os.\+h}}
+
+
+Header of \mbox{\hyperlink{cmsis__os_8c}{cmsis\+\_\+os.\+c}} A new set of A\+P\+Is are added in addition to existing ones, these A\+P\+Is are specific to Free\+R\+T\+OS.  
+
+
+{\ttfamily \#include \char`\"{}Free\+R\+T\+O\+S.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}task.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}timers.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}queue.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}semphr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}event\+\_\+groups.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structos__thread__def}{os\+\_\+thread\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__timer__def}{os\+\_\+timer\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__mutex__def}{os\+\_\+mutex\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__semaphore__def}{os\+\_\+semaphore\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__pool__def}{os\+\_\+pool\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__message_q__def}{os\+\_\+message\+Q\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos__mail_q__def}{os\+\_\+mail\+Q\+\_\+def}}
+\item 
+struct \mbox{\hyperlink{structos_event}{os\+Event}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a702196bacccbb978620c736b209387f1}{os\+C\+M\+S\+IS}}~0x10002
+\begin{DoxyCompactList}\small\item\em A\+PI version (main \mbox{[}31\+:16\mbox{]} .sub \mbox{[}15\+:0\mbox{]}) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_ab78dce646fabec479c5f34bc5175b7de}{os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL}}~0x10000
+\begin{DoxyCompactList}\small\item\em R\+T\+OS identification and version (main \mbox{[}31\+:16\mbox{]} .sub \mbox{[}15\+:0\mbox{]}) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a47cf03658f01cdffca688e9096b58289}{os\+Kernel\+System\+Id}}~\char`\"{}K\+E\+R\+N\+EL V1.\+00\char`\"{}
+\begin{DoxyCompactList}\small\item\em R\+T\+OS identification string. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a22f7d235bc9f783933bd5a981fd79696}{os\+Feature\+\_\+\+Main\+Thread}}~1
+\begin{DoxyCompactList}\small\item\em main thread 1=main can be thread, 0=not available \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_add84b683001de327894851b428587caa}\label{cmsis__os_8h_add84b683001de327894851b428587caa}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_add84b683001de327894851b428587caa}{os\+Feature\+\_\+\+Pool}}~1
+\begin{DoxyCompactList}\small\item\em Memory Pools\+: 1=available, 0=not available. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_aceb2e0071ce160d153047f2eac1aca8e}\label{cmsis__os_8h_aceb2e0071ce160d153047f2eac1aca8e}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_aceb2e0071ce160d153047f2eac1aca8e}{os\+Feature\+\_\+\+MailQ}}~1
+\begin{DoxyCompactList}\small\item\em Mail Queues\+: 1=available, 0=not available. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_a479a6561f859e3d4818e25708593d203}\label{cmsis__os_8h_a479a6561f859e3d4818e25708593d203}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_a479a6561f859e3d4818e25708593d203}{os\+Feature\+\_\+\+MessageQ}}~1
+\begin{DoxyCompactList}\small\item\em Message Queues\+: 1=available, 0=not available. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_a01edde265710d883b6e237d34a6ef4a6}\label{cmsis__os_8h_a01edde265710d883b6e237d34a6ef4a6}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_a01edde265710d883b6e237d34a6ef4a6}{os\+Feature\+\_\+\+Signals}}~8
+\begin{DoxyCompactList}\small\item\em maximum number of Signal Flags available per thread \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_a7da4c7bfb340779c9fc7b321f5ab3e3a}\label{cmsis__os_8h_a7da4c7bfb340779c9fc7b321f5ab3e3a}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_a7da4c7bfb340779c9fc7b321f5ab3e3a}{os\+Feature\+\_\+\+Semaphore}}~1
+\begin{DoxyCompactList}\small\item\em os\+Feature\+\_\+\+Semaphore function\+: 1=available, 0=not available \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_a6c97d38879ae86491628f6e647639bad}\label{cmsis__os_8h_a6c97d38879ae86491628f6e647639bad}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_a6c97d38879ae86491628f6e647639bad}{os\+Feature\+\_\+\+Wait}}~0
+\begin{DoxyCompactList}\small\item\em os\+Wait function\+: 1=available, 0=not available \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{cmsis__os_8h_ae554ec16c23c5b7d65affade2a351891}\label{cmsis__os_8h_ae554ec16c23c5b7d65affade2a351891}} 
+\#define \mbox{\hyperlink{cmsis__os_8h_ae554ec16c23c5b7d65affade2a351891}{os\+Feature\+\_\+\+Sys\+Tick}}~1
+\begin{DoxyCompactList}\small\item\em os\+Kernel\+Sys\+Tick functions\+: 1=available, 0=not available \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a9eb9a7a797a42e4b55eb171ecc609ddb}{os\+Wait\+Forever}}~0x\+F\+F\+F\+F\+F\+F\+FF
+\begin{DoxyCompactList}\small\item\em wait forever timeout value \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}{os\+Kernel\+Sys\+Tick\+Frequency}}~(config\+T\+I\+C\+K\+\_\+\+R\+A\+T\+E\+\_\+\+HZ)
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_ae12c190af42d7310d8006d64f4ed5a88}{os\+Kernel\+Sys\+Tick\+Micro\+Sec}}(microsec)~(((uint64\+\_\+t)microsec $\ast$ (\mbox{\hyperlink{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}{os\+Kernel\+Sys\+Tick\+Frequency}})) / 1000000)
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a1537e80813785bebbc3cbab3226eb04f}{os\+Thread\+Def}}(name,  thread,  priority,  instances,  stacksz)
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}{os\+Thread}}(name)~\&os\+\_\+thread\+\_\+def\+\_\+\#\#name
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a1c720627e08d1cc1afcad44e799ed492}{os\+Timer\+Def}}(name,  function)
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a1b8d670eaf964b2910fa06885e650678}{os\+Timer}}(name)~\&os\+\_\+timer\+\_\+def\+\_\+\#\#name
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a9b522438489d7c402c95332b58bc94f3}{os\+Mutex\+Def}}(name)~const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} os\+\_\+mutex\+\_\+def\+\_\+\#\#name = \{ 0 \}
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}{os\+Mutex}}(name)~\&os\+\_\+mutex\+\_\+def\+\_\+\#\#name
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a9e66fe361749071e5ab87826c43c2f1b}{os\+Semaphore\+Def}}(name)~const \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}} os\+\_\+semaphore\+\_\+def\+\_\+\#\#name = \{ 0 \}
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}(name)~\&os\+\_\+semaphore\+\_\+def\+\_\+\#\#name
+\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a87b471d4fe2d5dbd0040708edd52771b}{os\+Pool\+Def}}(name,  no,  type)
+\begin{DoxyCompactList}\small\item\em Define a Memory Pool. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a5f0b204a82327533d420210125c90697}{os\+Pool}}(name)~\&os\+\_\+pool\+\_\+def\+\_\+\#\#name
+\begin{DoxyCompactList}\small\item\em Access a Memory Pool definition. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_ac9a6a6276c12609793e7701afcc82326}{os\+Message\+Q\+Def}}(name,  queue\+\_\+sz,  type)
+\begin{DoxyCompactList}\small\item\em Create a Message Queue Definition. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a2d446a0b4bb90bf05d6f92eedeaabc97}{os\+MessageQ}}(name)~\&os\+\_\+message\+Q\+\_\+def\+\_\+\#\#name
+\begin{DoxyCompactList}\small\item\em Access a Message Queue Definition. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_a58d712b16c0c6668059f509386d1e55b}{os\+Mail\+Q\+Def}}(name,  queue\+\_\+sz,  type)
+\begin{DoxyCompactList}\small\item\em Create a Mail Queue Definition. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cmsis__os_8h_ad2deeb66d51ade54e63d8f87ff2ec9d2}{os\+MailQ}}(name)~\&os\+\_\+mail\+Q\+\_\+def\+\_\+\#\#name
+\begin{DoxyCompactList}\small\item\em Access a Mail Queue Definition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \mbox{\hyperlink{cmsis__os_8h_a3a96994ab8318050b476d72d890ce765}{os\+\_\+pthread}}) (void const $\ast$argument)
+\item 
+typedef void($\ast$ \mbox{\hyperlink{cmsis__os_8h_a7904cad2180c6b3a0ac112fe8ff273e7}{os\+\_\+ptimer}}) (void const $\ast$argument)
+\item 
+typedef Task\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}
+\item 
+typedef Timer\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}}
+\item 
+typedef Semaphore\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}
+\item 
+typedef Semaphore\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}
+\item 
+typedef struct \mbox{\hyperlink{structos__pool__cb}{os\+\_\+pool\+\_\+cb}} $\ast$ \mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}}
+\item 
+typedef Queue\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}
+\item 
+typedef struct \mbox{\hyperlink{structos__mail_q__cb}{os\+\_\+mail\+Q\+\_\+cb}} $\ast$ \mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}
+\item 
+typedef struct \mbox{\hyperlink{structos__thread__def}{os\+\_\+thread\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}{os\+Thread\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__timer__def}{os\+\_\+timer\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}{os\+Timer\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__mutex__def}{os\+\_\+mutex\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__semaphore__def}{os\+\_\+semaphore\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__pool__def}{os\+\_\+pool\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}{os\+Pool\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__message_q__def}{os\+\_\+message\+Q\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}{os\+Message\+Q\+Def\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structos__mail_q__def}{os\+\_\+mail\+Q\+\_\+def}} \mbox{\hyperlink{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}{os\+Mail\+Q\+Def\+\_\+t}}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}} \{ \newline
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa549e79a43ff4f8b2b31afb613f5caa81}{os\+Priority\+Idle}} = -\/3, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa61cb822239ac8f66dfbdc7291598a3d4}{os\+Priority\+Low}} = -\/2, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa193b650117c209b4a203954542bcc3e6}{os\+Priority\+Below\+Normal}} = -\/1, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa45a2895ad30c79fb97de18cac7cc19f1}{os\+Priority\+Normal}} = 0, 
+\newline
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa17b36cd9cd38652c2bc6d4803990674b}{os\+Priority\+Above\+Normal}} = +1, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa914433934143a9ba767e59577c56e6c2}{os\+Priority\+High}} = +2, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa1485dec3702434a1ec3cb74c7a17a4af}{os\+Priority\+Realtime}} = +3, 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aae35f5e2f9c64ad346822521b643bdea4}{os\+Priority\+Error}} = 0x84
+ \}
+\item 
+enum \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \{ \newline
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea9e1c9e2550bb4de8969a935acffc968f}{os\+OK}} = 0, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5df7e9643aa8a2f5f3a6f6ec59758518}{os\+Event\+Signal}} = 0x08, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ead604f3673359dd4ac643b16dc5a2c342}{os\+Event\+Message}} = 0x10, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea15b12e42b42b53f35fb8a2724ad02926}{os\+Event\+Mail}} = 0x20, 
+\newline
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea78f477732375c0e1fca814e369618177}{os\+Event\+Timeout}} = 0x40, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac24adca6a5d072c9f01c32178ba0d109}{os\+Error\+Parameter}} = 0x80, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea8fc5801e8b0482bdf22ad63a77f0155d}{os\+Error\+Resource}} = 0x81, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea314d24a49003f09459035db0dd7c9467}{os\+Error\+Timeout\+Resource}} = 0x\+C1, 
+\newline
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea21635bdc492d3094fe83027fa4a30e2f}{os\+Error\+I\+SR}} = 0x82, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf6552310a817452aedfcd453f2805d65}{os\+Error\+I\+S\+R\+Recursive}} = 0x83, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eab7dda0ef504817659334cbfd650ae56f}{os\+Error\+Priority}} = 0x84, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf1fac0240218e51eb30a13da2f8aae81}{os\+Error\+No\+Memory}} = 0x85, 
+\newline
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea4672c8a0c0f6bb1d7981da4602e8e9ee}{os\+Error\+Value}} = 0x86, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5fde24ff588ec5ab9cb8314bade26fbc}{os\+Error\+OS}} = 0x\+FF, 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac7a77f5fe18a15a357790c36a4aca1b1}{os\+\_\+status\+\_\+reserved}} = 0x7\+F\+F\+F\+F\+F\+FF
+ \}
+\item 
+enum \mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}{os\+\_\+timer\+\_\+type}} \{ \mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ad21712f8df5f97069c82dc9eec37b951}{os\+Timer\+Once}} = 0, 
+\mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ab9c91f9699162edb09bb7c90c11c8788}{os\+Timer\+Periodic}} = 1
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a53d078a801022e202e8115c083ece68e}{os\+Kernel\+Initialize}} (void)
+\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_aab668ffd2ea76bb0a77ab0ab385eaef2}{os\+Kernel\+Start}} (void)
+\begin{DoxyCompactList}\small\item\em Start the R\+T\+OS Kernel with executing the specified thread. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a3b571de44cd3094c643247a7397f86b5}{os\+Kernel\+Running}} (void)
+\begin{DoxyCompactList}\small\item\em Check if the R\+T\+OS kernel is already started. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_ad0262e4688e95d1e9038afd9bcc16001}{os\+Kernel\+Sys\+Tick}} (void)
+\begin{DoxyCompactList}\small\item\em Get the value of the Kernel Sys\+Tick timer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}{os\+Thread\+Def\+\_\+t}} $\ast$thread\+\_\+def, void $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Create a thread and add it to Active Threads and set it to state R\+E\+A\+DY. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}} (void)
+\begin{DoxyCompactList}\small\item\em Return the thread ID of the current running thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_aea135bb90eb853eff39e0800b91bbeab}{os\+Thread\+Terminate}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Terminate execution of a thread and remove it from Active Threads. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_af13a667493c5d629a90c13e113b99233}{os\+Thread\+Yield}} (void)
+\begin{DoxyCompactList}\small\item\em Pass control to next thread that is in state {\bfseries R\+E\+A\+DY}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a0dfb90ccf1f6e4b54b9251b12d1cbc8b}{os\+Thread\+Set\+Priority}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id, \mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}} priority)
+\begin{DoxyCompactList}\small\item\em Change priority of an active thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}} \mbox{\hyperlink{cmsis__os_8h_a4299d838978bc2aae5e4350754e6a4e9}{os\+Thread\+Get\+Priority}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get current priority of an active thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a02e19d5e723bfb06ba9324d625162255}{os\+Delay}} (uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Wait for Timeout (Time Delay) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}} \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}{os\+Timer\+Def\+\_\+t}} $\ast$timer\+\_\+def, \mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}{os\+\_\+timer\+\_\+type}} type, void $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Create a timer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a27a797a401b068e2644d1125f22a07ca}{os\+Timer\+Start}} (\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}} timer\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Start or restart a timer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a58f36b121a812936435cacc6e1e0e091}{os\+Timer\+Stop}} (\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}} timer\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Stop a timer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a746b8043d906849bd65e3900fcb483cf}{os\+Timer\+Delete}} (\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}} timer\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Delete a timer. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a3de2730654589d6c3559c4b9e2825553}{os\+Signal\+Set}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id, int32\+\_\+t signals)
+\begin{DoxyCompactList}\small\item\em Set the specified Signal Flags of an active thread. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a87283a6ebc31ce9ed42baf3ea7e4eab6}{os\+Signal\+Clear}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id, int32\+\_\+t signals)
+\item 
+\mbox{\hyperlink{structos_event}{os\+Event}} \mbox{\hyperlink{cmsis__os_8h_a38860acda96df47da6923348d96fc4c9}{os\+Signal\+Wait}} (int32\+\_\+t signals, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Wait for one or more Signal Flags to become signaled for the current {\bfseries R\+U\+N\+N\+I\+NG} thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} $\ast$mutex\+\_\+def)
+\begin{DoxyCompactList}\small\item\em Create and Initialize a Mutex object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}{os\+Mutex\+Wait}} (\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} mutex\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Wait until a Mutex becomes available. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a006e4744d741e8e132c3d5bbc295afe1}{os\+Mutex\+Release}} (\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} mutex\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Release a Mutex that was obtained by \mbox{\hyperlink{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}{os\+Mutex\+Wait}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_ac27e24135185d51d18f3dabc20910219}{os\+Mutex\+Delete}} (\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} mutex\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Delete a Mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}} $\ast$semaphore\+\_\+def, int32\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Create and Initialize a Semaphore object used for managing resources. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_acc15b0fc8ce1167fe43da33042e62098}{os\+Semaphore\+Wait}} (\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} semaphore\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Wait until a Semaphore token becomes available. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_ab108914997c49e14d8ff1ae0d1988ca0}{os\+Semaphore\+Release}} (\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} semaphore\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Release a Semaphore token. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_abae2801ac2c096f6e8c69a264908f595}{os\+Semaphore\+Delete}} (\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} semaphore\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Delete a Semaphore. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}} \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}{os\+Pool\+Def\+\_\+t}} $\ast$pool\+\_\+def)
+\begin{DoxyCompactList}\small\item\em Create and Initialize a memory pool. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{cmsis__os_8h_ab4bc93bf17f94ca99363e53e1a763fb5}{os\+Pool\+Alloc}} (\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}} pool\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Allocate a memory block from a memory pool. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{cmsis__os_8h_ab22c2f194e0f0b05494aa0e9c97d7a51}{os\+Pool\+C\+Alloc}} (\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}} pool\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Allocate a memory block from a memory pool and set memory block to zero. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a4a861e9c469c9d0daf5721bf174f8e54}{os\+Pool\+Free}} (\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}} pool\+\_\+id, void $\ast$block)
+\begin{DoxyCompactList}\small\item\em Return an allocated memory block back to a specific memory pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}{os\+Message\+Q\+Def\+\_\+t}} $\ast$queue\+\_\+def, \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Create and Initialize a Message Queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_ac0dcf462fc92de8ffaba6cc004514a6d}{os\+Message\+Put}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t info, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Put a Message to a Queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structos_event}{os\+Event}} \mbox{\hyperlink{cmsis__os_8h_a6c6892b8f2296cca6becd57ca2d7e1ae}{os\+Message\+Get}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Get a Message or Wait for a Message from a Queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}{os\+Mail\+Q\+Def\+\_\+t}} $\ast$queue\+\_\+def, \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Create and Initialize mail queue. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{cmsis__os_8h_ac985d7f260b80d7891157697b760aa02}{os\+Mail\+Alloc}} (\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Allocate a memory block from a mail. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{cmsis__os_8h_a9e492e5839bf0d2bf66492e70eae3ddb}{os\+Mail\+C\+Alloc}} (\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Allocate a memory block from a mail and set memory block to zero. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a485ef6f81854ebda8ffbce4832181e02}{os\+Mail\+Put}} (\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} queue\+\_\+id, void $\ast$mail)
+\begin{DoxyCompactList}\small\item\em Put a mail to a queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structos_event}{os\+Event}} \mbox{\hyperlink{cmsis__os_8h_ac6ad7e6e7d6c4a80e60da22c57a42ccd}{os\+Mail\+Get}} (\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Get a mail from a queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a27c1060cf21393f96b4fd1ed1c0167cc}{os\+Mail\+Free}} (\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} queue\+\_\+id, void $\ast$mail)
+\begin{DoxyCompactList}\small\item\em Free a memory block from a mail. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cmsis__os_8h_ab169d629ebefc57e030b324d4cce9eea}{os\+Systick\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em Handles the tick increment. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a204bf99a22ca8fe85b1f8028f0268278}{os\+Thread\+Suspend}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Suspend execution of a thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a98905f234a096669566e7b93272b2653}{os\+Thread\+Resume}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Resume execution of a suspended thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a56a2ad8a2fb63a7fdad28d2e9411c3a1}{os\+Thread\+Suspend\+All}} (void)
+\begin{DoxyCompactList}\small\item\em Suspend execution of a all active threads. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a909a8098efc243cec5729ac51fdb3bdc}{os\+Thread\+Resume\+All}} (void)
+\begin{DoxyCompactList}\small\item\em Resume execution of a all suspended threads. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_afc406147a5d66dda6ff62d338a7c99cd}{os\+Delay\+Until}} (uint32\+\_\+t $\ast$Previous\+Wake\+Time, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Delay a task until a specified time. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a0c9e0cca7aca466bb8887fb56e4b4cc8}{os\+Abort\+Delay}} (\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Abort the delay for a specific thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a72dea6af29c3caa97b583da895237697}{os\+Thread\+List}} (uint8\+\_\+t $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Lists all the current threads, along with their current state and stack usage high water mark. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structos_event}{os\+Event}} \mbox{\hyperlink{cmsis__os_8h_aee1081c573fe04809315378a37c0ce23}{os\+Message\+Peek}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Receive an item from a queue without removing the item from the queue. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a272501325655aa8bbf36ecd36e38bc56}{os\+Message\+Waiting}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the number of messaged stored in a queue. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a4f80ea3dd0140a782dc3e79fc7d1cba6}{os\+Message\+Available\+Space}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the available space in a message queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_aa6eff4b4ee9e73ab881840eaf329c469}{os\+Message\+Delete}} (\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} queue\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Delete a Message Queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} \mbox{\hyperlink{cmsis__os_8h_a09a8e658872a88d284f8143bcb62cff6}{os\+Recursive\+Mutex\+Create}} (const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} $\ast$mutex\+\_\+def)
+\begin{DoxyCompactList}\small\item\em Create and Initialize a Recursive Mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a14c641c81a487a21851555cab5c04531}{os\+Recursive\+Mutex\+Release}} (\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} mutex\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Release a Recursive Mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} \mbox{\hyperlink{cmsis__os_8h_a479c5c0d01b4f43854761026d2054b30}{os\+Recursive\+Mutex\+Wait}} (\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} mutex\+\_\+id, uint32\+\_\+t millisec)
+\begin{DoxyCompactList}\small\item\em Release a Recursive Mutex. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a5aaec061a877326be39a4998f7690567}{os\+Semaphore\+Get\+Count}} (\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} semaphore\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Returns the current count value of a counting semaphore. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header of \mbox{\hyperlink{cmsis__os_8c}{cmsis\+\_\+os.\+c}} A new set of A\+P\+Is are added in addition to existing ones, these A\+P\+Is are specific to Free\+R\+T\+OS. 
+
+\begin{DoxyAuthor}{Author}
+M\+CD Application Team 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13-\/\+July-\/2017 
+\end{DoxyDate}
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Redistribution and use in source and binary forms, with or without modification, are permitted, provided that the following conditions are met\+:
+
+
+\begin{DoxyEnumerate}
+\item Redistribution of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of other contributors to this software may be used to endorse or promote products derived from this software without specific written permission.
+\item This software, including modifications and/or derivative works of this software, must execute solely and exclusively on microcontroller or microprocessor devices manufactured by or for S\+T\+Microelectronics.
+\item Redistribution and use of this software other than as permitted under this license is void and will automatically terminate your rights under this license.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS, I\+M\+P\+L\+I\+ED OR S\+T\+A\+T\+U\+T\+O\+RY W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY, F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+ND N\+O\+N-\/\+I\+N\+F\+R\+I\+N\+G\+E\+M\+E\+NT OF T\+H\+I\+RD P\+A\+R\+TY I\+N\+T\+E\+L\+L\+E\+C\+T\+U\+AL P\+R\+O\+P\+E\+R\+TY R\+I\+G\+H\+TS A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED TO T\+HE F\+U\+L\+L\+E\+ST E\+X\+T\+E\+NT P\+E\+R\+M\+I\+T\+T\+ED BY L\+AW. IN NO E\+V\+E\+NT S\+H\+A\+LL S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cmsis__os_8h_a702196bacccbb978620c736b209387f1}\label{cmsis__os_8h_a702196bacccbb978620c736b209387f1}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+C\+M\+S\+IS@{os\+C\+M\+S\+IS}}
+\index{os\+C\+M\+S\+IS@{os\+C\+M\+S\+IS}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+C\+M\+S\+IS}{osCMSIS}}
+{\footnotesize\ttfamily \#define os\+C\+M\+S\+IS~0x10002}
+
+
+
+A\+PI version (main \mbox{[}31\+:16\mbox{]} .sub \mbox{[}15\+:0\mbox{]}) 
+
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+C\+M\+S\+IS} identifies the C\+M\+S\+I\+S-\/\+R\+T\+OS A\+PI version. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ab78dce646fabec479c5f34bc5175b7de}\label{cmsis__os_8h_ab78dce646fabec479c5f34bc5175b7de}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL@{os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL}}
+\index{os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL@{os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL}{osCMSIS\_KERNEL}}
+{\footnotesize\ttfamily \#define os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL~0x10000}
+
+
+
+R\+T\+OS identification and version (main \mbox{[}31\+:16\mbox{]} .sub \mbox{[}15\+:0\mbox{]}) 
+
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+C\+M\+S\+I\+S\+\_\+\+K\+E\+R\+N\+EL} identifies the underlying R\+T\+OS kernel and version number. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a22f7d235bc9f783933bd5a981fd79696}\label{cmsis__os_8h_a22f7d235bc9f783933bd5a981fd79696}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Feature\+\_\+\+Main\+Thread@{os\+Feature\+\_\+\+Main\+Thread}}
+\index{os\+Feature\+\_\+\+Main\+Thread@{os\+Feature\+\_\+\+Main\+Thread}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Feature\+\_\+\+Main\+Thread}{osFeature\_MainThread}}
+{\footnotesize\ttfamily \#define os\+Feature\+\_\+\+Main\+Thread~1}
+
+
+
+main thread 1=main can be thread, 0=not available 
+
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Feature\+\_\+xxx} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a47cf03658f01cdffca688e9096b58289}\label{cmsis__os_8h_a47cf03658f01cdffca688e9096b58289}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+System\+Id@{os\+Kernel\+System\+Id}}
+\index{os\+Kernel\+System\+Id@{os\+Kernel\+System\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+System\+Id}{osKernelSystemId}}
+{\footnotesize\ttfamily \#define os\+Kernel\+System\+Id~\char`\"{}K\+E\+R\+N\+EL V1.\+00\char`\"{}}
+
+
+
+R\+T\+OS identification string. 
+
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+System\+Id} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}\label{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Sys\+Tick\+Frequency@{os\+Kernel\+Sys\+Tick\+Frequency}}
+\index{os\+Kernel\+Sys\+Tick\+Frequency@{os\+Kernel\+Sys\+Tick\+Frequency}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Sys\+Tick\+Frequency}{osKernelSysTickFrequency}}
+{\footnotesize\ttfamily \#define os\+Kernel\+Sys\+Tick\+Frequency~(config\+T\+I\+C\+K\+\_\+\+R\+A\+T\+E\+\_\+\+HZ)}
+
+The R\+T\+OS kernel system timer frequency in Hz \begin{DoxyNote}{Note}
+Reflects the system timer setting and is typically defined in a configuration file. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ae12c190af42d7310d8006d64f4ed5a88}\label{cmsis__os_8h_ae12c190af42d7310d8006d64f4ed5a88}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Sys\+Tick\+Micro\+Sec@{os\+Kernel\+Sys\+Tick\+Micro\+Sec}}
+\index{os\+Kernel\+Sys\+Tick\+Micro\+Sec@{os\+Kernel\+Sys\+Tick\+Micro\+Sec}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Sys\+Tick\+Micro\+Sec}{osKernelSysTickMicroSec}}
+{\footnotesize\ttfamily \#define os\+Kernel\+Sys\+Tick\+Micro\+Sec(\begin{DoxyParamCaption}\item[{}]{microsec }\end{DoxyParamCaption})~(((uint64\+\_\+t)microsec $\ast$ (\mbox{\hyperlink{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}{os\+Kernel\+Sys\+Tick\+Frequency}})) / 1000000)}
+
+Convert a microseconds value to a R\+T\+OS kernel system timer value. 
+\begin{DoxyParams}{Parameters}
+{\em microsec} & time value in microseconds. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+time value normalized to the \mbox{\hyperlink{cmsis__os_8h_a9e0954d52722673e2031233a2ab99960}{os\+Kernel\+Sys\+Tick\+Frequency}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{cmsis__os_8h_ad2deeb66d51ade54e63d8f87ff2ec9d2}\label{cmsis__os_8h_ad2deeb66d51ade54e63d8f87ff2ec9d2}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+MailQ@{os\+MailQ}}
+\index{os\+MailQ@{os\+MailQ}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+MailQ}{osMailQ}}
+{\footnotesize\ttfamily \#define os\+MailQ(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+mail\+Q\+\_\+def\+\_\+\#\#name}
+
+
+
+Access a Mail Queue Definition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the queue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+MailQ} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a58d712b16c0c6668059f509386d1e55b}\label{cmsis__os_8h_a58d712b16c0c6668059f509386d1e55b}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Q\+Def@{os\+Mail\+Q\+Def}}
+\index{os\+Mail\+Q\+Def@{os\+Mail\+Q\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Q\+Def}{osMailQDef}}
+{\footnotesize\ttfamily \#define os\+Mail\+Q\+Def(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{queue\+\_\+sz,  }\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{struct }\mbox{\hyperlink{structos__mail_q__cb}{os\_mailQ\_cb}} *os\_mailQ\_cb\_##name; \(\backslash\)
+const \mbox{\hyperlink{structos__mail_q__def}{osMailQDef\_t}} os\_mailQ\_def\_##name =  \(\backslash\)
+\{ (queue\_sz), \textcolor{keyword}{sizeof} (type), (&os\_mailQ\_cb\_##name) \}
+\end{DoxyCode}
+
+
+Create a Mail Queue Definition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the queue \\
+\hline
+{\em queue\+\_\+sz} & maximum number of messages in queue \\
+\hline
+{\em type} & data type of a single message element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Mail\+Q\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a2d446a0b4bb90bf05d6f92eedeaabc97}\label{cmsis__os_8h_a2d446a0b4bb90bf05d6f92eedeaabc97}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+MessageQ@{os\+MessageQ}}
+\index{os\+MessageQ@{os\+MessageQ}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+MessageQ}{osMessageQ}}
+{\footnotesize\ttfamily \#define os\+MessageQ(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+message\+Q\+\_\+def\+\_\+\#\#name}
+
+
+
+Access a Message Queue Definition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the queue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+MessageQ} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ac9a6a6276c12609793e7701afcc82326}\label{cmsis__os_8h_ac9a6a6276c12609793e7701afcc82326}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Q\+Def@{os\+Message\+Q\+Def}}
+\index{os\+Message\+Q\+Def@{os\+Message\+Q\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Q\+Def}{osMessageQDef}}
+{\footnotesize\ttfamily \#define os\+Message\+Q\+Def(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{queue\+\_\+sz,  }\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} \mbox{\hyperlink{structos__message_q__def}{osMessageQDef\_t}} os\_messageQ\_def\_##name = \(\backslash\)
+\{ (queue\_sz), \textcolor{keyword}{sizeof} (type) \}
+\end{DoxyCode}
+
+
+Create a Message Queue Definition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the queue. \\
+\hline
+{\em queue\+\_\+sz} & maximum number of messages in the queue. \\
+\hline
+{\em type} & data type of a single message element (for debugger). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Message\+Q\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}\label{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex@{os\+Mutex}}
+\index{os\+Mutex@{os\+Mutex}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex}{osMutex}}
+{\footnotesize\ttfamily \#define os\+Mutex(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+mutex\+\_\+def\+\_\+\#\#name}
+
+Access a Mutex definition. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the mutex object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Mutex} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a9b522438489d7c402c95332b58bc94f3}\label{cmsis__os_8h_a9b522438489d7c402c95332b58bc94f3}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Def@{os\+Mutex\+Def}}
+\index{os\+Mutex\+Def@{os\+Mutex\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Def}{osMutexDef}}
+{\footnotesize\ttfamily \#define os\+Mutex\+Def(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} os\+\_\+mutex\+\_\+def\+\_\+\#\#name = \{ 0 \}}
+
+Define a Mutex. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the mutex object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Mutex\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a5f0b204a82327533d420210125c90697}\label{cmsis__os_8h_a5f0b204a82327533d420210125c90697}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool@{os\+Pool}}
+\index{os\+Pool@{os\+Pool}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool}{osPool}}
+{\footnotesize\ttfamily \#define os\+Pool(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+pool\+\_\+def\+\_\+\#\#name}
+
+
+
+Access a Memory Pool definition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the memory pool \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Pool} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a87b471d4fe2d5dbd0040708edd52771b}\label{cmsis__os_8h_a87b471d4fe2d5dbd0040708edd52771b}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Def@{os\+Pool\+Def}}
+\index{os\+Pool\+Def@{os\+Pool\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Def}{osPoolDef}}
+{\footnotesize\ttfamily \#define os\+Pool\+Def(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{no,  }\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} \mbox{\hyperlink{structos__pool__def}{osPoolDef\_t}} os\_pool\_def\_##name = \(\backslash\)
+\{ (no), \textcolor{keyword}{sizeof}(type), NULL \}
+\end{DoxyCode}
+
+
+Define a Memory Pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the memory pool. \\
+\hline
+{\em no} & maximum number of blocks (objects) in the memory pool. \\
+\hline
+{\em type} & data type of a single block (object). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Pool\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}\label{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore@{os\+Semaphore}}
+\index{os\+Semaphore@{os\+Semaphore}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore}{osSemaphore}}
+{\footnotesize\ttfamily \#define os\+Semaphore(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+semaphore\+\_\+def\+\_\+\#\#name}
+
+Access a Semaphore definition. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the semaphore object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Semaphore} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a9e66fe361749071e5ab87826c43c2f1b}\label{cmsis__os_8h_a9e66fe361749071e5ab87826c43c2f1b}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Def@{os\+Semaphore\+Def}}
+\index{os\+Semaphore\+Def@{os\+Semaphore\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Def}{osSemaphoreDef}}
+{\footnotesize\ttfamily \#define os\+Semaphore\+Def(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~const \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}} os\+\_\+semaphore\+\_\+def\+\_\+\#\#name = \{ 0 \}}
+
+Define a Semaphore object. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the semaphore object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Semaphore\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}\label{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread@{os\+Thread}}
+\index{os\+Thread@{os\+Thread}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread}{osThread}}
+{\footnotesize\ttfamily \#define os\+Thread(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+thread\+\_\+def\+\_\+\#\#name}
+
+Access a Thread definition. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the thread definition object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Thread} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a1537e80813785bebbc3cbab3226eb04f}\label{cmsis__os_8h_a1537e80813785bebbc3cbab3226eb04f}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Def@{os\+Thread\+Def}}
+\index{os\+Thread\+Def@{os\+Thread\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Def}{osThreadDef}}
+{\footnotesize\ttfamily \#define os\+Thread\+Def(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{thread,  }\item[{}]{priority,  }\item[{}]{instances,  }\item[{}]{stacksz }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} \mbox{\hyperlink{structos__thread__def}{osThreadDef\_t}} os\_thread\_def\_##name = \(\backslash\)
+\{ #name, (thread), (priority), (instances), (stacksz)\}
+\end{DoxyCode}
+Create a Thread Definition with function, priority, and stack requirements. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the thread function. \\
+\hline
+{\em priority} & initial priority of the thread function. \\
+\hline
+{\em instances} & number of possible thread instances. \\
+\hline
+{\em stacksz} & stack size (in bytes) requirements for the thread function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameters to {\bfseries os\+Thread\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a1b8d670eaf964b2910fa06885e650678}\label{cmsis__os_8h_a1b8d670eaf964b2910fa06885e650678}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer@{os\+Timer}}
+\index{os\+Timer@{os\+Timer}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer}{osTimer}}
+{\footnotesize\ttfamily \#define os\+Timer(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~\&os\+\_\+timer\+\_\+def\+\_\+\#\#name}
+
+Access a Timer definition. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Timer} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a1c720627e08d1cc1afcad44e799ed492}\label{cmsis__os_8h_a1c720627e08d1cc1afcad44e799ed492}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Def@{os\+Timer\+Def}}
+\index{os\+Timer\+Def@{os\+Timer\+Def}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Def}{osTimerDef}}
+{\footnotesize\ttfamily \#define os\+Timer\+Def(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{function }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} \mbox{\hyperlink{structos__timer__def}{osTimerDef\_t}} os\_timer\_def\_##name = \(\backslash\)
+\{ (\textcolor{keyword}{function}) \}
+\end{DoxyCode}
+Define a Timer object. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer object. \\
+\hline
+{\em function} & name of the timer call back function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: The parameter to {\bfseries os\+Timer\+Def} shall be consistent but the macro body is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a9eb9a7a797a42e4b55eb171ecc609ddb}\label{cmsis__os_8h_a9eb9a7a797a42e4b55eb171ecc609ddb}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Wait\+Forever@{os\+Wait\+Forever}}
+\index{os\+Wait\+Forever@{os\+Wait\+Forever}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Wait\+Forever}{osWaitForever}}
+{\footnotesize\ttfamily \#define os\+Wait\+Forever~0x\+F\+F\+F\+F\+F\+F\+FF}
+
+
+
+wait forever timeout value 
+
+Timeout value. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Wait\+Forever} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{cmsis__os_8h_a3a96994ab8318050b476d72d890ce765}\label{cmsis__os_8h_a3a96994ab8318050b476d72d890ce765}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+\_\+pthread@{os\+\_\+pthread}}
+\index{os\+\_\+pthread@{os\+\_\+pthread}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+\_\+pthread}{os\_pthread}}
+{\footnotesize\ttfamily typedef void($\ast$ os\+\_\+pthread) (void const $\ast$argument)}
+
+Entry point of a thread. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+pthread} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a7904cad2180c6b3a0ac112fe8ff273e7}\label{cmsis__os_8h_a7904cad2180c6b3a0ac112fe8ff273e7}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+\_\+ptimer@{os\+\_\+ptimer}}
+\index{os\+\_\+ptimer@{os\+\_\+ptimer}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+\_\+ptimer}{os\_ptimer}}
+{\footnotesize\ttfamily typedef void($\ast$ os\+\_\+ptimer) (void const $\ast$argument)}
+
+Entry point of a timer call back function. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+ptimer} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}\label{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Q\+Def\+\_\+t@{os\+Mail\+Q\+Def\+\_\+t}}
+\index{os\+Mail\+Q\+Def\+\_\+t@{os\+Mail\+Q\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Q\+Def\+\_\+t}{osMailQDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__mail_q__def}{os\+\_\+mail\+Q\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}{os\+Mail\+Q\+Def\+\_\+t}}}
+
+Definition structure for mail queue. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__mail_q__def}{os\+\_\+mail\+Q\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}\label{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Q\+Id@{os\+Mail\+Q\+Id}}
+\index{os\+Mail\+Q\+Id@{os\+Mail\+Q\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Q\+Id}{osMailQId}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__mail_q__cb}{os\+\_\+mail\+Q\+\_\+cb}}$\ast$ \mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}
+
+Mail ID identifies the mail queue (pointer to a mail queue control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__mail_q__cb}{os\+\_\+mail\+Q\+\_\+cb}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}\label{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Q\+Def\+\_\+t@{os\+Message\+Q\+Def\+\_\+t}}
+\index{os\+Message\+Q\+Def\+\_\+t@{os\+Message\+Q\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Q\+Def\+\_\+t}{osMessageQDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__message_q__def}{os\+\_\+message\+Q\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}{os\+Message\+Q\+Def\+\_\+t}}}
+
+Definition structure for message queue. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__message_q__def}{os\+\_\+message\+Q\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}\label{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Q\+Id@{os\+Message\+Q\+Id}}
+\index{os\+Message\+Q\+Id@{os\+Message\+Q\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Q\+Id}{osMessageQId}}
+{\footnotesize\ttfamily typedef Queue\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}
+
+Message ID identifies the message queue (pointer to a message queue control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+message\+Q\+\_\+cb} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}\label{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Def\+\_\+t@{os\+Mutex\+Def\+\_\+t}}
+\index{os\+Mutex\+Def\+\_\+t@{os\+Mutex\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Def\+\_\+t}{osMutexDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__mutex__def}{os\+\_\+mutex\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}}}
+
+Mutex Definition structure contains setup information for a mutex. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__mutex__def}{os\+\_\+mutex\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}\label{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Id@{os\+Mutex\+Id}}
+\index{os\+Mutex\+Id@{os\+Mutex\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Id}{osMutexId}}
+{\footnotesize\ttfamily typedef Semaphore\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}
+
+Mutex ID identifies the mutex (pointer to a mutex control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+mutex\+\_\+cb} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}\label{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Def\+\_\+t@{os\+Pool\+Def\+\_\+t}}
+\index{os\+Pool\+Def\+\_\+t@{os\+Pool\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Def\+\_\+t}{osPoolDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__pool__def}{os\+\_\+pool\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}{os\+Pool\+Def\+\_\+t}}}
+
+Definition structure for memory block allocation. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__pool__def}{os\+\_\+pool\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}\label{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Id@{os\+Pool\+Id}}
+\index{os\+Pool\+Id@{os\+Pool\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Id}{osPoolId}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__pool__cb}{os\+\_\+pool\+\_\+cb}}$\ast$ \mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}}}
+
+Pool ID identifies the memory pool (pointer to a memory pool control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__pool__cb}{os\+\_\+pool\+\_\+cb}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}\label{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Def\+\_\+t@{os\+Semaphore\+Def\+\_\+t}}
+\index{os\+Semaphore\+Def\+\_\+t@{os\+Semaphore\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Def\+\_\+t}{osSemaphoreDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__semaphore__def}{os\+\_\+semaphore\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}}}
+
+Semaphore Definition structure contains setup information for a semaphore. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__semaphore__def}{os\+\_\+semaphore\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}\label{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Id@{os\+Semaphore\+Id}}
+\index{os\+Semaphore\+Id@{os\+Semaphore\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Id}{osSemaphoreId}}
+{\footnotesize\ttfamily typedef Semaphore\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}}
+
+Semaphore ID identifies the semaphore (pointer to a semaphore control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+semaphore\+\_\+cb} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}\label{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Def\+\_\+t@{os\+Thread\+Def\+\_\+t}}
+\index{os\+Thread\+Def\+\_\+t@{os\+Thread\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Def\+\_\+t}{osThreadDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__thread__def}{os\+\_\+thread\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}{os\+Thread\+Def\+\_\+t}}}
+
+Thread Definition structure contains startup information of a thread. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__thread__def}{os\+\_\+thread\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}\label{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Id@{os\+Thread\+Id}}
+\index{os\+Thread\+Id@{os\+Thread\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Id}{osThreadId}}
+{\footnotesize\ttfamily typedef Task\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}
+
+Thread ID identifies the thread (pointer to a thread control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+thread\+\_\+cb} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}\label{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Def\+\_\+t@{os\+Timer\+Def\+\_\+t}}
+\index{os\+Timer\+Def\+\_\+t@{os\+Timer\+Def\+\_\+t}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Def\+\_\+t}{osTimerDef\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structos__timer__def}{os\+\_\+timer\+\_\+def}}  \mbox{\hyperlink{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}{os\+Timer\+Def\+\_\+t}}}
+
+Timer Definition structure contains timer parameters. \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries \mbox{\hyperlink{structos__timer__def}{os\+\_\+timer\+\_\+def}}} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}\label{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Id@{os\+Timer\+Id}}
+\index{os\+Timer\+Id@{os\+Timer\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Id}{osTimerId}}
+{\footnotesize\ttfamily typedef Timer\+Handle\+\_\+t \mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}}}
+
+Timer ID identifies the timer (pointer to a timer control block). \begin{DoxyNote}{Note}
+C\+AN BE C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+timer\+\_\+cb} is implementation specific in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}\label{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+\_\+timer\+\_\+type@{os\+\_\+timer\+\_\+type}}
+\index{os\+\_\+timer\+\_\+type@{os\+\_\+timer\+\_\+type}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+\_\+timer\+\_\+type}{os\_timer\_type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}{os\+\_\+timer\+\_\+type}}}
+
+Timer type value for the timer definition. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+\_\+timer\+\_\+type} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Timer\+Once@{os\+Timer\+Once}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Once@{os\+Timer\+Once}}}\mbox{\Hypertarget{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ad21712f8df5f97069c82dc9eec37b951}\label{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ad21712f8df5f97069c82dc9eec37b951}} 
+os\+Timer\+Once&one-\/shot timer \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Timer\+Periodic@{os\+Timer\+Periodic}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Periodic@{os\+Timer\+Periodic}}}\mbox{\Hypertarget{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ab9c91f9699162edb09bb7c90c11c8788}\label{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9ab9c91f9699162edb09bb7c90c11c8788}} 
+os\+Timer\+Periodic&repeating timer \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority@{os\+Priority}}
+\index{os\+Priority@{os\+Priority}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Priority}{osPriority}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}}}
+
+Priority used for thread control. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Priority} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Idle@{os\+Priority\+Idle}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Idle@{os\+Priority\+Idle}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa549e79a43ff4f8b2b31afb613f5caa81}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa549e79a43ff4f8b2b31afb613f5caa81}} 
+os\+Priority\+Idle&priority\+: idle (lowest) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Low@{os\+Priority\+Low}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Low@{os\+Priority\+Low}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa61cb822239ac8f66dfbdc7291598a3d4}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa61cb822239ac8f66dfbdc7291598a3d4}} 
+os\+Priority\+Low&priority\+: low \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Below\+Normal@{os\+Priority\+Below\+Normal}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Below\+Normal@{os\+Priority\+Below\+Normal}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa193b650117c209b4a203954542bcc3e6}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa193b650117c209b4a203954542bcc3e6}} 
+os\+Priority\+Below\+Normal&priority\+: below normal \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Normal@{os\+Priority\+Normal}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Normal@{os\+Priority\+Normal}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa45a2895ad30c79fb97de18cac7cc19f1}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa45a2895ad30c79fb97de18cac7cc19f1}} 
+os\+Priority\+Normal&priority\+: normal (default) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Above\+Normal@{os\+Priority\+Above\+Normal}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Above\+Normal@{os\+Priority\+Above\+Normal}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa17b36cd9cd38652c2bc6d4803990674b}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa17b36cd9cd38652c2bc6d4803990674b}} 
+os\+Priority\+Above\+Normal&priority\+: above normal \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+High@{os\+Priority\+High}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+High@{os\+Priority\+High}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa914433934143a9ba767e59577c56e6c2}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa914433934143a9ba767e59577c56e6c2}} 
+os\+Priority\+High&priority\+: high \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Realtime@{os\+Priority\+Realtime}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Realtime@{os\+Priority\+Realtime}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa1485dec3702434a1ec3cb74c7a17a4af}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aa1485dec3702434a1ec3cb74c7a17a4af}} 
+os\+Priority\+Realtime&priority\+: realtime (highest) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Priority\+Error@{os\+Priority\+Error}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Priority\+Error@{os\+Priority\+Error}}}\mbox{\Hypertarget{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aae35f5e2f9c64ad346822521b643bdea4}\label{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849aae35f5e2f9c64ad346822521b643bdea4}} 
+os\+Priority\+Error&system cannot determine priority or thread has illegal priority \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Status@{os\+Status}}
+\index{os\+Status@{os\+Status}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Status}{osStatus}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}}}
+
+Status code values returned by C\+M\+S\+I\+S-\/\+R\+T\+OS functions. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Status} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+OK@{os\+OK}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+OK@{os\+OK}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea9e1c9e2550bb4de8969a935acffc968f}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea9e1c9e2550bb4de8969a935acffc968f}} 
+os\+OK&function completed; no error or event occurred. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Event\+Signal@{os\+Event\+Signal}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Event\+Signal@{os\+Event\+Signal}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5df7e9643aa8a2f5f3a6f6ec59758518}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5df7e9643aa8a2f5f3a6f6ec59758518}} 
+os\+Event\+Signal&function completed; signal event occurred. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Event\+Message@{os\+Event\+Message}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Event\+Message@{os\+Event\+Message}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ead604f3673359dd4ac643b16dc5a2c342}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ead604f3673359dd4ac643b16dc5a2c342}} 
+os\+Event\+Message&function completed; message event occurred. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Event\+Mail@{os\+Event\+Mail}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Event\+Mail@{os\+Event\+Mail}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea15b12e42b42b53f35fb8a2724ad02926}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea15b12e42b42b53f35fb8a2724ad02926}} 
+os\+Event\+Mail&function completed; mail event occurred. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Event\+Timeout@{os\+Event\+Timeout}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Event\+Timeout@{os\+Event\+Timeout}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea78f477732375c0e1fca814e369618177}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea78f477732375c0e1fca814e369618177}} 
+os\+Event\+Timeout&function completed; timeout occurred. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+Parameter@{os\+Error\+Parameter}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+Parameter@{os\+Error\+Parameter}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac24adca6a5d072c9f01c32178ba0d109}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac24adca6a5d072c9f01c32178ba0d109}} 
+os\+Error\+Parameter&parameter error\+: a mandatory parameter was missing or specified an incorrect object. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+Resource@{os\+Error\+Resource}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+Resource@{os\+Error\+Resource}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea8fc5801e8b0482bdf22ad63a77f0155d}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea8fc5801e8b0482bdf22ad63a77f0155d}} 
+os\+Error\+Resource&resource not available\+: a specified resource was not available. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+Timeout\+Resource@{os\+Error\+Timeout\+Resource}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+Timeout\+Resource@{os\+Error\+Timeout\+Resource}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea314d24a49003f09459035db0dd7c9467}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea314d24a49003f09459035db0dd7c9467}} 
+os\+Error\+Timeout\+Resource&resource not available within given time\+: a specified resource was not available within the timeout period. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+I\+SR@{os\+Error\+I\+SR}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+I\+SR@{os\+Error\+I\+SR}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea21635bdc492d3094fe83027fa4a30e2f}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea21635bdc492d3094fe83027fa4a30e2f}} 
+os\+Error\+I\+SR&not allowed in I\+SR context\+: the function cannot be called from interrupt service routines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+I\+S\+R\+Recursive@{os\+Error\+I\+S\+R\+Recursive}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+I\+S\+R\+Recursive@{os\+Error\+I\+S\+R\+Recursive}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf6552310a817452aedfcd453f2805d65}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf6552310a817452aedfcd453f2805d65}} 
+os\+Error\+I\+S\+R\+Recursive&function called multiple times from I\+SR with same object. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+Priority@{os\+Error\+Priority}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+Priority@{os\+Error\+Priority}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eab7dda0ef504817659334cbfd650ae56f}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eab7dda0ef504817659334cbfd650ae56f}} 
+os\+Error\+Priority&system cannot determine priority or thread has illegal priority. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+No\+Memory@{os\+Error\+No\+Memory}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+No\+Memory@{os\+Error\+No\+Memory}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf1fac0240218e51eb30a13da2f8aae81}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eaf1fac0240218e51eb30a13da2f8aae81}} 
+os\+Error\+No\+Memory&system is out of memory\+: it was impossible to allocate or reserve memory for the operation. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+Value@{os\+Error\+Value}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+Value@{os\+Error\+Value}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea4672c8a0c0f6bb1d7981da4602e8e9ee}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea4672c8a0c0f6bb1d7981da4602e8e9ee}} 
+os\+Error\+Value&value of a parameter is out of range. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+Error\+OS@{os\+Error\+OS}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Error\+OS@{os\+Error\+OS}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5fde24ff588ec5ab9cb8314bade26fbc}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99ea5fde24ff588ec5ab9cb8314bade26fbc}} 
+os\+Error\+OS&unspecified R\+T\+OS error\+: run-\/time error but no other error message fits. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{os\+\_\+status\+\_\+reserved@{os\+\_\+status\+\_\+reserved}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+\_\+status\+\_\+reserved@{os\+\_\+status\+\_\+reserved}}}\mbox{\Hypertarget{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac7a77f5fe18a15a357790c36a4aca1b1}\label{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99eac7a77f5fe18a15a357790c36a4aca1b1}} 
+os\+\_\+status\+\_\+reserved&prevent from enum down-\/size compiler optimization. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{cmsis__os_8h_a0c9e0cca7aca466bb8887fb56e4b4cc8}\label{cmsis__os_8h_a0c9e0cca7aca466bb8887fb56e4b4cc8}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Abort\+Delay@{os\+Abort\+Delay}}
+\index{os\+Abort\+Delay@{os\+Abort\+Delay}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Abort\+Delay()}{osAbortDelay()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Abort\+Delay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Abort the delay for a specific thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}} ~\newline
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a02e19d5e723bfb06ba9324d625162255}\label{cmsis__os_8h_a02e19d5e723bfb06ba9324d625162255}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Delay@{os\+Delay}}
+\index{os\+Delay@{os\+Delay}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Delay()}{osDelay()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Delay (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Wait for Timeout (Time Delay) 
+
+Wait for Timeout (Time Delay). 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em millisec} & time delay value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em millisec} & time delay value \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_afc406147a5d66dda6ff62d338a7c99cd}\label{cmsis__os_8h_afc406147a5d66dda6ff62d338a7c99cd}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Delay\+Until@{os\+Delay\+Until}}
+\index{os\+Delay\+Until@{os\+Delay\+Until}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Delay\+Until()}{osDelayUntil()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Delay\+Until (\begin{DoxyParamCaption}\item[{uint32\+\_\+t $\ast$}]{Previous\+Wake\+Time,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Delay a task until a specified time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Previous\+Wake\+Time} & Pointer to a variable that holds the time at which the task was last unblocked. Previous\+Wake\+Time must be initialised with the current time prior to its first use (Previous\+Wake\+Time = \mbox{\hyperlink{cmsis__os_8h_ad0262e4688e95d1e9038afd9bcc16001}{os\+Kernel\+Sys\+Tick()}} ) \\
+\hline
+{\em millisec} & time delay value \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a53d078a801022e202e8115c083ece68e}\label{cmsis__os_8h_a53d078a801022e202e8115c083ece68e}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Initialize@{os\+Kernel\+Initialize}}
+\index{os\+Kernel\+Initialize@{os\+Kernel\+Initialize}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Initialize()}{osKernelInitialize()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Kernel\+Initialize (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Initialize the R\+T\+OS Kernel for creating objects. \begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Initialize} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a3b571de44cd3094c643247a7397f86b5}\label{cmsis__os_8h_a3b571de44cd3094c643247a7397f86b5}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Running@{os\+Kernel\+Running}}
+\index{os\+Kernel\+Running@{os\+Kernel\+Running}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Running()}{osKernelRunning()}}
+{\footnotesize\ttfamily int32\+\_\+t os\+Kernel\+Running (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Check if the R\+T\+OS kernel is already started. 
+
+Check if the R\+T\+OS kernel is already started. \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Running} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+0 R\+T\+OS is not started, 1 R\+T\+OS is started.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em (0)} & R\+T\+OS is not started (1) R\+T\+OS is started (-\/1) if this feature is disabled in \mbox{\hyperlink{_free_r_t_o_s_config_8h_source}{Free\+R\+T\+O\+S\+Config.\+h}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Running} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aab668ffd2ea76bb0a77ab0ab385eaef2}\label{cmsis__os_8h_aab668ffd2ea76bb0a77ab0ab385eaef2}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Start@{os\+Kernel\+Start}}
+\index{os\+Kernel\+Start@{os\+Kernel\+Start}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Start()}{osKernelStart()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Kernel\+Start (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Start the R\+T\+OS Kernel with executing the specified thread. 
+
+Start the R\+T\+OS Kernel. \begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Start} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+def} & thread definition referenced with \mbox{\hyperlink{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}{os\+Thread}}. \\
+\hline
+{\em argument} & pointer that is passed to the thread function as start argument. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Start} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ad0262e4688e95d1e9038afd9bcc16001}\label{cmsis__os_8h_ad0262e4688e95d1e9038afd9bcc16001}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Kernel\+Sys\+Tick@{os\+Kernel\+Sys\+Tick}}
+\index{os\+Kernel\+Sys\+Tick@{os\+Kernel\+Sys\+Tick}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Kernel\+Sys\+Tick()}{osKernelSysTick()}}
+{\footnotesize\ttfamily uint32\+\_\+t os\+Kernel\+Sys\+Tick (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Get the value of the Kernel Sys\+Tick timer. 
+
+Get the R\+T\+OS kernel system timer counter \begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Sys\+Tick} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+R\+T\+OS kernel system timer as 32-\/bit value
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Kernel\+Sys\+Tick} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ac985d7f260b80d7891157697b760aa02}\label{cmsis__os_8h_ac985d7f260b80d7891157697b760aa02}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Alloc@{os\+Mail\+Alloc}}
+\index{os\+Mail\+Alloc@{os\+Mail\+Alloc}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Alloc()}{osMailAlloc()}}
+{\footnotesize\ttfamily void$\ast$ os\+Mail\+Alloc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Allocate a memory block from a mail. 
+
+Allocate a memory block from a mail. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to memory block that can be filled with mail or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em pointer} & to memory block that can be filled with mail or N\+U\+LL in case error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a9e492e5839bf0d2bf66492e70eae3ddb}\label{cmsis__os_8h_a9e492e5839bf0d2bf66492e70eae3ddb}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+C\+Alloc@{os\+Mail\+C\+Alloc}}
+\index{os\+Mail\+C\+Alloc@{os\+Mail\+C\+Alloc}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+C\+Alloc()}{osMailCAlloc()}}
+{\footnotesize\ttfamily void$\ast$ os\+Mail\+C\+Alloc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Allocate a memory block from a mail and set memory block to zero. 
+
+Allocate a memory block from a mail and set memory block to zero. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to memory block that can be filled with mail or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+C\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em pointer} & to memory block that can be filled with mail or N\+U\+LL in case error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+C\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}\label{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Create@{os\+Mail\+Create}}
+\index{os\+Mail\+Create@{os\+Mail\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Create()}{osMailCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}} os\+Mail\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_a4478aff059e4a47e87e2f8d62f0f04c8}{os\+Mail\+Q\+Def\+\_\+t}} $\ast$}]{queue\+\_\+def,  }\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize mail queue. 
+
+Create and Initialize mail queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+def} & reference to the mail queue definition obtain with \mbox{\hyperlink{cmsis__os_8h_ad2deeb66d51ade54e63d8f87ff2ec9d2}{os\+MailQ}} \\
+\hline
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID (obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}) or N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+mail queue ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+def} & reference to the mail queue definition obtain with \mbox{\hyperlink{cmsis__os_8h_ad2deeb66d51ade54e63d8f87ff2ec9d2}{os\+MailQ}} \\
+\hline
+{\em thread\+\_\+id} & thread ID (obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}) or N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em mail} & queue ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a27c1060cf21393f96b4fd1ed1c0167cc}\label{cmsis__os_8h_a27c1060cf21393f96b4fd1ed1c0167cc}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Free@{os\+Mail\+Free}}
+\index{os\+Mail\+Free@{os\+Mail\+Free}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Free()}{osMailFree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Mail\+Free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}]{queue\+\_\+id,  }\item[{void $\ast$}]{mail }\end{DoxyParamCaption})}
+
+
+
+Free a memory block from a mail. 
+
+Free a memory block from a mail. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em mail} & pointer to the memory block that was obtained with \mbox{\hyperlink{cmsis__os_8h_ac6ad7e6e7d6c4a80e60da22c57a42ccd}{os\+Mail\+Get}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Free} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+{\em mail} & pointer to the memory block that was obtained with \mbox{\hyperlink{cmsis__os_8h_ac6ad7e6e7d6c4a80e60da22c57a42ccd}{os\+Mail\+Get}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Free} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ac6ad7e6e7d6c4a80e60da22c57a42ccd}\label{cmsis__os_8h_ac6ad7e6e7d6c4a80e60da22c57a42ccd}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Get@{os\+Mail\+Get}}
+\index{os\+Mail\+Get@{os\+Mail\+Get}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Get()}{osMailGet()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structos_event}{os\+Event}} os\+Mail\+Get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Get a mail from a queue. 
+
+Get a mail from a queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+event that contains mail information or error code. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Get} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em event} & that contains mail information or error code. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Get} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a485ef6f81854ebda8ffbce4832181e02}\label{cmsis__os_8h_a485ef6f81854ebda8ffbce4832181e02}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mail\+Put@{os\+Mail\+Put}}
+\index{os\+Mail\+Put@{os\+Mail\+Put}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mail\+Put()}{osMailPut()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Mail\+Put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a1dac049fb7725a8af8b26c71cbb373b5}{os\+Mail\+Q\+Id}}}]{queue\+\_\+id,  }\item[{void $\ast$}]{mail }\end{DoxyParamCaption})}
+
+
+
+Put a mail to a queue. 
+
+Put a mail to a queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em mail} & memory block previously allocated with \mbox{\hyperlink{cmsis__os_8h_ac985d7f260b80d7891157697b760aa02}{os\+Mail\+Alloc}} or \mbox{\hyperlink{cmsis__os_8h_a9e492e5839bf0d2bf66492e70eae3ddb}{os\+Mail\+C\+Alloc}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Put} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & mail queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_aa177e7fe5820dd70d8c9e46ded131174}{os\+Mail\+Create}}. \\
+\hline
+{\em mail} & memory block previously allocated with \mbox{\hyperlink{cmsis__os_8h_ac985d7f260b80d7891157697b760aa02}{os\+Mail\+Alloc}} or \mbox{\hyperlink{cmsis__os_8h_a9e492e5839bf0d2bf66492e70eae3ddb}{os\+Mail\+C\+Alloc}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mail\+Put} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a4f80ea3dd0140a782dc3e79fc7d1cba6}\label{cmsis__os_8h_a4f80ea3dd0140a782dc3e79fc7d1cba6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Available\+Space@{os\+Message\+Available\+Space}}
+\index{os\+Message\+Available\+Space@{os\+Message\+Available\+Space}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Available\+Space()}{osMessageAvailableSpace()}}
+{\footnotesize\ttfamily uint32\+\_\+t os\+Message\+Available\+Space (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get the available space in a message queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em available} & space in a message queue. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}\label{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Create@{os\+Message\+Create}}
+\index{os\+Message\+Create@{os\+Message\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Create()}{osMessageCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}} os\+Message\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_ae44dc32ab1acfe2a3190d31e41eba0bb}{os\+Message\+Q\+Def\+\_\+t}} $\ast$}]{queue\+\_\+def,  }\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize a Message Queue. 
+
+Create and Initialize a Message Queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+def} & queue definition referenced with \mbox{\hyperlink{cmsis__os_8h_a2d446a0b4bb90bf05d6f92eedeaabc97}{os\+MessageQ}}. \\
+\hline
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID (obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}) or N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+message queue ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+def} & queue definition referenced with \mbox{\hyperlink{cmsis__os_8h_a2d446a0b4bb90bf05d6f92eedeaabc97}{os\+MessageQ}}. \\
+\hline
+{\em thread\+\_\+id} & thread ID (obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}) or N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em message} & queue ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aa6eff4b4ee9e73ab881840eaf329c469}\label{cmsis__os_8h_aa6eff4b4ee9e73ab881840eaf329c469}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Delete@{os\+Message\+Delete}}
+\index{os\+Message\+Delete@{os\+Message\+Delete}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Delete()}{osMessageDelete()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Message\+Delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Delete a Message Queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a6c6892b8f2296cca6becd57ca2d7e1ae}\label{cmsis__os_8h_a6c6892b8f2296cca6becd57ca2d7e1ae}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Get@{os\+Message\+Get}}
+\index{os\+Message\+Get@{os\+Message\+Get}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Get()}{osMessageGet()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structos_event}{os\+Event}} os\+Message\+Get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Get a Message or Wait for a Message from a Queue. 
+
+Get a Message or Wait for a Message from a Queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+event information that includes status code. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Get} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em event} & information that includes status code. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Get} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aee1081c573fe04809315378a37c0ce23}\label{cmsis__os_8h_aee1081c573fe04809315378a37c0ce23}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Peek@{os\+Message\+Peek}}
+\index{os\+Message\+Peek@{os\+Message\+Peek}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Peek()}{osMessagePeek()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structos_event}{os\+Event}} os\+Message\+Peek (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Receive an item from a queue without removing the item from the queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em event} & information that includes status code. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_ac0dcf462fc92de8ffaba6cc004514a6d}\label{cmsis__os_8h_ac0dcf462fc92de8ffaba6cc004514a6d}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Put@{os\+Message\+Put}}
+\index{os\+Message\+Put@{os\+Message\+Put}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Put()}{osMessagePut()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Message\+Put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id,  }\item[{uint32\+\_\+t}]{info,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Put a Message to a Queue. 
+
+Put a Message to a Queue. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em info} & message information. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Put} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+{\em info} & message information. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Message\+Put} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a272501325655aa8bbf36ecd36e38bc56}\label{cmsis__os_8h_a272501325655aa8bbf36ecd36e38bc56}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Message\+Waiting@{os\+Message\+Waiting}}
+\index{os\+Message\+Waiting@{os\+Message\+Waiting}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Message\+Waiting()}{osMessageWaiting()}}
+{\footnotesize\ttfamily uint32\+\_\+t os\+Message\+Waiting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a8c191fd2b1369c8942873496a186a022}{os\+Message\+Q\+Id}}}]{queue\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get the number of messaged stored in a queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em queue\+\_\+id} & message queue ID obtained with \mbox{\hyperlink{cmsis__os_8h_af3b9345cf426304d46565152bc26fb78}{os\+Message\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em number} & of messages stored in a queue. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}\label{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Create@{os\+Mutex\+Create}}
+\index{os\+Mutex\+Create@{os\+Mutex\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Create()}{osMutexCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} os\+Mutex\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} $\ast$}]{mutex\+\_\+def }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize a Mutex object. 
+
+Create and Initialize a Mutex object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em mutex\+\_\+def} & mutex definition referenced with \mbox{\hyperlink{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}{os\+Mutex}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+mutex ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+def} & mutex definition referenced with \mbox{\hyperlink{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}{os\+Mutex}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em mutex} & ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ac27e24135185d51d18f3dabc20910219}\label{cmsis__os_8h_ac27e24135185d51d18f3dabc20910219}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Delete@{os\+Mutex\+Delete}}
+\index{os\+Mutex\+Delete@{os\+Mutex\+Delete}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Delete()}{osMutexDelete()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Mutex\+Delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}]{mutex\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Delete a Mutex. 
+
+Delete a Mutex that was created by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a006e4744d741e8e132c3d5bbc295afe1}\label{cmsis__os_8h_a006e4744d741e8e132c3d5bbc295afe1}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Release@{os\+Mutex\+Release}}
+\index{os\+Mutex\+Release@{os\+Mutex\+Release}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Release()}{osMutexRelease()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Mutex\+Release (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}]{mutex\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Release a Mutex that was obtained by \mbox{\hyperlink{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}{os\+Mutex\+Wait}}. 
+
+Release a Mutex that was obtained by \mbox{\hyperlink{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}{os\+Mutex\+Wait}}. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Release} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Release} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}\label{cmsis__os_8h_a5e1752b73f573ee015dbd9ef1edaba13}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Mutex\+Wait@{os\+Mutex\+Wait}}
+\index{os\+Mutex\+Wait@{os\+Mutex\+Wait}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Mutex\+Wait()}{osMutexWait()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Mutex\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}]{mutex\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Wait until a Mutex becomes available. 
+
+Wait until a Mutex becomes available. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a5c9de56e717016e39e788064e9a291cc}{os\+Mutex\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Mutex\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ab4bc93bf17f94ca99363e53e1a763fb5}\label{cmsis__os_8h_ab4bc93bf17f94ca99363e53e1a763fb5}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Alloc@{os\+Pool\+Alloc}}
+\index{os\+Pool\+Alloc@{os\+Pool\+Alloc}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Alloc()}{osPoolAlloc()}}
+{\footnotesize\ttfamily void$\ast$ os\+Pool\+Alloc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}}}]{pool\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Allocate a memory block from a memory pool. 
+
+Allocate a memory block from a memory pool. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+address of the allocated memory block or N\+U\+LL in case of no memory available. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em address} & of the allocated memory block or N\+U\+LL in case of no memory available. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ab22c2f194e0f0b05494aa0e9c97d7a51}\label{cmsis__os_8h_ab22c2f194e0f0b05494aa0e9c97d7a51}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+C\+Alloc@{os\+Pool\+C\+Alloc}}
+\index{os\+Pool\+C\+Alloc@{os\+Pool\+C\+Alloc}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+C\+Alloc()}{osPoolCAlloc()}}
+{\footnotesize\ttfamily void$\ast$ os\+Pool\+C\+Alloc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}}}]{pool\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Allocate a memory block from a memory pool and set memory block to zero. 
+
+Allocate a memory block from a memory pool and set memory block to zero. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+address of the allocated memory block or N\+U\+LL in case of no memory available. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+C\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em address} & of the allocated memory block or N\+U\+LL in case of no memory available. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+C\+Alloc} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}\label{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Create@{os\+Pool\+Create}}
+\index{os\+Pool\+Create@{os\+Pool\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Create()}{osPoolCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}} os\+Pool\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_aef82f849907f3d58ebef0e5aaaaf00a6}{os\+Pool\+Def\+\_\+t}} $\ast$}]{pool\+\_\+def }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize a memory pool. 
+
+Create and Initialize a memory pool. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pool\+\_\+def} & memory pool definition referenced with \mbox{\hyperlink{cmsis__os_8h_a5f0b204a82327533d420210125c90697}{os\+Pool}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+memory pool ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em pool\+\_\+def} & memory pool definition referenced with \mbox{\hyperlink{cmsis__os_8h_a5f0b204a82327533d420210125c90697}{os\+Pool}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em memory} & pool ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a4a861e9c469c9d0daf5721bf174f8e54}\label{cmsis__os_8h_a4a861e9c469c9d0daf5721bf174f8e54}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Pool\+Free@{os\+Pool\+Free}}
+\index{os\+Pool\+Free@{os\+Pool\+Free}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Pool\+Free()}{osPoolFree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Pool\+Free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a08d2e20fd9bbd96220fe068d420f3686}{os\+Pool\+Id}}}]{pool\+\_\+id,  }\item[{void $\ast$}]{block }\end{DoxyParamCaption})}
+
+
+
+Return an allocated memory block back to a specific memory pool. 
+
+Return an allocated memory block back to a specific memory pool. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em block} & address of the allocated memory block that is returned to the memory pool. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Free} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em pool\+\_\+id} & memory pool ID obtain referenced with \mbox{\hyperlink{cmsis__os_8h_a34af5c4f4ab38f4138ea7f1f9ece3a1a}{os\+Pool\+Create}}. \\
+\hline
+{\em block} & address of the allocated memory block that is returned to the memory pool. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Pool\+Free} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a09a8e658872a88d284f8143bcb62cff6}\label{cmsis__os_8h_a09a8e658872a88d284f8143bcb62cff6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Recursive\+Mutex\+Create@{os\+Recursive\+Mutex\+Create}}
+\index{os\+Recursive\+Mutex\+Create@{os\+Recursive\+Mutex\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Recursive\+Mutex\+Create()}{osRecursiveMutexCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}} os\+Recursive\+Mutex\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_a6709095c87e6d09539a9f8218815c3d9}{os\+Mutex\+Def\+\_\+t}} $\ast$}]{mutex\+\_\+def }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize a Recursive Mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+def} & mutex definition referenced with \mbox{\hyperlink{cmsis__os_8h_a1122a86faa64b4a0880c76cf68d0c934}{os\+Mutex}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em mutex} & ID for reference by other functions or N\+U\+LL in case of error.. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a14c641c81a487a21851555cab5c04531}\label{cmsis__os_8h_a14c641c81a487a21851555cab5c04531}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Recursive\+Mutex\+Release@{os\+Recursive\+Mutex\+Release}}
+\index{os\+Recursive\+Mutex\+Release@{os\+Recursive\+Mutex\+Release}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Recursive\+Mutex\+Release()}{osRecursiveMutexRelease()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Recursive\+Mutex\+Release (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}]{mutex\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Release a Recursive Mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a09a8e658872a88d284f8143bcb62cff6}{os\+Recursive\+Mutex\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a479c5c0d01b4f43854761026d2054b30}\label{cmsis__os_8h_a479c5c0d01b4f43854761026d2054b30}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Recursive\+Mutex\+Wait@{os\+Recursive\+Mutex\+Wait}}
+\index{os\+Recursive\+Mutex\+Wait@{os\+Recursive\+Mutex\+Wait}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Recursive\+Mutex\+Wait()}{osRecursiveMutexWait()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Recursive\+Mutex\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_abba580e11219b5ec867b5b26ac0b87f4}{os\+Mutex\+Id}}}]{mutex\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Release a Recursive Mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mutex\+\_\+id} & mutex ID obtained by \mbox{\hyperlink{cmsis__os_8h_a09a8e658872a88d284f8143bcb62cff6}{os\+Recursive\+Mutex\+Create}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}\label{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Create@{os\+Semaphore\+Create}}
+\index{os\+Semaphore\+Create@{os\+Semaphore\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Create()}{osSemaphoreCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}} os\+Semaphore\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_ad2b7c126fea0df2aa5568da553437d21}{os\+Semaphore\+Def\+\_\+t}} $\ast$}]{semaphore\+\_\+def,  }\item[{int32\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+
+
+Create and Initialize a Semaphore object used for managing resources. 
+
+Create and Initialize a Semaphore object used for managing resources. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em semaphore\+\_\+def} & semaphore definition referenced with \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}. \\
+\hline
+\mbox{\tt in}  & {\em count} & number of available resources. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+semaphore ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em semaphore\+\_\+def} & semaphore definition referenced with \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}. \\
+\hline
+{\em count} & number of available resources. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em semaphore} & ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_abae2801ac2c096f6e8c69a264908f595}\label{cmsis__os_8h_abae2801ac2c096f6e8c69a264908f595}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Delete@{os\+Semaphore\+Delete}}
+\index{os\+Semaphore\+Delete@{os\+Semaphore\+Delete}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Delete()}{osSemaphoreDelete()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Semaphore\+Delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}}]{semaphore\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Delete a Semaphore. 
+
+Delete a Semaphore that was created by \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}}. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a5aaec061a877326be39a4998f7690567}\label{cmsis__os_8h_a5aaec061a877326be39a4998f7690567}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Get\+Count@{os\+Semaphore\+Get\+Count}}
+\index{os\+Semaphore\+Get\+Count@{os\+Semaphore\+Get\+Count}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Get\+Count()}{osSemaphoreGetCount()}}
+{\footnotesize\ttfamily uint32\+\_\+t os\+Semaphore\+Get\+Count (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}}]{semaphore\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Returns the current count value of a counting semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em semaphore\+\_\+id} & semaphore\+\_\+id ID obtained by \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em count} & value \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_ab108914997c49e14d8ff1ae0d1988ca0}\label{cmsis__os_8h_ab108914997c49e14d8ff1ae0d1988ca0}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Release@{os\+Semaphore\+Release}}
+\index{os\+Semaphore\+Release@{os\+Semaphore\+Release}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Release()}{osSemaphoreRelease()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Semaphore\+Release (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}}]{semaphore\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Release a Semaphore token. 
+
+Release a Semaphore token. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Release} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Release} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_acc15b0fc8ce1167fe43da33042e62098}\label{cmsis__os_8h_acc15b0fc8ce1167fe43da33042e62098}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Semaphore\+Wait@{os\+Semaphore\+Wait}}
+\index{os\+Semaphore\+Wait@{os\+Semaphore\+Wait}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Semaphore\+Wait()}{osSemaphoreWait()}}
+{\footnotesize\ttfamily int32\+\_\+t os\+Semaphore\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a954e9c06583b05ae736d07e4e40097d5}{os\+Semaphore\+Id}}}]{semaphore\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Wait until a Semaphore token becomes available. 
+
+Wait until a Semaphore token becomes available. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a97381e8e55cd47cec390bf57c96d6edb}{os\+Semaphore\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of available tokens, or -\/1 in case of incorrect parameters. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em semaphore\+\_\+id} & semaphore object referenced with \mbox{\hyperlink{cmsis__os_8h_a03761ee8d2c3cd4544e18364ab301dac}{os\+Semaphore}}. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em number} & of available tokens, or -\/1 in case of incorrect parameters. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Semaphore\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a87283a6ebc31ce9ed42baf3ea7e4eab6}\label{cmsis__os_8h_a87283a6ebc31ce9ed42baf3ea7e4eab6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Signal\+Clear@{os\+Signal\+Clear}}
+\index{os\+Signal\+Clear@{os\+Signal\+Clear}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Signal\+Clear()}{osSignalClear()}}
+{\footnotesize\ttfamily int32\+\_\+t os\+Signal\+Clear (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id,  }\item[{int32\+\_\+t}]{signals }\end{DoxyParamCaption})}
+
+Clear the specified Signal Flags of an active thread. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\mbox{\tt in}  & {\em signals} & specifies the signal flags of the thread that shall be cleared. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+previous signal flags of the specified thread or 0x80000000 in case of incorrect parameters. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Signal\+Clear} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a3de2730654589d6c3559c4b9e2825553}\label{cmsis__os_8h_a3de2730654589d6c3559c4b9e2825553}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Signal\+Set@{os\+Signal\+Set}}
+\index{os\+Signal\+Set@{os\+Signal\+Set}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Signal\+Set()}{osSignalSet()}}
+{\footnotesize\ttfamily int32\+\_\+t os\+Signal\+Set (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id,  }\item[{int32\+\_\+t}]{signal }\end{DoxyParamCaption})}
+
+
+
+Set the specified Signal Flags of an active thread. 
+
+Set the specified Signal Flags of an active thread. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\mbox{\tt in}  & {\em signals} & specifies the signal flags of the thread that should be set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+os\+OK if successful, os\+Error\+OS if failed. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Signal\+Set} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+{\em signals} & specifies the signal flags of the thread that should be set. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em previous} & signal flags of the specified thread or 0x80000000 in case of incorrect parameters. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Signal\+Set} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a38860acda96df47da6923348d96fc4c9}\label{cmsis__os_8h_a38860acda96df47da6923348d96fc4c9}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Signal\+Wait@{os\+Signal\+Wait}}
+\index{os\+Signal\+Wait@{os\+Signal\+Wait}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Signal\+Wait()}{osSignalWait()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structos_event}{os\+Event}} os\+Signal\+Wait (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{signals,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Wait for one or more Signal Flags to become signaled for the current {\bfseries R\+U\+N\+N\+I\+NG} thread. 
+
+Wait for one or more Signal Flags to become signaled for the current {\bfseries R\+U\+N\+N\+I\+NG} thread. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em signals} & wait until all specified signal flags set or 0 for any single signal flag. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+event flag information or error code. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Signal\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em signals} & wait until all specified signal flags set or 0 for any single signal flag. \\
+\hline
+{\em millisec} & timeout value or 0 in case of no time-\/out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em event} & flag information or error code. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Signal\+Wait} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ab169d629ebefc57e030b324d4cce9eea}\label{cmsis__os_8h_ab169d629ebefc57e030b324d4cce9eea}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Systick\+Handler@{os\+Systick\+Handler}}
+\index{os\+Systick\+Handler@{os\+Systick\+Handler}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Systick\+Handler()}{osSystickHandler()}}
+{\footnotesize\ttfamily void os\+Systick\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Handles the tick increment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em none.} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none.} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}\label{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Create@{os\+Thread\+Create}}
+\index{os\+Thread\+Create@{os\+Thread\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Create()}{osThreadCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} os\+Thread\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_ac2c70c6eaadffd0e8bfb9c47485e80c1}{os\+Thread\+Def\+\_\+t}} $\ast$}]{thread\+\_\+def,  }\item[{void $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Create a thread and add it to Active Threads and set it to state R\+E\+A\+DY. 
+
+Create a thread and add it to Active Threads and set it to state R\+E\+A\+DY. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+def} & thread definition referenced with \mbox{\hyperlink{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}{os\+Thread}}. \\
+\hline
+\mbox{\tt in}  & {\em argument} & pointer that is passed to the thread function as start argument. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+thread ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+def} & thread definition referenced with \mbox{\hyperlink{cmsis__os_8h_af0c7c6b5e09f8be198312144b5c9e453}{os\+Thread}}. \\
+\hline
+{\em argument} & pointer that is passed to the thread function as start argument. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em thread} & ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}\label{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Get\+Id@{os\+Thread\+Get\+Id}}
+\index{os\+Thread\+Get\+Id@{os\+Thread\+Get\+Id}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Get\+Id()}{osThreadGetId()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}} os\+Thread\+Get\+Id (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Return the thread ID of the current running thread. 
+
+Return the thread ID of the current running thread. \begin{DoxyReturn}{Returns}
+thread ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Get\+Id} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyRetVals}{Return values}
+{\em thread} & ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Get\+Id} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a4299d838978bc2aae5e4350754e6a4e9}\label{cmsis__os_8h_a4299d838978bc2aae5e4350754e6a4e9}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Get\+Priority@{os\+Thread\+Get\+Priority}}
+\index{os\+Thread\+Get\+Priority@{os\+Thread\+Get\+Priority}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Get\+Priority()}{osThreadGetPriority()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}} os\+Thread\+Get\+Priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get current priority of an active thread. 
+
+Get current priority of an active thread. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+current priority value of the thread function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Get\+Priority} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em current} & priority value of the thread function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Get\+Priority} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a72dea6af29c3caa97b583da895237697}\label{cmsis__os_8h_a72dea6af29c3caa97b583da895237697}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+List@{os\+Thread\+List}}
+\index{os\+Thread\+List@{os\+Thread\+List}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+List()}{osThreadList()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+List (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Lists all the current threads, along with their current state and stack usage high water mark. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & A buffer into which the above mentioned details will be written \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a98905f234a096669566e7b93272b2653}\label{cmsis__os_8h_a98905f234a096669566e7b93272b2653}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Resume@{os\+Thread\+Resume}}
+\index{os\+Thread\+Resume@{os\+Thread\+Resume}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Resume()}{osThreadResume()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Resume (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Resume execution of a suspended thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a909a8098efc243cec5729ac51fdb3bdc}\label{cmsis__os_8h_a909a8098efc243cec5729ac51fdb3bdc}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Resume\+All@{os\+Thread\+Resume\+All}}
+\index{os\+Thread\+Resume\+All@{os\+Thread\+Resume\+All}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Resume\+All()}{osThreadResumeAll()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Resume\+All (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Resume execution of a all suspended threads. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a0dfb90ccf1f6e4b54b9251b12d1cbc8b}\label{cmsis__os_8h_a0dfb90ccf1f6e4b54b9251b12d1cbc8b}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Set\+Priority@{os\+Thread\+Set\+Priority}}
+\index{os\+Thread\+Set\+Priority@{os\+Thread\+Set\+Priority}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Set\+Priority()}{osThreadSetPriority()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Set\+Priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id,  }\item[{\mbox{\hyperlink{cmsis__os_8h_a7f2b42f1983b9107775ec2a1c69a849a}{os\+Priority}}}]{priority }\end{DoxyParamCaption})}
+
+
+
+Change priority of an active thread. 
+
+Change priority of an active thread. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\mbox{\tt in}  & {\em priority} & new priority value for the thread function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Set\+Priority} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+{\em priority} & new priority value for the thread function. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Set\+Priority} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a204bf99a22ca8fe85b1f8028f0268278}\label{cmsis__os_8h_a204bf99a22ca8fe85b1f8028f0268278}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Suspend@{os\+Thread\+Suspend}}
+\index{os\+Thread\+Suspend@{os\+Thread\+Suspend}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Suspend()}{osThreadSuspend()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Suspend (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Suspend execution of a thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_a56a2ad8a2fb63a7fdad28d2e9411c3a1}\label{cmsis__os_8h_a56a2ad8a2fb63a7fdad28d2e9411c3a1}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Suspend\+All@{os\+Thread\+Suspend\+All}}
+\index{os\+Thread\+Suspend\+All@{os\+Thread\+Suspend\+All}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Suspend\+All()}{osThreadSuspendAll()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Suspend\+All (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Suspend execution of a all active threads. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{cmsis__os_8h_aea135bb90eb853eff39e0800b91bbeab}\label{cmsis__os_8h_aea135bb90eb853eff39e0800b91bbeab}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Terminate@{os\+Thread\+Terminate}}
+\index{os\+Thread\+Terminate@{os\+Thread\+Terminate}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Terminate()}{osThreadTerminate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Terminate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a217fdd2811440d39a6e8c868a0b8ec82}{os\+Thread\+Id}}}]{thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Terminate execution of a thread and remove it from Active Threads. 
+
+Terminate execution of a thread and remove it from Active Threads. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Terminate} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+id} & thread ID obtained by \mbox{\hyperlink{cmsis__os_8h_ac59b5713cb083702dce759c73fd90dff}{os\+Thread\+Create}} or \mbox{\hyperlink{cmsis__os_8h_ab1df2a28925862ef8f9cf4e1c995c5a7}{os\+Thread\+Get\+Id}}. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Terminate} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_af13a667493c5d629a90c13e113b99233}\label{cmsis__os_8h_af13a667493c5d629a90c13e113b99233}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Thread\+Yield@{os\+Thread\+Yield}}
+\index{os\+Thread\+Yield@{os\+Thread\+Yield}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Thread\+Yield()}{osThreadYield()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Thread\+Yield (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Pass control to next thread that is in state {\bfseries R\+E\+A\+DY}. 
+
+Pass control to next thread that is in state {\bfseries R\+E\+A\+DY}. \begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Yield} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Thread\+Yield} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}\label{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Create@{os\+Timer\+Create}}
+\index{os\+Timer\+Create@{os\+Timer\+Create}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Create()}{osTimerCreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}} os\+Timer\+Create (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{cmsis__os_8h_a4fa06198874bc76e8dc26db38fc2f9d6}{os\+Timer\+Def\+\_\+t}} $\ast$}]{timer\+\_\+def,  }\item[{\mbox{\hyperlink{cmsis__os_8h_adac860eb9e1b4b0619271e6595ed83d9}{os\+\_\+timer\+\_\+type}}}]{type,  }\item[{void $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Create a timer. 
+
+Create a timer. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em timer\+\_\+def} & timer object referenced with \mbox{\hyperlink{cmsis__os_8h_a1b8d670eaf964b2910fa06885e650678}{os\+Timer}}. \\
+\hline
+\mbox{\tt in}  & {\em type} & os\+Timer\+Once for one-\/shot or os\+Timer\+Periodic for periodic behavior. \\
+\hline
+\mbox{\tt in}  & {\em argument} & argument to the timer call back function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+timer ID for reference by other functions or N\+U\+LL in case of error. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em timer\+\_\+def} & timer object referenced with \mbox{\hyperlink{cmsis__os_8h_a1b8d670eaf964b2910fa06885e650678}{os\+Timer}}. \\
+\hline
+{\em type} & os\+Timer\+Once for one-\/shot or os\+Timer\+Periodic for periodic behavior. \\
+\hline
+{\em argument} & argument to the timer call back function. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em timer} & ID for reference by other functions or N\+U\+LL in case of error. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Create} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a746b8043d906849bd65e3900fcb483cf}\label{cmsis__os_8h_a746b8043d906849bd65e3900fcb483cf}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Delete@{os\+Timer\+Delete}}
+\index{os\+Timer\+Delete@{os\+Timer\+Delete}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Delete()}{osTimerDelete()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Timer\+Delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}}}]{timer\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Delete a timer. 
+
+Delete a timer that was created by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}}. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}} \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Delete} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a27a797a401b068e2644d1125f22a07ca}\label{cmsis__os_8h_a27a797a401b068e2644d1125f22a07ca}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Start@{os\+Timer\+Start}}
+\index{os\+Timer\+Start@{os\+Timer\+Start}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Start()}{osTimerStart()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Timer\+Start (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}}}]{timer\+\_\+id,  }\item[{uint32\+\_\+t}]{millisec }\end{DoxyParamCaption})}
+
+
+
+Start or restart a timer. 
+
+Start or restart a timer. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}}. \\
+\hline
+\mbox{\tt in}  & {\em millisec} & time delay value of the timer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Start} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}}. \\
+\hline
+{\em millisec} & time delay value of the timer. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Start} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}
+\mbox{\Hypertarget{cmsis__os_8h_a58f36b121a812936435cacc6e1e0e091}\label{cmsis__os_8h_a58f36b121a812936435cacc6e1e0e091}} 
+\index{cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}!os\+Timer\+Stop@{os\+Timer\+Stop}}
+\index{os\+Timer\+Stop@{os\+Timer\+Stop}!cmsis\+\_\+os.\+h@{cmsis\+\_\+os.\+h}}
+\subsubsection{\texorpdfstring{os\+Timer\+Stop()}{osTimerStop()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cmsis__os_8h_ae2e091fefc4c767117727bd5aba4d99e}{os\+Status}} os\+Timer\+Stop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cmsis__os_8h_a6416f2f47941043a63be8453cecce5be}{os\+Timer\+Id}}}]{timer\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Stop a timer. 
+
+Stop the timer. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status code that indicates the execution status of the function. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Stop} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em timer\+\_\+id} & timer ID obtained by \mbox{\hyperlink{cmsis__os_8h_aedd312bfdca04e0b8162b666e09a1ae6}{os\+Timer\+Create}} \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em status} & code that indicates the execution status of the function. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+M\+U\+ST R\+E\+M\+A\+IN U\+N\+C\+H\+A\+N\+G\+ED\+: {\bfseries os\+Timer\+Stop} shall be consistent in every C\+M\+S\+I\+S-\/\+R\+T\+OS. 
+\end{DoxyNote}

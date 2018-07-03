@@ -1,0 +1,86 @@
+\hypertarget{group__cr_q_u_e_u_e___s_e_n_d___f_r_o_m___i_s_r}{}\section{cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+SR}
+\label{group__cr_q_u_e_u_e___s_e_n_d___f_r_o_m___i_s_r}\index{cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+SR@{cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+SR}}
+croutine. h 
+\begin{DoxyPre}
+ crQUEUE\_SEND\_FROM\_ISR(
+                           QueueHandle\_t pxQueue,
+                           void *pvItemToQueue,
+                           BaseType\_t xCoRoutinePreviouslyWoken
+                      )\end{DoxyPre}
+
+
+The macro\textquotesingle{}s cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+S\+R() and cr\+Q\+U\+E\+U\+E\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+F\+R\+O\+M\+\_\+\+I\+S\+R() are the co-\/routine equivalent to the x\+Queue\+Send\+From\+I\+S\+R() and x\+Queue\+Receive\+From\+I\+S\+R() functions used by tasks.
+
+cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+S\+R() and cr\+Q\+U\+E\+U\+E\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+F\+R\+O\+M\+\_\+\+I\+S\+R() can only be used to pass data between a co-\/routine and and I\+SR, whereas x\+Queue\+Send\+From\+I\+S\+R() and x\+Queue\+Receive\+From\+I\+S\+R() can only be used to pass data between a task and and I\+SR.
+
+cr\+Q\+U\+E\+U\+E\+\_\+\+S\+E\+N\+D\+\_\+\+F\+R\+O\+M\+\_\+\+I\+SR can only be called from an I\+SR to send data to a queue that is being used from within a co-\/routine.
+
+See the co-\/routine section of the W\+EB documentation for information on passing data between tasks and co-\/routines and between I\+SR\textquotesingle{}s and co-\/routines.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Queue} & The handle to the queue on which the item is to be posted.\\
+\hline
+{\em pv\+Item\+To\+Queue} & A pointer to the item that is to be placed on the queue. The size of the items the queue will hold was defined when the queue was created, so this many bytes will be copied from pv\+Item\+To\+Queue into the queue storage area.\\
+\hline
+{\em x\+Co\+Routine\+Previously\+Woken} & This is included so an I\+SR can post onto the same queue multiple times from a single interrupt. The first call should always pass in pd\+F\+A\+L\+SE. Subsequent calls should pass in the value returned from the previous call.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pd\+T\+R\+UE if a co-\/routine was woken by posting onto the queue. This is used by the I\+SR to determine if a context switch may be required following the I\+SR.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+// A co-routine that blocks on a queue waiting for characters to be received.
+static void vReceivingCoRoutine( CoRoutineHandle\_t xHandle, UBaseType\_t uxIndex )
+\{
+char cRxedChar;
+BaseType\_t xResult;
+\begin{DoxyVerb}// All co-routines must start with a call to crSTART().
+crSTART( xHandle );
+
+for( ;; )
+{
+    // Wait for data to become available on the queue.  This assumes the
+    // queue xCommsRxQueue has already been created!
+    crQUEUE_RECEIVE( xHandle, xCommsRxQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );
+
+    // Was a character received?
+    if( xResult == pdPASS )
+    {
+        // Process the character here.
+    }
+}
+
+// All co-routines must end with a call to crEND().
+crEND();
+\end{DoxyVerb}
+
+\}\end{DoxyPre}
+
+
+
+\begin{DoxyPre}// An ISR that uses a queue to send characters received on a serial port to
+// a co-routine.
+void vUART\_ISR( void )
+\{
+char cRxedChar;
+BaseType\_t xCRWokenByPost = pdFALSE;
+\begin{DoxyVerb}// We loop around reading characters until there are none left in the UART.
+while( UART_RX_REG_NOT_EMPTY() )
+{
+    // Obtain the character from the UART.
+    cRxedChar = UART_RX_REG;
+
+    // Post the character onto a queue.  xCRWokenByPost will be pdFALSE
+    // the first time around the loop.  If the post causes a co-routine
+    // to be woken (unblocked) then xCRWokenByPost will be set to pdTRUE.
+    // In this manner we can ensure that if more than one co-routine is
+    // blocked on the queue only one is woken by this ISR no matter how
+    // many characters are posted to the queue.
+    xCRWokenByPost = crQUEUE_SEND_FROM_ISR( xCommsRxQueue, &cRxedChar, xCRWokenByPost );
+}
+\end{DoxyVerb}
+
+\}\end{DoxyPre}
+ 

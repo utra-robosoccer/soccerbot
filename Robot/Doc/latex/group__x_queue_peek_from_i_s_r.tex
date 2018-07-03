@@ -1,0 +1,26 @@
+\hypertarget{group__x_queue_peek_from_i_s_r}{}\section{x\+Queue\+Peek\+From\+I\+SR}
+\label{group__x_queue_peek_from_i_s_r}\index{x\+Queue\+Peek\+From\+I\+SR@{x\+Queue\+Peek\+From\+I\+SR}}
+queue. h 
+\begin{DoxyPre}
+BaseType\_t xQueuePeekFromISR(
+                                QueueHandle\_t xQueue,
+                                void *pvBuffer,
+                            );\end{DoxyPre}
+
+
+A version of x\+Queue\+Peek() that can be called from an interrupt service routine (I\+SR).
+
+Receive an item from a queue without removing the item from the queue. The item is received by copy so a buffer of adequate size must be provided. The number of bytes copied into the buffer was defined when the queue was created.
+
+Successfully received items remain on the queue so will be returned again by the next call, or a call to x\+Queue\+Receive().
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Queue} & The handle to the queue from which the item is to be received.\\
+\hline
+{\em pv\+Buffer} & Pointer to the buffer into which the received item will be copied.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pd\+T\+R\+UE if an item was successfully received from the queue, otherwise pd\+F\+A\+L\+SE. 
+\end{DoxyReturn}

@@ -1,0 +1,74 @@
+\hypertarget{struct_t_i_m___base___init_type_def}{}\section{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def Struct Reference}
+\label{struct_t_i_m___base___init_type_def}\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+
+
+T\+IM Time base Configuration Structure definition ~\newline
+  
+
+
+
+
+{\ttfamily \#include $<$stm32f4xx\+\_\+hal\+\_\+tim.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_t_i_m___base___init_type_def_affb82025da5b8d4a06e61f1690460f4d}{Prescaler}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_t_i_m___base___init_type_def_a4b29303489c983d0e9326d7ae0196ceb}{Counter\+Mode}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_t_i_m___base___init_type_def_a49500eef6a2354eeee4adc005bf9cef6}{Period}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_t_i_m___base___init_type_def_a8f20e02ae2774e1523942604315b8e13}{Clock\+Division}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_t_i_m___base___init_type_def_a3c2ea8434bbce30aa191a816e27f9c1f}{Repetition\+Counter}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+T\+IM Time base Configuration Structure definition ~\newline
+ 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{struct_t_i_m___base___init_type_def_a8f20e02ae2774e1523942604315b8e13}\label{struct_t_i_m___base___init_type_def_a8f20e02ae2774e1523942604315b8e13}} 
+\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}!Clock\+Division@{Clock\+Division}}
+\index{Clock\+Division@{Clock\+Division}!T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Clock\+Division}{ClockDivision}}
+{\footnotesize\ttfamily uint32\+\_\+t Clock\+Division}
+
+Specifies the clock division. This parameter can be a value of \mbox{\hyperlink{group___t_i_m___clock_division}{T\+IM Clock Division}} \mbox{\Hypertarget{struct_t_i_m___base___init_type_def_a4b29303489c983d0e9326d7ae0196ceb}\label{struct_t_i_m___base___init_type_def_a4b29303489c983d0e9326d7ae0196ceb}} 
+\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}!Counter\+Mode@{Counter\+Mode}}
+\index{Counter\+Mode@{Counter\+Mode}!T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Counter\+Mode}{CounterMode}}
+{\footnotesize\ttfamily uint32\+\_\+t Counter\+Mode}
+
+Specifies the counter mode. This parameter can be a value of \mbox{\hyperlink{group___t_i_m___counter___mode}{T\+IM Counter Mode}} \mbox{\Hypertarget{struct_t_i_m___base___init_type_def_a49500eef6a2354eeee4adc005bf9cef6}\label{struct_t_i_m___base___init_type_def_a49500eef6a2354eeee4adc005bf9cef6}} 
+\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}!Period@{Period}}
+\index{Period@{Period}!T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Period}{Period}}
+{\footnotesize\ttfamily uint32\+\_\+t Period}
+
+Specifies the period value to be loaded into the active Auto-\/\+Reload Register at the next update event. This parameter can be a number between Min\+\_\+\+Data = 0x0000U and Max\+\_\+\+Data = 0x\+F\+F\+FF. \mbox{\Hypertarget{struct_t_i_m___base___init_type_def_affb82025da5b8d4a06e61f1690460f4d}\label{struct_t_i_m___base___init_type_def_affb82025da5b8d4a06e61f1690460f4d}} 
+\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}!Prescaler@{Prescaler}}
+\index{Prescaler@{Prescaler}!T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Prescaler}{Prescaler}}
+{\footnotesize\ttfamily uint32\+\_\+t Prescaler}
+
+Specifies the prescaler value used to divide the T\+IM clock. This parameter can be a number between Min\+\_\+\+Data = 0x0000U and Max\+\_\+\+Data = 0x\+F\+F\+F\+FU \mbox{\Hypertarget{struct_t_i_m___base___init_type_def_a3c2ea8434bbce30aa191a816e27f9c1f}\label{struct_t_i_m___base___init_type_def_a3c2ea8434bbce30aa191a816e27f9c1f}} 
+\index{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}!Repetition\+Counter@{Repetition\+Counter}}
+\index{Repetition\+Counter@{Repetition\+Counter}!T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def@{T\+I\+M\+\_\+\+Base\+\_\+\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Repetition\+Counter}{RepetitionCounter}}
+{\footnotesize\ttfamily uint32\+\_\+t Repetition\+Counter}
+
+Specifies the repetition counter value. Each time the R\+CR downcounter reaches zero, an update event is generated and counting restarts from the R\+CR value (N). This means in P\+WM mode that (N+1) corresponds to\+:
+\begin{DoxyItemize}
+\item the number of P\+WM periods in edge-\/aligned mode
+\item the number of half P\+WM period in center-\/aligned mode This parameter must be a number between Min\+\_\+\+Data = 0x00 and Max\+\_\+\+Data = 0x\+FF. \begin{DoxyNote}{Note}
+This parameter is valid only for T\+I\+M1 and T\+I\+M8. 
+\end{DoxyNote}
+
+\end{DoxyItemize}
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/\mbox{\hyperlink{stm32f4xx__hal__tim_8h}{stm32f4xx\+\_\+hal\+\_\+tim.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,73 @@
+\hypertarget{structarm__lms__norm__instance__f32}{}\section{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32 Struct Reference}
+\label{structarm__lms__norm__instance__f32}\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+
+
+Instance structure for the floating-\/point normalized L\+MS filter.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__lms__norm__instance__f32_a751941891e47f522a7f5375fe8990aac}{num\+Taps}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__lms__norm__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}{p\+State}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__lms__norm__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}{p\+Coeffs}}
+\item 
+float32\+\_\+t \mbox{\hyperlink{structarm__lms__norm__instance__f32_a11402afa7c9b9dac4cb953fa386e74d2}{mu}}
+\item 
+float32\+\_\+t \mbox{\hyperlink{structarm__lms__norm__instance__f32_ae1ed544b72f1510ed55d144a9424fddd}{energy}}
+\item 
+float32\+\_\+t \mbox{\hyperlink{structarm__lms__norm__instance__f32_ab56b6f83c5b324c3ef620474b6e5a6e1}{x0}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the floating-\/point normalized L\+MS filter. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__lms__norm__instance__f32_ae1ed544b72f1510ed55d144a9424fddd}\label{structarm__lms__norm__instance__f32_ae1ed544b72f1510ed55d144a9424fddd}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!energy@{energy}}
+\index{energy@{energy}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{energy}{energy}}
+{\footnotesize\ttfamily float32\+\_\+t energy}
+
+saves previous frame energy. \mbox{\Hypertarget{structarm__lms__norm__instance__f32_a11402afa7c9b9dac4cb953fa386e74d2}\label{structarm__lms__norm__instance__f32_a11402afa7c9b9dac4cb953fa386e74d2}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!mu@{mu}}
+\index{mu@{mu}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{mu}{mu}}
+{\footnotesize\ttfamily float32\+\_\+t mu}
+
+step size that control filter coefficient updates. \mbox{\Hypertarget{structarm__lms__norm__instance__f32_a751941891e47f522a7f5375fe8990aac}\label{structarm__lms__norm__instance__f32_a751941891e47f522a7f5375fe8990aac}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!num\+Taps@{num\+Taps}}
+\index{num\+Taps@{num\+Taps}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{num\+Taps}{numTaps}}
+{\footnotesize\ttfamily uint16\+\_\+t num\+Taps}
+
+number of coefficients in the filter. \mbox{\Hypertarget{structarm__lms__norm__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}\label{structarm__lms__norm__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!p\+Coeffs@{p\+Coeffs}}
+\index{p\+Coeffs@{p\+Coeffs}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Coeffs}{pCoeffs}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+Coeffs}
+
+points to the coefficient array. The array is of length num\+Taps. \mbox{\Hypertarget{structarm__lms__norm__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}\label{structarm__lms__norm__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!p\+State@{p\+State}}
+\index{p\+State@{p\+State}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+State}{pState}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+State}
+
+points to the state variable array. The array is of length num\+Taps+block\+Size-\/1. \mbox{\Hypertarget{structarm__lms__norm__instance__f32_ab56b6f83c5b324c3ef620474b6e5a6e1}\label{structarm__lms__norm__instance__f32_ab56b6f83c5b324c3ef620474b6e5a6e1}} 
+\index{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}!x0@{x0}}
+\index{x0@{x0}!arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32@{arm\+\_\+lms\+\_\+norm\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{x0}{x0}}
+{\footnotesize\ttfamily float32\+\_\+t x0}
+
+saves previous input sample. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,18 @@
+\hypertarget{group__x_event_group_get_bits}{}\section{x\+Event\+Group\+Get\+Bits}
+\label{group__x_event_group_get_bits}\index{x\+Event\+Group\+Get\+Bits@{x\+Event\+Group\+Get\+Bits}}
+\mbox{\hyperlink{event__groups_8h_source}{event\+\_\+groups.\+h}} 
+\begin{DoxyPre}
+   EventBits\_t xEventGroupGetBits( EventGroupHandle\_t xEventGroup );
+\end{DoxyPre}
+
+
+Returns the current value of the bits in an event group. This function cannot be used from an interrupt.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Event\+Group} & The event group being queried.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The event group bits at the time x\+Event\+Group\+Get\+Bits() was called. 
+\end{DoxyReturn}

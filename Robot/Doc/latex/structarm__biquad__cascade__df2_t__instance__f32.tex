@@ -1,0 +1,49 @@
+\hypertarget{structarm__biquad__cascade__df2_t__instance__f32}{}\section{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32 Struct Reference}
+\label{structarm__biquad__cascade__df2_t__instance__f32}\index{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}}
+
+
+Instance structure for the floating-\/point transposed direct form II Biquad cascade filter.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structarm__biquad__cascade__df2_t__instance__f32_a3615af038f56917909e0370c11bc2ec7}{num\+Stages}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__biquad__cascade__df2_t__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}{p\+State}}
+\item 
+float32\+\_\+t $\ast$ \mbox{\hyperlink{structarm__biquad__cascade__df2_t__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}{p\+Coeffs}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the floating-\/point transposed direct form II Biquad cascade filter. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__biquad__cascade__df2_t__instance__f32_a3615af038f56917909e0370c11bc2ec7}\label{structarm__biquad__cascade__df2_t__instance__f32_a3615af038f56917909e0370c11bc2ec7}} 
+\index{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}!num\+Stages@{num\+Stages}}
+\index{num\+Stages@{num\+Stages}!arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{num\+Stages}{numStages}}
+{\footnotesize\ttfamily uint8\+\_\+t num\+Stages}
+
+number of 2nd order stages in the filter. Overall order is 2$\ast$num\+Stages. \mbox{\Hypertarget{structarm__biquad__cascade__df2_t__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}\label{structarm__biquad__cascade__df2_t__instance__f32_aacbb8dd8eeba4b21fc2bb40076405ee3}} 
+\index{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}!p\+Coeffs@{p\+Coeffs}}
+\index{p\+Coeffs@{p\+Coeffs}!arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+Coeffs}{pCoeffs}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+Coeffs}
+
+points to the array of coefficients. The array is of length 5$\ast$num\+Stages. \mbox{\Hypertarget{structarm__biquad__cascade__df2_t__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}\label{structarm__biquad__cascade__df2_t__instance__f32_a335c87e6fdc4b96601d95a5de8b9c463}} 
+\index{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}!p\+State@{p\+State}}
+\index{p\+State@{p\+State}!arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32@{arm\+\_\+biquad\+\_\+cascade\+\_\+df2\+T\+\_\+instance\+\_\+f32}}
+\subsubsection{\texorpdfstring{p\+State}{pState}}
+{\footnotesize\ttfamily float32\+\_\+t$\ast$ p\+State}
+
+points to the array of state coefficients. The array is of length 2$\ast$num\+Stages. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

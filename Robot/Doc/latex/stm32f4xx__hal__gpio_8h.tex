@@ -1,0 +1,160 @@
+\hypertarget{stm32f4xx__hal__gpio_8h}{}\section{Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/stm32f4xx\+\_\+hal\+\_\+gpio.h File Reference}
+\label{stm32f4xx__hal__gpio_8h}\index{Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/stm32f4xx\+\_\+hal\+\_\+gpio.\+h@{Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/stm32f4xx\+\_\+hal\+\_\+gpio.\+h}}
+
+
+Header file of G\+P\+IO H\+AL module.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+def.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal\+\_\+gpio\+\_\+ex.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_g_p_i_o___init_type_def}{G\+P\+I\+O\+\_\+\+Init\+Type\+Def}}
+\begin{DoxyCompactList}\small\item\em G\+P\+IO Init structure definition ~\newline
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+0}~((uint16\+\_\+t)0x0001)  /$\ast$ Pin 0 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+1}~((uint16\+\_\+t)0x0002)  /$\ast$ Pin 1 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+2}~((uint16\+\_\+t)0x0004)  /$\ast$ Pin 2 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+3}~((uint16\+\_\+t)0x0008)  /$\ast$ Pin 3 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+4}~((uint16\+\_\+t)0x0010)  /$\ast$ Pin 4 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+5}~((uint16\+\_\+t)0x0020)  /$\ast$ Pin 5 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+6}~((uint16\+\_\+t)0x0040)  /$\ast$ Pin 6 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+7}~((uint16\+\_\+t)0x0080)  /$\ast$ Pin 7 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+8}~((uint16\+\_\+t)0x0100)  /$\ast$ Pin 8 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+9}~((uint16\+\_\+t)0x0200)  /$\ast$ Pin 9 selected    $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+10}~((uint16\+\_\+t)0x0400)  /$\ast$ Pin 10 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+11}~((uint16\+\_\+t)0x0800)  /$\ast$ Pin 11 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+12}~((uint16\+\_\+t)0x1000)  /$\ast$ Pin 12 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+13}~((uint16\+\_\+t)0x2000)  /$\ast$ Pin 13 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+14}~((uint16\+\_\+t)0x4000)  /$\ast$ Pin 14 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+15}~((uint16\+\_\+t)0x8000)  /$\ast$ Pin 15 selected   $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+All}~((uint16\+\_\+t)0x\+F\+F\+F\+F)  /$\ast$ All pins selected $\ast$/
+\item 
+\#define {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+M\+A\+SK}~0x0000\+F\+F\+F\+F\+U /$\ast$ P\+I\+N mask for assert test $\ast$/
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_gaf40bec3146810028a84b628d37d3b391}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+I\+N\+P\+UT}}~0x00000000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga1013838a64cec2f8c88f079c449d1982}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+PP}}~0x00000001U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga2f91757829f6e9505ec386b840941929}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+OD}}~0x00000011U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga526c72c5264316fc05c775b6cad4aa6a}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+A\+F\+\_\+\+PP}}~0x00000002U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga282b9fd37c8ef31daba314ffae6bf023}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+A\+F\+\_\+\+OD}}~0x00000012U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga7a04f9ab65ad572ad20791a35009220c}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+A\+N\+A\+L\+OG}}~0x00000003U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga088659562e68426d9a72821ea4fd8d50}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+I\+T\+\_\+\+R\+I\+S\+I\+NG}}~0x10110000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_gaa166210a6da3ac7e8d7504702520e522}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+I\+T\+\_\+\+F\+A\+L\+L\+I\+NG}}~0x10210000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga0678e61090ed61e91a6496f22ddfb3d1}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+I\+T\+\_\+\+R\+I\+S\+I\+N\+G\+\_\+\+F\+A\+L\+L\+I\+NG}}~0x10310000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga97d78b82ea178ff7a4c35aa60b4e9338}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+E\+V\+T\+\_\+\+R\+I\+S\+I\+NG}}~0x10120000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_gadbfa532b3566783ac6c0e07c2e0ffe5e}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+E\+V\+T\+\_\+\+F\+A\+L\+L\+I\+NG}}~0x10220000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__mode__define_ga1b760771297ed2fc55a6b13071188491}{G\+P\+I\+O\+\_\+\+M\+O\+D\+E\+\_\+\+E\+V\+T\+\_\+\+R\+I\+S\+I\+N\+G\+\_\+\+F\+A\+L\+L\+I\+NG}}~0x10320000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__speed__define_gab7916c4265bfa1b26a5205ea9c1caa4e}{G\+P\+I\+O\+\_\+\+S\+P\+E\+E\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+L\+OW}}~0x00000000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__speed__define_ga1724a25a9cf00ebf485daeb09cfa1e25}{G\+P\+I\+O\+\_\+\+S\+P\+E\+E\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+M\+E\+D\+I\+UM}}~0x00000001U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__speed__define_gaef5898db71cdb957cd41f940b0087af8}{G\+P\+I\+O\+\_\+\+S\+P\+E\+E\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+H\+I\+GH}}~0x00000002U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__speed__define_ga1944cf10e2ab172810d38b681d40b771}{G\+P\+I\+O\+\_\+\+S\+P\+E\+E\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+V\+E\+R\+Y\+\_\+\+H\+I\+GH}}~0x00000003U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__pull__define_ga5c2862579882c1cc64e36d38fbd07a4c}{G\+P\+I\+O\+\_\+\+N\+O\+P\+U\+LL}}~0x00000000U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__pull__define_gae689bc8f5c42d6df7bd54a8dd372e072}{G\+P\+I\+O\+\_\+\+P\+U\+L\+L\+UP}}~0x00000001U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o__pull__define_ga75d958d0410c36da7f27d1f4f5c36c14}{G\+P\+I\+O\+\_\+\+P\+U\+L\+L\+D\+O\+WN}}~0x00000002U
+\item 
+\#define \mbox{\hyperlink{group___g_p_i_o___exported___macros_gaae18fc8d92ffa4df2172c78869e712fc}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)~(E\+X\+TI-\/$>$PR \& (\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Checks whether the specified E\+X\+TI line flag is set or not. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___g_p_i_o___exported___macros_ga2f28fc349d1812cdc55a77c68d2b278d}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)~(E\+X\+TI-\/$>$PR = (\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Clears the E\+X\+TI\textquotesingle{}s line pending flags. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___g_p_i_o___exported___macros_ga27f0e1f6c38745169d74620f6a178a94}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+G\+E\+T\+\_\+\+IT}}(\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)~(E\+X\+TI-\/$>$PR \& (\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Checks whether the specified E\+X\+TI line is asserted or not. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___g_p_i_o___exported___macros_ga2a086506eec826f49b200fba64beb9f1}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+C\+L\+E\+A\+R\+\_\+\+IT}}(\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)~(E\+X\+TI-\/$>$PR = (\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Clears the E\+X\+TI\textquotesingle{}s line pending bits. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___g_p_i_o___exported___macros_gac50aef6881e1f76032941ead9c9bce61}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+G\+E\+N\+E\+R\+A\+T\+E\+\_\+\+S\+W\+IT}}(\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)~(E\+X\+TI-\/$>$S\+W\+I\+ER $\vert$= (\+\_\+\+\_\+\+E\+X\+T\+I\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Generates a Software interrupt on selected E\+X\+TI line. \end{DoxyCompactList}\item 
+\#define {\bfseries I\+S\+\_\+\+G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+A\+C\+T\+I\+ON}(A\+C\+T\+I\+ON)~(((A\+C\+T\+I\+ON) == G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+R\+E\+S\+ET) $\vert$$\vert$ ((A\+C\+T\+I\+ON) == G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+S\+ET))
+\item 
+\#define {\bfseries I\+S\+\_\+\+G\+P\+I\+O\+\_\+\+P\+IN}(P\+IN)~((((P\+IN) \& G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+M\+A\+SK ) != 0x00\+U) \&\& (((\+P\+I\+N) \& $\sim$\+G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+M\+A\+S\+K) == 0x00\+U))
+\item 
+\#define {\bfseries I\+S\+\_\+\+G\+P\+I\+O\+\_\+\+M\+O\+DE}(M\+O\+DE)
+\item 
+\#define {\bfseries I\+S\+\_\+\+G\+P\+I\+O\+\_\+\+S\+P\+E\+ED}(S\+P\+E\+ED)
+\item 
+\#define {\bfseries I\+S\+\_\+\+G\+P\+I\+O\+\_\+\+P\+U\+LL}(P\+U\+LL)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group___g_p_i_o___exported___types_ga5b3ef0486b179415581eb342e0ea6b43}\label{group___g_p_i_o___exported___types_ga5b3ef0486b179415581eb342e0ea6b43}} 
+enum \mbox{\hyperlink{group___g_p_i_o___exported___types_ga5b3ef0486b179415581eb342e0ea6b43}{G\+P\+I\+O\+\_\+\+Pin\+State}} \{ {\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+R\+E\+S\+ET} = 0, 
+{\bfseries G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+S\+ET}
+ \}
+\begin{DoxyCompactList}\small\item\em G\+P\+IO Bit S\+ET and Bit R\+E\+S\+ET enumeration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Init} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, \mbox{\hyperlink{struct_g_p_i_o___init_type_def}{G\+P\+I\+O\+\_\+\+Init\+Type\+Def}} $\ast$G\+P\+I\+O\+\_\+\+Init)
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+De\+Init} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, uint32\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\item 
+\mbox{\hyperlink{group___g_p_i_o___exported___types_ga5b3ef0486b179415581eb342e0ea6b43}{G\+P\+I\+O\+\_\+\+Pin\+State}} {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Read\+Pin} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Write\+Pin} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin, \mbox{\hyperlink{group___g_p_i_o___exported___types_ga5b3ef0486b179415581eb342e0ea6b43}{G\+P\+I\+O\+\_\+\+Pin\+State}} Pin\+State)
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Toggle\+Pin} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\item 
+\mbox{\hyperlink{stm32f4xx__hal__def_8h_a63c0679d1cb8b8c684fbb0632743478f}{H\+A\+L\+\_\+\+Status\+Type\+Def}} {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Lock\+Pin} (\mbox{\hyperlink{struct_g_p_i_o___type_def}{G\+P\+I\+O\+\_\+\+Type\+Def}} $\ast$G\+P\+I\+Ox, uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+I\+R\+Q\+Handler} (uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\item 
+void {\bfseries H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+Callback} (uint16\+\_\+t G\+P\+I\+O\+\_\+\+Pin)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file of G\+P\+IO H\+AL module. 
+
+\begin{DoxyAuthor}{Author}
+M\+CD Application Team 
+\end{DoxyAuthor}
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} C\+O\+P\+Y\+R\+I\+G\+H\+T(c) 2017 S\+T\+Microelectronics\end{center} }
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+E\+RS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS OR I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY A\+ND F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED. IN NO E\+V\+E\+NT S\+H\+A\+LL T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+ER OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 

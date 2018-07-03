@@ -1,0 +1,130 @@
+\hypertarget{group___i2_c___exported___types}{}\section{I2C Exported Types}
+\label{group___i2_c___exported___types}\index{I2\+C Exported Types@{I2\+C Exported Types}}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_i2_c___init_type_def}{I2\+C\+\_\+\+Init\+Type\+Def}}
+\begin{DoxyCompactList}\small\item\em I2C Configuration Structure definition. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_i2_c___handle_type_def}{I2\+C\+\_\+\+Handle\+Type\+Def}}
+\begin{DoxyCompactList}\small\item\em I2C handle Structure definition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{group___i2_c___exported___types_gaef355af8eab251ae2a19ee164ad81c37}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def}} \{ \newline
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a91ba08634e08d7287940f1bc5a37eeff}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}} = 0x00U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37af859ce60c5e462b0bfde3a5010bc72d1}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY}} = 0x20U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a0c503d6c0388f0d872b368557e278b5a}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY}} = 0x24U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37acb3a9e3d4d1076e0f4e65f91ca0161bc}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX}} = 0x21U, 
+\newline
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a4ea4ecc2dc3cb64c4877c123d9d73170}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX}} = 0x22U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a13518f06f54c7515100e86bb8d6e0779}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN}} = 0x28U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a14d22553a60819b276582e08459f30b0}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN}} = 0x29U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a8aec2547eedf1c9924f8efed33e3b5c5}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN}} = 0x2\+AU, 
+\newline
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a2c6f6d1fef0847f9da51153b5c295249}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT}} = 0x60U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a378abf24301fe7a23620fd78ff3f168b}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT}} = 0x\+A0U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37afe3c9b304462901099426a0d414be2a2}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR}} = 0x\+E0U
+ \}
+\begin{DoxyCompactList}\small\item\em H\+AL State structure definition. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{group___i2_c___exported___types_gabcbb7b844f2ffd63c4e530c117882062}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def}} \{ \mbox{\hyperlink{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a98c8fd642b7ac45a23479bd597fc7a71}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE}} = 0x00U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a1eea98660a170dd7b191c9dfe46da6d2}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER}} = 0x10U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a817358d19d278261f2047a5ec8ec6b53}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE}} = 0x20U, 
+\mbox{\hyperlink{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a3f592bd942f973242aac6b7df79f3f1e}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM}} = 0x40U
+ \}
+\begin{DoxyCompactList}\small\item\em H\+AL Mode structure definition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{group___i2_c___exported___types_gabcbb7b844f2ffd63c4e530c117882062}\label{group___i2_c___exported___types_gabcbb7b844f2ffd63c4e530c117882062}} 
+\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def}}
+\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def}!I2\+C Exported Types@{I2\+C Exported Types}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def}{HAL\_I2C\_ModeTypeDef}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{group___i2_c___exported___types_gabcbb7b844f2ffd63c4e530c117882062}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+Mode\+Type\+Def}}}
+
+
+
+H\+AL Mode structure definition. 
+
+\begin{DoxyNote}{Note}
+H\+AL I2C Mode value coding follow below described bitmap \+: b7 (not used) x \+: Should be set to 0 b6 0 \+: None 1 \+: Memory (H\+AL I2C communication is in Memory Mode) b5 0 \+: None 1 \+: Slave (H\+AL I2C communication is in Slave Mode) b4 0 \+: None 1 \+: Master (H\+AL I2C communication is in Master Mode) b3-\/b2-\/b1-\/b0 (not used) xxxx \+: Should be set to 0000 
+\end{DoxyNote}
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a98c8fd642b7ac45a23479bd597fc7a71}\label{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a98c8fd642b7ac45a23479bd597fc7a71}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+N\+O\+NE&No I2C communication on going \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a1eea98660a170dd7b191c9dfe46da6d2}\label{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a1eea98660a170dd7b191c9dfe46da6d2}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+A\+S\+T\+ER&I2C communication is in Master Mode \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a817358d19d278261f2047a5ec8ec6b53}\label{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a817358d19d278261f2047a5ec8ec6b53}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+S\+L\+A\+VE&I2C communication is in Slave Mode \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a3f592bd942f973242aac6b7df79f3f1e}\label{group___i2_c___exported___types_ggabcbb7b844f2ffd63c4e530c117882062a3f592bd942f973242aac6b7df79f3f1e}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+M\+O\+D\+E\+\_\+\+M\+EM&I2C communication is in Memory Mode \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{group___i2_c___exported___types_gaef355af8eab251ae2a19ee164ad81c37}\label{group___i2_c___exported___types_gaef355af8eab251ae2a19ee164ad81c37}} 
+\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def}}
+\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def}!I2\+C Exported Types@{I2\+C Exported Types}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def}{HAL\_I2C\_StateTypeDef}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{group___i2_c___exported___types_gaef355af8eab251ae2a19ee164ad81c37}{H\+A\+L\+\_\+\+I2\+C\+\_\+\+State\+Type\+Def}}}
+
+
+
+H\+AL State structure definition. 
+
+\begin{DoxyNote}{Note}
+H\+AL I2C State value coding follow below described bitmap \+: b7-\/b6 Error information 00 \+: No Error 01 \+: Abort (Abort user request on going) 10 \+: Timeout 11 \+: Error b5 IP initilisation status 0 \+: Reset (IP not initialized) 1 \+: Init done (IP initialized and ready to use. H\+AL I2C Init function called) b4 (not used) x \+: Should be set to 0 b3 0 \+: Ready or Busy (No Listen mode ongoing) 1 \+: Listen (IP in Address Listen Mode) b2 Intrinsic process state 0 \+: Ready 1 \+: Busy (IP busy with some configuration or internal operations) b1 Rx state 0 \+: Ready (no Rx operation ongoing) 1 \+: Busy (Rx operation ongoing) b0 Tx state 0 \+: Ready (no Tx operation ongoing) 1 \+: Busy (Tx operation ongoing) 
+\end{DoxyNote}
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a91ba08634e08d7287940f1bc5a37eeff}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a91ba08634e08d7287940f1bc5a37eeff}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET&Peripheral is not yet Initialized \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37af859ce60c5e462b0bfde3a5010bc72d1}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37af859ce60c5e462b0bfde3a5010bc72d1}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+A\+DY&Peripheral Initialized and ready for use \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a0c503d6c0388f0d872b368557e278b5a}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a0c503d6c0388f0d872b368557e278b5a}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+SY&An internal process is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37acb3a9e3d4d1076e0f4e65f91ca0161bc}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37acb3a9e3d4d1076e0f4e65f91ca0161bc}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+TX&Data Transmission process is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a4ea4ecc2dc3cb64c4877c123d9d73170}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a4ea4ecc2dc3cb64c4877c123d9d73170}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+RX&Data Reception process is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a13518f06f54c7515100e86bb8d6e0779}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a13518f06f54c7515100e86bb8d6e0779}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+L\+I\+S\+T\+EN&Address Listen Mode is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a14d22553a60819b276582e08459f30b0}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a14d22553a60819b276582e08459f30b0}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+T\+X\+\_\+\+L\+I\+S\+T\+EN&Address Listen Mode and Data Transmission process is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a8aec2547eedf1c9924f8efed33e3b5c5}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a8aec2547eedf1c9924f8efed33e3b5c5}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+B\+U\+S\+Y\+\_\+\+R\+X\+\_\+\+L\+I\+S\+T\+EN&Address Listen Mode and Data Reception process is ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a2c6f6d1fef0847f9da51153b5c295249}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a2c6f6d1fef0847f9da51153b5c295249}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+B\+O\+RT&Abort user request ongoing \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a378abf24301fe7a23620fd78ff3f168b}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37a378abf24301fe7a23620fd78ff3f168b}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+T\+I\+M\+E\+O\+UT&Timeout state \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR}!I2\+C Exported Types@{I2\+C Exported Types}}\index{I2\+C Exported Types@{I2\+C Exported Types}!H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR@{H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR}}}\mbox{\Hypertarget{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37afe3c9b304462901099426a0d414be2a2}\label{group___i2_c___exported___types_ggaef355af8eab251ae2a19ee164ad81c37afe3c9b304462901099426a0d414be2a2}} 
+H\+A\+L\+\_\+\+I2\+C\+\_\+\+S\+T\+A\+T\+E\+\_\+\+E\+R\+R\+OR&Error \\
+\hline
+
+\end{DoxyEnumFields}

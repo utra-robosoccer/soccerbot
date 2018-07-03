@@ -1,0 +1,65 @@
+\hypertarget{struct_f_l_a_s_h___erase_init_type_def}{}\section{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def Struct Reference}
+\label{struct_f_l_a_s_h___erase_init_type_def}\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+
+
+F\+L\+A\+SH Erase structure definition.  
+
+
+
+
+{\ttfamily \#include $<$stm32f4xx\+\_\+hal\+\_\+flash\+\_\+ex.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___erase_init_type_def_ae2154c09320f3ef7feb8f4a84e9ac17b}{Type\+Erase}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___erase_init_type_def_aa07868a5b012861c6111322c3dccdbec}{Banks}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___erase_init_type_def_a6c86f87bb12212ce21da3aec61759a52}{Sector}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___erase_init_type_def_a0511632174dfb4c07e218a857e6a6406}{Nb\+Sectors}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___erase_init_type_def_a85dd2161de6dd6ee5b24e87dcc674024}{Voltage\+Range}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+F\+L\+A\+SH Erase structure definition. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{struct_f_l_a_s_h___erase_init_type_def_aa07868a5b012861c6111322c3dccdbec}\label{struct_f_l_a_s_h___erase_init_type_def_aa07868a5b012861c6111322c3dccdbec}} 
+\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}!Banks@{Banks}}
+\index{Banks@{Banks}!F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Banks}{Banks}}
+{\footnotesize\ttfamily uint32\+\_\+t Banks}
+
+Select banks to erase when Mass erase is enabled. This parameter must be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___banks}{F\+L\+A\+SH Banks}} \mbox{\Hypertarget{struct_f_l_a_s_h___erase_init_type_def_a0511632174dfb4c07e218a857e6a6406}\label{struct_f_l_a_s_h___erase_init_type_def_a0511632174dfb4c07e218a857e6a6406}} 
+\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}!Nb\+Sectors@{Nb\+Sectors}}
+\index{Nb\+Sectors@{Nb\+Sectors}!F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Nb\+Sectors}{NbSectors}}
+{\footnotesize\ttfamily uint32\+\_\+t Nb\+Sectors}
+
+Number of sectors to be erased. This parameter must be a value between 1 and (max number of sectors -\/ value of Initial sector) \mbox{\Hypertarget{struct_f_l_a_s_h___erase_init_type_def_a6c86f87bb12212ce21da3aec61759a52}\label{struct_f_l_a_s_h___erase_init_type_def_a6c86f87bb12212ce21da3aec61759a52}} 
+\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}!Sector@{Sector}}
+\index{Sector@{Sector}!F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Sector}{Sector}}
+{\footnotesize\ttfamily uint32\+\_\+t Sector}
+
+Initial F\+L\+A\+SH sector to erase when Mass erase is disabled This parameter must be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___sectors}{F\+L\+A\+SH Sectors}} \mbox{\Hypertarget{struct_f_l_a_s_h___erase_init_type_def_ae2154c09320f3ef7feb8f4a84e9ac17b}\label{struct_f_l_a_s_h___erase_init_type_def_ae2154c09320f3ef7feb8f4a84e9ac17b}} 
+\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}!Type\+Erase@{Type\+Erase}}
+\index{Type\+Erase@{Type\+Erase}!F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Type\+Erase}{TypeErase}}
+{\footnotesize\ttfamily uint32\+\_\+t Type\+Erase}
+
+Mass erase or sector Erase. This parameter can be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___type___erase}{F\+L\+A\+SH Type Erase}} \mbox{\Hypertarget{struct_f_l_a_s_h___erase_init_type_def_a85dd2161de6dd6ee5b24e87dcc674024}\label{struct_f_l_a_s_h___erase_init_type_def_a85dd2161de6dd6ee5b24e87dcc674024}} 
+\index{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}!Voltage\+Range@{Voltage\+Range}}
+\index{Voltage\+Range@{Voltage\+Range}!F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+Erase\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Voltage\+Range}{VoltageRange}}
+{\footnotesize\ttfamily uint32\+\_\+t Voltage\+Range}
+
+The device voltage range which defines the erase parallelism This parameter must be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___voltage___range}{F\+L\+A\+SH Voltage Range}} 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/\mbox{\hyperlink{stm32f4xx__hal__flash__ex_8h}{stm32f4xx\+\_\+hal\+\_\+flash\+\_\+ex.\+h}}\end{DoxyCompactItemize}

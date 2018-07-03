@@ -1,0 +1,56 @@
+\hypertarget{group__v_task_suspend_all}{}\section{v\+Task\+Suspend\+All}
+\label{group__v_task_suspend_all}\index{v\+Task\+Suspend\+All@{v\+Task\+Suspend\+All}}
+task. h 
+\begin{DoxyPre}void vTaskSuspendAll( void );\end{DoxyPre}
+
+
+Suspends the scheduler without disabling interrupts. Context switches will not occur while the scheduler is suspended.
+
+After calling v\+Task\+Suspend\+All () the calling task will continue to execute without risk of being swapped out until a call to x\+Task\+Resume\+All () has been made.
+
+A\+PI functions that have the potential to cause a context switch (for example, v\+Task\+Delay\+Until(), x\+Queue\+Send(), etc.) must not be called while the scheduler is suspended.
+
+Example usage\+: 
+\begin{DoxyPre}
+void vTask1( void * pvParameters )
+\{
+    for( ;; )
+    \{
+     // Task code goes here.\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // ...\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // At some point the task wants to perform a long operation during
+     // which it does not want to get swapped out.  It cannot use
+     // taskENTER\_CRITICAL ()/taskEXIT\_CRITICAL () as the length of the
+     // operation may cause interrupts to be missed - including the
+     // ticks.\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // Prevent the real time kernel swapping out the task.
+     vTaskSuspendAll ();\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // Perform the operation here.  There is no need to use critical
+     // sections as we have all the microcontroller processing time.
+     // During this time interrupts will still operate and the kernel
+     // tick count will be maintained.\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // ...\end{DoxyPre}
+
+
+
+\begin{DoxyPre}     // The operation is complete.  Restart the kernel.
+     xTaskResumeAll ();
+    \}
+\}
+  \end{DoxyPre}
+ 

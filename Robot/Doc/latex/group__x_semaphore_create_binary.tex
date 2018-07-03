@@ -1,0 +1,41 @@
+\hypertarget{group__x_semaphore_create_binary}{}\section{x\+Semaphore\+Create\+Binary}
+\label{group__x_semaphore_create_binary}\index{x\+Semaphore\+Create\+Binary@{x\+Semaphore\+Create\+Binary}}
+semphr. h 
+\begin{DoxyPre}SemaphoreHandle\_t xSemaphoreCreateBinary( void )\end{DoxyPre}
+
+
+Creates a new binary semaphore instance, and returns a handle by which the new semaphore can be referenced.
+
+In many usage scenarios it is faster and more memory efficient to use a direct to task notification in place of a binary semaphore! \href{http://www.freertos.org/RTOS-task-notifications.html}{\tt http\+://www.\+freertos.\+org/\+R\+T\+O\+S-\/task-\/notifications.\+html}
+
+Internally, within the Free\+R\+T\+OS implementation, binary semaphores use a block of memory, in which the semaphore structure is stored. If a binary semaphore is created using x\+Semaphore\+Create\+Binary() then the required memory is automatically dynamically allocated inside the x\+Semaphore\+Create\+Binary() function. (see \href{http://www.freertos.org/a00111.html}{\tt http\+://www.\+freertos.\+org/a00111.\+html}). If a binary semaphore is created using x\+Semaphore\+Create\+Binary\+Static() then the application writer must provide the memory. x\+Semaphore\+Create\+Binary\+Static() therefore allows a binary semaphore to be created without using any dynamic memory allocation.
+
+The old v\+Semaphore\+Create\+Binary() macro is now deprecated in favour of this x\+Semaphore\+Create\+Binary() function. Note that binary semaphores created using the v\+Semaphore\+Create\+Binary() macro are created in a state such that the first call to \textquotesingle{}take\textquotesingle{} the semaphore would pass, whereas binary semaphores created using x\+Semaphore\+Create\+Binary() are created in a state such that the the semaphore must first be \textquotesingle{}given\textquotesingle{} before it can be \textquotesingle{}taken\textquotesingle{}.
+
+This type of semaphore can be used for pure synchronisation between tasks or between an interrupt and a task. The semaphore need not be given back once obtained, so one task/interrupt can continuously \textquotesingle{}give\textquotesingle{} the semaphore while another continuously \textquotesingle{}takes\textquotesingle{} the semaphore. For this reason this type of semaphore does not use a priority inheritance mechanism. For an alternative that does use priority inheritance see x\+Semaphore\+Create\+Mutex().
+
+\begin{DoxyReturn}{Returns}
+Handle to the created semaphore, or N\+U\+LL if the memory required to hold the semaphore\textquotesingle{}s data structures could not be allocated.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore = NULL;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+   // Semaphore cannot be used before a call to xSemaphoreCreateBinary().
+   // This is a macro so pass the variable in directly.
+   xSemaphore = xSemaphoreCreateBinary();\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   if( xSemaphore != NULL )
+   \{
+       // The semaphore was created successfully.
+       // The semaphore can now be used.
+   \}
+\}
+\end{DoxyPre}
+ 

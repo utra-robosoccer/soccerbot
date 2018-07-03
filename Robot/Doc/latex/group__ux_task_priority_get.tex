@@ -1,0 +1,48 @@
+\hypertarget{group__ux_task_priority_get}{}\section{ux\+Task\+Priority\+Get}
+\label{group__ux_task_priority_get}\index{ux\+Task\+Priority\+Get@{ux\+Task\+Priority\+Get}}
+task. h 
+\begin{DoxyPre}UBaseType\_t uxTaskPriorityGet( TaskHandle\_t xTask );\end{DoxyPre}
+
+
+I\+N\+C\+L\+U\+D\+E\+\_\+ux\+Task\+Priority\+Get must be defined as 1 for this function to be available. See the configuration section for more information.
+
+Obtain the priority of any task.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Task} & Handle of the task to be queried. Passing a N\+U\+LL handle results in the priority of the calling task being returned.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The priority of x\+Task.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+void vAFunction( void )
+\{
+TaskHandle\_t xHandle;
+\begin{DoxyVerb}// Create a task, storing the handle.
+xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
+
+// ...
+
+// Use the handle to obtain the priority of the created task.
+// It was created with tskIDLE_PRIORITY, but may have changed
+// it itself.
+if( uxTaskPriorityGet( xHandle ) != tskIDLE_PRIORITY )
+{
+ // The task has changed it's priority.
+}
+
+// ...
+
+// Is our priority higher than the created task?
+if( uxTaskPriorityGet( xHandle ) < uxTaskPriorityGet( NULL ) )
+{
+ // Our priority (obtained using NULL handle) is higher.
+}
+\end{DoxyVerb}
+
+\}
+  \end{DoxyPre}
+ 

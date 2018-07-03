@@ -1,0 +1,27 @@
+\hypertarget{group__v_task_get_run_time_stats}{}\section{v\+Task\+Get\+Run\+Time\+Stats}
+\label{group__v_task_get_run_time_stats}\index{v\+Task\+Get\+Run\+Time\+Stats@{v\+Task\+Get\+Run\+Time\+Stats}}
+task. h 
+\begin{DoxyPre}void vTaskGetRunTimeStats( char *pcWriteBuffer );\end{DoxyPre}
+
+
+config\+G\+E\+N\+E\+R\+A\+T\+E\+\_\+\+R\+U\+N\+\_\+\+T\+I\+M\+E\+\_\+\+S\+T\+A\+TS and config\+U\+S\+E\+\_\+\+S\+T\+A\+T\+S\+\_\+\+F\+O\+R\+M\+A\+T\+T\+I\+N\+G\+\_\+\+F\+U\+N\+C\+T\+I\+O\+NS must both be defined as 1 for this function to be available. The application must also then provide definitions for port\+C\+O\+N\+F\+I\+G\+U\+R\+E\+\_\+\+T\+I\+M\+E\+R\+\_\+\+F\+O\+R\+\_\+\+R\+U\+N\+\_\+\+T\+I\+M\+E\+\_\+\+S\+T\+A\+T\+S() and port\+G\+E\+T\+\_\+\+R\+U\+N\+\_\+\+T\+I\+M\+E\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+V\+A\+L\+U\+E() to configure a peripheral timer/counter and return the timers current count value respectively. The counter should be at least 10 times the frequency of the tick count.
+
+N\+O\+TE 1\+: This function will disable interrupts for its duration. It is not intended for normal application runtime use but as a debug aid.
+
+Setting config\+G\+E\+N\+E\+R\+A\+T\+E\+\_\+\+R\+U\+N\+\_\+\+T\+I\+M\+E\+\_\+\+S\+T\+A\+TS to 1 will result in a total accumulated execution time being stored for each task. The resolution of the accumulated time value depends on the frequency of the timer configured by the port\+C\+O\+N\+F\+I\+G\+U\+R\+E\+\_\+\+T\+I\+M\+E\+R\+\_\+\+F\+O\+R\+\_\+\+R\+U\+N\+\_\+\+T\+I\+M\+E\+\_\+\+S\+T\+A\+T\+S() macro. Calling v\+Task\+Get\+Run\+Time\+Stats() writes the total execution time of each task into a buffer, both as an absolute count value and as a percentage of the total system execution time.
+
+N\+O\+TE 2\+:
+
+This function is provided for convenience only, and is used by many of the demo applications. Do not consider it to be part of the scheduler.
+
+v\+Task\+Get\+Run\+Time\+Stats() calls ux\+Task\+Get\+System\+State(), then formats part of the ux\+Task\+Get\+System\+State() output into a human readable table that displays the amount of time each task has spent in the Running state in both absolute and percentage terms.
+
+v\+Task\+Get\+Run\+Time\+Stats() has a dependency on the sprintf() C library function that might bloat the code size, use a lot of stack, and provide different results on different platforms. An alternative, tiny, third party, and limited functionality implementation of sprintf() is provided in many of the Free\+R\+T\+O\+S/\+Demo sub-\/directories in a file called printf-\/stdarg.\+c (note printf-\/stdarg.\+c does not provide a full snprintf() implementation!).
+
+It is recommended that production systems call ux\+Task\+Get\+System\+State() directly to get access to raw stats data, rather than indirectly through a call to v\+Task\+Get\+Run\+Time\+Stats().
+
+
+\begin{DoxyParams}{Parameters}
+{\em pc\+Write\+Buffer} & A buffer into which the execution times will be written, in A\+S\+C\+II form. This buffer is assumed to be large enough to contain the generated report. Approximately 40 bytes per task should be sufficient. \\
+\hline
+\end{DoxyParams}

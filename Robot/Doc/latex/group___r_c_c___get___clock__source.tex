@@ -1,0 +1,78 @@
+\hypertarget{group___r_c_c___get___clock__source}{}\section{Get Clock source}
+\label{group___r_c_c___get___clock__source}\index{Get Clock source@{Get Clock source}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___r_c_c___get___clock__source_ga32f72b8c5b7e97b415867c57f9fafed6}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG}}(\+\_\+\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+\_\+)~M\+O\+D\+I\+F\+Y\+\_\+\+R\+EG(R\+CC-\/$>$C\+F\+GR, \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga0eea5e5f7743a7e8995b8beeb18355c1}{R\+C\+C\+\_\+\+C\+F\+G\+R\+\_\+\+SW}}, (\+\_\+\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Macro to configure the system clock source. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___r_c_c___get___clock__source_gac99c2453d9e77c8b457acc0210e754c2}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE}}()~(R\+CC-\/$>$C\+F\+GR \& \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga15bf2269500dc97e137315f44aa015c9}{R\+C\+C\+\_\+\+C\+F\+G\+R\+\_\+\+S\+WS}})
+\begin{DoxyCompactList}\small\item\em Macro to get the clock source used as system clock. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___r_c_c___get___clock__source_ga3ea1390f8124e2b3b8d53e95541d6e53}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE}}()~((uint32\+\_\+t)(R\+CC-\/$>$P\+L\+L\+C\+F\+GR \& R\+C\+C\+\_\+\+P\+L\+L\+C\+F\+G\+R\+\_\+\+P\+L\+L\+S\+RC))
+\begin{DoxyCompactList}\small\item\em Macro to get the oscillator used as P\+LL clock source. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group___r_c_c___get___clock__source_ga3ea1390f8124e2b3b8d53e95541d6e53}\label{group___r_c_c___get___clock__source_ga3ea1390f8124e2b3b8d53e95541d6e53}} 
+\index{Get Clock source@{Get Clock source}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE}!Get Clock source@{Get Clock source}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE}{\_\_HAL\_RCC\_GET\_PLL\_OSCSOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+P\+L\+L\+\_\+\+O\+S\+C\+S\+O\+U\+R\+CE(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~((uint32\+\_\+t)(R\+CC-\/$>$P\+L\+L\+C\+F\+GR \& R\+C\+C\+\_\+\+P\+L\+L\+C\+F\+G\+R\+\_\+\+P\+L\+L\+S\+RC))}
+
+
+
+Macro to get the oscillator used as P\+LL clock source. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & oscillator used as P\+LL clock source. The returned value can be one of the following\+:
+\begin{DoxyItemize}
+\item R\+C\+C\+\_\+\+P\+L\+L\+S\+O\+U\+R\+C\+E\+\_\+\+H\+SI\+: H\+SI oscillator is used as P\+LL clock source.
+\item R\+C\+C\+\_\+\+P\+L\+L\+S\+O\+U\+R\+C\+E\+\_\+\+H\+SE\+: H\+SE oscillator is used as P\+LL clock source. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___r_c_c___get___clock__source_gac99c2453d9e77c8b457acc0210e754c2}\label{group___r_c_c___get___clock__source_gac99c2453d9e77c8b457acc0210e754c2}} 
+\index{Get Clock source@{Get Clock source}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE}!Get Clock source@{Get Clock source}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE}{\_\_HAL\_RCC\_GET\_SYSCLK\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+G\+E\+T\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+S\+O\+U\+R\+CE(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~(R\+CC-\/$>$C\+F\+GR \& \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga15bf2269500dc97e137315f44aa015c9}{R\+C\+C\+\_\+\+C\+F\+G\+R\+\_\+\+S\+WS}})}
+
+
+
+Macro to get the clock source used as system clock. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & clock source used as system clock. The returned value can be one of the following\+:
+\begin{DoxyItemize}
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+H\+SI\+: H\+SI used as system clock.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+H\+SE\+: H\+SE used as system clock.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+P\+L\+L\+C\+LK\+: P\+LL used as system clock.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+P\+L\+L\+R\+C\+LK\+: P\+L\+LR used as system clock. This parameter is available only for S\+T\+M32\+F446xx devices. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___r_c_c___get___clock__source_ga32f72b8c5b7e97b415867c57f9fafed6}\label{group___r_c_c___get___clock__source_ga32f72b8c5b7e97b415867c57f9fafed6}} 
+\index{Get Clock source@{Get Clock source}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG}!Get Clock source@{Get Clock source}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG}{\_\_HAL\_RCC\_SYSCLK\_CONFIG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+\_\+\+C\+O\+N\+F\+IG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~M\+O\+D\+I\+F\+Y\+\_\+\+R\+EG(R\+CC-\/$>$C\+F\+GR, \mbox{\hyperlink{group___peripheral___registers___bits___definition_ga0eea5e5f7743a7e8995b8beeb18355c1}{R\+C\+C\+\_\+\+C\+F\+G\+R\+\_\+\+SW}}, (\+\_\+\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+\_\+))}
+
+
+
+Macro to configure the system clock source. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+\_\+} & specifies the system clock source. This parameter can be one of the following values\+:
+\begin{DoxyItemize}
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+H\+SI\+: H\+SI oscillator is used as system clock source.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+H\+SE\+: H\+SE oscillator is used as system clock source.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+P\+L\+L\+C\+LK\+: P\+LL output is used as system clock source.
+\item R\+C\+C\+\_\+\+S\+Y\+S\+C\+L\+K\+S\+O\+U\+R\+C\+E\+\_\+\+P\+L\+L\+R\+C\+LK\+: P\+L\+LR output is used as system clock source. This parameter is available only for S\+T\+M32\+F446xx devices. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}

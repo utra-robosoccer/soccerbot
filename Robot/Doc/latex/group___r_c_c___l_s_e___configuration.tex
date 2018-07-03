@@ -1,0 +1,56 @@
+\hypertarget{group___r_c_c___l_s_e___configuration}{}\section{L\+SE Configuration}
+\label{group___r_c_c___l_s_e___configuration}\index{L\+S\+E Configuration@{L\+S\+E Configuration}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___r_c_c___l_s_e___configuration_ga6b2b48f429e347c1c9c469122c64798b}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG}}(\+\_\+\+\_\+\+S\+T\+A\+T\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Macro to configure the External Low Speed oscillator (L\+SE). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group___r_c_c___l_s_e___configuration_ga6b2b48f429e347c1c9c469122c64798b}\label{group___r_c_c___l_s_e___configuration_ga6b2b48f429e347c1c9c469122c64798b}} 
+\index{L\+S\+E Configuration@{L\+S\+E Configuration}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG}!L\+S\+E Configuration@{L\+S\+E Configuration}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG}{\_\_HAL\_RCC\_LSE\_CONFIG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+C\+O\+N\+F\+IG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+S\+T\+A\+T\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{                                       \(\backslash\)
+                      if((\_\_STATE\_\_) == RCC\_LSE\_ON)            \(\backslash\)
+                      \{                                        \(\backslash\)
+                        SET\_BIT(RCC->BDCR, RCC\_BDCR\_LSEON);    \(\backslash\)
+                      \}                                        \(\backslash\)
+                      else \textcolor{keywordflow}{if}((\_\_STATE\_\_) == RCC\_LSE\_BYPASS)   \(\backslash\)
+                      \{                                        \(\backslash\)
+                        SET\_BIT(RCC->BDCR, RCC\_BDCR\_LSEBYP);   \(\backslash\)
+                        SET\_BIT(RCC->BDCR, RCC\_BDCR\_LSEON);    \(\backslash\)
+                      \}                                        \(\backslash\)
+                      else                                     \(\backslash\)
+                      \{                                        \(\backslash\)
+                        CLEAR\_BIT(RCC->BDCR, RCC\_BDCR\_LSEON);  \(\backslash\)
+                        CLEAR\_BIT(RCC->BDCR, RCC\_BDCR\_LSEBYP); \(\backslash\)
+                      \}                                        \(\backslash\)
+                    \} \textcolor{keywordflow}{while}(0U)
+\end{DoxyCode}
+
+
+Macro to configure the External Low Speed oscillator (L\+SE). 
+
+\begin{DoxyNote}{Note}
+Transition L\+SE Bypass to L\+SE On and L\+SE On to L\+SE Bypass are not supported by this macro. User should request a transition to L\+SE Off first and then L\+SE On or L\+SE Bypass. 
+
+As the L\+SE is in the Backup domain and write access is denied to this domain after reset, you have to enable write access using H\+A\+L\+\_\+\+P\+W\+R\+\_\+\+Enable\+Bk\+Up\+Access() function before to configure the L\+SE (to be done once after reset). 
+
+After enabling the L\+SE (R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+ON or R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+B\+Y\+P\+A\+SS), the application software should wait on L\+S\+E\+R\+DY flag to be set indicating that L\+SE clock is stable and can be used to clock the R\+TC. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+S\+T\+A\+T\+E\+\_\+\+\_\+} & specifies the new state of the L\+SE. This parameter can be one of the following values\+: \begin{DoxyItemize}
+\item R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+O\+FF\+: turn O\+FF the L\+SE oscillator, L\+S\+E\+R\+DY flag goes low after 6 L\+SE oscillator clock cycles. \item R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+ON\+: turn ON the L\+SE oscillator. \item R\+C\+C\+\_\+\+L\+S\+E\+\_\+\+B\+Y\+P\+A\+SS\+: L\+SE oscillator bypassed with external clock. \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}

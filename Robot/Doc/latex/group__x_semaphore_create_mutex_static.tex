@@ -1,0 +1,47 @@
+\hypertarget{group__x_semaphore_create_mutex_static}{}\section{x\+Semaphore\+Create\+Mutex\+Static}
+\label{group__x_semaphore_create_mutex_static}\index{x\+Semaphore\+Create\+Mutex\+Static@{x\+Semaphore\+Create\+Mutex\+Static}}
+semphr. h 
+\begin{DoxyPre}SemaphoreHandle\_t xSemaphoreCreateMutexStatic( StaticSemaphore\_t *pxMutexBuffer )\end{DoxyPre}
+
+
+Creates a new mutex type semaphore instance, and returns a handle by which the new mutex can be referenced.
+
+Internally, within the Free\+R\+T\+OS implementation, mutex semaphores use a block of memory, in which the mutex structure is stored. If a mutex is created using x\+Semaphore\+Create\+Mutex() then the required memory is automatically dynamically allocated inside the x\+Semaphore\+Create\+Mutex() function. (see \href{http://www.freertos.org/a00111.html}{\tt http\+://www.\+freertos.\+org/a00111.\+html}). If a mutex is created using x\+Semaphore\+Create\+Mutex\+Static() then the application writer must provided the memory. x\+Semaphore\+Create\+Mutex\+Static() therefore allows a mutex to be created without using any dynamic memory allocation.
+
+Mutexes created using this function can be accessed using the x\+Semaphore\+Take() and x\+Semaphore\+Give() macros. The x\+Semaphore\+Take\+Recursive() and x\+Semaphore\+Give\+Recursive() macros must not be used.
+
+This type of semaphore uses a priority inheritance mechanism so a task \textquotesingle{}taking\textquotesingle{} a semaphore M\+U\+ST A\+L\+W\+A\+YS \textquotesingle{}give\textquotesingle{} the semaphore back once the semaphore it is no longer required.
+
+Mutex type semaphores cannot be used from within interrupt service routines.
+
+See x\+Semaphore\+Create\+Binary() for an alternative implementation that can be used for pure synchronisation (where one task or interrupt always \textquotesingle{}gives\textquotesingle{} the semaphore and another always \textquotesingle{}takes\textquotesingle{} the semaphore) and from within interrupt service routines.
+
+
+\begin{DoxyParams}{Parameters}
+{\em px\+Mutex\+Buffer} & Must point to a variable of type Static\+Semaphore\+\_\+t, which will be used to hold the mutex\textquotesingle{}s data structure, removing the need for the memory to be allocated dynamically.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the mutex was successfully created then a handle to the created mutex is returned. If px\+Mutex\+Buffer was N\+U\+LL then N\+U\+LL is returned.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore;
+StaticSemaphore\_t xMutexBuffer;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+   // A mutex cannot be used before it has been created.  xMutexBuffer is
+   // into xSemaphoreCreateMutexStatic() so no dynamic memory allocation is
+   // attempted.
+   xSemaphore = xSemaphoreCreateMutexStatic( &xMutexBuffer );\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   // As no dynamic memory allocation was performed, xSemaphore cannot be NULL,
+   // so there is no need to check it.
+\}
+\end{DoxyPre}
+ 

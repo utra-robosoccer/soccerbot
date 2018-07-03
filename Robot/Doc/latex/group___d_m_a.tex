@@ -1,0 +1,535 @@
+\hypertarget{group___d_m_a}{}\section{D\+MA}
+\label{group___d_m_a}\index{D\+MA@{D\+MA}}
+
+
+D\+MA H\+AL module driver.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{group___d_m_a___exported___types}{D\+M\+A Exported Types}}
+\begin{DoxyCompactList}\small\item\em D\+MA Exported Types. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group___d_m_a___exported___constants}{D\+M\+A Exported Constants}}
+\begin{DoxyCompactList}\small\item\em D\+MA Exported constants. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group___d_m_a___exported___functions}{D\+M\+A Exported Functions}}
+\begin{DoxyCompactList}\small\item\em D\+MA Exported functions. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group___d_m_a___private___constants}{D\+M\+A Private Constants}}
+\begin{DoxyCompactList}\small\item\em D\+MA private defines and constants. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group___d_m_a___private___macros}{D\+M\+A Private Macros}}
+\begin{DoxyCompactList}\small\item\em D\+MA private macros. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group___d_m_a___private___functions}{D\+M\+A Private Functions}}
+\begin{DoxyCompactList}\small\item\em D\+MA private functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___d_m_a_gaadcee34f0999c8eafd37de2f69daa0ac}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$State = \mbox{\hyperlink{group___d_m_a___exported___types_gga9c012af359987a240826f29073bbe463a9e7be73da32b8c837cde0318e0d5eed2}{H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}})
+\begin{DoxyCompactList}\small\item\em Reset D\+MA handle state. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga8f0ff408d25904040b9d23ee7f6af080}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~(((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$F\+CR \& (D\+M\+A\+\_\+\+Sx\+F\+C\+R\+\_\+\+FS)))
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream F\+I\+FO filled level. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga93900b3ef3f87ef924eb887279a434b4}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$CR $\vert$=  D\+M\+A\+\_\+\+Sx\+C\+R\+\_\+\+EN)
+\begin{DoxyCompactList}\small\item\em Enable the specified D\+MA Stream. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_gafeef4c5e8c3f015cdecc0f37bbe063dc}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$CR \&=  $\sim$D\+M\+A\+\_\+\+Sx\+C\+R\+\_\+\+EN)
+\begin{DoxyCompactList}\small\item\em Disable the specified D\+MA Stream. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_gae3feef5ea50ff13a6a5b98cb353c87b0}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream transfer complete flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga0095f5f3166a82bedc67744ac94acfba}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream half transfer complete flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga5e765bb3b1c5fc9f1b1abbbb764250bc}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream transfer error flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga5878c3a1dbcf01e6840fffcf1f244088}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream F\+I\+FO error flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga23d1f282af3b9aa7aa396dcad94865d8}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Return the current D\+MA Stream direct mode error flag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga798d4b3b3fbd32b95540967bb35b35be}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Get the D\+MA Stream pending flags. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_gabc041fb1c85ea7a3af94e42470ef7f2a}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Clear the D\+MA Stream pending flags. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga2124233229c04ca90b790cd8cddfa98b}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Enable the specified D\+MA Stream interrupts. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga2867eab09398df2daac55c3f327654da}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Disable the specified D\+MA Stream interrupts. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga206f24e6bee4600515b9b6b1ec79365b}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Check whether the specified D\+MA Stream interrupt is enabled or disabled. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga448a8f809df86ccffae200ffd33d0a82}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  \+\_\+\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$N\+D\+TR = (uint16\+\_\+t)(\+\_\+\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+\_\+))
+\begin{DoxyCompactList}\small\item\em Writes the number of data units to be transferred on the D\+MA Stream. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___d_m_a_ga082d691311bac96641dc35a17cfe8e63}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}}(\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$N\+D\+TR)
+\begin{DoxyCompactList}\small\item\em Returns the number of remaining data units in the current D\+M\+Ay Streamx transfer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+D\+MA H\+AL module driver. 
+
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group___d_m_a_gabc041fb1c85ea7a3af94e42470ef7f2a}\label{group___d_m_a_gabc041fb1c85ea7a3af94e42470ef7f2a}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG}{\_\_HAL\_DMA\_CLEAR\_FLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA2\_Stream3)? (DMA2->HIFCR = (\_\_FLAG\_\_)) :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA1\_Stream7)? (DMA2->LIFCR = (\_\_FLAG\_\_)) :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA1\_Stream3)? (DMA1->HIFCR = (\_\_FLAG\_\_)) : (DMA1->LIFCR =
+       (\_\_FLAG\_\_)))
+\end{DoxyCode}
+
+
+Clear the D\+MA Stream pending flags. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+} & specifies the flag to clear. This parameter can be any combination of the following values\+: \begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+T\+C\+I\+Fx\+: Transfer complete flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+H\+T\+I\+Fx\+: Half transfer complete flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+T\+E\+I\+Fx\+: Transfer error flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+D\+M\+E\+I\+Fx\+: Direct mode error flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+F\+E\+I\+Fx\+: F\+I\+FO error flag. Where x can be 0\+\_\+4, 1\+\_\+5, 2\+\_\+6 or 3\+\_\+7 to select the D\+MA Stream flag. ~\newline
+\end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_gafeef4c5e8c3f015cdecc0f37bbe063dc}\label{group___d_m_a_gafeef4c5e8c3f015cdecc0f37bbe063dc}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE}{\_\_HAL\_DMA\_DISABLE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+LE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$CR \&=  $\sim$D\+M\+A\+\_\+\+Sx\+C\+R\+\_\+\+EN)}
+
+
+
+Disable the specified D\+MA Stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga2867eab09398df2daac55c3f327654da}\label{group___d_m_a_ga2867eab09398df2daac55c3f327654da}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT}{\_\_HAL\_DMA\_DISABLE\_IT}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+D\+I\+S\+A\+B\+L\+E\+\_\+\+IT(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((\_\_INTERRUPT\_\_) != DMA\_IT\_FE)? \(\backslash\)
+((\_\_HANDLE\_\_)->Instance->CR &= ~(\_\_INTERRUPT\_\_)) : ((\_\_HANDLE\_\_)->Instance->FCR &= ~(\_\_INTERRUPT\_\_)))
+\end{DoxyCode}
+
+
+Disable the specified D\+MA Stream interrupts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+} & specifies the D\+MA interrupt sources to be enabled or disabled. This parameter can be any combination of the following values\+: \begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+I\+T\+\_\+\+TC\+: Transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+HT\+: Half transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+TE\+: Transfer error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+FE\+: F\+I\+FO error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+D\+ME\+: Direct mode error interrupt. \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga93900b3ef3f87ef924eb887279a434b4}\label{group___d_m_a_ga93900b3ef3f87ef924eb887279a434b4}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE}{\_\_HAL\_DMA\_ENABLE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+LE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$CR $\vert$=  D\+M\+A\+\_\+\+Sx\+C\+R\+\_\+\+EN)}
+
+
+
+Enable the specified D\+MA Stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga2124233229c04ca90b790cd8cddfa98b}\label{group___d_m_a_ga2124233229c04ca90b790cd8cddfa98b}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT}{\_\_HAL\_DMA\_ENABLE\_IT}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+IT(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((\_\_INTERRUPT\_\_) != DMA\_IT\_FE)? \(\backslash\)
+((\_\_HANDLE\_\_)->Instance->CR |= (\_\_INTERRUPT\_\_)) : ((\_\_HANDLE\_\_)->Instance->FCR |= (\_\_INTERRUPT\_\_)))
+\end{DoxyCode}
+
+
+Enable the specified D\+MA Stream interrupts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+} & specifies the D\+MA interrupt sources to be enabled or disabled. This parameter can be any combination of the following values\+: \begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+I\+T\+\_\+\+TC\+: Transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+HT\+: Half transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+TE\+: Transfer error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+FE\+: F\+I\+FO error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+D\+ME\+: Direct mode error interrupt. \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga082d691311bac96641dc35a17cfe8e63}\label{group___d_m_a_ga082d691311bac96641dc35a17cfe8e63}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}{\_\_HAL\_DMA\_GET\_COUNTER}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$N\+D\+TR)}
+
+
+
+Returns the number of remaining data units in the current D\+M\+Ay Streamx transfer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & number of remaining data units in the current D\+MA Stream transfer. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga23d1f282af3b9aa7aa396dcad94865d8}\label{group___d_m_a_ga23d1f282af3b9aa7aa396dcad94865d8}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}{\_\_HAL\_DMA\_GET\_DME\_FLAG\_INDEX}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+D\+M\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream0))? DMA\_FLAG\_DMEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream0))? DMA\_FLAG\_DMEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream4))? DMA\_FLAG\_DMEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream4))? DMA\_FLAG\_DMEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream1))? DMA\_FLAG\_DMEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream1))? DMA\_FLAG\_DMEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream5))? DMA\_FLAG\_DMEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream5))? DMA\_FLAG\_DMEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream2))? DMA\_FLAG\_DMEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream2))? DMA\_FLAG\_DMEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream6))? DMA\_FLAG\_DMEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream6))? DMA\_FLAG\_DMEIF2\_6 :\(\backslash\)
+   DMA\_FLAG\_DMEIF3\_7)
+\end{DoxyCode}
+
+
+Return the current D\+MA Stream direct mode error flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & specified direct mode error flag index. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga5878c3a1dbcf01e6840fffcf1f244088}\label{group___d_m_a_ga5878c3a1dbcf01e6840fffcf1f244088}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}{\_\_HAL\_DMA\_GET\_FE\_FLAG\_INDEX}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream0))? DMA\_FLAG\_FEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream0))? DMA\_FLAG\_FEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream4))? DMA\_FLAG\_FEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream4))? DMA\_FLAG\_FEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream1))? DMA\_FLAG\_FEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream1))? DMA\_FLAG\_FEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream5))? DMA\_FLAG\_FEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream5))? DMA\_FLAG\_FEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream2))? DMA\_FLAG\_FEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream2))? DMA\_FLAG\_FEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream6))? DMA\_FLAG\_FEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream6))? DMA\_FLAG\_FEIF2\_6 :\(\backslash\)
+   DMA\_FLAG\_FEIF3\_7)
+\end{DoxyCode}
+
+
+Return the current D\+MA Stream F\+I\+FO error flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & specified F\+I\+FO error flag index. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga798d4b3b3fbd32b95540967bb35b35be}\label{group___d_m_a_ga798d4b3b3fbd32b95540967bb35b35be}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG}{\_\_HAL\_DMA\_GET\_FLAG}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+F\+L\+AG(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA2\_Stream3)? (DMA2->HISR & (\_\_FLAG\_\_)) :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA1\_Stream7)? (DMA2->LISR & (\_\_FLAG\_\_)) :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) > (uint32\_t)DMA1\_Stream3)? (DMA1->HISR & (\_\_FLAG\_\_)) : (DMA1->LISR & (
+      \_\_FLAG\_\_)))
+\end{DoxyCode}
+
+
+Get the D\+MA Stream pending flags. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+F\+L\+A\+G\+\_\+\+\_\+} & Get the specified flag. This parameter can be any combination of the following values\+: \begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+T\+C\+I\+Fx\+: Transfer complete flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+H\+T\+I\+Fx\+: Half transfer complete flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+T\+E\+I\+Fx\+: Transfer error flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+D\+M\+E\+I\+Fx\+: Direct mode error flag. \item D\+M\+A\+\_\+\+F\+L\+A\+G\+\_\+\+F\+E\+I\+Fx\+: F\+I\+FO error flag. Where x can be 0\+\_\+4, 1\+\_\+5, 2\+\_\+6 or 3\+\_\+7 to select the D\+MA Stream flag. ~\newline
+\end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & state of F\+L\+AG (S\+ET or R\+E\+S\+ET). \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga8f0ff408d25904040b9d23ee7f6af080}\label{group___d_m_a_ga8f0ff408d25904040b9d23ee7f6af080}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS}{\_\_HAL\_DMA\_GET\_FS}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+FS(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~(((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$F\+CR \& (D\+M\+A\+\_\+\+Sx\+F\+C\+R\+\_\+\+FS)))}
+
+
+
+Return the current D\+MA Stream F\+I\+FO filled level. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & F\+I\+FO filling state.
+\begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+\+Less1\+Quarter\+Full\+: when F\+I\+FO is less than 1 quarter-\/full and not empty.
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+1\+Quarter\+Full\+: if more than 1 quarter-\/full.
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+\+Half\+Full\+: if more than 1 half-\/full.
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+3\+Quarters\+Full\+: if more than 3 quarters-\/full.
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+\+Empty\+: when F\+I\+FO is empty
+\item D\+M\+A\+\_\+\+F\+I\+F\+O\+Status\+\_\+\+Full\+: when F\+I\+FO is full 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga0095f5f3166a82bedc67744ac94acfba}\label{group___d_m_a_ga0095f5f3166a82bedc67744ac94acfba}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}{\_\_HAL\_DMA\_GET\_HT\_FLAG\_INDEX}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+H\+T\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream0))? DMA\_FLAG\_HTIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream0))? DMA\_FLAG\_HTIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream4))? DMA\_FLAG\_HTIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream4))? DMA\_FLAG\_HTIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream1))? DMA\_FLAG\_HTIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream1))? DMA\_FLAG\_HTIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream5))? DMA\_FLAG\_HTIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream5))? DMA\_FLAG\_HTIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream2))? DMA\_FLAG\_HTIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream2))? DMA\_FLAG\_HTIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream6))? DMA\_FLAG\_HTIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream6))? DMA\_FLAG\_HTIF2\_6 :\(\backslash\)
+   DMA\_FLAG\_HTIF3\_7)
+\end{DoxyCode}
+
+
+Return the current D\+MA Stream half transfer complete flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & specified half transfer complete flag index. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga206f24e6bee4600515b9b6b1ec79365b}\label{group___d_m_a_ga206f24e6bee4600515b9b6b1ec79365b}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE}{\_\_HAL\_DMA\_GET\_IT\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+I\+T\+\_\+\+S\+O\+U\+R\+CE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((\_\_INTERRUPT\_\_) != DMA\_IT\_FE)? \(\backslash\)
+                                                        ((\_\_HANDLE\_\_)->Instance->CR & (\_\_INTERRUPT\_\_)) : \(\backslash\)
+                                                        ((\_\_HANDLE\_\_)->Instance->FCR & (\_\_INTERRUPT\_\_)))
+\end{DoxyCode}
+
+
+Check whether the specified D\+MA Stream interrupt is enabled or disabled. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+\_\+} & specifies the D\+MA interrupt source to check. This parameter can be one of the following values\+: \begin{DoxyItemize}
+\item D\+M\+A\+\_\+\+I\+T\+\_\+\+TC\+: Transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+HT\+: Half transfer complete interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+TE\+: Transfer error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+FE\+: F\+I\+FO error interrupt mask. \item D\+M\+A\+\_\+\+I\+T\+\_\+\+D\+ME\+: Direct mode error interrupt. \end{DoxyItemize}
+\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & state of D\+M\+A\+\_\+\+IT. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_gae3feef5ea50ff13a6a5b98cb353c87b0}\label{group___d_m_a_gae3feef5ea50ff13a6a5b98cb353c87b0}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}{\_\_HAL\_DMA\_GET\_TC\_FLAG\_INDEX}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream0))? DMA\_FLAG\_TCIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream0))? DMA\_FLAG\_TCIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream4))? DMA\_FLAG\_TCIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream4))? DMA\_FLAG\_TCIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream1))? DMA\_FLAG\_TCIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream1))? DMA\_FLAG\_TCIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream5))? DMA\_FLAG\_TCIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream5))? DMA\_FLAG\_TCIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream2))? DMA\_FLAG\_TCIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream2))? DMA\_FLAG\_TCIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream6))? DMA\_FLAG\_TCIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream6))? DMA\_FLAG\_TCIF2\_6 :\(\backslash\)
+   DMA\_FLAG\_TCIF3\_7)
+\end{DoxyCode}
+
+
+Return the current D\+MA Stream transfer complete flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & specified transfer complete flag index. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga5e765bb3b1c5fc9f1b1abbbb764250bc}\label{group___d_m_a_ga5e765bb3b1c5fc9f1b1abbbb764250bc}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX}{\_\_HAL\_DMA\_GET\_TE\_FLAG\_INDEX}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+G\+E\+T\+\_\+\+T\+E\+\_\+\+F\+L\+A\+G\+\_\+\+I\+N\+D\+EX(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream0))? DMA\_FLAG\_TEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream0))? DMA\_FLAG\_TEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream4))? DMA\_FLAG\_TEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream4))? DMA\_FLAG\_TEIF0\_4 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream1))? DMA\_FLAG\_TEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream1))? DMA\_FLAG\_TEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream5))? DMA\_FLAG\_TEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream5))? DMA\_FLAG\_TEIF1\_5 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream2))? DMA\_FLAG\_TEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream2))? DMA\_FLAG\_TEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA1\_Stream6))? DMA\_FLAG\_TEIF2\_6 :\(\backslash\)
+ ((uint32\_t)((\_\_HANDLE\_\_)->Instance) == ((uint32\_t)DMA2\_Stream6))? DMA\_FLAG\_TEIF2\_6 :\(\backslash\)
+   DMA\_FLAG\_TEIF3\_7)
+\end{DoxyCode}
+
+
+Return the current D\+MA Stream transfer error flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & specified transfer error flag index. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_gaadcee34f0999c8eafd37de2f69daa0ac}\label{group___d_m_a_gaadcee34f0999c8eafd37de2f69daa0ac}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE}{\_\_HAL\_DMA\_RESET\_HANDLE\_STATE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+R\+E\+S\+E\+T\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+S\+T\+A\+TE(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$State = \mbox{\hyperlink{group___d_m_a___exported___types_gga9c012af359987a240826f29073bbe463a9e7be73da32b8c837cde0318e0d5eed2}{H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+E\+S\+ET}})}
+
+
+
+Reset D\+MA handle state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & specifies the D\+MA handle. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{group___d_m_a_ga448a8f809df86ccffae200ffd33d0a82}\label{group___d_m_a_ga448a8f809df86ccffae200ffd33d0a82}} 
+\index{D\+MA@{D\+MA}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}!D\+MA@{D\+MA}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER}{\_\_HAL\_DMA\_SET\_COUNTER}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+D\+M\+A\+\_\+\+S\+E\+T\+\_\+\+C\+O\+U\+N\+T\+ER(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+,  }\item[{}]{\+\_\+\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+\_\+ }\end{DoxyParamCaption})~((\+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+)-\/$>$Instance-\/$>$N\+D\+TR = (uint16\+\_\+t)(\+\_\+\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+\_\+))}
+
+
+
+Writes the number of data units to be transferred on the D\+MA Stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+\+H\+A\+N\+D\+L\+E\+\_\+\+\_\+} & D\+MA handle \\
+\hline
+{\em \+\_\+\+\_\+\+C\+O\+U\+N\+T\+E\+R\+\_\+\+\_\+} & Number of data units to be transferred (from 0 to 65535) Number of data items depends only on the Peripheral data format.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+If Peripheral data format is Bytes\+: number of data units is equal to total number of bytes to be transferred.
+
+If Peripheral data format is Half-\/\+Word\+: number of data units is ~\newline
+ equal to total number of bytes to be transferred / 2.
+
+If Peripheral data format is Word\+: number of data units is equal to total number of bytes to be transferred / 4.
+\end{DoxyNote}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & number of remaining data units in the current D\+M\+Ay Streamx transfer. \\
+\hline
+\end{DoxyRetVals}

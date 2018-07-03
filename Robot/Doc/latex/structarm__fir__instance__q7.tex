@@ -1,0 +1,49 @@
+\hypertarget{structarm__fir__instance__q7}{}\section{arm\+\_\+fir\+\_\+instance\+\_\+q7 Struct Reference}
+\label{structarm__fir__instance__q7}\index{arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}}
+
+
+Instance structure for the Q7 F\+IR filter.  
+
+
+
+
+{\ttfamily \#include $<$arm\+\_\+math.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structarm__fir__instance__q7_a751941891e47f522a7f5375fe8990aac}{num\+Taps}}
+\item 
+q7\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__instance__q7_aa8f67102521b620af6f259afdcf29785}{p\+State}}
+\item 
+q7\+\_\+t $\ast$ \mbox{\hyperlink{structarm__fir__instance__q7_a54407554b4fe7bbbb43924e4eea45e7f}{p\+Coeffs}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Instance structure for the Q7 F\+IR filter. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structarm__fir__instance__q7_a751941891e47f522a7f5375fe8990aac}\label{structarm__fir__instance__q7_a751941891e47f522a7f5375fe8990aac}} 
+\index{arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}!num\+Taps@{num\+Taps}}
+\index{num\+Taps@{num\+Taps}!arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}}
+\subsubsection{\texorpdfstring{num\+Taps}{numTaps}}
+{\footnotesize\ttfamily uint16\+\_\+t num\+Taps}
+
+number of filter coefficients in the filter. \mbox{\Hypertarget{structarm__fir__instance__q7_a54407554b4fe7bbbb43924e4eea45e7f}\label{structarm__fir__instance__q7_a54407554b4fe7bbbb43924e4eea45e7f}} 
+\index{arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}!p\+Coeffs@{p\+Coeffs}}
+\index{p\+Coeffs@{p\+Coeffs}!arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}}
+\subsubsection{\texorpdfstring{p\+Coeffs}{pCoeffs}}
+{\footnotesize\ttfamily q7\+\_\+t$\ast$ p\+Coeffs}
+
+points to the coefficient array. The array is of length num\+Taps. \mbox{\Hypertarget{structarm__fir__instance__q7_aa8f67102521b620af6f259afdcf29785}\label{structarm__fir__instance__q7_aa8f67102521b620af6f259afdcf29785}} 
+\index{arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}!p\+State@{p\+State}}
+\index{p\+State@{p\+State}!arm\+\_\+fir\+\_\+instance\+\_\+q7@{arm\+\_\+fir\+\_\+instance\+\_\+q7}}
+\subsubsection{\texorpdfstring{p\+State}{pState}}
+{\footnotesize\ttfamily q7\+\_\+t$\ast$ p\+State}
+
+points to the state variable array. The array is of length num\+Taps+block\+Size-\/1. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+C\+M\+S\+I\+S/\+Include/arm\+\_\+math.\+h\end{DoxyCompactItemize}

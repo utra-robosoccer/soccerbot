@@ -1,0 +1,222 @@
+\hypertarget{stm32f4xx__it_8c}{}\section{Src/stm32f4xx\+\_\+it.c File Reference}
+\label{stm32f4xx__it_8c}\index{Src/stm32f4xx\+\_\+it.\+c@{Src/stm32f4xx\+\_\+it.\+c}}
+
+
+Interrupt Service Routines.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+it.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+os.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}\label{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}{N\+M\+I\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Non maskable interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}\label{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}{Hard\+Fault\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Hard fault interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}\label{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}{Mem\+Manage\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Memory management fault. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}\label{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}{Bus\+Fault\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Pre-\/fetch fault, memory access fault. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}\label{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}{Usage\+Fault\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Undefined instruction or illegal state. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}\label{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}{Debug\+Mon\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Debug monitor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}\label{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}{Sys\+Tick\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles System tick timer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a1b70a4441662b1d6548e803499da414f}\label{stm32f4xx__it_8c_a1b70a4441662b1d6548e803499da414f}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a1b70a4441662b1d6548e803499da414f}{D\+M\+A1\+\_\+\+Stream0\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream0 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a31783ba032a9c7268a10ba2b4c59a9fd}\label{stm32f4xx__it_8c_a31783ba032a9c7268a10ba2b4c59a9fd}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a31783ba032a9c7268a10ba2b4c59a9fd}{D\+M\+A1\+\_\+\+Stream1\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream1 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ac94fc5e78628ab5037170f7626ded1da}\label{stm32f4xx__it_8c_ac94fc5e78628ab5037170f7626ded1da}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_ac94fc5e78628ab5037170f7626ded1da}{D\+M\+A1\+\_\+\+Stream2\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream2 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a51d485393cf37043623c8bd0abae12a1}\label{stm32f4xx__it_8c_a51d485393cf37043623c8bd0abae12a1}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a51d485393cf37043623c8bd0abae12a1}{D\+M\+A1\+\_\+\+Stream3\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream3 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a30841f7aec070752b7b989ea8a271039}\label{stm32f4xx__it_8c_a30841f7aec070752b7b989ea8a271039}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a30841f7aec070752b7b989ea8a271039}{D\+M\+A1\+\_\+\+Stream4\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream4 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ac201b60d58b0eba2ce0b55710eb3c4d0}\label{stm32f4xx__it_8c_ac201b60d58b0eba2ce0b55710eb3c4d0}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_ac201b60d58b0eba2ce0b55710eb3c4d0}{D\+M\+A1\+\_\+\+Stream5\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream5 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_aa28fd448462a6347589129f63bb0a388}\label{stm32f4xx__it_8c_aa28fd448462a6347589129f63bb0a388}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_aa28fd448462a6347589129f63bb0a388}{D\+M\+A1\+\_\+\+Stream6\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream6 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ad1fd361bc5ad89facee67c76d1ff8dc0}\label{stm32f4xx__it_8c_ad1fd361bc5ad89facee67c76d1ff8dc0}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_ad1fd361bc5ad89facee67c76d1ff8dc0}{T\+I\+M1\+\_\+\+U\+P\+\_\+\+T\+I\+M10\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles T\+I\+M1 update interrupt and T\+I\+M10 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a272ffa65eb8ff5c4a065b0d3473611cd}\label{stm32f4xx__it_8c_a272ffa65eb8ff5c4a065b0d3473611cd}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a272ffa65eb8ff5c4a065b0d3473611cd}{I2\+C1\+\_\+\+E\+V\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles I2\+C1 event interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a7139cd4baabbbcbab0c1fe6d7d4ae1cc}\label{stm32f4xx__it_8c_a7139cd4baabbbcbab0c1fe6d7d4ae1cc}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a7139cd4baabbbcbab0c1fe6d7d4ae1cc}{U\+S\+A\+R\+T1\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+S\+A\+R\+T1 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a0ca6fd0e6f77921dd1123539857ba0a8}\label{stm32f4xx__it_8c_a0ca6fd0e6f77921dd1123539857ba0a8}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a0ca6fd0e6f77921dd1123539857ba0a8}{U\+S\+A\+R\+T2\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+S\+A\+R\+T2 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a0d108a3468b2051548183ee5ca2158a0}\label{stm32f4xx__it_8c_a0d108a3468b2051548183ee5ca2158a0}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a0d108a3468b2051548183ee5ca2158a0}{U\+S\+A\+R\+T3\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+S\+A\+R\+T3 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ae81787590524971351490705554cc351}\label{stm32f4xx__it_8c_ae81787590524971351490705554cc351}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_ae81787590524971351490705554cc351}{D\+M\+A1\+\_\+\+Stream7\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A1 stream7 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a88774889b903ae43403cd7e7a11a8f4f}\label{stm32f4xx__it_8c_a88774889b903ae43403cd7e7a11a8f4f}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a88774889b903ae43403cd7e7a11a8f4f}{U\+A\+R\+T4\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+A\+R\+T4 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_aa1c474cac5abda23ebbe8a9e8f4d7551}\label{stm32f4xx__it_8c_aa1c474cac5abda23ebbe8a9e8f4d7551}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_aa1c474cac5abda23ebbe8a9e8f4d7551}{U\+A\+R\+T5\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+A\+R\+T5 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_adab6f3e22e90bd5b1ceebb98022abdf2}\label{stm32f4xx__it_8c_adab6f3e22e90bd5b1ceebb98022abdf2}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_adab6f3e22e90bd5b1ceebb98022abdf2}{D\+M\+A2\+\_\+\+Stream1\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream1 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}\label{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}{D\+M\+A2\+\_\+\+Stream2\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream2 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a76d38919f345dfea8ab0e0cd9e2c47e3}\label{stm32f4xx__it_8c_a76d38919f345dfea8ab0e0cd9e2c47e3}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a76d38919f345dfea8ab0e0cd9e2c47e3}{D\+M\+A2\+\_\+\+Stream6\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream6 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_afc1d00127dcf2fb0afdbc50e4b587fdf}\label{stm32f4xx__it_8c_afc1d00127dcf2fb0afdbc50e4b587fdf}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_afc1d00127dcf2fb0afdbc50e4b587fdf}{D\+M\+A2\+\_\+\+Stream7\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream7 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a12c827857d907ad0cccd586fd934d446}\label{stm32f4xx__it_8c_a12c827857d907ad0cccd586fd934d446}} 
+void \mbox{\hyperlink{stm32f4xx__it_8c_a12c827857d907ad0cccd586fd934d446}{U\+S\+A\+R\+T6\+\_\+\+I\+R\+Q\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles U\+S\+A\+R\+T6 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_aa1e20137f74d718e0cfad0fa134b2543}\label{stm32f4xx__it_8c_aa1e20137f74d718e0cfad0fa134b2543}} 
+void {\bfseries pop\+\_\+registers\+\_\+from\+\_\+fault\+\_\+stack} (unsigned int $\ast$hardfault\+\_\+args)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_i2_c___handle_type_def}{I2\+C\+\_\+\+Handle\+Type\+Def}} \mbox{\hyperlink{stm32f4xx__it_8c_af7b2c26e44dadaaa798a5c3d82914ba7}{hi2c1}}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a4dcd0f023eeeb234649d17e647391be3}\label{stm32f4xx__it_8c_a4dcd0f023eeeb234649d17e647391be3}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+uart4\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a5531b2fb5af9f7c77f321c4a957d662b}\label{stm32f4xx__it_8c_a5531b2fb5af9f7c77f321c4a957d662b}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+uart4\+\_\+rx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a78ea5a382a3d999e9e2f71f6f2688cc7}\label{stm32f4xx__it_8c_a78ea5a382a3d999e9e2f71f6f2688cc7}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+uart5\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a794700eeb880a56b4598f4361b117881}\label{stm32f4xx__it_8c_a794700eeb880a56b4598f4361b117881}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+uart5\+\_\+rx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a5af94ab36bfe698db3e6beea96d10a90}\label{stm32f4xx__it_8c_a5af94ab36bfe698db3e6beea96d10a90}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart1\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a34251392f0d5e2461e3aef615918c235}\label{stm32f4xx__it_8c_a34251392f0d5e2461e3aef615918c235}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart1\+\_\+rx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a0083b476c2a75ab9fb2ccbed0048857e}\label{stm32f4xx__it_8c_a0083b476c2a75ab9fb2ccbed0048857e}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart2\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a784aa25dc7e4580cfbf80658340f482c}\label{stm32f4xx__it_8c_a784aa25dc7e4580cfbf80658340f482c}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart2\+\_\+rx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a8556819c2aafb13de4f13869b2c315ed}\label{stm32f4xx__it_8c_a8556819c2aafb13de4f13869b2c315ed}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart3\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a418ff7f6b595dcf41b10de1083e62340}\label{stm32f4xx__it_8c_a418ff7f6b595dcf41b10de1083e62340}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart3\+\_\+rx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a74b2c33b34b9087731c62656b23abbd5}\label{stm32f4xx__it_8c_a74b2c33b34b9087731c62656b23abbd5}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart6\+\_\+tx}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a66df27c9625144f6f85870d487c622a0}\label{stm32f4xx__it_8c_a66df27c9625144f6f85870d487c622a0}} 
+\mbox{\hyperlink{group___d_m_a___exported___types_ga41b754a906b86bce54dc79938970138b}{D\+M\+A\+\_\+\+Handle\+Type\+Def}} {\bfseries hdma\+\_\+usart6\+\_\+rx}
+\item 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} \mbox{\hyperlink{stm32f4xx__it_8c_ae273feb3e0dc44e38892650faa58fced}{huart4}}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a25a82fcf0cd24eb6d39977cb5864cec8}\label{stm32f4xx__it_8c_a25a82fcf0cd24eb6d39977cb5864cec8}} 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} {\bfseries huart5}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a2cf715bef37f7e8ef385a30974a5f0d5}\label{stm32f4xx__it_8c_a2cf715bef37f7e8ef385a30974a5f0d5}} 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} {\bfseries huart1}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_aa9479c261d65eecedd3d9582f7f0f89c}\label{stm32f4xx__it_8c_aa9479c261d65eecedd3d9582f7f0f89c}} 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} {\bfseries huart2}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_ab7c63c1b0f65db92b6a4ea19edf957e1}\label{stm32f4xx__it_8c_ab7c63c1b0f65db92b6a4ea19edf957e1}} 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} {\bfseries huart3}
+\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a38905dda1d2fbff006c69db48eddba9d}\label{stm32f4xx__it_8c_a38905dda1d2fbff006c69db48eddba9d}} 
+\mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} {\bfseries huart6}
+\item 
+\mbox{\hyperlink{struct_t_i_m___handle_type_def}{T\+I\+M\+\_\+\+Handle\+Type\+Def}} {\bfseries htim1}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Interrupt Service Routines. 
+
+C\+O\+P\+Y\+R\+I\+G\+H\+T(c) 2018 S\+T\+Microelectronics
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+E\+RS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS OR I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY A\+ND F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED. IN NO E\+V\+E\+NT S\+H\+A\+LL T\+HE C\+O\+P\+Y\+R\+I\+G\+HT H\+O\+L\+D\+ER OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{stm32f4xx__it_8c_af7b2c26e44dadaaa798a5c3d82914ba7}\label{stm32f4xx__it_8c_af7b2c26e44dadaaa798a5c3d82914ba7}} 
+\index{stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}!hi2c1@{hi2c1}}
+\index{hi2c1@{hi2c1}!stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}}
+\subsubsection{\texorpdfstring{hi2c1}{hi2c1}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_i2_c___handle_type_def}{I2\+C\+\_\+\+Handle\+Type\+Def}} hi2c1}
+
+File Name \+: I2\+C.\+c Description \+: This file provides code for the configuration of the I2C instances.
+
+This notice applies to any and all portions of this file that are not between comment pairs U\+S\+ER C\+O\+DE B\+E\+G\+IN and U\+S\+ER C\+O\+DE E\+ND. Other portions of this file, whether inserted by the user or by software development tools are owned by their respective copyright owners.
+
+Copyright (c) 2018 S\+T\+Microelectronics International N.\+V. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted, provided that the following conditions are met\+:
+
+
+\begin{DoxyEnumerate}
+\item Redistribution of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of other contributors to this software may be used to endorse or promote products derived from this software without specific written permission.
+\item This software, including modifications and/or derivative works of this software, must execute solely and exclusively on microcontroller or microprocessor devices manufactured by or for S\+T\+Microelectronics.
+\item Redistribution and use of this software other than as permitted under this license is void and will automatically terminate your rights under this license.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS, I\+M\+P\+L\+I\+ED OR S\+T\+A\+T\+U\+T\+O\+RY W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY, F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+ND N\+O\+N-\/\+I\+N\+F\+R\+I\+N\+G\+E\+M\+E\+NT OF T\+H\+I\+RD P\+A\+R\+TY I\+N\+T\+E\+L\+L\+E\+C\+T\+U\+AL P\+R\+O\+P\+E\+R\+TY R\+I\+G\+H\+TS A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED TO T\+HE F\+U\+L\+L\+E\+ST E\+X\+T\+E\+NT P\+E\+R\+M\+I\+T\+T\+ED BY L\+AW. IN NO E\+V\+E\+NT S\+H\+A\+LL S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. \mbox{\Hypertarget{stm32f4xx__it_8c_ae273feb3e0dc44e38892650faa58fced}\label{stm32f4xx__it_8c_ae273feb3e0dc44e38892650faa58fced}} 
+\index{stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}!huart4@{huart4}}
+\index{huart4@{huart4}!stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}}
+\subsubsection{\texorpdfstring{huart4}{huart4}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_u_a_r_t___handle_type_def}{U\+A\+R\+T\+\_\+\+Handle\+Type\+Def}} huart4}
+
+File Name \+: U\+S\+A\+R\+T.\+c Description \+: This file provides code for the configuration of the U\+S\+A\+RT instances.
+
+This notice applies to any and all portions of this file that are not between comment pairs U\+S\+ER C\+O\+DE B\+E\+G\+IN and U\+S\+ER C\+O\+DE E\+ND. Other portions of this file, whether inserted by the user or by software development tools are owned by their respective copyright owners.
+
+Copyright (c) 2018 S\+T\+Microelectronics International N.\+V. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted, provided that the following conditions are met\+:
+
+
+\begin{DoxyEnumerate}
+\item Redistribution of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\item Neither the name of S\+T\+Microelectronics nor the names of other contributors to this software may be used to endorse or promote products derived from this software without specific written permission.
+\item This software, including modifications and/or derivative works of this software, must execute solely and exclusively on microcontroller or microprocessor devices manufactured by or for S\+T\+Microelectronics.
+\item Redistribution and use of this software other than as permitted under this license is void and will automatically terminate your rights under this license.
+\end{DoxyEnumerate}
+
+T\+H\+IS S\+O\+F\+T\+W\+A\+RE IS P\+R\+O\+V\+I\+D\+ED BY S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS A\+ND C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS \char`\"{}\+A\+S I\+S\char`\"{} A\+ND A\+NY E\+X\+P\+R\+E\+SS, I\+M\+P\+L\+I\+ED OR S\+T\+A\+T\+U\+T\+O\+RY W\+A\+R\+R\+A\+N\+T\+I\+ES, I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, T\+HE I\+M\+P\+L\+I\+ED W\+A\+R\+R\+A\+N\+T\+I\+ES OF M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY, F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE A\+ND N\+O\+N-\/\+I\+N\+F\+R\+I\+N\+G\+E\+M\+E\+NT OF T\+H\+I\+RD P\+A\+R\+TY I\+N\+T\+E\+L\+L\+E\+C\+T\+U\+AL P\+R\+O\+P\+E\+R\+TY R\+I\+G\+H\+TS A\+RE D\+I\+S\+C\+L\+A\+I\+M\+ED TO T\+HE F\+U\+L\+L\+E\+ST E\+X\+T\+E\+NT P\+E\+R\+M\+I\+T\+T\+ED BY L\+AW. IN NO E\+V\+E\+NT S\+H\+A\+LL S\+T\+M\+I\+C\+R\+O\+E\+L\+E\+C\+T\+R\+O\+N\+I\+CS OR C\+O\+N\+T\+R\+I\+B\+U\+T\+O\+RS BE L\+I\+A\+B\+LE F\+OR A\+NY D\+I\+R\+E\+CT, I\+N\+D\+I\+R\+E\+CT, I\+N\+C\+I\+D\+E\+N\+T\+AL, S\+P\+E\+C\+I\+AL, E\+X\+E\+M\+P\+L\+A\+RY, OR C\+O\+N\+S\+E\+Q\+U\+E\+N\+T\+I\+AL D\+A\+M\+A\+G\+ES (I\+N\+C\+L\+U\+D\+I\+NG, B\+UT N\+OT L\+I\+M\+I\+T\+ED TO, P\+R\+O\+C\+U\+R\+E\+M\+E\+NT OF S\+U\+B\+S\+T\+I\+T\+U\+TE G\+O\+O\+DS OR S\+E\+R\+V\+I\+C\+ES; L\+O\+SS OF U\+SE, D\+A\+TA, OR P\+R\+O\+F\+I\+TS; OR B\+U\+S\+I\+N\+E\+SS I\+N\+T\+E\+R\+R\+U\+P\+T\+I\+ON) H\+O\+W\+E\+V\+ER C\+A\+U\+S\+ED A\+ND ON A\+NY T\+H\+E\+O\+RY OF L\+I\+A\+B\+I\+L\+I\+TY, W\+H\+E\+T\+H\+ER IN C\+O\+N\+T\+R\+A\+CT, S\+T\+R\+I\+CT L\+I\+A\+B\+I\+L\+I\+TY, OR T\+O\+RT (I\+N\+C\+L\+U\+D\+I\+NG N\+E\+G\+L\+I\+G\+E\+N\+CE OR O\+T\+H\+E\+R\+W\+I\+SE) A\+R\+I\+S\+I\+NG IN A\+NY W\+AY O\+UT OF T\+HE U\+SE OF T\+H\+IS S\+O\+F\+T\+W\+A\+RE, E\+V\+EN IF A\+D\+V\+I\+S\+ED OF T\+HE P\+O\+S\+S\+I\+B\+I\+L\+I\+TY OF S\+U\+CH D\+A\+M\+A\+GE. 

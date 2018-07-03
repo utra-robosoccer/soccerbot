@@ -1,0 +1,33 @@
+\hypertarget{group___r_c_c___l_s_i___configuration}{}\section{L\+SI Configuration}
+\label{group___r_c_c___l_s_i___configuration}\index{L\+S\+I Configuration@{L\+S\+I Configuration}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___r_c_c___l_s_i___configuration_ga560de8b8991db4a296de878a7a8aa58b}{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE}}()~($\ast$(\mbox{\hyperlink{core__sc300_8h_aec43007d9998a0a0e01faede4133d6be}{\+\_\+\+\_\+\+IO}} uint32\+\_\+t $\ast$) R\+C\+C\+\_\+\+C\+S\+R\+\_\+\+L\+S\+I\+O\+N\+\_\+\+BB = E\+N\+A\+B\+LE)
+\begin{DoxyCompactList}\small\item\em Macros to enable or disable the Internal Low Speed oscillator (L\+SI). \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{group___r_c_c___l_s_i___configuration_ga4f96095bb4acda60b7f66d5d927da181}\label{group___r_c_c___l_s_i___configuration_ga4f96095bb4acda60b7f66d5d927da181}} 
+\#define {\bfseries \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+D\+I\+S\+A\+B\+LE}()~($\ast$(\mbox{\hyperlink{core__sc300_8h_aec43007d9998a0a0e01faede4133d6be}{\+\_\+\+\_\+\+IO}} uint32\+\_\+t $\ast$) R\+C\+C\+\_\+\+C\+S\+R\+\_\+\+L\+S\+I\+O\+N\+\_\+\+BB = D\+I\+S\+A\+B\+LE)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group___r_c_c___l_s_i___configuration_ga560de8b8991db4a296de878a7a8aa58b}\label{group___r_c_c___l_s_i___configuration_ga560de8b8991db4a296de878a7a8aa58b}} 
+\index{L\+S\+I Configuration@{L\+S\+I Configuration}!\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE}}
+\index{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE@{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE}!L\+S\+I Configuration@{L\+S\+I Configuration}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE}{\_\_HAL\_RCC\_LSI\_ENABLE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+H\+A\+L\+\_\+\+R\+C\+C\+\_\+\+L\+S\+I\+\_\+\+E\+N\+A\+B\+LE(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~($\ast$(\mbox{\hyperlink{core__sc300_8h_aec43007d9998a0a0e01faede4133d6be}{\+\_\+\+\_\+\+IO}} uint32\+\_\+t $\ast$) R\+C\+C\+\_\+\+C\+S\+R\+\_\+\+L\+S\+I\+O\+N\+\_\+\+BB = E\+N\+A\+B\+LE)}
+
+
+
+Macros to enable or disable the Internal Low Speed oscillator (L\+SI). 
+
+\begin{DoxyNote}{Note}
+After enabling the L\+SI, the application software should wait on L\+S\+I\+R\+DY flag to be set indicating that L\+SI clock is stable and can be used to clock the I\+W\+DG and/or the R\+TC. 
+
+L\+SI can not be disabled if the I\+W\+DG is running. 
+
+When the L\+SI is stopped, L\+S\+I\+R\+DY flag goes low after 6 L\+SI oscillator clock cycles. 
+\end{DoxyNote}

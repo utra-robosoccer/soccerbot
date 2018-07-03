@@ -1,0 +1,22 @@
+\hypertarget{group__v_task_resume_from_i_s_r}{}\section{v\+Task\+Resume\+From\+I\+SR}
+\label{group__v_task_resume_from_i_s_r}\index{v\+Task\+Resume\+From\+I\+SR@{v\+Task\+Resume\+From\+I\+SR}}
+task. h 
+\begin{DoxyPre}void xTaskResumeFromISR( TaskHandle\_t xTaskToResume );\end{DoxyPre}
+
+
+I\+N\+C\+L\+U\+D\+E\+\_\+x\+Task\+Resume\+From\+I\+SR must be defined as 1 for this function to be available. See the configuration section for more information.
+
+An implementation of v\+Task\+Resume() that can be called from within an I\+SR.
+
+A task that has been suspended by one or more calls to v\+Task\+Suspend () will be made available for running again by a single call to x\+Task\+Resume\+From\+I\+SR ().
+
+x\+Task\+Resume\+From\+I\+S\+R() should not be used to synchronise a task with an interrupt if there is a chance that the interrupt could arrive prior to the task being suspended -\/ as this can lead to interrupts being missed. Use of a semaphore as a synchronisation mechanism would avoid this eventuality.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+Task\+To\+Resume} & Handle to the task being readied.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pd\+T\+R\+UE if resuming the task should result in a context switch, otherwise pd\+F\+A\+L\+SE. This is used by the I\+SR to determine if a context switch may be required following the I\+SR. 
+\end{DoxyReturn}

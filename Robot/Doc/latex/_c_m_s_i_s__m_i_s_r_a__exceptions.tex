@@ -1,0 +1,11 @@
+C\+M\+S\+IS violates the following M\+I\+S\+R\+A-\/C\+:2004 rules\+:
+
+\begin{DoxyItemize}
+\item Required Rule 8.\+5, object/function definition in header file.~\newline
+ Function definitions in header files are used to allow \textquotesingle{}inlining\textquotesingle{}.\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Required Rule 18.\+4, declaration of union type or object of union type\+: \textquotesingle{}\{...\}\textquotesingle{}.~\newline
+ Unions are used for effective representation of core registers.\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Advisory Rule 19.\+7, Function-\/like macro defined.~\newline
+ Function-\/like macros are used to allow more efficient code. \end{DoxyItemize}

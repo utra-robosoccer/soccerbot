@@ -1,0 +1,45 @@
+\hypertarget{group__x_semaphore_create_recursive_mutex}{}\section{x\+Semaphore\+Create\+Recursive\+Mutex}
+\label{group__x_semaphore_create_recursive_mutex}\index{x\+Semaphore\+Create\+Recursive\+Mutex@{x\+Semaphore\+Create\+Recursive\+Mutex}}
+semphr. h 
+\begin{DoxyPre}SemaphoreHandle\_t xSemaphoreCreateRecursiveMutex( void )\end{DoxyPre}
+
+
+Creates a new recursive mutex type semaphore instance, and returns a handle by which the new recursive mutex can be referenced.
+
+Internally, within the Free\+R\+T\+OS implementation, recursive mutexs use a block of memory, in which the mutex structure is stored. If a recursive mutex is created using x\+Semaphore\+Create\+Recursive\+Mutex() then the required memory is automatically dynamically allocated inside the x\+Semaphore\+Create\+Recursive\+Mutex() function. (see \href{http://www.freertos.org/a00111.html}{\tt http\+://www.\+freertos.\+org/a00111.\+html}). If a recursive mutex is created using x\+Semaphore\+Create\+Recursive\+Mutex\+Static() then the application writer must provide the memory that will get used by the mutex. x\+Semaphore\+Create\+Recursive\+Mutex\+Static() therefore allows a recursive mutex to be created without using any dynamic memory allocation.
+
+Mutexes created using this macro can be accessed using the x\+Semaphore\+Take\+Recursive() and x\+Semaphore\+Give\+Recursive() macros. The x\+Semaphore\+Take() and x\+Semaphore\+Give() macros must not be used.
+
+A mutex used recursively can be \textquotesingle{}taken\textquotesingle{} repeatedly by the owner. The mutex doesn\textquotesingle{}t become available again until the owner has called x\+Semaphore\+Give\+Recursive() for each successful \textquotesingle{}take\textquotesingle{} request. For example, if a task successfully \textquotesingle{}takes\textquotesingle{} the same mutex 5 times then the mutex will not be available to any other task until it has also \textquotesingle{}given\textquotesingle{} the mutex back exactly five times.
+
+This type of semaphore uses a priority inheritance mechanism so a task \textquotesingle{}taking\textquotesingle{} a semaphore M\+U\+ST A\+L\+W\+A\+YS \textquotesingle{}give\textquotesingle{} the semaphore back once the semaphore it is no longer required.
+
+Mutex type semaphores cannot be used from within interrupt service routines.
+
+See x\+Semaphore\+Create\+Binary() for an alternative implementation that can be used for pure synchronisation (where one task or interrupt always \textquotesingle{}gives\textquotesingle{} the semaphore and another always \textquotesingle{}takes\textquotesingle{} the semaphore) and from within interrupt service routines.
+
+\begin{DoxyReturn}{Returns}
+x\+Semaphore Handle to the created mutex semaphore. Should be of type Semaphore\+Handle\+\_\+t.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+   // Semaphore cannot be used before a call to xSemaphoreCreateMutex().
+   // This is a macro so pass the variable in directly.
+   xSemaphore = xSemaphoreCreateRecursiveMutex();\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   if( xSemaphore != NULL )
+   \{
+       // The semaphore was created successfully.
+       // The semaphore can now be used.
+   \}
+\}
+\end{DoxyPre}
+ 

@@ -1,0 +1,45 @@
+\hypertarget{group__x_semaphore_create_binary_static}{}\section{x\+Semaphore\+Create\+Binary\+Static}
+\label{group__x_semaphore_create_binary_static}\index{x\+Semaphore\+Create\+Binary\+Static@{x\+Semaphore\+Create\+Binary\+Static}}
+semphr. h 
+\begin{DoxyPre}SemaphoreHandle\_t xSemaphoreCreateBinaryStatic( StaticSemaphore\_t *pxSemaphoreBuffer )\end{DoxyPre}
+
+
+Creates a new binary semaphore instance, and returns a handle by which the new semaphore can be referenced.
+
+N\+O\+TE\+: In many usage scenarios it is faster and more memory efficient to use a direct to task notification in place of a binary semaphore! \href{http://www.freertos.org/RTOS-task-notifications.html}{\tt http\+://www.\+freertos.\+org/\+R\+T\+O\+S-\/task-\/notifications.\+html}
+
+Internally, within the Free\+R\+T\+OS implementation, binary semaphores use a block of memory, in which the semaphore structure is stored. If a binary semaphore is created using x\+Semaphore\+Create\+Binary() then the required memory is automatically dynamically allocated inside the x\+Semaphore\+Create\+Binary() function. (see \href{http://www.freertos.org/a00111.html}{\tt http\+://www.\+freertos.\+org/a00111.\+html}). If a binary semaphore is created using x\+Semaphore\+Create\+Binary\+Static() then the application writer must provide the memory. x\+Semaphore\+Create\+Binary\+Static() therefore allows a binary semaphore to be created without using any dynamic memory allocation.
+
+This type of semaphore can be used for pure synchronisation between tasks or between an interrupt and a task. The semaphore need not be given back once obtained, so one task/interrupt can continuously \textquotesingle{}give\textquotesingle{} the semaphore while another continuously \textquotesingle{}takes\textquotesingle{} the semaphore. For this reason this type of semaphore does not use a priority inheritance mechanism. For an alternative that does use priority inheritance see x\+Semaphore\+Create\+Mutex().
+
+
+\begin{DoxyParams}{Parameters}
+{\em px\+Semaphore\+Buffer} & Must point to a variable of type Static\+Semaphore\+\_\+t, which will then be used to hold the semaphore\textquotesingle{}s data structure, removing the need for the memory to be allocated dynamically.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the semaphore is created then a handle to the created semaphore is returned. If px\+Semaphore\+Buffer is N\+U\+LL then N\+U\+LL is returned.
+\end{DoxyReturn}
+Example usage\+: 
+\begin{DoxyPre}
+SemaphoreHandle\_t xSemaphore = NULL;
+StaticSemaphore\_t xSemaphoreBuffer;\end{DoxyPre}
+
+
+
+\begin{DoxyPre}void vATask( void * pvParameters )
+\{
+   // Semaphore cannot be used before a call to xSemaphoreCreateBinary().
+   // The semaphore's data structures will be placed in the xSemaphoreBuffer
+   // variable, the address of which is passed into the function.  The
+   // function's parameter is not NULL, so the function will not attempt any
+   // dynamic memory allocation, and therefore the function will not return
+   // return NULL.
+   xSemaphore = xSemaphoreCreateBinary( &xSemaphoreBuffer );\end{DoxyPre}
+
+
+
+\begin{DoxyPre}   // Rest of task code goes here.
+\}
+\end{DoxyPre}
+ 

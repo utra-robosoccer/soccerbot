@@ -1,0 +1,81 @@
+\hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def}{}\section{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def Struct Reference}
+\label{struct_f_l_a_s_h___o_b_program_init_type_def}\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+
+
+F\+L\+A\+SH Option Bytes Program structure definition.  
+
+
+
+
+{\ttfamily \#include $<$stm32f4xx\+\_\+hal\+\_\+flash\+\_\+ex.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_ac5941efaeb6bd9e3c0852613f990ebd8}{Option\+Type}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_ab5ab320199482e9eb21dc8460501dea5}{W\+R\+P\+State}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_a549b7149fc7cec7fa1235aa040b9d498}{W\+R\+P\+Sector}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_aa07868a5b012861c6111322c3dccdbec}{Banks}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_a671880a1dafb7b92e0e2b65593407c12}{R\+D\+P\+Level}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_af4bc744e01810b8cdef4b7c8c8e6009c}{B\+O\+R\+Level}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct_f_l_a_s_h___o_b_program_init_type_def_ac4ab84c90f7a878b0b39ec1f3dda8ded}{U\+S\+E\+R\+Config}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+F\+L\+A\+SH Option Bytes Program structure definition. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_aa07868a5b012861c6111322c3dccdbec}\label{struct_f_l_a_s_h___o_b_program_init_type_def_aa07868a5b012861c6111322c3dccdbec}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!Banks@{Banks}}
+\index{Banks@{Banks}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Banks}{Banks}}
+{\footnotesize\ttfamily uint32\+\_\+t Banks}
+
+Select banks for W\+RP activation/deactivation of all sectors. This parameter must be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___banks}{F\+L\+A\+SH Banks}} \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_af4bc744e01810b8cdef4b7c8c8e6009c}\label{struct_f_l_a_s_h___o_b_program_init_type_def_af4bc744e01810b8cdef4b7c8c8e6009c}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!B\+O\+R\+Level@{B\+O\+R\+Level}}
+\index{B\+O\+R\+Level@{B\+O\+R\+Level}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{B\+O\+R\+Level}{BORLevel}}
+{\footnotesize\ttfamily uint32\+\_\+t B\+O\+R\+Level}
+
+Set the B\+OR Level. This parameter can be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___b_o_r___reset___level}{F\+L\+A\+SH B\+OR Reset Level}} \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_ac5941efaeb6bd9e3c0852613f990ebd8}\label{struct_f_l_a_s_h___o_b_program_init_type_def_ac5941efaeb6bd9e3c0852613f990ebd8}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!Option\+Type@{Option\+Type}}
+\index{Option\+Type@{Option\+Type}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{Option\+Type}{OptionType}}
+{\footnotesize\ttfamily uint32\+\_\+t Option\+Type}
+
+Option byte to be configured. This parameter can be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___option___type}{F\+L\+A\+SH Option Type}} \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_a671880a1dafb7b92e0e2b65593407c12}\label{struct_f_l_a_s_h___o_b_program_init_type_def_a671880a1dafb7b92e0e2b65593407c12}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!R\+D\+P\+Level@{R\+D\+P\+Level}}
+\index{R\+D\+P\+Level@{R\+D\+P\+Level}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{R\+D\+P\+Level}{RDPLevel}}
+{\footnotesize\ttfamily uint32\+\_\+t R\+D\+P\+Level}
+
+Set the read protection level. This parameter can be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___option___bytes___read___protection}{F\+L\+A\+SH Option Bytes Read Protection}} \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_ac4ab84c90f7a878b0b39ec1f3dda8ded}\label{struct_f_l_a_s_h___o_b_program_init_type_def_ac4ab84c90f7a878b0b39ec1f3dda8ded}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!U\+S\+E\+R\+Config@{U\+S\+E\+R\+Config}}
+\index{U\+S\+E\+R\+Config@{U\+S\+E\+R\+Config}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{U\+S\+E\+R\+Config}{USERConfig}}
+{\footnotesize\ttfamily uint8\+\_\+t U\+S\+E\+R\+Config}
+
+Program the F\+L\+A\+SH User Option Byte\+: I\+W\+D\+G\+\_\+\+SW / R\+S\+T\+\_\+\+S\+T\+OP / R\+S\+T\+\_\+\+S\+T\+D\+BY. \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_a549b7149fc7cec7fa1235aa040b9d498}\label{struct_f_l_a_s_h___o_b_program_init_type_def_a549b7149fc7cec7fa1235aa040b9d498}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!W\+R\+P\+Sector@{W\+R\+P\+Sector}}
+\index{W\+R\+P\+Sector@{W\+R\+P\+Sector}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{W\+R\+P\+Sector}{WRPSector}}
+{\footnotesize\ttfamily uint32\+\_\+t W\+R\+P\+Sector}
+
+Specifies the sector(s) to be write protected. The value of this parameter depend on device used within the same series \mbox{\Hypertarget{struct_f_l_a_s_h___o_b_program_init_type_def_ab5ab320199482e9eb21dc8460501dea5}\label{struct_f_l_a_s_h___o_b_program_init_type_def_ab5ab320199482e9eb21dc8460501dea5}} 
+\index{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}!W\+R\+P\+State@{W\+R\+P\+State}}
+\index{W\+R\+P\+State@{W\+R\+P\+State}!F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def@{F\+L\+A\+S\+H\+\_\+\+O\+B\+Program\+Init\+Type\+Def}}
+\subsubsection{\texorpdfstring{W\+R\+P\+State}{WRPState}}
+{\footnotesize\ttfamily uint32\+\_\+t W\+R\+P\+State}
+
+Write protection activation or deactivation. This parameter can be a value of \mbox{\hyperlink{group___f_l_a_s_h_ex___w_r_p___state}{F\+L\+A\+SH W\+RP State}} 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Drivers/\+S\+T\+M32\+F4xx\+\_\+\+H\+A\+L\+\_\+\+Driver/\+Inc/\mbox{\hyperlink{stm32f4xx__hal__flash__ex_8h}{stm32f4xx\+\_\+hal\+\_\+flash\+\_\+ex.\+h}}\end{DoxyCompactItemize}
