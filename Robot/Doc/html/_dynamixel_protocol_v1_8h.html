@@ -9,6 +9,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -46,6 +54,23 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('_dynamixel_protocol_v1_8h.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +85,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_60925fc218da8ca7908795bf5f624060.html">Drivers</a></li><li class="navelem"><a class="el" href="dir_01043e09be118d118a1c0a841e614b7e.html">Dynamixel</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
@@ -75,14 +95,17 @@ $(function() {
 <div class="title">DynamixelProtocolV1.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="gpio_8h_source.html">gpio.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="usart_8h_source.html">usart.h</a>&quot;</code><br />
+
+<p>Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuator using protocol version 1.0 should be able to be integrated with little effort, as the instructions and register addresses are very similar for all actuators using this protocol version.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;gpio.h&quot;</code><br />
+<code>#include &quot;usart.h&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="_dynamixel___handle_type_def_8h_source.html">Dynamixel_HandleTypeDef.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_m_x28_8h_source.html">MX28/MX28.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_a_x12_a_8h_source.html">AX12A/AX12A.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="shared_macros_8h_source.html">sharedMacros.h</a>&quot;</code><br />
+<code>#include &quot;Dynamixel_HandleTypeDef.h&quot;</code><br />
+<code>#include &quot;MX28/MX28.h&quot;</code><br />
+<code>#include &quot;AX12A/AX12A.h&quot;</code><br />
+<code>#include &quot;sharedMacros.h&quot;</code><br />
 <code>#include &quot;cmsis_os.h&quot;</code><br />
 </div>
 <p><a href="_dynamixel_protocol_v1_8h_source.html">Go to the source code of this file.</a></p>
@@ -214,96 +237,134 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a2d5f4ea730f273121dc94b9425bc3d55"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a> { <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55afe0dadbeb5c11e52d0a5e47b6abb73cb">IO_DMA</a>, 
-<a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55a414f6b89d2981af1ec2ed8e110bfc47e">IO_POLL</a>, 
-<a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55aae07b2754c4d2efc8edc8e759eb79a00">IO_IT</a>
+<tr class="memitem:a2d5f4ea730f273121dc94b9425bc3d55"><td class="memItemLeft" align="right" valign="top"><a id="a2d5f4ea730f273121dc94b9425bc3d55"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>IO_FLAGS</b> { <b>IO_DMA</b>, 
+<b>IO_POLL</b>, 
+<b>IO_IT</b>
  }</td></tr>
 <tr class="separator:a2d5f4ea730f273121dc94b9425bc3d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acde9601989267c2818bd407257932b10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#acde9601989267c2818bd407257932b10">Dynamixel_SetID</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t ID)</td></tr>
-<tr class="separator:acde9601989267c2818bd407257932b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2970e0b076f2f97022782885f0f40a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a2970e0b076f2f97022782885f0f40a5a">Dynamixel_SetBaudRate</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint32_t baud)</td></tr>
-<tr class="separator:a2970e0b076f2f97022782885f0f40a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa83d2ec791afc039d38d2fb84b759ce2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#aa83d2ec791afc039d38d2fb84b759ce2">Dynamixel_SetReturnDelayTime</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint16_t microSec)</td></tr>
-<tr class="separator:aa83d2ec791afc039d38d2fb84b759ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad86c73a30cc54d228eaee9aa71bedfc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ad86c73a30cc54d228eaee9aa71bedfc5">Dynamixel_SetCWAngleLimit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float minAngle)</td></tr>
-<tr class="separator:ad86c73a30cc54d228eaee9aa71bedfc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dc6d1d812e06b31972ff0df65f48dce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a6dc6d1d812e06b31972ff0df65f48dce">Dynamixel_SetCCWAngleLimit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float maxAngle)</td></tr>
-<tr class="separator:a6dc6d1d812e06b31972ff0df65f48dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a918799fda0a088a22ddb5b6ebde9dea7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a918799fda0a088a22ddb5b6ebde9dea7">Dynamixel_SetHighestVoltageLimit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float highestVoltage)</td></tr>
-<tr class="separator:a918799fda0a088a22ddb5b6ebde9dea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b9a3a50d33977550c48a3cb4335b8da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a4b9a3a50d33977550c48a3cb4335b8da">Dynamixel_SetLowestVoltageLimit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float lowestVoltage)</td></tr>
-<tr class="separator:a4b9a3a50d33977550c48a3cb4335b8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d69ef92eb60b74b6ed75e82614ade8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a6d69ef92eb60b74b6ed75e82614ade8d">Dynamixel_SetMaxTorque</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float maxTorque)</td></tr>
-<tr class="separator:a6d69ef92eb60b74b6ed75e82614ade8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a654e08fee0f73bb3f15943c43fadd319"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a654e08fee0f73bb3f15943c43fadd319">Dynamixel_SetStatusReturnLevel</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t status_data)</td></tr>
-<tr class="separator:a654e08fee0f73bb3f15943c43fadd319"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2910ce24ca0b804f72b74a00d331dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ab2910ce24ca0b804f72b74a00d331dea">Dynamixel_SetAlarmLED</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t alarm_LED_data)</td></tr>
-<tr class="separator:ab2910ce24ca0b804f72b74a00d331dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9224a5f296e03de3f7641b91449926da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a9224a5f296e03de3f7641b91449926da">Dynamixel_SetAlarmShutdown</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t alarm_shutdown_data)</td></tr>
-<tr class="separator:a9224a5f296e03de3f7641b91449926da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41f1726bc88a49ab5051ed20f492a0f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a41f1726bc88a49ab5051ed20f492a0f6">Dynamixel_TorqueEnable</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t isEnabled)</td></tr>
-<tr class="separator:a41f1726bc88a49ab5051ed20f492a0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9031a9e4b81c946ba731cda4ed677abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a9031a9e4b81c946ba731cda4ed677abe">Dynamixel_LEDEnable</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t isEnabled)</td></tr>
-<tr class="separator:a9031a9e4b81c946ba731cda4ed677abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67e039f885c6e107121b297cb6388e8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a67e039f885c6e107121b297cb6388e8c">Dynamixel_SetGoalPosition</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalAngle)</td></tr>
-<tr class="separator:a67e039f885c6e107121b297cb6388e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2af2caa75e7341d542769dd9e8649fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ac2af2caa75e7341d542769dd9e8649fa">Dynamixel_SetGoalVelocity</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalVelocity)</td></tr>
-<tr class="separator:ac2af2caa75e7341d542769dd9e8649fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0728b1a0ad84f1626a5344bcef7a6427"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a0728b1a0ad84f1626a5344bcef7a6427">Dynamixel_SetGoalTorque</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalTorque)</td></tr>
-<tr class="separator:a0728b1a0ad84f1626a5344bcef7a6427"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a208adc06a269e04321f30e4f7334dfdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a208adc06a269e04321f30e4f7334dfdb">Dynamixel_LockEEPROM</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
-<tr class="separator:a208adc06a269e04321f30e4f7334dfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abccfff965b8862b0bc7cd5733e25f98a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#abccfff965b8862b0bc7cd5733e25f98a">Dynamixel_SetPunch</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float punch)</td></tr>
-<tr class="separator:abccfff965b8862b0bc7cd5733e25f98a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3edc0f39369851f07925e38a83f67f51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a3edc0f39369851f07925e38a83f67f51">Dynamixel_GetPosition</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:gacde9601989267c2818bd407257932b10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___exported___functions.html#gacde9601989267c2818bd407257932b10">Dynamixel_SetID</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t ID)</td></tr>
+<tr class="memdesc:gacde9601989267c2818bd407257932b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ID (identification number) for the current motor. Note that the instruction will be broadcasted using the current ID. As such, if the ID is not known, the motor ID should be initialized to the broadcast ID (0xFE) in the Dynamixel_Init function.  <a href="group___dynamixel___exported___functions.html#gacde9601989267c2818bd407257932b10">More...</a><br /></td></tr>
+<tr class="separator:gacde9601989267c2818bd407257932b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2970e0b076f2f97022782885f0f40a5a"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetBaudRate</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint32_t baud)</td></tr>
+<tr class="separator:ga2970e0b076f2f97022782885f0f40a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa83d2ec791afc039d38d2fb84b759ce2"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetReturnDelayTime</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint16_t microSec)</td></tr>
+<tr class="separator:gaa83d2ec791afc039d38d2fb84b759ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad86c73a30cc54d228eaee9aa71bedfc5"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetCWAngleLimit</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float minAngle)</td></tr>
+<tr class="separator:gad86c73a30cc54d228eaee9aa71bedfc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6dc6d1d812e06b31972ff0df65f48dce"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetCCWAngleLimit</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float maxAngle)</td></tr>
+<tr class="separator:ga6dc6d1d812e06b31972ff0df65f48dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga918799fda0a088a22ddb5b6ebde9dea7"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetHighestVoltageLimit</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float highestVoltage)</td></tr>
+<tr class="separator:ga918799fda0a088a22ddb5b6ebde9dea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b9a3a50d33977550c48a3cb4335b8da"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetLowestVoltageLimit</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float lowestVoltage)</td></tr>
+<tr class="separator:ga4b9a3a50d33977550c48a3cb4335b8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d69ef92eb60b74b6ed75e82614ade8d"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetMaxTorque</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float maxTorque)</td></tr>
+<tr class="separator:ga6d69ef92eb60b74b6ed75e82614ade8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga654e08fee0f73bb3f15943c43fadd319"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetStatusReturnLevel</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t status_data)</td></tr>
+<tr class="separator:ga654e08fee0f73bb3f15943c43fadd319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab2910ce24ca0b804f72b74a00d331dea"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetAlarmLED</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t alarm_LED_data)</td></tr>
+<tr class="separator:gab2910ce24ca0b804f72b74a00d331dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9224a5f296e03de3f7641b91449926da"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetAlarmShutdown</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t alarm_shutdown_data)</td></tr>
+<tr class="separator:ga9224a5f296e03de3f7641b91449926da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga41f1726bc88a49ab5051ed20f492a0f6"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_TorqueEnable</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t isEnabled)</td></tr>
+<tr class="separator:ga41f1726bc88a49ab5051ed20f492a0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9031a9e4b81c946ba731cda4ed677abe"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_LEDEnable</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t isEnabled)</td></tr>
+<tr class="separator:ga9031a9e4b81c946ba731cda4ed677abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67e039f885c6e107121b297cb6388e8c"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetGoalPosition</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalAngle)</td></tr>
+<tr class="separator:ga67e039f885c6e107121b297cb6388e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2af2caa75e7341d542769dd9e8649fa"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetGoalVelocity</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalVelocity)</td></tr>
+<tr class="separator:gac2af2caa75e7341d542769dd9e8649fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0728b1a0ad84f1626a5344bcef7a6427"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetGoalTorque</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalTorque)</td></tr>
+<tr class="separator:ga0728b1a0ad84f1626a5344bcef7a6427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga208adc06a269e04321f30e4f7334dfdb"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_LockEEPROM</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="separator:ga208adc06a269e04321f30e4f7334dfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabccfff965b8862b0bc7cd5733e25f98a"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetPunch</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float punch)</td></tr>
+<tr class="separator:gabccfff965b8862b0bc7cd5733e25f98a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3edc0f39369851f07925e38a83f67f51"><td class="memItemLeft" align="right" valign="top"><a id="a3edc0f39369851f07925e38a83f67f51"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetPosition</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a3edc0f39369851f07925e38a83f67f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaad13a5ad5c223678b56d23b59a1bc3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#aaad13a5ad5c223678b56d23b59a1bc3a">Dynamixel_GetVelocity</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:aaad13a5ad5c223678b56d23b59a1bc3a"><td class="memItemLeft" align="right" valign="top"><a id="aaad13a5ad5c223678b56d23b59a1bc3a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetVelocity</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:aaad13a5ad5c223678b56d23b59a1bc3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f574fbe64e91f7644bf9653540d36e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a2f574fbe64e91f7644bf9653540d36e1">Dynamixel_GetLoad</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a2f574fbe64e91f7644bf9653540d36e1"><td class="memItemLeft" align="right" valign="top"><a id="a2f574fbe64e91f7644bf9653540d36e1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetLoad</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a2f574fbe64e91f7644bf9653540d36e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a612a6cae0aa7f939510e1584d870652e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a612a6cae0aa7f939510e1584d870652e">Dynamixel_GetVoltage</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a612a6cae0aa7f939510e1584d870652e"><td class="memItemLeft" align="right" valign="top"><a id="a612a6cae0aa7f939510e1584d870652e"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetVoltage</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a612a6cae0aa7f939510e1584d870652e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1be3f0c36a3a421143dfaa04af7e0d0c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a1be3f0c36a3a421143dfaa04af7e0d0c">Dynamixel_GetTemperature</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a1be3f0c36a3a421143dfaa04af7e0d0c"><td class="memItemLeft" align="right" valign="top"><a id="a1be3f0c36a3a421143dfaa04af7e0d0c"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetTemperature</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a1be3f0c36a3a421143dfaa04af7e0d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c5bdf6190f809a617509cfdbf69915d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a9c5bdf6190f809a617509cfdbf69915d">Dynamixel_IsRegistered</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a9c5bdf6190f809a617509cfdbf69915d"><td class="memItemLeft" align="right" valign="top"><a id="a9c5bdf6190f809a617509cfdbf69915d"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_IsRegistered</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a9c5bdf6190f809a617509cfdbf69915d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fcd0de3d61eeaa85382e2a237a1c410"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a6fcd0de3d61eeaa85382e2a237a1c410">Dynamixel_IsMoving</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a6fcd0de3d61eeaa85382e2a237a1c410"><td class="memItemLeft" align="right" valign="top"><a id="a6fcd0de3d61eeaa85382e2a237a1c410"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_IsMoving</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a6fcd0de3d61eeaa85382e2a237a1c410"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee425951e23d20139b905fa2ba6f9e4c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#aee425951e23d20139b905fa2ba6f9e4c">Dynamixel_IsJointMode</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:aee425951e23d20139b905fa2ba6f9e4c"><td class="memItemLeft" align="right" valign="top"><a id="aee425951e23d20139b905fa2ba6f9e4c"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_IsJointMode</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:aee425951e23d20139b905fa2ba6f9e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabac5f22c65d45c6e62aec697ac597bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#aabac5f22c65d45c6e62aec697ac597bf">Dynamixel_DataWriter</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t *args, uint8_t numArgs)</td></tr>
+<tr class="memitem:aabac5f22c65d45c6e62aec697ac597bf"><td class="memItemLeft" align="right" valign="top"><a id="aabac5f22c65d45c6e62aec697ac597bf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_DataWriter</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t *args, uint8_t numArgs)</td></tr>
 <tr class="separator:aabac5f22c65d45c6e62aec697ac597bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0e18eec55a4c1c3600dc8406d21a9c9"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ae0e18eec55a4c1c3600dc8406d21a9c9">Dynamixel_DataReader</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t readAddr, uint8_t readLength)</td></tr>
+<tr class="memitem:ae0e18eec55a4c1c3600dc8406d21a9c9"><td class="memItemLeft" align="right" valign="top"><a id="ae0e18eec55a4c1c3600dc8406d21a9c9"></a>
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_DataReader</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t readAddr, uint8_t readLength)</td></tr>
 <tr class="separator:ae0e18eec55a4c1c3600dc8406d21a9c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81cc54c2139629f4737ef76b95ae9c92"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a81cc54c2139629f4737ef76b95ae9c92">Dynamixel_DataReader_DMA</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t readAddr, uint8_t readLength)</td></tr>
+<tr class="memitem:a81cc54c2139629f4737ef76b95ae9c92"><td class="memItemLeft" align="right" valign="top"><a id="a81cc54c2139629f4737ef76b95ae9c92"></a>
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_DataReader_DMA</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t readAddr, uint8_t readLength)</td></tr>
 <tr class="separator:a81cc54c2139629f4737ef76b95ae9c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eb94f7a4849e66078971dfe7bc1dcdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a2eb94f7a4849e66078971dfe7bc1dcdc">Dynamixel_SyncWritePosition</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, <a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *syncWriteBlock)</td></tr>
+<tr class="memitem:a2eb94f7a4849e66078971dfe7bc1dcdc"><td class="memItemLeft" align="right" valign="top"><a id="a2eb94f7a4849e66078971dfe7bc1dcdc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SyncWritePosition</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, <a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *syncWriteBlock)</td></tr>
 <tr class="separator:a2eb94f7a4849e66078971dfe7bc1dcdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3326f4a82982e88e69f71370433e59b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#aa3326f4a82982e88e69f71370433e59b">Dynamixel_SyncWritePositionAndVelocity</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, <a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *syncWriteBlock)</td></tr>
+<tr class="memitem:aa3326f4a82982e88e69f71370433e59b"><td class="memItemLeft" align="right" valign="top"><a id="aa3326f4a82982e88e69f71370433e59b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SyncWritePositionAndVelocity</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, <a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *syncWriteBlock)</td></tr>
 <tr class="separator:aa3326f4a82982e88e69f71370433e59b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25e0659774099bcba7bd5fc1dbc37843"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a25e0659774099bcba7bd5fc1dbc37843">Dynamixel_RegWrite</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2)</td></tr>
+<tr class="memitem:a25e0659774099bcba7bd5fc1dbc37843"><td class="memItemLeft" align="right" valign="top"><a id="a25e0659774099bcba7bd5fc1dbc37843"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_RegWrite</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t arrSize, uint8_t writeAddr, uint8_t param1, uint8_t param2)</td></tr>
 <tr class="separator:a25e0659774099bcba7bd5fc1dbc37843"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78077c4319d76d6de3309d49efd6bf2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a78077c4319d76d6de3309d49efd6bf2c">Dynamixel_Action</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a78077c4319d76d6de3309d49efd6bf2c"><td class="memItemLeft" align="right" valign="top"><a id="a78077c4319d76d6de3309d49efd6bf2c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_Action</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a78077c4319d76d6de3309d49efd6bf2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0a5015bc773c79b35767e38084fa5ce"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ae0a5015bc773c79b35767e38084fa5ce">Dynamixel_Ping</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:ae0a5015bc773c79b35767e38084fa5ce"><td class="memItemLeft" align="right" valign="top"><a id="ae0a5015bc773c79b35767e38084fa5ce"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_Ping</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:ae0a5015bc773c79b35767e38084fa5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae05122fb9961237e6cad4a4eba8dad38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#ae05122fb9961237e6cad4a4eba8dad38">Dynamixel_SetIOType</a> (enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a> type)</td></tr>
+<tr class="memitem:ae05122fb9961237e6cad4a4eba8dad38"><td class="memItemLeft" align="right" valign="top"><a id="ae05122fb9961237e6cad4a4eba8dad38"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_SetIOType</b> (enum IO_FLAGS type)</td></tr>
 <tr class="separator:ae05122fb9961237e6cad4a4eba8dad38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61fb59d98ad05c682348b8c2429dc4f1"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a61fb59d98ad05c682348b8c2429dc4f1">Dynamixel_GetIOType</a> ()</td></tr>
+<tr class="memitem:a61fb59d98ad05c682348b8c2429dc4f1"><td class="memItemLeft" align="right" valign="top"><a id="a61fb59d98ad05c682348b8c2429dc4f1"></a>
+enum IO_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_GetIOType</b> ()</td></tr>
 <tr class="separator:a61fb59d98ad05c682348b8c2429dc4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22047239f8dec368039be94fc8e2452e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a22047239f8dec368039be94fc8e2452e">Dynamixel_Init</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle, GPIO_TypeDef *DataDirPort, uint16_t DataDirPinNum, enum <a class="el" href="_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66">motorTypes_e</a> motorType)</td></tr>
+<tr class="memitem:a22047239f8dec368039be94fc8e2452e"><td class="memItemLeft" align="right" valign="top"><a id="a22047239f8dec368039be94fc8e2452e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_Init</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle, GPIO_TypeDef *DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType)</td></tr>
 <tr class="separator:a22047239f8dec368039be94fc8e2452e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af317c5e8c70770a60a7a3331e89c5d67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#af317c5e8c70770a60a7a3331e89c5d67">Dynamixel_Reset</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:af317c5e8c70770a60a7a3331e89c5d67"><td class="memItemLeft" align="right" valign="top"><a id="af317c5e8c70770a60a7a3331e89c5d67"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_Reset</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:af317c5e8c70770a60a7a3331e89c5d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a018df076095889475b42e8e21a26dc1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a018df076095889475b42e8e21a26dc1e">Dynamixel_EnterWheelMode</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalVelocity)</td></tr>
+<tr class="memitem:a018df076095889475b42e8e21a26dc1e"><td class="memItemLeft" align="right" valign="top"><a id="a018df076095889475b42e8e21a26dc1e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_EnterWheelMode</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float goalVelocity)</td></tr>
 <tr class="separator:a018df076095889475b42e8e21a26dc1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d16a19af6f00b284c750b524fa0079f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a2d16a19af6f00b284c750b524fa0079f">Dynamixel_EnterJointMode</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memitem:a2d16a19af6f00b284c750b524fa0079f"><td class="memItemLeft" align="right" valign="top"><a id="a2d16a19af6f00b284c750b524fa0079f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Dynamixel_EnterJointMode</b> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="separator:a2d16a19af6f00b284c750b524fa0079f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d3d35032085f23ec46cb337c7c40762"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#a5d3d35032085f23ec46cb337c7c40762">syncWriteBlockInit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> **arrDynamixel, uint8_t numMotors, UART_HandleTypeDef *UART_Handle, <a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *syncWriteBlock)</td></tr>
-<tr class="separator:a5d3d35032085f23ec46cb337c7c40762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -314,7 +375,10 @@ Variables</h2></td></tr>
 <tr class="memitem:afcda2c035c387ac3a88399e33602915b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8h.html#afcda2c035c387ac3a88399e33602915b">arrSyncWritePosition</a> [<a class="el" href="_dynamixel_protocol_v1_8h.html#a8309e50d2ad7393eda0b9b3dccb273b0">NUM_UARTS</a>][23]</td></tr>
 <tr class="separator:afcda2c035c387ac3a88399e33602915b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuator using protocol version 1.0 should be able to be integrated with little effort, as the instructions and register addresses are very similar for all actuators using this protocol version. </p>
+<dl class="section author"><dt>Author</dt><dd>Tyler </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a54e5850720a4e3e394fb900a4d83ab41"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54e5850720a4e3e394fb900a4d83ab41">&#9670;&nbsp;</a></span>__DYNAMIXEL_RECEIVE</h2>
 
@@ -340,6 +404,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set data direction pin low (RX) </p>
 
 </div>
 </div>
@@ -368,6 +433,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set data direction pin high (TX) </p>
 
 </div>
 </div>
@@ -382,6 +448,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus) </p>
 
 </div>
 </div>
@@ -396,6 +463,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Receive buffer size for UART receptions (number of bytes) </p>
 
 </div>
 </div>
@@ -410,6 +478,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default condition(s) under which the alarm LED will be set </p>
 
 </div>
 </div>
@@ -424,6 +493,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default condition(s) under which the motor will shut down due to an alarm </p>
 
 </div>
 </div>
@@ -438,6 +508,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default clockwise angle limit </p>
 
 </div>
 </div>
@@ -452,6 +523,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default value for the EEPROM lock </p>
 
 </div>
 </div>
@@ -466,6 +538,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default motor ID </p>
 
 </div>
 </div>
@@ -480,6 +553,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default LED state </p>
 
 </div>
 </div>
@@ -494,6 +568,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default permitted minimum voltage (0x3C = 60 -&gt; 6.0 V) </p>
 
 </div>
 </div>
@@ -508,6 +583,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default maximum torque limit (10-bit resolution percentage) </p>
 
 </div>
 </div>
@@ -522,6 +598,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default time motor waits before returning status packet (microseconds) </p>
 
 </div>
 </div>
@@ -536,6 +613,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default condition(s) under which a status packet will be returned (all) </p>
 
 </div>
 </div>
@@ -550,6 +628,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default motor power state </p>
 
 </div>
 </div>
@@ -564,6 +643,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Triggers instructions registered by INST_REG_WRITE </p>
 
 </div>
 </div>
@@ -578,6 +658,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets a status packet </p>
 
 </div>
 </div>
@@ -592,6 +673,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Reads data from a motor register </p>
 
 </div>
 </div>
@@ -606,6 +688,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Registers an instruction to be executed at a later time </p>
 
 </div>
 </div>
@@ -620,6 +703,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Resets the control tables of the Dynamixel actuator(s) specified </p>
 
 </div>
 </div>
@@ -634,6 +718,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Writes on a specified address with a specified data length on multiple devices </p>
 
 </div>
 </div>
@@ -648,6 +733,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Writes data for immediate execution </p>
 
 </div>
 </div>
@@ -662,6 +748,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum angular position (joint mode) </p>
 
 </div>
 </div>
@@ -676,6 +763,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum punch (proportional to minimum current) </p>
 
 </div>
 </div>
@@ -690,6 +778,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum torque (percent of maximum) </p>
 
 </div>
 </div>
@@ -704,6 +793,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum operating voltage </p>
 
 </div>
 </div>
@@ -718,6 +808,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum angular position (joint mode) </p>
 
 </div>
 </div>
@@ -732,6 +823,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum punch (proportional to minimum current) </p>
 
 </div>
 </div>
@@ -746,6 +838,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum torque (percent of maximum) </p>
 
 </div>
 </div>
@@ -760,6 +853,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum angular velocity (RPM) </p>
 
 </div>
 </div>
@@ -774,6 +868,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum operating voltage </p>
 
 </div>
 </div>
@@ -788,6 +883,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Used to determine buffer sizes </p>
 
 </div>
 </div>
@@ -802,6 +898,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Number of UARTs available for motor communication </p>
 
 </div>
 </div>
@@ -816,6 +913,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Timeout for blocking UART receptions, in milliseconds </p>
 
 </div>
 </div>
@@ -830,6 +928,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Alarm LED condition(s) register </p>
 
 </div>
 </div>
@@ -844,6 +943,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Alarm shutdown condition(s) register </p>
 
 </div>
 </div>
@@ -858,6 +958,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Baud rate register </p>
 
 </div>
 </div>
@@ -872,6 +973,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte) </p>
 
 </div>
 </div>
@@ -886,6 +988,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Current load register (0x28 = low byte, 0x29 = high byte) </p>
 
 </div>
 </div>
@@ -900,6 +1003,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Current position register (0x24 = low byte, 0x25 = high byte) </p>
 
 </div>
 </div>
@@ -914,6 +1018,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Current temperature register </p>
 
 </div>
 </div>
@@ -928,6 +1033,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Current velocity register (0x26 = low byte, 0x27 = high byte) </p>
 
 </div>
 </div>
@@ -942,6 +1048,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Current voltage register </p>
 
 </div>
 </div>
@@ -956,6 +1063,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Clockwise angle limit register (0x06 = low byte, 0x07 = high byte) </p>
 
 </div>
 </div>
@@ -970,6 +1078,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Goal position register (0x1E = low byte, 0x1F = high byte) </p>
 
 </div>
 </div>
@@ -984,6 +1093,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Goal torque register (0x22 = low byte, 0x23 = high byte) </p>
 
 </div>
 </div>
@@ -998,6 +1108,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Goal velocity register (0x20 = low byte, 0x21 = high byte) </p>
 
 </div>
 </div>
@@ -1012,6 +1123,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum voltage limit register </p>
 
 </div>
 </div>
@@ -1026,6 +1138,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Motor ID register </p>
 
 </div>
 </div>
@@ -1040,6 +1153,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>LED control register </p>
 
 </div>
 </div>
@@ -1054,6 +1168,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>EEPROM lock register </p>
 
 </div>
 </div>
@@ -1068,6 +1183,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Minimum voltage limit register </p>
 
 </div>
 </div>
@@ -1082,6 +1198,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Maximum torque limit register (0x0E = low byte, 0x0F = high byte) </p>
 
 </div>
 </div>
@@ -1096,6 +1213,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Motor motion register </p>
 
 </div>
 </div>
@@ -1110,6 +1228,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Punch (0x30 = low register, 0x31 = high register) </p>
 
 </div>
 </div>
@@ -1124,6 +1243,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Command execution status register </p>
 
 </div>
 </div>
@@ -1138,6 +1258,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Status packet return delay time register </p>
 
 </div>
 </div>
@@ -1152,6 +1273,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Status packet return condition(s) register </p>
 
 </div>
 </div>
@@ -1166,6 +1288,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Motor power control register </p>
 
 </div>
 </div>
@@ -1180,6 +1303,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Timeout for blocking UART transmissions, in milliseconds </p>
 
 </div>
 </div>
@@ -1194,1096 +1318,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a2d5f4ea730f273121dc94b9425bc3d55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d5f4ea730f273121dc94b9425bc3d55">&#9670;&nbsp;</a></span>IO_FLAGS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2d5f4ea730f273121dc94b9425bc3d55afe0dadbeb5c11e52d0a5e47b6abb73cb"></a>IO_DMA&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2d5f4ea730f273121dc94b9425bc3d55a414f6b89d2981af1ec2ed8e110bfc47e"></a>IO_POLL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2d5f4ea730f273121dc94b9425bc3d55aae07b2754c4d2efc8edc8e759eb79a00"></a>IO_IT&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a78077c4319d76d6de3309d49efd6bf2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78077c4319d76d6de3309d49efd6bf2c">&#9670;&nbsp;</a></span>Dynamixel_Action()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_Action </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae0e18eec55a4c1c3600dc8406d21a9c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0e18eec55a4c1c3600dc8406d21a9c9">&#9670;&nbsp;</a></span>Dynamixel_DataReader()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t Dynamixel_DataReader </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>readAddr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>readLength</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a81cc54c2139629f4737ef76b95ae9c92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81cc54c2139629f4737ef76b95ae9c92">&#9670;&nbsp;</a></span>Dynamixel_DataReader_DMA()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t Dynamixel_DataReader_DMA </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>readAddr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>readLength</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aabac5f22c65d45c6e62aec697ac597bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabac5f22c65d45c6e62aec697ac597bf">&#9670;&nbsp;</a></span>Dynamixel_DataWriter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_DataWriter </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>args</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>numArgs</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2d16a19af6f00b284c750b524fa0079f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d16a19af6f00b284c750b524fa0079f">&#9670;&nbsp;</a></span>Dynamixel_EnterJointMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_EnterJointMode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a018df076095889475b42e8e21a26dc1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a018df076095889475b42e8e21a26dc1e">&#9670;&nbsp;</a></span>Dynamixel_EnterWheelMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_EnterWheelMode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>goalVelocity</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a61fb59d98ad05c682348b8c2429dc4f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61fb59d98ad05c682348b8c2429dc4f1">&#9670;&nbsp;</a></span>Dynamixel_GetIOType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a> Dynamixel_GetIOType </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2f574fbe64e91f7644bf9653540d36e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f574fbe64e91f7644bf9653540d36e1">&#9670;&nbsp;</a></span>Dynamixel_GetLoad()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_GetLoad </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3edc0f39369851f07925e38a83f67f51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3edc0f39369851f07925e38a83f67f51">&#9670;&nbsp;</a></span>Dynamixel_GetPosition()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_GetPosition </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1be3f0c36a3a421143dfaa04af7e0d0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1be3f0c36a3a421143dfaa04af7e0d0c">&#9670;&nbsp;</a></span>Dynamixel_GetTemperature()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Dynamixel_GetTemperature </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aaad13a5ad5c223678b56d23b59a1bc3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaad13a5ad5c223678b56d23b59a1bc3a">&#9670;&nbsp;</a></span>Dynamixel_GetVelocity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_GetVelocity </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a612a6cae0aa7f939510e1584d870652e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a612a6cae0aa7f939510e1584d870652e">&#9670;&nbsp;</a></span>Dynamixel_GetVoltage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Dynamixel_GetVoltage </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a22047239f8dec368039be94fc8e2452e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22047239f8dec368039be94fc8e2452e">&#9670;&nbsp;</a></span>Dynamixel_Init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_Init </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>ID</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>UART_Handle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">GPIO_TypeDef *&#160;</td>
-          <td class="paramname"><em>DataDirPort</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>DataDirPinNum</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">enum <a class="el" href="_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66">motorTypes_e</a>&#160;</td>
-          <td class="paramname"><em>motorType</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aee425951e23d20139b905fa2ba6f9e4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee425951e23d20139b905fa2ba6f9e4c">&#9670;&nbsp;</a></span>Dynamixel_IsJointMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Dynamixel_IsJointMode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6fcd0de3d61eeaa85382e2a237a1c410"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fcd0de3d61eeaa85382e2a237a1c410">&#9670;&nbsp;</a></span>Dynamixel_IsMoving()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Dynamixel_IsMoving </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9c5bdf6190f809a617509cfdbf69915d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c5bdf6190f809a617509cfdbf69915d">&#9670;&nbsp;</a></span>Dynamixel_IsRegistered()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Dynamixel_IsRegistered </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9031a9e4b81c946ba731cda4ed677abe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9031a9e4b81c946ba731cda4ed677abe">&#9670;&nbsp;</a></span>Dynamixel_LEDEnable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_LEDEnable </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>isEnabled</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a208adc06a269e04321f30e4f7334dfdb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a208adc06a269e04321f30e4f7334dfdb">&#9670;&nbsp;</a></span>Dynamixel_LockEEPROM()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_LockEEPROM </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae0a5015bc773c79b35767e38084fa5ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0a5015bc773c79b35767e38084fa5ce">&#9670;&nbsp;</a></span>Dynamixel_Ping()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int8_t Dynamixel_Ping </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a25e0659774099bcba7bd5fc1dbc37843"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25e0659774099bcba7bd5fc1dbc37843">&#9670;&nbsp;</a></span>Dynamixel_RegWrite()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_RegWrite </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>arrSize</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>writeAddr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>param1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>param2</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af317c5e8c70770a60a7a3331e89c5d67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af317c5e8c70770a60a7a3331e89c5d67">&#9670;&nbsp;</a></span>Dynamixel_Reset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_Reset </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab2910ce24ca0b804f72b74a00d331dea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2910ce24ca0b804f72b74a00d331dea">&#9670;&nbsp;</a></span>Dynamixel_SetAlarmLED()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetAlarmLED </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>alarm_LED_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9224a5f296e03de3f7641b91449926da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9224a5f296e03de3f7641b91449926da">&#9670;&nbsp;</a></span>Dynamixel_SetAlarmShutdown()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetAlarmShutdown </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>alarm_shutdown_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2970e0b076f2f97022782885f0f40a5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2970e0b076f2f97022782885f0f40a5a">&#9670;&nbsp;</a></span>Dynamixel_SetBaudRate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetBaudRate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>baud</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6dc6d1d812e06b31972ff0df65f48dce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6dc6d1d812e06b31972ff0df65f48dce">&#9670;&nbsp;</a></span>Dynamixel_SetCCWAngleLimit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetCCWAngleLimit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>maxAngle</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad86c73a30cc54d228eaee9aa71bedfc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad86c73a30cc54d228eaee9aa71bedfc5">&#9670;&nbsp;</a></span>Dynamixel_SetCWAngleLimit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetCWAngleLimit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>minAngle</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a67e039f885c6e107121b297cb6388e8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67e039f885c6e107121b297cb6388e8c">&#9670;&nbsp;</a></span>Dynamixel_SetGoalPosition()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetGoalPosition </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>goalAngle</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0728b1a0ad84f1626a5344bcef7a6427"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0728b1a0ad84f1626a5344bcef7a6427">&#9670;&nbsp;</a></span>Dynamixel_SetGoalTorque()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetGoalTorque </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>goalTorque</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac2af2caa75e7341d542769dd9e8649fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2af2caa75e7341d542769dd9e8649fa">&#9670;&nbsp;</a></span>Dynamixel_SetGoalVelocity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetGoalVelocity </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>goalVelocity</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a918799fda0a088a22ddb5b6ebde9dea7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a918799fda0a088a22ddb5b6ebde9dea7">&#9670;&nbsp;</a></span>Dynamixel_SetHighestVoltageLimit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetHighestVoltageLimit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>highestVoltage</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="acde9601989267c2818bd407257932b10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acde9601989267c2818bd407257932b10">&#9670;&nbsp;</a></span>Dynamixel_SetID()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetID </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>ID</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae05122fb9961237e6cad4a4eba8dad38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae05122fb9961237e6cad4a4eba8dad38">&#9670;&nbsp;</a></span>Dynamixel_SetIOType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetIOType </td>
-          <td>(</td>
-          <td class="paramtype">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a>&#160;</td>
-          <td class="paramname"><em>type</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4b9a3a50d33977550c48a3cb4335b8da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b9a3a50d33977550c48a3cb4335b8da">&#9670;&nbsp;</a></span>Dynamixel_SetLowestVoltageLimit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetLowestVoltageLimit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>lowestVoltage</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6d69ef92eb60b74b6ed75e82614ade8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d69ef92eb60b74b6ed75e82614ade8d">&#9670;&nbsp;</a></span>Dynamixel_SetMaxTorque()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetMaxTorque </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>maxTorque</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abccfff965b8862b0bc7cd5733e25f98a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abccfff965b8862b0bc7cd5733e25f98a">&#9670;&nbsp;</a></span>Dynamixel_SetPunch()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetPunch </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>punch</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa83d2ec791afc039d38d2fb84b759ce2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa83d2ec791afc039d38d2fb84b759ce2">&#9670;&nbsp;</a></span>Dynamixel_SetReturnDelayTime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetReturnDelayTime </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>microSec</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a654e08fee0f73bb3f15943c43fadd319"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a654e08fee0f73bb3f15943c43fadd319">&#9670;&nbsp;</a></span>Dynamixel_SetStatusReturnLevel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetStatusReturnLevel </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>status_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2eb94f7a4849e66078971dfe7bc1dcdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2eb94f7a4849e66078971dfe7bc1dcdc">&#9670;&nbsp;</a></span>Dynamixel_SyncWritePosition()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SyncWritePosition </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *&#160;</td>
-          <td class="paramname"><em>syncWriteBlock</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa3326f4a82982e88e69f71370433e59b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3326f4a82982e88e69f71370433e59b">&#9670;&nbsp;</a></span>Dynamixel_SyncWritePositionAndVelocity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SyncWritePositionAndVelocity </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *&#160;</td>
-          <td class="paramname"><em>syncWriteBlock</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a41f1726bc88a49ab5051ed20f492a0f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41f1726bc88a49ab5051ed20f492a0f6">&#9670;&nbsp;</a></span>Dynamixel_TorqueEnable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_TorqueEnable </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>isEnabled</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5d3d35032085f23ec46cb337c7c40762"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d3d35032085f23ec46cb337c7c40762">&#9670;&nbsp;</a></span>syncWriteBlockInit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void syncWriteBlockInit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> **&#160;</td>
-          <td class="paramname"><em>arrDynamixel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>numMotors</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>UART_Handle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_sync_write_block__t.html">SyncWriteBlock_t</a> *&#160;</td>
-          <td class="paramname"><em>syncWriteBlock</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Maximum packet size for regular motor commands (exclusion: sync write) </p>
 
 </div>
 </div>
@@ -2299,6 +1334,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Pre-allocated buffer for reading in packets from motors </p>
 
 </div>
 </div>
@@ -2313,6 +1349,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Obsolete </p>
 
 </div>
 </div>
@@ -2327,15 +1364,20 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Pre-allocated buffer for transmitting packets to motors </p>
 
 </div>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.14
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_60925fc218da8ca7908795bf5f624060.html">Drivers</a></li><li class="navelem"><a class="el" href="dir_01043e09be118d118a1c0a841e614b7e.html">Dynamixel</a></li><li class="navelem"><a class="el" href="_dynamixel_protocol_v1_8h.html">DynamixelProtocolV1.h</a></li>
+    <li class="footer">Generated by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
 </body>
 </html>

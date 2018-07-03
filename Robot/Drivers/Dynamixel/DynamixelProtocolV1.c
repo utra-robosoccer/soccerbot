@@ -1,10 +1,14 @@
-/* This file holds common functional code for the AX12A library and MX28 library. It is
- * somewhat generic in that any Dynamixel actuator using protocol version 1.0 should
- * be able to be integrated with little effort, as the instructions and register
- * addresses are very similar for all actuators using this protocol version.
- *
- * Author: Tyler
- */
+/**
+  ******************************************************************************
+  * @file    DynamixelProtocolV1.c
+  * @author  Tyler
+  * @brief   Common functional code for the AX12A library and MX28 library.
+  * 		 It is generic in that any Dynamixel actuator using protocol version
+  * 		 1.0 should be able to be integrated with little effort, as the
+  * 		 instructions and register addresses are very similar for all
+  * 		 actuators using this protocol version.
+  ******************************************************************************
+  */
 
 /********************************* Includes ************************************/
 #include "DynamixelProtocolV1.h"
@@ -14,7 +18,7 @@
 
 /******************************* Public Variables *******************************/
 /* IO Type - initialized to blocking IO */
-enum IO_FLAGS IOType = IO_POLL;
+enum IO_FLAGS IOType = IO_POLL; /*!< Configures the low-level I/O mode used by the library. Default: polled I/O */
 
 /* Buffer for data received from motors. */
 uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
@@ -58,34 +62,35 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 
 /******************************** Functions ************************************/
-/*******************************************************************************/
-/*	Setter helper functions													   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+/** @defgroup Dynamixel_Exported_Functions Setters
+ *  @brief    Register-setting functions
+ *
+@verbatim
+ ===============================================================================
+                       ##### Setter helper functions #####
+ ===============================================================================
+    [..]  This subsection provides a set of functions which provide interfaces
+    	  for setting motor register values.
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Sets the ID (identification number) for the current motor.
+  * 		Note that the instruction will be broadcasted using the current ID.
+  * 		As such, if the ID is not known, the motor ID should be initialized
+  * 		to the broadcast ID (0xFE) in the Dynamixel_Init function.
+  *
+  * 		Instruction register address: 0x03 (EEPROM)
+  * 		Default value: 1
+  * @param  hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+  * 		contains the configuration information for the motor
+  * @param	ID the number between 0 and 252 or equal to 254 to identify the motor.
+  *			If 0xFE (254), any messages broadcasted to that ID will be broadcasted
+  *			to all motors
+  * @retval None
+  */
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
-	/* Sets the ID (identification number) for the current motor.
-	 * Note that the instruction will be broadcasted using the current ID.
-	 * As such, if the ID is not known, the motor ID should be initialized
-	 * to the broadcast ID (0xFE) in the Dynamixel_Init function.
-	 *
-	 * Instruction register address: 0x03 (EEPROM)
-	 * Default value: 1
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  ID, the number between 0 and 252 or equal to 254 to identify the motor.
-	 * 			  	If 0xFE (254), any messages broadcasted to that ID will be broadcasted
-	 * 			  	to all motors.
-	 *
-	 * Returns: none
-	 */
-
-
 	/* Compute validity. */
 	if((ID == 253) || (ID == 255)){
 		ID = DEFAULT_ID;
@@ -99,18 +104,18 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	hdynamixel -> _ID = ID;
 }
 
+/**
+  * @brief 	Sets the baud rate of a particular motor. Register address is 0x04
+  * 		in motor EEPROM.
+  *
+  * 		Instruction register address: 0x04 (EEPROM)
+  * 		Default value: 0x01
+  * @param  hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+  * 		contains the configuration information for the motor
+  * @param	baud the baud rate. Arguments in range [7844, 1000000] are valid
+  * @retval None
+  */
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
-	/* Sets the baud rate of a particular motor. Register address is 0x04 in motor EEPROM.
-	 *
-	 * Instruction register address: 0x04 (EEPROM)
-	 * Default value: 0x01
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  baud, the baud rate. Arguments in range [7844, 1000000] are valid
-	 *
-	 * Returns: none
-	 */
-
 	uint8_t baudArg = 0x01; // Default to 1 Mbps
 
 	if(hdynamixel -> _motorType == AX12ATYPE){
@@ -669,6 +674,10 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 	uint8_t args[3] = {REG_PUNCH, lowByte, highByte};
 	Dynamixel_DataWriter(hdynamixel, args, sizeof(args));
 }
+
+/**
+  * @}
+  */
 
 /*******************************************************************************/
 /*	Getter helper functions											  		   */
