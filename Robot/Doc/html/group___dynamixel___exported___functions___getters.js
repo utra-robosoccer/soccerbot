@@ -5,7 +5,7 @@ var group___dynamixel___exported___functions___getters =
     [ "Dynamixel_GetTemperature", "group___dynamixel___exported___functions___getters.html#ga1be3f0c36a3a421143dfaa04af7e0d0c", null ],
     [ "Dynamixel_GetVelocity", "group___dynamixel___exported___functions___getters.html#gaaad13a5ad5c223678b56d23b59a1bc3a", null ],
     [ "Dynamixel_GetVoltage", "group___dynamixel___exported___functions___getters.html#ga612a6cae0aa7f939510e1584d870652e", null ],
-    [ "Dynamixel_IsJointMode", "group___dynamixel___exported___functions___getters.html#gaee425951e23d20139b905fa2ba6f9e4c", null ],
-    [ "Dynamixel_IsMoving", "group___dynamixel___exported___functions___getters.html#ga6fcd0de3d61eeaa85382e2a237a1c410", null ],
-    [ "Dynamixel_IsRegistered", "group___dynamixel___exported___functions___getters.html#ga9c5bdf6190f809a617509cfdbf69915d", null ]
+    [ "Dynamixel_IsJointMode", "group___dynamixel___exported___functions___getters.html#ga1927f0f96a037050b5e8a591211ef8db", null ],
+    [ "Dynamixel_IsMoving", "group___dynamixel___exported___functions___getters.html#gacff925d04a9c8459a18ce97d5472df7f", null ],
+    [ "Dynamixel_IsRegistered", "group___dynamixel___exported___functions___getters.html#ga071559df599e50e85b554cc9ea57df41", null ]
 ];

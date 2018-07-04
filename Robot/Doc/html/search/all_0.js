@@ -7,7 +7,7 @@ var searchData=
   ['_5fdatadirport',['_dataDirPort',['../struct_dynamixel___handle_type_def.html#a5157edbd5a8183183a2a2d45b3c8be0d',1,'Dynamixel_HandleTypeDef']]],
   ['_5ferror_5fhandler',['_Error_Handler',['../main_8h.html#a47642651029b93e3f9c9edad46bd27b4',1,'_Error_Handler(char *, int):&#160;main.c'],['../main_8c.html#a829116a51f1db1a72ebd1120f60719d5',1,'_Error_Handler(char *file, int line):&#160;main.c']]],
   ['_5fid',['_ID',['../struct_dynamixel___handle_type_def.html#ac07cb35228843be781e258bd39485d6a',1,'Dynamixel_HandleTypeDef::_ID()'],['../struct_m_p_u6050___handle_type_def.html#ac07cb35228843be781e258bd39485d6a',1,'MPU6050_HandleTypeDef::_ID()']]],
-  ['_5fisjointmode',['_isJointMode',['../struct_dynamixel___handle_type_def.html#a1e1aecddb114d4e14ff464c0565a1a0c',1,'Dynamixel_HandleTypeDef']]],
+  ['_5fisjointmode',['_isJointMode',['../struct_dynamixel___handle_type_def.html#af60a557caed956737bcac0114ffb315b',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastload',['_lastLoad',['../struct_dynamixel___handle_type_def.html#ad411c71835cb7b17b9818d2836470d10',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastloaddirection',['_lastLoadDirection',['../struct_dynamixel___handle_type_def.html#ab2cead07066dc9f83aa1d8ea7f8b4b54',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastposition',['_lastPosition',['../struct_dynamixel___handle_type_def.html#a2e8a4d000bb45bf784fcbb56ebbfc10c',1,'Dynamixel_HandleTypeDef']]],

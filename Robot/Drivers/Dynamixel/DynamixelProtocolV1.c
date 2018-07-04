@@ -18,12 +18,12 @@
 
 /******************************* Public Variables *******************************/
 /* IO Type - initialized to blocking IO */
-enum IO_FLAGS IOType = IO_POLL; /*!< Configures the low-level I/O mode used by the library. Default: polled I/O */
+enum IO_FLAGS IOType = IO_POLL; /**< Configures the low-level I/O mode used by the library. Default: polled I/O */
 
-/* Buffer for data received from motors. */
+/** Pre-allocated buffer for reading in packets from motors */
 uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
 
-/* Bytes to be transmitted to motors are written to this array. */
+/** Pre-allocated buffer for transmitting packets to motors */
 uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 	{0xFF, 0xFF, 0xFE, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 1, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
@@ -46,14 +46,8 @@ uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 	{0xFF, 0xFF, 18, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00}
 };
 
-/* Sync-writing position uses this array. */
-uint8_t arrSyncWritePosition[NUM_UARTS][23] = {
-	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-	{0xFF, 0xFF, 0xFE, 0x00, INST_SYNC_WRITE, REG_GOAL_POSITION, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-};
+
+
 
 /************************ Private Function Prototypes **************************/
 static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
@@ -73,7 +67,7 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 
 /*****************************************************************************/
-/*  Setter helper functions                                                  */
+/*  Setter functions                                                         */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -85,7 +79,7 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  * @defgroup Dynamixel_Exported_Functions_Setters Setters
  * @brief    Register-setting functions
  *
- * # Setter helper functions #
+ * # Setter functions #
  *
  * This subsection provides a set of functions which provide interfaces for
  * setting motor register values.
@@ -728,7 +722,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 
 
 /*****************************************************************************/
-/*  Getter helper functions                                                  */
+/*  Getter functions                                                         */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -739,7 +733,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 /** @defgroup Dynamixel_Exported_Functions_Getters Getters
  *  @brief    Register-reading functions
  *
- * # Getter helper functions #
+ * # Getter functions #
  *
  * This subsection provides a set of functions which provide interfaces for
  * reading motor register values.
@@ -898,9 +892,9 @@ uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
  * @retval  isRegistered 1 if there are commands transmitted by REG_WRITE,
  *          0 otherwise
  */
-uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
+bool Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data read from the motor. */
-	return((uint8_t)Dynamixel_DataReader(hdynamixel, REG_REGISTERED, 1));
+	return((bool)Dynamixel_DataReader(hdynamixel, REG_REGISTERED, 1));
 }
 
 /**
@@ -910,7 +904,7 @@ uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
  *          contains the configuration information for the motor
  * @retval  isMoving 1 if moving, otherwise 0
  */
-uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
+bool Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data from the motor. */
 	return((uint8_t)Dynamixel_DataReader(hdynamixel, REG_MOVING, 1));
 }
@@ -926,13 +920,13 @@ uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
  *
  * @retval  isJointMode 1 if in joint mode, 0 if in wheel mode
  */
-uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
+bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
 	uint16_t retValCW = Dynamixel_DataReader(hdynamixel, REG_CW_ANGLE_LIMIT, 2);
 	uint16_t retValCCW = Dynamixel_DataReader(hdynamixel, REG_CCW_ANGLE_LIMIT, 2);
 
 	/* Parse data and write it into motor handle. */
-	hdynamixel -> _isJointMode = (uint8_t)((retValCW | retValCCW) != 0);
+	hdynamixel -> _isJointMode = (bool)((retValCW | retValCCW) != 0);
 
 	/* Return. */
 	return(hdynamixel -> _isJointMode);
@@ -996,7 +990,7 @@ enum IO_FLAGS Dynamixel_GetIOType(){
 
 
 /*****************************************************************************/
-/*  Low-level transmission and reception helper functions                    */
+/*  Low-level transmission and reception functions                           */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -1006,9 +1000,9 @@ enum IO_FLAGS Dynamixel_GetIOType(){
 /*****************************************************************************/
 /**
  * @defgroup Dynamixel_Exported_Functions_LL_TX_RX  Transmission and reception
- * @brief    Low-level transmission and reception helper functions
+ * @brief    Low-level transmission and reception functions
  *
- * # Low-level transmission and reception helper functions  #
+ * # Low-level transmission and reception functions  #
  *
  * This subsection provides a set of functions which provide flexible
  * interfaces for transferring packets between motors and the MCU.
@@ -1233,7 +1227,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 
 
 /*****************************************************************************/
-/*  Other motor instruction helper functions                                 */
+/*  Other motor instruction functions                                        */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -1242,10 +1236,10 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Other Other motor instruction helper functions
- * @brief    Other motor instruction helper functions
+ * @defgroup Dynamixel_Exported_Functions_Other Other motor instruction functions
+ * @brief    Other motor instruction functions
  *
- * # Other motor instruction helper functions  #
+ * # Other motor instruction functions  #
  *
  * This subsection provides a set of functions which implement certain
  * instructions (motor commands), but their uses are rather niche compared
@@ -1367,7 +1361,7 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 /*****************************************************************************/
-/*  Setup helper functions                                                   */
+/*  Setup functions                                                          */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -1376,10 +1370,10 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Setup Setup helper functions
- * @brief    Setup helper functions
+ * @defgroup Dynamixel_Exported_Functions_Setup Setup functions
+ * @brief    Setup functions
  *
- * # Setup helper functions  #
+ * # Setup functions  #
  *
  * This subsection provides a set of functions which implement functions
  * related to setup (data structure initialization, etc) and resetting.
