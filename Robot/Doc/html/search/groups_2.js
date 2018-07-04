@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['library_20configuration',['Library Configuration',['../group___dynamixel___exported___functions___library___configuration.html',1,'']]]
+  ['getters',['Getters',['../group___dynamixel___exported___functions___getters.html',1,'']]]
 ];

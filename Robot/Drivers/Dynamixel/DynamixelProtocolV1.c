@@ -56,7 +56,7 @@ uint8_t arrSyncWritePosition[NUM_UARTS][23] = {
 };
 
 /************************ Private Function Prototypes **************************/
-inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
+static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 
 
@@ -1375,24 +1375,34 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*                                                                           */
 /*****************************************************************************/
+/**
+ * @defgroup Dynamixel_Exported_Functions_Setup Setup helper functions
+ * @brief    Setup helper functions
+ *
+ * # Setup helper functions  #
+ *
+ * This subsection provides a set of functions which implement functions
+ * related to setup (data structure initialization, etc) and resetting.
+ * @{
+ */
+
+/**
+ * @brief   Initializes a motor handle
+ * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   ID the ID the motor has. Note that this function will not set the
+ *          ID in case there are multiple actuators on the same bus
+ * @param   UART_Handle the handle to the UART that will be used to communicate
+ *          with this motor
+ * @param   DataDirPort the pointer to the port that the data direction pin for
+ *          the motor is on
+ * @param   DataDirPinNum the number corresponding to the pin that controls
+ *          data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
+ * @param   motorType indicates whether motor is AX12A or MX28
+ * @retval None
+ */
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType){
-	/* Initializes the motor handle.
-	 *
-	 * Arguments: hdynamixel, the motor handle to be initialized
-	 * 			  ID, the ID the motor has. Note that this function will not set
-	 * 			  	  the ID in case there are multiple actuators on the same bus
-	 * 			  UART_Handle, the handle to the UART that will be used to
-	 * 			      communicate with this motor
-	 * 			  DataDirPort, the pointer to the port that the data direction pin
-	 * 			  	  for the motor is on
-	 * 			  DataDirPinNum, the number corresponding to the pin that controls
-	 * 			      data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
-	 * 			  motorType, indicates whether motor is AX12A or MX28
-	 *
-	 * Returns: none
-	 */
-
 	/* Set fields in motor handle. */
 	hdynamixel -> _motorType = motorType;		// Identifies the type of actuator; used in certain functions
 	hdynamixel -> _ID = ID; 					// Motor ID (unique or global)
@@ -1406,18 +1416,19 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
 	hdynamixel -> _dataDirPinNum = DataDirPinNum;
 }
 
+/**
+ * @brief   Resets motor control table
+ * @details Resets the control table values of the motor to the Factory Default
+ *          Value settings. Note that post-reset, motor ID will be 1. Thus, if
+ *          several motors with ID 1 are connected on the same bus, there will
+ *          not be a way to assign them unique IDs without first disconnecting
+ *          them. Need to wait around 500 ms before motor becomes valid again
+ * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @retval  None
+ */
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Resets the control table values of the motor to the Factory Default Value settings.
-	 * Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are
-	 * connected on the same bus, there will not be a way to assign them unique IDs without
-	 * first disconnecting them. Need to wait around 500 ms before motor becomes valid again.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
-	/* Define array for transmission. */
+    /* Define array for transmission. */
 	uint8_t arrTransmit[6];
 
 	/* Do assignments and computations. */
@@ -1436,6 +1447,11 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	hdynamixel -> _ID = DEFAULT_ID;
 }
 
+/**
+  * @}
+  */
+/* Dynamixel_Exported_Functions_Setup */
+
 
 
 
@@ -1448,16 +1464,31 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*                                                                           */
 /*****************************************************************************/
-void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
-	/* Sets the control registers such that the rotational angle of the motor
-	 * is not bounded.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  goalVelocity, the desired velocity to use when entering wheel mode
-	 *
-	 * Returns: none
-	 */
+/**
+ * @defgroup Dynamixel_Exported_Functions_Interfaces Interfaces for previously-defined functions
+ * @brief    Interfaces for previously-defined functions
+ *
+ * # Interfaces for previously-defined functions #
+ *
+ * This subsection provides a set of functions which implement functions
+ * which call previously-defined functions in order to accomplish specific
+ * tasks.
+ * @{
+ */
 
+/**
+ * @brief   Sets the control registers such that the rotational angle of the
+ *          motor is not bounded
+ * @details When the angle limits are both set to 0, then motor will attempt to
+ *          rotate with maximum velocity. To prevent undesired behaviour, the
+ *          goal velocity should be set right after calling this function
+ * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   goalVelocity the desired velocity in RPM to use when entering wheel
+ *          mode
+ * @retval  None
+ */
+void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* When the angle limits are both set to 0, then motor will attempt to
 	 * rotate with maximum velocity. To prevent undesired behaviour, the
 	 * goal velocity should be set right after calling this function */
@@ -1467,15 +1498,14 @@ void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVel
 	Dynamixel_SetGoalVelocity(hdynamixel, goalVelocity);
 }
 
+/**
+ * @brief  Sets the control registers such that the rotational angle of the
+ *         motor is constrained between the default values
+ * @param  hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *         contains the configuration information for the motor
+ * @retval None
+ */
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Sets the control registers such that the rotational angle of the motor
-	 * is constrained between the default values.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
 	Dynamixel_SetCWAngleLimit(hdynamixel, MIN_ANGLE);
 	Dynamixel_SetCCWAngleLimit(hdynamixel, MAX_ANGLE);
 	hdynamixel -> _isJointMode = 1;
@@ -1484,7 +1514,21 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /**
   * @}
   */
+/* Dynamixel_Exported_Functions_Interfaces */
+
+/**
+  * @}
+  */
 /* end Dynamixel_Exported_Functions */
+
+
+
+
+/**
+ * @defgroup Dynamixel_Private_Functions Dynamixel Private Functions
+ * @brief    Functions only accessible from within the library.
+ * @{
+ */
 
 
 
@@ -1498,15 +1542,26 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*                                                                           */
 /*****************************************************************************/
-inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
-	/* Compute the checksum for data to be transmitted.
-	 *
-	 * Arguments: arr, the array to be transmitted and ran through the checksum function
-	 * 			  length, the total length of the array arr
-	 *
-	 * Returns: the 1-byte number that is the checksum
-	 */
+/**
+ * @defgroup Dynamixel_Private_Functions_Computation Computation-based helper functions
+ * @brief    Computation-based helper functions
+ *
+ * # Computation-based helper functions #
+ *
+ * This subsection provides a set of functions which implement functions
+ * which execute solely computation-based tasks, such as computing a
+ * checksum.
+ * @{
+ */
 
+/**
+ * @brief  Compute the checksum for data passes in, according to a modular
+ *         checksum algorithm employed by the Dynamixel V1.0 protocol
+ * @param  arr the array to be ran through the checksum function
+ * @param  length the total length of the array arr
+ * @retval retval the 1-byte number that is the checksum
+ */
+static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	/* Local variable declaration. */
 	uint8_t accumulate = 0;
 
@@ -1518,3 +1573,13 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 
 	return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
 }
+
+/**
+  * @}
+  */
+/* Dynamixel_Private_Functions_Computation */
+
+/**
+  * @}
+  */
+/* end Dynamixel_Private_Functions */
