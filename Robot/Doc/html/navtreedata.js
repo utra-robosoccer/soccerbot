@@ -48,7 +48,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_a_x12_a_8h_source.html",
-"globals_vars.html"
+"group___dynamixel___exported___functions___getters.html#ga6fcd0de3d61eeaa85382e2a237a1c410"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
