@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Robot: Modules</title>
+<title>Robot: Computation-based helper functions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,7 +67,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('modules.html','');});
+$(document).ready(function(){initNavTree('group___dynamixel___private___functions___computation.html','');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -86,24 +86,78 @@ $(document).ready(function(){initNavTree('modules.html','');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Modules</div>  </div>
+<div class="title">Computation-based helper functions<div class="ingroups"><a class="el" href="group___dynamixel___private___functions.html">Dynamixel Private Functions</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all modules:</div><div class="directory">
-<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><a class="el" href="group___dynamixel___exported___functions.html" target="_self">Dynamixel Exported Functions</a></td><td class="desc">Globally-accessible functions for interfacing with Dynamixel actuators and controlling the settings of this library </td></tr>
-<tr id="row_0_0_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___setters.html" target="_self">Setters</a></td><td class="desc">Register-setting functions </td></tr>
-<tr id="row_0_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___getters.html" target="_self">Getters</a></td><td class="desc">Register-reading functions </td></tr>
-<tr id="row_0_2_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___library___configuration.html" target="_self">Library Configuration</a></td><td class="desc">Library configuration functions </td></tr>
-<tr id="row_0_3_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html" target="_self">Transmission and reception</a></td><td class="desc">Low-level transmission and reception helper functions </td></tr>
-<tr id="row_0_4_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___other.html" target="_self">Other motor instruction helper functions</a></td><td class="desc">Other motor instruction helper functions </td></tr>
-<tr id="row_0_5_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___setup.html" target="_self">Setup helper functions</a></td><td class="desc">Setup helper functions </td></tr>
-<tr id="row_0_6_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___exported___functions___interfaces.html" target="_self">Interfaces for previously-defined functions</a></td><td class="desc">Interfaces for previously-defined functions </td></tr>
-<tr id="row_1_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9660;</span><a class="el" href="group___dynamixel___private___functions.html" target="_self">Dynamixel Private Functions</a></td><td class="desc">Functions only accessible from within the library </td></tr>
-<tr id="row_1_0_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group___dynamixel___private___functions___computation.html" target="_self">Computation-based helper functions</a></td><td class="desc">Computation-based helper functions </td></tr>
+
+<p>Computation-based helper functions.  
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga3c6dca1a4013633e13288bd7f1191fe0"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0">Dynamixel_ComputeChecksum</a> (uint8_t *arr, int length)</td></tr>
+<tr class="memdesc:ga3c6dca1a4013633e13288bd7f1191fe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dynamixel V1.0 protocol.  <a href="#ga3c6dca1a4013633e13288bd7f1191fe0">More...</a><br /></td></tr>
+<tr class="separator:ga3c6dca1a4013633e13288bd7f1191fe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- directory -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Computation-based helper functions. </p>
+<h1>Computation-based helper functions</h1>
+<p>This subsection provides a set of functions which implement functions which execute solely computation-based tasks, such as computing a checksum. </p>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga3c6dca1a4013633e13288bd7f1191fe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3c6dca1a4013633e13288bd7f1191fe0">&#9670;&nbsp;</a></span>Dynamixel_ComputeChecksum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint8_t Dynamixel_ComputeChecksum </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dynamixel V1.0 protocol. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arr</td><td>the array to be ran through the checksum function </td></tr>
+    <tr><td class="paramname">length</td><td>the total length of the array arr </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">retval</td><td>the 1-byte number that is the checksum </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
