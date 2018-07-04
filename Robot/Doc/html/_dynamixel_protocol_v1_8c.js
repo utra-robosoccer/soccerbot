@@ -1,6 +1,6 @@
 var _dynamixel_protocol_v1_8c =
 [
-    [ "Dynamixel_Action", "group___dynamixel___exported___functions.html#ga78077c4319d76d6de3309d49efd6bf2c", null ],
+    [ "Dynamixel_Action", "group___dynamixel___exported___functions___other.html#ga78077c4319d76d6de3309d49efd6bf2c", null ],
     [ "Dynamixel_ComputeChecksum", "_dynamixel_protocol_v1_8c.html#a9934a5a82d925713fefa8929350e3996", null ],
     [ "Dynamixel_DataReader", "group___dynamixel___exported___functions___l_l___t_x___r_x.html#gae0e18eec55a4c1c3600dc8406d21a9c9", null ],
     [ "Dynamixel_DataWriter", "group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf", null ],
@@ -18,8 +18,8 @@ var _dynamixel_protocol_v1_8c =
     [ "Dynamixel_IsRegistered", "group___dynamixel___exported___functions___getters.html#ga9c5bdf6190f809a617509cfdbf69915d", null ],
     [ "Dynamixel_LEDEnable", "group___dynamixel___exported___functions___setters.html#ga9031a9e4b81c946ba731cda4ed677abe", null ],
     [ "Dynamixel_LockEEPROM", "group___dynamixel___exported___functions___setters.html#ga208adc06a269e04321f30e4f7334dfdb", null ],
-    [ "Dynamixel_Ping", "group___dynamixel___exported___functions.html#gae0a5015bc773c79b35767e38084fa5ce", null ],
-    [ "Dynamixel_RegWrite", "group___dynamixel___exported___functions.html#ga25e0659774099bcba7bd5fc1dbc37843", null ],
+    [ "Dynamixel_Ping", "group___dynamixel___exported___functions___other.html#gae0a5015bc773c79b35767e38084fa5ce", null ],
+    [ "Dynamixel_RegWrite", "group___dynamixel___exported___functions___other.html#ga25e0659774099bcba7bd5fc1dbc37843", null ],
     [ "Dynamixel_Reset", "group___dynamixel___exported___functions.html#gaf317c5e8c70770a60a7a3331e89c5d67", null ],
     [ "Dynamixel_SetAlarmLED", "group___dynamixel___exported___functions___setters.html#gab2910ce24ca0b804f72b74a00d331dea", null ],
     [ "Dynamixel_SetAlarmShutdown", "group___dynamixel___exported___functions___setters.html#ga9224a5f296e03de3f7641b91449926da", null ],
