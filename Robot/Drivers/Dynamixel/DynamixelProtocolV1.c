@@ -69,6 +69,18 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  * @{
  */
 
+
+
+
+/*****************************************************************************/
+/*  Setter helper functions                                                  */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 /**
  * @defgroup Dynamixel_Exported_Functions_Setters Setters
  * @brief    Register-setting functions
@@ -205,7 +217,7 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, uint16_t 
  *          Default value: 0x0000
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   minAngle, the minimum angle for all motor operations. Arguments
+ * @param   minAngle the minimum angle for all motor operations. Arguments
  *          between 0 and 300 are valid
  * @retval  None
  */
@@ -247,7 +259,7 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAng
  *          Default value: 0x03FF
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   maxAngle, the maximum angle for all motor operations. Arguments
+ * @param   maxAngle the maximum angle for all motor operations. Arguments
  *          between 0 and 300 are valid
  * @retval  None
  */
@@ -408,7 +420,7 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t
  *          Default value: 0x24 (0b00100100)
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   alarm_data
+ * @param   alarm_data the bits indicate the following:
  *              - bit 7: no function
  *              - bit 6: flash LED when an instruction error occurs
  *              - bit 5: flash LED when current load cannot be controlled with
@@ -440,7 +452,7 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LE
  *          Default value: 0x24 (0b00100100)
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   alarm_data
+ * @param   alarm_data the bits indicate the following:
  *              - bit 7: no function
  *              - bit 6: torque off when an instruction error occurs
  *              - bit 5: torque off when current load cannot be controlled with
@@ -568,7 +580,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, float goalAn
  *          Default value: None
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   velocity, the goal velocity in RPM. Arguments of 0-114 are valid
+ * @param   velocity the goal velocity in RPM. Arguments of 0-114 are valid
  *          when in joint mode. 0 corresponds to MAX motion in joint mode,
  *          and minimum motion in wheel mode. In wheel mode, negative
  *          arguments correspond to CW rotation
@@ -715,6 +727,15 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 
 
 
+/*****************************************************************************/
+/*  Getter helper functions                                                  */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 /** @defgroup Dynamixel_Exported_Functions_Getters Getters
  *  @brief    Register-reading functions
  *
@@ -837,7 +858,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
  *          checksum is verified, and is cleared otherwise
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  voltage The voltage in volts if the last read is valid, otherwise
+ * @retval  voltage the voltage in volts if the last read is valid, otherwise
  *          INFINITY
  */
 float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
@@ -853,10 +874,10 @@ float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
 /**
  * @brief   Reads the internal motor temperature
  * @details Reads address 0x2B in the motor RAM to see what the current
- *          temperature is inside the motor. Results are in degrees Celsius.
+ *          temperature is inside the motor. Results are in degrees Celsius
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  internal motor temperature in degrees Celsius
+ * @retval  temperature the internal motor temperature in degrees Celsius
  */
 uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
     /* Read data from motor straight into the motor handle. */
@@ -867,14 +888,15 @@ uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
  * @brief   Used to tell if a command sent was written to motor registers
  * @details Can also be used to see if the instruction in the motor register
  *          has been executed. If the ACTION command is executed, the value
- *          read is changed to 0.
+ *          read is changed to 0
  *
  *          Read address: 0x2C
  *
  *          Default value: 0x00
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  1 if there are commands transmitted by REG_WRITE, 0 otherwise
+ * @retval  isRegistered 1 if there are commands transmitted by REG_WRITE,
+ *          0 otherwise
  */
 uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data read from the motor. */
@@ -886,7 +908,7 @@ uint8_t Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
  * @details Reads the 0x2E address in motor RAM to see if motor is moving.
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  1 if moving, otherwise 0
+ * @retval  isMoving 1 if moving, otherwise 0
  */
 uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data from the motor. */
@@ -902,7 +924,7 @@ uint8_t Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  *
- * @retval  1 if in joint mode, 0 if in wheel mode
+ * @retval  isJointMode 1 if in joint mode, 0 if in wheel mode
  */
 uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
@@ -923,64 +945,99 @@ uint8_t Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 
-/*******************************************************************************/
-/*	Library configuration functions                                            */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
-void Dynamixel_SetIOType(enum IO_FLAGS type) {
-	/* Sets the IO protocol to one of three options:
-	 * Blocking (Polling), Non-Blocking (Interrupt), and DMA
-	 *
-	 * Arguments: One of IO_POLL, IO_IT, or IO_DMA
-	 *
-	 * Returns: none
-	 */
+/*****************************************************************************/
+/*  Library configuration functions                                          */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
+/**
+ * @defgroup Dynamixel_Exported_Functions_Library_Configuration Library Configuration
+ * @brief    Library configuration functions
+ *
+ * # Library configuration functions #
+ *
+ * This subsection provides a set of functions which provide interfaces for
+ * configuring certain parts of the library. Right now, the only thing that
+ * can be changed is the I/O mode (polling, interrupt-based, or DMA-based).
+ * @{
+ */
 
+/**
+ * @brief   Sets the I/O type used by the library
+ * @details Sets the IO protocol to one of three options:
+ *              -# Blocking (Polling)
+ *              -# Non-Blocking (Interrupt)
+ *              -# DMA
+ * @param   One of IO_POLL, IO_IT, or IO_DMA
+ * @retval  None
+ */
+void Dynamixel_SetIOType(enum IO_FLAGS type) {
 	IOType = type;
 }
 
+/**
+ * @brief   Gets the IO protocol setting for the library
+ * @retval  IOType one of IO_POLL, IO_IT, or IO_DMA
+ */
 enum IO_FLAGS Dynamixel_GetIOType(){
-	/* Gets the IO protocol setting for the library
-	 *
-	 * Arguments: none
-	 *
-	 * Returns: One of IO_POLL, IO_IT, or IO_DMA
-	 */
-
 	return IOType;
 }
 
+/**
+  * @}
+  */
+/* Dynamixel_Exported_Functions_Library_Configuration */
 
 
 
-/*******************************************************************************/
-/*	Transmit/receive helper functions										   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+
+/*****************************************************************************/
+/*  Low-level transmission and reception helper functions                    */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
+/**
+ * @defgroup Dynamixel_Exported_Functions_LL_TX_RX  Transmission and reception
+ * @brief    Low-level transmission and reception helper functions
+ *
+ * # Low-level transmission and reception helper functions  #
+ *
+ * This subsection provides a set of functions which provide flexible
+ * interfaces for transferring packets between motors and the MCU.
+ *
+ * This driver uses polled I/O, interrupt-based I/O, or DMA-based I/O
+ * depending on the value of IOType. The user is responsible for
+ * ensuring their system configuration is appropriate when using
+ * interrupt-based or DMA-based I/O. For example, the interrupt-based
+ * mode assumes that the user has enabled interrupts for the UART
+ * module corresponding to this motor, and similarly, the DMA-based
+ * mode assumes that a DMA channel has been allocated. Both of these
+ * non-blocking modes also assumes the user is calling from within the
+ * context of a FreeRTOS thread, and that the callback function has
+ * been implemented to unblock the thread using task notifications.
+ * @{
+ */
+
+/**
+ * @brief   Sends an array of data to a motor as per its configuration details
+ * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   args an array of arguments of the form `{ADDR, PARAM_1, ... ,
+ *          PARAM_N}`
+ * @param   numArgs this must be equal to `sizeof(args)`, and must be either 2
+ *          or 3
+ * @retval  None
+ */
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
-	/* Handles sending of data since this nearly identical for all setters.
-	 * Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  args is an array of arguments of the form
-	 * 						{ADDR, PARAM1, ...}
-	 *			  numArgs must be equal to sizeof(args), and must either be 2 or 3
-	 *
-	 * Returns: none
-	 */
-
 	BaseType_t status;
 	uint32_t notification;
 
@@ -1032,22 +1089,31 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 	}
 }
 
+/**
+ * @brief   Reads data back from the motor passed in by reference
+ * @details Uses the READ DATA instruction, 0x02, in the motor instruction set
+ *
+ *          The status packet returned will be of the following form:
+ *
+ *          \code {0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}
+ *          \endcode
+ *
+ *          Where N = readLength. Also, this function computes the checksum of
+ *          data using the same algorithm as the motors, and it sets
+ *          `hdynamixel -> _lastReadIsValid` if the computations match, and
+ *          clears this field otherwise. This is a basic data integrity check
+ *          that reduces the probability of passing invalid data to the
+ *          application
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   readAddr the address inside the motor memory table where reading
+ *          is to begin
+ *          readLength the number of bytes to be read. Must be either 1 or 2
+ * @retval  retval a 16-bit value containing 1 or both bytes received, as applicable.
+ *          The 1st byte received will be the LSB and the 2nd byte received
+ *          will be the MSB
+ */
 uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
-	/* Reads data back from the motor passed in by the handle. This process is identical
-	 * for all the getters which is why it is encapsulated in this function. Reading data
-	 * uses the READ DATA instruction, 0x02, in the motor instruction set.
-	 *
-	 * The status packet returned will be of them form:
-	 * 0xFF 0xFF ID LENGTH ERR PARAM_1...PARAM_N CHECKSUM, where N = readLength
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *			  readAddr, the address inside the motor memory table where reading is to begin
-	 *			  readLength, the number of bytes to be read. Must be either 1 or 2.
-	 *
-	 * Returns: a 16-bit value containing 1 or both bytes received, as applicable. The
-	 * 			1st byte received will be the LSB and the 2nd byte received will be the MSB
-	 */
-
 	uint8_t rxPacketSize = 0;
 	BaseType_t status;
 	uint32_t notification;
@@ -1160,217 +1226,21 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	}
 }
 
-// TODO: Test this
-void Dynamixel_SyncWritePosition(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock){
-	/* Implements the sync write instruction (0x83) for updating the positions of several motors connected
-	 * via the same UART module.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  syncWriteBlock, contains all the fields necessary for transmitting the data
-	 *
-	 * Returns: none
-	 */
-
-	/* Compute the first index into the sync write array */
-	uint8_t arrIdx = 0;
-	UART_HandleTypeDef* theUART = syncWriteBlock -> _UART_Handle;
-
-	if(theUART == &huart1){ arrIdx = 0; }
-	else if(theUART == &huart2){ arrIdx = 1; }
-	else if(theUART == &huart3){ arrIdx = 2; }
-	else if(theUART == &huart4){ arrIdx = 3; }
-	else if(theUART == &huart6){ arrIdx = 4; }
-	else{
-		// If we are here, then a UART that is not supported by the robot is attempting to be used
-		return;
-	}
-
-	/* Write packet length, based on the number of motors on this UART */
-	arrSyncWritePosition[arrIdx][3] = 4 + (syncWriteBlock -> numMotors) * (1 + 2);
-
-	/* Loop through motors in the syncWriteBlock, adding their IDs and arguments into the packet */
-	uint8_t idx = 7;
-	float goalAngle = 0;
-	uint16_t normalized_value = 0;
-	for(uint8_t motor = 0; motor < (syncWriteBlock -> numMotors); motor++){
-		// Put ID into packet
-		arrSyncWritePosition[arrIdx][idx] = (syncWriteBlock -> motorHandles)[motor] -> _ID;
-
-		/* Check for input validity. If input not valid, replace goalAngle with closest
-		 * valid value to ensure code won't halt. */
-		goalAngle = (syncWriteBlock -> motorArgs)[motor];
-		if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
-			if(goalAngle > MIN_ANGLE){
-				goalAngle = MAX_ANGLE;
-			}
-			else{
-				goalAngle = MIN_ANGLE;
-			}
-		}
-
-		/* Translate the angle from degrees into a 10- or 12-bit number. */
-		if((syncWriteBlock -> motorHandles)[motor] -> _motorType == AX12ATYPE){
-			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
-		}
-		else if((syncWriteBlock -> motorHandles)[motor] -> _motorType == MX28TYPE){
-			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 4095);
-		}
-		else{
-			// Should NEVER reach here!
-			return;
-		}
-
-		uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
-		uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
-
-		arrSyncWritePosition[arrIdx][idx + 1] = lowByte;
-		arrSyncWritePosition[arrIdx][idx + 2] = highByte;
-
-		idx += 3;
-	}
-
-	HAL_UART_Transmit(syncWriteBlock -> _UART_Handle, arrSyncWritePosition[arrIdx], 4 + arrSyncWritePosition[arrIdx][3], TRANSMIT_TIMEOUT);
-}
-
-// TODO: Test this
-void Dynamixel_SyncWritePositionAndVelocity(Dynamixel_HandleTypeDef* hdynamixel, SyncWriteBlock_t* syncWriteBlock){
-	/* Implements the sync write instruction (0x83) for updating the positions and velocities
-	 * of several motors connected via the same UART module.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  syncWriteBlock, contains all the fields necessary for transmitting the data
-	 *
-	 * Returns: none
-	 */
-
-	/* Compute the first index into the sync write array */
-	uint8_t arrIdx = 0;
-	UART_HandleTypeDef* theUART = syncWriteBlock -> _UART_Handle;
-
-	if(theUART == &huart1){ arrIdx = 0; }
-	else if(theUART == &huart2){ arrIdx = 1; }
-	else if(theUART == &huart3){ arrIdx = 2; }
-	else if(theUART == &huart4){ arrIdx = 3; }
-	else if(theUART == &huart6){ arrIdx = 4; }
-	else{
-		// If we are here, then a UART that is not supported by the robot is attempting to be used
-		return;
-	}
-
-	/* Write packet length, based on the number of motors on this UART */
-	arrSyncWritePosition[arrIdx][3] = 4 + (syncWriteBlock -> numMotors) * (1 + 2 + 2);
-
-	/* Loop through motors in the syncWriteBlock, adding their IDs and arguments into the packet */
-	uint8_t idx = 7;
-	uint8_t lowByte = 0;
-	uint8_t highByte = 0;
-	uint16_t normalized_value = 0;
-	float goalAngle = 0;
-	float goalVelocity = 0;
-
-	for(uint8_t motor = 0; motor < (syncWriteBlock -> numMotors); motor += 2){
-		// Put ID into packet
-		arrSyncWritePosition[arrIdx][idx] = (syncWriteBlock -> motorHandles)[motor] -> _ID;
-
-		/********** POSITION **********/
-		/* Check for input validity for position. If input not valid, replace goalAngle with closest
-		 * valid value to ensure code won't halt. */
-		goalAngle = (syncWriteBlock -> motorArgs)[motor]; // Position argument
-		if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
-			if(goalAngle > MIN_ANGLE){
-				goalAngle = MAX_ANGLE;
-			}
-			else{
-				goalAngle = MIN_ANGLE;
-			}
-		}
-
-		/* Translate the angle from degrees into a 10- or 12-bit number. */
-		normalized_value = 0;
-		if((syncWriteBlock -> motorHandles)[motor] -> _motorType == AX12ATYPE){
-			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
-		}
-		else if((syncWriteBlock -> motorHandles)[motor] -> _motorType == MX28TYPE){
-			normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 4095);
-		}
-		else{
-			// Should NEVER reach here!
-			return;
-		}
-
-		lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
-		highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
-
-		arrSyncWritePosition[arrIdx][idx + 1] = lowByte;
-		arrSyncWritePosition[arrIdx][idx + 2] = highByte;
-
-		/********** VELOCITY **********/
-		/* Translate the position from RPM into a 10-bit number. */
-		normalized_value = 0;
-		goalVelocity = (syncWriteBlock -> motorArgs)[motor + 1]; // Velocity argument
-		if(hdynamixel -> _isJointMode){
-			/* Check for input validity. If input not valid, replace goalAngle with closest
-			 * valid value to ensure code won't halt. */
-			if(goalVelocity != 0){
-				if(hdynamixel -> _motorType == AX12ATYPE){
-					if((goalVelocity < MIN_VELOCITY) || (goalVelocity > AX12A_MAX_VELOCITY)){
-						if(goalVelocity > MIN_VELOCITY){
-							goalVelocity = AX12A_MAX_VELOCITY;
-						}
-						else{
-							goalVelocity = MIN_VELOCITY;
-						}
-					}
-				}
-				else if(hdynamixel -> _motorType == MX28TYPE){
-					if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MX28_MAX_VELOCITY)){
-						if(goalVelocity > MIN_VELOCITY){
-							goalVelocity = MX28_MAX_VELOCITY;
-						}
-						else{
-							goalVelocity = MIN_VELOCITY;
-						}
-					}
-				}
-			}
-		}
-
-		if(hdynamixel -> _motorType == AX12ATYPE){
-			normalized_value = (uint16_t)(goalVelocity / AX12A_MAX_VELOCITY * 1023);
-			if(goalVelocity < 0){
-				normalized_value = ((uint16_t)((goalVelocity * -1) / AX12A_MAX_VELOCITY * 1023)) | 0b000010000000000;
-			}
-		}
-		else if(hdynamixel -> _motorType == MX28TYPE){
-			normalized_value = (uint16_t)(goalVelocity / MX28_MAX_VELOCITY * 1023);
-			if(goalVelocity < 0){
-				normalized_value = ((uint16_t)((goalVelocity * -1) / MX28_MAX_VELOCITY * 1023)) | 0b000010000000000;
-			}
-		}
-
-		lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal velocity
-		highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal velocity
-
-		arrSyncWritePosition[arrIdx][idx + 3] = lowByte;
-		arrSyncWritePosition[arrIdx][idx + 4] = highByte;
-
-		idx += 5;
-	}
-
-	HAL_UART_Transmit(syncWriteBlock -> _UART_Handle, arrSyncWritePosition[arrIdx], 4 + arrSyncWritePosition[arrIdx][3], TRANSMIT_TIMEOUT);
-}
+/**
+  * @}
+  */
+/* Dynamixel_Exported_Functions_LL_TX_RX */
 
 
-/*******************************************************************************/
-/*	Other motor instruction helper functions								   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+/*****************************************************************************/
+/*  Other motor instruction helper functions                                 */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 		uint8_t writeAddr, uint8_t param1, uint8_t param2){
 	/* Implementation of REG WRITE instruction with 2 parameters.
@@ -1475,16 +1345,15 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 
-/*******************************************************************************/
-/*	Setup helper functions      											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+/*****************************************************************************/
+/*  Setup helper functions                                                   */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType){
 	/* Initializes the motor handle.
@@ -1549,16 +1418,15 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 
-/*******************************************************************************/
-/*	Interfaces for previously-defined functions								   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+/*****************************************************************************/
+/*  Interfaces for previously-defined functions                              */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* Sets the control registers such that the rotational angle of the motor
 	 * is not bounded.
@@ -1600,16 +1468,15 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 
 
-/*******************************************************************************/
-/*	Computation-based helper functions										   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*								 											   */
-/*******************************************************************************/
+/*****************************************************************************/
+/*  Computation-based helper functions                                       */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
 inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	/* Compute the checksum for data to be transmitted.
 	 *
@@ -1629,28 +1496,4 @@ inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	}
 
 	return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
-}
-
-void syncWriteBlockInit(Dynamixel_HandleTypeDef** arrDynamixel, uint8_t numMotors, UART_HandleTypeDef* UART_Handle, SyncWriteBlock_t* syncWriteBlock){
-	/* Initializes the fields in the syncWriteBlock passed in by reference.
-	 *
-	 * Arguments: arrDynamixel, address of the array of motor handles
-	 *            numMotors, the size of the arrDynamixel array
-	 *            UART_Handle, the handle to the UART that will be used to
-	 * 			      communicate with this set of motors
-	 *            syncWriteBlock, the SyncWriteBlock_t structure to initialize
-	 *
-	 * Returns: none
-	 */
-
-	syncWriteBlock -> _UART_Handle = UART_Handle;
-
-	uint8_t idx = 0;
-	for(uint8_t i = 0; i < numMotors; i++){
-		if(arrDynamixel[i] -> _UART_Handle == syncWriteBlock -> _UART_Handle){
-            syncWriteBlock -> motorHandles[idx] = arrDynamixel[i];
-            syncWriteBlock -> numMotors = syncWriteBlock -> numMotors + 1;
-            idx++;
-		}
-	}
 }

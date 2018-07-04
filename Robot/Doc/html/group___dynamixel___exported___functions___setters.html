@@ -272,7 +272,7 @@ Functions</h2></td></tr>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">alarm_data</td><td><ul>
+    <tr><td class="paramname">alarm_data</td><td>the bits indicate the following:<ul>
 <li>bit 7: no function</li>
 <li>bit 6: flash LED when an instruction error occurs</li>
 <li>bit 5: flash LED when current load cannot be controlled with the specified maximum torque</li>
@@ -328,7 +328,7 @@ Functions</h2></td></tr>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">alarm_data</td><td><ul>
+    <tr><td class="paramname">alarm_data</td><td>the bits indicate the following:<ul>
 <li>bit 7: no function</li>
 <li>bit 6: torque off when an instruction error occurs</li>
 <li>bit 5: torque off when current load cannot be controlled with the specified maximum torque</li>
@@ -430,7 +430,7 @@ Functions</h2></td></tr>
 <p>Default value: 0x03FF </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">maxAngle,the</td><td>maximum angle for all motor operations. Arguments between 0 and 300 are valid </td></tr>
+    <tr><td class="paramname">maxAngle</td><td>the maximum angle for all motor operations. Arguments between 0 and 300 are valid </td></tr>
   </table>
   </dd>
 </dl>
@@ -476,7 +476,7 @@ Functions</h2></td></tr>
 <p>Default value: 0x0000 </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">minAngle,the</td><td>minimum angle for all motor operations. Arguments between 0 and 300 are valid </td></tr>
+    <tr><td class="paramname">minAngle</td><td>the minimum angle for all motor operations. Arguments between 0 and 300 are valid </td></tr>
   </table>
   </dd>
 </dl>
@@ -613,7 +613,7 @@ Functions</h2></td></tr>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">velocity,the</td><td>goal velocity in RPM. Arguments of 0-114 are valid when in joint mode. 0 corresponds to MAX motion in joint mode, and minimum motion in wheel mode. In wheel mode, negative arguments correspond to CW rotation </td></tr>
+    <tr><td class="paramname">velocity</td><td>the goal velocity in RPM. Arguments of 0-114 are valid when in joint mode. 0 corresponds to MAX motion in joint mode, and minimum motion in wheel mode. In wheel mode, negative arguments correspond to CW rotation </td></tr>
   </table>
   </dd>
 </dl>
