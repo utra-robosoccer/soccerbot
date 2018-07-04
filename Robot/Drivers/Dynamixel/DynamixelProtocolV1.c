@@ -1241,19 +1241,32 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*                                                                           */
 /*                                                                           */
 /*****************************************************************************/
+/**
+ * @defgroup Dynamixel_Exported_Functions_Other Other motor instruction helper functions
+ * @brief    Other motor instruction helper functions
+ *
+ * # Other motor instruction helper functions  #
+ *
+ * This subsection provides a set of functions which implement certain
+ * instructions (motor commands), but their uses are rather niche compared
+ * to the regular reading and writing functions.
+ * @{
+ */
+
+// TODO: Update this to use all 3 I/O modes
+/**
+ * @brief   Implementation of the REG WRITE instruction with 2 parameters
+ * @details Only supports polled I/O currently
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   writeAddr the starting address for where the data is to be written
+ * @param   param1 the first parameter
+ * @param   param2 the second parameter
+ * @retval  None
+ */
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 		uint8_t writeAddr, uint8_t param1, uint8_t param2){
-	/* Implementation of REG WRITE instruction with 2 parameters.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 * 			  writeAddr, thhe starting address for where the data is to be written
-	 * 			  param1, the first parameter
-	 * 			  param2, the second parameter
-	 *
-	 * Returns: none
-	 */
-
-	/* Define arrays for transmission. */
+    /* Define arrays for transmission. */
 	uint8_t arrTransmit[arrSize];
 
 	/* Do assignments and computations. */
@@ -1275,16 +1288,18 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
 }
 
+// TODO: Update this to use all 3 I/O modes
+/**
+ * @brief   Implementation of the ACTION instruction
+ * @details Only supports polled I/O currently. This triggers the
+ *          instruction registered by the REG WRITE instruction. This way,
+ *          time delays can be reduced for the concurrent motion of several
+ *          motors
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @retval  None
+ */
 void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Implements the ACTION instruction. This triggers the instruction registered by the REG WRITE
-	 * instruction. This way, time delays can be reduced for the concurrent motion of several
-	 * motors.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: none
-	 */
-
 	/* Define arrays for transmission and reception. */
 	uint8_t arrTransmit[6];
 
@@ -1303,16 +1318,17 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
 }
 
+// TODO: Update this to use all 3 I/O modes
+/**
+ * @brief   Implementation of the PING instruction
+ * @details Used only for returning a status packet or checking the existence
+ *          of a motor with a specified ID. Does not command any operations
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @retval  retval the motor ID seen in status packet if received a valid
+ *          status packet, otherwise the max uint8_t value
+ */
 int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
-	/* Used only for returning a status packet or checking the existence of a motor
-	 * with a specified ID. Does not command any operations.
-	 *
-	 * Arguments: hdynamixel, the motor handle
-	 *
-	 * Returns: motor ID seen in status packet if received a valid status packet,
-	 * 				otherwise -1
-	 */
-
 	/* Define arrays for transmission and reception. */
 	uint8_t arr[6];
 
@@ -1341,6 +1357,11 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 		return -1;
 	}
 }
+
+/**
+  * @}
+  */
+/* Dynamixel_Exported_Functions_Other */
 
 
 
