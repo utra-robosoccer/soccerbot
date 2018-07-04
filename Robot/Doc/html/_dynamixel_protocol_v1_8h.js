@@ -78,9 +78,9 @@ var _dynamixel_protocol_v1_8h =
     [ "Dynamixel_GetVelocity", "group___dynamixel___exported___functions___getters.html#gaaad13a5ad5c223678b56d23b59a1bc3a", null ],
     [ "Dynamixel_GetVoltage", "group___dynamixel___exported___functions___getters.html#ga612a6cae0aa7f939510e1584d870652e", null ],
     [ "Dynamixel_Init", "group___dynamixel___exported___functions___setup.html#ga22047239f8dec368039be94fc8e2452e", null ],
-    [ "Dynamixel_IsJointMode", "group___dynamixel___exported___functions___getters.html#gaee425951e23d20139b905fa2ba6f9e4c", null ],
-    [ "Dynamixel_IsMoving", "group___dynamixel___exported___functions___getters.html#ga6fcd0de3d61eeaa85382e2a237a1c410", null ],
-    [ "Dynamixel_IsRegistered", "group___dynamixel___exported___functions___getters.html#ga9c5bdf6190f809a617509cfdbf69915d", null ],
+    [ "Dynamixel_IsJointMode", "group___dynamixel___exported___functions___getters.html#ga1927f0f96a037050b5e8a591211ef8db", null ],
+    [ "Dynamixel_IsMoving", "group___dynamixel___exported___functions___getters.html#gacff925d04a9c8459a18ce97d5472df7f", null ],
+    [ "Dynamixel_IsRegistered", "group___dynamixel___exported___functions___getters.html#ga071559df599e50e85b554cc9ea57df41", null ],
     [ "Dynamixel_LEDEnable", "group___dynamixel___exported___functions___setters.html#ga9031a9e4b81c946ba731cda4ed677abe", null ],
     [ "Dynamixel_LockEEPROM", "group___dynamixel___exported___functions___setters.html#ga208adc06a269e04321f30e4f7334dfdb", null ],
     [ "Dynamixel_Ping", "group___dynamixel___exported___functions___other.html#gae0a5015bc773c79b35767e38084fa5ce", null ],
@@ -104,6 +104,5 @@ var _dynamixel_protocol_v1_8h =
     [ "Dynamixel_SetStatusReturnLevel", "group___dynamixel___exported___functions___setters.html#ga654e08fee0f73bb3f15943c43fadd319", null ],
     [ "Dynamixel_TorqueEnable", "group___dynamixel___exported___functions___setters.html#ga41f1726bc88a49ab5051ed20f492a0f6", null ],
     [ "arrReceive", "_dynamixel_protocol_v1_8h.html#a35cbe995456d8c7f71cf156fe94ddebc", null ],
-    [ "arrSyncWritePosition", "_dynamixel_protocol_v1_8h.html#afcda2c035c387ac3a88399e33602915b", null ],
     [ "arrTransmit", "_dynamixel_protocol_v1_8h.html#adb763f080296d0b91152bc1aed7a3353", null ]
 ];

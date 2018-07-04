@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Robot: Library Configuration</title>
+<title>Robot: Interfaces for previously-defined functions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,7 +67,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('group___dynamixel___exported___functions___library___configuration.html','');});
+$(document).ready(function(){initNavTree('group___m_x28___exported___functions___interfaces.html','');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -89,75 +89,44 @@ $(document).ready(function(){initNavTree('group___dynamixel___exported___functio
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Library Configuration<div class="ingroups"><a class="el" href="group___dynamixel___exported___functions.html">Dynamixel Exported Functions</a></div></div>  </div>
+<div class="title">Interfaces for previously-defined functions<div class="ingroups"><a class="el" href="group___m_x28___exported___functions.html">MX28 Exported Functions</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Library configuration functions.  
+<p>Interfaces for previously-defined functions.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae05122fb9961237e6cad4a4eba8dad38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___exported___functions___library___configuration.html#gae05122fb9961237e6cad4a4eba8dad38">Dynamixel_SetIOType</a> (enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a> type)</td></tr>
-<tr class="memdesc:gae05122fb9961237e6cad4a4eba8dad38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the I/O type used by the library.  <a href="#gae05122fb9961237e6cad4a4eba8dad38">More...</a><br /></td></tr>
-<tr class="separator:gae05122fb9961237e6cad4a4eba8dad38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga61fb59d98ad05c682348b8c2429dc4f1"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___exported___functions___library___configuration.html#ga61fb59d98ad05c682348b8c2429dc4f1">Dynamixel_GetIOType</a> ()</td></tr>
-<tr class="memdesc:ga61fb59d98ad05c682348b8c2429dc4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the IO protocol setting for the library.  <a href="#ga61fb59d98ad05c682348b8c2429dc4f1">More...</a><br /></td></tr>
-<tr class="separator:ga61fb59d98ad05c682348b8c2429dc4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7af48559dbbf1774e6dbd04616720075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28___exported___functions___interfaces.html#ga7af48559dbbf1774e6dbd04616720075">MX28_EnterMultiTurnMode</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
+<tr class="memdesc:ga7af48559dbbf1774e6dbd04616720075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates multi-turn mode, which allows the actuator to have a range of controllable position values from -28672 to 28672.  <a href="#ga7af48559dbbf1774e6dbd04616720075">More...</a><br /></td></tr>
+<tr class="separator:ga7af48559dbbf1774e6dbd04616720075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Library configuration functions. </p>
-<h1>Library configuration functions</h1>
-<p>This subsection provides a set of functions which provide interfaces for configuring certain parts of the library. Right now, the only thing that can be changed is the I/O mode (polling, interrupt-based, or DMA-based). </p>
+<p>Interfaces for previously-defined functions. </p>
+<h1>Interfaces for previously-defined functions</h1>
+<p>This subsection provides a set of functions which implement functions which call previously-defined functions in order to accomplish specific tasks. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga61fb59d98ad05c682348b8c2429dc4f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga61fb59d98ad05c682348b8c2429dc4f1">&#9670;&nbsp;</a></span>Dynamixel_GetIOType()</h2>
+<a id="ga7af48559dbbf1774e6dbd04616720075"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7af48559dbbf1774e6dbd04616720075">&#9670;&nbsp;</a></span>MX28_EnterMultiTurnMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a> Dynamixel_GetIOType </td>
+          <td class="memname">void MX28_EnterMultiTurnMode </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
+          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets the IO protocol setting for the library. </p>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">IOType</td><td>one of IO_POLL, IO_IT, or IO_DMA </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gae05122fb9961237e6cad4a4eba8dad38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae05122fb9961237e6cad4a4eba8dad38">&#9670;&nbsp;</a></span>Dynamixel_SetIOType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Dynamixel_SetIOType </td>
-          <td>(</td>
-          <td class="paramtype">enum <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a>&#160;</td>
-          <td class="paramname"><em>type</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets the I/O type used by the library. </p>
-<p>Sets the IO protocol to one of three options:</p><ol type="1">
-<li>Blocking (Polling)</li>
-<li>Non-Blocking (Interrupt)</li>
-<li>DMA <dl class="params"><dt>Parameters</dt><dd>
+<p>Activates multi-turn mode, which allows the actuator to have a range of controllable position values from -28672 to 28672. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">One</td><td>of IO_POLL, IO_IT, or IO_DMA </td></tr>
+    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
   </table>
   </dd>
 </dl>
@@ -167,8 +136,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-</li>
-</ol>
 
 </div>
 </div>

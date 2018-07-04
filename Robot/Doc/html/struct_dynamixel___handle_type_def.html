@@ -92,6 +92,8 @@ $(document).ready(function(){initNavTree('struct_dynamixel___handle_type_def.htm
 <div class="title">Dynamixel_HandleTypeDef Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_dynamixel___handle_type_def_8h_source.html">Dynamixel_HandleTypeDef.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -109,8 +111,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:ad411c71835cb7b17b9818d2836470d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2cead07066dc9f83aa1d8ea7f8b4b54"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#ab2cead07066dc9f83aa1d8ea7f8b4b54">_lastLoadDirection</a></td></tr>
 <tr class="separator:ab2cead07066dc9f83aa1d8ea7f8b4b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e1aecddb114d4e14ff464c0565a1a0c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#a1e1aecddb114d4e14ff464c0565a1a0c">_isJointMode</a></td></tr>
-<tr class="separator:a1e1aecddb114d4e14ff464c0565a1a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af60a557caed956737bcac0114ffb315b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#af60a557caed956737bcac0114ffb315b">_isJointMode</a></td></tr>
+<tr class="separator:af60a557caed956737bcac0114ffb315b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc481817957faca32bb883a5a497603"><td class="memItemLeft" align="right" valign="top">UART_HandleTypeDef *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#aefc481817957faca32bb883a5a497603">_UART_Handle</a></td></tr>
 <tr class="separator:aefc481817957faca32bb883a5a497603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5157edbd5a8183183a2a2d45b3c8be0d"><td class="memItemLeft" align="right" valign="top">GPIO_TypeDef *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#a5157edbd5a8183183a2a2d45b3c8be0d">_dataDirPort</a></td></tr>
@@ -118,7 +120,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a83700584e6d6b79965f6c42d0b92148e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#a83700584e6d6b79965f6c42d0b92148e">_dataDirPinNum</a></td></tr>
 <tr class="separator:a83700584e6d6b79965f6c42d0b92148e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Organizes all the information relevant to a motor </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="a83700584e6d6b79965f6c42d0b92148e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83700584e6d6b79965f6c42d0b92148e">&#9670;&nbsp;</a></span>_dataDirPinNum</h2>
 
@@ -164,14 +168,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a1e1aecddb114d4e14ff464c0565a1a0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e1aecddb114d4e14ff464c0565a1a0c">&#9670;&nbsp;</a></span>_isJointMode</h2>
+<a id="af60a557caed956737bcac0114ffb315b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af60a557caed956737bcac0114ffb315b">&#9670;&nbsp;</a></span>_isJointMode</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t _isJointMode</td>
+          <td class="memname">bool _isJointMode</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -205,7 +209,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>1 -&gt; CW | 0 -&gt; CCW </p>
+<p>1 implies CW | 0 implies CCW </p>
 
 </div>
 </div>
@@ -235,7 +239,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>1 -&gt; checksum verified for last read 0 -&gt; checksum mismatch </p>
+<p>1 if checksum verified for last read, 0 if checksum mismatch </p>
 
 </div>
 </div>
