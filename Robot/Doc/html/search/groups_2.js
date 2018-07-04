@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['setters',['Setters',['../group___dynamixel___exported___functions___setters.html',1,'']]]
+  ['library_20configuration',['Library Configuration',['../group___dynamixel___exported___functions___library___configuration.html',1,'']]]
 ];

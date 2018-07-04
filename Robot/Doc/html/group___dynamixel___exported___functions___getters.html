@@ -209,7 +209,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reads the internal motor temperature. </p>
-<p>Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor. Results are in degrees Celsius. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Reads address 0x2B in the motor RAM to see what the current temperature is inside the motor. Results are in degrees Celsius </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
   </table>
@@ -217,7 +217,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">internal</td><td>motor temperature in degrees Celsius </td></tr>
+    <tr><td class="paramname">temperature</td><td>the internal motor temperature in degrees Celsius </td></tr>
   </table>
   </dd>
 </dl>
@@ -281,7 +281,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">voltage</td><td>The voltage in volts if the last read is valid, otherwise INFINITY </td></tr>
+    <tr><td class="paramname">voltage</td><td>the voltage in volts if the last read is valid, otherwise INFINITY </td></tr>
   </table>
   </dd>
 </dl>
@@ -313,7 +313,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">1</td><td>if in joint mode, 0 if in wheel mode </td></tr>
+    <tr><td class="paramname">isJointMode</td><td>1 if in joint mode, 0 if in wheel mode </td></tr>
   </table>
   </dd>
 </dl>
@@ -345,7 +345,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">1</td><td>if moving, otherwise 0 </td></tr>
+    <tr><td class="paramname">isMoving</td><td>1 if moving, otherwise 0 </td></tr>
   </table>
   </dd>
 </dl>
@@ -369,7 +369,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Used to tell if a command sent was written to motor registers. </p>
-<p>Can also be used to see if the instruction in the motor register has been executed. If the ACTION command is executed, the value read is changed to 0.</p>
+<p>Can also be used to see if the instruction in the motor register has been executed. If the ACTION command is executed, the value read is changed to 0</p>
 <p>Read address: 0x2C</p>
 <p>Default value: 0x00 </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -379,7 +379,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">1</td><td>if there are commands transmitted by REG_WRITE, 0 otherwise </td></tr>
+    <tr><td class="paramname">isRegistered</td><td>1 if there are commands transmitted by REG_WRITE, 0 otherwise </td></tr>
   </table>
   </dd>
 </dl>
