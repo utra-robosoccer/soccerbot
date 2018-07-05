@@ -25,5 +25,6 @@ var searchData=
   ['reg_5fregistered',['REG_REGISTERED',['../_dynamixel_protocol_v1_8h.html#a691e859f82ec1c5d963e0f7f2cef8bc0',1,'DynamixelProtocolV1.h']]],
   ['reg_5freturn_5fdelay_5ftime',['REG_RETURN_DELAY_TIME',['../_dynamixel_protocol_v1_8h.html#a6fdc6d6428532564d271ace3eb6f1efb',1,'DynamixelProtocolV1.h']]],
   ['reg_5fstatus_5freturn_5flevel',['REG_STATUS_RETURN_LEVEL',['../_dynamixel_protocol_v1_8h.html#add8f4f5734bf5ba3368e87ed2e5baae7',1,'DynamixelProtocolV1.h']]],
-  ['reg_5ftorque_5fenable',['REG_TORQUE_ENABLE',['../_dynamixel_protocol_v1_8h.html#a1c8c48f9dff15cea75deff965af5159a',1,'DynamixelProtocolV1.h']]]
+  ['reg_5ftorque_5fenable',['REG_TORQUE_ENABLE',['../_dynamixel_protocol_v1_8h.html#a1c8c48f9dff15cea75deff965af5159a',1,'DynamixelProtocolV1.h']]],
+  ['robot_5fstate_5fmpu_5fdata_5foffset',['ROBOT_STATE_MPU_DATA_OFFSET',['../robot_state_8h.html#a5e8c90e0a2de956501bf71d9dcd7a6fc',1,'robotState.h']]]
 ];

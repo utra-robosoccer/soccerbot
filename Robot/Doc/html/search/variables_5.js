@@ -1,22 +1,4 @@
 var searchData=
 [
-  ['hdma_5fuart4_5frx',['hdma_uart4_rx',['../usart_8c.html#a5531b2fb5af9f7c77f321c4a957d662b',1,'usart.c']]],
-  ['hdma_5fuart4_5ftx',['hdma_uart4_tx',['../usart_8c.html#a4dcd0f023eeeb234649d17e647391be3',1,'usart.c']]],
-  ['hdma_5fuart5_5frx',['hdma_uart5_rx',['../usart_8c.html#a794700eeb880a56b4598f4361b117881',1,'usart.c']]],
-  ['hdma_5fuart5_5ftx',['hdma_uart5_tx',['../usart_8c.html#a78ea5a382a3d999e9e2f71f6f2688cc7',1,'usart.c']]],
-  ['hdma_5fusart1_5frx',['hdma_usart1_rx',['../usart_8c.html#a34251392f0d5e2461e3aef615918c235',1,'usart.c']]],
-  ['hdma_5fusart1_5ftx',['hdma_usart1_tx',['../usart_8c.html#a5af94ab36bfe698db3e6beea96d10a90',1,'usart.c']]],
-  ['hdma_5fusart2_5frx',['hdma_usart2_rx',['../usart_8c.html#a784aa25dc7e4580cfbf80658340f482c',1,'usart.c']]],
-  ['hdma_5fusart2_5ftx',['hdma_usart2_tx',['../usart_8c.html#a0083b476c2a75ab9fb2ccbed0048857e',1,'usart.c']]],
-  ['hdma_5fusart3_5frx',['hdma_usart3_rx',['../usart_8c.html#a418ff7f6b595dcf41b10de1083e62340',1,'usart.c']]],
-  ['hdma_5fusart3_5ftx',['hdma_usart3_tx',['../usart_8c.html#a8556819c2aafb13de4f13869b2c315ed',1,'usart.c']]],
-  ['hdma_5fusart6_5frx',['hdma_usart6_rx',['../usart_8c.html#a66df27c9625144f6f85870d487c622a0',1,'usart.c']]],
-  ['hdma_5fusart6_5ftx',['hdma_usart6_tx',['../usart_8c.html#a74b2c33b34b9087731c62656b23abbd5',1,'usart.c']]],
-  ['hi2c1',['hi2c1',['../i2c_8h.html#af7b2c26e44dadaaa798a5c3d82914ba7',1,'hi2c1():&#160;i2c.c'],['../i2c_8c.html#af7b2c26e44dadaaa798a5c3d82914ba7',1,'hi2c1():&#160;i2c.c']]],
-  ['huart1',['huart1',['../usart_8h.html#a2cf715bef37f7e8ef385a30974a5f0d5',1,'huart1():&#160;usart.c'],['../usart_8c.html#a2cf715bef37f7e8ef385a30974a5f0d5',1,'huart1():&#160;usart.c']]],
-  ['huart2',['huart2',['../usart_8h.html#aa9479c261d65eecedd3d9582f7f0f89c',1,'huart2():&#160;usart.c'],['../usart_8c.html#aa9479c261d65eecedd3d9582f7f0f89c',1,'huart2():&#160;usart.c']]],
-  ['huart3',['huart3',['../usart_8h.html#ab7c63c1b0f65db92b6a4ea19edf957e1',1,'huart3():&#160;usart.c'],['../usart_8c.html#ab7c63c1b0f65db92b6a4ea19edf957e1',1,'huart3():&#160;usart.c']]],
-  ['huart4',['huart4',['../usart_8h.html#ae273feb3e0dc44e38892650faa58fced',1,'huart4():&#160;usart.c'],['../usart_8c.html#ae273feb3e0dc44e38892650faa58fced',1,'huart4():&#160;usart.c']]],
-  ['huart5',['huart5',['../usart_8h.html#a25a82fcf0cd24eb6d39977cb5864cec8',1,'huart5():&#160;usart.c'],['../usart_8c.html#a25a82fcf0cd24eb6d39977cb5864cec8',1,'huart5():&#160;usart.c']]],
-  ['huart6',['huart6',['../usart_8h.html#a38905dda1d2fbff006c69db48eddba9d',1,'huart6():&#160;usart.c'],['../usart_8c.html#a38905dda1d2fbff006c69db48eddba9d',1,'huart6():&#160;usart.c']]]
+  ['start_5fseq',['start_seq',['../structrobot__state.html#ae237ee7fa149fb1a40b8badc494744bb',1,'robot_state']]]
 ];
