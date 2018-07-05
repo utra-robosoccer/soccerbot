@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['other_20motor_20instruction_20functions',['Other motor instruction functions',['../group___dynamixel___exported___functions___other.html',1,'']]]
+  ['mx28_20exported_20functions',['MX28 Exported Functions',['../group___m_x28___exported___functions.html',1,'']]]
 ];

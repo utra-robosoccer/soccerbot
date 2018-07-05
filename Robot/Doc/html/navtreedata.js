@@ -36,7 +36,7 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
-        [ "All", "globals.html", null ],
+        [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
@@ -49,8 +49,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_a_x12_a_8h_source.html",
-"group___dynamixel___exported___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e"
+"_a_x12_a_8c.html",
+"group___a_x12_a___exported___functions.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

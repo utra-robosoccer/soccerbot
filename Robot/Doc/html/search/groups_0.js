@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['computation_2dbased_20helper_20functions',['Computation-based helper functions',['../group___dynamixel___private___functions___computation.html',1,'']]]
+  ['ax12a_20exported_20functions',['AX12A Exported Functions',['../group___a_x12_a___exported___functions.html',1,'']]]
 ];

@@ -106,7 +106,7 @@
 #define MIN_PUNCH             0		/**< Minimum punch (proportional to minimum current) */
 
 /*************************** Library configuration ****************************/
-/** Enumerates the low-level I/O modes the library supports: */
+/** Enumerates the low-level I/O modes the library supports */
 enum IO_FLAGS{
     IO_DMA,     /**< Direct memory access */
     IO_POLL,    /**< Polled I/O           */

@@ -9,6 +9,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -47,6 +55,22 @@ $(function() {
 /* @license-end */</script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('globals_d.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -62,7 +86,7 @@ $(function() {
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all functions, variables, defines, enums, and typedefs with links to the files they belong to:</div>
+<div class="textblock">Here is a list of all documented functions, variables, defines, enums, and typedefs with links to the documentation:</div>
 
 <h3><a id="index_d"></a>- d -</h3><ul>
 <li>DEFAULT_ALARM_LED
@@ -98,188 +122,171 @@ $(function() {
 <li>DEFAULT_TORQUE_ENABLE
 : <a class="el" href="_dynamixel_protocol_v1_8h.html#aea2e131e4c412bde90ee5b377467081b">DynamixelProtocolV1.h</a>
 </li>
-<li>defaultTaskBuffer
-: <a class="el" href="freertos_8c.html#a3cba240cf694e90aa0d4601c51a6c19f">freertos.c</a>
-</li>
-<li>defaultTaskControlBlock
-: <a class="el" href="freertos_8c.html#aca18732f09ae696fd34b94d393dc9a42">freertos.c</a>
-</li>
-<li>defaultTaskHandle
-: <a class="el" href="freertos_8c.html#aa658fe134a5d1309d7a15c8116fa142c">freertos.c</a>
-</li>
 <li>Dynamixel_Action()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a78077c4319d76d6de3309d49efd6bf2c">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a78077c4319d76d6de3309d49efd6bf2c">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___other.html#ga78077c4319d76d6de3309d49efd6bf2c">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___other.html#ga78077c4319d76d6de3309d49efd6bf2c">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_ComputeChecksum()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a9934a5a82d925713fefa8929350e3996">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_DataReader()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#ae0e18eec55a4c1c3600dc8406d21a9c9">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#ae0e18eec55a4c1c3600dc8406d21a9c9">DynamixelProtocolV1.h</a>
-</li>
-<li>Dynamixel_DataReader_DMA()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a81cc54c2139629f4737ef76b95ae9c92">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gae0e18eec55a4c1c3600dc8406d21a9c9">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gae0e18eec55a4c1c3600dc8406d21a9c9">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_DataWriter()
-: <a class="el" href="_a_x12_a_8c.html#aabac5f22c65d45c6e62aec697ac597bf">AX12A.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#aabac5f22c65d45c6e62aec697ac597bf">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#aabac5f22c65d45c6e62aec697ac597bf">DynamixelProtocolV1.h</a>
-, <a class="el" href="_m_x28_8c.html#aabac5f22c65d45c6e62aec697ac597bf">MX28.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">AX12A.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">MX28.c</a>
 </li>
 <li>Dynamixel_EnterJointMode()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a2d16a19af6f00b284c750b524fa0079f">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a2d16a19af6f00b284c750b524fa0079f">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_EnterWheelMode()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a018df076095889475b42e8e21a26dc1e">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a018df076095889475b42e8e21a26dc1e">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_GetIOType()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a61fb59d98ad05c682348b8c2429dc4f1">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a61fb59d98ad05c682348b8c2429dc4f1">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___library___configuration.html#ga61fb59d98ad05c682348b8c2429dc4f1">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___library___configuration.html#ga61fb59d98ad05c682348b8c2429dc4f1">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_GetLoad()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a2f574fbe64e91f7644bf9653540d36e1">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a2f574fbe64e91f7644bf9653540d36e1">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga2f574fbe64e91f7644bf9653540d36e1">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga2f574fbe64e91f7644bf9653540d36e1">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_GetPosition()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a3edc0f39369851f07925e38a83f67f51">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a3edc0f39369851f07925e38a83f67f51">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga3edc0f39369851f07925e38a83f67f51">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga3edc0f39369851f07925e38a83f67f51">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_GetTemperature()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a1be3f0c36a3a421143dfaa04af7e0d0c">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a1be3f0c36a3a421143dfaa04af7e0d0c">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga1be3f0c36a3a421143dfaa04af7e0d0c">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga1be3f0c36a3a421143dfaa04af7e0d0c">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_GetVelocity()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#aaad13a5ad5c223678b56d23b59a1bc3a">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#aaad13a5ad5c223678b56d23b59a1bc3a">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#gaaad13a5ad5c223678b56d23b59a1bc3a">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#gaaad13a5ad5c223678b56d23b59a1bc3a">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_GetVoltage()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a612a6cae0aa7f939510e1584d870652e">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a612a6cae0aa7f939510e1584d870652e">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga612a6cae0aa7f939510e1584d870652e">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga612a6cae0aa7f939510e1584d870652e">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_Init()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a22047239f8dec368039be94fc8e2452e">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a22047239f8dec368039be94fc8e2452e">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setup.html#ga22047239f8dec368039be94fc8e2452e">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setup.html#ga22047239f8dec368039be94fc8e2452e">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_IsJointMode()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#aee425951e23d20139b905fa2ba6f9e4c">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#aee425951e23d20139b905fa2ba6f9e4c">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga1927f0f96a037050b5e8a591211ef8db">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga1927f0f96a037050b5e8a591211ef8db">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_IsMoving()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a6fcd0de3d61eeaa85382e2a237a1c410">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a6fcd0de3d61eeaa85382e2a237a1c410">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#gacff925d04a9c8459a18ce97d5472df7f">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#gacff925d04a9c8459a18ce97d5472df7f">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_IsRegistered()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a9c5bdf6190f809a617509cfdbf69915d">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a9c5bdf6190f809a617509cfdbf69915d">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___getters.html#ga071559df599e50e85b554cc9ea57df41">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___getters.html#ga071559df599e50e85b554cc9ea57df41">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_LEDEnable()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a9031a9e4b81c946ba731cda4ed677abe">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a9031a9e4b81c946ba731cda4ed677abe">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga9031a9e4b81c946ba731cda4ed677abe">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga9031a9e4b81c946ba731cda4ed677abe">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_LockEEPROM()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a208adc06a269e04321f30e4f7334dfdb">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a208adc06a269e04321f30e4f7334dfdb">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga208adc06a269e04321f30e4f7334dfdb">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga208adc06a269e04321f30e4f7334dfdb">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_Ping()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#ae0a5015bc773c79b35767e38084fa5ce">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#ae0a5015bc773c79b35767e38084fa5ce">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___other.html#gae0a5015bc773c79b35767e38084fa5ce">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___other.html#gae0a5015bc773c79b35767e38084fa5ce">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_RegWrite()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a25e0659774099bcba7bd5fc1dbc37843">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a25e0659774099bcba7bd5fc1dbc37843">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___other.html#ga25e0659774099bcba7bd5fc1dbc37843">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___other.html#ga25e0659774099bcba7bd5fc1dbc37843">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_Reset()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#af317c5e8c70770a60a7a3331e89c5d67">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#af317c5e8c70770a60a7a3331e89c5d67">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setup.html#gaf317c5e8c70770a60a7a3331e89c5d67">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setup.html#gaf317c5e8c70770a60a7a3331e89c5d67">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetAlarmLED()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#ab2910ce24ca0b804f72b74a00d331dea">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#ab2910ce24ca0b804f72b74a00d331dea">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gab2910ce24ca0b804f72b74a00d331dea">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gab2910ce24ca0b804f72b74a00d331dea">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetAlarmShutdown()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a9224a5f296e03de3f7641b91449926da">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a9224a5f296e03de3f7641b91449926da">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga9224a5f296e03de3f7641b91449926da">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga9224a5f296e03de3f7641b91449926da">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetBaudRate()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a2970e0b076f2f97022782885f0f40a5a">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a2970e0b076f2f97022782885f0f40a5a">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga2970e0b076f2f97022782885f0f40a5a">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga2970e0b076f2f97022782885f0f40a5a">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetCCWAngleLimit()
-: <a class="el" href="_m_x28_8c.html#a6dc6d1d812e06b31972ff0df65f48dce">MX28.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a6dc6d1d812e06b31972ff0df65f48dce">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a6dc6d1d812e06b31972ff0df65f48dce">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce">MX28.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetCWAngleLimit()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#ad86c73a30cc54d228eaee9aa71bedfc5">DynamixelProtocolV1.c</a>
-, <a class="el" href="_m_x28_8c.html#ad86c73a30cc54d228eaee9aa71bedfc5">MX28.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#ad86c73a30cc54d228eaee9aa71bedfc5">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5">MX28.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetGoalPosition()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a67e039f885c6e107121b297cb6388e8c">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a67e039f885c6e107121b297cb6388e8c">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga67e039f885c6e107121b297cb6388e8c">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga67e039f885c6e107121b297cb6388e8c">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetGoalTorque()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a0728b1a0ad84f1626a5344bcef7a6427">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a0728b1a0ad84f1626a5344bcef7a6427">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga0728b1a0ad84f1626a5344bcef7a6427">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga0728b1a0ad84f1626a5344bcef7a6427">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetGoalVelocity()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#ac2af2caa75e7341d542769dd9e8649fa">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#ac2af2caa75e7341d542769dd9e8649fa">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gac2af2caa75e7341d542769dd9e8649fa">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gac2af2caa75e7341d542769dd9e8649fa">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetHighestVoltageLimit()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a918799fda0a088a22ddb5b6ebde9dea7">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a918799fda0a088a22ddb5b6ebde9dea7">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga918799fda0a088a22ddb5b6ebde9dea7">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga918799fda0a088a22ddb5b6ebde9dea7">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetID()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#acde9601989267c2818bd407257932b10">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#acde9601989267c2818bd407257932b10">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gacde9601989267c2818bd407257932b10">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gacde9601989267c2818bd407257932b10">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetIOType()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#ae05122fb9961237e6cad4a4eba8dad38">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#ae05122fb9961237e6cad4a4eba8dad38">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___library___configuration.html#gae05122fb9961237e6cad4a4eba8dad38">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___library___configuration.html#gae05122fb9961237e6cad4a4eba8dad38">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetLowestVoltageLimit()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a4b9a3a50d33977550c48a3cb4335b8da">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a4b9a3a50d33977550c48a3cb4335b8da">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga4b9a3a50d33977550c48a3cb4335b8da">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga4b9a3a50d33977550c48a3cb4335b8da">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetMaxTorque()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a6d69ef92eb60b74b6ed75e82614ade8d">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a6d69ef92eb60b74b6ed75e82614ade8d">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga6d69ef92eb60b74b6ed75e82614ade8d">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga6d69ef92eb60b74b6ed75e82614ade8d">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetPunch()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#abccfff965b8862b0bc7cd5733e25f98a">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#abccfff965b8862b0bc7cd5733e25f98a">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gabccfff965b8862b0bc7cd5733e25f98a">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gabccfff965b8862b0bc7cd5733e25f98a">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_SetReturnDelayTime()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#aa83d2ec791afc039d38d2fb84b759ce2">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#aa83d2ec791afc039d38d2fb84b759ce2">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#gaa83d2ec791afc039d38d2fb84b759ce2">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#gaa83d2ec791afc039d38d2fb84b759ce2">DynamixelProtocolV1.c</a>
 </li>
 <li>Dynamixel_SetStatusReturnLevel()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#a654e08fee0f73bb3f15943c43fadd319">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#a654e08fee0f73bb3f15943c43fadd319">DynamixelProtocolV1.h</a>
-</li>
-<li>Dynamixel_SyncWritePosition()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a2eb94f7a4849e66078971dfe7bc1dcdc">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a2eb94f7a4849e66078971dfe7bc1dcdc">DynamixelProtocolV1.c</a>
-</li>
-<li>Dynamixel_SyncWritePositionAndVelocity()
-: <a class="el" href="_dynamixel_protocol_v1_8c.html#aa3326f4a82982e88e69f71370433e59b">DynamixelProtocolV1.c</a>
-, <a class="el" href="_dynamixel_protocol_v1_8h.html#aa3326f4a82982e88e69f71370433e59b">DynamixelProtocolV1.h</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga654e08fee0f73bb3f15943c43fadd319">DynamixelProtocolV1.c</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga654e08fee0f73bb3f15943c43fadd319">DynamixelProtocolV1.h</a>
 </li>
 <li>Dynamixel_TorqueEnable()
-: <a class="el" href="_dynamixel_protocol_v1_8h.html#a41f1726bc88a49ab5051ed20f492a0f6">DynamixelProtocolV1.h</a>
-, <a class="el" href="_dynamixel_protocol_v1_8c.html#a41f1726bc88a49ab5051ed20f492a0f6">DynamixelProtocolV1.c</a>
+: <a class="el" href="group___dynamixel___exported___functions___setters.html#ga41f1726bc88a49ab5051ed20f492a0f6">DynamixelProtocolV1.h</a>
+, <a class="el" href="group___dynamixel___exported___functions___setters.html#ga41f1726bc88a49ab5051ed20f492a0f6">DynamixelProtocolV1.c</a>
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.14
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
 </body>
 </html>
