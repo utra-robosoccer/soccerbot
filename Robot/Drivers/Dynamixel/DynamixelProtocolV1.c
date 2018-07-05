@@ -6,7 +6,10 @@
   * 		 It is generic in that any Dynamixel actuator using protocol version
   * 		 1.0 should be able to be integrated with little effort, as the
   * 		 instructions and register addresses are very similar for all
-  * 		 actuators using this protocol version.
+  * 		 actuators using this protocol version
+  *
+  * @defgroup Dynamixel
+  * @brief    Everything related to Dynamixel actuators
   ******************************************************************************
   */
 
@@ -57,10 +60,10 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 /******************************** Functions ************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions Dynamixel Exported Functions
+ * @defgroup Dynamixel_Generic_Exported_Functions Dynamixel Generic Exported Functions
  * @brief    Globally-accessible functions for interfacing with Dynamixel
- *           actuators and controlling the settings of this library.
- * @{
+ *           actuators and controlling the settings of this library
+ * @ingroup  Dynamixel
  */
 
 
@@ -83,6 +86,8 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  *
  * This subsection provides a set of functions which provide interfaces for
  * setting motor register values.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -737,6 +742,8 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
  *
  * This subsection provides a set of functions which provide interfaces for
  * reading motor register values.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -957,6 +964,8 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  * This subsection provides a set of functions which provide interfaces for
  * configuring certain parts of the library. Right now, the only thing that
  * can be changed is the I/O mode (polling, interrupt-based, or DMA-based).
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -1017,6 +1026,8 @@ enum IO_FLAGS Dynamixel_GetIOType(){
  * non-blocking modes also assumes the user is calling from within the
  * context of a FreeRTOS thread, and that the callback function has
  * been implemented to unblock the thread using task notifications.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -1244,6 +1255,8 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * This subsection provides a set of functions which implement certain
  * instructions (motor commands), but their uses are rather niche compared
  * to the regular reading and writing functions.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -1377,6 +1390,8 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
  *
  * This subsection provides a set of functions which implement functions
  * related to setup (data structure initialization, etc) and resetting.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -1467,6 +1482,8 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
  * This subsection provides a set of functions which implement functions
  * which call previously-defined functions in order to accomplish specific
  * tasks.
+ *
+ * @ingroup Dynamixel_Generic_Exported_Functions
  * @{
  */
 
@@ -1510,23 +1527,14 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
   */
 /* Dynamixel_Exported_Functions_Interfaces */
 
-/**
-  * @}
-  */
-/* end Dynamixel_Exported_Functions */
-
 
 
 
 /**
- * @defgroup Dynamixel_Private_Functions Dynamixel Private Functions
+ * @defgroup Dynamixel_Generic_Private_Functions Dynamixel Generic Private Functions
  * @brief    Functions only accessible from within the library.
- * @{
+ * @ingroup  Dynamixel
  */
-
-
-
-
 /*****************************************************************************/
 /*  Computation-based helper functions                                       */
 /*                                                                           */
@@ -1545,6 +1553,8 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  * This subsection provides a set of functions which implement functions
  * which execute solely computation-based tasks, such as computing a
  * checksum.
+ *
+ * @ingroup Dynamixel_Generic_Private_Functions
  * @{
  */
 
@@ -1572,8 +1582,3 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
   * @}
   */
 /* Dynamixel_Private_Functions_Computation */
-
-/**
-  * @}
-  */
-/* end Dynamixel_Private_Functions */

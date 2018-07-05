@@ -25,13 +25,13 @@ extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, floa
 
 /******************************** Functions ************************************/
 /**
- * @defgroup MX28_Exported_Functions MX28 Exported Functions
+ * @defgroup MX28 MX28
  * @brief    Globally-accessible functions for interfacing with MX28 actuators.
  *           These functions are specific to MX28s and have no analogue for
  *           other actuators supported by this library. All of these functions
  *           will return and have no effect if the motor structure type field
  *           is not MX28TYPE.
- * @{
+ * @ingroup  Dynamixel
  */
 
 
@@ -47,13 +47,15 @@ extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, floa
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup MX28_Exported_Functions_Setters Setters
+ * @defgroup MX28_Setters Setters
  * @brief    Register-setting functions
  *
  * # Setter functions #
  *
  * This subsection provides a set of functions which provide interfaces for
  * setting motor register values.
+ *
+ * @ingroup MX28
  * @{
  */
 
@@ -173,7 +175,7 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
 /**
   * @}
   */
-/* end MX28_Exported_Functions_Setters */
+/* end MX28_Setters */
 
 
 /*****************************************************************************/
@@ -186,7 +188,7 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup MX28_Exported_Functions_Interfaces Interfaces for previously-defined functions
+ * @defgroup MX28_Interfaces Interfaces for previously-defined functions
  * @brief    Interfaces for previously-defined functions
  *
  * # Interfaces for previously-defined functions #
@@ -194,6 +196,8 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
  * This subsection provides a set of functions which implement functions
  * which call previously-defined functions in order to accomplish specific
  * tasks.
+ *
+ * @ingroup MX28
  * @{
  */
 
@@ -214,4 +218,4 @@ void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel){
 /**
  * @}
  */
-/* end MX28_Exported_Functions_Interfaces */
+/* end MX28_Interfaces */

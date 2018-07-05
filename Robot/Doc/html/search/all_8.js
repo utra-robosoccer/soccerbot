@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___a_x12_a___exported___functions___interfaces.html',1,'']]],
+  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___a_x12_a___interfaces.html',1,'']]],
   ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___dynamixel___exported___functions___interfaces.html',1,'']]],
   ['inst_5faction',['INST_ACTION',['../_dynamixel_protocol_v1_8h.html#adea21b73305aa7a5b3317e299c616853',1,'DynamixelProtocolV1.h']]],
   ['inst_5fping',['INST_PING',['../_dynamixel_protocol_v1_8h.html#acb92e93ddd4b53533b14dc3403346bbf',1,'DynamixelProtocolV1.h']]],
@@ -14,5 +14,5 @@ var searchData=
   ['io_5fit',['IO_IT',['../_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55aae07b2754c4d2efc8edc8e759eb79a00',1,'DynamixelProtocolV1.h']]],
   ['io_5fpoll',['IO_POLL',['../_dynamixel_protocol_v1_8h.html#a2d5f4ea730f273121dc94b9425bc3d55a414f6b89d2981af1ec2ed8e110bfc47e',1,'DynamixelProtocolV1.h']]],
   ['iotype',['IOType',['../_dynamixel_protocol_v1_8c.html#a000e1129765177bcf2fa5ca52cd6df4e',1,'DynamixelProtocolV1.c']]],
-  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___m_x28___exported___functions___interfaces.html',1,'']]]
+  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___m_x28___interfaces.html',1,'']]]
 ];

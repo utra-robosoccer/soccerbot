@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Robot: Setup functions</title>
+<title>Robot: Interfaces for previously-defined functions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,7 +67,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('group___dynamixel___exported___functions___setup.html','');});
+$(document).ready(function(){initNavTree('group___a_x12_a___interfaces.html','');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -89,35 +89,35 @@ $(document).ready(function(){initNavTree('group___dynamixel___exported___functio
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Setup functions<div class="ingroups"><a class="el" href="group___dynamixel.html">Dynamixel</a> &raquo; <a class="el" href="group___dynamixel___generic___exported___functions.html">Dynamixel Generic Exported Functions</a></div></div>  </div>
+<div class="title">Interfaces for previously-defined functions<div class="ingroups"><a class="el" href="group___dynamixel.html">Dynamixel</a> &raquo; <a class="el" href="group___a_x12_a.html">AX12A</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Setup functions.  
+<p>Interfaces for previously-defined functions.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga22047239f8dec368039be94fc8e2452e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___exported___functions___setup.html#ga22047239f8dec368039be94fc8e2452e">Dynamixel_Init</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle, GPIO_TypeDef *DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType)</td></tr>
-<tr class="memdesc:ga22047239f8dec368039be94fc8e2452e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a motor handle.  <a href="#ga22047239f8dec368039be94fc8e2452e">More...</a><br /></td></tr>
-<tr class="separator:ga22047239f8dec368039be94fc8e2452e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf317c5e8c70770a60a7a3331e89c5d67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel___exported___functions___setup.html#gaf317c5e8c70770a60a7a3331e89c5d67">Dynamixel_Reset</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
-<tr class="memdesc:gaf317c5e8c70770a60a7a3331e89c5d67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets motor control table.  <a href="#gaf317c5e8c70770a60a7a3331e89c5d67">More...</a><br /></td></tr>
-<tr class="separator:gaf317c5e8c70770a60a7a3331e89c5d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41">AX12A_SetComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceSlope)</td></tr>
+<tr class="memdesc:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance slope.  <a href="#ga43a54da2ab8d918bcb85fadf7b69dd41">More...</a><br /></td></tr>
+<tr class="separator:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga84976a47de3863df1f389c5f405e108d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___interfaces.html#ga84976a47de3863df1f389c5f405e108d">AX12A_SetComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceMargin)</td></tr>
+<tr class="memdesc:ga84976a47de3863df1f389c5f405e108d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance margin.  <a href="#ga84976a47de3863df1f389c5f405e108d">More...</a><br /></td></tr>
+<tr class="separator:ga84976a47de3863df1f389c5f405e108d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Setup functions. </p>
-<h1>Setup functions</h1>
-<p>This subsection provides a set of functions which implement functions related to setup (data structure initialization, etc) and resetting. </p>
+<p>Interfaces for previously-defined functions. </p>
+<h1>Interfaces for previously-defined functions</h1>
+<p>This subsection provides a set of functions which implement functions which call previously-defined functions in order to accomplish specific tasks. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga22047239f8dec368039be94fc8e2452e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga22047239f8dec368039be94fc8e2452e">&#9670;&nbsp;</a></span>Dynamixel_Init()</h2>
+<a id="ga84976a47de3863df1f389c5f405e108d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga84976a47de3863df1f389c5f405e108d">&#9670;&nbsp;</a></span>AX12A_SetComplianceMargin()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Dynamixel_Init </td>
+          <td class="memname">void AX12A_SetComplianceMargin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
           <td class="paramname"><em>hdynamixel</em>, </td>
@@ -126,31 +126,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>ID</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>UART_Handle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">GPIO_TypeDef *&#160;</td>
-          <td class="paramname"><em>DataDirPort</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>DataDirPinNum</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">enum motorTypes_e&#160;</td>
-          <td class="paramname"><em>motorType</em>&#160;</td>
+          <td class="paramname"><em>complianceMargin</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -160,15 +136,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes a motor handle. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Sets both the CW and CCW compliance margin. </p>
+<p>"Sets the compliance margin for the current motor. The compliance margin is the acceptable error between the current position and goal position. The greater the value, the more error is acceptable" </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">ID</td><td>the ID the motor has. Note that this function will not set the ID in case there are multiple actuators on the same bus </td></tr>
-    <tr><td class="paramname">UART_Handle</td><td>the handle to the UART that will be used to communicate with this motor </td></tr>
-    <tr><td class="paramname">DataDirPort</td><td>the pointer to the port that the data direction pin for the motor is on </td></tr>
-    <tr><td class="paramname">DataDirPinNum</td><td>the number corresponding to the pin that controls data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15) </td></tr>
-    <tr><td class="paramname">motorType</td><td>indicates whether motor is AX12A or MX28 </td></tr>
+    <tr><td class="paramname">complianceMargin,the</td><td>acceptable error between the current and goal position. Arguments in range [0, 255] </td></tr>
   </table>
   </dd>
 </dl>
@@ -181,26 +153,37 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gaf317c5e8c70770a60a7a3331e89c5d67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf317c5e8c70770a60a7a3331e89c5d67">&#9670;&nbsp;</a></span>Dynamixel_Reset()</h2>
+<a id="ga43a54da2ab8d918bcb85fadf7b69dd41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga43a54da2ab8d918bcb85fadf7b69dd41">&#9670;&nbsp;</a></span>AX12A_SetComplianceSlope()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Dynamixel_Reset </td>
+          <td class="memname">void AX12A_SetComplianceSlope </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td>
-          <td class="paramname"><em>hdynamixel</em></td><td>)</td>
+          <td class="paramname"><em>hdynamixel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>complianceSlope</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Resets motor control table. </p>
-<p>Resets the control table values of the motor to the Factory Default Value settings. Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are connected on the same bus, there will not be a way to assign them unique IDs without first disconnecting them. Need to wait around 500 ms before motor becomes valid again </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Sets both the CW and CCW compliance slope. </p>
+<p>"Sets the compliance slope for the current motor, which sets the level of torque near the goal position. The higher the value, the more flexibility that is obtained. That is, a high value means that as the goal position is approached, the torque will be significantly reduced. If a low value is used, then as the goal position is approached, the torque will not be reduced all that much" </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">complianceSlope</td><td>arguments in range [1, 7], with 1 being the least flexible </td></tr>
   </table>
   </dd>
 </dl>

@@ -13,10 +13,10 @@ var _a_x12_a_8h =
     [ "AX12A_REG_CCW_COMPLIANCE_SLOPE", "_a_x12_a_8h.html#ac3f58e93539885cdc32ab245427a0e4b", null ],
     [ "AX12A_REG_CW_COMPLIANCE_MARGIN", "_a_x12_a_8h.html#a4bc8a2e4def4d0e5e09e66e0e2d3e939", null ],
     [ "AX12A_REG_CW_COMPLIANCE_SLOPE", "_a_x12_a_8h.html#ad86243b8574837400996ab5d4b6e6927", null ],
-    [ "AX12A_SetCCWComplianceMargin", "group___a_x12_a___exported___functions___setters.html#ga9335097bc945f1da3520d0e0d98109df", null ],
-    [ "AX12A_SetCCWComplianceSlope", "group___a_x12_a___exported___functions___setters.html#ga763c348ba5f89fa5bf57595a2ef7e386", null ],
-    [ "AX12A_SetComplianceMargin", "group___a_x12_a___exported___functions___interfaces.html#ga84976a47de3863df1f389c5f405e108d", null ],
-    [ "AX12A_SetComplianceSlope", "group___a_x12_a___exported___functions___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41", null ],
-    [ "AX12A_SetCWComplianceMargin", "group___a_x12_a___exported___functions___setters.html#gaa63744a89c07f50119d0d4f79a8345c1", null ],
-    [ "AX12A_SetCWComplianceSlope", "group___a_x12_a___exported___functions___setters.html#ga52703a78cb46fc1b207cf9d898950451", null ]
+    [ "AX12A_SetCCWComplianceMargin", "group___a_x12_a___setters.html#ga9335097bc945f1da3520d0e0d98109df", null ],
+    [ "AX12A_SetCCWComplianceSlope", "group___a_x12_a___setters.html#ga763c348ba5f89fa5bf57595a2ef7e386", null ],
+    [ "AX12A_SetComplianceMargin", "group___a_x12_a___interfaces.html#ga84976a47de3863df1f389c5f405e108d", null ],
+    [ "AX12A_SetComplianceSlope", "group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41", null ],
+    [ "AX12A_SetCWComplianceMargin", "group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1", null ],
+    [ "AX12A_SetCWComplianceSlope", "group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451", null ]
 ];

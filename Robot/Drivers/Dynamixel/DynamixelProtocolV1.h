@@ -6,7 +6,7 @@
   * 		 It is generic in that any Dynamixel actuator using protocol
   * 		 version 1.0 should be able to be integrated with little effort, as
   * 		 the instructions and register addresses are very similar for all
-  * 		 actuators using this protocol version.
+  * 		 actuators using this protocol version
   ******************************************************************************
   */
 
