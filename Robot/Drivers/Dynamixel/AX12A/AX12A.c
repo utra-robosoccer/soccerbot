@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    AX12A.c
   * @author  Tyler
-  * @brief   This file provides implements AX12A-specific functions.
+  * @brief   This file implements AX12A-specific functions.
   ******************************************************************************
   */
 

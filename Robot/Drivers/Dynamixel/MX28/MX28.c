@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    MX28.c
   * @author  Tyler
-  * @brief   This file provides implements MX28-specific functions.
+  * @brief   This file implements MX28-specific functions.
   ******************************************************************************
   */
 
