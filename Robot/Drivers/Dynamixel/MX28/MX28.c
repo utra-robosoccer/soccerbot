@@ -30,7 +30,7 @@ extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, floa
  *           These functions are specific to MX28s and have no analogue for
  *           other actuators supported by this library. All of these functions
  *           will return and have no effect if the motor structure type field
- *           is not MX28TYPE
+ *           is not MX28TYPE.
  * @{
  */
 

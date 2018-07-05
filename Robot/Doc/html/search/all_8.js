@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___a_x12_a___exported___functions___interfaces.html',1,'']]],
   ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___dynamixel___exported___functions___interfaces.html',1,'']]],
   ['inst_5faction',['INST_ACTION',['../_dynamixel_protocol_v1_8h.html#adea21b73305aa7a5b3317e299c616853',1,'DynamixelProtocolV1.h']]],
   ['inst_5fping',['INST_PING',['../_dynamixel_protocol_v1_8h.html#acb92e93ddd4b53533b14dc3403346bbf',1,'DynamixelProtocolV1.h']]],
