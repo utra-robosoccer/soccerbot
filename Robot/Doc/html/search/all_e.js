@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['setters',['Setters',['../group___a_x12_a___exported___functions___setters.html',1,'']]],
+  ['setters',['Setters',['../group___a_x12_a___setters.html',1,'']]],
   ['setters',['Setters',['../group___dynamixel___exported___functions___setters.html',1,'']]],
   ['setup_20functions',['Setup functions',['../group___dynamixel___exported___functions___setup.html',1,'']]],
-  ['setters',['Setters',['../group___m_x28___exported___functions___setters.html',1,'']]],
+  ['setters',['Setters',['../group___m_x28___setters.html',1,'']]],
   ['startdefaulttask',['StartDefaultTask',['../freertos_8c.html#a016544463b4842ced7191baf8f449cea',1,'freertos.c']]],
   ['startimutask',['StartIMUTask',['../freertos_8c.html#a2b1b4b3fe51fe46654895c7626bf83bd',1,'freertos.c']]],
   ['startrxtask',['StartRxTask',['../freertos_8c.html#af50979eaf2ad1b106c5514b33138a434',1,'freertos.c']]],

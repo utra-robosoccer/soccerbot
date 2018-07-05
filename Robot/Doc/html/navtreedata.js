@@ -51,7 +51,7 @@ var NAVTREEINDEX =
 [
 "_a_x12_a_8c.html",
 "globals_u.html",
-"usart_8h_source.html"
+"structrobot__state.html#ae237ee7fa149fb1a40b8badc494744bb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

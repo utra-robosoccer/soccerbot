@@ -23,13 +23,13 @@ extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* a
 
 /******************************** Functions ************************************/
 /**
- * @defgroup AX12A_Exported_Functions AX12A Exported Functions
+ * @defgroup AX12A AX12A
  * @brief    Globally-accessible functions for interfacing with AX12A actuators.
  *           These functions are specific to AX12As and have no analogue for
  *           other actuators supported by this library. All of these functions
  *           will return and have no effect if the motor structure type field
  *           is not AX12ATYPE
- * @{
+ * @ingroup  Dynamixel
  */
 
 
@@ -45,13 +45,15 @@ extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* a
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup AX12A_Exported_Functions_Setters Setters
+ * @defgroup AX12A_Setters Setters
  * @brief    Register-setting functions
  *
  * # Setter functions #
  *
  * This subsection provides a set of functions which provide interfaces for
  * setting motor register values.
+ *
+ * @ingroup AX12A
  * @{
  */
 
@@ -176,7 +178,7 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
 /**
   * @}
   */
-/* end AX12A_Exported_Functions_Setters */
+/* end AX12A_Setters */
 
 
 
@@ -190,7 +192,7 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup AX12A_Exported_Functions_Interfaces Interfaces for previously-defined functions
+ * @defgroup AX12A_Interfaces Interfaces for previously-defined functions
  * @brief    Interfaces for previously-defined functions
  *
  * # Interfaces for previously-defined functions #
@@ -198,6 +200,8 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
  * This subsection provides a set of functions which implement functions
  * which call previously-defined functions in order to accomplish specific
  * tasks.
+ *
+ * @ingroup AX12A
  * @{
  */
 
@@ -240,4 +244,4 @@ void AX12A_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t comp
 /**
  * @}
  */
-/* end AX12A_Exported_Functions_Interfaces */
+/* end AX12A_Interfaces */

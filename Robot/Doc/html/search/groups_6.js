@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mx28_20exported_20functions',['MX28 Exported Functions',['../group___m_x28___exported___functions.html',1,'']]]
+  ['mx28',['MX28',['../group___m_x28.html',1,'']]]
 ];
