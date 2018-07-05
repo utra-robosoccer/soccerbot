@@ -92,22 +92,83 @@ $(document).ready(function(){initNavTree('structrobot__state.html','');});
 <div class="title">robot_state Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="robot_state_8h_source.html">robotState.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ae237ee7fa149fb1a40b8badc494744bb"><td class="memItemLeft" align="right" valign="top"><a id="ae237ee7fa149fb1a40b8badc494744bb"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>start_seq</b></td></tr>
+<tr class="memitem:ae237ee7fa149fb1a40b8badc494744bb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrobot__state.html#ae237ee7fa149fb1a40b8badc494744bb">start_seq</a></td></tr>
 <tr class="separator:ae237ee7fa149fb1a40b8badc494744bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaabdc509cdaba7df9f56c6c76f3ae19"><td class="memItemLeft" align="right" valign="top"><a id="abaabdc509cdaba7df9f56c6c76f3ae19"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="memitem:abaabdc509cdaba7df9f56c6c76f3ae19"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrobot__state.html#abaabdc509cdaba7df9f56c6c76f3ae19">id</a></td></tr>
 <tr class="separator:abaabdc509cdaba7df9f56c6c76f3ae19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d523ddd4d9b8eafb9241f3c94fc66da"><td class="memItemLeft" align="right" valign="top"><a id="a3d523ddd4d9b8eafb9241f3c94fc66da"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>msg</b> [80]</td></tr>
+<tr class="memitem:a3d523ddd4d9b8eafb9241f3c94fc66da"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrobot__state.html#a3d523ddd4d9b8eafb9241f3c94fc66da">msg</a> [80]</td></tr>
 <tr class="separator:a3d523ddd4d9b8eafb9241f3c94fc66da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7fcef41c32448ba17572576c2c808df"><td class="memItemLeft" align="right" valign="top"><a id="ab7fcef41c32448ba17572576c2c808df"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>end_seq</b></td></tr>
+<tr class="memitem:ab7fcef41c32448ba17572576c2c808df"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrobot__state.html#ab7fcef41c32448ba17572576c2c808df">end_seq</a></td></tr>
 <tr class="separator:ab7fcef41c32448ba17572576c2c808df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Data structure sent from the MCU to the PC. Contains sensor data </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="ab7fcef41c32448ba17572576c2c808df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7fcef41c32448ba17572576c2c808df">&#9670;&nbsp;</a></span>end_seq</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t end_seq</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>End sequence to attach to message (for data integrity purposes) </p>
+
+</div>
+</div>
+<a id="abaabdc509cdaba7df9f56c6c76f3ae19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaabdc509cdaba7df9f56c6c76f3ae19">&#9670;&nbsp;</a></span>id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Message ID </p>
+
+</div>
+</div>
+<a id="a3d523ddd4d9b8eafb9241f3c94fc66da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d523ddd4d9b8eafb9241f3c94fc66da">&#9670;&nbsp;</a></span>msg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char msg[80]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Raw message data as bytes sent over a serial terminal </p>
+
+</div>
+</div>
+<a id="ae237ee7fa149fb1a40b8badc494744bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae237ee7fa149fb1a40b8badc494744bb">&#9670;&nbsp;</a></span>start_seq</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t start_seq</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Start sequence to attach to message (for data integrity purposes) </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Communication/<a class="el" href="robot_state_8h_source.html">robotState.h</a></li>
 </ul>

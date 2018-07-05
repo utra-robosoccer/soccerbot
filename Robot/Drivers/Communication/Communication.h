@@ -1,9 +1,10 @@
-/*
- * Communication.h
- *
- *  Created on: May 28, 2018
- *      Author: Admin
- */
+/**
+  ******************************************************************************
+  * @file    Communication.h
+  * @author  Jason
+  * @brief   Header for top-level communication module
+  ******************************************************************************
+  */
 
 #ifndef COMMUNICATION_COMMUNICATION_H_
 #define COMMUNICATION_COMMUNICATION_H_
@@ -17,7 +18,7 @@
 #include "robotGoal.h"
 
 
-/******************************* Public Variables *******************************/
+/******************************* Public Variables ******************************/
 extern RobotGoal robotGoal;
 extern RobotState robotState;
 
