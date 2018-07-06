@@ -1,5 +1,5 @@
 /**
-  ******************************************************************************
+  *****************************************************************************
   * @file    DynamixelProtocolV1.c
   * @author  Tyler
   * @author  Gokul
@@ -13,18 +13,19 @@
   *
   * @defgroup Dynamixel
   * @brief    Everything related to Dynamixel actuators
-  ******************************************************************************
+  *****************************************************************************
   */
 
-/********************************* Includes ************************************/
+/********************************* Includes **********************************/
 #include "DynamixelProtocolV1.h"
 
 
 
 
-/******************************* Public Variables *******************************/
+/******************************* Public Variables ****************************/
 /* IO Type - initialized to blocking IO */
-enum IO_FLAGS IOType = IO_POLL; /**< Configures the low-level I/O mode used by the library. Default: polled I/O */
+enum IO_FLAGS IOType = IO_POLL; /**< Configures the low-level I/O mode used by
+                                     the library. Default: polled I/O        */
 
 /** Pre-allocated buffer for reading in packets from motors */
 uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
@@ -55,13 +56,13 @@ uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 
 
 
-/************************ Private Function Prototypes **************************/
+/************************ Private Function Prototypes ************************/
 static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 
 
 
-/******************************** Functions ************************************/
+/******************************** Functions **********************************/
 /**
  * @defgroup Dynamixel_Generic_Exported_Functions Dynamixel Generic Exported Functions
  * @brief    Globally-accessible functions for interfacing with Dynamixel
@@ -104,9 +105,9 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  *          Default value: 1
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   ID the number between 0 and 252 or equal to 254 to identify the motor.
- *          If 0xFE (254), any messages broadcasted to that ID will be broadcasted
- *          to all motors
+ * @param   ID the number between 0 and 252 or equal to 254 to identify the
+ *          motor. If 0xFE (254), any messages broadcasted to that ID will be
+ *          broadcasted to all motors
  * @retval  None
  */
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
@@ -139,9 +140,11 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
 	uint8_t baudArg = 0x01; // Default to 1 Mbps
 
 	if(hdynamixel -> _motorType == AX12ATYPE){
-		/* Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps. */
+		/* Set _baud equal to the hex code corresponding to baud. Default to 1
+		 * Mbps. */
 		if(baud > 0){
-			/* Valid for baud in range [7844, 1000000]. Will be converted to 8-bit resolution. */
+			/* Valid for baud in range [7844, 1000000]. Will be converted to
+			 * 8-bit resolution. */
 			baudArg = (uint8_t)((2000000 / baud) - 1);
 		}
 		else{
@@ -150,7 +153,8 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
 		}
 	}
 	else if(hdynamixel -> _motorType == MX28TYPE){
-		/* Set _baud equal to the hex code corresponding to baud. Default to 1 Mbps. */
+		/* Set _baud equal to the hex code corresponding to baud. Default to 1
+		 * Mbps. */
 		if(baud >= 9600 && baud <= 3500000){
 			if(baud >= 2250000){
 				if(baud < 2500000){
@@ -168,7 +172,8 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
 			}
 		}
 		else{
-			/* Default to 1000000 symbols/s (MX28_DEFAULT_BAUD_RATE is not to be used for our application) */
+			/* Default to 1000000 symbols/s (MX28_DEFAULT_BAUD_RATE is not to
+			 * be used for our application) */
 			baudArg = 0x01;
 		}
 	}
