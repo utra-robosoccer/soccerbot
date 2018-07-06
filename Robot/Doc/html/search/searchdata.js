@@ -9,7 +9,7 @@ var indexSectionsWithContent =
   6: "i",
   7: "i",
   8: "_abdimnrt",
-  9: "acdgilmost"
+  9: "acdfgilmost"
 };
 
 var indexSectionNames =

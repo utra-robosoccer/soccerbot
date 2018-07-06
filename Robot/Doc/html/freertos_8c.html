@@ -144,51 +144,51 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a016544463b4842ced7191baf8f449cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#a016544463b4842ced7191baf8f449cea">StartDefaultTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:a016544463b4842ced7191baf8f449cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the defaultTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="#a016544463b4842ced7191baf8f449cea">More...</a><br /></td></tr>
-<tr class="separator:a016544463b4842ced7191baf8f449cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#abb7badba6cdb3ff61f2dff35b5a9ff2c">UART1_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:abb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#abb7badba6cdb3ff61f2dff35b5a9ff2c">More...</a><br /></td></tr>
-<tr class="separator:abb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd685a32f5ae07a72d480671f7c646d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#afd685a32f5ae07a72d480671f7c646d5">UART2_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:afd685a32f5ae07a72d480671f7c646d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART2_ thread. It processes all commands for the motors physically connected to UART2, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#afd685a32f5ae07a72d480671f7c646d5">More...</a><br /></td></tr>
-<tr class="separator:afd685a32f5ae07a72d480671f7c646d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a478be609d54754b09cd8bdaee19aaf65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#a478be609d54754b09cd8bdaee19aaf65">UART3_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:a478be609d54754b09cd8bdaee19aaf65"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART3_ thread. It processes all commands for the motors physically connected to UART3, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#a478be609d54754b09cd8bdaee19aaf65">More...</a><br /></td></tr>
-<tr class="separator:a478be609d54754b09cd8bdaee19aaf65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a099b379cd3d7afbd65e8009d5bcae63f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#a099b379cd3d7afbd65e8009d5bcae63f">UART4_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:a099b379cd3d7afbd65e8009d5bcae63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART4_ thread. It processes all commands for the motors physically connected to UART4, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#a099b379cd3d7afbd65e8009d5bcae63f">More...</a><br /></td></tr>
-<tr class="separator:a099b379cd3d7afbd65e8009d5bcae63f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaecd9665005d7d4414f1e30828e89a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#aeaecd9665005d7d4414f1e30828e89a9">UART6_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:aeaecd9665005d7d4414f1e30828e89a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART6_ thread. It processes all commands for the motors physically connected to UART6, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#aeaecd9665005d7d4414f1e30828e89a9">More...</a><br /></td></tr>
-<tr class="separator:aeaecd9665005d7d4414f1e30828e89a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b1b4b3fe51fe46654895c7626bf83bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#a2b1b4b3fe51fe46654895c7626bf83bd">StartIMUTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:a2b1b4b3fe51fe46654895c7626bf83bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the IMUTask thread. During each control cycle, this thread fetches accelerometer and gyroscope data, then sends this data to the multi-writer sensor queue, which is read only by the TX task.  <a href="#a2b1b4b3fe51fe46654895c7626bf83bd">More...</a><br /></td></tr>
-<tr class="separator:a2b1b4b3fe51fe46654895c7626bf83bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af50979eaf2ad1b106c5514b33138a434"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#af50979eaf2ad1b106c5514b33138a434">StartRxTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:af50979eaf2ad1b106c5514b33138a434"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the RxTask thread. It initiates DMA-based receptions of RobotGoals from the PC via UART5. Upon successful reception of a RobotGoal, the UARTx_ and IMUTask threads are unblocked.  <a href="#af50979eaf2ad1b106c5514b33138a434">More...</a><br /></td></tr>
-<tr class="separator:af50979eaf2ad1b106c5514b33138a434"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfae5c57e07c9a086f73340d2aee1a7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#abfae5c57e07c9a086f73340d2aee1a7b">StartTxTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:abfae5c57e07c9a086f73340d2aee1a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the TxTask thread. This thread is blocked until all sensor data has been received through the sensor queue. After this time, the UARTx_ and IMUTask will be blocked. Then, a DMA-based transmission of a RobotState is sent to the PC via UART5.  <a href="#abfae5c57e07c9a086f73340d2aee1a7b">More...</a><br /></td></tr>
-<tr class="separator:abfae5c57e07c9a086f73340d2aee1a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga016544463b4842ced7191baf8f449cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga016544463b4842ced7191baf8f449cea">StartDefaultTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:ga016544463b4842ced7191baf8f449cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the defaultTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="group___threads.html#ga016544463b4842ced7191baf8f449cea">More...</a><br /></td></tr>
+<tr class="separator:ga016544463b4842ced7191baf8f449cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gabb7badba6cdb3ff61f2dff35b5a9ff2c">UART1_Handler</a> (void const *argument)</td></tr>
+<tr class="memdesc:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gabb7badba6cdb3ff61f2dff35b5a9ff2c">More...</a><br /></td></tr>
+<tr class="separator:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafd685a32f5ae07a72d480671f7c646d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gafd685a32f5ae07a72d480671f7c646d5">UART2_Handler</a> (void const *argument)</td></tr>
+<tr class="memdesc:gafd685a32f5ae07a72d480671f7c646d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART2_ thread. It processes all commands for the motors physically connected to UART2, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gafd685a32f5ae07a72d480671f7c646d5">More...</a><br /></td></tr>
+<tr class="separator:gafd685a32f5ae07a72d480671f7c646d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga478be609d54754b09cd8bdaee19aaf65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga478be609d54754b09cd8bdaee19aaf65">UART3_Handler</a> (void const *argument)</td></tr>
+<tr class="memdesc:ga478be609d54754b09cd8bdaee19aaf65"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART3_ thread. It processes all commands for the motors physically connected to UART3, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga478be609d54754b09cd8bdaee19aaf65">More...</a><br /></td></tr>
+<tr class="separator:ga478be609d54754b09cd8bdaee19aaf65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga099b379cd3d7afbd65e8009d5bcae63f">UART4_Handler</a> (void const *argument)</td></tr>
+<tr class="memdesc:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART4_ thread. It processes all commands for the motors physically connected to UART4, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga099b379cd3d7afbd65e8009d5bcae63f">More...</a><br /></td></tr>
+<tr class="separator:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeaecd9665005d7d4414f1e30828e89a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gaeaecd9665005d7d4414f1e30828e89a9">UART6_Handler</a> (void const *argument)</td></tr>
+<tr class="memdesc:gaeaecd9665005d7d4414f1e30828e89a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART6_ thread. It processes all commands for the motors physically connected to UART6, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gaeaecd9665005d7d4414f1e30828e89a9">More...</a><br /></td></tr>
+<tr class="separator:gaeaecd9665005d7d4414f1e30828e89a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd">StartIMUTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the IMUTask thread. During each control cycle, this thread fetches accelerometer and gyroscope data, then sends this data to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd">More...</a><br /></td></tr>
+<tr class="separator:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf50979eaf2ad1b106c5514b33138a434"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gaf50979eaf2ad1b106c5514b33138a434">StartRxTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:gaf50979eaf2ad1b106c5514b33138a434"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the RxTask thread. It initiates DMA-based receptions of RobotGoals from the PC via UART5. Upon successful reception of a RobotGoal, the UARTx_ and IMUTask threads are unblocked.  <a href="group___threads.html#gaf50979eaf2ad1b106c5514b33138a434">More...</a><br /></td></tr>
+<tr class="separator:gaf50979eaf2ad1b106c5514b33138a434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gabfae5c57e07c9a086f73340d2aee1a7b">StartTxTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the TxTask thread. This thread is blocked until all sensor data has been received through the sensor queue. After this time, the UARTx_ and IMUTask will be blocked. Then, a DMA-based transmission of a RobotState is sent to the PC via UART5.  <a href="group___threads.html#gabfae5c57e07c9a086f73340d2aee1a7b">More...</a><br /></td></tr>
+<tr class="separator:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abade755e13d07c10889ae83143656158"><td class="memItemLeft" align="right" valign="top"><a id="abade755e13d07c10889ae83143656158"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_FREERTOS_Init</b> (void)</td></tr>
 <tr class="separator:abade755e13d07c10889ae83143656158"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1988aa923b19fa6f31c93afa7773f793"><td class="memItemLeft" align="right" valign="top"><a id="a1988aa923b19fa6f31c93afa7773f793"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vApplicationGetIdleTaskMemory</b> (StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)</td></tr>
 <tr class="separator:a1988aa923b19fa6f31c93afa7773f793"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac16a95413b35f05c5ce725fefd8531a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#ac16a95413b35f05c5ce725fefd8531a5">HAL_I2C_MemRxCpltCallback</a> (I2C_HandleTypeDef *hi2c)</td></tr>
-<tr class="memdesc:ac16a95413b35f05c5ce725fefd8531a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a memory read from a I2C device is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="#ac16a95413b35f05c5ce725fefd8531a5">More...</a><br /></td></tr>
-<tr class="separator:ac16a95413b35f05c5ce725fefd8531a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcdf9b59049eccbc87d54042f9235b1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#abcdf9b59049eccbc87d54042f9235b1a">HAL_UART_TxCpltCallback</a> (UART_HandleTypeDef *huart)</td></tr>
-<tr class="memdesc:abcdf9b59049eccbc87d54042f9235b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a transmission from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="#abcdf9b59049eccbc87d54042f9235b1a">More...</a><br /></td></tr>
-<tr class="separator:abcdf9b59049eccbc87d54042f9235b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae494a9643f29b87d6d81e5264e60e57b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#ae494a9643f29b87d6d81e5264e60e57b">HAL_UART_RxCpltCallback</a> (UART_HandleTypeDef *huart)</td></tr>
-<tr class="memdesc:ae494a9643f29b87d6d81e5264e60e57b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a reception from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="#ae494a9643f29b87d6d81e5264e60e57b">More...</a><br /></td></tr>
-<tr class="separator:ae494a9643f29b87d6d81e5264e60e57b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e0456ea96d55db31de947fb3e954f18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="freertos_8c.html#a0e0456ea96d55db31de947fb3e954f18">HAL_UART_ErrorCallback</a> (UART_HandleTypeDef *huart)</td></tr>
-<tr class="memdesc:a0e0456ea96d55db31de947fb3e954f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever an error is encountered in association with a UART module. For this program, the callback behaviour consists of storing the error code in a local variable.  <a href="#a0e0456ea96d55db31de947fb3e954f18">More...</a><br /></td></tr>
-<tr class="separator:a0e0456ea96d55db31de947fb3e954f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac16a95413b35f05c5ce725fefd8531a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___callbacks.html#gac16a95413b35f05c5ce725fefd8531a5">HAL_I2C_MemRxCpltCallback</a> (I2C_HandleTypeDef *hi2c)</td></tr>
+<tr class="memdesc:gac16a95413b35f05c5ce725fefd8531a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a memory read from a I2C device is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="group___callbacks.html#gac16a95413b35f05c5ce725fefd8531a5">More...</a><br /></td></tr>
+<tr class="separator:gac16a95413b35f05c5ce725fefd8531a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabcdf9b59049eccbc87d54042f9235b1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___callbacks.html#gabcdf9b59049eccbc87d54042f9235b1a">HAL_UART_TxCpltCallback</a> (UART_HandleTypeDef *huart)</td></tr>
+<tr class="memdesc:gabcdf9b59049eccbc87d54042f9235b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a transmission from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="group___callbacks.html#gabcdf9b59049eccbc87d54042f9235b1a">More...</a><br /></td></tr>
+<tr class="separator:gabcdf9b59049eccbc87d54042f9235b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae494a9643f29b87d6d81e5264e60e57b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___callbacks.html#gae494a9643f29b87d6d81e5264e60e57b">HAL_UART_RxCpltCallback</a> (UART_HandleTypeDef *huart)</td></tr>
+<tr class="memdesc:gae494a9643f29b87d6d81e5264e60e57b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever a reception from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run.  <a href="group___callbacks.html#gae494a9643f29b87d6d81e5264e60e57b">More...</a><br /></td></tr>
+<tr class="separator:gae494a9643f29b87d6d81e5264e60e57b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e0456ea96d55db31de947fb3e954f18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___callbacks.html#ga0e0456ea96d55db31de947fb3e954f18">HAL_UART_ErrorCallback</a> (UART_HandleTypeDef *huart)</td></tr>
+<tr class="memdesc:ga0e0456ea96d55db31de947fb3e954f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called whenever an error is encountered in association with a UART module. For this program, the callback behaviour consists of storing the error code in a local variable.  <a href="group___callbacks.html#ga0e0456ea96d55db31de947fb3e954f18">More...</a><br /></td></tr>
+<tr class="separator:ga0e0456ea96d55db31de947fb3e954f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -408,336 +408,7 @@ static StackType_t&#160;</td><td class="memItemRight" valign="bottom"><b>xIdleSt
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Code for freertos application. </p>
-<p>This notice applies to any and all portions of this file that are not between comment pairs USER CODE BEGIN and USER CODE END. Other portions of this file, whether inserted by the user or by software development tools are owned by their respective copyright owners.</p>
-<p>Copyright (c) 2018 STMicroelectronics International N.V. All rights reserved.</p>
-<p>Redistribution and use in source and binary forms, with or without modification, are permitted, provided that the following conditions are met:</p>
-<ol type="1">
-<li>Redistribution of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
-<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
-<li>Neither the name of STMicroelectronics nor the names of other contributors to this software may be used to endorse or promote products derived from this software without specific written permission.</li>
-<li>This software, including modifications and/or derivative works of this software, must execute solely and exclusively on microcontroller or microprocessor devices manufactured by or for STMicroelectronics.</li>
-<li>Redistribution and use of this software other than as permitted under this license is void and will automatically terminate your rights under this license.</li>
-</ol>
-<p>THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ac16a95413b35f05c5ce725fefd8531a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac16a95413b35f05c5ce725fefd8531a5">&#9670;&nbsp;</a></span>HAL_I2C_MemRxCpltCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void HAL_I2C_MemRxCpltCallback </td>
-          <td>(</td>
-          <td class="paramtype">I2C_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>hi2c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is called whenever a memory read from a I2C device is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">hi2c</td><td>pointer to a I2C_HandleTypeDef structure that contains the configuration information for I2C module corresponding to the callback </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a0e0456ea96d55db31de947fb3e954f18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e0456ea96d55db31de947fb3e954f18">&#9670;&nbsp;</a></span>HAL_UART_ErrorCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void HAL_UART_ErrorCallback </td>
-          <td>(</td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>huart</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is called whenever an error is encountered in association with a UART module. For this program, the callback behaviour consists of storing the error code in a local variable. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">huart</td><td>pointer to a UART_HandleTypeDef structure that contains the configuration information for UART module corresponding to the callback </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ae494a9643f29b87d6d81e5264e60e57b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae494a9643f29b87d6d81e5264e60e57b">&#9670;&nbsp;</a></span>HAL_UART_RxCpltCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void HAL_UART_RxCpltCallback </td>
-          <td>(</td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>huart</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is called whenever a reception from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">huart</td><td>pointer to a UART_HandleTypeDef structure that contains the configuration information for UART module corresponding to the callback </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="abcdf9b59049eccbc87d54042f9235b1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abcdf9b59049eccbc87d54042f9235b1a">&#9670;&nbsp;</a></span>HAL_UART_TxCpltCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void HAL_UART_TxCpltCallback </td>
-          <td>(</td>
-          <td class="paramtype">UART_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>huart</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is called whenever a transmission from a UART module is completed. For this program, the callback behaviour consists of unblocking the thread which initiated the I/O and yielding to a higher priority task from the ISR if there are any that can run. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">huart</td><td>pointer to a UART_HandleTypeDef structure that contains the configuration information for UART module corresponding to the callback </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a016544463b4842ced7191baf8f449cea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a016544463b4842ced7191baf8f449cea">&#9670;&nbsp;</a></span>StartDefaultTask()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void StartDefaultTask </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the defaultTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="a2b1b4b3fe51fe46654895c7626bf83bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b1b4b3fe51fe46654895c7626bf83bd">&#9670;&nbsp;</a></span>StartIMUTask()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void StartIMUTask </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the IMUTask thread. During each control cycle, this thread fetches accelerometer and gyroscope data, then sends this data to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="af50979eaf2ad1b106c5514b33138a434"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af50979eaf2ad1b106c5514b33138a434">&#9670;&nbsp;</a></span>StartRxTask()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void StartRxTask </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the RxTask thread. It initiates DMA-based receptions of RobotGoals from the PC via UART5. Upon successful reception of a RobotGoal, the UARTx_ and IMUTask threads are unblocked. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="abfae5c57e07c9a086f73340d2aee1a7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfae5c57e07c9a086f73340d2aee1a7b">&#9670;&nbsp;</a></span>StartTxTask()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void StartTxTask </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the TxTask thread. This thread is blocked until all sensor data has been received through the sensor queue. After this time, the UARTx_ and IMUTask will be blocked. Then, a DMA-based transmission of a RobotState is sent to the PC via UART5. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="abb7badba6cdb3ff61f2dff35b5a9ff2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb7badba6cdb3ff61f2dff35b5a9ff2c">&#9670;&nbsp;</a></span>UART1_Handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART1_Handler </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="afd685a32f5ae07a72d480671f7c646d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd685a32f5ae07a72d480671f7c646d5">&#9670;&nbsp;</a></span>UART2_Handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART2_Handler </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the UART2_ thread. It processes all commands for the motors physically connected to UART2, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="a478be609d54754b09cd8bdaee19aaf65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a478be609d54754b09cd8bdaee19aaf65">&#9670;&nbsp;</a></span>UART3_Handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART3_Handler </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the UART3_ thread. It processes all commands for the motors physically connected to UART3, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="a099b379cd3d7afbd65e8009d5bcae63f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a099b379cd3d7afbd65e8009d5bcae63f">&#9670;&nbsp;</a></span>UART4_Handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART4_Handler </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the UART4_ thread. It processes all commands for the motors physically connected to UART4, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-<a id="aeaecd9665005d7d4414f1e30828e89a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeaecd9665005d7d4414f1e30828e89a9">&#9670;&nbsp;</a></span>UART6_Handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART6_Handler </td>
-          <td>(</td>
-          <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>argument</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function is executed in the context of the UART6_ thread. It processes all commands for the motors physically connected to UART6, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task. </p>
-<p>This function never returns. </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
