@@ -11,8 +11,13 @@
   * 		 instructions and register addresses are very similar for all
   * 		 actuators using this protocol version
   *
-  * @defgroup Dynamixel
+  * @defgroup Dynamixel Dynamixel
   * @brief    Everything related to Dynamixel actuators
+  *
+  * @defgroup DynamixelProtocolV1 Dynamixel Protocol V1.0
+  * @brief    Everything related to implementing the Dynamixel communication
+  *           protocol, version 1.0
+  * @ingroup  Dynamixel
   *****************************************************************************
   */
 
@@ -64,10 +69,10 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 
 /******************************** Functions **********************************/
 /**
- * @defgroup Dynamixel_Generic_Exported_Functions Dynamixel Generic Exported Functions
+ * @defgroup DynamixelProtocolV1_Public_Functions Public Functions
  * @brief    Globally-accessible functions for interfacing with Dynamixel
  *           actuators and controlling the settings of this library
- * @ingroup  Dynamixel
+ * @ingroup  DynamixelProtocolV1
  */
 
 
@@ -83,7 +88,7 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Setters Setters
+ * @defgroup DynamixelProtocolV1_Public_Functions_Setters Setters
  * @brief    Register-setting functions
  *
  * # Setter functions #
@@ -91,7 +96,7 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  * This subsection provides a set of functions which provide interfaces for
  * setting motor register values.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -729,7 +734,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 /**
   * @}
   */
-/* end Dynamixel_Exported_Functions_Setters */
+/* end DynamixelProtocolV1_Public_Functions_Setters */
 
 
 
@@ -743,7 +748,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 /*                                                                           */
 /*                                                                           */
 /*****************************************************************************/
-/** @defgroup Dynamixel_Exported_Functions_Getters Getters
+/** @defgroup DynamixelProtocolV1_Public_Functions_Getters Getters
  *  @brief    Register-reading functions
  *
  * # Getter functions #
@@ -751,7 +756,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
  * This subsection provides a set of functions which provide interfaces for
  * reading motor register values.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -950,7 +955,7 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /**
   * @}
   */
-/* end Dynamixel_Exported_Functions_Getters */
+/* end DynamixelProtocolV1_Public_Functions_Getters */
 
 
 
@@ -964,7 +969,8 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Library_Configuration Library Configuration
+ * @defgroup DynamixelProtocolV1_Public_Functions_Library_Configuration  \
+ *           Library Configuration
  * @brief    Library configuration functions
  *
  * # Library configuration functions #
@@ -973,7 +979,7 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  * configuring certain parts of the library. Right now, the only thing that
  * can be changed is the I/O mode (polling, interrupt-based, or DMA-based).
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -1001,7 +1007,7 @@ enum IO_FLAGS Dynamixel_GetIOType(){
 /**
   * @}
   */
-/* Dynamixel_Exported_Functions_Library_Configuration */
+/* DynamixelProtocolV1_Public_Functions_Library_Configuration */
 
 
 
@@ -1016,7 +1022,8 @@ enum IO_FLAGS Dynamixel_GetIOType(){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_LL_TX_RX  Transmission and reception
+ * @defgroup DynamixelProtocolV1_Public_Functions_LL_TX_RX Transmission and \
+ *           reception
  * @brief    Low-level transmission and reception functions
  *
  * # Low-level transmission and reception functions  #
@@ -1035,7 +1042,7 @@ enum IO_FLAGS Dynamixel_GetIOType(){
  * context of a FreeRTOS thread, and that the callback function has
  * been implemented to unblock the thread using task notifications.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -1242,7 +1249,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /**
   * @}
   */
-/* Dynamixel_Exported_Functions_LL_TX_RX */
+/* DynamixelProtocolV1_Public_Functions_LL_TX_RX */
 
 
 /*****************************************************************************/
@@ -1255,7 +1262,8 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Other Other motor instruction functions
+ * @defgroup DynamixelProtocolV1_Public_Functions_Other Other motor \
+ *           instruction functions
  * @brief    Other motor instruction functions
  *
  * # Other motor instruction functions  #
@@ -1264,7 +1272,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * instructions (motor commands), but their uses are rather niche compared
  * to the regular reading and writing functions.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -1376,7 +1384,7 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 /**
   * @}
   */
-/* Dynamixel_Exported_Functions_Other */
+/* DynamixelProtocolV1_Public_Functions_Other */
 
 
 
@@ -1391,7 +1399,7 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Setup Setup functions
+ * @defgroup DynamixelProtocolV1_Public_Functions_Setup Setup functions
  * @brief    Setup functions
  *
  * # Setup functions  #
@@ -1399,7 +1407,7 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
  * This subsection provides a set of functions which implement functions
  * related to setup (data structure initialization, etc) and resetting.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -1467,7 +1475,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 /**
   * @}
   */
-/* Dynamixel_Exported_Functions_Setup */
+/* DynamixelProtocolV1_Public_Functions_Setup */
 
 
 
@@ -1482,7 +1490,8 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Exported_Functions_Interfaces Interfaces for previously-defined functions
+ * @defgroup DynamixelProtocolV1_Public_Functions_Interfaces Interfaces for \
+ *           previously-defined functions
  * @brief    Interfaces for previously-defined functions
  *
  * # Interfaces for previously-defined functions #
@@ -1491,7 +1500,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
  * which call previously-defined functions in order to accomplish specific
  * tasks.
  *
- * @ingroup Dynamixel_Generic_Exported_Functions
+ * @ingroup DynamixelProtocolV1_Public_Functions
  * @{
  */
 
@@ -1533,15 +1542,15 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /**
   * @}
   */
-/* Dynamixel_Exported_Functions_Interfaces */
+/* DynamixelProtocolV1_Public_Functions_Interfaces */
 
 
 
 
 /**
- * @defgroup Dynamixel_Generic_Private_Functions Dynamixel Generic Private Functions
+ * @defgroup DynamixelProtocolV1_Private_Functions Dynamixel Private Functions
  * @brief    Functions only accessible from within the library.
- * @ingroup  Dynamixel
+ * @ingroup  DynamixelProtocolV1
  */
 /*****************************************************************************/
 /*  Computation-based helper functions                                       */
@@ -1553,7 +1562,8 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Dynamixel_Private_Functions_Computation Computation-based helper functions
+ * @defgroup DynamixelProtocolV1_Private_Functions_Computation \
+ *           Computation-based helper functions
  * @brief    Computation-based helper functions
  *
  * # Computation-based helper functions #
@@ -1562,7 +1572,7 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  * which execute solely computation-based tasks, such as computing a
  * checksum.
  *
- * @ingroup Dynamixel_Generic_Private_Functions
+ * @ingroup DynamixelProtocolV1_Private_Functions
  * @{
  */
 
@@ -1589,4 +1599,4 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 /**
   * @}
   */
-/* Dynamixel_Private_Functions_Computation */
+/* DynamixelProtocolV1_Private_Functions_Computation */

@@ -3,6 +3,11 @@
   * @file    AX12A.h
   * @author  Tyler
   * @brief   This file provides interfaces for AX12A-specific functions.
+  *
+  * @defgroup AX12AHeader AX12A (header)
+  * @brief    Header for AX12A, showing the public content
+  * @ingroup  AX12A
+  * @{
   ******************************************************************************
   */
 
@@ -54,5 +59,10 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
 // Interfaces for previously-defined functions
 void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope);
 void AX12A_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope);
+
+/**
+ * @}
+ */
+/* end AX12AHeader */
 
 #endif /* __DYNAMIXEL_AX-12A_H__ */
