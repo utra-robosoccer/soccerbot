@@ -1,0 +1,9 @@
+digraph "MX28 (header)"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="MX28",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___m_x28.html",tooltip="Globally-accessible functions for interfacing with MX28 actuators. These functions are specific to MX..."];
+  Node0 [label="MX28 (header)",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1->Node0 [shape=plaintext, dir="back", style="solid"];
+}
