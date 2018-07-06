@@ -71,4 +71,4 @@ uint32_t Days_WeeksToDays(uint32_t weeks);
  */
 /* end ModuleNameHeader */
 
-#endif /* __EXAMPLE_H_ */
+#endif /* __EXAMPLE_H__ */
