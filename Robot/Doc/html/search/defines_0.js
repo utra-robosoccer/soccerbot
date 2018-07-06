@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_5f_5fdynamixel_5freceive',['__DYNAMIXEL_RECEIVE',['../_dynamixel_protocol_v1_8h.html#a54e5850720a4e3e394fb900a4d83ab41',1,'DynamixelProtocolV1.h']]],
-  ['_5f_5fdynamixel_5ftransmit',['__DYNAMIXEL_TRANSMIT',['../_dynamixel_protocol_v1_8h.html#a96ab88c3e05d70e9dfb0650a6d83e7bf',1,'DynamixelProtocolV1.h']]]
+  ['robot_5fstate_5fmpu_5fdata_5foffset',['ROBOT_STATE_MPU_DATA_OFFSET',['../robot_state_8h.html#a5e8c90e0a2de956501bf71d9dcd7a6fc',1,'robotState.h']]]
 ];
