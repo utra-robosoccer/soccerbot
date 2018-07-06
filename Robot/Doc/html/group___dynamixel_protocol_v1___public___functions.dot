@@ -1,0 +1,23 @@
+digraph "Public Functions"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir=LR;
+  Node4 [label="Library Configuration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___library___configuration.html",tooltip="Library configuration functions. "];
+  Node0 [label="Public Functions",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 [label="Setters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___setters.html",tooltip="Register-setting functions. "];
+  Node1 [label="Dynamixel Protocol V1.0",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1.html",tooltip="Everything related to implementing the Dynamixel communication protocol, version 1.0  "];
+  Node6 [label="Other motor       \l   instruction functions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___other.html",tooltip="Other motor instruction functions. "];
+  Node5 [label="Transmission and  \l        reception",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html",tooltip="Low-level transmission and reception functions. "];
+  Node8 [label="Interfaces for    \l      previously-defined\l functions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___interfaces.html",tooltip="Interfaces for previously-defined functions. "];
+  Node7 [label="Setup functions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___setup.html",tooltip="Setup functions. "];
+  Node3 [label="Getters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___public___functions___getters.html",tooltip="Register-reading functions. "];
+  Node1->Node0 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node2 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node3 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node4 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node5 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node6 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node7 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node8 [shape=plaintext, dir="back", style="solid"];
+}

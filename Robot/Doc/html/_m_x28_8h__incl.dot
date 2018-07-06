@@ -1,0 +1,19 @@
+digraph "D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Dynamixel/MX28/MX28.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="D:/Users/Tyler/Documents\l/STM/embedded/soccer-embedded\l/Robot/Drivers/Dynamixel/MX28/MX28.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="../Dynamixel_HandleTypeDef.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_dynamixel___handle_type_def_8h.html",tooltip="This file defines the data structure used by all Dynamixel actuators, as well as user-defined types i..."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="stdint.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="stdbool.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="gpio.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$gpio_8h_source.html"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="stm32f4xx_hal.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="main.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8h.html",tooltip=": Header for main.c file. This file contains the common defines of the application. "];
+  Node6 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
