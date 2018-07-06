@@ -1,13 +1,17 @@
-/*
- * Communication.c
- *
- *  Created on: May 28, 2018
- *      Author: Admin
- */
+/**
+  ******************************************************************************
+  * @file    Communication.c
+  * @author  Jason
+  * @brief   Top-level communcation module
+  *
+  * @defgroup Communication
+  * @brief    Everything related to communication data structures
+  ******************************************************************************
+  */
 
 /********************************** Includes **********************************/
 #include "Communication.h"
 
-/******************************* Public Variables *******************************/
+/******************************* Public Variables *****************************/
 RobotGoal robotGoal = {0};
 RobotState robotState = {0};
