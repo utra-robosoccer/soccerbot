@@ -2,18 +2,32 @@
   ******************************************************************************
   * @file    MX28.h
   * @author  Tyler
-  * @brief   This file provides interfaces for MX28-specific functions.
+  * @brief   This file provides interfaces for MX28-specific functions
+  *
+  * @defgroup MX28Header MX28 (header)
+  * @brief    Header for MX28, showing the public content
+  * @ingroup  MX28
+  * @{
   ******************************************************************************
   */
 
-/******************** Define to prevent recursive inclusion *******************/
+
+
+
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef __MX28_H__
 #define __MX28_H__
 
-/********************************** Includes **********************************/
+
+
+
+/********************************* Includes **********************************/
 #include "../Dynamixel_HandleTypeDef.h"
 
-/*********************************** Macros ***********************************/
+
+
+
+/********************************** Macros ***********************************/
 /* Value limit definitions */
 #define MX28_MAX_VELOCITY          117	/**< Maximum angular velocity (RPM) */
 
@@ -34,7 +48,10 @@
 #define MX28_DEFAULT_P_GAIN						0x08 	/**< Default proportional gain parameter value */
 #define MX28_DEFAULT_PUNCH						0x0000	/**< Default punch */
 
-/***************************** Function prototypes ****************************/
+
+
+
+/***************************** Function prototypes ***************************/
 // Setters (use the WRITE DATA instruction)
 void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset);
 void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divider);
@@ -45,5 +62,10 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
 
 // Interfaces for previously-defined functions
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel);
+
+/**
+ * @}
+ */
+/* end MX28Header */
 
 #endif /* __MX28_H__ */

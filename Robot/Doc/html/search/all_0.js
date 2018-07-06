@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['_5f_5fdynamixel_5freceive',['__DYNAMIXEL_RECEIVE',['../_dynamixel_protocol_v1_8h.html#a54e5850720a4e3e394fb900a4d83ab41',1,'DynamixelProtocolV1.h']]],
-  ['_5f_5fdynamixel_5ftransmit',['__DYNAMIXEL_TRANSMIT',['../_dynamixel_protocol_v1_8h.html#a96ab88c3e05d70e9dfb0650a6d83e7bf',1,'DynamixelProtocolV1.h']]],
+  ['_5f_5fdynamixel_5freceive',['__DYNAMIXEL_RECEIVE',['../group___dynamixel_protocol_v1_header.html#ga54e5850720a4e3e394fb900a4d83ab41',1,'DynamixelProtocolV1.h']]],
+  ['_5f_5fdynamixel_5ftransmit',['__DYNAMIXEL_TRANSMIT',['../group___dynamixel_protocol_v1_header.html#ga96ab88c3e05d70e9dfb0650a6d83e7bf',1,'DynamixelProtocolV1.h']]],
   ['_5fbaudrate',['_BaudRate',['../struct_m_p_u6050___handle_type_def.html#a6e97a9b23568fd2900bf6a2397a20a36',1,'MPU6050_HandleTypeDef']]],
   ['_5fdatadirpinnum',['_dataDirPinNum',['../struct_dynamixel___handle_type_def.html#a83700584e6d6b79965f6c42d0b92148e',1,'Dynamixel_HandleTypeDef']]],
   ['_5fdatadirport',['_dataDirPort',['../struct_dynamixel___handle_type_def.html#a5157edbd5a8183183a2a2d45b3c8be0d',1,'Dynamixel_HandleTypeDef']]],

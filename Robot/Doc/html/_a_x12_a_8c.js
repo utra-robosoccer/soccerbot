@@ -6,5 +6,5 @@ var _a_x12_a_8c =
     [ "AX12A_SetComplianceSlope", "group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41", null ],
     [ "AX12A_SetCWComplianceMargin", "group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1", null ],
     [ "AX12A_SetCWComplianceSlope", "group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451", null ],
-    [ "Dynamixel_DataWriter", "group___dynamixel___exported___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf", null ]
+    [ "Dynamixel_DataWriter", "group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf", null ]
 ];
