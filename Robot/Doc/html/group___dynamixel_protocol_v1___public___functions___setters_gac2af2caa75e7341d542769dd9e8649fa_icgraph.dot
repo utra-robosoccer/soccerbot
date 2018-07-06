@@ -1,9 +1,0 @@
-digraph "Dynamixel_SetGoalVelocity"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node45 [label="Dynamixel_SetGoalVelocity",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node45 -> Node46 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node46 [label="Dynamixel_EnterWheelMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1_header.html#ga018df076095889475b42e8e21a26dc1e",tooltip="Sets the control registers such that the rotational angle of the motor is not bounded. "];
-}

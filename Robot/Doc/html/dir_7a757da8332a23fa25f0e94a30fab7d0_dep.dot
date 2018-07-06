@@ -1,9 +1,0 @@
-digraph "D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Dynamixel/MX28" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_01043e09be118d118a1c0a841e614b7e {
-    graph [ bgcolor="#ddddee", pencolor="black", label="Dynamixel" fontname="Helvetica", fontsize="10", URL="dir_01043e09be118d118a1c0a841e614b7e.html"]
-  dir_7a757da8332a23fa25f0e94a30fab7d0 [shape=box, label="MX28", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_7a757da8332a23fa25f0e94a30fab7d0.html"];
-  }
-}

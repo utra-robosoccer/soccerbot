@@ -1,9 +1,0 @@
-digraph "Computation-based helper functions"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir=LR;
-  Node1 [label="Dynamixel Private Functions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group___dynamixel_protocol_v1___private___functions.html",tooltip="Functions only accessible from within the library. "];
-  Node0 [label="Computation-based helper\l functions",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node1->Node0 [shape=plaintext, dir="back", style="solid"];
-}
