@@ -2,6 +2,9 @@
   ******************************************************************************
   * @file    freertos.c
   * @brief   Code for freertos application
+  * @author  Gokul
+  * @author  Tyler
+  * @author  Izaak
   *
   * @defgroup FreeRTOS
   * @brief    Everything related to FreeRTOS
