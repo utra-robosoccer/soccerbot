@@ -25,7 +25,7 @@
 
 
 
-/********************************** Includes *********************************/
+/********************************* Includes **********************************/
 /* I/O */
 #include "gpio.h"
 #include "usart.h"
@@ -46,7 +46,7 @@
 
 
 
-/*********************************** Macros **********************************/
+/********************************* Macros ************************************/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) /**< Set data direction pin high (TX) */
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) /**< Set data direction pin low (RX) */
 

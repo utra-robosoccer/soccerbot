@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    AX12A.h
   * @author  Tyler
-  * @brief   This file provides interfaces for AX12A-specific functions.
+  * @brief   This file provides interfaces for AX12A-specific functions
   *
   * @defgroup AX12AHeader AX12A (header)
   * @brief    Header for AX12A, showing the public content
@@ -21,13 +21,13 @@
 
 
 
-/********************************** Includes *********************************/
+/********************************* Includes **********************************/
 #include "../Dynamixel_HandleTypeDef.h"
 
 
 
 
-/*********************************** Macros **********************************/
+/********************************** Macros ***********************************/
 /* Value limit definitions */
 #define AX12A_MAX_VELOCITY          114	/**< Maximum angular velocity (RPM) */
 

@@ -9,19 +9,19 @@
 
 
 
-/********************************* Includes ************************************/
+/********************************* Includes **********************************/
 #include "AX12A.h"
 
 
 
 
-/*********************************** Externs **********************************/
+/********************************* Externs ***********************************/
 extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 
 
 
 
-/******************************** Functions ************************************/
+/******************************** Functions **********************************/
 /**
  * @defgroup AX12A AX12A
  * @brief    Globally-accessible functions for interfacing with AX12A actuators.
