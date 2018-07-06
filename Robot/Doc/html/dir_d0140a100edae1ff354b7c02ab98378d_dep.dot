@@ -1,9 +1,0 @@
-digraph "D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Dynamixel/AX12A" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_01043e09be118d118a1c0a841e614b7e {
-    graph [ bgcolor="#ddddee", pencolor="black", label="Dynamixel" fontname="Helvetica", fontsize="10", URL="dir_01043e09be118d118a1c0a841e614b7e.html"]
-  dir_d0140a100edae1ff354b7c02ab98378d [shape=box, label="AX12A", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_d0140a100edae1ff354b7c02ab98378d.html"];
-  }
-}
