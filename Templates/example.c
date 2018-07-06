@@ -3,12 +3,12 @@
   * @file    example.c
   * @author  Tyler
   * @brief   This file is an example built off the template. It illustrates
-  * 		     some ways in which the template may be filled in. It also provides
-  * 		     some examples for how to use Doxygen.
+  *          some ways in which the template may be filled in. It also provides
+  *          some examples for how to use Doxygen.
   *
   * @defgroup Days Days
   * @brief    This module is responsible for setting and getting weekday
-  *			      information
+  *           information
   *****************************************************************************
   */
 

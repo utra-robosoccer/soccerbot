@@ -9,6 +9,6 @@ var struct_dynamixel___handle_type_def =
     [ "_lastPosition", "struct_dynamixel___handle_type_def.html#a2e8a4d000bb45bf784fcbb56ebbfc10c", null ],
     [ "_lastReadIsValid", "struct_dynamixel___handle_type_def.html#a9bd336b14eaeadc645922eee290bb0ad", null ],
     [ "_lastVelocity", "struct_dynamixel___handle_type_def.html#a46adc1a0c9e0288ba60b06cfc345adea", null ],
-    [ "_motorType", "struct_dynamixel___handle_type_def.html#aefe5d348d9db9ec81956535e9a04c5ac", null ],
+    [ "_motorType", "struct_dynamixel___handle_type_def.html#a40d2f9e9ebd58c5f18d132d704a79683", null ],
     [ "_UART_Handle", "struct_dynamixel___handle_type_def.html#aefc481817957faca32bb883a5a497603", null ]
 ];
