@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    MX28.h
   * @author  Tyler
-  * @brief   This file provides interfaces for MX28-specific functions.
+  * @brief   This file provides interfaces for MX28-specific functions
   *
   * @defgroup MX28Header MX28 (header)
   * @brief    Header for MX28, showing the public content
@@ -21,13 +21,13 @@
 
 
 
-/********************************** Includes *********************************/
+/********************************* Includes **********************************/
 #include "../Dynamixel_HandleTypeDef.h"
 
 
 
 
-/*********************************** Macros **********************************/
+/********************************** Macros ***********************************/
 /* Value limit definitions */
 #define MX28_MAX_VELOCITY          117	/**< Maximum angular velocity (RPM) */
 
