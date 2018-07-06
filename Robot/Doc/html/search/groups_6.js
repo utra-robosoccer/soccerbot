@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mx28',['MX28',['../group___m_x28.html',1,'']]]
+  ['library_20configuration',['Library Configuration',['../group___dynamixel___exported___functions___library___configuration.html',1,'']]]
 ];

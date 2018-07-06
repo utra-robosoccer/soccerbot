@@ -2,6 +2,9 @@
   ******************************************************************************
   * @file    freertos.c
   * @brief   Code for freertos application
+  *
+  * @defgroup FreeRTOS
+  * @brief    Everything related to FreeRTOS
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -42,7 +45,6 @@
   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
   ******************************************************************************
   */
 
@@ -266,6 +268,14 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 }
 
+/**
+ * @defgroup Threads
+ * @brief    These are functions run in the context of their own FreeRTOS
+ *           threads
+ *
+ * @ingroup  FreeRTOS
+ */
+
 /* StartDefaultTask function */
 /**
   * @brief  This function is executed in the context of the defaultTask
@@ -274,6 +284,8 @@ void MX_FREERTOS_Init(void) {
   * 		responsibility for distributing commands to the actuators
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void StartDefaultTask(void const * argument)
 {
@@ -459,6 +471,8 @@ void StartDefaultTask(void const * argument)
   * 		TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void UART1_Handler(void const * argument)
 {
@@ -491,6 +505,8 @@ void UART1_Handler(void const * argument)
   * 		TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void UART2_Handler(void const * argument)
 {
@@ -523,6 +539,8 @@ void UART2_Handler(void const * argument)
   * 		TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void UART3_Handler(void const * argument)
 {
@@ -555,6 +573,8 @@ void UART3_Handler(void const * argument)
   * 		TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void UART4_Handler(void const * argument)
 {
@@ -587,6 +607,8 @@ void UART4_Handler(void const * argument)
   * 		TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void UART6_Handler(void const * argument)
 {
@@ -617,6 +639,8 @@ void UART6_Handler(void const * argument)
   * 		read only by the TX task.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void StartIMUTask(void const * argument)
 {
@@ -655,6 +679,8 @@ void StartIMUTask(void const * argument)
   * 		RobotGoal, the UARTx_ and IMUTask threads are unblocked.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void StartRxTask(void const * argument)
 {
@@ -757,6 +783,8 @@ void StartRxTask(void const * argument)
   * 		PC via UART5.
   *
   * 		This function never returns.
+  *
+  * @ingroup Threads
   */
 void StartTxTask(void const * argument)
 {
@@ -842,6 +870,14 @@ void StartTxTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 /**
+ * @defgroup Callbacks
+ * @brief    Callback functions for unblocking FreeRTOS threads which perform
+ *           non-blocking I/O
+ *
+ * @ingroup FreeRTOS
+ */
+
+/**
   * @brief  This function is called whenever a memory read from a I2C
   * 		device is completed. For this program, the callback behaviour
   * 		consists of unblocking the thread which initiated the I/O and
@@ -851,6 +887,8 @@ void StartTxTask(void const * argument)
   *         the configuration information for I2C module corresponding to
   *         the callback
   * @retval None
+  *
+  * @ingroup Callbacks
   */
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
@@ -870,6 +908,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
   *         the configuration information for UART module corresponding to
   *         the callback
   * @retval None
+  *
+  * @ingroup Callbacks
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 	if(setupIsDone){
@@ -906,6 +946,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   *         the configuration information for UART module corresponding to
   *         the callback
   * @retval None
+  *
+  * @ingroup Callbacks
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -939,6 +981,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
   *         the configuration information for UART module corresponding to
   *         the callback
   * @retval None
+  *
+  * @ingroup Callbacks
   */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {

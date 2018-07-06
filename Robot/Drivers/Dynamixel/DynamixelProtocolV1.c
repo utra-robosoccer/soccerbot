@@ -2,6 +2,8 @@
   ******************************************************************************
   * @file    DynamixelProtocolV1.c
   * @author  Tyler
+  * @author  Gokul
+  * @author  Hannah
   * @brief   Top-level module for Dynamixel library (protocol V1.0). Contains
   *          common functional code for the AX12A library and MX28 library.
   * 		 It is generic in that any Dynamixel actuator using protocol version
