@@ -10,11 +10,17 @@
   ******************************************************************************
   */
 
-/******************** Define to prevent recursive inclusion *******************/
+
+
+
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef __DYNAMIXEL_PROTOCOL_V1_H__
 #define __DYNAMIXEL_PROTOCOL_V1_H__
 
-/********************************** Includes **********************************/
+
+
+
+/********************************** Includes *********************************/
 /* I/O */
 #include "gpio.h"
 #include "usart.h"
@@ -32,7 +38,10 @@
 #include "sharedMacros.h"
 #include "cmsis_os.h"
 
-/*********************************** Macros ***********************************/
+
+
+
+/*********************************** Macros **********************************/
 #define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) /**< Set data direction pin high (TX) */
 #define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) /**< Set data direction pin low (RX) */
 
@@ -105,7 +114,10 @@
 #define MAX_PUNCH             1023	/**< Maximum punch (proportional to minimum current) */
 #define MIN_PUNCH             0		/**< Minimum punch (proportional to minimum current) */
 
-/*************************** Library configuration ****************************/
+
+
+
+/*************************** Library configuration ***************************/
 /** Enumerates the low-level I/O modes the library supports */
 enum IO_FLAGS{
     IO_DMA,     /**< Direct memory access */
@@ -113,14 +125,20 @@ enum IO_FLAGS{
     IO_IT       /**< Interrupt-based I/O  */
 };
 
-/****************************** Public Variables ******************************/
+
+
+
+/****************************** Public Variables *****************************/
 /** Pre-allocated buffer for reading in packets from motors */
 extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
 
 /** Pre-allocated buffer for transmitting packets to motors */
 extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
 
-/***************************** Function prototypes ****************************/
+
+
+
+/***************************** Function prototypes ***************************/
 // Setters (use the WRITE DATA instruction)
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID); // (EEPROM)
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud); // (EEPROM)

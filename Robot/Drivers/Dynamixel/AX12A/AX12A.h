@@ -6,14 +6,23 @@
   ******************************************************************************
   */
 
-/******************** Define to prevent recursive inclusion *******************/
+
+
+
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef __AX12A__
 #define __AX12A__
 
-/********************************** Includes **********************************/
+
+
+
+/********************************** Includes *********************************/
 #include "../Dynamixel_HandleTypeDef.h"
 
-/*********************************** Macros ***********************************/
+
+
+
+/*********************************** Macros **********************************/
 /* Value limit definitions */
 #define AX12A_MAX_VELOCITY          114	/**< Maximum angular velocity (RPM) */
 
@@ -34,7 +43,9 @@
 #define AX12A_DEFAULT_PUNCH						0x0020	/**< Default punch */
 
 
-/***************************** Function prototypes ****************************/
+
+
+/***************************** Function prototypes ***************************/
 void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin); // (RAM)
 void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin); // (RAM)
 void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope); // (RAM)

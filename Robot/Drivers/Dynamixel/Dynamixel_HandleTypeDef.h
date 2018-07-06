@@ -1,14 +1,33 @@
+/**
+  ******************************************************************************
+  * @file    Dynamixel_HandleTypeDef.h
+  * @author  Tyler
+  * @brief   This file defines the data structure used by all Dynamixel
+  *          actuators, as well as user-defined types it uses.
+  *
+  * @ingroup Dynamixel
+  ******************************************************************************
+  */
 
-/******************** Define to prevent recursive inclusion *******************/
+
+
+
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 #define __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 
-/********************************** Includes **********************************/
+
+
+
+/********************************** Includes *********************************/
 #include <stdint.h>
 #include <stdbool.h>
 #include "gpio.h"
 
-/*********************************** Types ************************************/
+
+
+
+/*********************************** Types ***********************************/
 /** Enumerates the types of Dynamixel actuators the library supports */
 enum motorTypes_e{
 	AX12ATYPE,      /**< AX12A actuator */
