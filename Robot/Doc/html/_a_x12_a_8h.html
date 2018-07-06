@@ -96,260 +96,64 @@ $(document).ready(function(){initNavTree('_a_x12_a_8h.html','');});
 
 <p>This file provides interfaces for AX12A-specific functions.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;../Dynamixel_HandleTypeDef.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_dynamixel___handle_type_def_8h_source.html">../Dynamixel_HandleTypeDef.h</a>&quot;</code><br />
 </div>
 <p><a href="_a_x12_a_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:afbe106e2e61bf75baf3f19098269c6c3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#afbe106e2e61bf75baf3f19098269c6c3">AX12A_MAX_VELOCITY</a>&#160;&#160;&#160;114</td></tr>
-<tr class="separator:afbe106e2e61bf75baf3f19098269c6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bc8a2e4def4d0e5e09e66e0e2d3e939"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a4bc8a2e4def4d0e5e09e66e0e2d3e939">AX12A_REG_CW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x1A</td></tr>
-<tr class="separator:a4bc8a2e4def4d0e5e09e66e0e2d3e939"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02c13af72d88c53cc92debc92849b586"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a02c13af72d88c53cc92debc92849b586">AX12A_REG_CCW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x1B</td></tr>
-<tr class="separator:a02c13af72d88c53cc92debc92849b586"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad86243b8574837400996ab5d4b6e6927"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#ad86243b8574837400996ab5d4b6e6927">AX12A_REG_CW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x1C</td></tr>
-<tr class="separator:ad86243b8574837400996ab5d4b6e6927"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3f58e93539885cdc32ab245427a0e4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#ac3f58e93539885cdc32ab245427a0e4b">AX12A_REG_CCW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x1D</td></tr>
-<tr class="separator:ac3f58e93539885cdc32ab245427a0e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5c1f226b9a8a70e0ff7e32d881ce9c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a7a5c1f226b9a8a70e0ff7e32d881ce9c">AX12A_DEFAULT_BAUD_RATE</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:a7a5c1f226b9a8a70e0ff7e32d881ce9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5ea15a6736398de23d29b487f33dece"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#aa5ea15a6736398de23d29b487f33dece">AX12A_DEFAULT_CCW_ANGLE_LIMIT</a>&#160;&#160;&#160;0x03FF</td></tr>
-<tr class="separator:aa5ea15a6736398de23d29b487f33dece"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae876ce432f4de2cc8d40d1393218ebd3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#ae876ce432f4de2cc8d40d1393218ebd3">AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT</a>&#160;&#160;&#160;0xBE</td></tr>
-<tr class="separator:ae876ce432f4de2cc8d40d1393218ebd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca75c82bc45c50f328809006247ef39c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#aca75c82bc45c50f328809006247ef39c">AX12A_DEFAULT_CW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:aca75c82bc45c50f328809006247ef39c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae07444d934c259bbed4a42ed39639af6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#ae07444d934c259bbed4a42ed39639af6">AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:ae07444d934c259bbed4a42ed39639af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a1acf248210fb791aedcea47187714f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a5a1acf248210fb791aedcea47187714f">AX12A_DEFAULT_CW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x20</td></tr>
-<tr class="separator:a5a1acf248210fb791aedcea47187714f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d76f211a115c8a0c0675509b05fe2a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a4d76f211a115c8a0c0675509b05fe2a2">AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x20</td></tr>
-<tr class="separator:a4d76f211a115c8a0c0675509b05fe2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a3f78f22a17f1c60b514a23c1104498"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_a_x12_a_8h.html#a2a3f78f22a17f1c60b514a23c1104498">AX12A_DEFAULT_PUNCH</a>&#160;&#160;&#160;0x0020</td></tr>
-<tr class="separator:a2a3f78f22a17f1c60b514a23c1104498"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafbe106e2e61bf75baf3f19098269c6c3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gafbe106e2e61bf75baf3f19098269c6c3">AX12A_MAX_VELOCITY</a>&#160;&#160;&#160;114</td></tr>
+<tr class="separator:gafbe106e2e61bf75baf3f19098269c6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4bc8a2e4def4d0e5e09e66e0e2d3e939"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga4bc8a2e4def4d0e5e09e66e0e2d3e939">AX12A_REG_CW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x1A</td></tr>
+<tr class="separator:ga4bc8a2e4def4d0e5e09e66e0e2d3e939"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga02c13af72d88c53cc92debc92849b586"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga02c13af72d88c53cc92debc92849b586">AX12A_REG_CCW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x1B</td></tr>
+<tr class="separator:ga02c13af72d88c53cc92debc92849b586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad86243b8574837400996ab5d4b6e6927"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gad86243b8574837400996ab5d4b6e6927">AX12A_REG_CW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x1C</td></tr>
+<tr class="separator:gad86243b8574837400996ab5d4b6e6927"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3f58e93539885cdc32ab245427a0e4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gac3f58e93539885cdc32ab245427a0e4b">AX12A_REG_CCW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x1D</td></tr>
+<tr class="separator:gac3f58e93539885cdc32ab245427a0e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a5c1f226b9a8a70e0ff7e32d881ce9c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga7a5c1f226b9a8a70e0ff7e32d881ce9c">AX12A_DEFAULT_BAUD_RATE</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="separator:ga7a5c1f226b9a8a70e0ff7e32d881ce9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5ea15a6736398de23d29b487f33dece"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gaa5ea15a6736398de23d29b487f33dece">AX12A_DEFAULT_CCW_ANGLE_LIMIT</a>&#160;&#160;&#160;0x03FF</td></tr>
+<tr class="separator:gaa5ea15a6736398de23d29b487f33dece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae876ce432f4de2cc8d40d1393218ebd3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gae876ce432f4de2cc8d40d1393218ebd3">AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT</a>&#160;&#160;&#160;0xBE</td></tr>
+<tr class="separator:gae876ce432f4de2cc8d40d1393218ebd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca75c82bc45c50f328809006247ef39c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gaca75c82bc45c50f328809006247ef39c">AX12A_DEFAULT_CW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="separator:gaca75c82bc45c50f328809006247ef39c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae07444d934c259bbed4a42ed39639af6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gae07444d934c259bbed4a42ed39639af6">AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="separator:gae07444d934c259bbed4a42ed39639af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5a1acf248210fb791aedcea47187714f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga5a1acf248210fb791aedcea47187714f">AX12A_DEFAULT_CW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x20</td></tr>
+<tr class="separator:ga5a1acf248210fb791aedcea47187714f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4d76f211a115c8a0c0675509b05fe2a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga4d76f211a115c8a0c0675509b05fe2a2">AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE</a>&#160;&#160;&#160;0x20</td></tr>
+<tr class="separator:ga4d76f211a115c8a0c0675509b05fe2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2a3f78f22a17f1c60b514a23c1104498"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga2a3f78f22a17f1c60b514a23c1104498">AX12A_DEFAULT_PUNCH</a>&#160;&#160;&#160;0x0020</td></tr>
+<tr class="separator:ga2a3f78f22a17f1c60b514a23c1104498"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaa63744a89c07f50119d0d4f79a8345c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1">AX12A_SetCWComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CWcomplianceMargin)</td></tr>
-<tr class="memdesc:gaa63744a89c07f50119d0d4f79a8345c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clockwise compliance margin for the current motor.  <a href="group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1">More...</a><br /></td></tr>
+<tr class="memitem:gaa63744a89c07f50119d0d4f79a8345c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gaa63744a89c07f50119d0d4f79a8345c1">AX12A_SetCWComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CWcomplianceMargin)</td></tr>
+<tr class="memdesc:gaa63744a89c07f50119d0d4f79a8345c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clockwise compliance margin for the current motor.  <a href="group___a_x12_a_header.html#gaa63744a89c07f50119d0d4f79a8345c1">More...</a><br /></td></tr>
 <tr class="separator:gaa63744a89c07f50119d0d4f79a8345c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9335097bc945f1da3520d0e0d98109df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___setters.html#ga9335097bc945f1da3520d0e0d98109df">AX12A_SetCCWComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CCWcomplianceMargin)</td></tr>
-<tr class="memdesc:ga9335097bc945f1da3520d0e0d98109df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the counter-clockwise compliance margin for the current motor.  <a href="group___a_x12_a___setters.html#ga9335097bc945f1da3520d0e0d98109df">More...</a><br /></td></tr>
+<tr class="memitem:ga9335097bc945f1da3520d0e0d98109df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga9335097bc945f1da3520d0e0d98109df">AX12A_SetCCWComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CCWcomplianceMargin)</td></tr>
+<tr class="memdesc:ga9335097bc945f1da3520d0e0d98109df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the counter-clockwise compliance margin for the current motor.  <a href="group___a_x12_a_header.html#ga9335097bc945f1da3520d0e0d98109df">More...</a><br /></td></tr>
 <tr class="separator:ga9335097bc945f1da3520d0e0d98109df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga52703a78cb46fc1b207cf9d898950451"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451">AX12A_SetCWComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CWcomplianceSlope)</td></tr>
-<tr class="memdesc:ga52703a78cb46fc1b207cf9d898950451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clockwise compliance slope for the current motor.  <a href="group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451">More...</a><br /></td></tr>
+<tr class="memitem:ga52703a78cb46fc1b207cf9d898950451"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga52703a78cb46fc1b207cf9d898950451">AX12A_SetCWComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CWcomplianceSlope)</td></tr>
+<tr class="memdesc:ga52703a78cb46fc1b207cf9d898950451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clockwise compliance slope for the current motor.  <a href="group___a_x12_a_header.html#ga52703a78cb46fc1b207cf9d898950451">More...</a><br /></td></tr>
 <tr class="separator:ga52703a78cb46fc1b207cf9d898950451"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga763c348ba5f89fa5bf57595a2ef7e386"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___setters.html#ga763c348ba5f89fa5bf57595a2ef7e386">AX12A_SetCCWComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CCWcomplianceSlope)</td></tr>
-<tr class="memdesc:ga763c348ba5f89fa5bf57595a2ef7e386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the counter-clockwise compliance slope for the current motor.  <a href="group___a_x12_a___setters.html#ga763c348ba5f89fa5bf57595a2ef7e386">More...</a><br /></td></tr>
+<tr class="memitem:ga763c348ba5f89fa5bf57595a2ef7e386"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga763c348ba5f89fa5bf57595a2ef7e386">AX12A_SetCCWComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t CCWcomplianceSlope)</td></tr>
+<tr class="memdesc:ga763c348ba5f89fa5bf57595a2ef7e386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the counter-clockwise compliance slope for the current motor.  <a href="group___a_x12_a_header.html#ga763c348ba5f89fa5bf57595a2ef7e386">More...</a><br /></td></tr>
 <tr class="separator:ga763c348ba5f89fa5bf57595a2ef7e386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41">AX12A_SetComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceSlope)</td></tr>
-<tr class="memdesc:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance slope.  <a href="group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41">More...</a><br /></td></tr>
+<tr class="memitem:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#ga43a54da2ab8d918bcb85fadf7b69dd41">AX12A_SetComplianceSlope</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceSlope)</td></tr>
+<tr class="memdesc:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance slope.  <a href="group___a_x12_a_header.html#ga43a54da2ab8d918bcb85fadf7b69dd41">More...</a><br /></td></tr>
 <tr class="separator:ga43a54da2ab8d918bcb85fadf7b69dd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga84976a47de3863df1f389c5f405e108d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a___interfaces.html#ga84976a47de3863df1f389c5f405e108d">AX12A_SetComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceSlope)</td></tr>
-<tr class="memdesc:ga84976a47de3863df1f389c5f405e108d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance margin.  <a href="group___a_x12_a___interfaces.html#ga84976a47de3863df1f389c5f405e108d">More...</a><br /></td></tr>
-<tr class="separator:ga84976a47de3863df1f389c5f405e108d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaf85e6a41b8503fdef180d5ff0b9cf20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_x12_a_header.html#gaaf85e6a41b8503fdef180d5ff0b9cf20">AX12A_SetComplianceMargin</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t complianceSlope)</td></tr>
+<tr class="memdesc:gaaf85e6a41b8503fdef180d5ff0b9cf20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets both the CW and CCW compliance margin.  <a href="group___a_x12_a_header.html#gaaf85e6a41b8503fdef180d5ff0b9cf20">More...</a><br /></td></tr>
+<tr class="separator:gaaf85e6a41b8503fdef180d5ff0b9cf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file provides interfaces for AX12A-specific functions. </p>
 <dl class="section author"><dt>Author</dt><dd>Tyler </dd></dl>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a7a5c1f226b9a8a70e0ff7e32d881ce9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a5c1f226b9a8a70e0ff7e32d881ce9c">&#9670;&nbsp;</a></span>AX12A_DEFAULT_BAUD_RATE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_BAUD_RATE&#160;&#160;&#160;0x01</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default baud rate register setting </p>
-
-</div>
-</div>
-<a id="aa5ea15a6736398de23d29b487f33dece"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5ea15a6736398de23d29b487f33dece">&#9670;&nbsp;</a></span>AX12A_DEFAULT_CCW_ANGLE_LIMIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_CCW_ANGLE_LIMIT&#160;&#160;&#160;0x03FF</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default counter-clockwise angle limit </p>
-
-</div>
-</div>
-<a id="ae07444d934c259bbed4a42ed39639af6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae07444d934c259bbed4a42ed39639af6">&#9670;&nbsp;</a></span>AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN&#160;&#160;&#160;0x01</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default counter-clockwise compliance margin (position error) </p>
-
-</div>
-</div>
-<a id="a4d76f211a115c8a0c0675509b05fe2a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d76f211a115c8a0c0675509b05fe2a2">&#9670;&nbsp;</a></span>AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE&#160;&#160;&#160;0x20</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default counter-clockwise compliance slope (torque near goal position) </p>
-
-</div>
-</div>
-<a id="aca75c82bc45c50f328809006247ef39c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca75c82bc45c50f328809006247ef39c">&#9670;&nbsp;</a></span>AX12A_DEFAULT_CW_COMPLIANCE_MARGIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_CW_COMPLIANCE_MARGIN&#160;&#160;&#160;0x01</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default clockwise compliance margin (position error) </p>
-
-</div>
-</div>
-<a id="a5a1acf248210fb791aedcea47187714f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a1acf248210fb791aedcea47187714f">&#9670;&nbsp;</a></span>AX12A_DEFAULT_CW_COMPLIANCE_SLOPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_CW_COMPLIANCE_SLOPE&#160;&#160;&#160;0x20</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default clockwise compliance slope (torque near goal position) </p>
-
-</div>
-</div>
-<a id="ae876ce432f4de2cc8d40d1393218ebd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae876ce432f4de2cc8d40d1393218ebd3">&#9670;&nbsp;</a></span>AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT&#160;&#160;&#160;0xBE</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default permitted maximum voltage (0xBE = 140 -&gt; 14.0 V) </p>
-
-</div>
-</div>
-<a id="a2a3f78f22a17f1c60b514a23c1104498"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a3f78f22a17f1c60b514a23c1104498">&#9670;&nbsp;</a></span>AX12A_DEFAULT_PUNCH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_DEFAULT_PUNCH&#160;&#160;&#160;0x0020</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Default punch </p>
-
-</div>
-</div>
-<a id="afbe106e2e61bf75baf3f19098269c6c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbe106e2e61bf75baf3f19098269c6c3">&#9670;&nbsp;</a></span>AX12A_MAX_VELOCITY</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_MAX_VELOCITY&#160;&#160;&#160;114</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Maximum angular velocity (RPM) </p>
-
-</div>
-</div>
-<a id="a02c13af72d88c53cc92debc92849b586"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02c13af72d88c53cc92debc92849b586">&#9670;&nbsp;</a></span>AX12A_REG_CCW_COMPLIANCE_MARGIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_REG_CCW_COMPLIANCE_MARGIN&#160;&#160;&#160;0x1B</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Counter-clockwise compliance margin register </p>
-
-</div>
-</div>
-<a id="ac3f58e93539885cdc32ab245427a0e4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3f58e93539885cdc32ab245427a0e4b">&#9670;&nbsp;</a></span>AX12A_REG_CCW_COMPLIANCE_SLOPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_REG_CCW_COMPLIANCE_SLOPE&#160;&#160;&#160;0x1D</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Counter-clockwise compliance slope register </p>
-
-</div>
-</div>
-<a id="a4bc8a2e4def4d0e5e09e66e0e2d3e939"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bc8a2e4def4d0e5e09e66e0e2d3e939">&#9670;&nbsp;</a></span>AX12A_REG_CW_COMPLIANCE_MARGIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_REG_CW_COMPLIANCE_MARGIN&#160;&#160;&#160;0x1A</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Clockwise compliance margin register </p>
-
-</div>
-</div>
-<a id="ad86243b8574837400996ab5d4b6e6927"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad86243b8574837400996ab5d4b6e6927">&#9670;&nbsp;</a></span>AX12A_REG_CW_COMPLIANCE_SLOPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define AX12A_REG_CW_COMPLIANCE_SLOPE&#160;&#160;&#160;0x1C</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Clockwise compliance slope register </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

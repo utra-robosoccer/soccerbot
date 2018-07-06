@@ -7,6 +7,11 @@
   * 		 version 1.0 should be able to be integrated with little effort, as
   * 		 the instructions and register addresses are very similar for all
   * 		 actuators using this protocol version
+  *
+  * @defgroup DynamixelProtocolV1Header Dynamixel Protocol V1.0 (header)
+  * @brief    Header for Dynamixel Protocol V1.0, showing the public content
+  * @ingroup  DynamixelProtocolV1
+  * @{
   ******************************************************************************
   */
 
@@ -190,5 +195,10 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 // Interfaces for previously-defined functions
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity);
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
+
+/**
+ * @}
+ */
+/* end DynamixelProtocolV1Header */
 
 #endif /* __DYNAMIXEL_PROTOCOL_V1_H__ */

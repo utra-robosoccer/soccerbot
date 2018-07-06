@@ -3,6 +3,11 @@
   * @file    MX28.h
   * @author  Tyler
   * @brief   This file provides interfaces for MX28-specific functions.
+  *
+  * @defgroup MX28Header MX28 (header)
+  * @brief    Header for MX28, showing the public content
+  * @ingroup  MX28
+  * @{
   ******************************************************************************
   */
 
@@ -57,5 +62,10 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
 
 // Interfaces for previously-defined functions
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel);
+
+/**
+ * @}
+ */
+/* end MX28Header */
 
 #endif /* __MX28_H__ */
