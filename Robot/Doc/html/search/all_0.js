@@ -13,7 +13,7 @@ var searchData=
   ['_5flastposition',['_lastPosition',['../struct_dynamixel___handle_type_def.html#a2e8a4d000bb45bf784fcbb56ebbfc10c',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastreadisvalid',['_lastReadIsValid',['../struct_dynamixel___handle_type_def.html#a9bd336b14eaeadc645922eee290bb0ad',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastvelocity',['_lastVelocity',['../struct_dynamixel___handle_type_def.html#a46adc1a0c9e0288ba60b06cfc345adea',1,'Dynamixel_HandleTypeDef']]],
-  ['_5fmotortype',['_motorType',['../struct_dynamixel___handle_type_def.html#aefe5d348d9db9ec81956535e9a04c5ac',1,'Dynamixel_HandleTypeDef']]],
+  ['_5fmotortype',['_motorType',['../struct_dynamixel___handle_type_def.html#a40d2f9e9ebd58c5f18d132d704a79683',1,'Dynamixel_HandleTypeDef']]],
   ['_5fuart_5fhandle',['_UART_Handle',['../struct_dynamixel___handle_type_def.html#aefc481817957faca32bb883a5a497603',1,'Dynamixel_HandleTypeDef']]],
   ['_5fx_5faccel',['_X_ACCEL',['../struct_m_p_u6050___handle_type_def.html#aaf3e4413134d46aedd2edd71e8789df6',1,'MPU6050_HandleTypeDef']]],
   ['_5fx_5fgyro',['_X_GYRO',['../struct_m_p_u6050___handle_type_def.html#a5cfa2f2a0ea0d3f8edc506238d2f0d9f',1,'MPU6050_HandleTypeDef']]],

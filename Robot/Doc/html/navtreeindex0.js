@@ -11,9 +11,10 @@ var NAVTREEINDEX0 =
 "_communication_8h.html#ac506966b1e773431c55862462858c0a1":[2,0,0,0,1,1],
 "_communication_8h_source.html":[2,0,0,0,1],
 "_dynamixel___handle_type_def_8h.html":[2,0,0,1,2],
-"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66":[2,0,0,1,2,1],
-"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66a478ae953e21ee25962283e4f5fe6bea6":[2,0,0,1,2,1,1],
-"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66a936aa44023035ede390334a9ea5fc783":[2,0,0,1,2,1,0],
+"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66":[2,0,0,1,2,2],
+"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66a478ae953e21ee25962283e4f5fe6bea6":[2,0,0,1,2,2,1],
+"_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66a936aa44023035ede390334a9ea5fc783":[2,0,0,1,2,2,0],
+"_dynamixel___handle_type_def_8h.html#a87ba55c932e76420eb2051bffd8a6843":[2,0,0,1,2,1],
 "_dynamixel___handle_type_def_8h_source.html":[2,0,0,1,2],
 "_dynamixel_protocol_v1_8c.html":[2,0,0,1,3],
 "_dynamixel_protocol_v1_8c.html#a000e1129765177bcf2fa5ca52cd6df4e":[2,0,0,1,3,40],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "group___dynamixel_protocol_v1___public___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e":[2,0,0,1,3,5],
 "group___dynamixel_protocol_v1___public___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f":[0,1,1,0,6,0],
 "group___dynamixel_protocol_v1___public___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f":[2,0,0,1,3,4],
-"group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html":[0,1,1,0,3],
-"group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf":[0,1,1,0,3,1]
+"group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html":[0,1,1,0,3]
 };

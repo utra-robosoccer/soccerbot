@@ -1,0 +1,4 @@
+<map id="Dynamixel_IsJointMode" name="Dynamixel_IsJointMode">
+<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gae0e18eec55a4c1c3600dc8406d21a9c9" title="Reads data back from the motor passed in by reference. " alt="" coords="212,5,371,32"/>
+<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="419,5,623,32"/>
+</map>
