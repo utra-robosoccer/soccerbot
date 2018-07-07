@@ -38,7 +38,7 @@ var _dynamixel_protocol_v1_8c =
     [ "Dynamixel_SetReturnDelayTime", "group___dynamixel_protocol_v1___public___functions___setters.html#gaa83d2ec791afc039d38d2fb84b759ce2", null ],
     [ "Dynamixel_SetStatusReturnLevel", "group___dynamixel_protocol_v1___public___functions___setters.html#ga654e08fee0f73bb3f15943c43fadd319", null ],
     [ "Dynamixel_TorqueEnable", "group___dynamixel_protocol_v1___public___functions___setters.html#ga41f1726bc88a49ab5051ed20f492a0f6", null ],
-    [ "arrReceive", "group___dynamixel_protocol_v1_header.html#ga35cbe995456d8c7f71cf156fe94ddebc", null ],
-    [ "arrTransmit", "group___dynamixel_protocol_v1_header.html#gadb763f080296d0b91152bc1aed7a3353", null ],
+    [ "arrReceive", "_dynamixel_protocol_v1_8c.html#a35cbe995456d8c7f71cf156fe94ddebc", null ],
+    [ "arrTransmit", "_dynamixel_protocol_v1_8c.html#adb763f080296d0b91152bc1aed7a3353", null ],
     [ "IOType", "_dynamixel_protocol_v1_8c.html#a000e1129765177bcf2fa5ca52cd6df4e", null ]
 ];
