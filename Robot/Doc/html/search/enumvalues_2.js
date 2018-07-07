@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['mx28type',['MX28TYPE',['../_dynamixel___handle_type_def_8h.html#a497d7796b971d673d2e6b60ca4fc1b66a478ae953e21ee25962283e4f5fe6bea6',1,'Dynamixel_HandleTypeDef.h']]]
+  ['eimudata',['eIMUData',['../group___u_a_r_t___handler_header.html#gga1b17be8bc97f384afceaeced2aae04e6adc7d468c436044599835310b98131f71',1,'UART_Handler.h']]],
+  ['emotordata',['eMotorData',['../group___u_a_r_t___handler_header.html#gga1b17be8bc97f384afceaeced2aae04e6a7202481aa3407f1714ef002b7902df48',1,'UART_Handler.h']]]
 ];

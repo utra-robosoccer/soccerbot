@@ -89,9 +89,11 @@ $(document).ready(function(){initNavTree('struct_u_a_r_tcmd__t.html','');});
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">UARTcmd_t Struct Reference</div>  </div>
+<div class="title">UARTcmd_t Struct Reference<div class="ingroups"><a class="el" href="group___u_a_r_t___handler.html">UART Handler</a> &raquo; <a class="el" href="group___u_a_r_t___handler_header.html">UART Handler (header)</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_u_a_r_t___handler_8h_source.html">UART_Handler.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for UARTcmd_t:</div>
 <div class="dyncontent">
@@ -103,21 +105,80 @@ Collaboration diagram for UARTcmd_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:afe6b0f7af715a27f97b50b799e695dbc"><td class="memItemLeft" align="right" valign="top"><a id="afe6b0f7af715a27f97b50b799e695dbc"></a>
-eUARTcmd_t&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="memitem:afe6b0f7af715a27f97b50b799e695dbc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___u_a_r_t___handler_header.html#ga4be85e025b05b2e3b0db13420d61108f">eUARTcmd_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_a_r_tcmd__t.html#afe6b0f7af715a27f97b50b799e695dbc">type</a></td></tr>
 <tr class="separator:afe6b0f7af715a27f97b50b799e695dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade6c3413bb42c2dd9ae09422289e533c"><td class="memItemLeft" align="right" valign="top"><a id="ade6c3413bb42c2dd9ae09422289e533c"></a>
-<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>motorHandle</b></td></tr>
+<tr class="memitem:ade6c3413bb42c2dd9ae09422289e533c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_a_r_tcmd__t.html#ade6c3413bb42c2dd9ae09422289e533c">motorHandle</a></td></tr>
 <tr class="separator:ade6c3413bb42c2dd9ae09422289e533c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17956fe0129d3d4c94ebc06cfef2ad82"><td class="memItemLeft" align="right" valign="top"><a id="a17956fe0129d3d4c94ebc06cfef2ad82"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>value</b></td></tr>
+<tr class="memitem:a17956fe0129d3d4c94ebc06cfef2ad82"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_a_r_tcmd__t.html#a17956fe0129d3d4c94ebc06cfef2ad82">value</a></td></tr>
 <tr class="separator:a17956fe0129d3d4c94ebc06cfef2ad82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afad18aef473ee14c446a056b782bda6e"><td class="memItemLeft" align="right" valign="top"><a id="afad18aef473ee14c446a056b782bda6e"></a>
-QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><b>qHandle</b></td></tr>
+<tr class="memitem:afad18aef473ee14c446a056b782bda6e"><td class="memItemLeft" align="right" valign="top">QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_a_r_tcmd__t.html#afad18aef473ee14c446a056b782bda6e">qHandle</a></td></tr>
 <tr class="separator:afad18aef473ee14c446a056b782bda6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This is the container type for motor commands. The control thread sends these to the various UART handlers through the UART queues. The container provides all the information needed to generate the appropriate motor action (reading from or writing to motor command registers) </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="ade6c3413bb42c2dd9ae09422289e533c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade6c3413bb42c2dd9ae09422289e533c">&#9670;&nbsp;</a></span>motorHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a>* motorHandle</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Pointer to the motor container </p>
+
+</div>
+</div>
+<a id="afad18aef473ee14c446a056b782bda6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afad18aef473ee14c446a056b782bda6e">&#9670;&nbsp;</a></span>qHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QueueHandle_t qHandle</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Pointer to the queue for this motor's commands </p>
+
+</div>
+</div>
+<a id="afe6b0f7af715a27f97b50b799e695dbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe6b0f7af715a27f97b50b799e695dbc">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___u_a_r_t___handler_header.html#ga4be85e025b05b2e3b0db13420d61108f">eUARTcmd_t</a> type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Indicates the type of motor command </p>
+
+</div>
+</div>
+<a id="a17956fe0129d3d4c94ebc06cfef2ad82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17956fe0129d3d4c94ebc06cfef2ad82">&#9670;&nbsp;</a></span>value</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The value to be written in the case of a write instruction </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>C:/Users/Hannah/Documents/GitHub/soccer-embedded/Robot/Inc/<a class="el" href="_u_a_r_t___handler_8h_source.html">UART_Handler.h</a></li>
+<li>D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Inc/<a class="el" href="_u_a_r_t___handler_8h_source.html">UART_Handler.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

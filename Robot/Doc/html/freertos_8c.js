@@ -103,7 +103,7 @@ var freertos_8c =
     [ "UART6_reqHandle", "freertos_8c.html#af5f6c93227b0020cdc41cc9abf6fe028", null ],
     [ "UART_rxBuffer", "freertos_8c.html#a44c56573b190027c106400058c2a1fe6", null ],
     [ "UART_rxControlBlock", "freertos_8c.html#acc7072eff561c639801e29fca10e5f2d", null ],
-    [ "UART_rxHandle", "freertos_8c.html#ade81e4b71063ca3c76b947f6adf50d88", null ],
+    [ "UART_rxHandle", "group___u_a_r_t___handler.html#gade81e4b71063ca3c76b947f6adf50d88", null ],
     [ "xIdleStack", "freertos_8c.html#af311b04396149ce536fe1a3b5f127445", null ],
     [ "xIdleTaskTCBBuffer", "freertos_8c.html#a2dd1013c5ef8f355ac2f1479e36ec659", null ]
 ];

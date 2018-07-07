@@ -1,8 +1,8 @@
 
 /**
   ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
+  * @file           main.c
+  * @brief          Main program body
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -76,7 +76,7 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-/*! \mainpage Main Page V1
+/** \mainpage Main Page V1
  *
  * \section intro_sec Introduction
  *
