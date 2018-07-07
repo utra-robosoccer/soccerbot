@@ -18,6 +18,8 @@ var NAVTREEINDEX0 =
 "_dynamixel___handle_type_def_8h_source.html":[2,0,0,1,2],
 "_dynamixel_protocol_v1_8c.html":[2,0,0,1,3],
 "_dynamixel_protocol_v1_8c.html#a000e1129765177bcf2fa5ca52cd6df4e":[2,0,0,1,3,40],
+"_dynamixel_protocol_v1_8c.html#a35cbe995456d8c7f71cf156fe94ddebc":[2,0,0,1,3,38],
+"_dynamixel_protocol_v1_8c.html#adb763f080296d0b91152bc1aed7a3353":[2,0,0,1,3,39],
 "_dynamixel_protocol_v1_8h.html":[2,0,0,1,4],
 "_dynamixel_protocol_v1_8h_source.html":[2,0,0,1,4],
 "_free_r_t_o_s_config_8h_source.html":[2,0,1,1],
@@ -204,8 +206,8 @@ var NAVTREEINDEX0 =
 "group___a_x12_a_header.html#gaca75c82bc45c50f328809006247ef39c":[2,0,0,1,0,1,4],
 "group___a_x12_a_header.html#gad86243b8574837400996ab5d4b6e6927":[2,0,0,1,0,1,12],
 "group___a_x12_a_header.html#gad86243b8574837400996ab5d4b6e6927":[0,1,0,2,12],
-"group___a_x12_a_header.html#gae07444d934c259bbed4a42ed39639af6":[2,0,0,1,0,1,2],
 "group___a_x12_a_header.html#gae07444d934c259bbed4a42ed39639af6":[0,1,0,2,2],
+"group___a_x12_a_header.html#gae07444d934c259bbed4a42ed39639af6":[2,0,0,1,0,1,2],
 "group___a_x12_a_header.html#gae876ce432f4de2cc8d40d1393218ebd3":[2,0,0,1,0,1,6],
 "group___a_x12_a_header.html#gae876ce432f4de2cc8d40d1393218ebd3":[0,1,0,2,6],
 "group___a_x12_a_header.html#gafbe106e2e61bf75baf3f19098269c6c3":[2,0,0,1,0,1,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "group___dynamixel_protocol_v1___public___functions___interfaces.html":[0,1,1,0,6],
 "group___dynamixel_protocol_v1___public___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e":[0,1,1,0,6,1],
 "group___dynamixel_protocol_v1___public___functions___interfaces.html#ga018df076095889475b42e8e21a26dc1e":[2,0,0,1,3,5],
-"group___dynamixel_protocol_v1___public___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f":[0,1,1,0,6,0],
-"group___dynamixel_protocol_v1___public___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f":[2,0,0,1,3,4],
-"group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html":[0,1,1,0,3]
+"group___dynamixel_protocol_v1___public___functions___interfaces.html#ga2d16a19af6f00b284c750b524fa0079f":[0,1,1,0,6,0]
 };
