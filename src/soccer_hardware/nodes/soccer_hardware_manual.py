@@ -14,13 +14,6 @@ import rospy
 import struct
 from datetime import datetime
 from prettytable import PrettyTable
-from soccer_msgs.msg import RobotGoal
-from soccer_msgs.msg import RobotState
-from sensor_msgs.msg import Imu
-from geometry_msgs.msg import Vector3
-from geometry_msgs.msg import Quaternion
-from tf.msg import tfMessage
-from tf.transformations import quaternion_from_euler
 
 def rxDecoder(raw, decodeHeader=True):
     ''' Decodes raw bytes received from the microcontroller. As per the agreed
@@ -142,14 +135,6 @@ def receiveWithChecks():
     (recvAngles, recvIMUData) = rxDecoder(receivePacketFromMCU(),
                                             decodeHeader=False)
     
-    imuArray = np.array(recvIMUData).reshape((6, 1))
-    imu = Imu()
-    vec1 = Vector3(imuArray[0][0], imuArray[1][0], imuArray[2][0])
-    imu.angular_velocity = vec1
-    vec2 = Vector3(imuArray[3][0], imuArray[4][0], imuArray[5][0])
-    imu.linear_acceleration = vec2
-    pub.publish(imu)
-    
     if(numTransfers % 50 == 0):
         print('\n')
         logString("Received valid data")
@@ -183,29 +168,26 @@ def receiveWithoutChecks():
     # if(header == 0xFFFFFFFF):
     #     # TODO
 
-
-def trajectory_callback(robotGoal):
-    if not ser.isOpen():
-        return
-    angles[0:18,0] = robotGoal.trajectories[0:18]
-    sendPacketToMCU(vec2bytes(robotGoal.trajectories[0:18]))
-    receiveWithChecks()
-    
-
 if __name__ == "__main__":
+    #os.chdir('/home/shahryar/soccer-embedded/Development/Comm-PC')
     os.chdir('/home/nvidia/soccer-embedded/Development/Comm-PC')
     logString("Starting PC-side application")
     
     trajectory = np.loadtxt(open("getupfront.csv", "rb"), delimiter=",", skiprows=0)
-    angles = np.zeros((18, 1))   
-
-    ser = serial.Serial('/dev/ttyUSB0',230400,timeout=100)
     
-    numTransfers = 0
-    logString("Opened port " + ser.name)
+    # with serial.Serial('/dev/ttyACM0',230400,timeout=100) as ser:
+    with serial.Serial('/dev/ttyUSB0',230400,timeout=100) as ser:
+        logString("Opened port " + ser.name)
         
-    rospy.init_node('soccer_hardware', anonymous=True)
-    rospy.Subscriber("robotGoal", RobotGoal, trajectory_callback, queue_size=1)
-    pub = rospy.Publisher('soccerbot/imu', Imu, queue_size=1)
-
-    rospy.spin()            
+        numTransfers = 0
+        while(ser.isOpen()):
+            for i in range(trajectory.shape[1]):
+                # Uncomment this if you want to step through the trajectories via user input
+                dummy = raw_input('');
+                angles = trajectory[:, i:i+1]
+                #angles = np.zeros((18, 1))
+                sendPacketToMCU(vec2bytes(angles))
+                
+                numTransfers = numTransfers + 1
+                
+                receiveWithChecks()
