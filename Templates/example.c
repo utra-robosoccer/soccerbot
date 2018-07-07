@@ -43,7 +43,7 @@ static days_t theDay; /**< The current day of the week */
 
 /******************************** Functions **********************************/
 /*****************************************************************************/
-/*  Setter Functions                                                      	 */
+/*  Setter Functions                                                         */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
@@ -109,7 +109,7 @@ int Days_SetDay(uint8_t password, days_t dayToSet){
 
 
 /*****************************************************************************/
-/*  Getter Functions                                                      	 */
+/*  Getter Functions                                                         */
 /*                                                                           */
 /*                                                                           */
 /*                                                                           */
