@@ -92,7 +92,7 @@ void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   divider the resolution divider setting
- * @retval
+ * @retval  None
  */
 void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divider){
 
@@ -105,7 +105,7 @@ void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divi
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   DGain the derivative gain parameter
- * @retval
+ * @retval  None
  */
 void MX28_SetDGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t DGain){
 	if(hdynamixel -> _motorType == MX28TYPE){

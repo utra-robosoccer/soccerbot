@@ -2,7 +2,13 @@
   ******************************************************************************
   * @file    Communication.h
   * @author  Jason
+  * @author  Tyler
   * @brief   Header for top-level communication module
+  *
+  * @defgroup CommunicationHeader Communication (Header)
+  * @brief    Header for communication, showing the public content
+  * @ingroup  Communication
+  * @{
   ******************************************************************************
   */
 
@@ -21,5 +27,10 @@
 /******************************* Public Variables ******************************/
 extern RobotGoal robotGoal;
 extern RobotState robotState;
+
+/**
+ * @}
+ */
+/* end CommunicationHeader */
 
 #endif /* COMMUNICATION_COMMUNICATION_H_ */

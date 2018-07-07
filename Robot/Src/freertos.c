@@ -6,7 +6,7 @@
   * @author  Tyler
   * @author  Izaak
   *
-  * @defgroup FreeRTOS
+  * @defgroup FreeRTOS FreeRTOS
   * @brief    Everything related to FreeRTOS
   ******************************************************************************
   * This notice applies to any and all portions of this file
@@ -272,7 +272,7 @@ void MX_FREERTOS_Init(void) {
 }
 
 /**
- * @defgroup Threads
+ * @defgroup Threads Threads
  * @brief    These are functions run in the context of their own FreeRTOS
  *           threads
  *
@@ -873,7 +873,7 @@ void StartTxTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 /**
- * @defgroup Callbacks
+ * @defgroup Callbacks Callbacks
  * @brief    Callback functions for unblocking FreeRTOS threads which perform
  *           non-blocking I/O
  *
