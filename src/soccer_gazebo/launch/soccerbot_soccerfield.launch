@@ -22,7 +22,7 @@
   <param name="robot_description" textfile="$(find soccer_description)/models/soccerbot/model.urdf" />
 
   <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-  args="-urdf -model soccerbot -param robot_description -z 0.05 -Y 1.57"/>
+  args="-urdf -model soccerbot -param robot_description -z 0.05"/>
 
   <!-- ros_control soccerbot launch file -->
   <include file="$(find soccer_control)/launch/soccer_control.launch" />
