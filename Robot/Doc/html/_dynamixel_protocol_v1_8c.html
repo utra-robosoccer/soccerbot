@@ -234,10 +234,10 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a000e1129765177bcf2fa5ca52cd6df4e"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="group___dynamixel_protocol_v1_header.html#ga2d5f4ea730f273121dc94b9425bc3d55">IO_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8c.html#a000e1129765177bcf2fa5ca52cd6df4e">IOType</a> = <a class="el" href="group___dynamixel_protocol_v1_header.html#gga2d5f4ea730f273121dc94b9425bc3d55a414f6b89d2981af1ec2ed8e110bfc47e">IO_POLL</a></td></tr>
 <tr class="separator:a000e1129765177bcf2fa5ca52cd6df4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga35cbe995456d8c7f71cf156fe94ddebc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga35cbe995456d8c7f71cf156fe94ddebc">arrReceive</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>][<a class="el" href="group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335">BUFF_SIZE_RX</a>] = {{0}}</td></tr>
-<tr class="separator:ga35cbe995456d8c7f71cf156fe94ddebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadb763f080296d0b91152bc1aed7a3353"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadb763f080296d0b91152bc1aed7a3353">arrTransmit</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>+1][<a class="el" href="group___dynamixel_protocol_v1_header.html#gabcf40a9097334bfad2dfa8badbe2081f">TX_PACKET_SIZE</a>]</td></tr>
-<tr class="separator:gadb763f080296d0b91152bc1aed7a3353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35cbe995456d8c7f71cf156fe94ddebc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8c.html#a35cbe995456d8c7f71cf156fe94ddebc">arrReceive</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>][<a class="el" href="group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335">BUFF_SIZE_RX</a>] = {{0}}</td></tr>
+<tr class="separator:a35cbe995456d8c7f71cf156fe94ddebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb763f080296d0b91152bc1aed7a3353"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dynamixel_protocol_v1_8c.html#adb763f080296d0b91152bc1aed7a3353">arrTransmit</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>+1][<a class="el" href="group___dynamixel_protocol_v1_header.html#gabcf40a9097334bfad2dfa8badbe2081f">TX_PACKET_SIZE</a>]</td></tr>
+<tr class="separator:adb763f080296d0b91152bc1aed7a3353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Top-level module for Dynamixel library (protocol V1.0). Contains common functional code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuator using protocol version 1.0 should be able to be integrated with little effort, as the instructions and register addresses are very similar for all actuators using this protocol version. </p>
@@ -247,6 +247,37 @@ Gokul </dd>
 <dd>
 Hannah </dd></dl>
 </div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a35cbe995456d8c7f71cf156fe94ddebc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35cbe995456d8c7f71cf156fe94ddebc">&#9670;&nbsp;</a></span>arrReceive</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t arrReceive[<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>][<a class="el" href="group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335">BUFF_SIZE_RX</a>] = {{0}}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Pre-allocated buffer for reading in packets from motors </p>
+
+</div>
+</div>
+<a id="adb763f080296d0b91152bc1aed7a3353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb763f080296d0b91152bc1aed7a3353">&#9670;&nbsp;</a></span>arrTransmit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t arrTransmit[<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>+1][<a class="el" href="group___dynamixel_protocol_v1_header.html#gabcf40a9097334bfad2dfa8badbe2081f">TX_PACKET_SIZE</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {0xFF, 0xFF, 0xFE, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 1, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 2, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 3, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 4, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 5, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 6, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 7, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 8, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 9, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 10, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 11, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 12, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 13, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 14, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 15, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 16, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 17, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00},</div><div class="line">    {0xFF, 0xFF, 18, 0x00, <a class="code" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>, 0x00, 0x00, 0x00, 0x00}</div><div class="line">}</div><div class="ttc" id="group___dynamixel_protocol_v1_header_html_gaf5f75dd76b3a7035583f9169576e7138"><div class="ttname"><a href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a></div><div class="ttdeci">#define INST_WRITE_DATA</div><div class="ttdef"><b>Definition:</b> DynamixelProtocolV1.h:64</div></div>
+</div><!-- fragment --><p>Pre-allocated buffer for transmitting packets to motors </p>
+
+</div>
+</div>
 <a id="a000e1129765177bcf2fa5ca52cd6df4e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a000e1129765177bcf2fa5ca52cd6df4e">&#9670;&nbsp;</a></span>IOType</h2>
 

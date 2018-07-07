@@ -157,7 +157,8 @@ Functions</h2></td></tr>
 </pre><div class="fragment"><div class="line">{0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}</div></div><!-- fragment --><p>Where N = readLength. Also, this function computes the checksum of data using the same algorithm as the motors, and it sets <code>hdynamixel -&gt; _lastReadIsValid</code> if the computations match, and clears this field otherwise. This is a basic data integrity check that reduces the probability of passing invalid data to the application </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin readLength the number of bytes to be read. Must be either 1 or 2 </td></tr>
+    <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin </td></tr>
+    <tr><td class="paramname">readLength</td><td>the number of bytes to be read. Must be either 1 or 2 </td></tr>
   </table>
   </dd>
 </dl>

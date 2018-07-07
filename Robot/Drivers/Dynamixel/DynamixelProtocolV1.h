@@ -135,10 +135,10 @@ enum IO_FLAGS{
 
 /****************************** Public Variables *****************************/
 /** Pre-allocated buffer for reading in packets from motors */
-extern uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
+uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX];
 
 /** Pre-allocated buffer for transmitting packets to motors */
-extern uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
+uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE];
 
 
 

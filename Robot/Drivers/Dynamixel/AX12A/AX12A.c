@@ -232,7 +232,7 @@ void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t compl
  *          acceptable"
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   complianceMargin, the acceptable error between the current and
+ * @param   complianceMargin the acceptable error between the current and
  *          goal position. Arguments in range [0, 255]
  * @retval  None
  */
