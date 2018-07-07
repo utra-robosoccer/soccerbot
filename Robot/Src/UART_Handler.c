@@ -3,14 +3,34 @@
   * @file    UART_Handler.c
   * @author  Tyler
   * @brief   This file implements a generic event processor for UART events,
-  *          which occur commands for the motors need to be distributed
+  *          which occur when commands for the motors need to be distributed
+  *
+  * @defgroup UART_Handler UART Handler
+  * @brief    Event processor for motor commands
+  * @{
   ******************************************************************************
   */
 
+
+
+
+/********************************* Includes **********************************/
 #include "UART_Handler.h"
 
+
+
+
+/********************************* Externs ***********************************/
+/**
+ * Sensor data queue. This module writes current positions of motors into this
+ * queue
+ */
 extern osMessageQId UART_rxHandle;
 
+
+
+
+/******************************** Functions **********************************/
 /**
  * @brief  The UART event processor calls the low-level libraries to execute
  *         reads and writes for motors
@@ -37,3 +57,8 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
 			  break;
 	  }
 }
+
+/**
+ * @}
+ */
+/* end UART_Handler */
