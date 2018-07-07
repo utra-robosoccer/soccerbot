@@ -76,7 +76,18 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+/*! \mainpage Main Page V1
+ *
+ * \section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * \section install_sec Module Descriptions
+ *
+ * \subsection module_communication Communication: 
+ * [Communication](@ref Communication) 
+ * NOTE: [Link Text](@ref HandleName)
+ */
 /* USER CODE END 0 */
 
 /**
