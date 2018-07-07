@@ -196,7 +196,7 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
  *          Default value: 250 (0xFA)
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   microsec the time in microseconds to delay. Arguments in range
+ * @param   microSec the time in microseconds to delay. Arguments in range
  *          [2, 508] are valid. Default: 500
  * @retval  None
  */
@@ -406,7 +406,7 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, float maxTorque
  *          Default value: 0x02
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   status
+ * @param   status_data
  *              - 0 to return only on ping
  *              - 1 to return only for reads
  *              - 2 to return for all commands
@@ -432,7 +432,7 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t
  *          Default value: 0x24 (0b00100100)
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   alarm_data the bits indicate the following:
+ * @param   alarm_LED_data the bits indicate the following:
  *              - bit 7: no function
  *              - bit 6: flash LED when an instruction error occurs
  *              - bit 5: flash LED when current load cannot be controlled with
@@ -464,7 +464,7 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LE
  *          Default value: 0x24 (0b00100100)
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   alarm_data the bits indicate the following:
+ * @param   alarm_shutdown_data the bits indicate the following:
  *              - bit 7: no function
  *              - bit 6: torque off when an instruction error occurs
  *              - bit 5: torque off when current load cannot be controlled with
@@ -547,7 +547,7 @@ void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled)
  *          Default value: None
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   angle the desired angular position. Arguments between 0 and 300 are
+ * @param   goalAngle the desired angular position. Arguments between 0 and 300 are
  *          valid. Note that 150 corresponds to the middle position
  * @retval  None
  */
@@ -592,7 +592,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, float goalAn
  *          Default value: None
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @param   velocity the goal velocity in RPM. Arguments of 0-114 are valid
+ * @param   goalVelocity the goal velocity in RPM. Arguments of 0-114 are valid
  *          when in joint mode. 0 corresponds to MAX motion in joint mode,
  *          and minimum motion in wheel mode. In wheel mode, negative
  *          arguments correspond to CW rotation
@@ -989,7 +989,7 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  *              -# Blocking (Polling)
  *              -# Non-Blocking (Interrupt)
  *              -# DMA
- * @param   One of IO_POLL, IO_IT, or IO_DMA
+ * @param   type one of IO_POLL, IO_IT, or IO_DMA
  * @retval  None
  */
 void Dynamixel_SetIOType(enum IO_FLAGS type) {
@@ -1128,7 +1128,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
  *          contains the configuration information for the motor
  * @param   readAddr the address inside the motor memory table where reading
  *          is to begin
- *          readLength the number of bytes to be read. Must be either 1 or 2
+ * @param   readLength the number of bytes to be read. Must be either 1 or 2
  * @retval  retval a 16-bit value containing 1 or both bytes received, as applicable.
  *          The 1st byte received will be the LSB and the 2nd byte received
  *          will be the MSB
@@ -1282,6 +1282,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * @details Only supports polled I/O currently
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
+ * @param   arrSize the size of the array to be written (either 1 or 2)
  * @param   writeAddr the starting address for where the data is to be written
  * @param   param1 the first parameter
  * @param   param2 the second parameter

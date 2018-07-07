@@ -1410,7 +1410,8 @@ Here is the call graph for this function:</div>
 </pre><div class="fragment"><div class="line">{0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}</div></div><!-- fragment --><p>Where N = readLength. Also, this function computes the checksum of data using the same algorithm as the motors, and it sets <code>hdynamixel -&gt; _lastReadIsValid</code> if the computations match, and clears this field otherwise. This is a basic data integrity check that reduces the probability of passing invalid data to the application </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin readLength the number of bytes to be read. Must be either 1 or 2 </td></tr>
+    <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin </td></tr>
+    <tr><td class="paramname">readLength</td><td>the number of bytes to be read. Must be either 1 or 2 </td></tr>
   </table>
   </dd>
 </dl>
@@ -2224,6 +2225,7 @@ Here is the call graph for this function:</div>
 <p>Only supports polled I/O currently </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">arrSize</td><td>the size of the array to be written (either 1 or 2) </td></tr>
     <tr><td class="paramname">writeAddr</td><td>the starting address for where the data is to be written </td></tr>
     <tr><td class="paramname">param1</td><td>the first parameter </td></tr>
     <tr><td class="paramname">param2</td><td>the second parameter </td></tr>
@@ -2320,7 +2322,7 @@ Here is the call graph for this function:</div>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">alarm_data</td><td>the bits indicate the following:<ul>
+    <tr><td class="paramname">alarm_LED_data</td><td>the bits indicate the following:<ul>
 <li>bit 7: no function</li>
 <li>bit 6: flash LED when an instruction error occurs</li>
 <li>bit 5: flash LED when current load cannot be controlled with the specified maximum torque</li>
@@ -2385,7 +2387,7 @@ Here is the call graph for this function:</div>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">alarm_data</td><td>the bits indicate the following:<ul>
+    <tr><td class="paramname">alarm_shutdown_data</td><td>the bits indicate the following:<ul>
 <li>bit 7: no function</li>
 <li>bit 6: torque off when an instruction error occurs</li>
 <li>bit 5: torque off when current load cannot be controlled with the specified maximum torque</li>
@@ -2596,7 +2598,7 @@ Here is the call graph for this function:</div>
 <p>Default value: None </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">angle</td><td>the desired angular position. Arguments between 0 and 300 are valid. Note that 150 corresponds to the middle position </td></tr>
+    <tr><td class="paramname">goalAngle</td><td>the desired angular position. Arguments between 0 and 300 are valid. Note that 150 corresponds to the middle position </td></tr>
   </table>
   </dd>
 </dl>
@@ -2706,7 +2708,7 @@ Here is the call graph for this function:</div>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">velocity</td><td>the goal velocity in RPM. Arguments of 0-114 are valid when in joint mode. 0 corresponds to MAX motion in joint mode, and minimum motion in wheel mode. In wheel mode, negative arguments correspond to CW rotation </td></tr>
+    <tr><td class="paramname">goalVelocity</td><td>the goal velocity in RPM. Arguments of 0-114 are valid when in joint mode. 0 corresponds to MAX motion in joint mode, and minimum motion in wheel mode. In wheel mode, negative arguments correspond to CW rotation </td></tr>
   </table>
   </dd>
 </dl>
@@ -2864,7 +2866,7 @@ Here is the call graph for this function:</div>
 <li>Non-Blocking (Interrupt)</li>
 <li>DMA <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">One</td><td>of IO_POLL, IO_IT, or IO_DMA </td></tr>
+    <tr><td class="paramname">type</td><td>one of IO_POLL, IO_IT, or IO_DMA </td></tr>
   </table>
   </dd>
 </dl>
@@ -3080,7 +3082,7 @@ Here is the call graph for this function:</div>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">microsec</td><td>the time in microseconds to delay. Arguments in range [2, 508] are valid. Default: 500 </td></tr>
+    <tr><td class="paramname">microSec</td><td>the time in microseconds to delay. Arguments in range [2, 508] are valid. Default: 500 </td></tr>
   </table>
   </dd>
 </dl>
@@ -3133,7 +3135,7 @@ Here is the call graph for this function:</div>
 </pre> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
-    <tr><td class="paramname">status</td><td><ul>
+    <tr><td class="paramname">status_data</td><td><ul>
 <li>0 to return only on ping</li>
 <li>1 to return only for reads</li>
 <li>2 to return for all commands </li>
