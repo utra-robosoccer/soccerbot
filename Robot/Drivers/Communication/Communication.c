@@ -2,10 +2,12 @@
   ******************************************************************************
   * @file    Communication.c
   * @author  Jason
+  * @author  Tyler
   * @brief   Top-level communcation module
   *
-  * @defgroup Communication
+  * @defgroup Communication Communication
   * @brief    Everything related to communication data structures
+  * @{
   ******************************************************************************
   */
 
@@ -15,3 +17,8 @@
 /******************************* Public Variables *****************************/
 RobotGoal robotGoal = {0};
 RobotState robotState = {0};
+
+/**
+ * @}
+ */
+/* end Communication */
