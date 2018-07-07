@@ -12,8 +12,15 @@
   ******************************************************************************
   */
 
-#ifndef COMMUNICATION_COMMUNICATION_H_
-#define COMMUNICATION_COMMUNICATION_H_
+
+
+
+/******************** Define to prevent recursive inclusion *******************/
+#ifndef __COMMUNICATION_H__
+#define __COMMUNICATION_H__
+
+
+
 
 /********************************** Includes **********************************/
 #include <stdint.h>
@@ -24,13 +31,15 @@
 #include "robotGoal.h"
 
 
+
+
 /******************************* Public Variables ******************************/
-extern RobotGoal robotGoal;
-extern RobotState robotState;
+RobotGoal robotGoal;
+RobotState robotState;
 
 /**
  * @}
  */
 /* end CommunicationHeader */
 
-#endif /* COMMUNICATION_COMMUNICATION_H_ */
+#endif /* __COMMUNICATION_H__ */

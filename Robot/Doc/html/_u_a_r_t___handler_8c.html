@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Robot: C:/Users/Hannah/Documents/GitHub/soccer-embedded/Robot/Src/UART_Handler.c File Reference</title>
+<title>Robot: D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Src/UART_Handler.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -94,15 +94,15 @@ $(document).ready(function(){initNavTree('_u_a_r_t___handler_8c.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>This file implements a generic event processor for UART events, which occur commands for the motors need to be distributed.  
+<p>This file implements a generic event processor for UART events, which occur when commands for the motors need to be distributed.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;UART_Handler.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_u_a_r_t___handler_8h_source.html">UART_Handler.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for UART_Handler.c:</div>
 <div class="dyncontent">
-<div class="center"><img src="_u_a_r_t___handler_8c__incl.png" border="0" usemap="#_c_1_2_users_2_hannah_2_documents_2_git_hub_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c" alt=""/></div>
-<map name="_c_1_2_users_2_hannah_2_documents_2_git_hub_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c" id="_c_1_2_users_2_hannah_2_documents_2_git_hub_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c">
-<area shape="rect" id="node2" href="_u_a_r_t___handler_8h_source.html" title="UART_Handler.h" alt="" coords="459,109,577,136"/>
+<div class="center"><img src="_u_a_r_t___handler_8c__incl.png" border="0" usemap="#_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c" alt=""/></div>
+<map name="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c" id="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_src_2_u_a_r_t___handler_8c">
+<area shape="rect" id="node2" href="_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="459,109,577,136"/>
 <area shape="rect" id="node3" href="_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="295,184,458,225"/>
 <area shape="rect" id="node4" href="gpio_8h_source.html" title="gpio.h" alt="" coords="281,423,339,449"/>
 <area shape="rect" id="node7" href="usart_8h_source.html" title="usart.h" alt="" coords="5,423,68,449"/>
@@ -116,74 +116,19 @@ Include dependency graph for UART_Handler.c:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9714c8eb77aab0d3a5719e5233d397ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_a_r_t___handler_8c.html#a9714c8eb77aab0d3a5719e5233d397ca">UART_ProcessEvent</a> (<a class="el" href="struct_u_a_r_tcmd__t.html">UARTcmd_t</a> *cmdPtr, <a class="el" href="struct_t_x_data__t.html">TXData_t</a> *DataToSend)</td></tr>
-<tr class="memdesc:a9714c8eb77aab0d3a5719e5233d397ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UART event processor calls the low-level libraries to execute reads and writes for motors.  <a href="#a9714c8eb77aab0d3a5719e5233d397ca">More...</a><br /></td></tr>
-<tr class="separator:a9714c8eb77aab0d3a5719e5233d397ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9714c8eb77aab0d3a5719e5233d397ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___u_a_r_t___handler.html#ga9714c8eb77aab0d3a5719e5233d397ca">UART_ProcessEvent</a> (<a class="el" href="struct_u_a_r_tcmd__t.html">UARTcmd_t</a> *cmdPtr, <a class="el" href="struct_t_x_data__t.html">TXData_t</a> *DataToSend)</td></tr>
+<tr class="memdesc:ga9714c8eb77aab0d3a5719e5233d397ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UART event processor calls the low-level libraries to execute reads and writes for motors.  <a href="group___u_a_r_t___handler.html#ga9714c8eb77aab0d3a5719e5233d397ca">More...</a><br /></td></tr>
+<tr class="separator:ga9714c8eb77aab0d3a5719e5233d397ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ade81e4b71063ca3c76b947f6adf50d88"><td class="memItemLeft" align="right" valign="top"><a id="ade81e4b71063ca3c76b947f6adf50d88"></a>
-osMessageQId&#160;</td><td class="memItemRight" valign="bottom"><b>UART_rxHandle</b></td></tr>
-<tr class="separator:ade81e4b71063ca3c76b947f6adf50d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade81e4b71063ca3c76b947f6adf50d88"><td class="memItemLeft" align="right" valign="top">osMessageQId&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___u_a_r_t___handler.html#gade81e4b71063ca3c76b947f6adf50d88">UART_rxHandle</a></td></tr>
+<tr class="separator:gade81e4b71063ca3c76b947f6adf50d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file implements a generic event processor for UART events, which occur commands for the motors need to be distributed. </p>
+<div class="textblock"><p>This file implements a generic event processor for UART events, which occur when commands for the motors need to be distributed. </p>
 <dl class="section author"><dt>Author</dt><dd>Tyler </dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a9714c8eb77aab0d3a5719e5233d397ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9714c8eb77aab0d3a5719e5233d397ca">&#9670;&nbsp;</a></span>UART_ProcessEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UART_ProcessEvent </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_u_a_r_tcmd__t.html">UARTcmd_t</a> *&#160;</td>
-          <td class="paramname"><em>cmdPtr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_t_x_data__t.html">TXData_t</a> *&#160;</td>
-          <td class="paramname"><em>DataToSend</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The UART event processor calls the low-level libraries to execute reads and writes for motors. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">cmdPtr</td><td>the handle for the command structure containing all relevant data fields </td></tr>
-    <tr><td class="paramname">DataToSend</td><td>the handle for the data structure to copy into the sensor queue if a read is executed </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="_u_a_r_t___handler_8c_a9714c8eb77aab0d3a5719e5233d397ca_cgraph.png" border="0" usemap="#_u_a_r_t___handler_8c_a9714c8eb77aab0d3a5719e5233d397ca_cgraph" alt=""/></div>
-<map name="_u_a_r_t___handler_8c_a9714c8eb77aab0d3a5719e5233d397ca_cgraph" id="_u_a_r_t___handler_8c_a9714c8eb77aab0d3a5719e5233d397ca_cgraph">
-<area shape="rect" id="node2" href="group___dynamixel_protocol_v1___public___functions___getters.html#ga3edc0f39369851f07925e38a83f67f51" title="Reads the angular position of the motor in degrees. " alt="" coords="196,5,355,32"/>
-<area shape="rect" id="node3" href="group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gae0e18eec55a4c1c3600dc8406d21a9c9" title="Reads data back from the motor passed in by reference. " alt="" coords="403,5,561,32"/>
-<area shape="rect" id="node4" href="group___dynamixel_protocol_v1___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="609,5,813,32"/>
-</map>
-</div>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
