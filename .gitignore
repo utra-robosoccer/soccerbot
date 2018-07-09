@@ -8,3 +8,9 @@ src/darknet_ros/weights/yolo.weights
 src/darknet_ros/darknet_ros/yolo_network_config/weights/tiny-yolo-voc.weights
 .catkin_tools/
 src/soccerbot/
+soccerbot_build.log
+soccerbot_build.stat
+soccer_ws.sublime-project
+soccer_ws.sublime-workspace
+deploy_background_build.sh
+deploy_build_ros_model.sh
