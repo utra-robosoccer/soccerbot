@@ -107,7 +107,8 @@ int main(void) {
 
     /* USER CODE BEGIN 2 */
     enum cases {
-        INVALID, VALID_AX, // e.g. AX01
+        INVALID,
+		VALID_AX, // e.g. AX01
         VALID_MX1, // e.g. M101
         VALID_MX2, // e.g. M201
         QUERY // e.g. ?...
@@ -115,7 +116,7 @@ int main(void) {
 
     uint8_t isInitialized = 0; //checks if new motor structure should be initialized
     uint8_t id_show;
-    currCase = 0; //case 1:AX12 at 1M, case 2: MX28 at 57600, case 3: MX28 at 1M
+    currCase = -2; //case 1:AX12 at 1M, case 2: MX28 at 57600, case 3: MX28 at 1M
     pastCase = -1; //needed for isInitialized condition
 
     /* USER CODE END 2 */
@@ -297,11 +298,12 @@ int valid_rx(char *rx) {
      */
     int idCheck = 0;
     /*1. return if query case*/
-    if (rx == "?...") {
+    if (rx[0] == '?') {
         return 4;
     }
     /*2. check if received ID is valid*/
-    uint8_t id_num = atoi(rx_buf[2]) * 10 + atoi(rx_buf[3]);
+    //NOTED: atoi(CHARACTER) instead of STRING causes problems
+    uint16_t id_num = (rx[2]-'0')*10 + (rx[3]-'0');
     if (id_num > 0 && id_num < 100) { //valid id is 1-18 at the moment, but set to 1-100 for now
         rx_valid = id_num;
         idCheck = 1;
