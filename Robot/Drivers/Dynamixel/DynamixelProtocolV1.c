@@ -1047,6 +1047,26 @@ enum IO_FLAGS Dynamixel_GetIOType(){
  */
 
 /**
+ * @brief  Set data direction pin high (TX)
+ * @param  port the port the data direction pin is on
+ * @param  pinNum the pin number of the data direction pin on the specified port
+ * @retval None
+ */
+static inline void Dynamixel_BusDirTX(GPIO_TypeDef* port, uint16_t pinNum){
+    HAL_GPIO_WritePin(port, pinNum, 1);
+}
+
+/**
+ * @brief  Set data direction pin low (RX)
+ * @param  port the port the data direction pin is on
+ * @param  pinNum the pin number of the data direction pin on the specified port
+ * @retval None
+ */
+static inline void Dynamixel_BusDirRX(GPIO_TypeDef* port, uint16_t pinNum){
+    HAL_GPIO_WritePin(port, pinNum, 0);
+}
+
+/**
  * @brief   Sends an array of data to a motor as per its configuration details
  * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
@@ -1080,7 +1100,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 		arrTransmit[ID][4 + numArgs + 1] = Dynamixel_ComputeChecksum(arrTransmit[ID], 4 + numArgs + 2);
 
 		/* Set data direction for transmit. */
-		__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+		Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 		/* Transmit. */
 		switch(IOType) {
@@ -1170,7 +1190,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	}
 
 	// Set data direction for transmit
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	// Transmit + Receive
 	switch(IOType) {
@@ -1186,7 +1206,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 
 			// Set data direction for receive
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
 			do{
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
@@ -1201,7 +1221,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		case IO_POLL:
 			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
 
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize, RECEIVE_TIMEOUT);
 			break;
 		case IO_IT:
@@ -1215,7 +1235,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 					}
 			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
 			do{
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
@@ -1306,7 +1326,7 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 	}
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
@@ -1336,7 +1356,7 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
@@ -1365,13 +1385,13 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 	arr[5] = Dynamixel_ComputeChecksum(arr, 6);
 
 	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 6, TRANSMIT_TIMEOUT);
 
 	/* Set data direction for receive. */
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Receive. */
 	if(HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 6, RECEIVE_TIMEOUT)){
@@ -1466,7 +1486,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);

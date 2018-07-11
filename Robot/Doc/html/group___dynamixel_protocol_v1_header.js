@@ -1,7 +1,5 @@
 var group___dynamixel_protocol_v1_header =
 [
-    [ "__DYNAMIXEL_RECEIVE", "group___dynamixel_protocol_v1_header.html#ga54e5850720a4e3e394fb900a4d83ab41", null ],
-    [ "__DYNAMIXEL_TRANSMIT", "group___dynamixel_protocol_v1_header.html#ga96ab88c3e05d70e9dfb0650a6d83e7bf", null ],
     [ "BROADCAST_ID", "group___dynamixel_protocol_v1_header.html#gab9fe47395310b34fa1ceb112c9ca10e2", null ],
     [ "BUFF_SIZE_RX", "group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335", null ],
     [ "DEFAULT_ALARM_LED", "group___dynamixel_protocol_v1_header.html#gaf37a134a4f0283038079891693436e71", null ],

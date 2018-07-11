@@ -1,6 +1,7 @@
 <map id="MX28_EnterMultiTurnMode" name="MX28_EnterMultiTurnMode">
 <area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___public___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5" title="Sets the clockwise angle limit for the current motor. " alt="" coords="235,5,429,32"/>
-<area shape="rect" id="node5" href="$group___dynamixel_protocol_v1___public___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce" title="Sets the counter&#45;clockwise angle limit for the current motor. " alt="" coords="231,56,433,83"/>
+<area shape="rect" id="node6" href="$group___dynamixel_protocol_v1___public___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce" title="Sets the counter&#45;clockwise angle limit for the current motor. " alt="" coords="231,56,433,83"/>
 <area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="481,31,633,57"/>
-<area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="681,31,885,57"/>
+<area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="681,5,885,32"/>
+<area shape="rect" id="node5" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#ga382d4b7e36403cf22d25bab6da922e3c" title="Set data direction pin high (TX) " alt="" coords="712,56,855,83"/>
 </map>
