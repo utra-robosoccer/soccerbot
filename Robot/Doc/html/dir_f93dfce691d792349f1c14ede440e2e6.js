@@ -5,7 +5,7 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "gpio.h", "gpio_8h_source.html", null ],
     [ "i2c.h", "i2c_8h_source.html", null ],
     [ "main.h", "main_8h.html", "main_8h" ],
-    [ "sharedMacros.h", "shared_macros_8h_source.html", null ],
+    [ "sharedMacros.h", "shared_macros_8h.html", "shared_macros_8h" ],
     [ "UART_Handler.h", "_u_a_r_t___handler_8h.html", "_u_a_r_t___handler_8h" ],
     [ "usart.h", "usart_8h_source.html", null ]
 ];

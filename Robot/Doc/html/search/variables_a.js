@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['uart_5frxhandle',['UART_rxHandle',['../group___u_a_r_t___handler.html#gade81e4b71063ca3c76b947f6adf50d88',1,'UART_rxHandle():&#160;freertos.c'],['../group___u_a_r_t___handler.html#gade81e4b71063ca3c76b947f6adf50d88',1,'UART_rxHandle():&#160;freertos.c']]]
+  ['start_5fseq',['start_seq',['../structrobot__state.html#ae237ee7fa149fb1a40b8badc494744bb',1,'robot_state']]]
 ];

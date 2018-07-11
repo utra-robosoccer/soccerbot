@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['motorhandle',['motorHandle',['../struct_u_a_r_tcmd__t.html#ade6c3413bb42c2dd9ae09422289e533c',1,'UARTcmd_t']]],
-  ['msg',['msg',['../structrobot__goal.html#a3d523ddd4d9b8eafb9241f3c94fc66da',1,'robot_goal::msg()'],['../structrobot__state.html#a3d523ddd4d9b8eafb9241f3c94fc66da',1,'robot_state::msg()']]]
+  ['edatatype',['eDataType',['../struct_t_x_data__t.html#a8cd9aa6c8b7e217e88052cad45c1e206',1,'TXData_t']]],
+  ['end_5fseq',['end_seq',['../structrobot__state.html#ab7fcef41c32448ba17572576c2c808df',1,'robot_state']]]
 ];
