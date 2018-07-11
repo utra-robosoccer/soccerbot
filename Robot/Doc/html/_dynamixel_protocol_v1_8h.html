@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('_dynamixel_protocol_v1_8h.html','');})
 <code>#include &quot;<a class="el" href="_dynamixel___handle_type_def_8h_source.html">Dynamixel_HandleTypeDef.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_m_x28_8h_source.html">MX28/MX28.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_a_x12_a_8h_source.html">AX12A/AX12A.h</a>&quot;</code><br />
-<code>#include &quot;sharedMacros.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="shared_macros_8h_source.html">sharedMacros.h</a>&quot;</code><br />
 <code>#include &quot;cmsis_os.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for DynamixelProtocolV1.h:</div>
@@ -117,7 +117,7 @@ Include dependency graph for DynamixelProtocolV1.h:</div>
 <area shape="rect" id="node8" href="_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="32,184,220,211"/>
 <area shape="rect" id="node10" href="_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="51,109,152,136"/>
 <area shape="rect" id="node11" href="_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="176,109,291,136"/>
-<area shape="rect" id="node12" href="shared_macros_8h_source.html" title="sharedMacros.h" alt="" coords="504,109,619,136"/>
+<area shape="rect" id="node12" href="shared_macros_8h.html" title="This file defines macros used throughout various parts of the system that engage in non&#45;blocking I/O ..." alt="" coords="504,109,619,136"/>
 <area shape="rect" id="node4" href="main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="220,333,282,360"/>
 </map>
 </div>
@@ -137,124 +137,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga889312e611f88f2a8ed0c039cdc59ae1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga889312e611f88f2a8ed0c039cdc59ae1">TRANSMIT_TIMEOUT</a>&#160;&#160;&#160;10</td></tr>
-<tr class="separator:ga889312e611f88f2a8ed0c039cdc59ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c69942f01447fa7563c5726c7d8abf2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4c69942f01447fa7563c5726c7d8abf2">RECEIVE_TIMEOUT</a>&#160;&#160;&#160;10</td></tr>
-<tr class="separator:ga4c69942f01447fa7563c5726c7d8abf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga52b56a381e777b55e1b59019d9ee072e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>&#160;&#160;&#160;18</td></tr>
 <tr class="separator:ga52b56a381e777b55e1b59019d9ee072e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga74785603bc6bb11879e1b5d2a7391335"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335">BUFF_SIZE_RX</a>&#160;&#160;&#160;8</td></tr>
-<tr class="separator:ga74785603bc6bb11879e1b5d2a7391335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabcf40a9097334bfad2dfa8badbe2081f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gabcf40a9097334bfad2dfa8badbe2081f">TX_PACKET_SIZE</a>&#160;&#160;&#160;9</td></tr>
-<tr class="separator:gabcf40a9097334bfad2dfa8badbe2081f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8309e50d2ad7393eda0b9b3dccb273b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga8309e50d2ad7393eda0b9b3dccb273b0">NUM_UARTS</a>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:ga8309e50d2ad7393eda0b9b3dccb273b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacb92e93ddd4b53533b14dc3403346bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gacb92e93ddd4b53533b14dc3403346bbf">INST_PING</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:gacb92e93ddd4b53533b14dc3403346bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga091b7377c1484006602a48ab24863dfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga091b7377c1484006602a48ab24863dfa">INST_READ_DATA</a>&#160;&#160;&#160;0x02</td></tr>
-<tr class="separator:ga091b7377c1484006602a48ab24863dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5f75dd76b3a7035583f9169576e7138"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaf5f75dd76b3a7035583f9169576e7138">INST_WRITE_DATA</a>&#160;&#160;&#160;0x03</td></tr>
-<tr class="separator:gaf5f75dd76b3a7035583f9169576e7138"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae2afd415cd9007f4688bf77507f0383e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gae2afd415cd9007f4688bf77507f0383e">INST_REG_WRITE</a>&#160;&#160;&#160;0x04</td></tr>
-<tr class="separator:gae2afd415cd9007f4688bf77507f0383e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadea21b73305aa7a5b3317e299c616853"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadea21b73305aa7a5b3317e299c616853">INST_ACTION</a>&#160;&#160;&#160;0x05</td></tr>
-<tr class="separator:gadea21b73305aa7a5b3317e299c616853"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad670526ca941302efb4a0d00e7dd43c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gad670526ca941302efb4a0d00e7dd43c0">INST_RESET</a>&#160;&#160;&#160;0x06</td></tr>
-<tr class="separator:gad670526ca941302efb4a0d00e7dd43c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeaa4b61ee11d45bd1a0cb932d7abaf77"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaeaa4b61ee11d45bd1a0cb932d7abaf77">INST_SYNC_WRITE</a>&#160;&#160;&#160;0x83</td></tr>
-<tr class="separator:gaeaa4b61ee11d45bd1a0cb932d7abaf77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga91339a8293cb53b81407c016bc41e2b1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga91339a8293cb53b81407c016bc41e2b1">REG_ID</a>&#160;&#160;&#160;0x03</td></tr>
-<tr class="separator:ga91339a8293cb53b81407c016bc41e2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae7b539835367b400bc288d9da4ce1023"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gae7b539835367b400bc288d9da4ce1023">REG_BAUD_RATE</a>&#160;&#160;&#160;0x04</td></tr>
-<tr class="separator:gae7b539835367b400bc288d9da4ce1023"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6fdc6d6428532564d271ace3eb6f1efb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga6fdc6d6428532564d271ace3eb6f1efb">REG_RETURN_DELAY_TIME</a>&#160;&#160;&#160;0x05</td></tr>
-<tr class="separator:ga6fdc6d6428532564d271ace3eb6f1efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b842cd69ac9d9738bf4ba650c3a7621"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4b842cd69ac9d9738bf4ba650c3a7621">REG_CW_ANGLE_LIMIT</a>&#160;&#160;&#160;0x06</td></tr>
-<tr class="separator:ga4b842cd69ac9d9738bf4ba650c3a7621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga743153810f47d359b7560ff197780643"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga743153810f47d359b7560ff197780643">REG_CCW_ANGLE_LIMIT</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="separator:ga743153810f47d359b7560ff197780643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0b2f8593f9cf5897d95206470d5b7519"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga0b2f8593f9cf5897d95206470d5b7519">REG_HIGH_VOLTAGE_LIMIT</a>&#160;&#160;&#160;0x0C</td></tr>
-<tr class="separator:ga0b2f8593f9cf5897d95206470d5b7519"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4eb09efd22fcc1248f890b78ccbcb3df"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4eb09efd22fcc1248f890b78ccbcb3df">REG_LOW_VOLTAGE_LIMIT</a>&#160;&#160;&#160;0x0D</td></tr>
-<tr class="separator:ga4eb09efd22fcc1248f890b78ccbcb3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9c62f497a1daf38e7ff24eae86a8f94c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga9c62f497a1daf38e7ff24eae86a8f94c">REG_MAX_TORQUE</a>&#160;&#160;&#160;0x0E</td></tr>
-<tr class="separator:ga9c62f497a1daf38e7ff24eae86a8f94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadd8f4f5734bf5ba3368e87ed2e5baae7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadd8f4f5734bf5ba3368e87ed2e5baae7">REG_STATUS_RETURN_LEVEL</a>&#160;&#160;&#160;0x10</td></tr>
-<tr class="separator:gadd8f4f5734bf5ba3368e87ed2e5baae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeab54e7253c72d329f6e488143439e93"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaeab54e7253c72d329f6e488143439e93">REG_ALARM_LED</a>&#160;&#160;&#160;0x11</td></tr>
-<tr class="separator:gaeab54e7253c72d329f6e488143439e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac31e30813abf2177fa7475a328127d75"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gac31e30813abf2177fa7475a328127d75">REG_ALARM_SHUTDOWN</a>&#160;&#160;&#160;0x12</td></tr>
-<tr class="separator:gac31e30813abf2177fa7475a328127d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1c8c48f9dff15cea75deff965af5159a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga1c8c48f9dff15cea75deff965af5159a">REG_TORQUE_ENABLE</a>&#160;&#160;&#160;0x18</td></tr>
-<tr class="separator:ga1c8c48f9dff15cea75deff965af5159a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab8f82c4a237030359253c32e745c038d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gab8f82c4a237030359253c32e745c038d">REG_LED_ENABLE</a>&#160;&#160;&#160;0x19</td></tr>
-<tr class="separator:gab8f82c4a237030359253c32e745c038d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5ce5115a75b57d0355a0ddb7c2c87448"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga5ce5115a75b57d0355a0ddb7c2c87448">REG_GOAL_POSITION</a>&#160;&#160;&#160;0x1E</td></tr>
-<tr class="separator:ga5ce5115a75b57d0355a0ddb7c2c87448"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99f18ab88fd5c70d165f059f0280d9ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga99f18ab88fd5c70d165f059f0280d9ee">REG_GOAL_VELOCITY</a>&#160;&#160;&#160;0x20</td></tr>
-<tr class="separator:ga99f18ab88fd5c70d165f059f0280d9ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7c16cd3033c6d6f49f7890ac56bd2175"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga7c16cd3033c6d6f49f7890ac56bd2175">REG_GOAL_TORQUE</a>&#160;&#160;&#160;0x22</td></tr>
-<tr class="separator:ga7c16cd3033c6d6f49f7890ac56bd2175"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga95b82dcf21b2a0694431e6297e5e8aca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga95b82dcf21b2a0694431e6297e5e8aca">REG_LOCK_EEPROM</a>&#160;&#160;&#160;0x2F</td></tr>
-<tr class="separator:ga95b82dcf21b2a0694431e6297e5e8aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadb5017a079300904524452909400137c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadb5017a079300904524452909400137c">REG_PUNCH</a>&#160;&#160;&#160;0x30</td></tr>
-<tr class="separator:gadb5017a079300904524452909400137c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4f0b56e5c7eece2bb3add1e9f8519380"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4f0b56e5c7eece2bb3add1e9f8519380">REG_CURRENT_POSITION</a>&#160;&#160;&#160;0x24</td></tr>
-<tr class="separator:ga4f0b56e5c7eece2bb3add1e9f8519380"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa382d505d06599b11254f81f65dc0c5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gafa382d505d06599b11254f81f65dc0c5">REG_CURRENT_VELOCITY</a>&#160;&#160;&#160;0x26</td></tr>
-<tr class="separator:gafa382d505d06599b11254f81f65dc0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9e5220994a5da07a09d8c2324bb93023"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga9e5220994a5da07a09d8c2324bb93023">REG_CURRENT_LOAD</a>&#160;&#160;&#160;0x28</td></tr>
-<tr class="separator:ga9e5220994a5da07a09d8c2324bb93023"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga78d1aac33a6d80c9c4d38238eada9492"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga78d1aac33a6d80c9c4d38238eada9492">REG_CURRENT_VOLTAGE</a>&#160;&#160;&#160;0x2A</td></tr>
-<tr class="separator:ga78d1aac33a6d80c9c4d38238eada9492"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa5f650cf69dd1c780862478fe484e4c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaa5f650cf69dd1c780862478fe484e4c1">REG_CURRENT_TEMPERATURE</a>&#160;&#160;&#160;0x2B</td></tr>
-<tr class="separator:gaa5f650cf69dd1c780862478fe484e4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga691e859f82ec1c5d963e0f7f2cef8bc0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga691e859f82ec1c5d963e0f7f2cef8bc0">REG_REGISTERED</a>&#160;&#160;&#160;0x2C</td></tr>
-<tr class="separator:ga691e859f82ec1c5d963e0f7f2cef8bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9acaacf588bc85ec1ddf8634c49f75f4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga9acaacf588bc85ec1ddf8634c49f75f4">REG_MOVING</a>&#160;&#160;&#160;0x2E</td></tr>
-<tr class="separator:ga9acaacf588bc85ec1ddf8634c49f75f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab9fe47395310b34fa1ceb112c9ca10e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gab9fe47395310b34fa1ceb112c9ca10e2">BROADCAST_ID</a>&#160;&#160;&#160;0xFE</td></tr>
-<tr class="separator:gab9fe47395310b34fa1ceb112c9ca10e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga50f28d60b2b6da9c769708953aaa34d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga50f28d60b2b6da9c769708953aaa34d0">DEFAULT_ID</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:ga50f28d60b2b6da9c769708953aaa34d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab324f8dad2896523952f488311f1f675"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gab324f8dad2896523952f488311f1f675">DEFAULT_RETURN_DELAY</a>&#160;&#160;&#160;0xFA</td></tr>
-<tr class="separator:gab324f8dad2896523952f488311f1f675"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadff150d9aa53853e5bb79f67987ad80a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadff150d9aa53853e5bb79f67987ad80a">DEFAULT_CW_ANGLE_LIMIT</a>&#160;&#160;&#160;0x0000</td></tr>
-<tr class="separator:gadff150d9aa53853e5bb79f67987ad80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga41c966dfcb7498d5b5f85e536b557827"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga41c966dfcb7498d5b5f85e536b557827">DEFAULT_LOW_VOLTAGE_LIMIT</a>&#160;&#160;&#160;0x3C</td></tr>
-<tr class="separator:ga41c966dfcb7498d5b5f85e536b557827"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4318c76972a3e5f57f68b43d800d65ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4318c76972a3e5f57f68b43d800d65ed">DEFAULT_MAXIMUM_TORQUE</a>&#160;&#160;&#160;0x03FF</td></tr>
-<tr class="separator:ga4318c76972a3e5f57f68b43d800d65ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaded63c4edc004b8d50451dd2a16776f4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaded63c4edc004b8d50451dd2a16776f4">DEFAULT_STATUS_RETURN_LEVEL</a>&#160;&#160;&#160;0x02</td></tr>
-<tr class="separator:gaded63c4edc004b8d50451dd2a16776f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf37a134a4f0283038079891693436e71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaf37a134a4f0283038079891693436e71">DEFAULT_ALARM_LED</a>&#160;&#160;&#160;0x24</td></tr>
-<tr class="separator:gaf37a134a4f0283038079891693436e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeaa2914c1aa90c21425b783bed6fb9b8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaeaa2914c1aa90c21425b783bed6fb9b8">DEFAULT_ALARM_SHUTDOWN</a>&#160;&#160;&#160;0x24</td></tr>
-<tr class="separator:gaeaa2914c1aa90c21425b783bed6fb9b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaea2e131e4c412bde90ee5b377467081b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaea2e131e4c412bde90ee5b377467081b">DEFAULT_TORQUE_ENABLE</a>&#160;&#160;&#160;0x00</td></tr>
-<tr class="separator:gaea2e131e4c412bde90ee5b377467081b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gada73d06bf48f973ff2a9b42fc57d06fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gada73d06bf48f973ff2a9b42fc57d06fc">DEFAULT_LED_ENABLE</a>&#160;&#160;&#160;0x00</td></tr>
-<tr class="separator:gada73d06bf48f973ff2a9b42fc57d06fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga220f88e79d1d5626fb8f90e9b9410790"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga220f88e79d1d5626fb8f90e9b9410790">DEFAULT_EEPROM_LOCK</a>&#160;&#160;&#160;0x00</td></tr>
-<tr class="separator:ga220f88e79d1d5626fb8f90e9b9410790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5842884a999d32a2c7a8462dd6dc6c00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga5842884a999d32a2c7a8462dd6dc6c00">MIN_VELOCITY</a>&#160;&#160;&#160;1</td></tr>
-<tr class="separator:ga5842884a999d32a2c7a8462dd6dc6c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf3c82099d63a2d91d68bd62d954059c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaf3c82099d63a2d91d68bd62d954059c7">MAX_ANGLE</a>&#160;&#160;&#160;300</td></tr>
-<tr class="separator:gaf3c82099d63a2d91d68bd62d954059c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5cc136dbc86df89de56c3aa421c12ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaf5cc136dbc86df89de56c3aa421c12ee">MIN_ANGLE</a>&#160;&#160;&#160;0</td></tr>
-<tr class="separator:gaf5cc136dbc86df89de56c3aa421c12ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaffdf293ef95fd884b05ac19b8f90ad3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaaffdf293ef95fd884b05ac19b8f90ad3">MAX_TORQUE</a>&#160;&#160;&#160;100</td></tr>
-<tr class="separator:gaaffdf293ef95fd884b05ac19b8f90ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3ab1e4fe639ae1549b40bdc0b5c1a0af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga3ab1e4fe639ae1549b40bdc0b5c1a0af">MIN_TORQUE</a>&#160;&#160;&#160;0</td></tr>
-<tr class="separator:ga3ab1e4fe639ae1549b40bdc0b5c1a0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0637861f9419cef73e2e7e6210280e4e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga0637861f9419cef73e2e7e6210280e4e">MAX_VOLTAGE</a>&#160;&#160;&#160;14</td></tr>
-<tr class="separator:ga0637861f9419cef73e2e7e6210280e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga34badbf9acae6cc5c2eed2ab51b32d30"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga34badbf9acae6cc5c2eed2ab51b32d30">MIN_VOLTAGE</a>&#160;&#160;&#160;6</td></tr>
-<tr class="separator:ga34badbf9acae6cc5c2eed2ab51b32d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaf3caf40ce946a91e713b3e982c50771"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaaf3caf40ce946a91e713b3e982c50771">MAX_PUNCH</a>&#160;&#160;&#160;1023</td></tr>
-<tr class="separator:gaaf3caf40ce946a91e713b3e982c50771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2507baa0f08b777840f6810a878a672e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga2507baa0f08b777840f6810a878a672e">MIN_PUNCH</a>&#160;&#160;&#160;0</td></tr>
-<tr class="separator:ga2507baa0f08b777840f6810a878a672e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -380,10 +266,48 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga35cbe995456d8c7f71cf156fe94ddebc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga35cbe995456d8c7f71cf156fe94ddebc">arrReceive</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>][<a class="el" href="group___dynamixel_protocol_v1_header.html#ga74785603bc6bb11879e1b5d2a7391335">BUFF_SIZE_RX</a>]</td></tr>
-<tr class="separator:ga35cbe995456d8c7f71cf156fe94ddebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadb763f080296d0b91152bc1aed7a3353"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadb763f080296d0b91152bc1aed7a3353">arrTransmit</a> [<a class="el" href="group___dynamixel_protocol_v1_header.html#ga52b56a381e777b55e1b59019d9ee072e">NUM_MOTORS</a>+1][<a class="el" href="group___dynamixel_protocol_v1_header.html#gabcf40a9097334bfad2dfa8badbe2081f">TX_PACKET_SIZE</a>]</td></tr>
-<tr class="separator:gadb763f080296d0b91152bc1aed7a3353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f785fe616773f806a29402255b11faf"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga6f785fe616773f806a29402255b11faf">BROADCAST_ID</a></td></tr>
+<tr class="separator:ga6f785fe616773f806a29402255b11faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadcd5c70caa0af5fa62200065a1e1b597"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadcd5c70caa0af5fa62200065a1e1b597">DEFAULT_ID</a></td></tr>
+<tr class="separator:gadcd5c70caa0af5fa62200065a1e1b597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadea77669a0b34d8a94f6092203baf418"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gadea77669a0b34d8a94f6092203baf418">DEFAULT_RETURN_DELAY</a></td></tr>
+<tr class="separator:gadea77669a0b34d8a94f6092203baf418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef60810780baae7c7d54ffdadb9bbe96"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaef60810780baae7c7d54ffdadb9bbe96">DEFAULT_CW_ANGLE_LIMIT</a></td></tr>
+<tr class="separator:gaef60810780baae7c7d54ffdadb9bbe96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2ded0d56459d11c3e6fea9bf14435abb"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga2ded0d56459d11c3e6fea9bf14435abb">DEFAULT_LOW_VOLTAGE_LIMIT</a></td></tr>
+<tr class="separator:ga2ded0d56459d11c3e6fea9bf14435abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32eeef4fd328d4378e5ca868dffcf6c6"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga32eeef4fd328d4378e5ca868dffcf6c6">DEFAULT_MAXIMUM_TORQUE</a></td></tr>
+<tr class="separator:ga32eeef4fd328d4378e5ca868dffcf6c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5fe7d65ff558a5f1596c0597e0c2fcba"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga5fe7d65ff558a5f1596c0597e0c2fcba">DEFAULT_STATUS_RETURN_LEVEL</a></td></tr>
+<tr class="separator:ga5fe7d65ff558a5f1596c0597e0c2fcba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4467475649af2ca231293a4be576c9ac"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga4467475649af2ca231293a4be576c9ac">DEFAULT_ALARM_LED</a></td></tr>
+<tr class="separator:ga4467475649af2ca231293a4be576c9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf0d41527a98bd8b37479eaa50bec12b9"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaf0d41527a98bd8b37479eaa50bec12b9">DEFAULT_ALARM_SHUTDOWN</a></td></tr>
+<tr class="separator:gaf0d41527a98bd8b37479eaa50bec12b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga02a949cbb038277edd8bfeab17547726"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga02a949cbb038277edd8bfeab17547726">DEFAULT_TORQUE_ENABLE</a></td></tr>
+<tr class="separator:ga02a949cbb038277edd8bfeab17547726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabeb73c0a508dfdd1b02f869890054606"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gabeb73c0a508dfdd1b02f869890054606">DEFAULT_LED_ENABLE</a></td></tr>
+<tr class="separator:gabeb73c0a508dfdd1b02f869890054606"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3af1402a2e8cd631101d1713c8ff576e"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga3af1402a2e8cd631101d1713c8ff576e">DEFAULT_EEPROM_LOCK</a></td></tr>
+<tr class="separator:ga3af1402a2e8cd631101d1713c8ff576e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafea72c218c11248d29a2799bea2d31f8"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gafea72c218c11248d29a2799bea2d31f8">MIN_VELOCITY</a></td></tr>
+<tr class="separator:gafea72c218c11248d29a2799bea2d31f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaccb2add52210ac77bacac5d48e33b1f0"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaccb2add52210ac77bacac5d48e33b1f0">MAX_ANGLE</a></td></tr>
+<tr class="separator:gaccb2add52210ac77bacac5d48e33b1f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac7287fbb0c5cd6aae14f43f878189d9"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gaac7287fbb0c5cd6aae14f43f878189d9">MIN_ANGLE</a></td></tr>
+<tr class="separator:gaac7287fbb0c5cd6aae14f43f878189d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga910d8057c4618e24c8604940e8759b18"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga910d8057c4618e24c8604940e8759b18">MAX_TORQUE</a></td></tr>
+<tr class="separator:ga910d8057c4618e24c8604940e8759b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga18e54f04b95c869971cee4c308569bff"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga18e54f04b95c869971cee4c308569bff">MIN_TORQUE</a></td></tr>
+<tr class="separator:ga18e54f04b95c869971cee4c308569bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae04d94ae27e54f9a24fb46f394ae0de4"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gae04d94ae27e54f9a24fb46f394ae0de4">MAX_VOLTAGE</a></td></tr>
+<tr class="separator:gae04d94ae27e54f9a24fb46f394ae0de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdf5dde7ec9b7245825780f3b1fb7c71"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#gafdf5dde7ec9b7245825780f3b1fb7c71">MIN_VOLTAGE</a></td></tr>
+<tr class="separator:gafdf5dde7ec9b7245825780f3b1fb7c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga499f94691d6486979e2adf41080ce1da"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga499f94691d6486979e2adf41080ce1da">MAX_PUNCH</a></td></tr>
+<tr class="separator:ga499f94691d6486979e2adf41080ce1da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga930b7036c10b0d76a08db5c98b87c8b4"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1_header.html#ga930b7036c10b0d76a08db5c98b87c8b4">MIN_PUNCH</a></td></tr>
+<tr class="separator:ga930b7036c10b0d76a08db5c98b87c8b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuator using protocol version 1.0 should be able to be integrated with little effort, as the instructions and register addresses are very similar for all actuators using this protocol version. </p>
