@@ -4,6 +4,6 @@
 <area shape="rect" id="node8" href="$_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="32,184,220,211"/>
 <area shape="rect" id="node10" href="$_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="51,109,152,136"/>
 <area shape="rect" id="node11" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="176,109,291,136"/>
-<area shape="rect" id="node12" href="$shared_macros_8h_source.html" title="sharedMacros.h" alt="" coords="504,109,619,136"/>
+<area shape="rect" id="node12" href="$shared_macros_8h.html" title="This file defines macros used throughout various parts of the system that engage in non&#45;blocking I/O ..." alt="" coords="504,109,619,136"/>
 <area shape="rect" id="node4" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="220,333,282,360"/>
 </map>
