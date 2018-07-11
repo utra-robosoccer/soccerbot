@@ -3,7 +3,7 @@
 <area shape="rect" id="node11" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="1271,423,1328,449"/>
 <area shape="rect" id="node12" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="1801,348,1851,375"/>
 <area shape="rect" id="node13" href="$_m_p_u6050_8h_source.html" title="../Drivers/MPU6050\l/MPU6050.h" alt="" coords="1512,184,1647,225"/>
-<area shape="rect" id="node16" href="$shared_macros_8h_source.html" title="sharedMacros.h" alt="" coords="1435,273,1550,300"/>
+<area shape="rect" id="node16" href="$shared_macros_8h.html" title="This file defines macros used throughout various parts of the system that engage in non&#45;blocking I/O ..." alt="" coords="1435,273,1550,300"/>
 <area shape="rect" id="node17" href="$_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="865,109,984,136"/>
 <area shape="rect" id="node18" href="$_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="997,184,1159,225"/>
 <area shape="rect" id="node22" href="$_communication_8h.html" title="Header for top&#45;level communication module. " alt="" coords="591,184,757,225"/>

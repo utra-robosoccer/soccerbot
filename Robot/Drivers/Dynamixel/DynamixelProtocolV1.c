@@ -27,16 +27,97 @@
 
 
 
+/********************************** Macros ***********************************/
+/* Communications */
+#define BUFF_SIZE_RX            8       /**< Receive buffer size for UART receptions (number of bytes) */
+#define TX_PACKET_SIZE          9       /**< Maximum packet size for regular motor commands (exclusion: sync write) */
+
+/* Instruction set definitions */
+#define INST_PING               0x01        /**< Gets a status packet  */
+#define INST_READ_DATA          0x02        /**< Reads data from a motor register */
+#define INST_WRITE_DATA         0x03        /**< Writes data for immediate execution */
+#define INST_REG_WRITE          0x04        /**< Registers an instruction to be executed at a later time */
+#define INST_ACTION             0x05        /**< Triggers instructions registered by INST_REG_WRITE */
+#define INST_RESET              0x06        /**< Resets the control tables of the Dynamixel actuator(s) specified */
+#define INST_SYNC_WRITE         0x83        /**< Writes on a specified address with a specified data length on multiple devices */
+
+/* Register addresses */
+#define REG_ID                              0x03    /**< Motor ID register */
+#define REG_BAUD_RATE                       0x04    /**< Baud rate register */
+#define REG_RETURN_DELAY_TIME               0x05    /**< Status packet return delay time register */
+#define REG_CW_ANGLE_LIMIT                  0x06    /**< Clockwise angle limit register (0x06 = low byte, 0x07 = high byte) */
+#define REG_CCW_ANGLE_LIMIT                 0x08    /**< Counter-clockwise angle limit register (0x08 = low byte, 0x09 = high byte) */
+#define REG_HIGH_VOLTAGE_LIMIT              0x0C    /**< Maximum voltage limit register */
+#define REG_LOW_VOLTAGE_LIMIT               0x0D    /**< Minimum voltage limit register */
+#define REG_MAX_TORQUE                      0x0E    /**< Maximum torque limit register (0x0E = low byte, 0x0F = high byte) */
+#define REG_STATUS_RETURN_LEVEL             0x10    /**< Status packet return condition(s) register */
+#define REG_ALARM_LED                       0x11    /**< Alarm LED condition(s) register */
+#define REG_ALARM_SHUTDOWN                  0x12    /**< Alarm shutdown condition(s) register */
+#define REG_TORQUE_ENABLE                   0x18    /**< Motor power control register */
+#define REG_LED_ENABLE                      0x19    /**< LED control register */
+#define REG_GOAL_POSITION                   0x1E    /**< Goal position register (0x1E = low byte, 0x1F = high byte) */
+#define REG_GOAL_VELOCITY                   0x20    /**< Goal velocity register (0x20 = low byte, 0x21 = high byte) */
+#define REG_GOAL_TORQUE                     0x22    /**< Goal torque register (0x22 = low byte, 0x23 = high byte) */
+#define REG_LOCK_EEPROM                     0x2F    /**< EEPROM lock register */
+#define REG_PUNCH                           0x30    /**< Punch (0x30 = low register, 0x31 = high register) */
+#define REG_CURRENT_POSITION                0x24    /**< Current position register (0x24 = low byte, 0x25 = high byte) */
+#define REG_CURRENT_VELOCITY                0x26    /**< Current velocity register (0x26 = low byte, 0x27 = high byte) */
+#define REG_CURRENT_LOAD                    0x28    /**< Current load register (0x28 = low byte, 0x29 = high byte) */
+#define REG_CURRENT_VOLTAGE                 0x2A    /**< Current voltage register */
+#define REG_CURRENT_TEMPERATURE             0x2B    /**< Current temperature register */
+#define REG_REGISTERED                      0x2C    /**< Command execution status register */
+#define REG_MOVING                          0x2E    /**< Motor motion register */
+
+
+
+
+/********************************* Constants *********************************/
+// Communications
+static const uint32_t TRANSMIT_TIMEOUT    = 10;         /**< Timeout for blocking UART transmissions, in milliseconds */
+static const uint32_t RECEIVE_TIMEOUT     = 10;         /**< Timeout for blocking UART receptions, in milliseconds */
+
+// Default register values
+const uint8_t BROADCAST_ID                = 0xFE;       /**< Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus) */
+const uint8_t DEFAULT_ID                  = 0x01;       /**< Default motor ID */
+const uint8_t DEFAULT_RETURN_DELAY        = 0xFA;       /**< Default time motor waits before returning status packet (microseconds) */
+const uint16_t DEFAULT_CW_ANGLE_LIMIT     = 0x0000;     /**< Default clockwise angle limit */
+const uint8_t DEFAULT_LOW_VOLTAGE_LIMIT   = 0x3C;       /**< Default permitted minimum voltage (0x3C = 60 -> 6.0 V) */
+const uint16_t DEFAULT_MAXIMUM_TORQUE     = 0x03FF;     /**< Default maximum torque limit (10-bit resolution percentage) */
+const uint8_t DEFAULT_STATUS_RETURN_LEVEL = 0x02;       /**< Default condition(s) under which a status packet will be returned (all) */
+const uint8_t DEFAULT_ALARM_LED           = 0x24;       /**< Default condition(s) under which the alarm LED will be set */
+const uint8_t DEFAULT_ALARM_SHUTDOWN      = 0x24;       /**< Default condition(s) under which the motor will shut down due to an alarm */
+const uint8_t DEFAULT_TORQUE_ENABLE       = 0x00;       /**< Default motor power state */
+const uint8_t DEFAULT_LED_ENABLE          = 0x00;       /**< Default LED state */
+const uint8_t DEFAULT_EEPROM_LOCK         = 0x00;       /**< Default value for the EEPROM lock */
+
+// Value limit definitions
+const float MIN_VELOCITY                  = 1.0;        /**< Minimum angular velocity (RPM) */
+const float MAX_ANGLE                     = 300.0;      /**< Maximum angular position (joint mode) */
+const float MIN_ANGLE                     = 0.0;        /**< Minimum angular position (joint mode) */
+const float MAX_TORQUE                    = 100.0;      /**< Maximum torque (percent of maximum) */
+const float MIN_TORQUE                    = 0.0;        /**< Minimum torque (percent of maximum) */
+const float MAX_VOLTAGE                   = 14.0;       /**< Maximum operating voltage */
+const float MIN_VOLTAGE                   = 6.0;        /**< Minimum operating voltage */
+const uint16_t MAX_PUNCH                  = 1023;       /**< Maximum punch (proportional to minimum current) */
+const uint16_t MIN_PUNCH                  = 0;          /**< Minimum punch (proportional to minimum current) */
+
+
+
+
 /******************************* Public Variables ****************************/
-/* IO Type - initialized to blocking IO */
+// IO Type - initialized to blocking IO
 enum IO_FLAGS IOType = IO_POLL; /**< Configures the low-level I/O mode used by
                                      the library. Default: polled I/O        */
 
+
+
+
+/***************************** Private Variables *****************************/
 /** Pre-allocated buffer for reading in packets from motors */
-uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
+static uint8_t arrReceive[NUM_MOTORS][BUFF_SIZE_RX] = {{0}};
 
 /** Pre-allocated buffer for transmitting packets to motors */
-uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
+static uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 	{0xFF, 0xFF, 0xFE, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 1, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
 	{0xFF, 0xFF, 2, 0x00, INST_WRITE_DATA, 0x00, 0x00, 0x00, 0x00},
@@ -1047,6 +1128,26 @@ enum IO_FLAGS Dynamixel_GetIOType(){
  */
 
 /**
+ * @brief  Set data direction pin high (TX)
+ * @param  port the port the data direction pin is on
+ * @param  pinNum the pin number of the data direction pin on the specified port
+ * @retval None
+ */
+static inline void Dynamixel_BusDirTX(GPIO_TypeDef* port, uint16_t pinNum){
+    HAL_GPIO_WritePin(port, pinNum, 1);
+}
+
+/**
+ * @brief  Set data direction pin low (RX)
+ * @param  port the port the data direction pin is on
+ * @param  pinNum the pin number of the data direction pin on the specified port
+ * @retval None
+ */
+static inline void Dynamixel_BusDirRX(GPIO_TypeDef* port, uint16_t pinNum){
+    HAL_GPIO_WritePin(port, pinNum, 0);
+}
+
+/**
  * @brief   Sends an array of data to a motor as per its configuration details
  * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
@@ -1080,7 +1181,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 		arrTransmit[ID][4 + numArgs + 1] = Dynamixel_ComputeChecksum(arrTransmit[ID], 4 + numArgs + 2);
 
 		/* Set data direction for transmit. */
-		__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+		Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 		/* Transmit. */
 		switch(IOType) {
@@ -1170,7 +1271,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 	}
 
 	// Set data direction for transmit
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	// Transmit + Receive
 	switch(IOType) {
@@ -1186,7 +1287,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 
 			// Set data direction for receive
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
 			do{
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
@@ -1201,7 +1302,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 		case IO_POLL:
 			HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
 
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize, RECEIVE_TIMEOUT);
 			break;
 		case IO_IT:
@@ -1215,7 +1316,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
 					}
 			} while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 
-			__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+			Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 			HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
 			do{
 				status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
@@ -1306,7 +1407,7 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 	}
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
@@ -1336,7 +1437,7 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
@@ -1365,13 +1466,13 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
 	arr[5] = Dynamixel_ComputeChecksum(arr, 6);
 
 	/* Set data direction for transmit. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 6, TRANSMIT_TIMEOUT);
 
 	/* Set data direction for receive. */
-	__DYNAMIXEL_RECEIVE(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Receive. */
 	if(HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, 6, RECEIVE_TIMEOUT)){
@@ -1466,7 +1567,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 	arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
 
 	/* Set data direction. */
-	__DYNAMIXEL_TRANSMIT(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+	Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
 	/* Transmit. */
 	HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
