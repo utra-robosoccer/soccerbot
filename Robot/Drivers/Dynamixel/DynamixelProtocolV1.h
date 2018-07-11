@@ -47,9 +47,6 @@
 
 
 /********************************* Macros ************************************/
-#define __DYNAMIXEL_TRANSMIT(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 1) /**< Set data direction pin high (TX) */
-#define __DYNAMIXEL_RECEIVE(port, pinNum) HAL_GPIO_WritePin(port, pinNum, 0) /**< Set data direction pin low (RX) */
-
 /* Communications */
 #define TRANSMIT_TIMEOUT 		10 		/**< Timeout for blocking UART transmissions, in milliseconds */
 #define RECEIVE_TIMEOUT			10 		/**< Timeout for blocking UART receptions, in milliseconds */

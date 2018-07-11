@@ -99,7 +99,6 @@ int Days_SetDay(uint8_t password, days_t dayToSet){
     return -1; // Return failure
 }
 
-
 /**
  * @}
  */
