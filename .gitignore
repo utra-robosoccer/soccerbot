@@ -96,3 +96,6 @@ tmp/
 RemoteSystemsTempFiles/
 .metadata/
 Robot/.settings/language.settings.xml
+
+#doxygen html output
+Doc\html\*
