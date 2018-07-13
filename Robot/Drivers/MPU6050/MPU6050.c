@@ -6,7 +6,7 @@
   * @author  Jenny
   * @brief   This
   *
-  * @defgroup MPU6050
+  * @defgroup MPU6050 MPU6050
   * @brief    All functions related to the MPU6060 IMU sensor.
   *****************************************************************************
   */
@@ -20,42 +20,20 @@
 const float g = 9.81;
 
 /******************************** Functions **********************************/
-void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
-    /* Reads data stored in sensor output registers and stores data into a buffer
+/**
+ * @defgroup Init Init
+ * @brief    These functions are for initialization of the MPU6050
+ *
+ * @ingroup  MPU6050
+ */
 
-       Parameters: Reg_addr: address of register required to be read from
-               sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
-                              the user.
-    */
-    uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
-}
-
-BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
-    /* Reads data stored in sensor output registers and stores data into a buffer using IT
-
-       Parameters: Reg_addr: address of register required to be read from
-               sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
-                              the user.
-    */
-
-    return HAL_I2C_Mem_Read_IT(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6);
-}
-
-
-void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
-    /* Write one-byte to sensor register
-     * Returns: None
-     */
-    HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
-}
-
-uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
-    uint8_t receivebyte;
-    uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
-    return receivebyte;
-}
-
-
+/**
+  * @brief   This function is used as the first step of initialization of an
+  * 		 MPU6050_HandleTypeDef struct.
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @ingroup Init
+  * @retval  None
+  */
 void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
     MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
     MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_ACCEL_CONFIG, 0);
@@ -73,22 +51,17 @@ void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
     sMPU6050 -> _Z_GYRO_OFFSET= 0;
 }
 
-
-
-void MPU6050_RESET_SENSOR_REG(MPU6050_HandleTypeDef *sMPU6050){
-    /* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers.
-       This bit automatically clears to 0 after the reset has been triggered.
-
-       register address: 6A
-       Return: None */
-
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_USER_CTRL, 1);
-}
-
+/**
+ * @brief   This function is used to manually set the offsets of the
+ *          accelerometer and gyroscope based on empirical measurements
+ *          taken for this specific sensor. In the future, this could
+ *          be updated to allow for various MPU6050 devices, each with
+ *          their own specific offsets.
+ * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+ * @ingroup Init
+ * @retval  None
+ */
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
-
-    //the extra - signs are because the sensor reads upright position as large positive Z accel
-
 
     sMPU6050 -> _X_ACCEL_OFFSET= (-714.25 * g / ACC_RANGE);
     sMPU6050 -> _Y_ACCEL_OFFSET= (-767.5 * g / ACC_RANGE);
@@ -99,105 +72,42 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
     sMPU6050 -> _Z_GYRO_OFFSET= (float)-130/IMU_GY_RANGE;
 }
 
-void MPU6050_Clear_Int(MPU6050_HandleTypeDef *sMPU6050){
-    /* Disables all interrupts
-       Register address 38
-       Returns : None
-     */
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 0);
+/**
+ * @brief   This function allows you to set the value of the LPF manually.
+ *          Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
+ *          for descriptions of what each value does.
+ * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+ * @param   lpf uint8_t between 0 and 7 inclusive
+ * @ingroup Init
+ * @retval  None
+ */
+void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf){
+
+    // the LPF reg is decimal 26
+
+    uint8_t current_value;
+    uint8_t bitmask=7; // 00000111
+
+    current_value=MPU6050_READ_REG(sMPU6050, 26); //read the current value of the LPF reg
+    //note that this reg also contains unneeded fsync data which should be preserved
+
+    current_value = (current_value & (~bitmask)) | lpf;
+    MPU6050_WRITE_REG(sMPU6050, 26, current_value);
 }
 
+/**
+ * @defgroup Accelerometer Accelerometer
+ * @brief    These functions are for the MPU6050 accelerometer
+ *
+ * @ingroup  MPU6050
+ */
 
-
-void MPU6050_Data_Ready_Int(MPU6050_HandleTypeDef *sMPU6050){
-    /* Enables data ready interrupt
-       Register address： 38
-       Returns : None
-    */
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 1);
-}
-
-
-
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
-    /*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
-      Returns : None*/
-    uint8_t output_buffer[6];
-    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
-    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-    sMPU6050 ->_X_GYRO = X;
-    sMPU6050 ->_Y_GYRO = Y;
-    sMPU6050 ->_Z_GYRO = Z;
-
-}
-
-void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
-    uint8_t output_buffer[6];
-    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
-    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-
-
-    sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
-    sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
-    sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
-}
-
-void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
-    uint8_t output_buffer[6];
-    uint32_t notification;
-    BaseType_t status;
-
-    if(MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
-        // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
-        return;
-    }
-
-    do{
-        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-        if(status != pdTRUE){
-            return;
-        }
-    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
-    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-
-
-    sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
-    sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
-    sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
-}
-
-void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
-
-    uint8_t output_buffer[6];
-    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-    int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-    sMPU6050 ->_X_ACCEL = -( X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET));
-    sMPU6050 ->_Y_ACCEL = -(Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET));
-    sMPU6050 ->_Z_ACCEL = -(Z_A * g / ACC_RANGE-(sMPU6050 ->_Z_ACCEL_OFFSET));
-
-    //Now find angles: consult pg 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
-    // for a sketch of what each angle means
-    float X=sMPU6050 -> _X_ACCEL;
-    float Y=sMPU6050 -> _Y_ACCEL;
-    float Z=sMPU6050 -> _Z_ACCEL;
-    float pitch, roll;
-    pitch = atan2(Y, Z) * 180/M_PI;
-    roll = atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
-    sMPU6050 ->_ROLL = pitch;
-    sMPU6050 ->_PITCH= roll;
-}
-
+/**
+  * @brief   This function reads the accelerometer using interrupts
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @ingroup Accelerometer
+  * @retval  None
+  */
 void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
     uint8_t output_buffer[6];
     uint32_t notification;
@@ -233,26 +143,213 @@ void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
     sMPU6050 ->_PITCH= atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
 }
 
-void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf){
-    /* uint8_t lpf : this input is between 0 and 7
-     *
-     * this function allows you to set the value of the LPF manually.
-     * Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
-     * for descriptions of what each value does.
-     *
-     */
-    // the LPF reg is decimal 26
+/**
+  * @brief   This function reads the accelerometer without using interrupts
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @ingroup Accelerometer
+  * @retval  None
+  */
+void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 
-    uint8_t current_value;
-    uint8_t bitmask=7; // 00000111
+    uint8_t output_buffer[6];
+    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+    int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    current_value=MPU6050_READ_REG(sMPU6050, 26); //read the current value of the LPF reg
-    //note that this reg also contains unneeded fsync data which should be preserved
+    sMPU6050 ->_X_ACCEL = -( X_A * g / ACC_RANGE-(sMPU6050 ->_X_ACCEL_OFFSET));
+    sMPU6050 ->_Y_ACCEL = -(Y_A * g / ACC_RANGE-(sMPU6050 ->_Y_ACCEL_OFFSET));
+    sMPU6050 ->_Z_ACCEL = -(Z_A * g / ACC_RANGE-(sMPU6050 ->_Z_ACCEL_OFFSET));
 
-    current_value = (current_value & (~bitmask)) | lpf;
-    MPU6050_WRITE_REG(sMPU6050, 26, current_value);
+    //Now find angles: consult pg 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
+    // for a sketch of what each angle means
+    float X=sMPU6050 -> _X_ACCEL;
+    float Y=sMPU6050 -> _Y_ACCEL;
+    float Z=sMPU6050 -> _Z_ACCEL;
+    float pitch, roll;
+    pitch = atan2(Y, Z) * 180/M_PI;
+    roll = atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
+    sMPU6050 ->_ROLL = pitch;
+    sMPU6050 ->_PITCH= roll;
 }
 
+/**
+ * @defgroup Gyroscope Gyroscope
+ * @brief    These functions are for the MPU6050 gyroscope
+ *
+ * @ingroup  MPU6050
+ */
+
+/**
+  * @brief   This function reads the gyroscope using interrupts
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @ingroup Gyroscope
+  * @retval  None
+  */
+void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
+    uint8_t output_buffer[6];
+    uint32_t notification;
+    BaseType_t status;
+
+    if(MPU6050_READ_DATA_IT(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+        // Try fix for flag bit silicon bug
+        generateClocks(1, 1);
+        return;
+    }
+
+    do{
+        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+        if(status != pdTRUE){
+            return;
+        }
+    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
+
+    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+
+
+    sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
+    sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
+    sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
+}
+
+/**
+  * @brief   This function reads the gyroscope without using interrupts
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @ingroup Gyroscope
+  * @retval  None
+  */
+void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
+    uint8_t output_buffer[6];
+    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+
+
+    sMPU6050 ->_X_GYRO = (float)X/IMU_GY_RANGE-(sMPU6050 ->_X_GYRO_OFFSET);
+    sMPU6050 ->_Y_GYRO = (float)Y/IMU_GY_RANGE-(sMPU6050 ->_Y_GYRO_OFFSET);
+    sMPU6050 ->_Z_GYRO = (float)Z/IMU_GY_RANGE-(sMPU6050 ->_Z_GYRO_OFFSET);
+}
+/**
+ * @defgroup Register_RW Register_RW
+ * @brief    These functions are for reading and writing to
+ *           registers on the MPU6050
+ *
+ * @ingroup  MPU6050
+ */
+
+/**
+  * @brief   This function reads a register from the MPU6050 without interrupts,
+  *          and stores it into a buffer
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @param   reg_addr uint8_t address of the register
+  * @param   sensor_buffer uint8_t* pointer to output buffer
+  * @ingroup Register_RW
+  * @retval  status
+  */
+void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
+    /* Reads data stored in sensor output registers and stores data into a buffer
+
+       Parameters: Reg_addr: address of register required to be read from
+               sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
+                              the user.
+    */
+    uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
+}
+
+/**
+  * @brief   This function reads a register from the MPU6050 with interrupts,
+  *          and stores it into a buffer
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @param   reg_addr uint8_t address of the register
+  * @param   sensor_buffer uint8_t* pointer to output buffer
+  * @ingroup Register_RW
+  * @retval  status
+  */
+BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
+    /* Reads data stored in sensor output registers and stores data into a buffer using IT
+
+       Parameters: Reg_addr: address of register required to be read from
+               sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
+                              the user.
+    */
+
+    return HAL_I2C_Mem_Read_IT(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6);
+}
+
+/**
+  * @brief   This function writes to a register from the MPU6050
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @param   reg_addr uint8_t address of the register
+  * @param   data uint8_t data to be written
+  * @ingroup Register_RW
+  * @retval  status
+  */
+void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
+    HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
+}
+
+/**
+  * @brief   This function reads from an MPU6050 register and returns it directly
+  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
+  * @param   reg_addr uint8_t address of the register
+  * @ingroup Register_RW
+  * @retval  receivebyte uint8_t data that was stored in the register
+  */
+uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
+    uint8_t receivebyte;
+    uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
+    return receivebyte;
+}
+
+
+
+void MPU6050_RESET_SENSOR_REG(MPU6050_HandleTypeDef *sMPU6050){
+    /* Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers.
+       This bit automatically clears to 0 after the reset has been triggered.
+
+       register address: 6A
+       Return: None */
+
+    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_USER_CTRL, 1);
+}
+
+
+void MPU6050_Clear_Int(MPU6050_HandleTypeDef *sMPU6050){
+    /* Disables all interrupts
+       Register address 38
+       Returns : None
+     */
+    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 0);
+}
+
+
+
+void MPU6050_Data_Ready_Int(MPU6050_HandleTypeDef *sMPU6050){
+    /* Enables data ready interrupt
+       Register address： 38
+       Returns : None
+    */
+    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 1);
+}
+
+
+
+void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
+    /*Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
+      Returns : None*/
+    uint8_t output_buffer[6];
+    MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    int16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
+    int16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
+    int16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
+    sMPU6050 ->_X_GYRO = X;
+    sMPU6050 ->_Y_GYRO = Y;
+    sMPU6050 ->_Z_GYRO = Z;
+
+}
 
 
 void MPU6050_10sec_calibration(MPU6050_HandleTypeDef *sMPU6050){
