@@ -1,0 +1,4 @@
+<map id="MPU6050_set_LPF" name="MPU6050_set_LPF">
+<area shape="rect" id="node2" href="$group___register___r_w.html#gacab46c551342f49abc21b568274ce226" title="This function reads from an MPU6050 register and returns it directly. " alt="" coords="191,5,348,32"/>
+<area shape="rect" id="node3" href="$group___register___r_w.html#ga79414c8e1a8684d480511136ee3b3367" title="This function writes to a register from the MPU6050. " alt="" coords="188,56,351,83"/>
+</map>

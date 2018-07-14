@@ -32,7 +32,7 @@ const float g = 9.81;
   * 		 MPU6050_HandleTypeDef struct.
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @ingroup Init
-  * @retval  None
+  * @return  None
   */
 void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
     MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
@@ -59,7 +59,7 @@ void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
  *          their own specific offsets.
  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
  * @ingroup Init
- * @retval  None
+ * @return  None
  */
 void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
 
@@ -79,7 +79,7 @@ void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050){
  * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
  * @param   lpf uint8_t between 0 and 7 inclusive
  * @ingroup Init
- * @retval  None
+ * @return  None
  */
 void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf){
 
@@ -106,7 +106,7 @@ void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf){
   * @brief   This function reads the accelerometer using interrupts
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @ingroup Accelerometer
-  * @retval  None
+  * @return  None
   */
 void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
     uint8_t output_buffer[6];
@@ -147,7 +147,7 @@ void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
   * @brief   This function reads the accelerometer without using interrupts
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @ingroup Accelerometer
-  * @retval  None
+  * @return  None
   */
 void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
 
@@ -184,7 +184,7 @@ void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
   * @brief   This function reads the gyroscope using interrupts
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @ingroup Gyroscope
-  * @retval  None
+  * @return  None
   */
 void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
     uint8_t output_buffer[6];
@@ -218,7 +218,7 @@ void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
   * @brief   This function reads the gyroscope without using interrupts
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @ingroup Gyroscope
-  * @retval  None
+  * @return  None
   */
 void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
     uint8_t output_buffer[6];
@@ -247,7 +247,7 @@ void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050){
   * @param   reg_addr uint8_t address of the register
   * @param   sensor_buffer uint8_t* pointer to output buffer
   * @ingroup Register_RW
-  * @retval  status
+  * @return  status
   */
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
     /* Reads data stored in sensor output registers and stores data into a buffer
@@ -266,7 +266,7 @@ void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_
   * @param   reg_addr uint8_t address of the register
   * @param   sensor_buffer uint8_t* pointer to output buffer
   * @ingroup Register_RW
-  * @retval  status
+  * @return  status
   */
 BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
     /* Reads data stored in sensor output registers and stores data into a buffer using IT
@@ -285,7 +285,7 @@ BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_add
   * @param   reg_addr uint8_t address of the register
   * @param   data uint8_t data to be written
   * @ingroup Register_RW
-  * @retval  status
+  * @return  status
   */
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
     HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
@@ -296,7 +296,7 @@ void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t
   * @param   *sMPU6050 Pointer to a struct of type MPU6050_HandleTypeDef
   * @param   reg_addr uint8_t address of the register
   * @ingroup Register_RW
-  * @retval  receivebyte uint8_t data that was stored in the register
+  * @return  Byte of data that was stored in the register
   */
 uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
     uint8_t receivebyte;

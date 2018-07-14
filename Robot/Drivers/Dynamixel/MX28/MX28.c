@@ -68,7 +68,7 @@ extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, floa
  *          contains the configuration information for the motor
  * @param   offset the signed offset argument indicating the offset value to
  *          program
- * @retval None
+ * @return  None
  */
 void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset){
 	if(offset > 28672){
@@ -92,7 +92,7 @@ void MX28_SetMultiTurnOffset(Dynamixel_HandleTypeDef* hdynamixel, int16_t offset
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   divider the resolution divider setting
- * @retval  None
+ * @return  None
  */
 void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divider){
 
@@ -105,7 +105,7 @@ void MX28_SetResolutionDivider(Dynamixel_HandleTypeDef* hdynamixel, uint8_t divi
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   DGain the derivative gain parameter
- * @retval  None
+ * @return  None
  */
 void MX28_SetDGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t DGain){
 	if(hdynamixel -> _motorType == MX28TYPE){
@@ -121,7 +121,7 @@ void MX28_SetDGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t DGain){
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   IGain the integral gain parameter
- * @retval  None
+ * @return  None
  */
 void MX28_SetIGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t IGain){
 	if(hdynamixel -> _motorType == MX28TYPE){
@@ -137,7 +137,7 @@ void MX28_SetIGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t IGain){
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   PGain the proportional gain parameter
- * @retval  None
+ * @return  None
  */
 void MX28_SetPGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t PGain){
 	if(hdynamixel -> _motorType == MX28TYPE){
@@ -154,7 +154,7 @@ void MX28_SetPGain(Dynamixel_HandleTypeDef* hdynamixel, uint8_t PGain){
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   goalAcceleration the target acceleration in degree/s^2
- * @retval None
+ * @return  None
  */
 void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcceleration){
 	if(hdynamixel -> _motorType == MX28TYPE){
@@ -206,7 +206,7 @@ void MX28_SetGoalAcceleration(Dynamixel_HandleTypeDef* hdynamixel, float goalAcc
  *          range of controllable position values from -28672 to 28672
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel){
 	if(hdynamixel -> _motorType == MX28TYPE){

@@ -3,6 +3,7 @@ var searchData=
   ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___a_x12_a___interfaces.html',1,'']]],
   ['interfaces_20for_20_20_20_20_20_20_20_20_20_20previously_2ddefined_20functions',['Interfaces for          previously-defined functions',['../group___dynamixel_protocol_v1___public___functions___interfaces.html',1,'']]],
   ['id',['id',['../structrobot__goal.html#abaabdc509cdaba7df9f56c6c76f3ae19',1,'robot_goal::id()'],['../structrobot__state.html#abaabdc509cdaba7df9f56c6c76f3ae19',1,'robot_state::id()']]],
+  ['init',['Init',['../group___init.html',1,'']]],
   ['inst_5faction',['INST_ACTION',['../_dynamixel_protocol_v1_8c.html#adea21b73305aa7a5b3317e299c616853',1,'DynamixelProtocolV1.c']]],
   ['inst_5fping',['INST_PING',['../_dynamixel_protocol_v1_8c.html#acb92e93ddd4b53533b14dc3403346bbf',1,'DynamixelProtocolV1.c']]],
   ['inst_5fread_5fdata',['INST_READ_DATA',['../_dynamixel_protocol_v1_8c.html#a091b7377c1484006602a48ab24863dfa',1,'DynamixelProtocolV1.c']]],

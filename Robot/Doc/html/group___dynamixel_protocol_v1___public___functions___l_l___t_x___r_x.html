@@ -168,12 +168,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>None </dd></dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -237,12 +232,7 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>None </dd></dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -327,8 +317,8 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Reads data back from the motor passed in by reference. </p>
-<p>Uses the READ DATA instruction, 0x02, in the motor instruction set </p><pre class="fragment">     The status packet returned will be of the following form:
-</pre><div class="fragment"><div class="line">{0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}</div></div><!-- fragment --><p>Where N = readLength. Also, this function computes the checksum of data using the same algorithm as the motors, and it sets <code>hdynamixel -&gt; _lastReadIsValid</code> if the computations match, and clears this field otherwise. This is a basic data integrity check that reduces the probability of passing invalid data to the application </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Uses the READ DATA instruction, 0x02, in the motor instruction set. The status packet returned will be of the following form</p>
+<div class="fragment"><div class="line">{0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}</div></div><!-- fragment --><p>Where N = readLength. Also, this function computes the checksum of data using the same algorithm as the motors, and it sets &lsquo;hdynamixel -&gt; _lastReadIsValid&rsquo; if the computations match, and clears this field otherwise. This is a basic data integrity check that reduces the probability of passing invalid data to the application </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
     <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin </td></tr>
@@ -336,12 +326,7 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">retval</td><td>a 16-bit value containing 1 or both bytes received, as applicable. The 1st byte received will be the LSB and the 2nd byte received will be the MSB </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>A 16-bit value containing 1 or both bytes received, as applicable. The 1st byte received will be the LSB and the 2nd byte received will be the MSB </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -412,12 +397,7 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>None </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
