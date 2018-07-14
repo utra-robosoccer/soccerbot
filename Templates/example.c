@@ -71,7 +71,7 @@ static days_t theDay; /**< The current day of the week */
  * @param   password the password the user enters to perform authentication
  *          when attempting to set the day
  * @param   day the day of the week
- * @retval  retval 1 if day set successfully, -1 otherwise
+ * @return  1 if day set successfully, -1 otherwise
  */
 int Days_SetDay(uint8_t password, days_t dayToSet){
     if(password == DONT_PANIC){
@@ -130,7 +130,7 @@ int Days_SetDay(uint8_t password, days_t dayToSet){
 
 /**
  * @brief   Gets the day of the week
- * @retval  retval the day of the week
+ * @return  The day of the week
  */
 days_t Days_GetDay(){
     return theDay;
@@ -169,7 +169,7 @@ days_t Days_GetDay(){
 /**
  * @brief  Converts weeks to days
  * @param  weeks the number of weeks which are to be converted into days
- * @retval retval the number of days equivalent to the specified number of 
+ * @return The number of days equivalent to the specified number of 
  *         weeks
  */
 uint32_t Days_WeeksToDays(uint32_t weeks){
