@@ -65,7 +65,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-char rx_buf[4] = "...."; //receives chars from uart, 1)AXid, 2)M1id, 3)M2id
+char rx_buf[4] = "...."; //receives chars from uart, 1)AX##, 2)M1##, 3)M2##
 uint8_t rx_valid = -1; //stores valid id in non-string format
 
 Dynamixel_HandleTypeDef motorAX;
@@ -190,8 +190,9 @@ int main(void) {
 				HAL_UART_Transmit(&huart2, (unsigned char *) "ID:0xFE\n", 8, 1000);
 			} else if(id_show != -1) { //if ID was assigned
 				char mes_id[10];
-				sprintf(mes_id, "ID: %d\n", id_show);
-				HAL_UART_Transmit(&huart2, mes_id, strlen(mes_id), 1000);
+				uint8_t strlength;
+				strlength = sprintf(mes_id, "ID: %d\n", id_show);
+				HAL_UART_Transmit(&huart2, (uint8_t*) mes_id, strlength, 1000);
 			}
 			break;
 		default:
