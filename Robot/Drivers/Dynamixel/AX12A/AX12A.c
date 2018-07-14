@@ -70,7 +70,7 @@ extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* a
  *          contains the configuration information for the motor
  * @param   CWcomplianceMargin the acceptable error between the current and
  *          goal position. Arguments in range [0, 255]
- * @retval  None
+ * @return  None
  */
 void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin){
 	/* Write data to motor. */
@@ -93,7 +93,7 @@ void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CW
  *          contains the configuration information for the motor
  * @param   CCWcomplianceMargin the acceptable error between the current and
  *          goal position. Arguments in range [0, 255]
- * @retval  None
+ * @return  None
  */
 void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin){
 	/* Write data to motor. */
@@ -119,7 +119,7 @@ void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t C
  *          contains the configuration information for the motor
  * @param   CWcomplianceSlope arguments in range [1, 7], with 1 being the
  *          least flexible
- * @retval  None
+ * @return  None
  */
 void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceSlope){
     if(hdynamixel -> _motorType == AX12ATYPE){
@@ -155,7 +155,7 @@ void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWc
  *          contains the configuration information for the motor
  * @param   CCWcomplianceSlope arguments in range [1, 7], with 1 being the
  *          least flexible
- * @retval  None
+ * @return  None
  */
 void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope){
 	if(hdynamixel -> _motorType == AX12ATYPE){
@@ -217,7 +217,7 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   complianceSlope arguments in range [1, 7], with 1 being the least flexible
- * @retval  None
+ * @return  None
  */
 void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope){
 	AX12A_SetCWComplianceSlope(hdynamixel, complianceSlope);
@@ -234,7 +234,7 @@ void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t compl
  *          contains the configuration information for the motor
  * @param   complianceMargin the acceptable error between the current and
  *          goal position. Arguments in range [0, 255]
- * @retval  None
+ * @return  None
  */
 void AX12A_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceMargin){
 	AX12A_SetCWComplianceMargin(hdynamixel, complianceMargin);

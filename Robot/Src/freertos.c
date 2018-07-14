@@ -889,7 +889,7 @@ void StartTxTask(void const * argument)
   * @param  hi2c pointer to a I2C_HandleTypeDef structure that contains
   *         the configuration information for I2C module corresponding to
   *         the callback
-  * @retval None
+  * @return None
   *
   * @ingroup Callbacks
   */
@@ -910,7 +910,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
-  * @retval None
+  * @return None
   *
   * @ingroup Callbacks
   */
@@ -948,7 +948,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
-  * @retval None
+  * @return None
   *
   * @ingroup Callbacks
   */
@@ -983,7 +983,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
-  * @retval None
+  * @return None
   *
   * @ingroup Callbacks
   */

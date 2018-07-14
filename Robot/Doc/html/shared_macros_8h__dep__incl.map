@@ -1,7 +1,7 @@
 <map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Inc/sharedMacros.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Inc/sharedMacros.h">
 <area shape="rect" id="node2" href="$_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="300,109,608,165"/>
 <area shape="rect" id="node5" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="538,317,762,373"/>
-<area shape="rect" id="node7" href="$_m_p_u6050_8h_source.html" title="D:/Users/Tyler/Documents\l/STM/embedded/soccer&#45;embedded\l/Robot/Drivers/MPU6050/MPU6050.h" alt="" coords="688,109,924,165"/>
+<area shape="rect" id="node7" href="$_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="688,109,924,165"/>
 <area shape="rect" id="node3" href="$_dynamixel_protocol_v1_8c.html" title="Top&#45;level module for Dynamixel library (protocol V1.0). Contains common functional code for the AX12A..." alt="" coords="5,213,313,269"/>
 <area shape="rect" id="node4" href="$_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="338,213,562,269"/>
 <area shape="rect" id="node6" href="$_u_a_r_t___handler_8c.html" title="This file implements a generic event processor for UART events, which occur when commands for the mot..." alt="" coords="290,317,514,373"/>
