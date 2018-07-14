@@ -194,7 +194,7 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
  * @param   ID the number between 0 and 252 or equal to 254 to identify the
  *          motor. If 0xFE (254), any messages broadcasted to that ID will be
  *          broadcasted to all motors
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
 	/* Compute validity. */
@@ -220,7 +220,7 @@ void Dynamixel_SetID(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID){
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   baud the baud rate. Arguments in range [7844, 1000000] are valid
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
 	uint8_t baudArg = 0x01; // Default to 1 Mbps
@@ -279,7 +279,7 @@ void Dynamixel_SetBaudRate(Dynamixel_HandleTypeDef* hdynamixel, uint32_t baud){
  *          contains the configuration information for the motor
  * @param   microSec the time in microseconds to delay. Arguments in range
  *          [2, 508] are valid. Default: 500
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, uint16_t microSec){
 	/* Compute validity. */
@@ -312,7 +312,7 @@ void Dynamixel_SetReturnDelayTime(Dynamixel_HandleTypeDef* hdynamixel, uint16_t 
  *          contains the configuration information for the motor
  * @param   minAngle the minimum angle for all motor operations. Arguments
  *          between 0 and 300 are valid
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAngle){
 	/* Initialize local variable to default value. */
@@ -354,7 +354,7 @@ void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAng
  *          contains the configuration information for the motor
  * @param   maxAngle the maximum angle for all motor operations. Arguments
  *          between 0 and 300 are valid
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAngle){
 	/* Initialize local variable to default value. */
@@ -396,7 +396,7 @@ void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAn
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   highestVoltage the highest operating voltage in volts
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float highestVoltage){
 	/* Declare local variable. Initialize to default value. */
@@ -428,7 +428,7 @@ void Dynamixel_SetHighestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   lowestVoltage the lowest operating voltage in volts
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float lowestVoltage){
 	/* Declare local variable. Initialize to default value. */
@@ -459,7 +459,7 @@ void Dynamixel_SetLowestVoltageLimit(Dynamixel_HandleTypeDef* hdynamixel, float 
  *          contains the configuration information for the motor
  * @param   maxTorque the maximum torque as a percentage (max: 100). Gets
  *          converted to 10-bit number
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, float maxTorque){
 	/* Initialize to default value. */
@@ -491,7 +491,7 @@ void Dynamixel_SetMaxTorque(Dynamixel_HandleTypeDef* hdynamixel, float maxTorque
  *              - 0 to return only on ping
  *              - 1 to return only for reads
  *              - 2 to return for all commands
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t status_data){
 	/* Evaluate argument validity. */
@@ -528,7 +528,7 @@ void Dynamixel_SetStatusReturnLevel(Dynamixel_HandleTypeDef* hdynamixel, uint8_t
  *                       limit or CCW angle limit
  *              - bit 0: flash LED when applied voltage is out of operating
  *                       range
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LED_data){
 	/* Write data to motor. */
@@ -560,7 +560,7 @@ void Dynamixel_SetAlarmLED(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_LE
  *                       limit or CCW angle limit
  *              - bit 0: torque off when applied voltage is out of operating
  *                       range
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t alarm_shutdown_data){
 	/* Write data to motor. */
@@ -579,7 +579,7 @@ void Dynamixel_SetAlarmShutdown(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ala
  *              - if 1, then generates torque by impressing power to the motor
  *              - if 0, then interrupts power to the motor to prevent it from
  *                generating torque
- * @retval  None
+ * @return  None
  */
 void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
 	/* Evaluate argument validity. */
@@ -602,7 +602,7 @@ void Dynamixel_TorqueEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabl
  * @param   isEnabled
  *              - if 1, LED is on
  *              - if 0, LED is off
- * @retval  None
+ * @return  None
  */
 void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled){
 	/* Evaluate argument validity. */
@@ -630,7 +630,7 @@ void Dynamixel_LEDEnable(Dynamixel_HandleTypeDef* hdynamixel, uint8_t isEnabled)
  *          contains the configuration information for the motor
  * @param   goalAngle the desired angular position. Arguments between 0 and 300 are
  *          valid. Note that 150 corresponds to the middle position
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, float goalAngle){
 	/* Check for input validity. If input not valid, replace goalAngle with closest
@@ -677,7 +677,7 @@ void Dynamixel_SetGoalPosition(Dynamixel_HandleTypeDef* hdynamixel, float goalAn
  *          when in joint mode. 0 corresponds to MAX motion in joint mode,
  *          and minimum motion in wheel mode. In wheel mode, negative
  *          arguments correspond to CW rotation
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* Translate the position from RPM into a 10-bit number. */
@@ -745,7 +745,7 @@ void Dynamixel_SetGoalVelocity(Dynamixel_HandleTypeDef* hdynamixel, float goalVe
  *          contains the configuration information for the motor
  * @param   goalTorque the percentage of the maximum possible torque (max:
  *          100). Gets converted into a 10-bit number
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, float goalTorque){
 	/* Translate the input from percentage into and 10-bit number. */
@@ -766,7 +766,7 @@ void Dynamixel_SetGoalTorque(Dynamixel_HandleTypeDef* hdynamixel, float goalTorq
  *          Default value: 0x00
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Write data to motor. */
@@ -788,7 +788,7 @@ void Dynamixel_LockEEPROM(Dynamixel_HandleTypeDef* hdynamixel){
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   punch for now, arguments in range [0, 1023] are valid
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
 	/* Evaluate argument validity. */
@@ -850,7 +850,7 @@ void Dynamixel_SetPunch(Dynamixel_HandleTypeDef* hdynamixel, float punch){
  *          checksum is verified, and is cleared otherwise
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
@@ -879,7 +879,7 @@ void Dynamixel_GetPosition(Dynamixel_HandleTypeDef* hdynamixel){
  *          checksum is verified, and is cleared otherwise
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
@@ -920,7 +920,7 @@ void Dynamixel_GetVelocity(Dynamixel_HandleTypeDef* hdynamixel){
  *          checksum is verified, and is cleared otherwise
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
@@ -953,7 +953,7 @@ void Dynamixel_GetLoad(Dynamixel_HandleTypeDef* hdynamixel){
  *          checksum is verified, and is cleared otherwise
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  voltage the voltage in volts if the last read is valid, otherwise
+ * @return  The voltage in volts if the last read is valid, otherwise
  *          INFINITY
  */
 float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
@@ -972,7 +972,7 @@ float Dynamixel_GetVoltage(Dynamixel_HandleTypeDef* hdynamixel){
  *          temperature is inside the motor. Results are in degrees Celsius
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  temperature the internal motor temperature in degrees Celsius
+ * @return  The internal motor temperature in degrees Celsius
  */
 uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
     /* Read data from motor straight into the motor handle. */
@@ -990,8 +990,7 @@ uint8_t Dynamixel_GetTemperature(Dynamixel_HandleTypeDef* hdynamixel){
  *          Default value: 0x00
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  isRegistered 1 if there are commands transmitted by REG_WRITE,
- *          0 otherwise
+ * @return  1 if there are commands transmitted by REG_WRITE, 0 otherwise
  */
 bool Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data read from the motor. */
@@ -1003,7 +1002,7 @@ bool Dynamixel_IsRegistered(Dynamixel_HandleTypeDef* hdynamixel){
  * @details Reads the 0x2E address in motor RAM to see if motor is moving.
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  isMoving 1 if moving, otherwise 0
+ * @return  1 if moving, otherwise 0
  */
 bool Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Return the data from the motor. */
@@ -1019,7 +1018,7 @@ bool Dynamixel_IsMoving(Dynamixel_HandleTypeDef* hdynamixel){
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  *
- * @retval  isJointMode 1 if in joint mode, 0 if in wheel mode
+ * @return  1 if in joint mode, 0 if in wheel mode
  */
 bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Read data from motor. */
@@ -1071,7 +1070,7 @@ bool Dynamixel_IsJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  *              -# Non-Blocking (Interrupt)
  *              -# DMA
  * @param   type one of IO_POLL, IO_IT, or IO_DMA
- * @retval  None
+ * @return  None
  */
 void Dynamixel_SetIOType(enum IO_FLAGS type) {
 	IOType = type;
@@ -1079,7 +1078,7 @@ void Dynamixel_SetIOType(enum IO_FLAGS type) {
 
 /**
  * @brief   Gets the IO protocol setting for the library
- * @retval  IOType one of IO_POLL, IO_IT, or IO_DMA
+ * @return  One of IO_POLL, IO_IT, or IO_DMA
  */
 enum IO_FLAGS Dynamixel_GetIOType(){
 	return IOType;
@@ -1131,7 +1130,7 @@ enum IO_FLAGS Dynamixel_GetIOType(){
  * @brief  Set data direction pin high (TX)
  * @param  port the port the data direction pin is on
  * @param  pinNum the pin number of the data direction pin on the specified port
- * @retval None
+ * @return None
  */
 static inline void Dynamixel_BusDirTX(GPIO_TypeDef* port, uint16_t pinNum){
     HAL_GPIO_WritePin(port, pinNum, 1);
@@ -1141,7 +1140,7 @@ static inline void Dynamixel_BusDirTX(GPIO_TypeDef* port, uint16_t pinNum){
  * @brief  Set data direction pin low (RX)
  * @param  port the port the data direction pin is on
  * @param  pinNum the pin number of the data direction pin on the specified port
- * @retval None
+ * @return None
  */
 static inline void Dynamixel_BusDirRX(GPIO_TypeDef* port, uint16_t pinNum){
     HAL_GPIO_WritePin(port, pinNum, 0);
@@ -1156,7 +1155,7 @@ static inline void Dynamixel_BusDirRX(GPIO_TypeDef* port, uint16_t pinNum){
  *          PARAM_N}`
  * @param   numArgs this must be equal to `sizeof(args)`, and must be either 2
  *          or 3
- * @retval  None
+ * @return  None
  */
 void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
 	BaseType_t status;
@@ -1212,16 +1211,16 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
 
 /**
  * @brief   Reads data back from the motor passed in by reference
- * @details Uses the READ DATA instruction, 0x02, in the motor instruction set
+ * @details Uses the READ DATA instruction, 0x02, in the motor instruction set.
+ *          The status packet returned will be of the following form
  *
- *          The status packet returned will be of the following form:
- *
- *          \code {0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}
- *          \endcode
+ *          @code{.c}
+ *          {0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}
+ *          @endcode
  *
  *          Where N = readLength. Also, this function computes the checksum of
  *          data using the same algorithm as the motors, and it sets
- *          `hdynamixel -> _lastReadIsValid` if the computations match, and
+ *          `hdynamixel -> _lastReadIsValid' if the computations match, and
  *          clears this field otherwise. This is a basic data integrity check
  *          that reduces the probability of passing invalid data to the
  *          application
@@ -1230,7 +1229,7 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
  * @param   readAddr the address inside the motor memory table where reading
  *          is to begin
  * @param   readLength the number of bytes to be read. Must be either 1 or 2
- * @retval  retval a 16-bit value containing 1 or both bytes received, as applicable.
+ * @return  A 16-bit value containing 1 or both bytes received, as applicable.
  *          The 1st byte received will be the LSB and the 2nd byte received
  *          will be the MSB
  */
@@ -1387,7 +1386,7 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * @param   writeAddr the starting address for where the data is to be written
  * @param   param1 the first parameter
  * @param   param2 the second parameter
- * @retval  None
+ * @return  None
  */
 void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
 		uint8_t writeAddr, uint8_t param1, uint8_t param2){
@@ -1422,7 +1421,7 @@ void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
  *          motors
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 	/* Define arrays for transmission and reception. */
@@ -1450,7 +1449,7 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
  *          of a motor with a specified ID. Does not command any operations
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  retval the motor ID seen in status packet if received a valid
+ * @return  The motor ID seen in status packet if received a valid
  *          status packet, otherwise the max uint8_t value
  */
 int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
@@ -1526,7 +1525,7 @@ int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
  * @param   DataDirPinNum the number corresponding to the pin that controls
  *          data direction (a power of two, e.g. 2^0 for pin 0, 2^15 for pin 15)
  * @param   motorType indicates whether motor is AX12A or MX28
- * @retval None
+ * @return None
  */
 void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_HandleTypeDef *UART_Handle,\
 		GPIO_TypeDef* DataDirPort, uint16_t DataDirPinNum, enum motorTypes_e motorType){
@@ -1552,7 +1551,7 @@ void Dynamixel_Init(Dynamixel_HandleTypeDef* hdynamixel, uint8_t ID, UART_Handle
  *          them. Need to wait around 500 ms before motor becomes valid again
  * @param 	hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
- * @retval  None
+ * @return  None
  */
 void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
     /* Define array for transmission. */
@@ -1616,7 +1615,7 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
  *          contains the configuration information for the motor
  * @param   goalVelocity the desired velocity in RPM to use when entering wheel
  *          mode
- * @retval  None
+ * @return  None
  */
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity){
 	/* When the angle limits are both set to 0, then motor will attempt to
@@ -1633,7 +1632,7 @@ void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVel
  *         motor is constrained between the default values
  * @param  hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *         contains the configuration information for the motor
- * @retval None
+ * @return None
  */
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 	Dynamixel_SetCWAngleLimit(hdynamixel, MIN_ANGLE);
@@ -1683,7 +1682,7 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
  *         checksum algorithm employed by the Dynamixel V1.0 protocol
  * @param  arr the array to be ran through the checksum function
  * @param  length the total length of the array arr
- * @retval retval the 1-byte number that is the checksum
+ * @return The 1-byte number that is the checksum
  */
 static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 	/* Local variable declaration. */

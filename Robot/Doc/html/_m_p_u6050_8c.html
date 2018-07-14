@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('_m_p_u6050_8c.html','');});
 
 <p>This.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;MPU6050.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_m_p_u6050_8h_source.html">MPU6050.h</a>&quot;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -104,7 +104,7 @@ Include dependency graph for MPU6050.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="_m_p_u6050_8c__incl.png" border="0" usemap="#_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_m_p_u6050_2_m_p_u6050_8c" alt=""/></div>
 <map name="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_m_p_u6050_2_m_p_u6050_8c" id="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_m_p_u6050_2_m_p_u6050_8c">
-<area shape="rect" id="node2" href="_m_p_u6050_8h_source.html" title="MPU6050.h" alt="" coords="366,109,457,136"/>
+<area shape="rect" id="node2" href="_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="366,109,457,136"/>
 <area shape="rect" id="node3" href="i2c_8h_source.html" title="i2c.h" alt="" coords="346,184,397,211"/>
 <area shape="rect" id="node7" href="usart_8h_source.html" title="usart.h" alt="" coords="421,184,484,211"/>
 <area shape="rect" id="node8" href="gpio_8h_source.html" title="gpio.h" alt="" coords="508,184,565,211"/>
@@ -115,27 +115,42 @@ Include dependency graph for MPU6050.c:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2b23d5074d61632a9b4c6a520418de0a"><td class="memItemLeft" align="right" valign="top"><a id="a2b23d5074d61632a9b4c6a520418de0a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_READ_DATA</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t Reg_addr, uint8_t *sensor_buffer)</td></tr>
-<tr class="separator:a2b23d5074d61632a9b4c6a520418de0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accf34cd6f47bcbb51ce9f4b4dc687230"><td class="memItemLeft" align="right" valign="top"><a id="accf34cd6f47bcbb51ce9f4b4dc687230"></a>
-BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_READ_DATA_IT</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t Reg_addr, uint8_t *sensor_buffer)</td></tr>
-<tr class="separator:accf34cd6f47bcbb51ce9f4b4dc687230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79414c8e1a8684d480511136ee3b3367"><td class="memItemLeft" align="right" valign="top"><a id="a79414c8e1a8684d480511136ee3b3367"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_WRITE_REG</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t reg_addr, uint8_t data)</td></tr>
-<tr class="separator:a79414c8e1a8684d480511136ee3b3367"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acab46c551342f49abc21b568274ce226"><td class="memItemLeft" align="right" valign="top"><a id="acab46c551342f49abc21b568274ce226"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_READ_REG</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t reg_addr)</td></tr>
-<tr class="separator:acab46c551342f49abc21b568274ce226"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cf74abb0c6d7d97f578bcb742a704a2"><td class="memItemLeft" align="right" valign="top"><a id="a3cf74abb0c6d7d97f578bcb742a704a2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_init</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:a3cf74abb0c6d7d97f578bcb742a704a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3cf74abb0c6d7d97f578bcb742a704a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___init.html#ga3cf74abb0c6d7d97f578bcb742a704a2">MPU6050_init</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:ga3cf74abb0c6d7d97f578bcb742a704a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used as the first step of initialization of an <a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> struct.  <a href="group___init.html#ga3cf74abb0c6d7d97f578bcb742a704a2">More...</a><br /></td></tr>
+<tr class="separator:ga3cf74abb0c6d7d97f578bcb742a704a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81e3804d58deb9dc212008fb5196c15c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___init.html#ga81e3804d58deb9dc212008fb5196c15c">MPU6050_manually_set_offsets</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:ga81e3804d58deb9dc212008fb5196c15c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to manually set the offsets of the accelerometer and gyroscope based on empirical measurements taken for this specific sensor. In the future, this could be updated to allow for various MPU6050 devices, each with their own specific offsets.  <a href="group___init.html#ga81e3804d58deb9dc212008fb5196c15c">More...</a><br /></td></tr>
+<tr class="separator:ga81e3804d58deb9dc212008fb5196c15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga321abd28200eb3361e57943172791c8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___init.html#ga321abd28200eb3361e57943172791c8c">MPU6050_set_LPF</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t lpf)</td></tr>
+<tr class="memdesc:ga321abd28200eb3361e57943172791c8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function allows you to set the value of the LPF manually. Please see <a href="https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf">https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf</a> for descriptions of what each value does.  <a href="group___init.html#ga321abd28200eb3361e57943172791c8c">More...</a><br /></td></tr>
+<tr class="separator:ga321abd28200eb3361e57943172791c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa77e47e57171275e98f038884d7d228f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f">MPU6050_Read_Accelerometer_Withoffset_IT</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:gaa77e47e57171275e98f038884d7d228f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads the accelerometer using interrupts.  <a href="group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f">More...</a><br /></td></tr>
+<tr class="separator:gaa77e47e57171275e98f038884d7d228f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c2d8f15dc8945177a87c32601d8d06a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___accelerometer.html#ga4c2d8f15dc8945177a87c32601d8d06a">MPU6050_Read_Accelerometer_Withoffset</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:ga4c2d8f15dc8945177a87c32601d8d06a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads the accelerometer without using interrupts.  <a href="group___accelerometer.html#ga4c2d8f15dc8945177a87c32601d8d06a">More...</a><br /></td></tr>
+<tr class="separator:ga4c2d8f15dc8945177a87c32601d8d06a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b0acbb8a05ff008d3bcdc77bd766b6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___gyroscope.html#ga9b0acbb8a05ff008d3bcdc77bd766b6b">MPU6050_Read_Gyroscope_Withoffset_IT</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:ga9b0acbb8a05ff008d3bcdc77bd766b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads the gyroscope using interrupts.  <a href="group___gyroscope.html#ga9b0acbb8a05ff008d3bcdc77bd766b6b">More...</a><br /></td></tr>
+<tr class="separator:ga9b0acbb8a05ff008d3bcdc77bd766b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad43fe33e6e12668fd12f97dc795310d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___gyroscope.html#gad43fe33e6e12668fd12f97dc795310d6">MPU6050_Read_Gyroscope_Withoffset</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
+<tr class="memdesc:gad43fe33e6e12668fd12f97dc795310d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads the gyroscope without using interrupts.  <a href="group___gyroscope.html#gad43fe33e6e12668fd12f97dc795310d6">More...</a><br /></td></tr>
+<tr class="separator:gad43fe33e6e12668fd12f97dc795310d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b23d5074d61632a9b4c6a520418de0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___register___r_w.html#ga2b23d5074d61632a9b4c6a520418de0a">MPU6050_READ_DATA</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t Reg_addr, uint8_t *sensor_buffer)</td></tr>
+<tr class="memdesc:ga2b23d5074d61632a9b4c6a520418de0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads a register from the MPU6050 without interrupts, and stores it into a buffer.  <a href="group___register___r_w.html#ga2b23d5074d61632a9b4c6a520418de0a">More...</a><br /></td></tr>
+<tr class="separator:ga2b23d5074d61632a9b4c6a520418de0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaccf34cd6f47bcbb51ce9f4b4dc687230"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230">MPU6050_READ_DATA_IT</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t Reg_addr, uint8_t *sensor_buffer)</td></tr>
+<tr class="memdesc:gaccf34cd6f47bcbb51ce9f4b4dc687230"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads a register from the MPU6050 with interrupts, and stores it into a buffer.  <a href="group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230">More...</a><br /></td></tr>
+<tr class="separator:gaccf34cd6f47bcbb51ce9f4b4dc687230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79414c8e1a8684d480511136ee3b3367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___register___r_w.html#ga79414c8e1a8684d480511136ee3b3367">MPU6050_WRITE_REG</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t reg_addr, uint8_t data)</td></tr>
+<tr class="memdesc:ga79414c8e1a8684d480511136ee3b3367"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function writes to a register from the MPU6050.  <a href="group___register___r_w.html#ga79414c8e1a8684d480511136ee3b3367">More...</a><br /></td></tr>
+<tr class="separator:ga79414c8e1a8684d480511136ee3b3367"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacab46c551342f49abc21b568274ce226"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___register___r_w.html#gacab46c551342f49abc21b568274ce226">MPU6050_READ_REG</a> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t reg_addr)</td></tr>
+<tr class="memdesc:gacab46c551342f49abc21b568274ce226"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads from an MPU6050 register and returns it directly.  <a href="group___register___r_w.html#gacab46c551342f49abc21b568274ce226">More...</a><br /></td></tr>
+<tr class="separator:gacab46c551342f49abc21b568274ce226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5f39e652ec669f5ab35d6ceab9aabb5"><td class="memItemLeft" align="right" valign="top"><a id="ae5f39e652ec669f5ab35d6ceab9aabb5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_RESET_SENSOR_REG</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
 <tr class="separator:ae5f39e652ec669f5ab35d6ceab9aabb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81e3804d58deb9dc212008fb5196c15c"><td class="memItemLeft" align="right" valign="top"><a id="a81e3804d58deb9dc212008fb5196c15c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_manually_set_offsets</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:a81e3804d58deb9dc212008fb5196c15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bea77642aaf290d86b256ea1b6ae93c"><td class="memItemLeft" align="right" valign="top"><a id="a6bea77642aaf290d86b256ea1b6ae93c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Clear_Int</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
 <tr class="separator:a6bea77642aaf290d86b256ea1b6ae93c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,21 +160,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Data_Ready_In
 <tr class="memitem:abc5c6df852d119ea9428f599ef07b4b4"><td class="memItemLeft" align="right" valign="top"><a id="abc5c6df852d119ea9428f599ef07b4b4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Read_Gyroscope</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
 <tr class="separator:abc5c6df852d119ea9428f599ef07b4b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad43fe33e6e12668fd12f97dc795310d6"><td class="memItemLeft" align="right" valign="top"><a id="ad43fe33e6e12668fd12f97dc795310d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Read_Gyroscope_Withoffset</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:ad43fe33e6e12668fd12f97dc795310d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b0acbb8a05ff008d3bcdc77bd766b6b"><td class="memItemLeft" align="right" valign="top"><a id="a9b0acbb8a05ff008d3bcdc77bd766b6b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Read_Gyroscope_Withoffset_IT</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:a9b0acbb8a05ff008d3bcdc77bd766b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c2d8f15dc8945177a87c32601d8d06a"><td class="memItemLeft" align="right" valign="top"><a id="a4c2d8f15dc8945177a87c32601d8d06a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Read_Accelerometer_Withoffset</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:a4c2d8f15dc8945177a87c32601d8d06a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa77e47e57171275e98f038884d7d228f"><td class="memItemLeft" align="right" valign="top"><a id="aa77e47e57171275e98f038884d7d228f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_Read_Accelerometer_Withoffset_IT</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
-<tr class="separator:aa77e47e57171275e98f038884d7d228f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321abd28200eb3361e57943172791c8c"><td class="memItemLeft" align="right" valign="top"><a id="a321abd28200eb3361e57943172791c8c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_set_LPF</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050, uint8_t lpf)</td></tr>
-<tr class="separator:a321abd28200eb3361e57943172791c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a625570c42824428d1ee51f58ce9e5b"><td class="memItemLeft" align="right" valign="top"><a id="a9a625570c42824428d1ee51f58ce9e5b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MPU6050_10sec_calibration</b> (<a class="el" href="struct_m_p_u6050___handle_type_def.html">MPU6050_HandleTypeDef</a> *sMPU6050)</td></tr>
 <tr class="separator:a9a625570c42824428d1ee51f58ce9e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
