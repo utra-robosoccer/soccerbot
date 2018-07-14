@@ -282,11 +282,11 @@ void MX_FREERTOS_Init(void) {
 /* StartDefaultTask function */
 /**
   * @brief  This function is executed in the context of the defaultTask
-  * 		thread. It initializes all data structures and peripheral
-  * 		devices associated with the application, and then assumes
-  * 		responsibility for distributing commands to the actuators
+  *         thread. It initializes all data structures and peripheral
+  *         devices associated with the application, and then assumes
+  *         responsibility for distributing commands to the actuators
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -466,14 +466,14 @@ void StartDefaultTask(void const * argument)
 /* UART1_Handler function */
 /**
   * @brief  This function is executed in the context of the UART1_
-  * 		thread. It processes all commands for the motors
-  * 		physically connected to UART1, and initiates the I/O
-  * 		calls to them. Whenever it processes read commands for
-  * 		a motor, it sends the data received to the
-  * 		multi-writer sensor queue, which is read only by the
-  * 		TX task.
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART1, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -500,14 +500,14 @@ void UART1_Handler(void const * argument)
 /* UART2_Handler function */
 /**
   * @brief  This function is executed in the context of the UART2_
-  * 		thread. It processes all commands for the motors
-  * 		physically connected to UART2, and initiates the I/O
-  * 		calls to them. Whenever it processes read commands for
-  * 		a motor, it sends the data received to the
-  * 		multi-writer sensor queue, which is read only by the
-  * 		TX task.
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART2, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -534,14 +534,14 @@ void UART2_Handler(void const * argument)
 /* UART3_Handler function */
 /**
   * @brief  This function is executed in the context of the UART3_
-  * 		thread. It processes all commands for the motors
-  * 		physically connected to UART3, and initiates the I/O
-  * 		calls to them. Whenever it processes read commands for
-  * 		a motor, it sends the data received to the
-  * 		multi-writer sensor queue, which is read only by the
-  * 		TX task.
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART3, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -568,14 +568,14 @@ void UART3_Handler(void const * argument)
 /* UART4_Handler function */
 /**
   * @brief  This function is executed in the context of the UART4_
-  * 		thread. It processes all commands for the motors
-  * 		physically connected to UART4, and initiates the I/O
-  * 		calls to them. Whenever it processes read commands for
-  * 		a motor, it sends the data received to the
-  * 		multi-writer sensor queue, which is read only by the
-  * 		TX task.
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART4, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -602,14 +602,14 @@ void UART4_Handler(void const * argument)
 /* UART6_Handler function */
 /**
   * @brief  This function is executed in the context of the UART6_
-  * 		thread. It processes all commands for the motors
-  * 		physically connected to UART6, and initiates the I/O
-  * 		calls to them. Whenever it processes read commands for
-  * 		a motor, it sends the data received to the
-  * 		multi-writer sensor queue, which is read only by the
-  * 		TX task.
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART6, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -636,12 +636,12 @@ void UART6_Handler(void const * argument)
 /* StartIMUTask function */
 /**
   * @brief  This function is executed in the context of the
-  * 		IMUTask thread. During each control cycle, this thread
-  * 		fetches accelerometer and gyroscope data, then sends
-  * 		this data to the multi-writer sensor queue, which is
-  * 		read only by the TX task.
+  *         IMUTask thread. During each control cycle, this thread
+  *         fetches accelerometer and gyroscope data, then sends
+  *         this data to the multi-writer sensor queue, which is
+  *         read only by the TX task.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -677,11 +677,11 @@ void StartIMUTask(void const * argument)
 /* StartRxTask function */
 /**
   * @brief  This function is executed in the context of the RxTask
-  * 		thread. It initiates DMA-based receptions of RobotGoals
-  * 		from the PC via UART5. Upon successful reception of a
-  * 		RobotGoal, the UARTx_ and IMUTask threads are unblocked.
+  *         thread. It initiates DMA-based receptions of RobotGoals
+  *         from the PC via UART5. Upon successful reception of a
+  *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -779,13 +779,13 @@ void StartRxTask(void const * argument)
 /* StartTxTask function */
 /**
   * @brief  This function is executed in the context of the TxTask
-  * 		thread. This thread is blocked until all sensor data
-  * 		has been received through the sensor queue. After this
-  * 		time, the UARTx_ and IMUTask will be blocked. Then, a
-  * 		DMA-based transmission of a RobotState is sent to the
-  * 		PC via UART5.
+  *         thread. This thread is blocked until all sensor data
+  *         has been received through the sensor queue. After this
+  *         time, the UARTx_ and IMUTask will be blocked. Then, a
+  *         DMA-based transmission of a RobotState is sent to the
+  *         PC via UART5.
   *
-  * 		This function never returns.
+  *         This function never returns.
   *
   * @ingroup Threads
   */
@@ -882,10 +882,10 @@ void StartTxTask(void const * argument)
 
 /**
   * @brief  This function is called whenever a memory read from a I2C
-  * 		device is completed. For this program, the callback behaviour
-  * 		consists of unblocking the thread which initiated the I/O and
-  * 		yielding to a higher priority task from the ISR if there are
-  * 		any that can run.
+  *         device is completed. For this program, the callback behaviour
+  *         consists of unblocking the thread which initiated the I/O and
+  *         yielding to a higher priority task from the ISR if there are
+  *         any that can run.
   * @param  hi2c pointer to a I2C_HandleTypeDef structure that contains
   *         the configuration information for I2C module corresponding to
   *         the callback
@@ -903,10 +903,10 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
 /**
   * @brief  This function is called whenever a transmission from a UART
-  * 		module is completed. For this program, the callback behaviour
-  * 		consists of unblocking the thread which initiated the I/O and
-  * 		yielding to a higher priority task from the ISR if there are
-  * 		any that can run.
+  *         module is completed. For this program, the callback behaviour
+  *         consists of unblocking the thread which initiated the I/O and
+  *         yielding to a higher priority task from the ISR if there are
+  *         any that can run.
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
@@ -941,10 +941,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
 
 /**
   * @brief  This function is called whenever a reception from a UART
-  * 		module is completed. For this program, the callback behaviour
-  * 		consists of unblocking the thread which initiated the I/O and
-  * 		yielding to a higher priority task from the ISR if there are
-  * 		any that can run.
+  *         module is completed. For this program, the callback behaviour
+  *         consists of unblocking the thread which initiated the I/O and
+  *         yielding to a higher priority task from the ISR if there are
+  *         any that can run.
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
@@ -972,14 +972,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
 	else if(huart == &huart6){
 		xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
 	}
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 /**
   * @brief  This function is called whenever an error is encountered in
-  * 		association with a UART module. For this program, the callback
-  * 		behaviour consists of storing the error code in a local
-  * 		variable.
+  *         association with a UART module. For this program, the callback
+  *         behaviour consists of storing the error code in a local
+  *         variable.
   * @param  huart pointer to a UART_HandleTypeDef structure that contains
   *         the configuration information for UART module corresponding to
   *         the callback
@@ -989,7 +989,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
   */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-     error = HAL_UART_GetError(huart);
+    error = HAL_UART_GetError(huart);
 }
 /* USER CODE END Application */
 
