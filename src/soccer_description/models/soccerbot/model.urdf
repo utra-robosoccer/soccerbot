@@ -451,7 +451,7 @@
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
   <joint name="torso_imu" type="fixed">
-    <parent link="base_link"/>
+    <parent link="torso"/>
     <child link="imu"/>
     <origin rpy="0 0 0" xyz="-0.03095 -0.0562  0.001286"/>
     <axis xyz="0  0  0"/>
