@@ -1,12 +1,12 @@
 [submodule "src/darknet_ros"]
 	path = src/darknet_ros
-	url = https://github.com/leggedrobotics/darknet_ros
+	url = https://github.com/utra-robosoccer/darknet_ros
 [submodule "src/usb_cam"]
 	path = src/usb_cam
-	url = https://github.com/ros-drivers/usb_cam
+	url = https://github.com/utra-robosoccer/usb_cam
 [submodule "src/pysdf"]
 	path = src/pysdf
-	url = https://github.com/andreasBihlmaier/pysdf
+	url = https://github.com/utra-robosoccer/pysdf
 [submodule "src/humanoid_league_msgs"]
 	path = src/humanoid_league_msgs
 	url = https://github.com/utra-robosoccer/humanoid_league_msgs
