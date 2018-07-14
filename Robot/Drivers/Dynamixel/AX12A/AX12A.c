@@ -73,11 +73,11 @@ extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* a
  * @return  None
  */
 void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWcomplianceMargin){
-	/* Write data to motor. */
-	if(hdynamixel -> _motorType == AX12ATYPE){
-		uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, CWcomplianceMargin};
-		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
-	}
+    /* Write data to motor. */
+    if(hdynamixel -> _motorType == AX12ATYPE){
+        uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, CWcomplianceMargin};
+        Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+    }
 }
 
 /**
@@ -96,11 +96,11 @@ void AX12A_SetCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CW
  * @return  None
  */
 void AX12A_SetCCWComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceMargin){
-	/* Write data to motor. */
-	if(hdynamixel -> _motorType == AX12ATYPE){
-		uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, CCWcomplianceMargin};
-		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
-	}
+    /* Write data to motor. */
+    if(hdynamixel -> _motorType == AX12ATYPE){
+        uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, CCWcomplianceMargin};
+        Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+    }
 }
 
 /**
@@ -133,10 +133,10 @@ void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWc
             step = AX12A_DEFAULT_CW_COMPLIANCE_SLOPE;
         }
 
-	    /* Write data to motor. */
-		uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_SLOPE, step};
-		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
-	}
+        /* Write data to motor. */
+        uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_SLOPE, step};
+        Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+    }
 }
 
 /**
@@ -158,7 +158,7 @@ void AX12A_SetCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CWc
  * @return  None
  */
 void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CCWcomplianceSlope){
-	if(hdynamixel -> _motorType == AX12ATYPE){
+    if(hdynamixel -> _motorType == AX12ATYPE){
         /* Translate the step into motor data. */
         uint8_t step;
 
@@ -170,14 +170,14 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
         }
 
         /* Write data to motor. */
-		uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_SLOPE, step};
-		Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
-	}
+        uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_SLOPE, step};
+        Dynamixel_DataWriter(hdynamixel, arr, sizeof(arr));
+    }
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 /* end AX12A_Setters */
 
 
@@ -220,8 +220,8 @@ void AX12A_SetCCWComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t CC
  * @return  None
  */
 void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceSlope){
-	AX12A_SetCWComplianceSlope(hdynamixel, complianceSlope);
-	AX12A_SetCCWComplianceSlope(hdynamixel, complianceSlope);
+    AX12A_SetCWComplianceSlope(hdynamixel, complianceSlope);
+    AX12A_SetCCWComplianceSlope(hdynamixel, complianceSlope);
 }
 
 /**
@@ -237,8 +237,8 @@ void AX12A_SetComplianceSlope(Dynamixel_HandleTypeDef* hdynamixel, uint8_t compl
  * @return  None
  */
 void AX12A_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t complianceMargin){
-	AX12A_SetCWComplianceMargin(hdynamixel, complianceMargin);
-	AX12A_SetCCWComplianceMargin(hdynamixel, complianceMargin);
+    AX12A_SetCWComplianceMargin(hdynamixel, complianceMargin);
+    AX12A_SetCCWComplianceMargin(hdynamixel, complianceMargin);
 }
 
 /**
