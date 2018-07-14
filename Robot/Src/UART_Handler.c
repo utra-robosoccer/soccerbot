@@ -41,21 +41,21 @@ extern osMessageQId UART_rxHandle;
  * @return None
  */
 void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
-	switch(cmdPtr->type){
-		  case cmdReadPosition:
-			  Dynamixel_GetPosition(cmdPtr->motorHandle);
-			  DataToSend->pData = cmdPtr->motorHandle;
-			  xQueueSend(UART_rxHandle, DataToSend, 0);
-			  break;
-		  case cmdWritePosition:
-			  Dynamixel_SetGoalPosition(cmdPtr->motorHandle, cmdPtr->value);
-			  break;
-		  case cmdWriteTorque:
-			  Dynamixel_TorqueEnable(cmdPtr->motorHandle, cmdPtr->value);
-			  break;
-		  default:
-			  break;
-	  }
+    switch(cmdPtr->type){
+        case cmdReadPosition:
+            Dynamixel_GetPosition(cmdPtr->motorHandle);
+            DataToSend->pData = cmdPtr->motorHandle;
+            xQueueSend(UART_rxHandle, DataToSend, 0);
+            break;
+        case cmdWritePosition:
+            Dynamixel_SetGoalPosition(cmdPtr->motorHandle, cmdPtr->value);
+            break;
+        case cmdWriteTorque:
+            Dynamixel_TorqueEnable(cmdPtr->motorHandle, cmdPtr->value);
+            break;
+        default:
+            break;
+    }
 }
 
 /**

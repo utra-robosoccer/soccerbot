@@ -293,35 +293,35 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
 
-  /* USER CODE BEGIN StartDefaultTask */
-	Dynamixel_SetIOType(IO_POLL); // Configure IO
+    /* USER CODE BEGIN StartDefaultTask */
+    Dynamixel_SetIOType(IO_POLL); // Configure IO
 
-	Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor10, 10, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor9, 9, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor8, 8, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor7, 7, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-	Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-	Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-	Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-	Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-	Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-	Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor10, 10, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor9, 9, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor8, 8, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor7, 7, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+    Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+    Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+    Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+    Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+    Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+    Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+    Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
 
 
-	Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
-			&Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
-			&Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
+    Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
+            &Motor5,&Motor6,&Motor7,&Motor8,&Motor9,&Motor10,&Motor11,&Motor12,
+            &Motor13,&Motor14,&Motor15,&Motor16,&Motor17,&Motor18};
 
-	UARTcmd_t Motorcmd[18];
-	for(uint8_t i = MOTOR1; i <= MOTOR18; i++) {
+    UARTcmd_t Motorcmd[18];
+    for(uint8_t i = MOTOR1; i <= MOTOR18; i++) {
         // Configure motor to return status packets only for read commands
         Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
 
@@ -333,134 +333,134 @@ void StartDefaultTask(void const * argument)
 
         // Settings for torque near goal position, and acceptable error (AX12A only)
         if(arrDynamixel[i]->_motorType == AX12ATYPE){
-        	AX12A_SetComplianceSlope(arrDynamixel[i], 5); // 4 vibrates; 7 is too loose
-        	AX12A_SetComplianceMargin(arrDynamixel[i], 1);
+            AX12A_SetComplianceSlope(arrDynamixel[i], 5); // 4 vibrates; 7 is too loose
+            AX12A_SetComplianceMargin(arrDynamixel[i], 1);
         }
 
-		(Motorcmd[i]).motorHandle = arrDynamixel[i];
-		(Motorcmd[i]).type = cmdWritePosition;
-	}
+        (Motorcmd[i]).motorHandle = arrDynamixel[i];
+        (Motorcmd[i]).type = cmdWritePosition;
+    }
 
-	(Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
-	(Motorcmd[MOTOR2]).qHandle = UART2_reqHandle;
-	(Motorcmd[MOTOR3]).qHandle = UART2_reqHandle;
-	(Motorcmd[MOTOR4]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR5]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR6]).qHandle = UART4_reqHandle;
-	(Motorcmd[MOTOR7]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR8]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR9]).qHandle = UART1_reqHandle;
-	(Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
-	(Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
-	(Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
-	(Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
-	(Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
-	(Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
-	(Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
+    (Motorcmd[MOTOR2]).qHandle = UART2_reqHandle;
+    (Motorcmd[MOTOR3]).qHandle = UART2_reqHandle;
+    (Motorcmd[MOTOR4]).qHandle = UART4_reqHandle;
+    (Motorcmd[MOTOR5]).qHandle = UART4_reqHandle;
+    (Motorcmd[MOTOR6]).qHandle = UART4_reqHandle;
+    (Motorcmd[MOTOR7]).qHandle = UART1_reqHandle;
+    (Motorcmd[MOTOR8]).qHandle = UART1_reqHandle;
+    (Motorcmd[MOTOR9]).qHandle = UART1_reqHandle;
+    (Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
+    (Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
+    (Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
+    (Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
 
-	Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
+    Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
 
-	// IMU initialization
-	IMUdata._I2C_Handle = &hi2c1;
-	MPU6050_init(&IMUdata);
-	MPU6050_manually_set_offsets(&IMUdata);
-	MPU6050_set_LPF(&IMUdata, 4);
+    // IMU initialization
+    IMUdata._I2C_Handle = &hi2c1;
+    MPU6050_init(&IMUdata);
+    MPU6050_manually_set_offsets(&IMUdata);
+    MPU6050_set_LPF(&IMUdata, 4);
 
-	// Set setupIsDone and unblock the higher-priority tasks
-	setupIsDone = true;
-	xTaskNotify(rxTaskHandle, 1UL, eNoAction);
-	xTaskNotify(txTaskHandle, 1UL, eNoAction);
-	xTaskNotify(UART1_Handle, 1UL, eNoAction);
-	xTaskNotify(UART2_Handle, 1UL, eNoAction);
-	xTaskNotify(UART3_Handle, 1UL, eNoAction);
-	xTaskNotify(UART4_Handle, 1UL, eNoAction);
-	xTaskNotify(UART6_Handle, 1UL, eNoAction);
-	xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
+    // Set setupIsDone and unblock the higher-priority tasks
+    setupIsDone = true;
+    xTaskNotify(rxTaskHandle, 1UL, eNoAction);
+    xTaskNotify(txTaskHandle, 1UL, eNoAction);
+    xTaskNotify(UART1_Handle, 1UL, eNoAction);
+    xTaskNotify(UART2_Handle, 1UL, eNoAction);
+    xTaskNotify(UART3_Handle, 1UL, eNoAction);
+    xTaskNotify(UART4_Handle, 1UL, eNoAction);
+    xTaskNotify(UART6_Handle, 1UL, eNoAction);
+    xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
 
-	/* Infinite loop */
-	uint32_t numIterations = 0;
-	uint8_t i;
-	float positions[18];
-	while(1){
-		xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
+    /* Infinite loop */
+    uint32_t numIterations = 0;
+    uint8_t i;
+    float positions[18];
+    while(1){
+        xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
 
-		// Convert raw bytes from robotGoal received from PC into floats
-		for(uint8_t i = 0; i < 18; i++){
-			uint8_t* ptr = (uint8_t*)&positions[i];
-			for(uint8_t j = 0; j < 4; j++){
-				*ptr = robotGoal.msg[i * 4 + j];
-				ptr++;
-			}
-		}
+        // Convert raw bytes from robotGoal received from PC into floats
+        for(uint8_t i = 0; i < 18; i++){
+            uint8_t* ptr = (uint8_t*)&positions[i];
+            for(uint8_t j = 0; j < 4; j++){
+                *ptr = robotGoal.msg[i * 4 + j];
+                ptr++;
+            }
+        }
 
-		if(numIterations % 100 == 0){
-			// Every 100 iterations, assert torque enable
-			for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
-				Motorcmd[i].type = cmdWriteTorque;
-				Motorcmd[i].value = 1; // Enable
-				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-			}
-		}
+        if(numIterations % 100 == 0){
+            // Every 100 iterations, assert torque enable
+            for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
+                Motorcmd[i].type = cmdWriteTorque;
+                Motorcmd[i].value = 1; // Enable
+                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+            }
+        }
 
-		// Send each goal position to the queue, where the UART handler
-		// thread that's listening will receive it and send it to the motor
-		for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-			switch(i){
-			    case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-			  				 break;
-			    case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
-							 break;
-			    case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
-			    			 break;
-			    case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
-			    			 break;
-			    case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
-			    			 break;
-			    case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
-			    			 break;
-			    case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
-			    			 break;
-			    case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
-			    			 break;
-			    default:
-			    	break;
+        // Send each goal position to the queue, where the UART handler
+        // thread that's listening will receive it and send it to the motor
+        for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+            switch(i){
+            case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
+            break;
+            case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
+            break;
+            case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
+            break;
+            case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
+            break;
+            case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+            break;
+            case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
+            break;
+            case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
+            break;
+            case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
+            break;
+            case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
+            break;
+            case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
+            break;
+            case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
+            break;
+            case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
+            break;
+            default:
+                break;
             }
 
-			Motorcmd[i].type = cmdWritePosition;
-			xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+            Motorcmd[i].type = cmdWritePosition;
+            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
 
-			// Only read from legs
-			if(i <= MOTOR12){
-				Motorcmd[i].type = cmdReadPosition;
-				xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-			}
+            // Only read from legs
+            if(i <= MOTOR12){
+                Motorcmd[i].type = cmdReadPosition;
+                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+            }
         }
 
-		numIterations++;
+        numIterations++;
     }
-  /* USER CODE END StartDefaultTask */
+    /* USER CODE END StartDefaultTask */
 }
 
 /* UART1_Handler function */
@@ -479,22 +479,22 @@ void StartDefaultTask(void const * argument)
   */
 void UART1_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART1_Handler */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN UART1_Handler */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  UARTcmd_t cmdMessage;
-  TXData_t dataToSend;
-  dataToSend.eDataType = eMotorData;
+    /* Infinite loop */
+    UARTcmd_t cmdMessage;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
 
-  for(;;)
-	{
-	  while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage, &dataToSend);
-  }
-  /* USER CODE END UART1_Handler */
+    for(;;)
+    {
+        while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage, &dataToSend);
+    }
+    /* USER CODE END UART1_Handler */
 }
 
 /* UART2_Handler function */
@@ -513,22 +513,22 @@ void UART1_Handler(void const * argument)
   */
 void UART2_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART2_Handler */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN UART2_Handler */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  UARTcmd_t cmdMessage;
-  TXData_t dataToSend;
-  dataToSend.eDataType = eMotorData;
+    /* Infinite loop */
+    UARTcmd_t cmdMessage;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
 
-  for(;;)
-	{
-	  while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage, &dataToSend);
-  }
-  /* USER CODE END UART2_Handler */
+    for(;;)
+    {
+        while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage, &dataToSend);
+    }
+    /* USER CODE END UART2_Handler */
 }
 
 /* UART3_Handler function */
@@ -547,22 +547,22 @@ void UART2_Handler(void const * argument)
   */
 void UART3_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART3_Handler */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN UART3_Handler */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  UARTcmd_t cmdMessage;
-  TXData_t dataToSend;
-  dataToSend.eDataType = eMotorData;
+    /* Infinite loop */
+    UARTcmd_t cmdMessage;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
 
-  for(;;)
-	{
-	  while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage, &dataToSend);
-  }
-  /* USER CODE END UART3_Handler */
+    for(;;)
+    {
+        while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage, &dataToSend);
+    }
+    /* USER CODE END UART3_Handler */
 }
 
 /* UART4_Handler function */
@@ -581,22 +581,22 @@ void UART3_Handler(void const * argument)
   */
 void UART4_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART4_Handler */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN UART4_Handler */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  UARTcmd_t cmdMessage;
-  TXData_t dataToSend;
-  dataToSend.eDataType = eMotorData;
+    /* Infinite loop */
+    UARTcmd_t cmdMessage;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
 
-  for(;;)
-	{
-	  while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage, &dataToSend);
-  }
-  /* USER CODE END UART4_Handler */
+    for(;;)
+    {
+        while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage, &dataToSend);
+    }
+    /* USER CODE END UART4_Handler */
 }
 
 /* UART6_Handler function */
@@ -615,22 +615,22 @@ void UART4_Handler(void const * argument)
   */
 void UART6_Handler(void const * argument)
 {
-  /* USER CODE BEGIN UART6_Handler */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN UART6_Handler */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  UARTcmd_t cmdMessage;
-  TXData_t dataToSend;
-  dataToSend.eDataType = eMotorData;
+    /* Infinite loop */
+    UARTcmd_t cmdMessage;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
 
-  for(;;)
-	{
-	  while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-	  UART_ProcessEvent(&cmdMessage, &dataToSend);
-  }
-  /* USER CODE END UART6_Handler */
+    for(;;)
+    {
+        while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage, &dataToSend);
+    }
+    /* USER CODE END UART6_Handler */
 }
 
 /* StartIMUTask function */
@@ -647,31 +647,31 @@ void UART6_Handler(void const * argument)
   */
 void StartIMUTask(void const * argument)
 {
-  /* USER CODE BEGIN StartIMUTask */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN StartIMUTask */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  TXData_t dataToSend;
-  dataToSend.eDataType = eIMUData;
+    /* Infinite loop */
+    TXData_t dataToSend;
+    dataToSend.eDataType = eIMUData;
 
-  uint32_t notification;
+    uint32_t notification;
 
-  for(;;)
-  {
-	  do{
-	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+    for(;;)
+    {
+        do{
+            xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+        }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
 
-      // Note that it takes < 1 ms total for the sensor to read both accel and gyro
-	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+        // Note that it takes < 1 ms total for the sensor to read both accel and gyro
+        MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
+        MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
-	  dataToSend.pData = &IMUdata;
-	  xQueueSend(UART_rxHandle, &dataToSend, 0);
-  }
-  /* USER CODE END StartIMUTask */
+        dataToSend.pData = &IMUdata;
+        xQueueSend(UART_rxHandle, &dataToSend, 0);
+    }
+    /* USER CODE END StartIMUTask */
 }
 
 /* StartRxTask function */
@@ -687,93 +687,93 @@ void StartIMUTask(void const * argument)
   */
 void StartRxTask(void const * argument)
 {
-  /* USER CODE BEGIN StartRxTask */
-	uint8_t robotGoalData[sizeof(RobotGoal)];
-	uint8_t *robotGoalDataPtr;
-	uint8_t buffRx[92];
-	uint8_t startSeqCount;
-	uint8_t totalBytesRead;
+    /* USER CODE BEGIN StartRxTask */
+    uint8_t robotGoalData[sizeof(RobotGoal)];
+    uint8_t *robotGoalDataPtr;
+    uint8_t buffRx[92];
+    uint8_t startSeqCount;
+    uint8_t totalBytesRead;
 
-	// Receiving
-	robotGoal.id = 0;
-	robotGoalDataPtr = robotGoalData;
-	startSeqCount = 0;
-	totalBytesRead = 0;
+    // Receiving
+    robotGoal.id = 0;
+    robotGoalDataPtr = robotGoalData;
+    startSeqCount = 0;
+    totalBytesRead = 0;
 
-	// Sending
-	robotState.id = 0;
-	robotState.start_seq = UINT32_MAX;
-	robotState.end_seq = 0;
+    // Sending
+    robotState.id = 0;
+    robotState.start_seq = UINT32_MAX;
+    robotState.end_seq = 0;
 
-	xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-	HAL_StatusTypeDef status;
+    HAL_StatusTypeDef status;
 
-	uint32_t notification;
+    uint32_t notification;
 
-	HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+    HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
 
-	/* Infinite loop */
-	for (;;) {
-		// Wait until notified from ISR. Clear no bits on entry in case the notification
-		// comes before this statement is executed (which is rather unlikely as long as
-		// this task has the highest priority, but overall this is a better decision in
-		// case priorities are changed in the future and someone forgets about this.
-		do{
-			xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
-		}while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
+    /* Infinite loop */
+    for (;;) {
+        // Wait until notified from ISR. Clear no bits on entry in case the notification
+        // comes before this statement is executed (which is rather unlikely as long as
+        // this task has the highest priority, but overall this is a better decision in
+        // case priorities are changed in the future and someone forgets about this.
+        do{
+            xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
+        }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
-		do{
-			// This do-while loop with the mutex inside of it makes calls to the UART module
-			// responsible for PC communication atomic. This attempts to solve the following
-			// scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-			// when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-			// returns immediately when it detects that the uart module is already locked. Then
-			// the RX thread blocks itself and never wakes up since a RX transfer was never
-			// initialized.
-			xSemaphoreTake(PCUARTHandle, 1);
-			status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
-			xSemaphoreGive(PCUARTHandle);
-		}while(status != HAL_OK);
+        do{
+            // This do-while loop with the mutex inside of it makes calls to the UART module
+            // responsible for PC communication atomic. This attempts to solve the following
+            // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
+            // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+            // returns immediately when it detects that the uart module is already locked. Then
+            // the RX thread blocks itself and never wakes up since a RX transfer was never
+            // initialized.
+            xSemaphoreTake(PCUARTHandle, 1);
+            status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+            xSemaphoreGive(PCUARTHandle);
+        }while(status != HAL_OK);
 
-		for (uint8_t i = 0; i < sizeof(buffRx); i++) {
-			if (startSeqCount == 4) {
-				// This control block is entered when the header sequence of
-				// 0xFFFFFFFF has been received; thus we know the data we
-				// receive will be in tact
+        for (uint8_t i = 0; i < sizeof(buffRx); i++) {
+            if (startSeqCount == 4) {
+                // This control block is entered when the header sequence of
+                // 0xFFFFFFFF has been received; thus we know the data we
+                // receive will be in tact
 
-				*robotGoalDataPtr = buffRx[i];
-				robotGoalDataPtr++;
-				totalBytesRead++;
+                *robotGoalDataPtr = buffRx[i];
+                robotGoalDataPtr++;
+                totalBytesRead++;
 
-				if (totalBytesRead == sizeof(RobotGoal)) {
-					// If, after the last couple of receive interrupts, we have
-					// received sizeof(RobotGoal) bytes, then we copy the data
-					// buffer into the robotGoal structure and wake the control
-					// thread to distribute states to each actuator
-					memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-					robotState.id = robotGoal.id;
+                if (totalBytesRead == sizeof(RobotGoal)) {
+                    // If, after the last couple of receive interrupts, we have
+                    // received sizeof(RobotGoal) bytes, then we copy the data
+                    // buffer into the robotGoal structure and wake the control
+                    // thread to distribute states to each actuator
+                    memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+                    robotState.id = robotGoal.id;
 
-					// Reset the variables to help with reception of a RobotGoal
-					robotGoalDataPtr = robotGoalData;
-					startSeqCount = 0;
-					totalBytesRead = 0;
+                    // Reset the variables to help with reception of a RobotGoal
+                    robotGoalDataPtr = robotGoalData;
+                    startSeqCount = 0;
+                    totalBytesRead = 0;
 
-					xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
-					xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
-					continue;
-				}
-			}else{
-				// This control block is used to verify that the data header is in tact
-				if (buffRx[i] == 0xFF) {
-					startSeqCount++;
-				} else {
-					startSeqCount = 0;
-				}
-			}
-		}
-	}
-  /* USER CODE END StartRxTask */
+                    xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+                    xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
+                    continue;
+                }
+            }else{
+                // This control block is used to verify that the data header is in tact
+                if (buffRx[i] == 0xFF) {
+                    startSeqCount++;
+                } else {
+                    startSeqCount = 0;
+                }
+            }
+        }
+    }
+    /* USER CODE END StartRxTask */
 }
 
 /* StartTxTask function */
@@ -791,84 +791,84 @@ void StartRxTask(void const * argument)
   */
 void StartTxTask(void const * argument)
 {
-  /* USER CODE BEGIN StartTxTask */
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN StartTxTask */
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  TXData_t receivedData;
-  Dynamixel_HandleTypeDef* motorPtr = NULL;
-  MPU6050_HandleTypeDef* imuPtr = NULL;
-  char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
+    TXData_t receivedData;
+    Dynamixel_HandleTypeDef* motorPtr = NULL;
+    MPU6050_HandleTypeDef* imuPtr = NULL;
+    char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
 
-  HAL_StatusTypeDef status;
-  uint32_t notification;
-  uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
+    HAL_StatusTypeDef status;
+    uint32_t notification;
+    uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
 
-  // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
-  // be ready for this once all 18 motors can be ready from.
-  uint32_t NOTIFICATION_MASK = 0x80000000;
-  for(uint8_t i = 1; i <= 12; i++){
-	  NOTIFICATION_MASK |= (1 << i);
-  }
+    // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
+    // be ready for this once all 18 motors can be ready from.
+    uint32_t NOTIFICATION_MASK = 0x80000000;
+    for(uint8_t i = 1; i <= 12; i++){
+        NOTIFICATION_MASK |= (1 << i);
+    }
 
-  /* Infinite loop */
-  for(;;)
-  {
-	  // TODO: Test this
-	  while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
-		  while(xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY) != pdTRUE);
+    /* Infinite loop */
+    for(;;)
+    {
+        // TODO: Test this
+        while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
+            while(xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY) != pdTRUE);
 
-		  switch(receivedData.eDataType){
-			  case eMotorData:
-				  motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
+            switch(receivedData.eDataType){
+            case eMotorData:
+                motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
 
-				  if(motorPtr == NULL){ break; }
+                if(motorPtr == NULL){ break; }
 
-				  // Validate data and store it in robotState
-				  if(motorPtr->_ID <= NUM_MOTORS){
-					  // Copy sensor data for this motor into its section of robotState.msg
-					  memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)], &(motorPtr->_lastPosition), sizeof(float));
+                // Validate data and store it in robotState
+                if(motorPtr->_ID <= NUM_MOTORS){
+                    // Copy sensor data for this motor into its section of robotState.msg
+                    memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)], &(motorPtr->_lastPosition), sizeof(float));
 
-					  // Set flag indicating the motor with this id has reported in with position data
-					  dataReadyFlags |= (1 << motorPtr->_ID);
-				  }
-				  break;
-			  case eIMUData:
-				  imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
+                    // Set flag indicating the motor with this id has reported in with position data
+                    dataReadyFlags |= (1 << motorPtr->_ID);
+                }
+                break;
+            case eIMUData:
+                imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
 
-				  if(imuPtr == NULL){ break; }
+                if(imuPtr == NULL){ break; }
 
-				  // Copy sensor data into the IMU data section of robotState.msg
-				  memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
+                // Copy sensor data into the IMU data section of robotState.msg
+                memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
 
-				  // Set flag indicating IMU data has reported in
-				  dataReadyFlags |= 0x80000000;
-				  break;
-			  default:
-				  break;
-		  }
-	  }
-	  dataReadyFlags = 0; // Clear all flags
+                // Set flag indicating IMU data has reported in
+                dataReadyFlags |= 0x80000000;
+                break;
+            default:
+                break;
+            }
+        }
+        dataReadyFlags = 0; // Clear all flags
 
-	  do{
-	      // This do-while loop with the mutex inside of it makes calls to the UART module
-	      // responsible for PC communication atomic. This attempts to solve the following
-	      // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-	      // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-	      // returns immediately when it detects that the uart module is already locked. Then
-	      // the RX thread blocks itself and never wakes up since a RX transfer was never
-	      // initialized.
-	      xSemaphoreTake(PCUARTHandle, 1);
-	      status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
-	      xSemaphoreGive(PCUARTHandle);
-	  }while(status != HAL_OK);
+        do{
+            // This do-while loop with the mutex inside of it makes calls to the UART module
+            // responsible for PC communication atomic. This attempts to solve the following
+            // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
+            // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+            // returns immediately when it detects that the uart module is already locked. Then
+            // the RX thread blocks itself and never wakes up since a RX transfer was never
+            // initialized.
+            xSemaphoreTake(PCUARTHandle, 1);
+            status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
+            xSemaphoreGive(PCUARTHandle);
+        }while(status != HAL_OK);
 
-	  // Wait until notified from ISR. Clear no bits on entry in case the notification
-	  // came while a higher priority task was executing.
-	  do{
-		  xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
-  }
-  /* USER CODE END StartTxTask */
+        // Wait until notified from ISR. Clear no bits on entry in case the notification
+        // came while a higher priority task was executing.
+        do{
+            xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
+        }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+    }
+    /* USER CODE END StartTxTask */
 }
 
 /* USER CODE BEGIN Application */
@@ -915,28 +915,28 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
   * @ingroup Callbacks
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
-	if(setupIsDone){
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		if(huart == &huart5){
-			xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		if(huart == &huart1){
-			xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		else if(huart == &huart2){
-			xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		else if(huart == &huart3){
-			xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		else if(huart == &huart4){
-			xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		else if(huart == &huart6){
-			xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}
+    if(setupIsDone){
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        if(huart == &huart5){
+            xTaskNotifyFromISR(txTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        if(huart == &huart1){
+            xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        else if(huart == &huart2){
+            xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        else if(huart == &huart3){
+            xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        else if(huart == &huart4){
+            xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        else if(huart == &huart6){
+            xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        }
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
 }
 
 /**
@@ -953,25 +953,25 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   * @ingroup Callbacks
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	if (huart == &huart5) {
-		xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
-	if(huart == &huart1){
-		xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart2){
-		xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart3){
-		xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart4){
-		xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
-	else if(huart == &huart6){
-		xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	}
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    if (huart == &huart5) {
+        xTaskNotifyFromISR(rxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    if(huart == &huart1){
+        xTaskNotifyFromISR(UART1_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    else if(huart == &huart2){
+        xTaskNotifyFromISR(UART2_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    else if(huart == &huart3){
+        xTaskNotifyFromISR(UART3_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    else if(huart == &huart4){
+        xTaskNotifyFromISR(UART4_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    else if(huart == &huart6){
+        xTaskNotifyFromISR(UART6_Handle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
