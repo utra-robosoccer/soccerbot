@@ -395,6 +395,7 @@ void StartDefaultTask(void const * argument)
             }
         }
 
+        // TODO: This didn't really have an effect. Need to figure out why
         if(numIterations % 100 == 0){
             // Every 100 iterations, assert torque enable
             for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
@@ -408,44 +409,44 @@ void StartDefaultTask(void const * argument)
         // thread that's listening will receive it and send it to the motor
         for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
             switch(i){
-            case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
-            break;
-            case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
-            break;
-            case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
-            break;
-            case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
-            break;
-            case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
-            break;
-            case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
-            break;
-            case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
-            break;
-            case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
-            break;
-            case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
-            break;
-            case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
-            break;
-            case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
-            break;
-            case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
-            break;
-            default:
-                break;
+                case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
+                    break;
+                case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
+                    break;
+                case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
+                    break;
+                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
+                    break;
+                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                    break;
+                case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
+                    break;
+                case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
+                    break;
+                case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
+                    break;
+                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
+                    break;
+                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
+                    break;
+                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
+                    break;
+                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
+                    break;
+                default:
+                    break;
             }
 
             Motorcmd[i].type = cmdWritePosition;
@@ -714,7 +715,8 @@ void StartRxTask(void const * argument)
     HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
 
     /* Infinite loop */
-    for (;;) {
+    for (;;)
+    {
         // Wait until notified from ISR. Clear no bits on entry in case the notification
         // comes before this statement is executed (which is rather unlikely as long as
         // this task has the highest priority, but overall this is a better decision in
@@ -804,7 +806,7 @@ void StartTxTask(void const * argument)
     uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
 
     // TODO: In the future, this "12" should be replaced with NUM_MOTORS. We will
-    // be ready for this once all 18 motors can be ready from.
+    // be ready for this once all 18 motors can be read from.
     uint32_t NOTIFICATION_MASK = 0x80000000;
     for(uint8_t i = 1; i <= 12; i++){
         NOTIFICATION_MASK |= (1 << i);
@@ -813,7 +815,6 @@ void StartTxTask(void const * argument)
     /* Infinite loop */
     for(;;)
     {
-        // TODO: Test this
         while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
             while(xQueueReceive(UART_rxHandle, &receivedData, portMAX_DELAY) != pdTRUE);
 
