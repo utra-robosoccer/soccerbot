@@ -1,0 +1,6 @@
+<map id="MPU6050" name="MPU6050">
+<area shape="rect" id="node1" href="$group___init.html" title="These functions are for initialization of the MPU6050. " alt="" coords="166,5,205,32"/>
+<area shape="rect" id="node2" href="$group___gyroscope.html" title="These functions are for the MPU6050 gyroscope. " alt="" coords="143,56,228,83"/>
+<area shape="rect" id="node3" href="$group___register___r_w.html" title="These functions are for reading and writing to registers on the MPU6050. " alt="" coords="136,107,235,133"/>
+<area shape="rect" id="node5" href="$group___accelerometer.html" title="These functions are for the MPU6050 accelerometer. " alt="" coords="132,157,239,184"/>
+</map>

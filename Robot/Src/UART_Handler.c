@@ -38,7 +38,7 @@ extern osMessageQId UART_rxHandle;
  *         data fields
  * @param  DataToSend the handle for the data structure to copy into the sensor
  *         queue if a read is executed
- * @retval None
+ * @return None
  */
 void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
 	switch(cmdPtr->type){

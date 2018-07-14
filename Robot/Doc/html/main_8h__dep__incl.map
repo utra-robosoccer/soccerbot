@@ -7,7 +7,7 @@
 <area shape="rect" id="node5" href="$_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="447,213,680,284"/>
 <area shape="rect" id="node8" href="$_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="295,451,603,507"/>
 <area shape="rect" id="node11" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="854,659,1078,715"/>
-<area shape="rect" id="node15" href="$_m_p_u6050_8h_source.html" title="D:/Users/Tyler/Documents\l/STM/embedded/soccer&#45;embedded\l/Robot/Drivers/MPU6050/MPU6050.h" alt="" coords="1055,221,1291,277"/>
+<area shape="rect" id="node15" href="$_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="1055,221,1291,277"/>
 <area shape="rect" id="node6" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="273,339,539,395"/>
 <area shape="rect" id="node13" href="$_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="614,339,865,395"/>
 <area shape="rect" id="node7" href="$_a_x12_a_8c.html" title="This file implements AX12A&#45;specific functions. " alt="" coords="5,451,271,507"/>
