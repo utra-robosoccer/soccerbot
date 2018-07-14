@@ -7,6 +7,6 @@
 [submodule "src/pysdf"]
 	path = src/pysdf
 	url = https://github.com/andreasBihlmaier/pysdf
-[submodule "humanoid_league_msgs"]
-	path = humanoid_league_msgs
+[submodule "src/humanoid_league_msgs"]
+	path = src/humanoid_league_msgs
 	url = https://github.com/utra-robosoccer/humanoid_league_msgs
