@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=true
+TerminalOptions=bash
+Exec=bash -c "source /opt/ros/kinetic/setup.bash;source ~/soccer_ws/devel/setup.bash;~/soccer_ws/scripts/build.sh"
+Icon=/home/nvidia/soccer_ws/scripts/soccer.png
+Name=Soccer Build
