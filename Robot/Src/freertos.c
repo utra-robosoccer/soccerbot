@@ -92,7 +92,7 @@ osThreadId UART6_Handle;
 uint32_t UART6_Buffer[ 128 ];
 osStaticThreadDef_t UART6_ControlBlock;
 osThreadId IMUTaskHandle;
-uint32_t IMUTaskBuffer[ 512 ];
+uint32_t IMUTaskBuffer[ 128 ];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId rxTaskHandle;
 uint32_t rxTaskBuffer[ 512 ];
@@ -122,6 +122,7 @@ osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
 
 /* USER CODE BEGIN Variables */
+const double PI = 3.141592654;
 
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
@@ -225,7 +226,7 @@ void MX_FREERTOS_Init(void) {
   UART6_Handle = osThreadCreate(osThread(UART6_), NULL);
 
   /* definition and creation of IMUTask */
-  osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 512, IMUTaskBuffer, &IMUTaskControlBlock);
+  osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128, IMUTaskBuffer, &IMUTaskControlBlock);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of rxTask */
@@ -647,59 +648,31 @@ void UART6_Handler(void const * argument)
   */
 void StartIMUTask(void const * argument)
 {
-  /* USER CODE BEGIN StartIMUTask */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN StartIMUTask */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  TXData_t dataToSend;
-  dataToSend.eDataType = eIMUData;
+    /* Infinite loop */
+    TXData_t dataToSend;
+    dataToSend.eDataType = eIMUData;
 
-  uint32_t notification;
+    uint32_t notification;
 
-  MPUFilterType axFilter, ayFilter, azFilter, vxFilter, vyFilter, vzFilter;
-  MPUFilter_init(&axFilter);
-  MPUFilter_init(&ayFilter);
-  MPUFilter_init(&azFilter);
-  MPUFilter_init(&vxFilter);
-  MPUFilter_init(&vyFilter);
-  MPUFilter_init(&vzFilter);
+    for(;;)
+    {
+        do{
+            xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
+        }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
 
-  for(;;)
-  {
-	  do{
-	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+        // Note that it takes < 1 ms total for the sensor to read both accel and gyro
+        MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
+        MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
-      // Note that it takes < 1 ms total for the sensor to read both accel and gyro
-	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-
-	  // Filter
-	  MPUFilter_writeInput(&azFilter, IMUdata._Z_ACCEL);
-	  IMUdata._Z_ACCEL = MPUFilter_readOutput(&azFilter);
-
-	  MPUFilter_writeInput(&ayFilter, IMUdata._Y_ACCEL);
-	  IMUdata._Y_ACCEL = MPUFilter_readOutput(&ayFilter);
-
-	  MPUFilter_writeInput(&axFilter, IMUdata._X_ACCEL);
-	  IMUdata._X_ACCEL = MPUFilter_readOutput(&axFilter);
-
-	  MPUFilter_writeInput(&vzFilter, IMUdata._Z_GYRO);
-	  IMUdata._Z_GYRO = MPUFilter_readOutput(&vzFilter);
-
-	  MPUFilter_writeInput(&vyFilter, IMUdata._Y_GYRO);
-	  IMUdata._Y_GYRO = MPUFilter_readOutput(&vyFilter);
-
-	  MPUFilter_writeInput(&vxFilter, IMUdata._X_GYRO);
-	  IMUdata._X_GYRO = MPUFilter_readOutput(&vxFilter);
-
-	  // Send to TX thread
-	  dataToSend.pData = &IMUdata;
-	  xQueueSend(UART_rxHandle, &dataToSend, 0);
-  }
-  /* USER CODE END StartIMUTask */
+        dataToSend.pData = &IMUdata;
+        xQueueSend(UART_rxHandle, &dataToSend, 0);
+    }
+    /* USER CODE END StartIMUTask */
 }
 
 /* StartRxTask function */
