@@ -1,13 +1,7 @@
 /**
   ******************************************************************************
-  * @file    freertos.c
-  * @brief   Code for freertos application
-  * @author  Gokul
-  * @author  Tyler
-  * @author  Izaak
-  *
-  * @defgroup FreeRTOS FreeRTOS
-  * @brief    Everything related to FreeRTOS
+  * File Name          : freertos.c
+  * Description        : Code for freertos applications
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -48,6 +42,7 @@
   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
   ******************************************************************************
   */
 
@@ -65,6 +60,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "../Drivers/MPU6050/MPU6050.h"
+#include "../Drivers/MPU6050/MPUFilter.h"
 #include "sharedMacros.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
@@ -270,29 +266,11 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 }
 
-/**
- * @defgroup Threads Threads
- * @brief    These are functions run in the context of their own FreeRTOS
- *           threads
- *
- * @ingroup  FreeRTOS
- */
-
 /* StartDefaultTask function */
-/**
-  * @brief  This function is executed in the context of the defaultTask
-  *         thread. It initializes all data structures and peripheral
-  *         devices associated with the application, and then assumes
-  *         responsibility for distributing commands to the actuators
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void StartDefaultTask(void const * argument)
 {
 
-    /* USER CODE BEGIN StartDefaultTask */
+  /* USER CODE BEGIN StartDefaultTask */
     Dynamixel_SetIOType(IO_POLL); // Configure IO
 
     Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
@@ -460,26 +438,13 @@ void StartDefaultTask(void const * argument)
 
         numIterations++;
     }
-    /* USER CODE END StartDefaultTask */
+  /* USER CODE END StartDefaultTask */
 }
 
 /* UART1_Handler function */
-/**
-  * @brief  This function is executed in the context of the UART1_
-  *         thread. It processes all commands for the motors
-  *         physically connected to UART1, and initiates the I/O
-  *         calls to them. Whenever it processes read commands for
-  *         a motor, it sends the data received to the
-  *         multi-writer sensor queue, which is read only by the
-  *         TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void UART1_Handler(void const * argument)
 {
-    /* USER CODE BEGIN UART1_Handler */
+  /* USER CODE BEGIN UART1_Handler */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
@@ -494,26 +459,13 @@ void UART1_Handler(void const * argument)
         while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
-    /* USER CODE END UART1_Handler */
+  /* USER CODE END UART1_Handler */
 }
 
 /* UART2_Handler function */
-/**
-  * @brief  This function is executed in the context of the UART2_
-  *         thread. It processes all commands for the motors
-  *         physically connected to UART2, and initiates the I/O
-  *         calls to them. Whenever it processes read commands for
-  *         a motor, it sends the data received to the
-  *         multi-writer sensor queue, which is read only by the
-  *         TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void UART2_Handler(void const * argument)
 {
-    /* USER CODE BEGIN UART2_Handler */
+  /* USER CODE BEGIN UART2_Handler */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
@@ -528,26 +480,13 @@ void UART2_Handler(void const * argument)
         while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
-    /* USER CODE END UART2_Handler */
+  /* USER CODE END UART2_Handler */
 }
 
 /* UART3_Handler function */
-/**
-  * @brief  This function is executed in the context of the UART3_
-  *         thread. It processes all commands for the motors
-  *         physically connected to UART3, and initiates the I/O
-  *         calls to them. Whenever it processes read commands for
-  *         a motor, it sends the data received to the
-  *         multi-writer sensor queue, which is read only by the
-  *         TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void UART3_Handler(void const * argument)
 {
-    /* USER CODE BEGIN UART3_Handler */
+  /* USER CODE BEGIN UART3_Handler */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
@@ -562,26 +501,13 @@ void UART3_Handler(void const * argument)
         while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
-    /* USER CODE END UART3_Handler */
+  /* USER CODE END UART3_Handler */
 }
 
 /* UART4_Handler function */
-/**
-  * @brief  This function is executed in the context of the UART4_
-  *         thread. It processes all commands for the motors
-  *         physically connected to UART4, and initiates the I/O
-  *         calls to them. Whenever it processes read commands for
-  *         a motor, it sends the data received to the
-  *         multi-writer sensor queue, which is read only by the
-  *         TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void UART4_Handler(void const * argument)
 {
-    /* USER CODE BEGIN UART4_Handler */
+  /* USER CODE BEGIN UART4_Handler */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
@@ -596,26 +522,13 @@ void UART4_Handler(void const * argument)
         while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
-    /* USER CODE END UART4_Handler */
+  /* USER CODE END UART4_Handler */
 }
 
 /* UART6_Handler function */
-/**
-  * @brief  This function is executed in the context of the UART6_
-  *         thread. It processes all commands for the motors
-  *         physically connected to UART6, and initiates the I/O
-  *         calls to them. Whenever it processes read commands for
-  *         a motor, it sends the data received to the
-  *         multi-writer sensor queue, which is read only by the
-  *         TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void UART6_Handler(void const * argument)
 {
-    /* USER CODE BEGIN UART6_Handler */
+  /* USER CODE BEGIN UART6_Handler */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
@@ -630,21 +543,10 @@ void UART6_Handler(void const * argument)
         while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
-    /* USER CODE END UART6_Handler */
+  /* USER CODE END UART6_Handler */
 }
 
 /* StartIMUTask function */
-/**
-  * @brief  This function is executed in the context of the
-  *         IMUTask thread. During each control cycle, this thread
-  *         fetches accelerometer and gyroscope data, then sends
-  *         this data to the multi-writer sensor queue, which is
-  *         read only by the TX task.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void StartIMUTask(void const * argument)
 {
   /* USER CODE BEGIN StartIMUTask */
@@ -656,44 +558,25 @@ void StartIMUTask(void const * argument)
   TXData_t dataToSend;
   dataToSend.eDataType = eIMUData;
 
-  uint32_t notification;
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
 
-  MPUFilterType axFilter, ayFilter, azFilter, vxFilter, vyFilter, vzFilter;
-  MPUFilter_init(&axFilter);
-  MPUFilter_init(&ayFilter);
-  MPUFilter_init(&azFilter);
-  MPUFilter_init(&vxFilter);
-  MPUFilter_init(&vyFilter);
-  MPUFilter_init(&vzFilter);
+  const TickType_t IMU_CYCLE_TIME_MS = 2;
 
+  MPUFilter_InitAllFilters();
+
+  /* Infinite loop */
   for(;;)
   {
-	  do{
-	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+      // Service this thread every 2 ms for a 500 Hz sample rate
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
       // Note that it takes < 1 ms total for the sensor to read both accel and gyro
 	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
 	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 
-	  // Filter
-	  MPUFilter_writeInput(&azFilter, IMUdata._Z_ACCEL);
-	  IMUdata._Z_ACCEL = MPUFilter_readOutput(&azFilter);
-
-	  MPUFilter_writeInput(&ayFilter, IMUdata._Y_ACCEL);
-	  IMUdata._Y_ACCEL = MPUFilter_readOutput(&ayFilter);
-
-	  MPUFilter_writeInput(&axFilter, IMUdata._X_ACCEL);
-	  IMUdata._X_ACCEL = MPUFilter_readOutput(&axFilter);
-
-	  MPUFilter_writeInput(&vzFilter, IMUdata._Z_GYRO);
-	  IMUdata._Z_GYRO = MPUFilter_readOutput(&vzFilter);
-
-	  MPUFilter_writeInput(&vyFilter, IMUdata._Y_GYRO);
-	  IMUdata._Y_GYRO = MPUFilter_readOutput(&vyFilter);
-
-	  MPUFilter_writeInput(&vxFilter, IMUdata._X_GYRO);
-	  IMUdata._X_GYRO = MPUFilter_readOutput(&vxFilter);
+	  MPUFilter_FilterAcceleration(&IMUdata);
+	  MPUFilter_FilterAngularVelocity(&IMUdata);
 
 	  // Send to TX thread
 	  dataToSend.pData = &IMUdata;
@@ -703,19 +586,9 @@ void StartIMUTask(void const * argument)
 }
 
 /* StartRxTask function */
-/**
-  * @brief  This function is executed in the context of the RxTask
-  *         thread. It initiates DMA-based receptions of RobotGoals
-  *         from the PC via UART5. Upon successful reception of a
-  *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void StartRxTask(void const * argument)
 {
-    /* USER CODE BEGIN StartRxTask */
+  /* USER CODE BEGIN StartRxTask */
     uint8_t robotGoalData[sizeof(RobotGoal)];
     uint8_t *robotGoalDataPtr;
     uint8_t buffRx[92];
@@ -802,25 +675,13 @@ void StartRxTask(void const * argument)
             }
         }
     }
-    /* USER CODE END StartRxTask */
+  /* USER CODE END StartRxTask */
 }
 
 /* StartTxTask function */
-/**
-  * @brief  This function is executed in the context of the TxTask
-  *         thread. This thread is blocked until all sensor data
-  *         has been received through the sensor queue. After this
-  *         time, the UARTx_ and IMUTask will be blocked. Then, a
-  *         DMA-based transmission of a RobotState is sent to the
-  *         PC via UART5.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
 void StartTxTask(void const * argument)
 {
-    /* USER CODE BEGIN StartTxTask */
+  /* USER CODE BEGIN StartTxTask */
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
     TXData_t receivedData;
@@ -896,7 +757,7 @@ void StartTxTask(void const * argument)
             xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
         }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
     }
-    /* USER CODE END StartTxTask */
+  /* USER CODE END StartTxTask */
 }
 
 /* USER CODE BEGIN Application */

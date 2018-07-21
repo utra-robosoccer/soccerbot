@@ -1,3 +1,13 @@
+/**
+  *****************************************************************************
+  * @file    MPUFilter.h
+  * @author  Tyler
+  * @brief   Header code for IMU filtering.
+  *
+  * @ingroup  IMU_Filter
+  *****************************************************************************
+  */
+
 /******************************* SOURCE LICENSE *********************************
 Copyright (c) 2018 MicroModeler.
 
@@ -10,46 +20,39 @@ This Information is distributed WITHOUT ANY WARRANTY; without even the implied w
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 ******************************* END OF LICENSE *********************************/
-
-// A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
-
-// Begin header file, MPUFilter.h
-
-#ifndef MPUFILTER_H_ // Include guards
-#define MPUFILTER_H_
-
-#define ARM_MATH_CM4	// Use ARM Cortex M4
-#define __FPU_PRESENT 1		// Does this device have a floating point unit?
-#include <arm_math.h>	// Include CMSIS header
-
 // Link with library: libarm_cortexM4_mathL.a (or equivalent)
 // Add CMSIS/Lib/GCC to the library search path
 // Add CMSIS/Include to the include search path
-extern float32_t MPUFilter_coefficients[21];
-
-typedef struct
-{
-	arm_fir_instance_f32 instance;
-	float32_t state[37];
-	float32_t output;
-} MPUFilterType;
-
-void MPUFilter_init( MPUFilterType * pThis );
-void MPUFilter_reset( MPUFilterType * pThis );
-inline void MPUFilter_writeInput(MPUFilterType * pThis, float input){
-	arm_fir_f32( &pThis->instance, &input, &pThis->output, 1 );
-};
-inline float MPUFilter_readOutput( MPUFilterType * pThis ){
-	return pThis->output;
-}
+// A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
 
 
-int MPUFilter_filterBlock( MPUFilterType * pThis, float * pInput, float * pOutput, unsigned int count );
-#define MPUFilter_outputToFloat( output )  \
-	(output)
 
-#define MPUFilter_inputFromFloat( input )  \
-	(input)
 
-#endif // MPUFILTER_H_
+/******************** Define to prevent recursive inclusion ******************/
+#ifndef __MPUFILTER_H__
+#define __MPUFILTER_H__
 
+
+
+
+/********************************** Macros ***********************************/
+// Note: These need to be defined before arm_math.h is included
+#define ARM_MATH_CM4     // Use ARM Cortex M4
+#define __FPU_PRESENT 1  // Math libraries will generate FPU instructions
+
+
+
+
+/********************************* Includes **********************************/
+#include <arm_math.h>	// Include CMSIS header
+#include "MPU6050.h"
+
+
+
+
+/***************************** Function prototypes ***************************/
+void MPUFilter_InitAllFilters();
+void MPUFilter_FilterAcceleration(MPU6050_HandleTypeDef* IMUdata);
+void MPUFilter_FilterAngularVelocity(MPU6050_HandleTypeDef* IMUdata);
+
+#endif /* __MPUFILTER_H__ */
