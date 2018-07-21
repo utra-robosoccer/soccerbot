@@ -1,12 +1,26 @@
-/*
- * Communication.h
- *
- *  Created on: May 28, 2018
- *      Author: Admin
- */
+/**
+  ******************************************************************************
+  * @file    Communication.h
+  * @author  Jason
+  * @author  Tyler
+  * @brief   Header for top-level communication module
+  *
+  * @defgroup CommunicationHeader Communication (Header)
+  * @brief    Header for communication, showing the public content
+  * @ingroup  Communication
+  * @{
+  ******************************************************************************
+  */
 
-#ifndef COMMUNICATION_COMMUNICATION_H_
-#define COMMUNICATION_COMMUNICATION_H_
+
+
+
+/******************** Define to prevent recursive inclusion *******************/
+#ifndef __COMMUNICATION_H__
+#define __COMMUNICATION_H__
+
+
+
 
 /********************************** Includes **********************************/
 #include <stdint.h>
@@ -17,8 +31,15 @@
 #include "robotGoal.h"
 
 
-/******************************* Public Variables *******************************/
-extern RobotGoal robotGoal;
-extern RobotState robotState;
 
-#endif /* COMMUNICATION_COMMUNICATION_H_ */
+
+/******************************* Public Variables ******************************/
+RobotGoal robotGoal;
+RobotState robotState;
+
+/**
+ * @}
+ */
+/* end CommunicationHeader */
+
+#endif /* __COMMUNICATION_H__ */

@@ -1,0 +1,5 @@
+<map id="AX12A_SetComplianceSlope" name="AX12A_SetComplianceSlope">
+<area shape="rect" id="node2" href="$group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451" title="Sets the clockwise compliance slope for the current motor. " alt="" coords="247,5,458,32"/>
+<area shape="rect" id="node4" href="$group___a_x12_a___setters.html#ga763c348ba5f89fa5bf57595a2ef7e386" title="Sets the counter&#45;clockwise compliance slope for the current motor. " alt="" coords="243,56,463,83"/>
+<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="511,31,663,57"/>
+</map>

@@ -1,4 +1,14 @@
-
+/**
+  ******************************************************************************
+  * @file    MPU6050.h
+  * @author  Izaak
+  * @author  Jenny
+  * @author  Tyler
+  * @brief   Header code for the MPU6050 library, including the struct in which
+  *          accelerometer and gyroscope data are stored.
+  *@ingroup  MPU6050
+  ******************************************************************************
+  */
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
@@ -54,7 +64,8 @@ typedef struct{
 
 
 }MPU6050_HandleTypeDef;
-/****************Function Definition********************************/
+
+/**************** Function Definitions ********************************/
 void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
 BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
 void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
