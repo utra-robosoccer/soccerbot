@@ -20,7 +20,6 @@
 #include <stdlib.h>
 
 #include "sharedMacros.h"
-#include "MPUFilter.h"
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;

@@ -1,8 +1,8 @@
 
 /**
   ******************************************************************************
-  * @file           main.c
-  * @brief          Main program body
+  * @file           : main.c
+  * @brief          : Main program body
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
