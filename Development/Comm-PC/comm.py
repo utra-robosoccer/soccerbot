@@ -213,31 +213,26 @@ def analyze():
     from prettytable import PrettyTable
     import matplotlib.pyplot as plt
     
-    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21_16_03_15'
-    root2 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21_16_46_49'
-    root3 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21_16_49_14'
-    root4 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21_16_54_39'
-    root5 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21_16_59_20'
-    root6 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21'
-    root = root6
+    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21'
+    root = root1
     os.chdir(root)
     
     files = os.listdir(os.getcwd())
     files = [file for file in files if file.endswith('.txt')]
-    filename = files[1]
-    data = np.loadtxt(fname=filename, usecols=(1,2,3,4,5,6))
-    time = np.arange(0, data.shape[0])
-
-    plt.figure(figsize=(70, 10))
-    plt.title('Data for {0}'.format(filename))
-    plt.xlabel('Time (s)')
-    plt.plot(time, data[:,0], color='red', label='Vx')
-    plt.plot(time, data[:,1], color='green', label='Vy')
-    plt.plot(time, data[:,2], color='blue', label='Vz')
-    plt.plot(time, data[:,3], color='purple', label='Ax')
-    plt.plot(time, data[:,4], color='brown', label='Ay')
-    plt.plot(time, data[:,5], color='orange', label='Az')
-    plt.legend(loc='best')
-    plt.savefig(root + '/' + filename + '.png')
-    plt.close()
+    for filename in files:
+        data = np.loadtxt(fname=filename, usecols=(1,2,3,4,5,6))
+        time = np.arange(0, data.shape[0])
+    
+        plt.figure(figsize=(70, 10))
+        plt.title('Data for {0}'.format(filename))
+        plt.xlabel('Time (s)')
+        plt.plot(time, data[:,0], color='red', label='Vx')
+        plt.plot(time, data[:,1], color='green', label='Vy')
+        plt.plot(time, data[:,2], color='blue', label='Vz')
+        plt.plot(time, data[:,3], color='purple', label='Ax')
+        plt.plot(time, data[:,4], color='brown', label='Ay')
+        plt.plot(time, data[:,5], color='orange', label='Az')
+        plt.legend(loc='best')
+        plt.savefig(root + '/' + filename + '.png')
+        plt.close()
     
