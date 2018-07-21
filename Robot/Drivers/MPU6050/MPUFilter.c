@@ -36,9 +36,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 /********************************* Constants *********************************/
+/** Number of filter taps (equal to number of coefficients here) */
 static const uint16_t MPUFilter_numTaps = 21;
-static const uint16_t MPUFilter_blockSize = 16;
+static const uint16_t MPUFilter_blockSize = 16; // TODO: Should be 1??
 
+/**
+ * FIR filter coefficients, which correspond to the filter's impulse response
+ * in the discrete time domain. The impulse respond of this filter in fact
+ * looks much like a hamming window. Since there are 21 coefficients, input
+ * signals are delayed by (21 - 1)/2 = 10 samples.
+ */
 static float32_t MPUFilter_coefficients[21] =
 {
     -0.018872079, -0.0011102221, 0.0030367336, 0.014906744, 0.030477359, 0.049086205,
@@ -62,6 +69,7 @@ typedef struct
 
 
 /***************************** Private Variables *****************************/
+/** Filters for acceleration and angular velocity along each axis */
 static MPUFilterType axFilter, ayFilter, azFilter, vxFilter, vyFilter, vzFilter;
 
 
