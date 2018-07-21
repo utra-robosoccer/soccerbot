@@ -101,7 +101,7 @@ static inline float MPUFilter_readOutput( MPUFilterType * pThis ){
 
 static void MPUFilter_init( MPUFilterType * pThis )
 {
-	arm_fir_init_f32( &pThis->instance, MPUFilter_numTaps, MPUFilter_coefficients, pThis->state, MPUFilter_blockSize );
+	arm_fir_init_f32( &pThis->instance, 21, MPUFilter_coefficients, pThis->state, MPUFilter_blockSize );
 	MPUFilter_reset( pThis );
 
 }

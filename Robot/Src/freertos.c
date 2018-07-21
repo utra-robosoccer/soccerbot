@@ -561,7 +561,7 @@ void StartIMUTask(void const * argument)
   TickType_t xLastWakeTime;
   xLastWakeTime = xTaskGetTickCount();
 
-  const TickType_t IMU_CYCLE_TIME_MS = 2;
+  const TickType_t IMU_CYCLE_TIME_MS = 4;
 
   MPUFilter_InitAllFilters();
 
