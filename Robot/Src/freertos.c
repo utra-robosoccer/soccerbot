@@ -561,7 +561,8 @@ void StartIMUTask(void const * argument)
   TickType_t xLastWakeTime;
   xLastWakeTime = xTaskGetTickCount();
 
-  const TickType_t IMU_CYCLE_TIME_MS = 4;
+  const TickType_t IMU_CYCLE_TIME_MS = 2;
+  uint8_t i = 0;
 
   MPUFilter_InitAllFilters();
 
@@ -571,12 +572,19 @@ void StartIMUTask(void const * argument)
       // Service this thread every 2 ms for a 500 Hz sample rate
       vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-      // Note that it takes < 1 ms total for the sensor to read both accel and gyro
 	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-
 	  MPUFilter_FilterAcceleration(&IMUdata);
-	  MPUFilter_FilterAngularVelocity(&IMUdata);
+
+	  // Gyroscope data is much more volatile/sensitive to changes than
+	  // acceleration data. To compensate, we feed in samples to the filter
+	  // slower. Good DSP practise? Not sure. To compensate for the high
+	  // delays, we also use a filter with fewer taps than the acceleration
+	  // filters
+	  if(i % 16 == 0){
+	      MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+	      MPUFilter_FilterAngularVelocity(&IMUdata);
+	  }
+	  i++;
 
 	  // Send to TX thread
 	  dataToSend.pData = &IMUdata;
