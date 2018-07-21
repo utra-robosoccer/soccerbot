@@ -38,13 +38,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 /********************************* Constants *********************************/
 /** Number of filter taps (equal to number of coefficients here) */
 static const uint16_t MPUFilter_numTaps = 21;
-static const uint16_t MPUFilter_blockSize = 16; // TODO: Should be 1??
+static const uint16_t MPUFilter_blockSize = 16; // TODO: What should this really be?
 
 /**
  * FIR filter coefficients, which correspond to the filter's impulse response
- * in the discrete time domain. The impulse respond of this filter in fact
- * looks much like a hamming window. Since there are 21 coefficients, input
- * signals are delayed by (21 - 1)/2 = 10 samples.
+ * in the discrete time domain. Since there are 21 coefficients, input
+ * signals are delayed by (21 - 1)/2 = 10 samples. At 500 Hz sample rate, this
+ * is a 20 ms delay
  */
 static float32_t MPUFilter_coefficients[21] =
 {
@@ -52,6 +52,15 @@ static float32_t MPUFilter_coefficients[21] =
     0.070363952, 0.089952103, 0.10482875, 0.11485946, 0.11869398, 0.11485946,
     0.10482875, 0.089952103, 0.070363952, 0.049086205, 0.030477359, 0.014906744,
     0.0030367336, -0.0011102221, -0.018872079
+};
+
+/**
+ * Filter coefficients for a filter with 5 sample = 10 ms delay
+ */
+static float MPUFilter_shortCoefficients[11] =
+{
+    0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315,
+    0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841
 };
 
 

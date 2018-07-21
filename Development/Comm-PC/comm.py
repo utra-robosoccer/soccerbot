@@ -182,8 +182,8 @@ if __name__ == "__main__":
         while(ser.isOpen()):
             for i in range(trajectory.shape[1]):
                 dummy=input('') # Uncomment this if you want to step through the trajectories via user input
-                angles = trajectory[:, i:i+1]
-                #angles = np.zeros((18, 1))
+                #angles = trajectory[:, i:i+1]
+                angles = np.zeros((18, 1))
                 sendPacketToMCU(vec2bytes(angles))
                 
                 numTransfers = numTransfers + 1
