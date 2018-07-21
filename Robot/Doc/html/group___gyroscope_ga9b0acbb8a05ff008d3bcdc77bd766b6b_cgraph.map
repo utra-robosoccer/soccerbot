@@ -1,0 +1,3 @@
+<map id="MPU6050_Read_Gyroscope_Withoffset_IT" name="MPU6050_Read_Gyroscope_Withoffset_IT">
+<area shape="rect" id="node2" href="$group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230" title="This function reads a register from the MPU6050 with interrupts, and stores it into a buffer..." alt="" coords="240,13,420,39"/>
+</map>
