@@ -7,12 +7,21 @@
 //
 // Code generated for Simulink model 'soccer_vision'.
 //
+<<<<<<< HEAD
 // Model version                  : 1.759
 // Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
 // C/C++ source code generated on : Sat Jul 14 20:07:55 2018
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
+=======
+// Model version                  : 1.770
+// Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
+// C/C++ source code generated on : Sun Jul 15 23:50:31 2018
+//
+// Target selection: ert.tlc
+// Embedded hardware selection: ARM Compatible->ARM 64-bit (LP64)
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
@@ -22,6 +31,10 @@
 
 // Named constants for MATLAB Function: '<S12>/Label Net Lines'
 #define soccer_vision_scalerho         (0.002)
+<<<<<<< HEAD
+=======
+#define soccer_vision_MessageQueueLen  (1)
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
 // Block signals (default storage)
 B_soccer_vision_T soccer_vision_B;
@@ -34,6 +47,30 @@ RT_MODEL_soccer_vision_T soccer_vision_M_;
 RT_MODEL_soccer_vision_T *const soccer_vision_M = &soccer_vision_M_;
 
 // Forward declaration for local functions
+<<<<<<< HEAD
+=======
+static void soccer_vision_char(const uint8_T varargin_1_data[], const int32_T
+  varargin_1_size[2], char_T y_data[], int32_T y_size[2]);
+static boolean_T soccer_vision_strcmp(const char_T a_data[], const int32_T
+  a_size[2]);
+static void soccer_vision_typecast(const uint8_T x_data[], const int32_T *x_size,
+  uint8_T y_data[], int32_T *y_size);
+static void soccer_vision_permute(const uint8_T a_data[], const int32_T a_size[3],
+  uint8_T b_data[], int32_T b_size[3]);
+static void soccer_vision_ImageReader_readImage(const uint8_T data_data[], const
+  int32_T *data_size, uint32_T width, uint32_T height, uint8_T img_data[],
+  int32_T img_size[3]);
+static void soccer_vision_ReadImage_decodeImage(const
+  robotics_slros_internal_block_ReadImage_soccer_vision_T *obj, const uint8_T
+  data_data[], const int32_T *data_size, uint32_T width, uint32_T height,
+  uint8_T image_data[], int32_T image_size[3], uint8_T *errorCode);
+static uint8_T soccer_vision_ReadImage_update
+  (robotics_slros_internal_block_ReadImage_soccer_vision_T *obj, uint32_T
+   busstruct_Height, uint32_T busstruct_Width, const uint8_T busstruct_Encoding
+   [128], uint32_T busstruct_Encoding_SL_Info_CurrentLength, const uint8_T
+   busstruct_Data[128], uint32_T busstruct_Data_SL_Info_CurrentLength, uint32_T
+   busstruct_Data_SL_Info_ReceivedLength);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 static real_T soccer_vision_rand(void);
 static void soccer_vision_distfun(real_T D_data[], int32_T D_size[2], const
   real_T X[40], const real_T C_data[], const int32_T C_size[2], int32_T crows);
@@ -66,6 +103,7 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5]);
 static Point2f_soccer_vision_T *soccer_vision_Line2f_screenIntersection(const
   Line2f_soccer_vision_T *obj1, const Line2f_soccer_vision_T *obj2,
   Point2f_soccer_vision_T *iobj_0);
+<<<<<<< HEAD
 void mul_wide_s32(int32_T in0, int32_T in1, uint32_T *ptrOutBitsHi, uint32_T
                   *ptrOutBitsLo)
 {
@@ -201,13 +239,388 @@ int32_T div_nzp_s32(int32_T numerator, int32_T denominator)
     : (uint32_T)denominator);
   return (numerator < 0) != (denominator < 0) ? -(int32_T)tempAbsQuotient :
     (int32_T)tempAbsQuotient;
+=======
+static void soccer_vision_SystemProp_matlabCodegenSetAnyProp
+  (robotics_slros_internal_block_Subscriber_soccer_vision_T *obj, boolean_T
+   value);
+static void soccer_vision_matlabCodegenHandle_matlabCodegenDestructor
+  (robotics_slros_internal_block_Subscriber_soccer_vision_T *obj);
+static void rate_scheduler(void);
+
+//
+//   This function updates active task flag for each subrate.
+// The function is called at model base rate, hence the
+// generated code self-manages all its subrates.
+//
+static void rate_scheduler(void)
+{
+  // Compute which subrates run during the next base time step.  Subrates
+  //  are an integer multiple of the base rate counter.  Therefore, the subtask
+  //  counter is reset when it reaches its limit (zero means run).
+
+  (soccer_vision_M->Timing.TaskCounters.TID[1])++;
+  if ((soccer_vision_M->Timing.TaskCounters.TID[1]) > 9) {// Sample time: [0.1s, 0.0s] 
+    soccer_vision_M->Timing.TaskCounters.TID[1] = 0;
+  }
+}
+
+static void soccer_vision_char(const uint8_T varargin_1_data[], const int32_T
+  varargin_1_size[2], char_T y_data[], int32_T y_size[2])
+{
+  int32_T loop_ub;
+  int32_T i;
+  y_size[0] = 1;
+  y_size[1] = varargin_1_size[1];
+  loop_ub = varargin_1_size[1] - 1;
+  for (i = 0; i <= loop_ub; i++) {
+    y_data[i] = (int8_T)varargin_1_data[i];
+  }
+}
+
+static boolean_T soccer_vision_strcmp(const char_T a_data[], const int32_T
+  a_size[2])
+{
+  boolean_T b_bool;
+  int32_T kstr;
+  char_T b[4];
+  static const char_T tmp[128] = { '\x00', '\x01', '\x02', '\x03', '\x04',
+    '\x05', '\x06', '\x07', '\x08', '\x09', '\x0a', '\x0b', '\x0c', '\x0d',
+    '\x0e', '\x0f', '\x10', '\x11', '\x12', '\x13', '\x14', '\x15', '\x16',
+    '\x17', '\x18', '\x19', '\x1a', '\x1b', '\x1c', '\x1d', '\x1e', '\x1f', ' ',
+    '!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>',
+    '?', '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',
+    ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+    'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '{', '|', '}', '~', '\x7f' };
+
+  int32_T exitg1;
+  b[0] = 'r';
+  b[1] = 'g';
+  b[2] = 'b';
+  b[3] = '8';
+  b_bool = false;
+  if (a_size[1] == 4) {
+    kstr = 0;
+    do {
+      exitg1 = 0;
+      if (kstr + 1 < 5) {
+        if (tmp[(uint8_T)a_data[kstr] & 127] != tmp[(int32_T)b[kstr]]) {
+          exitg1 = 1;
+        } else {
+          kstr++;
+        }
+      } else {
+        b_bool = true;
+        exitg1 = 1;
+      }
+    } while (exitg1 == 0);
+  }
+
+  return b_bool;
+}
+
+static void soccer_vision_typecast(const uint8_T x_data[], const int32_T *x_size,
+  uint8_T y_data[], int32_T *y_size)
+{
+  *y_size = *x_size;
+  memcpy((void *)&y_data[0], (void *)&x_data[0], (uint32_T)((size_t)*x_size *
+          sizeof(uint8_T)));
+}
+
+static void soccer_vision_permute(const uint8_T a_data[], const int32_T a_size[3],
+  uint8_T b_data[], int32_T b_size[3])
+{
+  boolean_T b;
+  int8_T perm[3];
+  int32_T plast;
+  int32_T k;
+  boolean_T exitg1;
+  perm[0] = 2;
+  perm[1] = 1;
+  perm[2] = 3;
+  b = true;
+  if (!((a_size[0] == 0) || (a_size[1] == 0))) {
+    plast = 0;
+    k = 0;
+    exitg1 = false;
+    while ((!exitg1) && (k + 1 < 4)) {
+      if (a_size[perm[k] - 1] != 1) {
+        if (plast > perm[k]) {
+          b = false;
+          exitg1 = true;
+        } else {
+          plast = perm[k];
+          k++;
+        }
+      } else {
+        k++;
+      }
+    }
+  }
+
+  if (b) {
+    b_size[0] = a_size[1];
+    b_size[1] = a_size[0];
+    b_size[2] = 3;
+    k = a_size[1] * a_size[0] * 3 - 1;
+    if (0 <= k) {
+      memcpy(&b_data[0], &a_data[0], (k + 1) * sizeof(uint8_T));
+    }
+  } else {
+    b_size[0] = a_size[1];
+    b_size[1] = a_size[0];
+    b_size[2] = 3;
+    for (k = 1; k <= a_size[1]; k++) {
+      for (plast = 1; plast <= a_size[0]; plast++) {
+        b_data[(k + b_size[0] * (plast - 1)) - 1] = a_data[((k - 1) * a_size[0]
+          + plast) - 1];
+      }
+    }
+
+    for (k = 1; k <= a_size[1]; k++) {
+      for (plast = 1; plast <= a_size[0]; plast++) {
+        b_data[((k + b_size[0] * (plast - 1)) + b_size[0] * b_size[1]) - 1] =
+          a_data[(((k - 1) * a_size[0] + plast) + a_size[0] * a_size[1]) - 1];
+      }
+    }
+
+    for (k = 1; k <= a_size[1]; k++) {
+      for (plast = 1; plast <= a_size[0]; plast++) {
+        b_data[((k + b_size[0] * (plast - 1)) + ((b_size[0] * b_size[1]) << 1))
+          - 1] = a_data[(((k - 1) * a_size[0] + plast) + ((a_size[0] * a_size[1])
+          << 1)) - 1];
+      }
+    }
+  }
+}
+
+static void soccer_vision_ImageReader_readImage(const uint8_T data_data[], const
+  int32_T *data_size, uint32_T width, uint32_T height, uint8_T img_data[],
+  int32_T img_size[3])
+{
+  uint32_T y;
+  int32_T n;
+  int32_T k;
+  int32_T loop_ub;
+  int32_T i;
+  uint32_T qY;
+  if (*data_size == 0) {
+    img_size[0] = 0;
+    img_size[1] = 1;
+    img_size[2] = 1;
+  } else {
+    soccer_vision_typecast(data_data, data_size, soccer_vision_B.data_data_k, &n);
+    soccer_vision_B.u0 = (uint64_T)width * height;
+    if (soccer_vision_B.u0 > 4294967295UL) {
+      soccer_vision_B.u0 = 4294967295UL;
+    }
+
+    soccer_vision_B.u0 = (uint32_T)soccer_vision_B.u0 * 3UL;
+    if (soccer_vision_B.u0 > 4294967295UL) {
+      soccer_vision_B.u0 = 4294967295UL;
+    }
+
+    y = (uint32_T)soccer_vision_B.u0;
+    if (y < 1U) {
+      n = 0;
+    } else {
+      n = (int32_T)((y - 1U) / 3U) + 1;
+    }
+
+    for (k = 0; k < n; k++) {
+      soccer_vision_B.y_data[k] = k * 3U + 1U;
+    }
+
+    if (0 <= n - 1) {
+      memcpy(&soccer_vision_B.indexBase_data[0], &soccer_vision_B.y_data[0], n *
+             sizeof(uint32_T));
+    }
+
+    loop_ub = n * 3 - 1;
+    if (0 <= loop_ub) {
+      memset(&soccer_vision_B.b_index_data[0], 0, (loop_ub + 1) * sizeof
+             (uint32_T));
+    }
+
+    for (loop_ub = 0; loop_ub < 3; loop_ub++) {
+      k = 1 + loop_ub;
+      for (i = 0; i < n; i++) {
+        soccer_vision_B.d0 = (real_T)soccer_vision_B.indexBase_data[i] + (real_T)
+          k;
+        if (soccer_vision_B.d0 < 4.294967296E+9) {
+          y = (uint32_T)soccer_vision_B.d0;
+        } else {
+          y = MAX_uint32_T;
+        }
+
+        qY = y - /*MW:OvSatOk*/ 1U;
+        if (qY > y) {
+          qY = 0U;
+        }
+
+        soccer_vision_B.b_index_data[i + n * loop_ub] = qY;
+      }
+    }
+
+    soccer_vision_B.data_size[0] = (int32_T)width;
+    soccer_vision_B.data_size[1] = (int32_T)height;
+    soccer_vision_B.data_size[2] = 3;
+    loop_ub = (int32_T)width * (int32_T)height * 3;
+    for (k = 0; k < loop_ub; k++) {
+      soccer_vision_B.data_data[k] = soccer_vision_B.data_data_k[(int32_T)
+        soccer_vision_B.b_index_data[k] - 1];
+    }
+
+    soccer_vision_permute(soccer_vision_B.data_data, soccer_vision_B.data_size,
+                          soccer_vision_B.tmp_data, soccer_vision_B.tmp_size);
+    img_size[0] = soccer_vision_B.tmp_size[0];
+    img_size[1] = soccer_vision_B.tmp_size[1];
+    img_size[2] = 3;
+    loop_ub = soccer_vision_B.tmp_size[0] * soccer_vision_B.tmp_size[1] *
+      soccer_vision_B.tmp_size[2];
+    if (0 <= loop_ub - 1) {
+      memcpy(&img_data[0], &soccer_vision_B.tmp_data[0], loop_ub * sizeof
+             (uint8_T));
+    }
+  }
+}
+
+static void soccer_vision_ReadImage_decodeImage(const
+  robotics_slros_internal_block_ReadImage_soccer_vision_T *obj, const uint8_T
+  data_data[], const int32_T *data_size, uint32_T width, uint32_T height,
+  uint8_T image_data[], int32_T image_size[3], uint8_T *errorCode)
+{
+  if ((height > 480U) || (width > 640U)) {
+    *errorCode = 2U;
+    image_size[0] = 480;
+    image_size[1] = 640;
+    image_size[2] = 3;
+    memcpy(&image_data[0], &obj->Image[0], 921600U * sizeof(uint8_T));
+  } else {
+    soccer_vision_ImageReader_readImage(data_data, data_size, width, height,
+      image_data, image_size);
+    *errorCode = 0U;
+  }
+}
+
+static uint8_T soccer_vision_ReadImage_update
+  (robotics_slros_internal_block_ReadImage_soccer_vision_T *obj, uint32_T
+   busstruct_Height, uint32_T busstruct_Width, const uint8_T busstruct_Encoding
+   [128], uint32_T busstruct_Encoding_SL_Info_CurrentLength, const uint8_T
+   busstruct_Data[128], uint32_T busstruct_Data_SL_Info_CurrentLength, uint32_T
+   busstruct_Data_SL_Info_ReceivedLength)
+{
+  uint8_T errorCode;
+  if (busstruct_Data_SL_Info_CurrentLength <
+      busstruct_Data_SL_Info_ReceivedLength) {
+    errorCode = 3U;
+  } else {
+    if (1U > busstruct_Encoding_SL_Info_CurrentLength) {
+      soccer_vision_B.c = 0;
+    } else {
+      soccer_vision_B.c = (int32_T)busstruct_Encoding_SL_Info_CurrentLength;
+    }
+
+    soccer_vision_B.busstruct_Encoding_size[0] = 1;
+    soccer_vision_B.busstruct_Encoding_size[1] = soccer_vision_B.c;
+    if (0 <= soccer_vision_B.c - 1) {
+      memcpy(&soccer_vision_B.busstruct_Encoding_data[0], &busstruct_Encoding[0],
+             soccer_vision_B.c * sizeof(uint8_T));
+    }
+
+    soccer_vision_char(soccer_vision_B.busstruct_Encoding_data,
+                       soccer_vision_B.busstruct_Encoding_size,
+                       soccer_vision_B.tmp_data_c, soccer_vision_B.tmp_size_b);
+    if (!soccer_vision_strcmp(soccer_vision_B.tmp_data_c,
+         soccer_vision_B.tmp_size_b)) {
+      errorCode = 1U;
+    } else {
+      if (1U > busstruct_Data_SL_Info_CurrentLength) {
+        soccer_vision_B.c = 0;
+      } else {
+        soccer_vision_B.c = (int32_T)busstruct_Data_SL_Info_CurrentLength;
+      }
+
+      soccer_vision_B.busstruct_Data_size = soccer_vision_B.c;
+      if (0 <= soccer_vision_B.c - 1) {
+        memcpy(&soccer_vision_B.busstruct_Encoding_data[0], &busstruct_Data[0],
+               soccer_vision_B.c * sizeof(uint8_T));
+      }
+
+      soccer_vision_ReadImage_decodeImage(obj,
+        soccer_vision_B.busstruct_Encoding_data,
+        &soccer_vision_B.busstruct_Data_size, busstruct_Width, busstruct_Height,
+        soccer_vision_B.rawImage_data, soccer_vision_B.rawImage_size, &errorCode);
+      if (errorCode == 0) {
+        memset(&obj->Image[0], 0, 921600U * sizeof(uint8_T));
+        if (1 > soccer_vision_B.rawImage_size[0]) {
+          soccer_vision_B.c = 0;
+        } else {
+          soccer_vision_B.c = soccer_vision_B.rawImage_size[0];
+        }
+
+        if (1 > soccer_vision_B.rawImage_size[1]) {
+          soccer_vision_B.h = 0;
+        } else {
+          soccer_vision_B.h = soccer_vision_B.rawImage_size[1];
+        }
+
+        for (soccer_vision_B.i1 = 0; soccer_vision_B.i1 < soccer_vision_B.c;
+             soccer_vision_B.i1++) {
+          soccer_vision_B.i_data[soccer_vision_B.i1] = soccer_vision_B.i1;
+        }
+
+        for (soccer_vision_B.i1 = 0; soccer_vision_B.i1 < soccer_vision_B.h;
+             soccer_vision_B.i1++) {
+          soccer_vision_B.j_data[soccer_vision_B.i1] = soccer_vision_B.i1;
+        }
+
+        for (soccer_vision_B.i1 = 0; soccer_vision_B.i1 < 3; soccer_vision_B.i1
+             ++) {
+          for (soccer_vision_B.i3 = 0; soccer_vision_B.i3 < soccer_vision_B.h;
+               soccer_vision_B.i3++) {
+            for (soccer_vision_B.i2 = 0; soccer_vision_B.i2 < soccer_vision_B.c;
+                 soccer_vision_B.i2++) {
+              obj->Image[(soccer_vision_B.i_data[soccer_vision_B.i2] + 480 *
+                          soccer_vision_B.j_data[soccer_vision_B.i3]) + 307200 *
+                soccer_vision_B.i1] = soccer_vision_B.rawImage_data
+                [(soccer_vision_B.c * soccer_vision_B.i3 + soccer_vision_B.i2) +
+                soccer_vision_B.c * soccer_vision_B.h * soccer_vision_B.i1];
+            }
+          }
+        }
+
+        soccer_vision_B.i1 = soccer_vision_B.rawImage_size[0];
+        if (soccer_vision_B.rawImage_size[0] < 0) {
+          soccer_vision_B.i1 = 0;
+        }
+
+        soccer_vision_B.i3 = soccer_vision_B.rawImage_size[1];
+        if (soccer_vision_B.rawImage_size[1] < 0) {
+          soccer_vision_B.i3 = 0;
+        }
+
+        obj->ImageSize[0] = (uint32_T)soccer_vision_B.i1;
+        obj->ImageSize[1] = (uint32_T)soccer_vision_B.i3;
+        errorCode = 0U;
+      }
+    }
+  }
+
+  return errorCode;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 // Function for MATLAB Function: '<S2>/Filter'
 static real_T soccer_vision_rand(void)
 {
   real_T r;
+<<<<<<< HEAD
   uint32_T u[2];
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   uint32_T mti;
   uint32_T y;
   int32_T j;
@@ -296,11 +709,19 @@ static real_T soccer_vision_rand(void)
       y ^= y >> 11U;
       y ^= y << 7U & 2636928640U;
       y ^= y << 15U & 4022730752U;
+<<<<<<< HEAD
       u[j] = y >> 18U ^ y;
     }
 
     r = ((real_T)(u[0] >> 5U) * 6.7108864E+7 + (real_T)(u[1] >> 6U)) *
       1.1102230246251565E-16;
+=======
+      soccer_vision_B.u_c[j] = y >> 18U ^ y;
+    }
+
+    r = ((real_T)(soccer_vision_B.u_c[0] >> 5U) * 6.7108864E+7 + (real_T)
+         (soccer_vision_B.u_c[1] >> 6U)) * 1.1102230246251565E-16;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   } while (r == 0.0);
 
   return r;
@@ -523,8 +944,11 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
   idx[20], real_T C_data[], int32_T C_size[2], real_T D_data[], int32_T D_size[2],
   int32_T counts_data[], boolean_T *converged, int32_T *iter)
 {
+<<<<<<< HEAD
   int32_T nchanged;
   int32_T lonely;
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   int32_T from;
   int32_T nempty;
   int32_T c_j;
@@ -537,11 +961,22 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
 
   memset(&soccer_vision_B.previdx[0], 0, 20U * sizeof(int32_T));
   memset(&soccer_vision_B.moved[0], 0, 20U * sizeof(int32_T));
+<<<<<<< HEAD
   for (nchanged = 1; nchanged <= k; nchanged++) {
     soccer_vision_B.changed_data[nchanged - 1] = nchanged;
   }
 
   nchanged = k;
+=======
+  soccer_vision_B.nchanged = 1;
+  while (soccer_vision_B.nchanged <= k) {
+    soccer_vision_B.changed_data[soccer_vision_B.nchanged - 1] =
+      soccer_vision_B.nchanged;
+    soccer_vision_B.nchanged++;
+  }
+
+  soccer_vision_B.nchanged = k;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   soccer_vision_B.prevtotsumD = (rtInf);
   *iter = 0;
   *converged = false;
@@ -549,11 +984,19 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
     exitg1 = 0;
     (*iter)++;
     soccer_vision_gcentroids(C_data, C_size, counts_data, X, idx,
+<<<<<<< HEAD
       soccer_vision_B.changed_data, nchanged);
     soccer_vision_distfun_k(D_data, D_size, X, C_data, C_size,
       soccer_vision_B.changed_data, nchanged);
     nempty = 0;
     for (f_j = 0; f_j < nchanged; f_j++) {
+=======
+      soccer_vision_B.changed_data, soccer_vision_B.nchanged);
+    soccer_vision_distfun_k(D_data, D_size, X, C_data, C_size,
+      soccer_vision_B.changed_data, soccer_vision_B.nchanged);
+    nempty = 0;
+    for (f_j = 0; f_j < soccer_vision_B.nchanged; f_j++) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       if (counts_data[soccer_vision_B.changed_data[f_j] - 1] == 0) {
         nempty++;
         soccer_vision_B.empties_data[nempty - 1] =
@@ -564,17 +1007,30 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
     if (nempty > 0) {
       for (f_j = 0; f_j < nempty; f_j++) {
         soccer_vision_B.totsumD = D_data[(idx[0] - 1) * D_size[0]];
+<<<<<<< HEAD
         lonely = 0;
+=======
+        soccer_vision_B.lonely = 0;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         for (from = 0; from < 20; from++) {
           if (D_data[(idx[from] - 1) * D_size[0] + from] >
               soccer_vision_B.totsumD) {
             soccer_vision_B.totsumD = D_data[(idx[from] - 1) * D_size[0] + from];
+<<<<<<< HEAD
             lonely = from;
           }
         }
 
         from = idx[lonely];
         if (counts_data[idx[lonely] - 1] < 2) {
+=======
+            soccer_vision_B.lonely = from;
+          }
+        }
+
+        from = idx[soccer_vision_B.lonely];
+        if (counts_data[idx[soccer_vision_B.lonely] - 1] < 2) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
           c_j = 1;
           exitg2 = false;
           while ((!exitg2) && (c_j < 21)) {
@@ -590,7 +1046,11 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
           exitg2 = false;
           while ((!exitg2) && (c_j + 1 < 21)) {
             if (idx[c_j] == from) {
+<<<<<<< HEAD
               lonely = c_j;
+=======
+              soccer_vision_B.lonely = c_j;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
               exitg2 = true;
             } else {
               c_j++;
@@ -598,15 +1058,24 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
           }
         }
 
+<<<<<<< HEAD
         C_data[soccer_vision_B.empties_data[f_j] - 1] = X[lonely];
         C_data[(soccer_vision_B.empties_data[f_j] + C_size[0]) - 1] = X[lonely +
           20];
         counts_data[soccer_vision_B.empties_data[f_j] - 1] = 1;
         idx[lonely] = soccer_vision_B.empties_data[f_j];
+=======
+        C_data[soccer_vision_B.empties_data[f_j] - 1] = X[soccer_vision_B.lonely];
+        C_data[(soccer_vision_B.empties_data[f_j] + C_size[0]) - 1] =
+          X[soccer_vision_B.lonely + 20];
+        counts_data[soccer_vision_B.empties_data[f_j] - 1] = 1;
+        idx[soccer_vision_B.lonely] = soccer_vision_B.empties_data[f_j];
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         soccer_vision_distfun(D_data, D_size, X, C_data, C_size,
                               soccer_vision_B.empties_data[f_j]);
         soccer_vision_gcentroids_f(C_data, C_size, counts_data, X, idx, from);
         soccer_vision_distfun(D_data, D_size, X, C_data, C_size, from);
+<<<<<<< HEAD
         if (nchanged < k) {
           lonely = 0;
           exitg2 = false;
@@ -614,15 +1083,34 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
                     soccer_vision_B.changed_data[lonely])))) {
             if (from > soccer_vision_B.changed_data[lonely]) {
               for (c_j = nchanged; c_j >= lonely + 1; c_j--) {
+=======
+        if (soccer_vision_B.nchanged < k) {
+          soccer_vision_B.lonely = 0;
+          exitg2 = false;
+          while ((!exitg2) && ((soccer_vision_B.lonely + 1 <=
+                                soccer_vision_B.nchanged) && (!(from ==
+                    soccer_vision_B.changed_data[soccer_vision_B.lonely])))) {
+            if (from > soccer_vision_B.changed_data[soccer_vision_B.lonely]) {
+              for (c_j = soccer_vision_B.nchanged; c_j >= soccer_vision_B.lonely
+                   + 1; c_j--) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
                 soccer_vision_B.changed_data[c_j] =
                   soccer_vision_B.changed_data[c_j - 1];
               }
 
+<<<<<<< HEAD
               soccer_vision_B.changed_data[lonely] = from;
               nchanged++;
               exitg2 = true;
             } else {
               lonely++;
+=======
+              soccer_vision_B.changed_data[soccer_vision_B.lonely] = from;
+              soccer_vision_B.nchanged++;
+              exitg2 = true;
+            } else {
+              soccer_vision_B.lonely++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
             }
           }
         }
@@ -637,7 +1125,12 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
     if (soccer_vision_B.prevtotsumD <= soccer_vision_B.totsumD) {
       memcpy(&idx[0], &soccer_vision_B.previdx[0], 20U * sizeof(int32_T));
       soccer_vision_gcentroids(C_data, C_size, counts_data, X,
+<<<<<<< HEAD
         soccer_vision_B.previdx, soccer_vision_B.changed_data, nchanged);
+=======
+        soccer_vision_B.previdx, soccer_vision_B.changed_data,
+        soccer_vision_B.nchanged);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       (*iter)--;
       exitg1 = 1;
     } else if (*iter >= 15) {
@@ -647,23 +1140,42 @@ static void soccer_vision_batchUpdate(const real_T X[40], int32_T k, int32_T
       soccer_vision_B.prevtotsumD = soccer_vision_B.totsumD;
       soccer_vision_mindim2(D_data, D_size, soccer_vision_B.d_m,
                             soccer_vision_B.nidx);
+<<<<<<< HEAD
       nchanged = 0;
+=======
+      soccer_vision_B.nchanged = 0;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       for (nempty = 0; nempty < 20; nempty++) {
         if ((soccer_vision_B.nidx[nempty] != soccer_vision_B.previdx[nempty]) &&
             (D_data[(soccer_vision_B.previdx[nempty] - 1) * D_size[0] + nempty] >
              soccer_vision_B.d_m[nempty])) {
+<<<<<<< HEAD
           nchanged++;
           soccer_vision_B.moved[nchanged - 1] = nempty + 1;
+=======
+          soccer_vision_B.nchanged++;
+          soccer_vision_B.moved[soccer_vision_B.nchanged - 1] = nempty + 1;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
           idx[nempty] = soccer_vision_B.nidx[nempty];
         }
       }
 
+<<<<<<< HEAD
       if (nchanged == 0) {
         *converged = true;
         exitg1 = 1;
       } else {
         nchanged = soccer_vision_findchanged(soccer_vision_B.changed_data, idx,
           soccer_vision_B.previdx, soccer_vision_B.moved, nchanged);
+=======
+      if (soccer_vision_B.nchanged == 0) {
+        *converged = true;
+        exitg1 = 1;
+      } else {
+        soccer_vision_B.nchanged = soccer_vision_findchanged
+          (soccer_vision_B.changed_data, idx, soccer_vision_B.previdx,
+           soccer_vision_B.moved, soccer_vision_B.nchanged);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       }
     }
   } while (exitg1 == 0);
@@ -947,8 +1459,11 @@ static void soccer_vision_merge(int32_T idx[5], real_T x[5], int32_T offset,
 // Function for MATLAB Function: '<S12>/Label Field Lines'
 static void soccer_vision_sort(real_T x[5], int32_T idx[5])
 {
+<<<<<<< HEAD
   int8_T idx4[4];
   int32_T ib;
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   int32_T m;
   int8_T perm[4];
   int32_T i1;
@@ -956,6 +1471,7 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
   int32_T i3;
   int32_T i4;
   soccer_vision_B.x4[0] = 0.0;
+<<<<<<< HEAD
   idx4[0] = 0;
   soccer_vision_B.x4[1] = 0.0;
   idx4[1] = 0;
@@ -963,24 +1479,45 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
   idx4[2] = 0;
   soccer_vision_B.x4[3] = 0.0;
   idx4[3] = 0;
+=======
+  soccer_vision_B.idx4[0] = 0;
+  soccer_vision_B.x4[1] = 0.0;
+  soccer_vision_B.idx4[1] = 0;
+  soccer_vision_B.x4[2] = 0.0;
+  soccer_vision_B.idx4[2] = 0;
+  soccer_vision_B.x4[3] = 0.0;
+  soccer_vision_B.idx4[3] = 0;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   for (m = 0; m < 5; m++) {
     idx[m] = 0;
     soccer_vision_B.xwork[m] = 0.0;
   }
 
   soccer_vision_B.nNaNs = 0;
+<<<<<<< HEAD
   ib = 0;
+=======
+  soccer_vision_B.ib = 0;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   for (m = 0; m < 5; m++) {
     if (rtIsNaN(x[m])) {
       idx[4 - soccer_vision_B.nNaNs] = m + 1;
       soccer_vision_B.xwork[4 - soccer_vision_B.nNaNs] = x[m];
       soccer_vision_B.nNaNs++;
     } else {
+<<<<<<< HEAD
       ib++;
       idx4[ib - 1] = (int8_T)(m + 1);
       soccer_vision_B.x4[ib - 1] = x[m];
       if (ib == 4) {
         ib = m - soccer_vision_B.nNaNs;
+=======
+      soccer_vision_B.ib++;
+      soccer_vision_B.idx4[soccer_vision_B.ib - 1] = (int8_T)(m + 1);
+      soccer_vision_B.x4[soccer_vision_B.ib - 1] = x[m];
+      if (soccer_vision_B.ib == 4) {
+        soccer_vision_B.ib = m - soccer_vision_B.nNaNs;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         if (soccer_vision_B.x4[0] <= soccer_vision_B.x4[1]) {
           i1 = 1;
           i2 = 2;
@@ -1034,6 +1571,7 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
         }
 
         i1 = perm[0] - 1;
+<<<<<<< HEAD
         idx[ib - 3] = idx4[i1];
         i2 = perm[1] - 1;
         idx[ib - 2] = idx4[i2];
@@ -1046,15 +1584,37 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
         x[ib - 1] = soccer_vision_B.x4[i3];
         x[ib] = soccer_vision_B.x4[i4];
         ib = 0;
+=======
+        idx[soccer_vision_B.ib - 3] = soccer_vision_B.idx4[i1];
+        i2 = perm[1] - 1;
+        idx[soccer_vision_B.ib - 2] = soccer_vision_B.idx4[i2];
+        i3 = perm[2] - 1;
+        idx[soccer_vision_B.ib - 1] = soccer_vision_B.idx4[i3];
+        i4 = perm[3] - 1;
+        idx[soccer_vision_B.ib] = soccer_vision_B.idx4[i4];
+        x[soccer_vision_B.ib - 3] = soccer_vision_B.x4[i1];
+        x[soccer_vision_B.ib - 2] = soccer_vision_B.x4[i2];
+        x[soccer_vision_B.ib - 1] = soccer_vision_B.x4[i3];
+        x[soccer_vision_B.ib] = soccer_vision_B.x4[i4];
+        soccer_vision_B.ib = 0;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       }
     }
   }
 
+<<<<<<< HEAD
   if (ib > 0) {
     perm[1] = 0;
     perm[2] = 0;
     perm[3] = 0;
     switch (ib) {
+=======
+  if (soccer_vision_B.ib > 0) {
+    perm[1] = 0;
+    perm[2] = 0;
+    perm[3] = 0;
+    switch (soccer_vision_B.ib) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
      case 1:
       perm[0] = 1;
       break;
@@ -1100,15 +1660,23 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
       break;
     }
 
+<<<<<<< HEAD
     for (m = 5; m - 4 <= ib; m++) {
       i1 = perm[m - 5] - 1;
       i2 = (m - soccer_vision_B.nNaNs) - ib;
       idx[i2] = idx4[i1];
+=======
+    for (m = 5; m - 4 <= soccer_vision_B.ib; m++) {
+      i1 = perm[m - 5] - 1;
+      i2 = (m - soccer_vision_B.nNaNs) - soccer_vision_B.ib;
+      idx[i2] = soccer_vision_B.idx4[i1];
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       x[i2] = soccer_vision_B.x4[i1];
     }
   }
 
   m = soccer_vision_B.nNaNs >> 1;
+<<<<<<< HEAD
   for (ib = 1; ib <= m; ib++) {
     i1 = (ib - soccer_vision_B.nNaNs) + 4;
     i2 = idx[i1];
@@ -1116,6 +1684,17 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
     idx[5 - ib] = i2;
     x[i1] = soccer_vision_B.xwork[5 - ib];
     x[5 - ib] = soccer_vision_B.xwork[i1];
+=======
+  soccer_vision_B.ib = 1;
+  while (soccer_vision_B.ib <= m) {
+    i1 = (soccer_vision_B.ib - soccer_vision_B.nNaNs) + 4;
+    i2 = idx[i1];
+    idx[i1] = idx[5 - soccer_vision_B.ib];
+    idx[5 - soccer_vision_B.ib] = i2;
+    x[i1] = soccer_vision_B.xwork[5 - soccer_vision_B.ib];
+    x[5 - soccer_vision_B.ib] = soccer_vision_B.xwork[i1];
+    soccer_vision_B.ib++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   }
 
   if ((soccer_vision_B.nNaNs & 1U) != 0U) {
@@ -1128,12 +1707,21 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
       soccer_vision_B.iwork[m] = 0;
     }
 
+<<<<<<< HEAD
     ib = (5 - soccer_vision_B.nNaNs) >> 2;
     m = 4;
     while (ib > 1) {
       if ((ib & 1U) != 0U) {
         ib--;
         i1 = m * ib;
+=======
+    soccer_vision_B.ib = (5 - soccer_vision_B.nNaNs) >> 2;
+    m = 4;
+    while (soccer_vision_B.ib > 1) {
+      if ((soccer_vision_B.ib & 1U) != 0U) {
+        soccer_vision_B.ib--;
+        i1 = m * soccer_vision_B.ib;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         i2 = 5 - (soccer_vision_B.nNaNs + i1);
         if (i2 > m) {
           soccer_vision_merge(idx, x, i1, m, i2 - m, soccer_vision_B.iwork,
@@ -1142,8 +1730,13 @@ static void soccer_vision_sort(real_T x[5], int32_T idx[5])
       }
 
       i1 = m << 1;
+<<<<<<< HEAD
       ib >>= 1;
       for (i2 = 1; i2 <= ib; i2++) {
+=======
+      soccer_vision_B.ib >>= 1;
+      for (i2 = 1; i2 <= soccer_vision_B.ib; i2++) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         soccer_vision_merge(idx, x, (i2 - 1) * i1, m, m, soccer_vision_B.iwork,
                             soccer_vision_B.xwork);
       }
@@ -1240,10 +1833,32 @@ static Point2f_soccer_vision_T *soccer_vision_Line2f_screenIntersection(const
   return intersect;
 }
 
+<<<<<<< HEAD
+=======
+static void soccer_vision_SystemProp_matlabCodegenSetAnyProp
+  (robotics_slros_internal_block_Subscriber_soccer_vision_T *obj, boolean_T
+   value)
+{
+  obj->matlabCodegenIsDeleted = value;
+}
+
+static void soccer_vision_matlabCodegenHandle_matlabCodegenDestructor
+  (robotics_slros_internal_block_Subscriber_soccer_vision_T *obj)
+{
+  if (!obj->matlabCodegenIsDeleted) {
+    soccer_vision_SystemProp_matlabCodegenSetAnyProp(obj, true);
+  }
+}
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 // Model step function
 void soccer_vision_step(void)
 {
   boolean_T y[2];
+<<<<<<< HEAD
+=======
+  robotics_slros_internal_block_ReadImage_soccer_vision_T *obj;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   boolean_T b4;
   boolean_T b3;
   boolean_T b2;
@@ -1252,6 +1867,7 @@ void soccer_vision_step(void)
   int32_T *lines;
   boolean_T exitg1;
 
+<<<<<<< HEAD
   // MATLAB Function: '<S2>/Cover Edge' incorporates:
   //   Constant: '<S2>/Constant6'
 
@@ -1413,10 +2029,329 @@ void soccer_vision_step(void)
   // S-Function (svipedge): '<S10>/Edge Detection'
   for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 158;
        soccer_vision_B.imgCol++) {
+=======
+  // Reset subsysRan breadcrumbs
+  srClearBC(soccer_vision_DW.EnabledSubsystem_SubsysRanBC);
+  if (soccer_vision_M->Timing.TaskCounters.TID[1] == 0) {
+    // Outputs for Atomic SubSystem: '<S4>/Subscribe'
+    // MATLABSystem: '<S5>/SourceBlock' incorporates:
+    //   Inport: '<S6>/In1'
+
+    b1 = Sub_soccer_vision_197.getLatestMessage(&soccer_vision_B.b_varargout_2);
+
+    // Outputs for Enabled SubSystem: '<S5>/Enabled Subsystem' incorporates:
+    //   EnablePort: '<S6>/Enable'
+
+    if (b1) {
+      soccer_vision_B.In1 = soccer_vision_B.b_varargout_2;
+      srUpdateBC(soccer_vision_DW.EnabledSubsystem_SubsysRanBC);
+    }
+
+    // End of MATLABSystem: '<S5>/SourceBlock'
+    // End of Outputs for SubSystem: '<S5>/Enabled Subsystem'
+    // End of Outputs for SubSystem: '<S4>/Subscribe'
+
+    // MATLABSystem: '<S4>/Read Image'
+    obj = &soccer_vision_DW.obj;
+    soccer_vision_B.ReadImage_o2 = soccer_vision_ReadImage_update
+      (&soccer_vision_DW.obj, soccer_vision_B.In1.Height,
+       soccer_vision_B.In1.Width, soccer_vision_B.In1.Encoding,
+       soccer_vision_B.In1.Encoding_SL_Info.CurrentLength,
+       soccer_vision_B.In1.Data, soccer_vision_B.In1.Data_SL_Info.CurrentLength,
+       soccer_vision_B.In1.Data_SL_Info.ReceivedLength);
+    for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 3;
+         soccer_vision_B.imgCol++) {
+      for (soccer_vision_B.q = 0; soccer_vision_B.q < 640; soccer_vision_B.q++)
+      {
+        for (soccer_vision_B.accumOne = 0; soccer_vision_B.accumOne < 480;
+             soccer_vision_B.accumOne++) {
+          soccer_vision_B.fullImage[(soccer_vision_B.accumOne + 480 *
+            soccer_vision_B.q) + 307200 * soccer_vision_B.imgCol] = obj->Image
+            [(((soccer_vision_B.imgCol + 1) - 1) * 307200 + 480 *
+              soccer_vision_B.q) + soccer_vision_B.accumOne];
+        }
+      }
+    }
+
+    // MATLAB Function: '<S2>/Cover Edge' incorporates:
+    //   Constant: '<S2>/Constant6'
+
+    soccer_vision_B.totalLineCount = 240.0 - 0.0 *
+      soccer_vision_P.Constant6_Value;
+
+    // Copy the image from input to output.
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 307200; soccer_vision_B.q++)
+    {
+      // S-Function (svipdrawshapes): '<S2>/Cover Above Horizon' incorporates:
+      //   MATLABSystem: '<S4>/Read Image'
+      //   S-Function (svipcolorconv): '<S4>/Color Space  Conversion'
+
+      soccer_vision_B.CoverAboveHorizon[soccer_vision_B.q] = (uint8_T)
+        ((((soccer_vision_B.fullImage[307200 + soccer_vision_B.q] * 38470U +
+            soccer_vision_B.fullImage[soccer_vision_B.q] * 19595U) +
+           soccer_vision_B.fullImage[614400 + soccer_vision_B.q] * 7471U) +
+          32768U) >> 16);
+    }
+
+    // S-Function (svipdrawshapes): '<S2>/Cover Above Horizon'
+    // Calculate FillColor times Opacity.
+    // Calculate One minus Opacity.
+    CoverAboveHorizon_DW_OneMOpacity = (int16_T)(16384 -
+      soccer_vision_P.CoverAboveHorizon_RTP_OPACITY);
+
+    // MATLAB Function: '<S2>/Cover Edge'
+    // Update view port.
+    // Draw all filled rectangles.
+    // Find the overlapping area of the rectangle and the view port.
+    if (soccer_vision_B.totalLineCount < 4.294967296E+9) {
+      soccer_vision_B.horizonY = 240U;
+    } else {
+      soccer_vision_B.horizonY = MAX_uint32_T;
+    }
+
+    // S-Function (svipdrawshapes): '<S2>/Cover Above Horizon'
+    soccer_vision_B.imgCol = (int32_T)soccer_vision_B.horizonY - 2;
+    if (479 <= soccer_vision_B.imgCol) {
+      soccer_vision_B.imgCol = 479;
+    }
+
+    // Draw a filled rectangle.
+    if (0 <= soccer_vision_B.imgCol) {
+      soccer_vision_B.accumOne = 0;
+      while (soccer_vision_B.accumOne <= 638) {
+        soccer_vision_B.accumTwo = soccer_vision_B.accumOne * 480;
+        soccer_vision_B.q = 0;
+        while (soccer_vision_B.q <= soccer_vision_B.imgCol) {
+          soccer_vision_B.CoverAboveHorizon[soccer_vision_B.accumTwo] = (uint8_T)
+            ((soccer_vision_B.CoverAboveHorizon[soccer_vision_B.accumTwo] *
+              CoverAboveHorizon_DW_OneMOpacity) >> 14);
+          soccer_vision_B.accumTwo++;
+          soccer_vision_B.q++;
+        }
+
+        soccer_vision_B.accumOne++;
+      }
+    }
+
+    // S-Function (svipresize): '<S10>/Resize'
+    // this algorithm computes interpolation weights on demand as oppose to using a lookup table 
+    // first resize along X-axis direction
+    soccer_vision_B.accumFour = 0;
+    for (soccer_vision_B.accumOne = 0; soccer_vision_B.accumOne < 160;
+         soccer_vision_B.accumOne++) {
+      soccer_vision_B.accumTwo = (((soccer_vision_B.accumOne << 10) + 512) << 2)
+        - 512;
+      soccer_vision_B.q = soccer_vision_B.accumTwo >> 10;
+      soccer_vision_B.imgIdx = soccer_vision_B.q * 480;
+      soccer_vision_B.imgRow = soccer_vision_B.imgIdx + 480;
+      soccer_vision_B.accumTwo -= soccer_vision_B.q << 10;
+
+      // bilinear interpolation
+      soccer_vision_B.imgIdx_d = 1024 - soccer_vision_B.accumTwo;
+
+      // adjust offsets so that the input image index will not exceed the image bounds 
+      for (soccer_vision_B.q = 0; soccer_vision_B.q < 480; soccer_vision_B.q++)
+      {
+        soccer_vision_B.i0 = (int64_T)
+          soccer_vision_B.CoverAboveHorizon[soccer_vision_B.q +
+          soccer_vision_B.imgIdx] * soccer_vision_B.imgIdx_d;
+        if (soccer_vision_B.i0 > 2147483647L) {
+          soccer_vision_B.i0 = 2147483647L;
+        } else {
+          if (soccer_vision_B.i0 < -2147483648L) {
+            soccer_vision_B.i0 = -2147483648L;
+          }
+        }
+
+        soccer_vision_B.q0 = (int32_T)soccer_vision_B.i0;
+        soccer_vision_B.i0 = (int64_T)
+          soccer_vision_B.CoverAboveHorizon[soccer_vision_B.imgRow +
+          soccer_vision_B.q] * soccer_vision_B.accumTwo;
+        if (soccer_vision_B.i0 > 2147483647L) {
+          soccer_vision_B.i0 = 2147483647L;
+        } else {
+          if (soccer_vision_B.i0 < -2147483648L) {
+            soccer_vision_B.i0 = -2147483648L;
+          }
+        }
+
+        soccer_vision_B.imgCol = (int32_T)soccer_vision_B.i0;
+        if ((soccer_vision_B.q0 < 0) && (soccer_vision_B.imgCol < MIN_int32_T
+             - soccer_vision_B.q0)) {
+          soccer_vision_B.imgCol = MIN_int32_T;
+        } else if ((soccer_vision_B.q0 > 0) && (soccer_vision_B.imgCol >
+                    MAX_int32_T - soccer_vision_B.q0)) {
+          soccer_vision_B.imgCol = MAX_int32_T;
+        } else {
+          soccer_vision_B.imgCol += soccer_vision_B.q0;
+        }
+
+        soccer_vision_B.imgCol = ((soccer_vision_B.imgCol & 512U) != 0U) +
+          (soccer_vision_B.imgCol >> 10);
+        if (soccer_vision_B.imgCol < 0) {
+          soccer_vision_B.imgCol = 0;
+        } else {
+          if (soccer_vision_B.imgCol > 255) {
+            soccer_vision_B.imgCol = 255;
+          }
+        }
+
+        soccer_vision_DW.Resize_IntBuffer[soccer_vision_B.accumFour +
+          soccer_vision_B.q] = (uint8_T)soccer_vision_B.imgCol;
+      }
+
+      soccer_vision_B.accumFour += 480;
+    }
+
+    // resize along Y-axis direction
+    soccer_vision_B.accumFour = 0;
+    for (soccer_vision_B.accumOne = 0; soccer_vision_B.accumOne < 160;
+         soccer_vision_B.accumOne++) {
+      soccer_vision_B.q = soccer_vision_B.accumOne * 480;
+      for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 480;
+           soccer_vision_B.imgCol++) {
+        soccer_vision_DW.Resize_LineBuffer[soccer_vision_B.imgCol] =
+          soccer_vision_DW.Resize_IntBuffer[soccer_vision_B.q];
+        soccer_vision_B.q++;
+      }
+
+      soccer_vision_B.imgRow = soccer_vision_B.accumFour;
+      for (soccer_vision_B.q = 0; soccer_vision_B.q < 120; soccer_vision_B.q++)
+      {
+        soccer_vision_B.accumTwo = (((soccer_vision_B.q << 10) + 512) << 2) -
+          512;
+        soccer_vision_B.imgIdx = soccer_vision_B.accumTwo >> 10;
+        soccer_vision_B.accumTwo -= soccer_vision_B.imgIdx << 10;
+        soccer_vision_B.i0 = (int64_T)(1024 - soccer_vision_B.accumTwo) *
+          soccer_vision_DW.Resize_LineBuffer[soccer_vision_B.imgIdx];
+        if (soccer_vision_B.i0 > 2147483647L) {
+          soccer_vision_B.i0 = 2147483647L;
+        } else {
+          if (soccer_vision_B.i0 < -2147483648L) {
+            soccer_vision_B.i0 = -2147483648L;
+          }
+        }
+
+        soccer_vision_B.q0 = (int32_T)soccer_vision_B.i0;
+        soccer_vision_B.i0 = (int64_T)
+          soccer_vision_DW.Resize_LineBuffer[soccer_vision_B.imgIdx + 1] *
+          soccer_vision_B.accumTwo;
+        if (soccer_vision_B.i0 > 2147483647L) {
+          soccer_vision_B.i0 = 2147483647L;
+        } else {
+          if (soccer_vision_B.i0 < -2147483648L) {
+            soccer_vision_B.i0 = -2147483648L;
+          }
+        }
+
+        soccer_vision_B.imgCol = (int32_T)soccer_vision_B.i0;
+        if ((soccer_vision_B.q0 < 0) && (soccer_vision_B.imgCol < MIN_int32_T
+             - soccer_vision_B.q0)) {
+          soccer_vision_B.accumTwo = MIN_int32_T;
+        } else if ((soccer_vision_B.q0 > 0) && (soccer_vision_B.imgCol >
+                    MAX_int32_T - soccer_vision_B.q0)) {
+          soccer_vision_B.accumTwo = MAX_int32_T;
+        } else {
+          soccer_vision_B.accumTwo = soccer_vision_B.q0 + soccer_vision_B.imgCol;
+        }
+
+        soccer_vision_B.imgCol = ((soccer_vision_B.accumTwo & 512U) != 0U) +
+          (soccer_vision_B.accumTwo >> 10);
+        if (soccer_vision_B.imgCol < 0) {
+          soccer_vision_B.imgCol = 0;
+        } else {
+          if (soccer_vision_B.imgCol > 255) {
+            soccer_vision_B.imgCol = 255;
+          }
+        }
+
+        soccer_vision_B.Resize[soccer_vision_B.imgRow] = (uint8_T)
+          soccer_vision_B.imgCol;
+        soccer_vision_B.imgRow++;
+      }
+
+      soccer_vision_B.accumFour += 120;
+    }
+
+    // End of S-Function (svipresize): '<S10>/Resize'
+
+    // S-Function (svipedge): '<S10>/Edge Detection'
+    for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 158;
+         soccer_vision_B.imgCol++) {
+      for (soccer_vision_B.imgRow = 0; soccer_vision_B.imgRow < 118;
+           soccer_vision_B.imgRow++) {
+        soccer_vision_B.accumOne = 0;
+        soccer_vision_B.accumTwo = 0;
+        soccer_vision_B.imgIdx = ((soccer_vision_B.imgCol + 1) * 120 +
+          soccer_vision_B.imgRow) + 1;
+        for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++)
+        {
+          soccer_vision_B.accumOne += (int32_T)(((int64_T)
+            soccer_vision_B.Resize[soccer_vision_B.imgIdx +
+            soccer_vision_DW.EdgeDetection_VO_DW[soccer_vision_B.q]] *
+            soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+          soccer_vision_B.accumTwo += (int32_T)(((int64_T)
+            soccer_vision_B.Resize[soccer_vision_B.imgIdx +
+            soccer_vision_DW.EdgeDetection_HO_DW[soccer_vision_B.q]] *
+            soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+        }
+
+        soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.imgIdx] =
+          (int32_T)(((int64_T)soccer_vision_B.accumOne *
+                     soccer_vision_B.accumOne) >> 8);
+        soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.imgIdx] =
+          (int32_T)(((int64_T)soccer_vision_B.accumTwo *
+                     soccer_vision_B.accumTwo) >> 8);
+      }
+    }
+
+    for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 158;
+         soccer_vision_B.imgCol++) {
+      soccer_vision_B.accumOne = 0;
+      soccer_vision_B.accumTwo = 0;
+      soccer_vision_B.imgIdx = 0;
+      soccer_vision_B.accumFour = 0;
+      soccer_vision_B.imgRow = (soccer_vision_B.imgCol + 1) * 120;
+      soccer_vision_B.imgIdx_d = (soccer_vision_B.imgCol + 1) * 120 + 119;
+      for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+        soccer_vision_B.accumOne += (int32_T)(((int64_T)
+          soccer_vision_B.Resize[soccer_vision_B.imgRow +
+          soccer_vision_DW.EdgeDetection_HOU_DW[soccer_vision_B.q]] *
+          soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.accumTwo += (int32_T)(((int64_T)
+          soccer_vision_B.Resize[soccer_vision_B.imgIdx_d +
+          soccer_vision_DW.EdgeDetection_HOD_DW[soccer_vision_B.q]] *
+          soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.imgIdx += (int32_T)(((int64_T)
+          soccer_vision_B.Resize[soccer_vision_B.imgRow +
+          soccer_vision_DW.EdgeDetection_VOU_DW[soccer_vision_B.q]] *
+          soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.accumFour += (int32_T)(((int64_T)
+          soccer_vision_B.Resize[soccer_vision_B.imgIdx_d +
+          soccer_vision_DW.EdgeDetection_VOD_DW[soccer_vision_B.q]] *
+          soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+      }
+
+      soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.imgRow] =
+        (int32_T)(((int64_T)soccer_vision_B.imgIdx * soccer_vision_B.imgIdx) >>
+                  8);
+      soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.imgRow] =
+        (int32_T)(((int64_T)soccer_vision_B.accumOne * soccer_vision_B.accumOne)
+                  >> 8);
+      soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.imgIdx_d] =
+        (int32_T)(((int64_T)soccer_vision_B.accumFour *
+                   soccer_vision_B.accumFour) >> 8);
+      soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.imgIdx_d] =
+        (int32_T)(((int64_T)soccer_vision_B.accumTwo * soccer_vision_B.accumTwo)
+                  >> 8);
+    }
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     for (soccer_vision_B.imgRow = 0; soccer_vision_B.imgRow < 118;
          soccer_vision_B.imgRow++) {
       soccer_vision_B.accumOne = 0;
       soccer_vision_B.accumTwo = 0;
+<<<<<<< HEAD
       soccer_vision_B.imgIdx = ((soccer_vision_B.imgCol + 1) * 120 +
         soccer_vision_B.imgRow) + 1;
       for (soccer_vision_B.i = 0; soccer_vision_B.i < 6; soccer_vision_B.i++) {
@@ -1439,10 +2374,48 @@ void soccer_vision_step(void)
 
   for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 158;
        soccer_vision_B.imgCol++) {
+=======
+      soccer_vision_B.imgIdx = 0;
+      soccer_vision_B.accumFour = 0;
+      for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+        soccer_vision_B.accumOne += (int32_T)(((int64_T)soccer_vision_B.Resize
+          [(soccer_vision_B.imgRow +
+            soccer_vision_DW.EdgeDetection_VOL_DW[soccer_vision_B.q]) + 1] *
+          soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.accumTwo += (int32_T)(((int64_T)soccer_vision_B.Resize
+          [(soccer_vision_B.imgRow +
+            soccer_vision_DW.EdgeDetection_VOR_DW[soccer_vision_B.q]) + 19081] *
+          soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.imgIdx += (int32_T)(((int64_T)soccer_vision_B.Resize
+          [(soccer_vision_B.imgRow +
+            soccer_vision_DW.EdgeDetection_HOL_DW[soccer_vision_B.q]) + 1] *
+          soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+        soccer_vision_B.accumFour += (int32_T)(((int64_T)soccer_vision_B.Resize
+          [(soccer_vision_B.imgRow +
+            soccer_vision_DW.EdgeDetection_HOR_DW[soccer_vision_B.q]) + 19081] *
+          soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+      }
+
+      soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.imgRow + 1] =
+        (int32_T)(((int64_T)soccer_vision_B.accumOne * soccer_vision_B.accumOne)
+                  >> 8);
+      soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.imgRow + 1] =
+        (int32_T)(((int64_T)soccer_vision_B.imgIdx * soccer_vision_B.imgIdx) >>
+                  8);
+      soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[19081 +
+        soccer_vision_B.imgRow] = (int32_T)(((int64_T)soccer_vision_B.accumTwo *
+        soccer_vision_B.accumTwo) >> 8);
+      soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[19081 +
+        soccer_vision_B.imgRow] = (int32_T)(((int64_T)soccer_vision_B.accumFour *
+        soccer_vision_B.accumFour) >> 8);
+    }
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     soccer_vision_B.accumOne = 0;
     soccer_vision_B.accumTwo = 0;
     soccer_vision_B.imgIdx = 0;
     soccer_vision_B.accumFour = 0;
+<<<<<<< HEAD
     soccer_vision_B.imgRow = (soccer_vision_B.imgCol + 1) * 120;
     soccer_vision_B.imgIdx_d = (soccer_vision_B.imgCol + 1) * 120 + 119;
     for (soccer_vision_B.i = 0; soccer_vision_B.i < 6; soccer_vision_B.i++) {
@@ -1476,10 +2449,36 @@ void soccer_vision_step(void)
 
   for (soccer_vision_B.imgRow = 0; soccer_vision_B.imgRow < 118;
        soccer_vision_B.imgRow++) {
+=======
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+      soccer_vision_B.accumOne += (int32_T)(((int64_T)
+        soccer_vision_B.Resize[soccer_vision_DW.EdgeDetection_VOUL_DW[soccer_vision_B.q]]
+        * soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.accumTwo += (int32_T)(((int64_T)
+        soccer_vision_B.Resize[soccer_vision_DW.EdgeDetection_HOUL_DW[soccer_vision_B.q]]
+        * soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.imgIdx += (int32_T)(((int64_T)soccer_vision_B.Resize[119 +
+        soccer_vision_DW.EdgeDetection_VOLL_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.accumFour += (int32_T)(((int64_T)soccer_vision_B.Resize
+        [119 + soccer_vision_DW.EdgeDetection_HOLL_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+    }
+
+    soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[0] = (int32_T)(((int64_T)
+      soccer_vision_B.accumOne * soccer_vision_B.accumOne) >> 8);
+    soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[0] = (int32_T)(((int64_T)
+      soccer_vision_B.accumTwo * soccer_vision_B.accumTwo) >> 8);
+    soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[119] = (int32_T)(((int64_T)
+      soccer_vision_B.imgIdx * soccer_vision_B.imgIdx) >> 8);
+    soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[119] = (int32_T)(((int64_T)
+      soccer_vision_B.accumFour * soccer_vision_B.accumFour) >> 8);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     soccer_vision_B.accumOne = 0;
     soccer_vision_B.accumTwo = 0;
     soccer_vision_B.imgIdx = 0;
     soccer_vision_B.accumFour = 0;
+<<<<<<< HEAD
     for (soccer_vision_B.i = 0; soccer_vision_B.i < 6; soccer_vision_B.i++) {
       soccer_vision_B.accumOne += mul_ssu32_loSR
         (soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.i], (uint32_T)
@@ -1955,6 +2954,426 @@ void soccer_vision_step(void)
     }
 
     soccer_vision_B.i++;
+=======
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+      soccer_vision_B.accumOne += (int32_T)(((int64_T)soccer_vision_B.Resize
+        [19080 + soccer_vision_DW.EdgeDetection_VOUR_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.accumTwo += (int32_T)(((int64_T)soccer_vision_B.Resize
+        [19080 + soccer_vision_DW.EdgeDetection_HOUR_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.imgIdx += (int32_T)(((int64_T)soccer_vision_B.Resize[19199
+        + soccer_vision_DW.EdgeDetection_VOLR_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_VC_RTP[soccer_vision_B.q]) >> 23);
+      soccer_vision_B.accumFour += (int32_T)(((int64_T)soccer_vision_B.Resize
+        [19199 + soccer_vision_DW.EdgeDetection_HOLR_DW[soccer_vision_B.q]] *
+        soccer_vision_ConstP.EdgeDetection_HC_RTP[soccer_vision_B.q]) >> 23);
+    }
+
+    soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[19080] = (int32_T)(((int64_T)
+      soccer_vision_B.accumOne * soccer_vision_B.accumOne) >> 8);
+    soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[19080] = (int32_T)(((int64_T)
+      soccer_vision_B.accumTwo * soccer_vision_B.accumTwo) >> 8);
+    soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[19199] = (int32_T)(((int64_T)
+      soccer_vision_B.imgIdx * soccer_vision_B.imgIdx) >> 8);
+    soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[19199] = (int32_T)(((int64_T)
+      soccer_vision_B.accumFour * soccer_vision_B.accumFour) >> 8);
+    soccer_vision_B.accumTwo = 0;
+    soccer_vision_B.q = 0;
+    while (soccer_vision_B.q < 19200) {
+      soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] =
+        soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.q];
+      soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] +=
+        soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.q];
+      soccer_vision_B.accumTwo += (int32_T)(((int64_T)
+        soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] *
+        soccer_vision_DW.EdgeDetection_MEAN_FACTOR_DW) >> 31);
+      soccer_vision_B.q++;
+    }
+
+    soccer_vision_B.accumOne = (int32_T)(((int64_T)
+      soccer_vision_P.EdgeDetection_thresholdTuning * soccer_vision_B.accumTwo) >>
+      8);
+    for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 160;
+         soccer_vision_B.imgCol++) {
+      for (soccer_vision_B.imgRow = 0; soccer_vision_B.imgRow < 120;
+           soccer_vision_B.imgRow++) {
+        soccer_vision_B.q = soccer_vision_B.imgCol * 120 +
+          soccer_vision_B.imgRow;
+        b1 = true;
+        b2 = true;
+        b3 = true;
+        b4 = true;
+        if (soccer_vision_B.imgCol != 0) {
+          b1 = (soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q -
+                120] <=
+                soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q]);
+        }
+
+        if (soccer_vision_B.imgCol != 159) {
+          b2 = (soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] >
+                soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q +
+                120]);
+        }
+
+        if (soccer_vision_B.imgRow != 0) {
+          b3 = (soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q - 1]
+                <= soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q]);
+        }
+
+        if (soccer_vision_B.imgRow != 119) {
+          b4 = (soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] >
+                soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q + 1]);
+        }
+
+        soccer_vision_B.EdgeDetection[soccer_vision_B.q] =
+          ((soccer_vision_DW.EdgeDetection_GRAD_SUM_DW[soccer_vision_B.q] >
+            soccer_vision_B.accumOne) &&
+           (((soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.q] >=
+              soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.q]) &&
+             b1 && b2) ||
+            ((soccer_vision_DW.EdgeDetection_GH_SQUARED_DW[soccer_vision_B.q] >=
+              soccer_vision_DW.EdgeDetection_GV_SQUARED_DW[soccer_vision_B.q]) &&
+             b3 && b4)));
+      }
+    }
+
+    // End of S-Function (svipedge): '<S10>/Edge Detection'
+
+    // S-Function (sviphough): '<S10>/Hough Transform'
+    if (soccer_vision_M->Timing.TaskCounters.TID[1] == 0) {
+      MWVIP_Hough_D(&soccer_vision_B.EdgeDetection[0],
+                    &soccer_vision_B.HoughTransform_o1[0],
+                    &soccer_vision_ConstP.HoughTransform_SINE_TABLE_RTP[0],
+                    &soccer_vision_ConstP.HoughTransform_FIRSTRHO_RTP, 120, 160,
+                    399, 91);
+    }
+
+    // End of S-Function (sviphough): '<S10>/Hough Transform'
+
+    // Gain: '<S10>/Gain'
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 399; soccer_vision_B.q++) {
+      soccer_vision_B.Gain[soccer_vision_B.q] = soccer_vision_P.Gain_Gain *
+        soccer_vision_B.HoughTransform_o3[soccer_vision_B.q];
+    }
+
+    // End of Gain: '<S10>/Gain'
+
+    // S-Function (svipfindlocalmax): '<S10>/Find Local Maxima'
+    soccer_vision_B.accumTwo = 0;
+    b1 = false;
+    soccer_vision_B.q = 0;
+    while (soccer_vision_B.q < 71820) {
+      soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q] =
+        soccer_vision_B.HoughTransform_o1[soccer_vision_B.q];
+      soccer_vision_B.q++;
+    }
+
+    memset(&soccer_vision_B.FindLocalMaxima_o1[0], 0, 40U * sizeof(uint32_T));
+    while (!b1) {
+      soccer_vision_B.imgCol = 0;
+      soccer_vision_B.sumdbest =
+        soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[0];
+      soccer_vision_B.q = 0;
+      while (soccer_vision_B.q < 71820) {
+        if (soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q] >
+            soccer_vision_B.sumdbest) {
+          soccer_vision_B.imgCol = soccer_vision_B.q;
+          soccer_vision_B.sumdbest =
+            soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q];
+        }
+
+        soccer_vision_B.q++;
+      }
+
+      soccer_vision_B.accumOne = soccer_vision_B.imgCol % 399;
+      soccer_vision_B.q = soccer_vision_B.imgCol / 399;
+      if (soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.imgCol]
+          >= soccer_vision_P.FindLocalMaxima_threshold) {
+        soccer_vision_B.FindLocalMaxima_o1[soccer_vision_B.accumTwo] = (uint32_T)
+          (1 + soccer_vision_B.q);
+        soccer_vision_B.FindLocalMaxima_o1[20U + soccer_vision_B.accumTwo] =
+          (uint32_T)(1 + soccer_vision_B.accumOne);
+        soccer_vision_B.accumTwo++;
+        if (soccer_vision_B.accumTwo == 20) {
+          b1 = true;
+        }
+
+        soccer_vision_B.imgIdx = soccer_vision_B.accumOne - 100;
+        if (!(soccer_vision_B.imgIdx > 0)) {
+          soccer_vision_B.imgIdx = 0;
+        }
+
+        soccer_vision_B.accumFour = soccer_vision_B.accumOne + 100;
+        if (!(soccer_vision_B.accumFour < 398)) {
+          soccer_vision_B.accumFour = 398;
+        }
+
+        soccer_vision_B.imgCol = soccer_vision_B.q - 25;
+        soccer_vision_B.imgRow = soccer_vision_B.q + 25;
+        if (!((soccer_vision_B.imgCol < 0) || (soccer_vision_B.imgRow > 179))) {
+          while (soccer_vision_B.imgCol <= soccer_vision_B.imgRow) {
+            soccer_vision_B.imgIdx_d = soccer_vision_B.imgCol * 399;
+            soccer_vision_B.q = soccer_vision_B.imgIdx;
+            while (soccer_vision_B.q <= soccer_vision_B.accumFour) {
+              soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q
+                + soccer_vision_B.imgIdx_d] = 0.0;
+              soccer_vision_B.q++;
+            }
+
+            soccer_vision_B.imgCol++;
+          }
+        } else {
+          if (soccer_vision_B.imgCol < 0) {
+            soccer_vision_B.accumOne = soccer_vision_B.imgCol;
+            while (soccer_vision_B.accumOne <= soccer_vision_B.imgRow) {
+              if (soccer_vision_B.accumOne < 0) {
+                soccer_vision_B.imgIdx_d = (soccer_vision_B.accumOne + 180) *
+                  399 + 398;
+                soccer_vision_B.q = soccer_vision_B.imgIdx;
+                while (soccer_vision_B.q <= soccer_vision_B.accumFour) {
+                  soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.imgIdx_d
+                    - soccer_vision_B.q] = 0.0;
+                  soccer_vision_B.q++;
+                }
+              } else {
+                soccer_vision_B.imgIdx_d = soccer_vision_B.accumOne * 399;
+                soccer_vision_B.q = soccer_vision_B.imgIdx;
+                while (soccer_vision_B.q <= soccer_vision_B.accumFour) {
+                  soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q
+                    + soccer_vision_B.imgIdx_d] = 0.0;
+                  soccer_vision_B.q++;
+                }
+              }
+
+              soccer_vision_B.accumOne++;
+            }
+          }
+
+          if (soccer_vision_B.imgRow > 179) {
+            soccer_vision_B.accumOne = soccer_vision_B.imgCol;
+            while (soccer_vision_B.accumOne <= soccer_vision_B.imgRow) {
+              if (soccer_vision_B.accumOne > 179) {
+                soccer_vision_B.imgIdx_d = (soccer_vision_B.accumOne - 180) *
+                  399 + 398;
+                soccer_vision_B.q = soccer_vision_B.imgIdx;
+                while (soccer_vision_B.q <= soccer_vision_B.accumFour) {
+                  soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.imgIdx_d
+                    - soccer_vision_B.q] = 0.0;
+                  soccer_vision_B.q++;
+                }
+              } else {
+                soccer_vision_B.imgIdx_d = soccer_vision_B.accumOne * 399;
+                soccer_vision_B.q = soccer_vision_B.imgIdx;
+                while (soccer_vision_B.q <= soccer_vision_B.accumFour) {
+                  soccer_vision_DW.FindLocalMaxima_TEMP_IN_DWORKS[soccer_vision_B.q
+                    + soccer_vision_B.imgIdx_d] = 0.0;
+                  soccer_vision_B.q++;
+                }
+              }
+
+              soccer_vision_B.accumOne++;
+            }
+          }
+        }
+      } else {
+        b1 = true;
+      }
+    }
+
+    // End of S-Function (svipfindlocalmax): '<S10>/Find Local Maxima'
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 20; soccer_vision_B.q++) {
+      // S-Function (sdspperm2): '<S10>/Variable Selector' incorporates:
+      //   Selector: '<S10>/Selector1'
+
+      soccer_vision_B.imgCol = (int32_T)
+        soccer_vision_B.FindLocalMaxima_o1[soccer_vision_B.q] - 1;
+      if (soccer_vision_B.imgCol < 0) {
+        soccer_vision_B.imgCol = 0;
+      } else {
+        if (soccer_vision_B.imgCol >= 180) {
+          soccer_vision_B.imgCol = 179;
+        }
+      }
+
+      soccer_vision_B.rho[soccer_vision_B.q] =
+        soccer_vision_B.HoughTransform_o2[soccer_vision_B.imgCol];
+
+      // End of S-Function (sdspperm2): '<S10>/Variable Selector'
+
+      // S-Function (sdspperm2): '<S10>/Variable Selector1' incorporates:
+      //   Selector: '<S10>/Selector'
+
+      soccer_vision_B.imgCol = (int32_T)soccer_vision_B.FindLocalMaxima_o1[20 +
+        soccer_vision_B.q] - 1;
+      if (soccer_vision_B.imgCol < 0) {
+        soccer_vision_B.imgCol = 0;
+      } else {
+        if (soccer_vision_B.imgCol >= 399) {
+          soccer_vision_B.imgCol = 398;
+        }
+      }
+
+      soccer_vision_B.VariableSelector1[soccer_vision_B.q] =
+        soccer_vision_B.Gain[soccer_vision_B.imgCol];
+
+      // End of S-Function (sdspperm2): '<S10>/Variable Selector1'
+
+      // MATLAB Function: '<S2>/Filter'
+      soccer_vision_B.lines[soccer_vision_B.q] =
+        soccer_vision_B.rho[soccer_vision_B.q];
+      soccer_vision_B.lines[soccer_vision_B.q + 20] =
+        soccer_vision_B.VariableSelector1[soccer_vision_B.q] *
+        soccer_vision_P.scalerho;
+      if (soccer_vision_B.lines[20 + soccer_vision_B.q] < 0.0) {
+        soccer_vision_B.lines[soccer_vision_B.q] += 3.1415926535897931;
+        soccer_vision_B.lines[20 + soccer_vision_B.q] = -soccer_vision_B.lines
+          [20 + soccer_vision_B.q];
+      }
+
+      if (soccer_vision_B.lines[soccer_vision_B.q] > 3.1415926535897931) {
+        soccer_vision_B.lines[soccer_vision_B.q] -= 6.2831853071795862;
+      }
+    }
+
+    // MATLAB Function: '<S2>/Filter' incorporates:
+    //   Constant: '<S2>/Constant1'
+    //   MATLAB Function: '<S2>/Cover Edge'
+
+    soccer_vision_B.sumdbest = 1.0E+6;
+    soccer_vision_B.imgCol = -1;
+    soccer_vision_B.accumTwo = 1;
+    soccer_vision_B.linesFilteredBest_data[0] = 0.0;
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 4; soccer_vision_B.q++) {
+      soccer_vision_kmeans(soccer_vision_B.lines, 3.0 + (real_T)
+                           soccer_vision_B.q, soccer_vision_B.unusedU0,
+                           soccer_vision_B.C_data, soccer_vision_B.C_size,
+                           soccer_vision_B.sumd_data, &soccer_vision_B.sumd_size);
+      soccer_vision_B.imgIdx = 0;
+      soccer_vision_B.accumFour = 0;
+      while (soccer_vision_B.accumFour <= soccer_vision_B.q + 2) {
+        soccer_vision_B.accumOne = 0;
+        while (soccer_vision_B.accumOne <= soccer_vision_B.q + 2) {
+          if (!(1 + soccer_vision_B.accumFour <= 1 + soccer_vision_B.accumOne))
+          {
+            soccer_vision_B.scale = 3.3121686421112381E-170;
+            soccer_vision_B.absxk = fabs
+              (soccer_vision_B.C_data[soccer_vision_B.accumFour] -
+               soccer_vision_B.C_data[soccer_vision_B.accumOne]);
+            if (soccer_vision_B.absxk > 3.3121686421112381E-170) {
+              soccer_vision_B.c_y = 1.0;
+              soccer_vision_B.scale = soccer_vision_B.absxk;
+            } else {
+              soccer_vision_B.t = soccer_vision_B.absxk /
+                3.3121686421112381E-170;
+              soccer_vision_B.c_y = soccer_vision_B.t * soccer_vision_B.t;
+            }
+
+            soccer_vision_B.absxk = fabs
+              (soccer_vision_B.C_data[soccer_vision_B.accumFour +
+               soccer_vision_B.C_size[0]] -
+               soccer_vision_B.C_data[soccer_vision_B.accumOne +
+               soccer_vision_B.C_size[0]]);
+            if (soccer_vision_B.absxk > soccer_vision_B.scale) {
+              soccer_vision_B.t = soccer_vision_B.scale / soccer_vision_B.absxk;
+              soccer_vision_B.c_y = soccer_vision_B.c_y * soccer_vision_B.t *
+                soccer_vision_B.t + 1.0;
+              soccer_vision_B.scale = soccer_vision_B.absxk;
+            } else {
+              soccer_vision_B.t = soccer_vision_B.absxk / soccer_vision_B.scale;
+              soccer_vision_B.c_y += soccer_vision_B.t * soccer_vision_B.t;
+            }
+
+            soccer_vision_B.c_y = soccer_vision_B.scale * sqrt
+              (soccer_vision_B.c_y);
+            if (soccer_vision_B.c_y < soccer_vision_P.clusterProximityThreshold)
+            {
+              soccer_vision_B.imgIdx = 1;
+            }
+          }
+
+          soccer_vision_B.accumOne++;
+        }
+
+        soccer_vision_B.accumFour++;
+      }
+
+      if (soccer_vision_B.imgIdx != 1) {
+        soccer_vision_B.scale = soccer_vision_B.sumd_data[0];
+        soccer_vision_B.accumOne = 2;
+        while (soccer_vision_B.accumOne <= soccer_vision_B.sumd_size) {
+          soccer_vision_B.scale +=
+            soccer_vision_B.sumd_data[soccer_vision_B.accumOne - 1];
+          soccer_vision_B.accumOne++;
+        }
+
+        if (soccer_vision_B.scale / (real_T)soccer_vision_B.sumd_size <
+            soccer_vision_B.sumdbest) {
+          soccer_vision_B.sumdbest = soccer_vision_B.sumd_data[0];
+          soccer_vision_B.imgCol = 2;
+          while (soccer_vision_B.imgCol <= soccer_vision_B.sumd_size) {
+            soccer_vision_B.sumdbest +=
+              soccer_vision_B.sumd_data[soccer_vision_B.imgCol - 1];
+            soccer_vision_B.imgCol++;
+          }
+
+          soccer_vision_B.sumdbest /= (real_T)soccer_vision_B.sumd_size;
+          soccer_vision_B.imgCol = soccer_vision_B.q + 2;
+          soccer_vision_B.accumTwo = soccer_vision_B.C_size[0];
+          soccer_vision_B.accumOne = soccer_vision_B.C_size[0] *
+            soccer_vision_B.C_size[1] - 1;
+          if (0 <= soccer_vision_B.accumOne) {
+            memcpy(&soccer_vision_B.linesFilteredBest_data[0],
+                   &soccer_vision_B.C_data[0], (soccer_vision_B.accumOne + 1) *
+                   sizeof(real_T));
+          }
+        }
+      }
+    }
+
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+      soccer_vision_B.thetaField[soccer_vision_B.q] = 0.0;
+      soccer_vision_B.rhoField[soccer_vision_B.q] = 0.0;
+      soccer_vision_B.thetaNet[soccer_vision_B.q] = 0.0;
+      soccer_vision_B.rhoNet[soccer_vision_B.q] = 0.0;
+    }
+
+    soccer_vision_B.sumdbest = 0.0;
+    soccer_vision_B.scale = 0.0;
+    soccer_vision_B.q = 0;
+    while (soccer_vision_B.q <= soccer_vision_B.imgCol) {
+      if ((soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q] <
+           soccer_vision_P.netAngleThreshold + soccer_vision_P.Constant1_Value) &&
+          (soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q] >
+           -soccer_vision_P.netAngleThreshold + soccer_vision_P.Constant1_Value))
+      {
+        soccer_vision_B.scale++;
+        soccer_vision_B.accumOne = (int32_T)soccer_vision_B.scale - 1;
+        soccer_vision_B.thetaNet[soccer_vision_B.accumOne] =
+          soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q];
+        soccer_vision_B.rhoNet[soccer_vision_B.accumOne] =
+          soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q +
+          soccer_vision_B.accumTwo] / soccer_vision_P.scalerho;
+      } else {
+        if ((soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q +
+             soccer_vision_B.accumTwo] > soccer_vision_B.totalLineCount *
+             soccer_vision_P.scalerho) ||
+            ((soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q] < 0.0) &&
+             (soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q] >
+              -1.0471975511965976))) {
+          soccer_vision_B.sumdbest++;
+          soccer_vision_B.accumOne = (int32_T)soccer_vision_B.sumdbest - 1;
+          soccer_vision_B.thetaField[soccer_vision_B.accumOne] =
+            soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q];
+          soccer_vision_B.rhoField[soccer_vision_B.accumOne] =
+            soccer_vision_B.linesFilteredBest_data[soccer_vision_B.q +
+            soccer_vision_B.accumTwo] / soccer_vision_P.scalerho;
+        }
+      }
+
+      soccer_vision_B.q++;
+    }
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   }
 
   // MATLAB Function: '<S12>/Label Net Lines' incorporates:
@@ -1963,6 +3382,7 @@ void soccer_vision_step(void)
   memset(&soccer_vision_B.netLinesNew[0], 0, sizeof(real_T) << 3U);
   y[0] = false;
   y[1] = false;
+<<<<<<< HEAD
   soccer_vision_B.i = 0;
   exitg1 = false;
   while ((!exitg1) && (soccer_vision_B.i + 1 <= 4)) {
@@ -1984,10 +3404,34 @@ void soccer_vision_step(void)
       exitg1 = true;
     } else {
       soccer_vision_B.i++;
+=======
+  soccer_vision_B.q = 0;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q + 1 <= 4)) {
+    if (!((soccer_vision_DW.Memory_PreviousInput[soccer_vision_B.q] == 0.0) ||
+          rtIsNaN(soccer_vision_DW.Memory_PreviousInput[soccer_vision_B.q]))) {
+      y[0] = true;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+    }
+  }
+
+  soccer_vision_B.q = 4;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q + 1 <= 8)) {
+    if (!((soccer_vision_DW.Memory_PreviousInput[soccer_vision_B.q] == 0.0) ||
+          rtIsNaN(soccer_vision_DW.Memory_PreviousInput[soccer_vision_B.q]))) {
+      y[1] = true;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     }
   }
 
   b1 = true;
+<<<<<<< HEAD
   soccer_vision_B.i = 1;
   exitg1 = false;
   while ((!exitg1) && (soccer_vision_B.i < 3)) {
@@ -1996,6 +3440,16 @@ void soccer_vision_step(void)
       exitg1 = true;
     } else {
       soccer_vision_B.i++;
+=======
+  soccer_vision_B.q = 1;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q < 3)) {
+    if (!y[soccer_vision_B.q - 1]) {
+      b1 = false;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     }
   }
 
@@ -2005,9 +3459,15 @@ void soccer_vision_step(void)
   }
 
   soccer_vision_B.totalLineCount = 0.0;
+<<<<<<< HEAD
   for (soccer_vision_B.i = 0; soccer_vision_B.i < 6; soccer_vision_B.i++) {
     if (soccer_vision_B.thetaNet[soccer_vision_B.i] == 0.0) {
       if (!(soccer_vision_B.rhoNet[soccer_vision_B.i] == 0.0)) {
+=======
+  for (soccer_vision_B.q = 0; soccer_vision_B.q < 6; soccer_vision_B.q++) {
+    if (soccer_vision_B.thetaNet[soccer_vision_B.q] == 0.0) {
+      if (!(soccer_vision_B.rhoNet[soccer_vision_B.q] == 0.0)) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         soccer_vision_B.totalLineCount++;
       }
     } else {
@@ -2035,6 +3495,7 @@ void soccer_vision_step(void)
         (soccer_vision_B.netLinesNew[5] != 0.0)) {
       soccer_vision_B.totalLineCount = soccer_vision_B.rhoNet[0] *
         soccer_vision_scalerho;
+<<<<<<< HEAD
       soccer_vision_B.thetaNet_k[0] = soccer_vision_B.thetaNet[0] -
         soccer_vision_B.netLinesNew[0];
       soccer_vision_B.thetaNet_k[1] = soccer_vision_B.totalLineCount -
@@ -2045,6 +3506,18 @@ void soccer_vision_step(void)
         soccer_vision_B.netLinesNew[5] * soccer_vision_scalerho;
       if (soccer_vision_norm(soccer_vision_B.thetaNet_k) < soccer_vision_norm
           (soccer_vision_B.thetaNet_c)) {
+=======
+      soccer_vision_B.dv0[0] = soccer_vision_B.thetaNet[0] -
+        soccer_vision_B.netLinesNew[0];
+      soccer_vision_B.dv0[1] = soccer_vision_B.totalLineCount -
+        soccer_vision_B.netLinesNew[4] * soccer_vision_scalerho;
+      soccer_vision_B.dv1[0] = soccer_vision_B.thetaNet[0] -
+        soccer_vision_B.netLinesNew[1];
+      soccer_vision_B.dv1[1] = soccer_vision_B.totalLineCount -
+        soccer_vision_B.netLinesNew[5] * soccer_vision_scalerho;
+      if (soccer_vision_norm(soccer_vision_B.dv0) < soccer_vision_norm
+          (soccer_vision_B.dv1)) {
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         soccer_vision_B.netLinesNew[0] = soccer_vision_B.thetaNet[0];
         soccer_vision_B.netLinesNew[4] = soccer_vision_B.rhoNet[0];
       } else {
@@ -2065,6 +3538,7 @@ void soccer_vision_step(void)
   memset(&soccer_vision_B.fieldLinesNew[0], 0, 10U * sizeof(real_T));
   y[0] = false;
   y[1] = false;
+<<<<<<< HEAD
   soccer_vision_B.i = 0;
   exitg1 = false;
   while ((!exitg1) && (soccer_vision_B.i + 1 <= 5)) {
@@ -2086,10 +3560,34 @@ void soccer_vision_step(void)
       exitg1 = true;
     } else {
       soccer_vision_B.i++;
+=======
+  soccer_vision_B.q = 0;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q + 1 <= 5)) {
+    if (!((soccer_vision_DW.Memory1_PreviousInput[soccer_vision_B.q] == 0.0) ||
+          rtIsNaN(soccer_vision_DW.Memory1_PreviousInput[soccer_vision_B.q]))) {
+      y[0] = true;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+    }
+  }
+
+  soccer_vision_B.q = 5;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q + 1 <= 10)) {
+    if (!((soccer_vision_DW.Memory1_PreviousInput[soccer_vision_B.q] == 0.0) ||
+          rtIsNaN(soccer_vision_DW.Memory1_PreviousInput[soccer_vision_B.q]))) {
+      y[1] = true;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     }
   }
 
   b1 = true;
+<<<<<<< HEAD
   soccer_vision_B.i = 1;
   exitg1 = false;
   while ((!exitg1) && (soccer_vision_B.i < 3)) {
@@ -2098,6 +3596,16 @@ void soccer_vision_step(void)
       exitg1 = true;
     } else {
       soccer_vision_B.i++;
+=======
+  soccer_vision_B.q = 1;
+  exitg1 = false;
+  while ((!exitg1) && (soccer_vision_B.q < 3)) {
+    if (!y[soccer_vision_B.q - 1]) {
+      b1 = false;
+      exitg1 = true;
+    } else {
+      soccer_vision_B.q++;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     }
   }
 
@@ -2123,13 +3631,18 @@ void soccer_vision_step(void)
 
   // End of MATLAB Function: '<S12>/Label Field Lines'
 
+<<<<<<< HEAD
   // Concatenate: '<S12>/Matrix Concatenate' incorporates:
   //   Selector: '<S2>/Selector'
 
+=======
+  // Concatenate: '<S12>/Matrix Concatenate'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   for (soccer_vision_B.imgCol = 0; soccer_vision_B.imgCol < 2;
        soccer_vision_B.imgCol++) {
     soccer_vision_B.MatrixConcatenate[9 * soccer_vision_B.imgCol] =
       soccer_vision_B.netLinesNew[soccer_vision_B.imgCol << 2];
+<<<<<<< HEAD
     soccer_vision_B.i = 1 + 9 * soccer_vision_B.imgCol;
     soccer_vision_B.MatrixConcatenate[soccer_vision_B.i] =
       soccer_vision_B.netLinesNew[(soccer_vision_B.imgCol << 2) + 1];
@@ -2157,11 +3670,24 @@ void soccer_vision_step(void)
       soccer_vision_B.rtb_netLinesNew_c[soccer_vision_B.i] =
         soccer_vision_B.fieldLinesNew[5 * soccer_vision_B.imgCol +
         soccer_vision_B.accumOne];
+=======
+    soccer_vision_B.MatrixConcatenate[1 + 9 * soccer_vision_B.imgCol] =
+      soccer_vision_B.netLinesNew[(soccer_vision_B.imgCol << 2) + 1];
+    soccer_vision_B.MatrixConcatenate[2 + 9 * soccer_vision_B.imgCol] =
+      soccer_vision_B.netLinesNew[(soccer_vision_B.imgCol << 2) + 2];
+    soccer_vision_B.MatrixConcatenate[3 + 9 * soccer_vision_B.imgCol] =
+      soccer_vision_B.netLinesNew[(soccer_vision_B.imgCol << 2) + 3];
+    for (soccer_vision_B.q = 0; soccer_vision_B.q < 5; soccer_vision_B.q++) {
+      soccer_vision_B.MatrixConcatenate[(soccer_vision_B.q + 9 *
+        soccer_vision_B.imgCol) + 4] = soccer_vision_B.fieldLinesNew[5 *
+        soccer_vision_B.imgCol + soccer_vision_B.q];
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     }
   }
 
   // End of Concatenate: '<S12>/Matrix Concatenate'
 
+<<<<<<< HEAD
   // Selector: '<S2>/Selector'
   memcpy(&soccer_vision_B.Selector[0], &soccer_vision_B.rtb_netLinesNew_c[0], 9U
          * sizeof(real_T));
@@ -2175,6 +3701,18 @@ void soccer_vision_step(void)
     soccer_vision_B.totalLineCount = (soccer_vision_B.rtb_netLinesNew_c[9 +
       soccer_vision_B.i] + 2.2204460492503131E-16) / (cos
       (soccer_vision_B.Selector[soccer_vision_B.i]) + 2.2204460492503131E-16);
+=======
+  // S-Function (sviphoughlines): '<S2>/Hough Lines' incorporates:
+  //   Selector: '<S2>/Selector'
+  //   Selector: '<S2>/Selector1'
+
+  for (soccer_vision_B.q = 0; soccer_vision_B.q < 9; soccer_vision_B.q++) {
+    soccer_vision_B.imgCol = 0;
+    soccer_vision_B.totalLineCount = (soccer_vision_B.MatrixConcatenate[9 +
+      soccer_vision_B.q] + 2.2204460492503131E-16) / (cos
+      (soccer_vision_B.MatrixConcatenate[soccer_vision_B.q]) +
+      2.2204460492503131E-16);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
     // part-1: top horizontal axis
     soccer_vision_B.sumdbest = floor(soccer_vision_B.totalLineCount + 0.5);
@@ -2191,9 +3729,16 @@ void soccer_vision_step(void)
       soccer_vision_B.imgCol = 1;
     }
 
+<<<<<<< HEAD
     soccer_vision_B.scale = (soccer_vision_B.rtb_netLinesNew_c[9 +
       soccer_vision_B.i] + 2.2204460492503131E-16) / (sin
       (soccer_vision_B.Selector[soccer_vision_B.i]) + 2.2204460492503131E-16);
+=======
+    soccer_vision_B.scale = (soccer_vision_B.MatrixConcatenate[9 +
+      soccer_vision_B.q] + 2.2204460492503131E-16) / (sin
+      (soccer_vision_B.MatrixConcatenate[soccer_vision_B.q]) +
+      2.2204460492503131E-16);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
     // part-2: left vertical axis
     soccer_vision_B.sumdbest = floor(soccer_vision_B.scale + 0.5);
@@ -2256,6 +3801,7 @@ void soccer_vision_step(void)
       soccer_vision_B.tmpOutRC[3U] = -1;
     }
 
+<<<<<<< HEAD
     soccer_vision_B.HoughLines[soccer_vision_B.i] = soccer_vision_B.tmpOutRC[1]
       + 1;
     soccer_vision_B.HoughLines[soccer_vision_B.i + 9] =
@@ -2264,10 +3810,21 @@ void soccer_vision_step(void)
       soccer_vision_B.HoughLines[soccer_vision_B.i + 18] = MAX_int32_T;
     } else {
       soccer_vision_B.HoughLines[soccer_vision_B.i + 18] =
+=======
+    soccer_vision_B.HoughLines[soccer_vision_B.q] = soccer_vision_B.tmpOutRC[1]
+      + 1;
+    soccer_vision_B.HoughLines[soccer_vision_B.q + 9] =
+      soccer_vision_B.tmpOutRC[0] + 1;
+    if (soccer_vision_B.tmpOutRC[3] > 2147483646) {
+      soccer_vision_B.HoughLines[soccer_vision_B.q + 18] = MAX_int32_T;
+    } else {
+      soccer_vision_B.HoughLines[soccer_vision_B.q + 18] =
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
         soccer_vision_B.tmpOutRC[3] + 1;
     }
 
     if (soccer_vision_B.tmpOutRC[2] > 2147483646) {
+<<<<<<< HEAD
       soccer_vision_B.HoughLines[soccer_vision_B.i + 27] = MAX_int32_T;
     } else {
       soccer_vision_B.HoughLines[soccer_vision_B.i + 27] =
@@ -2278,6 +3835,16 @@ void soccer_vision_step(void)
   }
 
   // End of Selector: '<S2>/Selector1'
+=======
+      soccer_vision_B.HoughLines[soccer_vision_B.q + 27] = MAX_int32_T;
+    } else {
+      soccer_vision_B.HoughLines[soccer_vision_B.q + 27] =
+        soccer_vision_B.tmpOutRC[2] + 1;
+    }
+  }
+
+  // End of S-Function (sviphoughlines): '<S2>/Hough Lines'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
   // MATLABSystem: '<S2>/MATLAB System' incorporates:
   //   Constant: '<S2>/Constant6'
@@ -2367,6 +3934,7 @@ void soccer_vision_step(void)
          &soccer_vision_B.fieldLinesNew[0], 10U * sizeof(real_T));
 
   // External mode
+<<<<<<< HEAD
   rtExtModeUploadCheckTrigger(1);
 
   {                                    // Sample time: [0.1s, 0.0s]
@@ -2375,6 +3943,20 @@ void soccer_vision_step(void)
 
   // signal main to stop simulation
   {                                    // Sample time: [0.1s, 0.0s]
+=======
+  rtExtModeUploadCheckTrigger(2);
+
+  {                                    // Sample time: [0.01s, 0.0s]
+    rtExtModeUpload(0, soccer_vision_M->Timing.taskTime0);
+  }
+
+  if (soccer_vision_M->Timing.TaskCounters.TID[1] == 0) {// Sample time: [0.1s, 0.0s] 
+    rtExtModeUpload(1, ((soccer_vision_M->Timing.clockTick1) * 0.1));
+  }
+
+  // signal main to stop simulation
+  {                                    // Sample time: [0.01s, 0.0s]
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     if ((rtmGetTFinal(soccer_vision_M)!=-1) &&
         !((rtmGetTFinal(soccer_vision_M)-soccer_vision_M->Timing.taskTime0) >
           soccer_vision_M->Timing.taskTime0 * (DBL_EPSILON))) {
@@ -2394,6 +3976,20 @@ void soccer_vision_step(void)
 
   soccer_vision_M->Timing.taskTime0 =
     (++soccer_vision_M->Timing.clockTick0) * soccer_vision_M->Timing.stepSize0;
+<<<<<<< HEAD
+=======
+  if (soccer_vision_M->Timing.TaskCounters.TID[1] == 0) {
+    // Update absolute timer for sample time: [0.1s, 0.0s]
+    // The "clockTick1" counts the number of times the code of this task has
+    //  been executed. The resolution of this integer timer is 0.1, which is the step size
+    //  of the task. Size of "clockTick1" ensures timer will not overflow during the
+    //  application lifespan selected.
+
+    soccer_vision_M->Timing.clockTick1++;
+  }
+
+  rate_scheduler();
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 // Model initialize function
@@ -2408,6 +4004,7 @@ void soccer_vision_initialize(void)
   (void) memset((void *)soccer_vision_M, 0,
                 sizeof(RT_MODEL_soccer_vision_T));
   rtmSetTFinal(soccer_vision_M, -1);
+<<<<<<< HEAD
   soccer_vision_M->Timing.stepSize0 = 0.1;
 
   // External mode info
@@ -2415,19 +4012,42 @@ void soccer_vision_initialize(void)
   soccer_vision_M->Sizes.checksums[1] = (1635707103U);
   soccer_vision_M->Sizes.checksums[2] = (2266577057U);
   soccer_vision_M->Sizes.checksums[3] = (2057941208U);
+=======
+  soccer_vision_M->Timing.stepSize0 = 0.01;
+
+  // External mode info
+  soccer_vision_M->Sizes.checksums[0] = (3812702237U);
+  soccer_vision_M->Sizes.checksums[1] = (2286541348U);
+  soccer_vision_M->Sizes.checksums[2] = (1009730477U);
+  soccer_vision_M->Sizes.checksums[3] = (3966864686U);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
     static RTWExtModeInfo rt_ExtModeInfo;
+<<<<<<< HEAD
     static const sysRanDType *systemRan[6];
+=======
+    static const sysRanDType *systemRan[10];
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     soccer_vision_M->extModeInfo = (&rt_ExtModeInfo);
     rteiSetSubSystemActiveVectorAddresses(&rt_ExtModeInfo, systemRan);
     systemRan[0] = &rtAlwaysEnabled;
     systemRan[1] = &rtAlwaysEnabled;
     systemRan[2] = &rtAlwaysEnabled;
+<<<<<<< HEAD
     systemRan[3] = &rtAlwaysEnabled;
     systemRan[4] = &rtAlwaysEnabled;
     systemRan[5] = &rtAlwaysEnabled;
+=======
+    systemRan[3] = (sysRanDType *)&soccer_vision_DW.EnabledSubsystem_SubsysRanBC;
+    systemRan[4] = &rtAlwaysEnabled;
+    systemRan[5] = &rtAlwaysEnabled;
+    systemRan[6] = &rtAlwaysEnabled;
+    systemRan[7] = &rtAlwaysEnabled;
+    systemRan[8] = &rtAlwaysEnabled;
+    systemRan[9] = &rtAlwaysEnabled;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     rteiSetModelMappingInfoPtr(soccer_vision_M->extModeInfo,
       &soccer_vision_M->SpecialInfo.mappingInfo);
     rteiSetChecksumsPtr(soccer_vision_M->extModeInfo,
@@ -3031,7 +4651,11 @@ void soccer_vision_initialize(void)
     (void) memset((char_T *) &dtInfo, 0,
                   sizeof(dtInfo));
     soccer_vision_M->SpecialInfo.mappingInfo = (&dtInfo);
+<<<<<<< HEAD
     dtInfo.numDataTypes = 22;
+=======
+    dtInfo.numDataTypes = 28;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     dtInfo.dataTypeSizes = &rtDataTypeSizes[0];
     dtInfo.dataTypeNames = &rtDataTypeNames[0];
 
@@ -3045,8 +4669,40 @@ void soccer_vision_initialize(void)
   {
     uint32_T r;
     int32_T nonZeroIdx;
+<<<<<<< HEAD
     int32_T EdgeDetection_VO_DW_tmp;
 
+=======
+    static const char_T tmp[28] = { '/', 's', 'o', 'c', 'c', 'e', 'r', 'b', 'o',
+      't', '/', 'c', 'a', 'm', 'e', 'r', 'a', '1', '/', 'i', 'm', 'a', 'g', 'e',
+      '_', 'r', 'a', 'w' };
+
+    char_T tmp_0[29];
+    int32_T EdgeDetection_VO_DW_tmp;
+
+    // Start for Atomic SubSystem: '<S4>/Subscribe'
+    // Start for MATLABSystem: '<S5>/SourceBlock'
+    soccer_vision_DW.obj_h.matlabCodegenIsDeleted = true;
+    soccer_vision_DW.obj_h.isInitialized = 0;
+    soccer_vision_DW.obj_h.matlabCodegenIsDeleted = false;
+    soccer_vision_DW.obj_h.isSetupComplete = false;
+    soccer_vision_DW.obj_h.isInitialized = 1;
+    for (nonZeroIdx = 0; nonZeroIdx < 28; nonZeroIdx++) {
+      tmp_0[nonZeroIdx] = tmp[nonZeroIdx];
+    }
+
+    tmp_0[28] = '\x00';
+    Sub_soccer_vision_197.createSubscriber(tmp_0, soccer_vision_MessageQueueLen);
+    soccer_vision_DW.obj_h.isSetupComplete = true;
+
+    // End of Start for MATLABSystem: '<S5>/SourceBlock'
+    // End of Start for SubSystem: '<S4>/Subscribe'
+
+    // Start for MATLABSystem: '<S4>/Read Image'
+    soccer_vision_DW.obj.isInitialized = 0;
+    soccer_vision_DW.obj.isInitialized = 1;
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     // Start for S-Function (svipedge): '<S10>/Edge Detection'
     // Calculate FillColor times Opacity.
     // Calculate One minus Opacity.
@@ -3211,6 +4867,22 @@ void soccer_vision_initialize(void)
     memcpy(&soccer_vision_DW.Memory1_PreviousInput[0],
            &soccer_vision_P.Memory1_InitialCondition[0], 10U * sizeof(real_T));
 
+<<<<<<< HEAD
+=======
+    // SystemInitialize for Atomic SubSystem: '<S4>/Subscribe'
+    // SystemInitialize for Enabled SubSystem: '<S5>/Enabled Subsystem'
+    // SystemInitialize for Outport: '<S6>/Out1'
+    soccer_vision_B.In1 = soccer_vision_P.Out1_Y0;
+
+    // End of SystemInitialize for SubSystem: '<S5>/Enabled Subsystem'
+    // End of SystemInitialize for SubSystem: '<S4>/Subscribe'
+
+    // InitializeConditions for MATLABSystem: '<S4>/Read Image'
+    memset(&soccer_vision_DW.obj.Image[0], 0, 921600U * sizeof(uint8_T));
+    soccer_vision_DW.obj.ImageSize[0] = 480U;
+    soccer_vision_DW.obj.ImageSize[1] = 640U;
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     // SystemInitialize for MATLAB Function: '<S2>/Filter'
     memset(&soccer_vision_DW.state[0], 0, 625U * sizeof(uint32_T));
     r = 5489U;
@@ -3229,7 +4901,16 @@ void soccer_vision_initialize(void)
 // Model terminate function
 void soccer_vision_terminate(void)
 {
+<<<<<<< HEAD
   // (no terminate code required)
+=======
+  // Terminate for Atomic SubSystem: '<S4>/Subscribe'
+  // Terminate for MATLABSystem: '<S5>/SourceBlock'
+  soccer_vision_matlabCodegenHandle_matlabCodegenDestructor
+    (&soccer_vision_DW.obj_h);
+
+  // End of Terminate for SubSystem: '<S4>/Subscribe'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 //

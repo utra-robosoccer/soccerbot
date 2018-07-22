@@ -2,4 +2,5 @@
 	<node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories" />
 	<include file="$(find soccer_gazebo)/launch/soccerbot_soccerfield.launch"/>
 	<node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" />
+	<include file="$(find darknet_ros)/launch/darknet_ros.launch"/>
 </launch>

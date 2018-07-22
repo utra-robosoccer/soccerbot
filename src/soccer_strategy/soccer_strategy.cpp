@@ -7,9 +7,15 @@
 //
 // Code generated for Simulink model 'soccer_strategy'.
 //
+<<<<<<< HEAD
 // Model version                  : 1.641
 // Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
 // C/C++ source code generated on : Sat Jul 14 19:27:01 2018
+=======
+// Model version                  : 1.643
+// Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
+// C/C++ source code generated on : Sun Jul 15 22:34:09 2018
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
@@ -86,7 +92,10 @@ static void rate_scheduler(void)
 static void soccer_strategy_SystemProp_matlabCodegenSetAnyProp
   (dsp_simulink_MovingAverage_soccer_strategy_T *obj, boolean_T value)
 {
+<<<<<<< HEAD
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   obj->matlabCodegenIsDeleted = value;
 }
 
@@ -94,8 +103,11 @@ static void soccer_strategy_SystemCore_release
   (dsp_simulink_MovingAverage_soccer_strategy_T *obj)
 {
   dsp_private_SlidingWindowAverageCG_soccer_strategy_T *obj_0;
+<<<<<<< HEAD
 
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   if ((obj->isInitialized == 1) && obj->isSetupComplete) {
     obj_0 = obj->pStatistic;
     if (obj_0->isInitialized == 1) {
@@ -104,27 +116,39 @@ static void soccer_strategy_SystemCore_release
 
     obj->NumChannels = -1;
   }
+<<<<<<< HEAD
 
   // End of Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 static void soccer_strategy_SystemCore_delete
   (dsp_simulink_MovingAverage_soccer_strategy_T *obj)
 {
+<<<<<<< HEAD
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   soccer_strategy_SystemCore_release(obj);
 }
 
 static void soccer_strategy_matlabCodegenHandle_matlabCodegenDestructor
   (dsp_simulink_MovingAverage_soccer_strategy_T *obj)
 {
+<<<<<<< HEAD
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   if (!obj->matlabCodegenIsDeleted) {
     soccer_strategy_SystemProp_matlabCodegenSetAnyProp(obj, true);
     soccer_strategy_SystemCore_delete(obj);
   }
+<<<<<<< HEAD
 
   // End of Start for MATLABSystem: '<S14>/Moving Average'
+=======
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 //
@@ -139,14 +163,22 @@ static void soccer_strategy_matlabCodegenHandle_matlabCodegenDestructor
 void soccer_strategy_MovingAverage_Init(DW_MovingAverage_soccer_strategy_T
   *localDW)
 {
+<<<<<<< HEAD
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+  // InitializeConditions for MATLABSystem: '<S14>/Moving Average'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   if (localDW->obj.pStatistic->isInitialized == 1) {
     localDW->obj.pStatistic->pCumSum = 0.0;
     memset(&localDW->obj.pStatistic->pCumSumRev[0], 0, 59U * sizeof(real_T));
     localDW->obj.pStatistic->pCumRevIndex = 1.0;
   }
 
+<<<<<<< HEAD
   // End of Start for MATLABSystem: '<S14>/Moving Average'
+=======
+  // End of InitializeConditions for MATLABSystem: '<S14>/Moving Average'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 //
@@ -194,7 +226,11 @@ void soccer_strategy_MovingAverage(real_T rtu_0,
   real_T z;
   int32_T z_tmp;
 
+<<<<<<< HEAD
   // Start for MATLABSystem: '<S14>/Moving Average'
+=======
+  // MATLABSystem: '<S14>/Moving Average'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   if (localDW->obj.TunablePropsChanged) {
     localDW->obj.TunablePropsChanged = false;
   }
@@ -234,9 +270,15 @@ void soccer_strategy_MovingAverage(real_T rtu_0,
   memcpy(&localDW->obj.pStatistic->pCumSumRev[0], &localB->csumrev[0], 59U *
          sizeof(real_T));
   localDW->obj.pStatistic->pCumRevIndex = cumRevIndex;
+<<<<<<< HEAD
 
   // MATLABSystem: '<S14>/Moving Average'
   localB->MovingAverage = z / 60.0;
+=======
+  localB->MovingAverage = z / 60.0;
+
+  // End of MATLABSystem: '<S14>/Moving Average'
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 }
 
 //
@@ -1426,10 +1468,17 @@ void soccer_strategy_initialize(void)
   soccer_strategy_M->Timing.stepSize0 = 0.01;
 
   // External mode info
+<<<<<<< HEAD
   soccer_strategy_M->Sizes.checksums[0] = (3739384106U);
   soccer_strategy_M->Sizes.checksums[1] = (3956152911U);
   soccer_strategy_M->Sizes.checksums[2] = (1286300255U);
   soccer_strategy_M->Sizes.checksums[3] = (3637763210U);
+=======
+  soccer_strategy_M->Sizes.checksums[0] = (3887346866U);
+  soccer_strategy_M->Sizes.checksums[1] = (336917250U);
+  soccer_strategy_M->Sizes.checksums[2] = (3199104002U);
+  soccer_strategy_M->Sizes.checksums[3] = (3366517519U);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
