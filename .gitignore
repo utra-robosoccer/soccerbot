@@ -12,6 +12,10 @@ soccer_ws.sublime-project
 soccer_ws.sublime-workspace
 deploy_background_build.sh
 deploy_build_ros_model.sh
-Icon[]*
+Icon[]
 .metadata/
 .catkin_workspace
+*.log
+
+# Matlab Build Files
+soccer_vision_build.stat
