@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>environment</name>
+  <name>soccer_rl</name>
   <version>0.0.0</version>
-  <description>The environment package</description>
+  <description>The soccer_rl package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
