@@ -579,7 +579,11 @@ void StartIMUTask(void const * argument)
 	  // acceleration data. To compensate, we feed in samples to the filter
 	  // slower. Good DSP practise? Not sure. To compensate for the high
 	  // delays, we also use a filter with fewer taps than the acceleration
-	  // filters
+	  // filters. Ideally: we would sample faster to reduce aliasing, then
+	  // use a filter with a smaller cutoff frequency. However, the filter
+	  // designer we are using does not allow us to generate such filters in
+	  // the free version, so this is the best we can do unless we use other
+	  // software.
 	  if(i % 16 == 0){
 	      MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
 	      MPUFilter_FilterAngularVelocity(&IMUdata);
