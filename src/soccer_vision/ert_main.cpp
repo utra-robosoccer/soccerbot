@@ -7,12 +7,21 @@
 //
 // Code generated for Simulink model 'soccer_vision'.
 //
+<<<<<<< HEAD
 // Model version                  : 1.759
 // Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
 // C/C++ source code generated on : Sat Jul 14 20:07:55 2018
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
+=======
+// Model version                  : 1.770
+// Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
+// C/C++ source code generated on : Sun Jul 15 23:50:31 2018
+//
+// Target selection: ert.tlc
+// Embedded hardware selection: ARM Compatible->ARM 64-bit (LP64)
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
@@ -50,7 +59,11 @@ void *baseRateTask(void *arg)
     // External mode
     {
       boolean_T rtmStopReq = false;
+<<<<<<< HEAD
       rtExtModePauseIfNeeded(soccer_vision_M->extModeInfo, 1, &rtmStopReq);
+=======
+      rtExtModePauseIfNeeded(soccer_vision_M->extModeInfo, 2, &rtmStopReq);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       if (rtmStopReq) {
         rtmSetStopRequested(soccer_vision_M, true);
       }
@@ -95,7 +108,11 @@ void *terminateTask(void *arg)
                  "pthread_join");
   }
 
+<<<<<<< HEAD
   rtExtModeShutdown(1);
+=======
+  rtExtModeShutdown(2);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
   // Disable rt_OneStep() here
 
@@ -111,7 +128,11 @@ void backgroundTask(void *arg)
     // External mode
     {
       boolean_T rtmStopReq = false;
+<<<<<<< HEAD
       rtExtModeOneStep(soccer_vision_M->extModeInfo, 1, &rtmStopReq);
+=======
+      rtExtModeOneStep(soccer_vision_M->extModeInfo, 2, &rtmStopReq);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
       if (rtmStopReq) {
         rtmSetStopRequested(soccer_vision_M, true);
       }
@@ -133,11 +154,19 @@ int main(int argc, char **argv)
 
   // External mode
   rtSetTFinalForExtMode(&rtmGetTFinal(soccer_vision_M));
+<<<<<<< HEAD
   rtExtModeCheckInit(1);
 
   {
     boolean_T rtmStopReq = false;
     rtExtModeWaitForStartPkt(soccer_vision_M->extModeInfo, 1, &rtmStopReq);
+=======
+  rtExtModeCheckInit(2);
+
+  {
+    boolean_T rtmStopReq = false;
+    rtExtModeWaitForStartPkt(soccer_vision_M->extModeInfo, 2, &rtmStopReq);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
     if (rtmStopReq) {
       rtmSetStopRequested(soccer_vision_M, true);
     }
@@ -146,7 +175,11 @@ int main(int argc, char **argv)
   rtERTExtModeStartMsg();
 
   // Call RTOS Initialization function
+<<<<<<< HEAD
   myRTOSInit(0.1, 0);
+=======
+  myRTOSInit(0.01, 0);
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
   // Wait for stop semaphore
   sem_wait(&stopSem);

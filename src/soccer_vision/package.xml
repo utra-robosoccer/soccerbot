@@ -9,9 +9,20 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+<<<<<<< HEAD
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
 
   <run_depend>roscpp</run_depend>
+=======
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
   <run_depend>std_msgs</run_depend>
 </package>

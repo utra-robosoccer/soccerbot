@@ -7,12 +7,21 @@
 //
 // Code generated for Simulink model 'soccer_vision'.
 //
+<<<<<<< HEAD
 // Model version                  : 1.759
 // Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
 // C/C++ source code generated on : Sat Jul 14 20:07:55 2018
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
+=======
+// Model version                  : 1.770
+// Simulink Coder version         : 8.14 (R2018a) 06-Feb-2018
+// C/C++ source code generated on : Sun Jul 15 23:50:31 2018
+//
+// Target selection: ert.tlc
+// Embedded hardware selection: ARM Compatible->ARM 64-bit (LP64)
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
@@ -33,6 +42,7 @@
 
 //=======================================================================*
 //  Target hardware information
+<<<<<<< HEAD
 //    Device type: Generic->Unspecified (assume 32-bit Generic)
 //    Number of bits:     char:   8    short:   16    int:  32
 //                        long:  32
@@ -40,6 +50,24 @@
 //    Byte ordering: Unspecified
 //    Signed integer division rounds to: Undefined
 //    Shift right on a signed integer as arithmetic shift: on
+// =======================================================================
+=======
+//    Device type: ARM Compatible->ARM 64-bit (LP64)
+//    Number of bits:     char:   8    short:   16    int:  32
+//                        long:  64    long long:  64
+//                        native word size:  64
+//    Byte ordering: LittleEndian
+//    Signed integer division rounds to: Zero
+//    Shift right on a signed integer as arithmetic shift: on
+// =======================================================================
+#ifdef PORTABLE_WORDSIZES              // PORTABLE_WORDSIZES defined
+
+//=======================================================================*
+//  Host information
+//    Number of bits:     char:   8    short:   16    int:  32
+//                        long:  64
+//                        long long:  64
+//                        native word size:  64
 // =======================================================================
 
 //=======================================================================*
@@ -59,7 +87,7 @@ typedef double real64_T;
 
 //===========================================================================*
 //  Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
-//                            real_T, time_T, ulong_T.                        *
+//                            real_T, time_T, ulong_T, ulonglong_T.           *
 // ===========================================================================
 typedef double real_T;
 typedef double time_T;
@@ -67,10 +95,63 @@ typedef unsigned char boolean_T;
 typedef int int_T;
 typedef unsigned int uint_T;
 typedef unsigned long ulong_T;
+typedef unsigned long ulonglong_T;
+typedef char char_T;
+typedef unsigned char uchar_T;
+typedef char_T byte_T;
+typedef long int64_T;
+typedef unsigned long uint64_T;
+
+#else                                  // PORTABLE_WORDSIZES not defined
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
+
+//=======================================================================*
+//  Fixed width word size data types:                                     *
+//    int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
+//    uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
+//    real32_T, real64_T           - 32 and 64 bit floating point numbers *
+// =======================================================================
+typedef signed char int8_T;
+typedef unsigned char uint8_T;
+typedef short int16_T;
+typedef unsigned short uint16_T;
+typedef int int32_T;
+typedef unsigned int uint32_T;
+<<<<<<< HEAD
+=======
+typedef long int64_T;
+typedef unsigned long uint64_T;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
+typedef float real32_T;
+typedef double real64_T;
+
+//===========================================================================*
+//  Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
+<<<<<<< HEAD
+//                            real_T, time_T, ulong_T.                        *
+=======
+//                            real_T, time_T, ulong_T, ulonglong_T.           *
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
+// ===========================================================================
+typedef double real_T;
+typedef double time_T;
+typedef unsigned char boolean_T;
+typedef int int_T;
+typedef unsigned int uint_T;
+typedef unsigned long ulong_T;
+<<<<<<< HEAD
+=======
+typedef unsigned long long ulonglong_T;
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 typedef char char_T;
 typedef unsigned char uchar_T;
 typedef char_T byte_T;
 
+<<<<<<< HEAD
+=======
+#endif                                 // PORTABLE_WORDSIZES
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 //===========================================================================*
 //  Complex number type definitions                                           *
 // ===========================================================================
@@ -133,6 +214,23 @@ typedef struct {
   uint32_T im;
 } cuint32_T;
 
+<<<<<<< HEAD
+=======
+#define CINT64_T
+
+typedef struct {
+  int64_T re;
+  int64_T im;
+} cint64_T;
+
+#define CUINT64_T
+
+typedef struct {
+  uint64_T re;
+  uint64_T im;
+} cuint64_T;
+
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 //=======================================================================*
 //  Min and Max:                                                          *
 //    int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
@@ -147,6 +245,12 @@ typedef struct {
 #define MAX_int32_T                    ((int32_T)(2147483647))
 #define MIN_int32_T                    ((int32_T)(-2147483647-1))
 #define MAX_uint32_T                   ((uint32_T)(0xFFFFFFFFU))
+<<<<<<< HEAD
+=======
+#define MAX_int64_T                    ((int64_T)(9223372036854775807L))
+#define MIN_int64_T                    ((int64_T)(-9223372036854775807L-1L))
+#define MAX_uint64_T                   ((uint64_T)(0xFFFFFFFFFFFFFFFFUL))
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
 
 // Block D-Work pointer type
 typedef void * pointer_T;

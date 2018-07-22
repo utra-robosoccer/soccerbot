@@ -12,6 +12,7 @@ soccer_ws.sublime-project
 soccer_ws.sublime-workspace
 deploy_background_build.sh
 deploy_build_ros_model.sh
+<<<<<<< HEAD
 Icon[
 ]*
 .metadata/
@@ -19,3 +20,12 @@ Icon[
 *.swp
 *.log
 *.stat
+=======
+Icon[]
+.metadata/
+.catkin_workspace
+*.log
+
+# Matlab Build Files
+soccer_vision_build.stat
+>>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
