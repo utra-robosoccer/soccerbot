@@ -131,8 +131,6 @@ osStaticMessageQDef_t UART_rxControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
 
-const double PI = 3.141592654;
-
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
 				 MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
