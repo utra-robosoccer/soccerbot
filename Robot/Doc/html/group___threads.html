@@ -107,9 +107,9 @@ Collaboration diagram for Threads:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga016544463b4842ced7191baf8f449cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga016544463b4842ced7191baf8f449cea">StartDefaultTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:ga016544463b4842ced7191baf8f449cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the defaultTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="#ga016544463b4842ced7191baf8f449cea">More...</a><br /></td></tr>
-<tr class="separator:ga016544463b4842ced7191baf8f449cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae9a7f9b9094fd560310f92b214f2c829"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gae9a7f9b9094fd560310f92b214f2c829">StartCommandTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:gae9a7f9b9094fd560310f92b214f2c829"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the commandTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="#gae9a7f9b9094fd560310f92b214f2c829">More...</a><br /></td></tr>
+<tr class="separator:gae9a7f9b9094fd560310f92b214f2c829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gabb7badba6cdb3ff61f2dff35b5a9ff2c">UART1_Handler</a> (void const *argument)</td></tr>
 <tr class="memdesc:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="#gabb7badba6cdb3ff61f2dff35b5a9ff2c">More...</a><br /></td></tr>
 <tr class="separator:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,14 +138,14 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>These are functions run in the context of their own FreeRTOS threads. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga016544463b4842ced7191baf8f449cea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga016544463b4842ced7191baf8f449cea">&#9670;&nbsp;</a></span>StartDefaultTask()</h2>
+<a id="gae9a7f9b9094fd560310f92b214f2c829"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae9a7f9b9094fd560310f92b214f2c829">&#9670;&nbsp;</a></span>StartCommandTask()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void StartDefaultTask </td>
+          <td class="memname">void StartCommandTask </td>
           <td>(</td>
           <td class="paramtype">void const *&#160;</td>
           <td class="paramname"><em>argument</em></td><td>)</td>
@@ -154,15 +154,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This function is executed in the context of the defaultTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators. </p>
+<p>This function is executed in the context of the commandTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators. </p>
 <p>This function never returns. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="group___threads_ga016544463b4842ced7191baf8f449cea_cgraph.png" border="0" usemap="#group___threads_ga016544463b4842ced7191baf8f449cea_cgraph" alt=""/></div>
-<map name="group___threads_ga016544463b4842ced7191baf8f449cea_cgraph" id="group___threads_ga016544463b4842ced7191baf8f449cea_cgraph">
-<area shape="rect" id="node2" href="group___dynamixel_protocol_v1___public___functions___library___configuration.html#gae05122fb9961237e6cad4a4eba8dad38" title="Sets the I/O type used by the library. " alt="" coords="172,5,323,32"/>
-<area shape="rect" id="node3" href="group___dynamixel_protocol_v1___public___functions___setup.html#ga22047239f8dec368039be94fc8e2452e" title="Initializes a motor handle. " alt="" coords="194,56,301,83"/>
+<div class="center"><img src="group___threads_gae9a7f9b9094fd560310f92b214f2c829_cgraph.png" border="0" usemap="#group___threads_gae9a7f9b9094fd560310f92b214f2c829_cgraph" alt=""/></div>
+<map name="group___threads_gae9a7f9b9094fd560310f92b214f2c829_cgraph" id="group___threads_gae9a7f9b9094fd560310f92b214f2c829_cgraph">
+<area shape="rect" id="node2" href="group___dynamixel_protocol_v1___public___functions___library___configuration.html#gae05122fb9961237e6cad4a4eba8dad38" title="Sets the I/O type used by the library. " alt="" coords="191,5,341,32"/>
+<area shape="rect" id="node3" href="group___dynamixel_protocol_v1___public___functions___setup.html#ga22047239f8dec368039be94fc8e2452e" title="Initializes a motor handle. " alt="" coords="213,56,319,83"/>
 </map>
 </div>
 
