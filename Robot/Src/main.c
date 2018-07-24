@@ -76,17 +76,27 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-/** \mainpage Main Page V1
+/** \mainpage Welcome
  *
  * \section intro_sec Introduction
  *
- * This is the introduction.
+ * This is the documentation for the embedded software for UTRA's soccerbot.
+ * In the future, this page will be updated with high-level descriptions of
+ * how this software works (including some diagrams!). Until that time comes,
+ * we suggest browsing the Modules and Data Structures sections.
  *
- * \section install_sec Module Descriptions
+ * \section desc High-level Description
+ * Coming soon.
  *
- * \subsection module_communication Communication: 
- * [Communication](@ref Communication) 
- * NOTE: [Link Text](@ref HandleName)
+ * \subsection desc_dataflow Dataflow
+ * Coming soon. For now, please see [FreeRTOS](@ref FreeRTOS), [UART_Handler]
+ * (@ref UART_Handler) and [Communication](@ref Communication).
+ *
+ * \subsection desc_actuators Actuators
+ * Coming soon. For now, please see [Dynamixel](@ref Dynamixel).
+ *
+ * \subsection desc_sensors Sensors
+ * Coming soon. For now, please see [MPU6050](@ref MPU6050).
  */
 /* USER CODE END 0 */
 

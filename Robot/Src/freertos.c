@@ -294,7 +294,25 @@ void StartDefaultTask(void const * argument)
 }
 
 /* USER CODE BEGIN Application */
+/**
+ * @defgroup Threads Threads
+ * @brief    These are functions run in the context of their own FreeRTOS
+ *           threads
+ *
+ * @ingroup  FreeRTOS
+ */
+
 /* StartCommandTask function */
+/**
+  * @brief  This function is executed in the context of the commandTask
+  *         thread. It initializes all data structures and peripheral
+  *         devices associated with the application, and then assumes
+  *         responsibility for distributing commands to the actuators
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void StartCommandTask(void const * argument)
 {
   /* USER CODE BEGIN StartCommandTask */
@@ -467,7 +485,21 @@ void StartCommandTask(void const * argument)
     }
   /* USER CODE END StartCommandTask */
 }
+
 /* UART1_Handler function */
+/**
+  * @brief  This function is executed in the context of the UART1_
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART1, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void UART1_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART1_Handler */
@@ -489,6 +521,19 @@ void UART1_Handler(void const * argument)
 }
 
 /* UART2_Handler function */
+/**
+  * @brief  This function is executed in the context of the UART2_
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART2, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void UART2_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART2_Handler */
@@ -510,6 +555,19 @@ void UART2_Handler(void const * argument)
 }
 
 /* UART3_Handler function */
+/**
+  * @brief  This function is executed in the context of the UART3_
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART3, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void UART3_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART3_Handler */
@@ -531,6 +589,19 @@ void UART3_Handler(void const * argument)
 }
 
 /* UART4_Handler function */
+/**
+  * @brief  This function is executed in the context of the UART4_
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART4, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void UART4_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART4_Handler */
@@ -552,6 +623,19 @@ void UART4_Handler(void const * argument)
 }
 
 /* UART6_Handler function */
+/**
+  * @brief  This function is executed in the context of the UART6_
+  *         thread. It processes all commands for the motors
+  *         physically connected to UART6, and initiates the I/O
+  *         calls to them. Whenever it processes read commands for
+  *         a motor, it sends the data received to the
+  *         multi-writer sensor queue, which is read only by the
+  *         TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void UART6_Handler(void const * argument)
 {
   /* USER CODE BEGIN UART6_Handler */
@@ -573,6 +657,17 @@ void UART6_Handler(void const * argument)
 }
 
 /* StartIMUTask function */
+/**
+  * @brief  This function is executed in the context of the
+  *         IMUTask thread. During each control cycle, this thread
+  *         fetches accelerometer and gyroscope data, then sends
+  *         this data to the multi-writer sensor queue, which is
+  *         read only by the TX task.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void StartIMUTask(void const * argument)
 {
     /* USER CODE BEGIN StartIMUTask */
@@ -603,6 +698,16 @@ void StartIMUTask(void const * argument)
 }
 
 /* StartRxTask function */
+/**
+  * @brief  This function is executed in the context of the RxTask
+  *         thread. It initiates DMA-based receptions of RobotGoals
+  *         from the PC via UART5. Upon successful reception of a
+  *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void StartRxTask(void const * argument)
 {
   /* USER CODE BEGIN StartRxTask */
@@ -696,6 +801,18 @@ void StartRxTask(void const * argument)
 }
 
 /* StartTxTask function */
+/**
+  * @brief  This function is executed in the context of the TxTask
+  *         thread. This thread is blocked until all sensor data
+  *         has been received through the sensor queue. After this
+  *         time, the UARTx_ and IMUTask will be blocked. Then, a
+  *         DMA-based transmission of a RobotState is sent to the
+  *         PC via UART5.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void StartTxTask(void const * argument)
 {
   /* USER CODE BEGIN StartTxTask */

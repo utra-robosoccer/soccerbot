@@ -1,3 +1,3 @@
 <map id="Dynamixel_Init" name="Dynamixel_Init">
-<area shape="rect" id="node2" href="$group___threads.html#ga016544463b4842ced7191baf8f449cea" title="This function is executed in the context of the defaultTask thread. It initializes all data structure..." alt="" coords="160,5,279,32"/>
+<area shape="rect" id="node2" href="$group___threads.html#gae9a7f9b9094fd560310f92b214f2c829" title="This function is executed in the context of the commandTask thread. It initializes all data structure..." alt="" coords="160,5,297,32"/>
 </map>
