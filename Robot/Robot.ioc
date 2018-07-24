@@ -133,6 +133,7 @@ Dma.USART6_TX.8.PeriphInc=DMA_PINC_DISABLE
 Dma.USART6_TX.8.Priority=DMA_PRIORITY_LOW
 Dma.USART6_TX.8.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority,FIFOMode
 FREERTOS.FootprintOK=true
+FREERTOS.INCLUDE_vTaskDelayUntil=1
 FREERTOS.IPParameters=Tasks01,FootprintOK,MEMORY_ALLOCATION
 FREERTOS.MEMORY_ALLOCATION=2
 FREERTOS.Tasks01=defaultTask,-3,128,StartDefaultTask,Default,NULL,Static,defaultTaskBuffer,defaultTaskControlBlock
