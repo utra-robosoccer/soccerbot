@@ -1,11 +1,14 @@
 '''
-Real-time data plotter for 1 float via virtual COM port
+Real-time data plotter for a stream of floats from a virtual COM port
+
+Author: Tyler
 '''
 
 import sys
 import numpy as np
 import serial
 import struct
+import ctypes
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDesktopWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSignal, QObject, QThread
@@ -53,34 +56,40 @@ class SerialReader(QThread):
                         "SUCCESS: connected to {0}".format(self.com_port))
             except:
                 num_tries = num_tries + 1
-                print("Serial port connection failure")
                 
                 self.signal_serial_status.emit(
                     "FAIL: Could not connect to {0}. Number of tries: {1}".
                     format(self.com_port, num_tries)
                 )
             
-            QThread.sleep(1)
+            QThread.msleep(100)
         
     def receiveFromMCU():
         # TODO
         while(ser.in_waiting < 4):
-            time.sleep(0.001)
+            QThread.msleep(1)
     
         raw = ser.read(4)
         v = bytes2fvec(raw)
         
+        
+# In the future, could extend this to accept an argument for the number of
+# channels being multiplexed in the stream
 class DataPlotter(QMainWindow):
     def __init__(self, com_port):
-        super().__init__()
+        super(DataPlotter, self).__init__()
         self.initUI(com_port)
     
     def initUI(self, com_port):
         # Init the GUI window
         self.resize(1000, 750)
         self.center()
-        self.setWindowTitle('Data Plotter')
+        
+        self.setWindowTitle('Robosoccer Data Plotter')
         self.setWindowIcon(QIcon('icon.png'))
+        myappid = 'utra.robosoccer.plotter'
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        
         self.statusBar().showMessage('Ready')
         self.show()
         
@@ -96,7 +105,6 @@ class DataPlotter(QMainWindow):
         self.move(windowGeometry.topLeft())
         
     def serial_status_signal_callback(self, status):
-        print(status)
         self.statusBar().showMessage(status)
         
         
@@ -106,4 +114,3 @@ if __name__ == "__main__":
     dataPlotter = DataPlotter(com)
     sys.exit(app.exec_())
     
-    # with serial.Serial('COM7',230400,timeout=100) as ser:
