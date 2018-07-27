@@ -17,7 +17,7 @@ import serial
 import struct
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDesktopWidget, QSizePolicy, QVBoxLayout
-from PyQt5.QtCore import pyqtSignal, QObject, QThread, QDateTime
+from PyQt5.QtCore import pyqtSignal, QObject, QThread, QDateTime, QTimer
 
 import ctypes
 from PyQt5.QtGui import QIcon
@@ -55,11 +55,13 @@ class SerialReader(QThread):
     def __init__(self, comPort):
         super(SerialReader, self).__init__()
         self.comPort = comPort
-    
-    def run(self):
-        self.test()
         self.initReader()
-        receiveFromMCU()
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.receiveFromMCU)
+        self.timer.start(2)
+    
+    # def run(self):
+    #     self.test()
         
     def test(self):
         while(True):
@@ -74,7 +76,7 @@ class SerialReader(QThread):
         
         while(not connected):
             try:
-                ser = serial.Serial(self.comPort, 230400, timeout=100)
+                self.ser = serial.Serial(self.comPort, 230400, timeout=100)
                 self.ser.reset_output_buffer()
                 self.ser.reset_input_buffer()
                 
@@ -93,15 +95,14 @@ class SerialReader(QThread):
             
             QThread.msleep(100)
         
-    def receiveFromMCU():
-        while(True):
-            while(ser.in_waiting < 4):
-                QThread.msleep(1)
-                
-            raw = ser.read(4)
-            v = bytes2fvec(raw)
+    def receiveFromMCU(self):
+        if(self.ser.in_waiting < 4):
+            return
             
-            self.signal_serial_update.emit(v)
+        raw = self.ser.read(4)
+        v = bytes2fvec(raw)
+            
+        self.signal_serial_update.emit(v)
         
 # In the future, could extend this to accept an argument for the number of
 # channels being time multiplexed in the stream
@@ -179,7 +180,7 @@ class DataPlotter(QMainWindow):
         self.ax.figure.canvas.draw()
         
 if __name__ == "__main__":
-    com = 'COM7'
+    com = 'COM8'
     app = QApplication(sys.argv)
     dataPlotter = DataPlotter(com)
     sys.exit(app.exec_())
