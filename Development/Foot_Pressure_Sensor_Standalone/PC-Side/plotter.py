@@ -26,22 +26,42 @@ def bytes2fvec(byteArr):
         
     return vec
     
-class SerialReader(QObject):
+class SerialReader(QThread):
     """ Class that reads data from a serial port """
+    signal_serial_status = pyqtSignal(str)
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, com_port):
+        super(SerialReader, self).__init__()
+        self.com_port = com_port
+    
+    def run(self):
         self.initReader()
-    
+        #receiveFromMCU()
+        
     def initReader(self):
-        # In the future, emit a signal here that updates the status bar
-        try:
-            ser = serial.Serial('COM7',230400,timeout=100)
-            self.ser.reset_output_buffer()
-            self.ser.reset_input_buffer()
-        except:
-            print("Serial port connection failure")
-
+        connected = False
+        num_tries = 0
+        while(not connected):
+            try:
+                ser = serial.Serial(self.com_port, 230400, timeout=100)
+                self.ser.reset_output_buffer()
+                self.ser.reset_input_buffer()
+                
+                connected = True
+                
+                self.signal_serial_status.emit(self.signal_serial_status, 
+                        "SUCCESS: connected to {0}".format(self.com_port))
+            except:
+                num_tries = num_tries + 1
+                print("Serial port connection failure")
+                
+                self.signal_serial_status.emit(
+                    "FAIL: Could not connect to {0}. Number of tries: {1}".
+                    format(self.com_port, num_tries)
+                )
+            
+            QThread.sleep(1)
+        
     def receiveFromMCU():
         # TODO
         while(ser.in_waiting < 4):
@@ -51,11 +71,11 @@ class SerialReader(QObject):
         v = bytes2fvec(raw)
         
 class DataPlotter(QMainWindow):
-    def __init__(self):
+    def __init__(self, com_port):
         super().__init__()
-        self.initUI()
+        self.initUI(com_port)
     
-    def initUI(self):
+    def initUI(self, com_port):
         # Init the GUI window
         self.resize(1000, 750)
         self.center()
@@ -65,9 +85,9 @@ class DataPlotter(QMainWindow):
         self.show()
         
         # Init the serial data reader
-        self.serialReaderThread = QThread()
-        self.serialReader = SerialReader()
-        self.serialReader.moveToThread(self.serialReaderThread)
+        self.serialThread = SerialReader(com_port)
+        self.serialThread.signal_serial_status.connect(self.serial_status_signal_callback)
+        self.serialThread.start()
         
     def center(self):
         windowGeometry = self.frameGeometry()
@@ -75,10 +95,15 @@ class DataPlotter(QMainWindow):
         windowGeometry.moveCenter(centerPoint)
         self.move(windowGeometry.topLeft())
         
+    def serial_status_signal_callback(self, status):
+        print(status)
+        self.statusBar().showMessage(status)
+        
         
 if __name__ == "__main__":
+    com = 'COM7'
     app = QApplication(sys.argv)
-    dataPlotter = DataPlotter()
+    dataPlotter = DataPlotter(com)
     sys.exit(app.exec_())
     
     # with serial.Serial('COM7',230400,timeout=100) as ser:
