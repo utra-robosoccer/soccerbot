@@ -20,14 +20,14 @@
 
 /********************************** Macros ***********************************/
 
-/********************************** Anonymous Namespace **********************/
+/**************************** Anonymous Namespace ****************************/
 namespace {
           
-/********************************** Local Helpers ****************************/                                              
+/******************************** Local Helpers ******************************/                                              
 
 }
 
-/********************************** Primary Namespace ************************/
+/****************************** Primary Namespace ****************************/
 using namespace Namespace;
 
 /********************************* Constants *********************************/
@@ -94,7 +94,7 @@ using namespace Namespace;
 /*                                                                           */
 /*****************************************************************************/
 /**
- * @defgroup Test Member Functions
+ * @defgroup Template_Member_Functions Member Functions
  * @brief    TODO -- describe submodule here
 
  *
@@ -109,4 +109,4 @@ int Class::testMe(int a, const char *s) {
 /**
  * @}
  */
-/* end Test Member Functions */
+/* end Template_Member_Functions */
