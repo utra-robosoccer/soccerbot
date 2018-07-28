@@ -31,19 +31,19 @@ else:
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
     
-def bytes2fvec(byteArr):
-    ''' Transforms a byte array, with entries interpreted as 32-bit floats, to
-        a Numpy vector.
+def bytes2UShortVec(byteArr):
+    ''' Transforms a byte array, with entries interpreted as 16-bit unsigned
+        integers, to a Numpy vector.
     '''
     
-    assert len(byteArr) % 4 == 0 # Make sure we are dealing with floats
+    assert len(byteArr) % 2 == 0 # Make sure we are dealing with unsigned shorts
     
-    numFloats = len(byteArr) // 4
+    numVals = len(byteArr) // 2
     
-    vec = np.zeros((numFloats, 1))
+    vec = np.zeros((numVals, 1))
     
-    for i in range(numFloats):
-        vec[i] = struct.unpack('<f', byteArr[i * 4:(i + 1) * 4])[0]
+    for i in range(numVals):
+        vec[i] = struct.unpack('<H', byteArr[i * 2:(i + 1) * 2])[0]
         
     return vec
     
@@ -76,7 +76,7 @@ class SerialReader(QThread):
         
         while(not connected):
             try:
-                self.ser = serial.Serial(self.comPort, 230400, timeout=100)
+                self.ser = serial.Serial(self.comPort, 115200, timeout=100)
                 self.ser.reset_output_buffer()
                 self.ser.reset_input_buffer()
                 
@@ -96,13 +96,22 @@ class SerialReader(QThread):
             QThread.msleep(100)
         
     def receiveFromMCU(self):
-        if(self.ser.in_waiting < 4):
+        if(self.ser.in_waiting < 2):
             return
             
-        raw = self.ser.read(4)
-        v = bytes2fvec(raw)
-            
-        self.signal_serial_update.emit(v)
+        raw = self.ser.read(2)
+        self.ser.reset_input_buffer()
+        
+        v = bytes2UShortVec(raw)
+        
+        if(v[0][0] < 4096):
+            self.signal_serial_update.emit(v)
+        
+    def exit(self):
+        self.ser.close()
+        self.timer.stop()
+        self.terminate()
+        
         
 # In the future, could extend this to accept an argument for the number of
 # channels being time multiplexed in the stream
@@ -160,6 +169,7 @@ class DataPlotter(QMainWindow):
         
     def serial_update_signal_callback(self, data):
         self.ax.clear()
+        self.ax.set_ylim(ymin=0, ymax=4096)
         
         # Shift data buffers left, add new data to rightmost slot, then redraw
         self.timeIndexes = np.roll(self.timeIndexes, -1)
@@ -176,11 +186,16 @@ class DataPlotter(QMainWindow):
         self.dataBuffer = np.roll(self.dataBuffer, -1)
         self.dataBuffer[-1:] = data
         
-        self.ax.plot(self.timeIndexes, self.dataBuffer)
+        self.ax.plot(self.timeIndexes, self.dataBuffer, color='r')
         self.ax.figure.canvas.draw()
         
+    def closeEvent(self, event):
+        self.serialThread.exit()
+        event.accept()
+        
 if __name__ == "__main__":
-    com = 'COM8'
+    #com = 'COM8'
+    com = 'COM3'
     app = QApplication(sys.argv)
     dataPlotter = DataPlotter(com)
     sys.exit(app.exec_())
