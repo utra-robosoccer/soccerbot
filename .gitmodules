@@ -10,3 +10,6 @@
 [submodule "src/humanoid_league_msgs"]
 	path = src/humanoid_league_msgs
 	url = https://github.com/utra-robosoccer/humanoid_league_msgs
+[submodule "src/soccer_description"]
+	path = src/soccer_description
+	url = https://www.github.com/utra-robosoccer/soccer_description
