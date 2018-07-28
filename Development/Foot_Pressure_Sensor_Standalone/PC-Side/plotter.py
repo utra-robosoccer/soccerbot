@@ -148,9 +148,6 @@ class DataPlotter(QMainWindow):
         self.hasReceivedData = False
         self.dataBuffer = np.zeros((100,)) # 100 data points to be buffered
         
-        self.ax.plot(self.timeIndexes, self.dataBuffer, color='r')
-        self.ax.set_ylim(ymin=0, ymax=4096)
-        
         # Init the serial data reader
         self.serialThread = SerialReader(comPort)
         self.serialThread.signal_serial_status.connect(
@@ -171,7 +168,8 @@ class DataPlotter(QMainWindow):
         self.statusBar().showMessage(status)
         
     def serial_update_signal_callback(self, data):
-        #self.ax.clear()
+        self.ax.clear()
+        self.ax.set_ylim(ymin=0, ymax=4096)
         
         # Shift data buffers left, add new data to rightmost slot, then redraw
         self.timeIndexes = np.roll(self.timeIndexes, -1)
