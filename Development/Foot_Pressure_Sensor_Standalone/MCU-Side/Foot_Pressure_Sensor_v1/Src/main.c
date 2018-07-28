@@ -53,7 +53,6 @@
 /* USER CODE BEGIN PV */
 volatile uint16_t ADC_BUF[64];
 volatile uint16_t adc_conv;
-uint32_t val_Foot_FL, val_Foot_FR, val_Foot_BL, val_Foot_BR;
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE END PV */
@@ -76,10 +75,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 		}
 		avg = avg >> 6;
 		adc_conv = (uint16_t) avg;
-		/*val_Foot_FL = ADC_BUF[0];
-		val_Foot_FR = ADC_BUF[1];
-		val_Foot_BL = ADC_BUF[2];
-		val_Foot_BR = ADC_BUF[3];*/
 	}
 }
 /* USER CODE END 0 */
@@ -123,15 +118,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		char mes_buf[50];
-		sprintf(mes_buf, "Val:\t%d\n", adc_conv);
-		HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
-		//HAL_UART_Transmit(&huart2, (uint8_t *)&adc_conv, sizeof(adc_conv), 1000);
+		//char mes_buf[50];
+		//sprintf(mes_buf, "Val:\t%d\n", adc_conv);
+		//HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
+		HAL_UART_Transmit(&huart2, (uint8_t *)&adc_conv, sizeof(adc_conv), 1000);
 		HAL_Delay(10);
-			//sprintf(mes_buf,
-			//		"TOP LEFT: %d\tTOP RIGHT: %d\tBOTTOM LEFT: %d\t, BOTTOM LEFT: %d\n",
-			//		val_Foot_FL, val_Foot_FR, val_Foot_BL, val_Foot_BR);
-			//HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
