@@ -35,5 +35,10 @@
 /******************************* Public Variables *******************************/
 
 /***************************** Function prototypes ****************************/
+void FootPressureSensor_Init(FootPressureSensor_HandleTypeDef* fpsensor, uint16_t adcAverageVal, enum fpLocation_e fpLocation, ADC_HandleTypeDef* ADCHandle, DMA_HandleTypeDef* DMA_Handle);
+void FootPressureSensor_Update(FootPressureSensor_HandleTypeDef* fpSensor);
+void FootPressureSensor_Start(FootPressureSensor_HandleTypeDef* fpsensor);
+void FootPressureSensor_Stop(FootPressureSensor_HandleTypeDef* fpsensor);
+
 
 #endif /* PRESSURESENSOR_H_ */
