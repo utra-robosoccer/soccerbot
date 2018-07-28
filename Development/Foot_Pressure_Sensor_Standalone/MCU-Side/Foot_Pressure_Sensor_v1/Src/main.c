@@ -51,7 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t ADC_BUF[4];
+volatile uint16_t ADC_BUF[64];
+volatile uint16_t adc_conv;
 uint32_t val_Foot_FL, val_Foot_FR, val_Foot_BL, val_Foot_BR;
 /* Private variables ---------------------------------------------------------*/
 
@@ -67,17 +68,19 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN 0 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+	uint32_t avg=0;
+	uint8_t len = sizeof(ADC_BUF)/sizeof(ADC_BUF[0]);
 	if (hadc->Instance == ADC1) {
-		val_Foot_FL = ADC_BUF[0];
+		for(uint8_t i=0 ;i<len;i++){
+			avg = avg + ADC_BUF[i];
+		}
+		avg = avg >> 6;
+		adc_conv = (uint16_t) avg;
+		/*val_Foot_FL = ADC_BUF[0];
 		val_Foot_FR = ADC_BUF[1];
 		val_Foot_BL = ADC_BUF[2];
-		val_Foot_BR = ADC_BUF[3];
+		val_Foot_BR = ADC_BUF[3];*/
 	}
-	char mes_buf[50];
-	sprintf(mes_buf,
-			"TOP LEFT: %d\tTOP RIGHT: %d\tBOTTOM LEFT: %d\t, BOTTOM LEFT: %d\n",
-			val_Foot_FL, val_Foot_FR, val_Foot_BL, val_Foot_BR);
-	HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
 }
 /* USER CODE END 0 */
 
@@ -113,15 +116,22 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_USART2_UART_Init();
-
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*) ADC_BUF, 4);
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*) ADC_BUF, 64);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-
+		char mes_buf[50];
+		sprintf(mes_buf, "Val:\t%d\n", adc_conv);
+		HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
+		//HAL_UART_Transmit(&huart2, (uint8_t *)&adc_conv, sizeof(adc_conv), 1000);
+		HAL_Delay(10);
+			//sprintf(mes_buf,
+			//		"TOP LEFT: %d\tTOP RIGHT: %d\tBOTTOM LEFT: %d\t, BOTTOM LEFT: %d\n",
+			//		val_Foot_FL, val_Foot_FR, val_Foot_BL, val_Foot_BR);
+			//HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -172,10 +182,10 @@ void SystemClock_Config(void)
   PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
   PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSI;
   PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
-  PeriphClkInit.PLLSAI1.PLLSAI1N = 16;
+  PeriphClkInit.PLLSAI1.PLLSAI1N = 12;
   PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV7;
   PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
-  PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV4;
+  PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV6;
   PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_ADC1CLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {

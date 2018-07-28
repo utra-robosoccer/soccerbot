@@ -51,12 +51,6 @@
 
 #define LFOOT_FL_Pin GPIO_PIN_0
 #define LFOOT_FL_GPIO_Port GPIOA
-#define LFOOT_FR_Pin GPIO_PIN_1
-#define LFOOT_FR_GPIO_Port GPIOA
-#define LFOOT_BL_Pin GPIO_PIN_3
-#define LFOOT_BL_GPIO_Port GPIOA
-#define LFOOT_BR_Pin GPIO_PIN_4
-#define LFOOT_BR_GPIO_Port GPIOA
 
 /* ########################## Assert Selection ############################## */
 /**
