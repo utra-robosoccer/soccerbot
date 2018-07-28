@@ -31,8 +31,8 @@
 
 
 
-/********************************** Namespace ********************************/
-/*!
+/********************************* Namespace *********************************/
+/**
  *  \addtogroup Namespace
  *  @{
  */
@@ -49,32 +49,29 @@ namespace Namespace {
 */
 class Class {
 
-/****************************** Public Members *******************************/
-  public:
+public:
     //! A constructor.
-    /*!
+    /**
       A more elaborate description of the constructor.
     */
     Class();
     //! A destructor.
-    /*!
+    /**
       A more elaborate description of the destructor.
     */
    ~Class();
     //! A normal member taking two arguments and returning an integer value.
-    /*!
+    /**
       \param a an integer argument.
       \param s a constant character pointer.
       \return The test results
     */
     int testMe(int a,const char *s);       
 
-/****************************** Protected Members ***************************/
-    protected:
+protected:
             
                        
-/****************************** Private Members *****************************/
-    private:
+private:
 
 }; //class Class
 
