@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\Hannah\Documents\GitHub\soccer-embedded\Development\Foot_Pressure_Sensor_v1\\Foot_Pressure_Sensor_v1</ProjectName>
+<ProjectName>C:\Users\Hannah\Documents\GitHub\soccer-embedded\Development\Foot_Pressure_Sensor_Standalone\MCU-Side\Foot_Pressure_Sensor_v1\\Foot_Pressure_Sensor_v1</ProjectName>
 <ProjectNature>C</ProjectNature> 
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\Hannah\Documents\University\UTRA\STM32Cube_FW_L4_V1.11.0\Drivers\CMSIS</HAL_Driver>
