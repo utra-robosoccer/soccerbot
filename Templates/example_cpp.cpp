@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    template_cpp.c
+  * @file    example_cpp.cpp
   * @author  TODO -- your name here
   * @brief   TODO -- brief description of file
   *
@@ -13,7 +13,7 @@
 
 
 /********************************* Includes **********************************/
-#include "template.h"
+#include "example_cpp.h"
 
 
 

@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    template.h
+  * @file    example_cpp.h
   * @author  TODO -- your name here
   * @brief   TODO -- briefly describe this file
   *
@@ -15,8 +15,8 @@
 
 
 /******************** Define to prevent recursive inclusion ******************/
-#ifndef __TEMPLATE_H__
-#define __TEMPLATE_H__
+#ifndef __EXAMPLE_CPP_H__
+#define __EXAMPLE_CPP_H__
 
 
 
@@ -84,6 +84,6 @@ class Class {
 /**
  * @}
  */
-/* end TODO -- module name defined on line 7 */
+/**/
 
-#endif /* __TEMPLATE_H__ */
+#endif /* __EXAMPLE_CPP_H__ */
