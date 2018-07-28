@@ -14,19 +14,24 @@
 #include "main.h"
 
 /*********************************** Types ************************************/
+enum fpLocation_e{
+	LFOOT_FL,
+	LFOOT_FR,
+	LFOOT_BL,
+	LFOOT_BR,
+	RFOOT_FL,
+	RFOOT_FR,
+	RFOOT_BL,
+	RFOOT_BR
+};
 
-// TODO: Should also have a resolution divider field for MX28
-//typedef struct{
-//	enum motorTypes_e		_motorType;				/*!< Identifies motor as AX12A, MX28, etc.			*/
-//	uint8_t					_ID;					/*!< Motor identification (0-252)					*/
-//	float					_lastPosition;			/*!< Position read from motor						*/
-//	float					_lastVelocity;			/*!< Velocity read from motor						*/
-//	float					_lastLoad;				/*!< Load read from motor (% of max torque)			*/
-//	uint8_t					_lastLoadDirection;		/*!< 1 -> CW | 0 -> CCW								*/
-//	uint8_t					_isJointMode;			/*!< 1 if motor is joint mode, 0 if wheel mode		*/
-//	UART_HandleTypeDef*		_UART_Handle;			/*!< UART handle for motor							*/
-//	GPIO_TypeDef*			_dataDirPort;			/*!< Port data direction pin is on					*/
-//	uint16_t				_dataDirPinNum;			/*!< Data direction pin number						*/
-//}Dynamixel_HandleTypeDef;
+typedef struct{
+	enum fpLocation_e		_fpLocation;			/*!< Identifies motor as AX12A, MX28, etc.			*/
+	uint16_t 				_adcAverageVal;			/*!< Average of the most recent 16 ADC values 		*/
+	ADC_HandleTypeDef*		_ADC_Handle;			/*!< ADC handle for sensor							*/
+	//GPIO_TypeDef*     	_GPIO_Handle;			/*!< GPIO output pin for sensor						*/
+	DMA_HandleTypeDef*		_DMA_Handle;			/*!< DMA handle for sensor							*/
+}FootPressureSensor_HandleTypeDef;
+
 
 #endif /* PRESSURESENSOR_HANDLETYPEDEF_H_ */

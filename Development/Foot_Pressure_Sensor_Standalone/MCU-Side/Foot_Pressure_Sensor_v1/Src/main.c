@@ -46,13 +46,14 @@
 
 /* USER CODE BEGIN Includes */
 #include "string.h"
+#include "PressureSensor_HandleTypeDef.h"
+#include "PressureSensor.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-volatile uint16_t ADC_BUF[64];
-volatile uint16_t adc_conv;
+
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE END PV */
@@ -66,17 +67,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-	uint32_t avg=0;
-	uint8_t len = sizeof(ADC_BUF)/sizeof(ADC_BUF[0]);
-	if (hadc->Instance == ADC1) {
-		for(uint8_t i=0 ;i<len;i++){
-			avg = avg + ADC_BUF[i];
-		}
-		avg = avg >> 6;
-		adc_conv = (uint16_t) avg;
-	}
-}
+FootPressureSensor_HandleTypeDef fpSensor_default;
 /* USER CODE END 0 */
 
 /**
@@ -94,7 +85,6 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -112,16 +102,19 @@ int main(void)
   MX_ADC1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*) ADC_BUF, 64);
+  FootPressureSensor_Init(&fpSensor_default, 0, LFOOT_FL, &hadc1, (hadc1.DMA_Handle));
+  FootPressureSensor_Start(&fpSensor_default);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
+		FootPressureSensor_Update(&fpSensor_default);
 		//char mes_buf[50];
-		//sprintf(mes_buf, "Val:\t%d\n", adc_conv);
+		//sprintf(mes_buf, "Val:\t%d\n", fpSensor_default._adcAverageVal);
 		//HAL_UART_Transmit(&huart2, mes_buf, strlen(mes_buf), 1000);
-		HAL_UART_Transmit(&huart2, (uint8_t *)&adc_conv, sizeof(adc_conv), 1000);
+		HAL_UART_Transmit(&huart2, (uint8_t *)&(fpSensor_default._adcAverageVal), sizeof(fpSensor_default._adcAverageVal), 1000);
+
 		HAL_Delay(10);
   /* USER CODE END WHILE */
 
