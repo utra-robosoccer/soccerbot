@@ -783,7 +783,7 @@ void StartRxTask(void const * argument)
                     startSeqCount = 0;
                     totalBytesRead = 0;
 
-                    xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+                    xTaskNotify(commandTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
                     xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
                     continue;
                 }
