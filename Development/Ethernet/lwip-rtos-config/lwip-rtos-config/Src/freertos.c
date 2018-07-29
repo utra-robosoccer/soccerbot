@@ -66,6 +66,8 @@ osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN Variables */
 
+extern struct netif gnetif;
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -120,6 +122,12 @@ void StartDefaultTask(void const * argument)
   MX_LWIP_Init();
 
   /* USER CODE BEGIN StartDefaultTask */
+
+  /* Initialize webserver demo */
+  http_server_netconn_init();
+
+  /* Notify user about the network interface config */
+  User_notification(&gnetif);
   /* Infinite loop */
   for(;;)
   {
