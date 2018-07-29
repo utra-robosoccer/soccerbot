@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDesktopWidget, 
 from PyQt5.QtCore import pyqtSignal, QObject, QThread, QDateTime, QTimer
 
 import ctypes
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QCloseEvent
 
 from matplotlib.backends.qt_compat import is_pyqt5, QtCore
 if is_pyqt5():
@@ -49,17 +49,21 @@ def bytes2UShortVec(byteArr):
     
 class SerialReader(QThread):
     """ Class that reads data from a serial port """
+    signal_serial_init = pyqtSignal()
     signal_serial_status = pyqtSignal(str)
     signal_serial_update = pyqtSignal(np.ndarray)
+    signal_serial_exception = pyqtSignal()
     
     def __init__(self, comPort):
         super(SerialReader, self).__init__()
         self.comPort = comPort
-        self.initReader()
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.receiveFromMCU)
-        self.timer.start(2)
     
+    def run(self):
+        self.initReader()
+        self.signal_serial_init.emit()
+        
     # def run(self):
     #     self.test()
         
@@ -96,20 +100,23 @@ class SerialReader(QThread):
             QThread.msleep(100)
         
     def receiveFromMCU(self):
-        if(self.ser.in_waiting < 2):
-            return
+        try:
+            if(self.ser.in_waiting < 2):
+                return
+                
+            raw = self.ser.read(2)
+            self.ser.reset_input_buffer()
             
-        raw = self.ser.read(2)
-        self.ser.reset_input_buffer()
-        
-        v = bytes2UShortVec(raw)
-        
-        if(v[0][0] < 4096):
-            self.signal_serial_update.emit(v)
+            v = bytes2UShortVec(raw)
+            
+            if(v[0][0] < 4096):
+                self.signal_serial_update.emit(v)
+        except serial.serialutil.SerialException:
+            self.signal_serial_exception.emit()
         
     def exit(self):
-        self.ser.close()
         self.timer.stop()
+        self.ser.close()
         self.terminate()
         
         
@@ -150,19 +157,29 @@ class DataPlotter(QMainWindow):
         
         # Init the serial data reader
         self.serialThread = SerialReader(comPort)
+        self.serialThread.signal_serial_init.connect(
+            self.serial_init_callback
+        )
         self.serialThread.signal_serial_status.connect(
             self.serial_status_signal_callback
         )
         self.serialThread.signal_serial_update.connect(
             self.serial_update_signal_callback
         )
+        self.serialThread.signal_serial_exception.connect(
+            self.serial_exception_callback
+        )
         self.serialThread.start()
+
         
     def center(self):
         windowGeometry = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         windowGeometry.moveCenter(centerPoint)
         self.move(windowGeometry.topLeft())
+        
+    def serial_init_callback(self):
+        self.serialThread.timer.start(2)
         
     def serial_status_signal_callback(self, status):
         self.statusBar().showMessage(status)
@@ -188,14 +205,18 @@ class DataPlotter(QMainWindow):
         
         self.ax.plot(self.timeIndexes, self.dataBuffer, color='r')
         self.ax.figure.canvas.draw()
-        
+    
+    def serial_exception_callback(self):
+        self.close()
+    
     def closeEvent(self, event):
         self.serialThread.exit()
         event.accept()
+        self.deleteLater()
         
 if __name__ == "__main__":
-    #com = 'COM8'
-    com = 'COM3'
+    com = 'COM8'
+    #com = 'COM3'
     app = QApplication(sys.argv)
     dataPlotter = DataPlotter(com)
     sys.exit(app.exec_())
