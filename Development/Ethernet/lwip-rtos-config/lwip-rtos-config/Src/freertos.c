@@ -58,6 +58,8 @@
 #include "lwip/tcpip.h"
 #include "app_ethernet.h"
 #include "httpserver-netconn.h"
+#include "lwip/udp.h"
+//#include "lwip/timeouts.h"
 
 /* USER CODE END Includes */
 
@@ -68,6 +70,8 @@ osThreadId defaultTaskHandle;
 
 extern struct netif gnetif;
 
+//ip_addr_t gateway;
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -77,6 +81,9 @@ extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
+
+void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
+	    const ip_addr_t *addr, u16_t port);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -140,20 +147,32 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 
   /* Initialize webserver demo */
-  http_server_netconn_init();
+  //http_server_netconn_init();
 
   /* Notify user about the network interface config */
   User_notification(&gnetif);
+
+  struct udp_pcb * echo_server_pcb = udp_new();
+  //gateway.addr = (192 << 24) + (168 << 16) + 2;
+  udp_bind(echo_server_pcb, IP_ADDR_ANY, 1047);
+  udp_recv(echo_server_pcb, handleReceive, 0);
   /* Infinite loop */
   for(;;)
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-    osThreadTerminate(NULL);
+
+    ethernetif_input(&gnetif);
+    //sys_check_timeouts();
+    //osThreadTerminate(NULL);
   }
   /* USER CODE END StartDefaultTask */
 }
 
 /* USER CODE BEGIN Application */
+
+void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
+	    const ip_addr_t *addr, u16_t port) {
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+}
      
 /* USER CODE END Application */
 
