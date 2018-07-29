@@ -1,5 +1,5 @@
 '''
-Real-time data plotter for a stream of floats from a virtual COM port
+Real-time data plotter for a stream of uint16_t from a virtual COM port
 
 Author: Tyler
 
@@ -12,11 +12,11 @@ Resources used:
 '''
 
 import sys
-import numpy as np
 import serial
 import struct
+import numpy as np
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDesktopWidget, QSizePolicy, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, QSizePolicy, QVBoxLayout
 from PyQt5.QtCore import pyqtSignal, QObject, QThread, QDateTime, QTimer
 
 import ctypes
@@ -30,13 +30,13 @@ else:
     from matplotlib.backends.backend_qt4agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
-    
+
 def bytes2UShortVec(byteArr):
     ''' Transforms a byte array, with entries interpreted as 16-bit unsigned
         integers, to a Numpy vector.
     '''
     
-    assert len(byteArr) % 2 == 0 # Make sure we are dealing with unsigned shorts
+    assert len(byteArr) % 2 == 0 # Sanity check for data type
     
     numVals = len(byteArr) // 2
     
@@ -46,7 +46,7 @@ def bytes2UShortVec(byteArr):
         vec[i] = struct.unpack('<H', byteArr[i * 2:(i + 1) * 2])[0]
         
     return vec
-    
+
 class SerialReader(QThread):
     """ Class that reads data from a serial port """
     signal_serial_init = pyqtSignal()
@@ -116,10 +116,12 @@ class SerialReader(QThread):
         
     def exit(self):
         self.timer.stop()
-        self.ser.close()
+        try:
+            self.ser.close()
+        except AttributeError:
+            pass
         self.terminate()
-        
-        
+
 # In the future, could extend this to accept an argument for the number of
 # channels being time multiplexed in the stream
 class DataPlotter(QMainWindow):
@@ -213,7 +215,7 @@ class DataPlotter(QMainWindow):
         self.serialThread.exit()
         event.accept()
         self.deleteLater()
-        
+
 if __name__ == "__main__":
     com = 'COM8'
     #com = 'COM3'
