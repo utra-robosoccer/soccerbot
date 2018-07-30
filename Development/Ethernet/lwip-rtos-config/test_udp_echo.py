@@ -22,18 +22,21 @@ try:
     print('Sending "{}"'.format(message))
     print('Measuring time taken for {} echoes'.format(num_samples))
 
-    t0 = time.perf_counter()
-
+    total_time = 0
+    f = open("times", "a")
     for i in range(num_samples):
+
+        t0 = time.perf_counter()
         sent = sock.sendto(message, server_address)
 
         # Receive response
         data, server = sock.recvfrom(4096)
-
+        t1 = time.perf_counter()
+        dt = t1 - t0
+        f.write("{},".format(dt))
+        total_time += dt
         #print('received "{}"'.format(data))
-
-    t1 = time.perf_counter()
-    total_time = t1 - t0
+    f.close()
 
     print('Took {} seconds for {} samples'.format(total_time, num_samples))
     print('Average echo time: {} seconds'.format(total_time / num_samples))
