@@ -1,6 +1,11 @@
 import socket
 import time
 
+# This script sends a message to the board, at IP address and port given by
+# server_address, using User Datagram Protocol (UDP). The board should be
+# programmed to echo back UDP packets sent to it. The time taken for num_samples
+# echoes is measured.
+
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
