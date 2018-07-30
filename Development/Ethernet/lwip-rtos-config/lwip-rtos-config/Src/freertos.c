@@ -69,6 +69,7 @@ osThreadId defaultTaskHandle;
 /* USER CODE BEGIN Variables */
 
 extern struct netif gnetif;
+struct udp_pcb * echo_server_pcb;
 
 //ip_addr_t gateway;
 
@@ -152,10 +153,22 @@ void StartDefaultTask(void const * argument)
   /* Notify user about the network interface config */
   User_notification(&gnetif);
 
-  struct udp_pcb * echo_server_pcb = udp_new();
-  //gateway.addr = (192 << 24) + (168 << 16) + 2;
-  udp_bind(echo_server_pcb, IP_ADDR_ANY, 1047);
-  udp_recv(echo_server_pcb, handleReceive, 0);
+  err_t err;
+
+  echo_server_pcb = udp_new();
+
+  if (echo_server_pcb) {
+    //gateway.addr = (192 << 24) + (168 << 16) + 2;
+    err = udp_bind(echo_server_pcb, IP_ADDR_ANY, 7);
+
+    if (err == ERR_OK) {
+      udp_recv(echo_server_pcb, handleReceive, 0);
+    }
+    else {
+      udp_remove(echo_server_pcb);
+    }
+  }
+
   /* Infinite loop */
   for(;;)
   {
@@ -172,6 +185,19 @@ void StartDefaultTask(void const * argument)
 void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
 	    const ip_addr_t *addr, u16_t port) {
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
+	/* Connect to the remote client */
+	  udp_connect(echo_server_pcb, addr, 7);
+
+	  /* Tell the client that we have accepted it */
+	  udp_send(echo_server_pcb, p);
+
+	  /* free the UDP connection, so we can accept new clients */
+	  udp_disconnect(echo_server_pcb);
+
+	  /* Free the p buffer */
+	  pbuf_free(p);
+
 }
      
 /* USER CODE END Application */
