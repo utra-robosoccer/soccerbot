@@ -56,8 +56,6 @@
 #include "ethernetif.h"
 #include "lwip/netif.h"
 #include "lwip/tcpip.h"
-#include "app_ethernet.h"
-#include "httpserver-netconn.h"
 #include "lwip/udp.h"
 //#include "lwip/timeouts.h"
 
@@ -151,7 +149,7 @@ void StartDefaultTask(void const * argument)
   //http_server_netconn_init();
 
   /* Notify user about the network interface config */
-  User_notification(&gnetif);
+  //User_notification(&gnetif);
 
   err_t err;
 
