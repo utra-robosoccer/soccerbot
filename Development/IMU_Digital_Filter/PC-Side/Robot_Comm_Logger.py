@@ -203,17 +203,13 @@ if __name__ == "__main__":
                     
                     
 def analyze():
-    import serial
-    import serial.tools.list_ports
     import time
     import os
     import numpy as np
-    import struct
     from datetime import datetime
-    from prettytable import PrettyTable
     import matplotlib.pyplot as plt
     
-    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21'
+    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_08_04'
     root = root1
     os.chdir(root)
     

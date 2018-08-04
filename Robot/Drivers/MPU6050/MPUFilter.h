@@ -36,15 +36,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 /********************************** Macros ***********************************/
-// Note: These need to be defined before arm_math.h is included
+// Note: This needs to be defined before arm_math.h is included
 #define ARM_MATH_CM4     // Use ARM Cortex M4
-#define __FPU_PRESENT 1  // Math libraries will generate FPU instructions
 
 
 
 
 /********************************* Includes **********************************/
-#include <arm_math.h>	// Include CMSIS header
+#include "stm32f446xx.h" // __FPU_PRESENT == 1 ==> generate FPU instructions
+#include <arm_math.h>	 // Include CMSIS header
 #include "MPU6050.h"
 
 
