@@ -158,7 +158,6 @@ for msg_size in MESSAGE_SIZES:
             print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
 
 print("Collected {} results".format(len(RESULTS_TIMES)))
-print("{}".format(ETH_ECHO_TEST))
 
 with open(ETH_ECHO_TEST["name"], "w") as test_results_json:
     json.dump(ETH_ECHO_TEST, test_results_json)
