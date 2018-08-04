@@ -69,6 +69,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "../Drivers/MPU6050/MPU6050.h"
+#include "../Drivers/MPU6050/MPUFilter.h"
 #include "sharedMacros.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
@@ -129,8 +130,6 @@ uint8_t UART_rxBuffer[ 32 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART_rxControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
-
-const double PI = 3.141592654;
 
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
@@ -388,7 +387,7 @@ void StartCommandTask(void const * argument)
     IMUdata._I2C_Handle = &hi2c1;
     MPU6050_init(&IMUdata);
     MPU6050_manually_set_offsets(&IMUdata);
-    MPU6050_set_LPF(&IMUdata, 4);
+    MPU6050_set_LPF(&IMUdata, 6); // 5 Hz bandwidth
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -679,17 +678,36 @@ void StartIMUTask(void const * argument)
     TXData_t dataToSend;
     dataToSend.eDataType = eIMUData;
 
-    uint32_t notification;
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
 
+    const TickType_t IMU_CYCLE_TIME_MS = 2;
+    uint8_t i = 0;
+
+    MPUFilter_InitAllFilters();
+
+    /* Infinite loop */
     for(;;)
     {
-        do{
-            xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-        }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
+        // Service this thread every 2 ms for a 500 Hz sample rate
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-        // Note that it takes < 1 ms total for the sensor to read both accel and gyro
         MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-        MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+
+        // Gyroscope data is much more volatile/sensitive to changes than
+        // acceleration data. To compensate, we feed in samples to the filter
+        // slower. Good DSP practise? Not sure. To compensate for the high
+        // delays, we also use a filter with fewer taps than the acceleration
+        // filters. Ideally: we would sample faster to reduce aliasing, then
+        // use a filter with a smaller cutoff frequency. However, the filter
+        // designer we are using does not allow us to generate such filters in
+        // the free version, so this is the best we can do unless we use other
+        // software.
+        if (i % 16 == 0) {
+            MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+            MPUFilter_FilterAngularVelocity(&IMUdata);
+        }
+        i++;
 
         dataToSend.pData = &IMUdata;
         xQueueSend(UART_rxHandle, &dataToSend, 0);
