@@ -233,8 +233,16 @@ void StartTX(void const * argument)
 {
   /* USER CODE BEGIN StartTX */
   IMUData_t recvData = {0};
-  uint8_t packet[25] = {0};
-  packet[24] = '\n';
+  uint8_t packet[24] = {0};
+
+  const uint8_t ax_off = 0;
+  const uint8_t ay_off = 4;
+  const uint8_t az_off = 8;
+  const uint8_t vx_off = 12;
+  const uint8_t vy_off = 16;
+  const uint8_t vz_off = 20;
+
+  volatile int8_t val = 0;
 
   uint32_t notification;
 
@@ -250,7 +258,29 @@ void StartTX(void const * argument)
       vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5));
 
       memcpy(packet, &recvData, 6 * sizeof(float));
-      HAL_UART_Transmit_DMA(&huart2, packet, sizeof(packet));
+
+      switch(val){
+          case 0:
+              HAL_UART_Transmit_DMA(&huart2, &packet[ax_off], sizeof(float));
+              break;
+          case 1:
+              HAL_UART_Transmit_DMA(&huart2, &packet[ay_off], sizeof(float));
+              break;
+          case 2:
+              HAL_UART_Transmit_DMA(&huart2, &packet[az_off], sizeof(float));
+              break;
+          case 3:
+              HAL_UART_Transmit_DMA(&huart2, &packet[vx_off], sizeof(float));
+              break;
+          case 4:
+              HAL_UART_Transmit_DMA(&huart2, &packet[vy_off], sizeof(float));
+              break;
+          case 5:
+              HAL_UART_Transmit_DMA(&huart2, &packet[vz_off], sizeof(float));
+              break;
+          default:
+              break;
+      }
 
       do{
           xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);

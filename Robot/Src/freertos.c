@@ -369,7 +369,7 @@ void StartCommandTask(void const * argument)
     IMUdata._I2C_Handle = &hi2c1;
     MPU6050_init(&IMUdata);
     MPU6050_manually_set_offsets(&IMUdata);
-    MPU6050_set_LPF(&IMUdata, 4);
+    MPU6050_set_LPF(&IMUdata, 6); // 5 Hz bandwidth
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -572,48 +572,46 @@ void UART6_Handler(void const * argument)
 }
 
 /* StartIMUTask function */
-void StartIMUTask(void const * argument)
-{
-  /* USER CODE BEGIN StartIMUTask */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+void StartIMUTask(void const * argument) {
+    /* USER CODE BEGIN StartIMUTask */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
-  TXData_t dataToSend;
-  dataToSend.eDataType = eIMUData;
+    /* Infinite loop */
+    TXData_t dataToSend;
+    dataToSend.eDataType = eIMUData;
 
-  TickType_t xLastWakeTime;
-  xLastWakeTime = xTaskGetTickCount();
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
 
-  const TickType_t IMU_CYCLE_TIME_MS = 2;
-  uint8_t i = 0;
+    const TickType_t IMU_CYCLE_TIME_MS = 2;
+    uint8_t i = 0;
 
-  MPUFilter_InitAllFilters();
+    MPUFilter_InitAllFilters();
 
-  /* Infinite loop */
-  for(;;)
-  {
-      // Service this thread every 2 ms for a 500 Hz sample rate
-      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+    /* Infinite loop */
+    for(;;)
+    {
+        // Service this thread every 2 ms for a 500 Hz sample rate
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-	  MPUFilter_FilterAcceleration(&IMUdata);
+        MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
 
-	  // Gyroscope data is much more volatile/sensitive to changes than
-	  // acceleration data. To compensate, we feed in samples to the filter
-	  // slower. Good DSP practise? Not sure. To compensate for the high
-	  // delays, we also use a filter with fewer taps than the acceleration
-	  // filters. Ideally: we would sample faster to reduce aliasing, then
-	  // use a filter with a smaller cutoff frequency. However, the filter
-	  // designer we are using does not allow us to generate such filters in
-	  // the free version, so this is the best we can do unless we use other
-	  // software.
-	  if(i % 16 == 0){
-	      MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-	      MPUFilter_FilterAngularVelocity(&IMUdata);
-	  }
-	  i++;
+        // Gyroscope data is much more volatile/sensitive to changes than
+        // acceleration data. To compensate, we feed in samples to the filter
+        // slower. Good DSP practise? Not sure. To compensate for the high
+        // delays, we also use a filter with fewer taps than the acceleration
+        // filters. Ideally: we would sample faster to reduce aliasing, then
+        // use a filter with a smaller cutoff frequency. However, the filter
+        // designer we are using does not allow us to generate such filters in
+        // the free version, so this is the best we can do unless we use other
+        // software.
+        if (i % 16 == 0) {
+            MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+            MPUFilter_FilterAngularVelocity(&IMUdata);
+        }
+        i++;
 
         dataToSend.pData = &IMUdata;
         xQueueSend(UART_rxHandle, &dataToSend, 0);
@@ -697,7 +695,7 @@ void StartRxTask(void const * argument)
                     startSeqCount = 0;
                     totalBytesRead = 0;
 
-                    xTaskNotify(defaultTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+                    xTaskNotify(commandTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
                     xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
                     continue;
                 }
