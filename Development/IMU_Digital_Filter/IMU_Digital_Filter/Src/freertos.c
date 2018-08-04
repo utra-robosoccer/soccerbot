@@ -52,22 +52,36 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
+#include "../Drivers/MPU6050/MPU6050.h"
+#include "sharedMacros.h"
+#include "../Drivers/MPU6050/MPUFilter.h"
 
+typedef struct{
+    float ax;
+    float ay;
+    float az;
+    float vx;
+    float vy;
+    float vz;
+}IMUData_t;
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
-uint32_t defaultTaskBuffer[ 128 ];
+uint32_t defaultTaskBuffer[ 512 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId IMUHandle;
-uint32_t IMUBuffer[ 128 ];
+uint32_t IMUBuffer[ 512 ];
 osStaticThreadDef_t IMUControlBlock;
 osThreadId TXHandle;
-uint32_t TXBuffer[ 128 ];
+uint32_t TXBuffer[ 512 ];
 osStaticThreadDef_t TXControlBlock;
+osMessageQId pcQueueHandle;
+uint8_t pcQueueBuffer[ 1 * sizeof( IMUData_t ) ];
+osStaticMessageQDef_t pcQueueControlBlock;
 
 /* USER CODE BEGIN Variables */
-
+MPU6050_HandleTypeDef IMUdata;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -120,20 +134,25 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of IMU */
-  osThreadStaticDef(IMU, StartIMU, osPriorityNormal, 0, 128, IMUBuffer, &IMUControlBlock);
+  osThreadStaticDef(IMU, StartIMU, osPriorityNormal, 0, 512, IMUBuffer, &IMUControlBlock);
   IMUHandle = osThreadCreate(osThread(IMU), NULL);
 
   /* definition and creation of TX */
-  osThreadStaticDef(TX, StartTX, osPriorityHigh, 0, 128, TXBuffer, &TXControlBlock);
+  osThreadStaticDef(TX, StartTX, osPriorityHigh, 0, 512, TXBuffer, &TXControlBlock);
   TXHandle = osThreadCreate(osThread(TX), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
+
+  /* Create the queue(s) */
+  /* definition and creation of pcQueue */
+  osMessageQStaticDef(pcQueue, 1, IMUData_t, pcQueueBuffer, &pcQueueControlBlock);
+  pcQueueHandle = osMessageCreate(osMessageQ(pcQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -145,11 +164,11 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+    /* Infinite loop */
+    for(;;)
+    {
+      osDelay(1);
+    }
   /* USER CODE END StartDefaultTask */
 }
 
@@ -157,11 +176,55 @@ void StartDefaultTask(void const * argument)
 void StartIMU(void const * argument)
 {
   /* USER CODE BEGIN StartIMU */
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
+
+  const TickType_t IMU_CYCLE_TIME_MS = 2;
+  uint8_t i = 0;
+
+  IMUdata._I2C_Handle = &hi2c1;
+  MPU6050_init(&IMUdata);
+  MPU6050_manually_set_offsets(&IMUdata);
+  MPU6050_set_LPF(&IMUdata, 4);
+
+  IMUData_t data;
+
+  MPUFilter_InitAllFilters();
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
-  }
+      // Service this thread every 2 ms for a 500 Hz sample rate
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+
+      MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
+      MPUFilter_FilterAcceleration(&IMUdata);
+
+      // Gyroscope data is much more volatile/sensitive to changes than
+      // acceleration data. To compensate, we feed in samples to the filter
+      // slower. Good DSP practise? Not sure. To compensate for the high
+      // delays, we also use a filter with fewer taps than the acceleration
+      // filters. Ideally: we would sample faster to reduce aliasing, then
+      // use a filter with a smaller cutoff frequency. However, the filter
+      // designer we are using does not allow us to generate such filters in
+      // the free version, so this is the best we can do unless we use other
+      // software.
+      if(i % 16 == 0){
+          MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
+          MPUFilter_FilterAngularVelocity(&IMUdata);
+      }
+      i++;
+
+      data.ax = IMUdata._X_ACCEL;
+      data.ay = IMUdata._Y_ACCEL;
+      data.az = IMUdata._Z_ACCEL;
+
+      data.vx = IMUdata._X_GYRO;
+      data.vy = IMUdata._Y_GYRO;
+      data.vz = IMUdata._Z_GYRO;
+
+      xQueueSend(pcQueueHandle, &data, 0);
+    }
   /* USER CODE END StartIMU */
 }
 
@@ -169,16 +232,42 @@ void StartIMU(void const * argument)
 void StartTX(void const * argument)
 {
   /* USER CODE BEGIN StartTX */
+  IMUData_t recvData = {0};
+  uint8_t packet[24] = {0};
+
+  uint32_t notification;
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      while(xQueueReceive(pcQueueHandle, &recvData, portMAX_DELAY) != pdTRUE);
+
+      memcpy(packet, &recvData, 6 * sizeof(float));
+      HAL_UART_Transmit_DMA(&huart2, packet, sizeof(packet));
+
+      do{
+          xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
+      }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
   }
   /* USER CODE END StartTX */
 }
 
 /* USER CODE BEGIN Application */
-     
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+    // This callback runs after the interrupt data transfer from the sensor to the mcu is finished
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xTaskNotifyFromISR(IMUHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    if(huart == &huart2){
+        xTaskNotifyFromISR(TXHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    }
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
