@@ -93,19 +93,17 @@ for msg_size in MESSAGE_SIZES:
                             amount_received += len(data)
                         t1 = time.perf_counter()
                         times.append(t1 - t0)
-            except:
-                sys.stderr.write("error: Exception while echoing")
+            except Exception as e:
+                sys.stderr.write("error: Exception {} while echoing".format(e))
                 exit(1)
             finally:
                 sock.close()
 
             f = open(TEST_FILE_NAME, "a")
             try:
-                f.write('\n')
-                for dt in times:
-                    f.write("{},".format(dt))
-            except:
-                sys.stderr.write("error: Exception while writing data")
+                f.write('\n{}'.format(",".join([str(t) for t in times])))
+            except Exception as e:
+                sys.stderr.write("error: Exception {} while writing data".format(e))
                 exit(1)
             finally:
                 f.close()
