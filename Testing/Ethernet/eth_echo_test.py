@@ -1,4 +1,5 @@
-#import json
+from datetime import datetime
+import json
 import numpy
 import random
 import socket
@@ -25,13 +26,31 @@ import time
 def gen_random_string(n):
     return ''.join([str(chr(ord(' ') + (random.randint(1, ord('~') - ord(' ')) % (ord('~') - ord(' '))))) for i in range(n)])
 
+ETH_ECHO_TEST = {
+    "name": "",
+    "config": {
+        "message_sizes": "",
+        "message_nums_test_in_sequence": "",
+        "message_num_trials": "",
+        "protocol": "",
+        "mcu_ip_address": "",
+        "mcu_port": "",
+        "host_pc_port": "",
+        "buffer_size": "",
+        "tcp_receive_buffer_size": ""
+    },
+    "tests": []
+}
+
+DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
+
 # Test parameters
 MESSAGE_SIZES = [1, 10, 80, 100]
 MESSAGE_NUMS_TEST_IN_SEQUENCE = [1, 10, 100, 500]
 MESSAGE_NUM_TRIALS = 3
 
 RESULTS_TIMES = []
-TEST_FILE_NAME = "times"
+RESULTS_LOG = "eth_echo_times_{}.log".format(DATE_TIME)
 
 # Network parameters
 PROTOCOL = "TCP"
@@ -44,10 +63,29 @@ BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 #TIMEOUT = 10000     # Time in ms for PC to timeout and fail a test if MCU hangs
 TCP_RECEIVE_BUFFER_SIZE = 16
 
+ETH_ECHO_TEST["name"] = "eth_echo_test_{}.json".format(DATE_TIME)
+ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
+ETH_ECHO_TEST["config"]["message_nums_test_in_sequence"] = str(MESSAGE_NUMS_TEST_IN_SEQUENCE)
+ETH_ECHO_TEST["config"]["message_num_trials"] = MESSAGE_NUM_TRIALS
+ETH_ECHO_TEST["config"]["protocol"] = PROTOCOL
+ETH_ECHO_TEST["config"]["mcu_ip_address"] = MCU_IP_ADDRESS
+ETH_ECHO_TEST["config"]["mcu_port"] = MCU_PORT
+ETH_ECHO_TEST["config"]["host_pc_port"] = HOST_PC_PORT
+ETH_ECHO_TEST["config"]["buffer_size"] = BUFFER_SIZE
+ETH_ECHO_TEST["config"]["tcp_receive_buffer_size"] = TCP_RECEIVE_BUFFER_SIZE
+
 i_trial = 0
 for msg_size in MESSAGE_SIZES:
     for num_echoes in MESSAGE_NUMS_TEST_IN_SEQUENCE:
         for i_trial in range(MESSAGE_NUM_TRIALS):
+            test = {
+                "msg_size": msg_size,
+                "num_echoes": num_echoes,
+                "trial": i_trial,
+                "message": gen_random_string(msg_size),
+                "times": ""
+            }
+
             sock = None
 
             if PROTOCOL == "UDP":
@@ -66,13 +104,11 @@ for msg_size in MESSAGE_SIZES:
             elif PROTOCOL == "TCP":
                 sock.connect(server_address)
 
-            message = gen_random_string(msg_size).encode()
+            message = test["message"].encode()
             times = []
 
-            print("\n--- NEW TEST")
-            print("Sending \"{}\" (of size {} bytes) over {}".format(message, len(message), PROTOCOL))
-            print("Measuring time taken for {} echoes".format(num_echoes))
-            print("Trial {}".format(i_trial))
+            print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
+            print("    ---- Sending message of size {} bytes".format(len(message)))
 
             try:
                 if (PROTOCOL == "UDP"):
@@ -99,9 +135,12 @@ for msg_size in MESSAGE_SIZES:
             finally:
                 sock.close()
 
-            f = open(TEST_FILE_NAME, "a")
+            times_string = ",".join([str(dt) for dt in times])
+            test["times"] = times_string
+
+            f = open(RESULTS_LOG, "a")
             try:
-                f.write('\n{}'.format(",".join([str(t) for t in times])))
+                f.write("\n" + times_string)
             except Exception as e:
                 sys.stderr.write("error: Exception {} while writing data".format(e))
                 exit(1)
@@ -109,12 +148,17 @@ for msg_size in MESSAGE_SIZES:
                 f.close()
 
             RESULTS_TIMES.extend(times)
+            ETH_ECHO_TEST["tests"].append(test)
 
             times_array = numpy.array(times)
 
-            print('Took {} seconds for {} samples'.format(numpy.sum(times_array), num_echoes))
-            print('Average echo time: {} seconds'.format(numpy.average(times_array)))
-            print('Standard deviation: {} seconds'.format(numpy.std(times_array)))
-            print('Maximum: {} seconds, Minimum: {} seconds'.format(numpy.amax(times_array), numpy.amin(times_array)))
+            print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
+            print('    ---- Average echo time: {} s'.format(numpy.average(times_array)))
+            print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
+            print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
 
 print("Collected {} results".format(len(RESULTS_TIMES)))
+print("{}".format(ETH_ECHO_TEST))
+
+with open(ETH_ECHO_TEST["name"], "w") as test_results_json:
+    json.dump(ETH_ECHO_TEST, test_results_json)
