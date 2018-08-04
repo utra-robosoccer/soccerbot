@@ -46,15 +46,12 @@ DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # Test parameters
 MESSAGE_SIZES = [1, 10, 80, 100]
-MESSAGE_NUMS_TEST_IN_SEQUENCE = [1, 10, 100, 500]
+MESSAGE_NUMS_TEST_IN_SEQUENCE = [1, 10, 100]
 MESSAGE_NUM_TRIALS = 3
 
-RESULTS_TIMES = []
-RESULTS_LOG = "eth_echo_times_{}.log".format(DATE_TIME)
-
 # Network parameters
-PROTOCOL = "TCP"
-MCU_IP_ADDRESS = "192.168.0.43"
+PROTOCOL = "UDP"
+MCU_IP_ADDRESS = "192.168.0.53"
 MCU_PORT = 7
 HOST_PC_PORT = 7
 
@@ -63,7 +60,10 @@ BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 #TIMEOUT = 10000     # Time in ms for PC to timeout and fail a test if MCU hangs
 TCP_RECEIVE_BUFFER_SIZE = 16
 
-ETH_ECHO_TEST["name"] = "eth_echo_test_{}.json".format(DATE_TIME)
+RESULTS_TIMES = []
+RESULTS_LOG = "eth_echo_times_{}_{}.log".format(PROTOCOL, DATE_TIME)
+
+ETH_ECHO_TEST["name"] = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
 ETH_ECHO_TEST["config"]["message_nums_test_in_sequence"] = str(MESSAGE_NUMS_TEST_IN_SEQUENCE)
 ETH_ECHO_TEST["config"]["message_num_trials"] = MESSAGE_NUM_TRIALS
