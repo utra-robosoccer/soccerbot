@@ -1,0 +1,3 @@
+<launch>
+    <node name="soccer_transforms_node" pkg="soccer_transforms" ns="soccerbot" type="soccer_transforms_node" />
+</launch>
