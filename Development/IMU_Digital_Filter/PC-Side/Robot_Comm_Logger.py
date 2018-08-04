@@ -209,7 +209,7 @@ def analyze():
     from datetime import datetime
     import matplotlib.pyplot as plt
     
-    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_08_04'
+    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/IMU_Digital_Filter/PC-Side/IMU_data/2018_08_04'
     root = root1
     os.chdir(root)
     

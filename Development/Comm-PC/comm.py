@@ -13,7 +13,6 @@ import numpy as np
 import struct
 from datetime import datetime
 from prettytable import PrettyTable
-import matplotlib.pyplot as plt
 
 def rxDecoder(raw, decodeHeader=True):
     ''' Decodes raw bytes received from the microcontroller. As per the agreed
@@ -126,19 +125,14 @@ def receivePacketFromMCU():
         if(totalBytesRead == 84):
             break
     return buff
-
-def receiveWithChecks(file):
+    
+def receiveWithChecks():
     ''' Receives a packet from the MCU and performs basic checks on the packet
         for data integrity. Also decodes the packet and prints a data readout 
         every so often.
     '''
     (recvAngles, recvIMUData) = rxDecoder(receivePacketFromMCU(),
                                             decodeHeader=False)
-                                            
-    file.write(datetime.now().strftime('%H.%M.%S.%f') + " ")
-    for item in recvIMUData:
-        file.write(str(item) + "\t")
-    file.write("\n")
     
     if(numTransfers % 50 == 0):
         print('\n')
@@ -158,7 +152,6 @@ def receiveWithoutChecks():
     rawData = ser.read(92)
                     
     (header, recvAngles, recvIMUData) = rxDecoder(rawData)
-
     
     if(numTransfers % 50 == 0):
         print('\n')
@@ -181,58 +174,18 @@ if __name__ == "__main__":
     
     trajectory = np.loadtxt(open("walking.csv", "rb"), delimiter=",", skiprows=0)
     
-    data_root = 'IMU_data\\' + time.strftime('%Y_%m_%d')+'\\'
-    if not os.path.exists(data_root):
-        os.makedirs(data_root)
+    # with serial.Serial('/dev/ttyACM0',230400,timeout=100) as ser:
+    with serial.Serial('COM7',230400,timeout=100) as ser:
+        logString("Opened port " + ser.name)
         
-    with open(data_root + time.strftime('%Y_%m_%d_%H_%M_%S') + ".txt", 'w') as f:
-        with serial.Serial('COM7',230400,timeout=100) as ser:
-            logString("Opened port " + ser.name)
-            
-            numTransfers = 0
-            while(ser.isOpen()):
-                for i in range(trajectory.shape[1]):
-                    #dummy=input('') # Uncomment this if you want to step through the trajectories via user input
-                    #angles = trajectory[:, i:i+1]
-                    angles = np.zeros((18, 1))
-                    sendPacketToMCU(vec2bytes(angles))
-                    
-                    numTransfers = numTransfers + 1
-                    
-                    receiveWithChecks(f)
-                    
-                    
-def analyze():
-    import serial
-    import serial.tools.list_ports
-    import time
-    import os
-    import numpy as np
-    import struct
-    from datetime import datetime
-    from prettytable import PrettyTable
-    import matplotlib.pyplot as plt
-    
-    root1 = 'D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/Comm-PC/IMU_data/2018_07_21'
-    root = root1
-    os.chdir(root)
-    
-    files = os.listdir(os.getcwd())
-    files = [file for file in files if file.endswith('.txt')]
-    for filename in files:
-        data = np.loadtxt(fname=filename, usecols=(1,2,3,4,5,6))
-        time = np.arange(0, data.shape[0])
-    
-        plt.figure(figsize=(70, 10))
-        plt.title('Data for {0}'.format(filename))
-        plt.xlabel('Time (s)')
-        plt.plot(time, data[:,0], color='red', label='Vx')
-        plt.plot(time, data[:,1], color='green', label='Vy')
-        plt.plot(time, data[:,2], color='blue', label='Vz')
-        plt.plot(time, data[:,3], color='purple', label='Ax')
-        plt.plot(time, data[:,4], color='brown', label='Ay')
-        plt.plot(time, data[:,5], color='orange', label='Az')
-        plt.legend(loc='best')
-        plt.savefig(root + '/' + filename + '.png')
-        plt.close()
-    
+        numTransfers = 0
+        while(ser.isOpen()):
+            for i in range(trajectory.shape[1]):
+                #dummy=input('') # Uncomment this if you want to step through the trajectories via user input
+                #angles = trajectory[:, i:i+1]
+                angles = np.zeros((18, 1))
+                sendPacketToMCU(vec2bytes(angles))
+                
+                numTransfers = numTransfers + 1
+                
+                receiveWithChecks()
