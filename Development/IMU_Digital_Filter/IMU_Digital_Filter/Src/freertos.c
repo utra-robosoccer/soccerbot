@@ -223,7 +223,7 @@ void StartIMU(void const * argument)
       data.vy = IMUdata._Y_GYRO;
       data.vz = IMUdata._Z_GYRO;
 
-      xQueueSend(pcQueueHandle, &data, 0);
+      xQueueOverwrite(pcQueueHandle, &data);
     }
   /* USER CODE END StartIMU */
 }
@@ -233,14 +233,21 @@ void StartTX(void const * argument)
 {
   /* USER CODE BEGIN StartTX */
   IMUData_t recvData = {0};
-  uint8_t packet[24] = {0};
+  uint8_t packet[25] = {0};
+  packet[24] = '\n';
 
   uint32_t notification;
+
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
 
   /* Infinite loop */
   for(;;)
   {
       while(xQueueReceive(pcQueueHandle, &recvData, portMAX_DELAY) != pdTRUE);
+
+      // Service this thread every 10 ms
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5));
 
       memcpy(packet, &recvData, 6 * sizeof(float));
       HAL_UART_Transmit_DMA(&huart2, packet, sizeof(packet));
