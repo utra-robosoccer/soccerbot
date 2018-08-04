@@ -80,7 +80,7 @@ class SerialReader(QThread):
         
         while(not connected):
             try:
-                self.ser = serial.Serial(self.comPort, 115200, timeout=100)
+                self.ser = serial.Serial(self.comPort, 230400, timeout=100)
                 self.ser.reset_output_buffer()
                 self.ser.reset_input_buffer()
                 
