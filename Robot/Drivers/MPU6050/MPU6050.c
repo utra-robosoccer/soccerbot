@@ -139,8 +139,8 @@ void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050){
     float X=sMPU6050 -> _X_ACCEL;
     float Y=sMPU6050 -> _Y_ACCEL;
     float Z=sMPU6050 -> _Z_ACCEL;
-    sMPU6050 ->_ROLL = atan2(Y, Z) * 180/M_PI;
-    sMPU6050 ->_PITCH= atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI;
+    sMPU6050 ->_ROLL  = sMPU6050 ->_ROLL * 0.95 + (atan2(Y, Z) * 180/M_PI) * 0.05;
+    sMPU6050 ->_PITCH = sMPU6050 ->_PITCH * 0.95 + (atan2(-X, sqrt(Y*Y + Z*Z)) * 180/M_PI) * 0.05;
 }
 
 /**
