@@ -36,7 +36,7 @@ def bytes2fVec(byteArr):
         to a Numpy vector.
     '''
     
-    assert len(byteArr) % 4 == 0 # Sanity check for data type
+    assert len(byteArr) == 24 # Sanity check
     
     numVals = len(byteArr) // 4
     
@@ -45,7 +45,7 @@ def bytes2fVec(byteArr):
     for i in range(numVals):
         vec[i] = struct.unpack('<f', byteArr[i * 4:(i + 1) * 4])[0]
         
-    return vec
+    return vec.T
 
 class SerialReader(QThread):
     """ Class that reads data from a serial port """
@@ -104,14 +104,17 @@ class SerialReader(QThread):
             if(self.ser.in_waiting < 6 * 4):
                 return
                 
-            raw = self.ser.read(24)
+            raw = self.ser.readline()
             self.ser.reset_input_buffer()
             
-            v = bytes2UShortVec(raw)
+            v = bytes2fVec(raw[:24])
             
-            self.signal_serial_update.emit(v)
+            if((v < 200).all() and (v > -200).all()):
+                self.signal_serial_update.emit(v)
         except serial.serialutil.SerialException:
             self.signal_serial_exception.emit()
+        except AssertionError:
+            pass
         
     def exit(self):
         self.timer.stop()
@@ -152,6 +155,12 @@ class DataPlotter(QMainWindow):
                         NavigationToolbar(canvas, self))
         self.ax = canvas.figure.subplots()
         
+        canvasV = FigureCanvas(Figure(figsize=(5, 3)))
+        layout.addWidget(canvasV)
+        self.addToolBar(QtCore.Qt.BottomToolBarArea,
+                        NavigationToolbar(canvasV, self))
+        self.axV = canvasV.figure.subplots()
+        
         self.timeIndexes = np.zeros((100,))
         self.hasReceivedData = False
         self.dataBuffer = np.zeros((100,6)) # 100 data points to be buffered
@@ -187,7 +196,9 @@ class DataPlotter(QMainWindow):
         
     def serial_update_signal_callback(self, data):
         self.ax.clear()
-        self.ax.set_ylim(ymin=0, ymax=200)
+        self.ax.set_ylim(ymin=-15, ymax=15)
+        self.axV.clear()
+        self.axV.set_ylim(ymin=-150, ymax=150)
         
         # Shift data buffers left, add new data to rightmost slot, then redraw
         self.timeIndexes = np.roll(self.timeIndexes, -1)
@@ -200,14 +211,20 @@ class DataPlotter(QMainWindow):
                 QDateTime.currentMSecsSinceEpoch() - self.startTime
             )
             self.ax.set_xlim(self.timeIndexes[0], self.timeIndexes[-1])
+            self.axV.set_xlim(self.timeIndexes[0], self.timeIndexes[-1])
         
         self.dataBuffer = np.roll(self.dataBuffer, -1, 0)
         self.dataBuffer[-1:] = data
         
-        colors = ['r', 'g', 'b', 'm', 'y', 'k']
-        for i in range(self.dataBuffer.shape[1]):
-            self.ax.plot(self.timeIndexes, self.dataBuffer[:i], color=color[i])
-            self.ax.figure.canvas.draw()
+        colors = ['r', 'g', 'b']
+        for i in range(self.dataBuffer.shape[1] // 2):
+            self.ax.plot(self.timeIndexes, self.dataBuffer[:,i], color=colors[i])
+        self.ax.figure.canvas.draw()
+        
+        colors = ['m', 'y', 'k']
+        for i in range(self.dataBuffer.shape[1] // 2):
+            self.axV.plot(self.timeIndexes, self.dataBuffer[:,i+3], color=colors[i])
+        self.axV.figure.canvas.draw()
     
     def serial_exception_callback(self):
         self.close()
