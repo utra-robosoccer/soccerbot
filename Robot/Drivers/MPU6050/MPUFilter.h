@@ -52,7 +52,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 /***************************** Function prototypes ***************************/
 void MPUFilter_InitAllFilters();
-void MPUFilter_FilterAcceleration(MPU6050_HandleTypeDef* IMUdata);
 void MPUFilter_FilterAngularVelocity(MPU6050_HandleTypeDef* IMUdata);
 
 #endif /* __MPUFILTER_H__ */

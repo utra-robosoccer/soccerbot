@@ -37,37 +37,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 /********************************* Constants *********************************/
 /**
- * Number of filter taps (equal to number of coefficients here) for
- * acceleration filter
- */
-static const uint16_t MPUFilter_numTapsAccel = 21;
-static const uint16_t MPUFilter_blockSizeAccel = 1;
-
-/**
- * FIR filter coefficients, which correspond to the filter's impulse response
- * in the discrete time domain. Since there are 21 coefficients, input
- * signals are delayed by (21 - 1)/2 = 10 samples. This filter is used for
- * acceleration data.
- */
-static float32_t MPUFilter_coefficientsAccel[21] =
-{
-    -0.018872079, -0.0011102221, 0.0030367336, 0.014906744, 0.030477359, 0.049086205,
-    0.070363952, 0.089952103, 0.10482875, 0.11485946, 0.11869398, 0.11485946,
-    0.10482875, 0.089952103, 0.070363952, 0.049086205, 0.030477359, 0.014906744,
-    0.0030367336, -0.0011102221, -0.018872079
-};
-
-/**
- * Number of filter taps (equal to number of coefficients here) for
- * angular velocity filter
+ * @brief Number of filter taps (equal to number of coefficients here) for
+ *        angular velocity filter
  */
 static const uint16_t MPUFilter_numTapsVel = 11;
+
+/** @brief Number of samples buffered before re-computing output */
 static const uint16_t MPUFilter_blockSizeVel = 1;
 
 /**
- * Filter coefficients for angular velocity filter. 5 sample delay
+ * @brief Filter coefficients for angular velocity filter. (11 - 1)/2 = 5
+ *        sample delay
  */
-static float MPUFilter_coefficientsVel[11] =
+static const float MPUFilter_coefficientsVel[11] =
 {
     0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315,
     0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841
@@ -77,89 +59,97 @@ static float MPUFilter_coefficientsVel[11] =
 
 
 /********************************** Types ************************************/
+/** @brief Container for angular velocity filter */
 typedef struct
 {
-    arm_fir_instance_f32 instance;
-    float32_t state[22];
-    float32_t output;
-} MPUFilterAccelType;
-
-typedef struct
-{
-    arm_fir_instance_f32 instance;
-    float32_t state[12];
-    float32_t output;
-} MPUFilterVelType;
+    arm_fir_instance_f32 instance; /**< Filter instance                      */
+    float32_t state[12];           /**< Previous inputs and new input        */
+    float32_t output;              /**< Output of filter                     */
+} MPUFilterVel_t;
 
 
 
 
 /***************************** Private Variables *****************************/
-/** Filters for acceleration along each axis */
-static MPUFilterAccelType axFilter, ayFilter, azFilter;
+/** @brief Filter for angular velocity along x-axis */
+static MPUFilterVel_t vxFilter;
 
-/** Filters for angular velocity along each axis */
-static MPUFilterVelType vxFilter, vyFilter, vzFilter;
+/** @brief Filter for angular velocity along y-axis */
+static MPUFilterVel_t vyFilter;
 
-
-
-
-/************************ Private Function Prototypes ************************/
-static void MPUFilter_initAccel( MPUFilterAccelType * pThis );
-static void MPUFilter_initVel( MPUFilterVelType * pThis );
-static void MPUFilter_resetAccel( MPUFilterAccelType * pThis );
-static void MPUFilter_resetVel( MPUFilterVelType * pThis );
+/** @brief Filter for angular velocity along z-axis */
+static MPUFilterVel_t vzFilter;
 
 
 
 
-/******************************** Functions **********************************/
-// Acceleration
-static inline void MPUFilter_writeInputAccel(MPUFilterAccelType * pThis, float input){
+/***************************** Private Functions *****************************/
+/**
+ * @defgroup IMU_Filter_Private_Functions Private functions
+ * @brief Functions used internally for writing inputs and initialization
+ * @ingroup IMU_Filter
+ * @{
+ */
+
+/**
+ * @brief  Write an input to the filter
+ * @param  pThis Pointer to filter container
+ * @param  input The new input to be written
+ * @return None
+ */
+static inline void MPUFilter_writeInputVel(MPUFilterVel_t * pThis, float input){
     arm_fir_f32( &pThis->instance, &input, &pThis->output, 1 );
 };
-static inline float MPUFilter_readOutputAccel( MPUFilterAccelType * pThis ){
+
+/**
+ * @brief  Read the current filter output
+ * @param  pThis Pointer to filter container
+ * @return None
+ */
+static inline float MPUFilter_readOutputVel( MPUFilterVel_t * pThis ){
     return pThis->output;
 }
 
-static void MPUFilter_initAccel( MPUFilterAccelType * pThis )
-{
-	arm_fir_init_f32(&pThis->instance, MPUFilter_numTapsAccel,
-	        MPUFilter_coefficientsAccel, pThis->state,
-	        MPUFilter_blockSizeAccel
-	);
-	MPUFilter_resetAccel( pThis );
-}
-
-static void MPUFilter_resetAccel( MPUFilterAccelType * pThis )
+/**
+ * @brief  Reset a velocity filter
+ * @param  pThis Pointer to filter container
+ * @return None
+ */
+static void MPUFilter_resetVel( MPUFilterVel_t * pThis )
 {
     memset( &pThis->state, 0, sizeof( pThis->state ) ); // Reset state to 0
     pThis->output = 0;                                  // Reset output
 }
 
-
-// Velocity
-static inline void MPUFilter_writeInputVel(MPUFilterVelType * pThis, float input){
-    arm_fir_f32( &pThis->instance, &input, &pThis->output, 1 );
-};
-static inline float MPUFilter_readOutputVel( MPUFilterVelType * pThis ){
-    return pThis->output;
-}
-
-static void MPUFilter_initVel( MPUFilterVelType * pThis )
+/**
+ * @brief  Initialize a velocity filter
+ * @param  pThis Pointer to filter container
+ * @return None
+ */
+static void MPUFilter_initVel( MPUFilterVel_t * pThis )
 {
     arm_fir_init_f32(&pThis->instance, MPUFilter_numTapsVel,
-            MPUFilter_coefficientsVel, pThis->state,
+            (float*)MPUFilter_coefficientsVel, pThis->state,
             MPUFilter_blockSizeVel
     );
     MPUFilter_resetVel( pThis );
 }
 
-static void MPUFilter_resetVel( MPUFilterVelType * pThis )
-{
-    memset( &pThis->state, 0, sizeof( pThis->state ) ); // Reset state to 0
-    pThis->output = 0;                                  // Reset output
-}
+/**
+ * @}
+ */
+/* end - IMU_Filter_Private_Functions */
+
+
+
+
+/****************************** Public Functions *****************************/
+/**
+ * @defgroup IMU_Filter_Public_Functions Public functions
+ * @brief Functions used outside the module
+ * @ingroup IMU_Filter
+ * @{
+ */
 
 /**
  * @brief  Initialize acceleration and angular velocity FIR filters for IMU
@@ -167,30 +157,9 @@ static void MPUFilter_resetVel( MPUFilterVelType * pThis )
  * @return None
  */
 void MPUFilter_InitAllFilters(){
-    MPUFilter_initAccel(&axFilter);
-    MPUFilter_initAccel(&ayFilter);
-    MPUFilter_initAccel(&azFilter);
     MPUFilter_initVel(&vxFilter);
     MPUFilter_initVel(&vyFilter);
     MPUFilter_initVel(&vzFilter);
-}
-
-/**
- * @brief  Reads Az, Ay, and Ax from the IMU handle and writes them into their
- *         corresponding FIR filters. The output of each FIR filter is then
- *         read and stored in the IMU handle where it was previously read.
- * @param  IMUdata Pointer to a struct of type MPU6050_HandleTypeDef
- * @return None
- */
-void MPUFilter_FilterAcceleration(MPU6050_HandleTypeDef* IMUdata){
-    MPUFilter_writeInputAccel(&azFilter, IMUdata->_Z_ACCEL);
-    IMUdata->_Z_ACCEL = MPUFilter_readOutputAccel(&azFilter);
-
-    MPUFilter_writeInputAccel(&ayFilter, IMUdata->_Y_ACCEL);
-    IMUdata->_Y_ACCEL = MPUFilter_readOutputAccel(&ayFilter);
-
-    MPUFilter_writeInputAccel(&axFilter, IMUdata->_X_ACCEL);
-    IMUdata->_X_ACCEL = MPUFilter_readOutputAccel(&axFilter);
 }
 
 /**
@@ -210,6 +179,11 @@ void MPUFilter_FilterAngularVelocity(MPU6050_HandleTypeDef* IMUdata){
     MPUFilter_writeInputVel(&vxFilter, IMUdata->_X_GYRO);
     IMUdata->_X_GYRO = MPUFilter_readOutputVel(&vxFilter);
 }
+
+/**
+ * @}
+ */
+/* end - IMU_Filter_Public_Functions */
 
 /**
  * @}
