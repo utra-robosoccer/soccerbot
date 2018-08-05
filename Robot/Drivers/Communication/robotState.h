@@ -11,7 +11,7 @@
 #ifndef ROBOTSTATE_H_
 #define ROBOTSTATE_H_
 
-/** Data structure sent from the MCU to the PC. Contains sensor data */
+/** @brief Data structure sent from the MCU to the PC. Contains sensor data */
 typedef struct robot_state {
 	uint32_t start_seq; /**< Start sequence to attach to message (for data
 	                         integrity purposes)                             */

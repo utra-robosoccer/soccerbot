@@ -170,36 +170,36 @@ Functions</h2></td></tr>
 <tr class="memitem:a016544463b4842ced7191baf8f449cea"><td class="memItemLeft" align="right" valign="top"><a id="a016544463b4842ced7191baf8f449cea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>StartDefaultTask</b> (void const *argument)</td></tr>
 <tr class="separator:a016544463b4842ced7191baf8f449cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abade755e13d07c10889ae83143656158"><td class="memItemLeft" align="right" valign="top"><a id="abade755e13d07c10889ae83143656158"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_FREERTOS_Init</b> (void)</td></tr>
-<tr class="separator:abade755e13d07c10889ae83143656158"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae9a7f9b9094fd560310f92b214f2c829"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gae9a7f9b9094fd560310f92b214f2c829">StartCommandTask</a> (void const *argument)</td></tr>
-<tr class="memdesc:gae9a7f9b9094fd560310f92b214f2c829"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the commandTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="group___threads.html#gae9a7f9b9094fd560310f92b214f2c829">More...</a><br /></td></tr>
-<tr class="separator:gae9a7f9b9094fd560310f92b214f2c829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gabb7badba6cdb3ff61f2dff35b5a9ff2c">UART1_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gabb7badba6cdb3ff61f2dff35b5a9ff2c">More...</a><br /></td></tr>
-<tr class="separator:gabb7badba6cdb3ff61f2dff35b5a9ff2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafd685a32f5ae07a72d480671f7c646d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gafd685a32f5ae07a72d480671f7c646d5">UART2_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:gafd685a32f5ae07a72d480671f7c646d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART2_ thread. It processes all commands for the motors physically connected to UART2, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gafd685a32f5ae07a72d480671f7c646d5">More...</a><br /></td></tr>
-<tr class="separator:gafd685a32f5ae07a72d480671f7c646d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga478be609d54754b09cd8bdaee19aaf65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga478be609d54754b09cd8bdaee19aaf65">UART3_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:ga478be609d54754b09cd8bdaee19aaf65"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART3_ thread. It processes all commands for the motors physically connected to UART3, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga478be609d54754b09cd8bdaee19aaf65">More...</a><br /></td></tr>
-<tr class="separator:ga478be609d54754b09cd8bdaee19aaf65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga099b379cd3d7afbd65e8009d5bcae63f">UART4_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART4_ thread. It processes all commands for the motors physically connected to UART4, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga099b379cd3d7afbd65e8009d5bcae63f">More...</a><br /></td></tr>
-<tr class="separator:ga099b379cd3d7afbd65e8009d5bcae63f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeaecd9665005d7d4414f1e30828e89a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gaeaecd9665005d7d4414f1e30828e89a9">UART6_Handler</a> (void const *argument)</td></tr>
-<tr class="memdesc:gaeaecd9665005d7d4414f1e30828e89a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART6_ thread. It processes all commands for the motors physically connected to UART6, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gaeaecd9665005d7d4414f1e30828e89a9">More...</a><br /></td></tr>
-<tr class="separator:gaeaecd9665005d7d4414f1e30828e89a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc2ba415e0f9e676e5906f2cae0be0c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gadc2ba415e0f9e676e5906f2cae0be0c7">StartUART1Task</a> (void const *argument)</td></tr>
+<tr class="memdesc:gadc2ba415e0f9e676e5906f2cae0be0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART1_ thread. It processes all commands for the motors physically connected to UART1, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gadc2ba415e0f9e676e5906f2cae0be0c7">More...</a><br /></td></tr>
+<tr class="separator:gadc2ba415e0f9e676e5906f2cae0be0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace242633a4776f26ce5ccea02f87436a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gace242633a4776f26ce5ccea02f87436a">StartUART2Task</a> (void const *argument)</td></tr>
+<tr class="memdesc:gace242633a4776f26ce5ccea02f87436a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART2_ thread. It processes all commands for the motors physically connected to UART2, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gace242633a4776f26ce5ccea02f87436a">More...</a><br /></td></tr>
+<tr class="separator:gace242633a4776f26ce5ccea02f87436a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga928fcff8baaf66bc24bf6a5e84b52424"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga928fcff8baaf66bc24bf6a5e84b52424">StartUART3Task</a> (void const *argument)</td></tr>
+<tr class="memdesc:ga928fcff8baaf66bc24bf6a5e84b52424"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART3_ thread. It processes all commands for the motors physically connected to UART3, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga928fcff8baaf66bc24bf6a5e84b52424">More...</a><br /></td></tr>
+<tr class="separator:ga928fcff8baaf66bc24bf6a5e84b52424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad07ae38e26b77f8241361f1f6d501863"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gad07ae38e26b77f8241361f1f6d501863">StartUART4Task</a> (void const *argument)</td></tr>
+<tr class="memdesc:gad07ae38e26b77f8241361f1f6d501863"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART4_ thread. It processes all commands for the motors physically connected to UART4, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gad07ae38e26b77f8241361f1f6d501863">More...</a><br /></td></tr>
+<tr class="separator:gad07ae38e26b77f8241361f1f6d501863"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab48676fff631b962b0a8e5d11df84fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gab48676fff631b962b0a8e5d11df84fbf">StartUART6Task</a> (void const *argument)</td></tr>
+<tr class="memdesc:gab48676fff631b962b0a8e5d11df84fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the UART6_ thread. It processes all commands for the motors physically connected to UART6, and initiates the I/O calls to them. Whenever it processes read commands for a motor, it sends the data received to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#gab48676fff631b962b0a8e5d11df84fbf">More...</a><br /></td></tr>
+<tr class="separator:gab48676fff631b962b0a8e5d11df84fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd">StartIMUTask</a> (void const *argument)</td></tr>
 <tr class="memdesc:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the IMUTask thread. During each control cycle, this thread fetches accelerometer and gyroscope data, then sends this data to the multi-writer sensor queue, which is read only by the TX task.  <a href="group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd">More...</a><br /></td></tr>
 <tr class="separator:ga2b1b4b3fe51fe46654895c7626bf83bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae9a7f9b9094fd560310f92b214f2c829"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gae9a7f9b9094fd560310f92b214f2c829">StartCommandTask</a> (void const *argument)</td></tr>
+<tr class="memdesc:gae9a7f9b9094fd560310f92b214f2c829"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the commandTask thread. It initializes all data structures and peripheral devices associated with the application, and then assumes responsibility for distributing commands to the actuators.  <a href="group___threads.html#gae9a7f9b9094fd560310f92b214f2c829">More...</a><br /></td></tr>
+<tr class="separator:gae9a7f9b9094fd560310f92b214f2c829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf50979eaf2ad1b106c5514b33138a434"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gaf50979eaf2ad1b106c5514b33138a434">StartRxTask</a> (void const *argument)</td></tr>
 <tr class="memdesc:gaf50979eaf2ad1b106c5514b33138a434"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the RxTask thread. It initiates DMA-based receptions of RobotGoals from the PC via UART5. Upon successful reception of a RobotGoal, the UARTx_ and IMUTask threads are unblocked.  <a href="group___threads.html#gaf50979eaf2ad1b106c5514b33138a434">More...</a><br /></td></tr>
 <tr class="separator:gaf50979eaf2ad1b106c5514b33138a434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___threads.html#gabfae5c57e07c9a086f73340d2aee1a7b">StartTxTask</a> (void const *argument)</td></tr>
 <tr class="memdesc:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is executed in the context of the TxTask thread. This thread is blocked until all sensor data has been received through the sensor queue. After this time, the UARTx_ and IMUTask will be blocked. Then, a DMA-based transmission of a RobotState is sent to the PC via UART5.  <a href="group___threads.html#gabfae5c57e07c9a086f73340d2aee1a7b">More...</a><br /></td></tr>
 <tr class="separator:gabfae5c57e07c9a086f73340d2aee1a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abade755e13d07c10889ae83143656158"><td class="memItemLeft" align="right" valign="top"><a id="abade755e13d07c10889ae83143656158"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_FREERTOS_Init</b> (void)</td></tr>
+<tr class="separator:abade755e13d07c10889ae83143656158"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1988aa923b19fa6f31c93afa7773f793"><td class="memItemLeft" align="right" valign="top"><a id="a1988aa923b19fa6f31c93afa7773f793"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vApplicationGetIdleTaskMemory</b> (StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)</td></tr>
 <tr class="separator:a1988aa923b19fa6f31c93afa7773f793"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -227,60 +227,51 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>defaultTaskBuffer
 <tr class="memitem:aca18732f09ae696fd34b94d393dc9a42"><td class="memItemLeft" align="right" valign="top"><a id="aca18732f09ae696fd34b94d393dc9a42"></a>
 osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>defaultTaskControlBlock</b></td></tr>
 <tr class="separator:aca18732f09ae696fd34b94d393dc9a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abca5ae79d68392bed5acba7016a9772c"><td class="memItemLeft" align="right" valign="top"><a id="abca5ae79d68392bed5acba7016a9772c"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>commandTaskHandle</b></td></tr>
-<tr class="separator:abca5ae79d68392bed5acba7016a9772c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c7c61f94eb90ed3b8b7a635e0afc881"><td class="memItemLeft" align="right" valign="top"><a id="a3c7c61f94eb90ed3b8b7a635e0afc881"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>commandTaskBuffer</b> [512]</td></tr>
-<tr class="separator:a3c7c61f94eb90ed3b8b7a635e0afc881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14ff070d109bfc8e915f91f8edb93dcd"><td class="memItemLeft" align="right" valign="top"><a id="a14ff070d109bfc8e915f91f8edb93dcd"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>commandTaskControlBlock</b></td></tr>
-<tr class="separator:a14ff070d109bfc8e915f91f8edb93dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab6d3bdb9f6cc41726dcd9127c249c2d"><td class="memItemLeft" align="right" valign="top"><a id="aab6d3bdb9f6cc41726dcd9127c249c2d"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART1_Handle</b></td></tr>
-<tr class="separator:aab6d3bdb9f6cc41726dcd9127c249c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad57d4b39c32e6d2f5e14d18785466358"><td class="memItemLeft" align="right" valign="top"><a id="ad57d4b39c32e6d2f5e14d18785466358"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART1_Buffer</b> [128]</td></tr>
-<tr class="separator:ad57d4b39c32e6d2f5e14d18785466358"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dc985ea36f7664c0db24809bf0c1f3d"><td class="memItemLeft" align="right" valign="top"><a id="a2dc985ea36f7664c0db24809bf0c1f3d"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART1_ControlBlock</b></td></tr>
-<tr class="separator:a2dc985ea36f7664c0db24809bf0c1f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adba26ce4b878fc7fcb2db9546eba8051"><td class="memItemLeft" align="right" valign="top"><a id="adba26ce4b878fc7fcb2db9546eba8051"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART2_Handle</b></td></tr>
-<tr class="separator:adba26ce4b878fc7fcb2db9546eba8051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a393c94e85933e8b0cc88c6e66b745960"><td class="memItemLeft" align="right" valign="top"><a id="a393c94e85933e8b0cc88c6e66b745960"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART2_Buffer</b> [128]</td></tr>
-<tr class="separator:a393c94e85933e8b0cc88c6e66b745960"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a922382cff62432f7fab1a81cd45f73ee"><td class="memItemLeft" align="right" valign="top"><a id="a922382cff62432f7fab1a81cd45f73ee"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART2_ControlBlock</b></td></tr>
-<tr class="separator:a922382cff62432f7fab1a81cd45f73ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad585d07c19973263354b0e4fd062faec"><td class="memItemLeft" align="right" valign="top"><a id="ad585d07c19973263354b0e4fd062faec"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART3_Handle</b></td></tr>
-<tr class="separator:ad585d07c19973263354b0e4fd062faec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb6529490dad7751ade1df136c5d5b33"><td class="memItemLeft" align="right" valign="top"><a id="abb6529490dad7751ade1df136c5d5b33"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART3_Buffer</b> [128]</td></tr>
-<tr class="separator:abb6529490dad7751ade1df136c5d5b33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7da9719affac2bab9d30fc2eec83789e"><td class="memItemLeft" align="right" valign="top"><a id="a7da9719affac2bab9d30fc2eec83789e"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART3_ControlBlock</b></td></tr>
-<tr class="separator:a7da9719affac2bab9d30fc2eec83789e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acda81d976d119571ad2e3125baadc783"><td class="memItemLeft" align="right" valign="top"><a id="acda81d976d119571ad2e3125baadc783"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART4_Handle</b></td></tr>
-<tr class="separator:acda81d976d119571ad2e3125baadc783"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7338b8475678301d38e308537faee91"><td class="memItemLeft" align="right" valign="top"><a id="ac7338b8475678301d38e308537faee91"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART4_Buffer</b> [128]</td></tr>
-<tr class="separator:ac7338b8475678301d38e308537faee91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe42300683d75b73464223992ba649c0"><td class="memItemLeft" align="right" valign="top"><a id="abe42300683d75b73464223992ba649c0"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART4_ControlBlock</b></td></tr>
-<tr class="separator:abe42300683d75b73464223992ba649c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8eee195035732883a8c48f27000d22c"><td class="memItemLeft" align="right" valign="top"><a id="ad8eee195035732883a8c48f27000d22c"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART6_Handle</b></td></tr>
-<tr class="separator:ad8eee195035732883a8c48f27000d22c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad827782c580b469829e5783ed34e99aa"><td class="memItemLeft" align="right" valign="top"><a id="ad827782c580b469829e5783ed34e99aa"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6_Buffer</b> [128]</td></tr>
-<tr class="separator:ad827782c580b469829e5783ed34e99aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a131664dd99efed67e1b6fedc9caa7a70"><td class="memItemLeft" align="right" valign="top"><a id="a131664dd99efed67e1b6fedc9caa7a70"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6_ControlBlock</b></td></tr>
-<tr class="separator:a131664dd99efed67e1b6fedc9caa7a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbb065c8ad964277ca665347acf9c101"><td class="memItemLeft" align="right" valign="top"><a id="acbb065c8ad964277ca665347acf9c101"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART1TaskHandle</b></td></tr>
+<tr class="separator:acbb065c8ad964277ca665347acf9c101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb001192704266ac30b6707ecf17142e"><td class="memItemLeft" align="right" valign="top"><a id="abb001192704266ac30b6707ecf17142e"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART1TaskBuffer</b> [128]</td></tr>
+<tr class="separator:abb001192704266ac30b6707ecf17142e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1885458af8741301b2753b837ff617b8"><td class="memItemLeft" align="right" valign="top"><a id="a1885458af8741301b2753b837ff617b8"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART1TaskControlBlock</b></td></tr>
+<tr class="separator:a1885458af8741301b2753b837ff617b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57fc0acc4e3e760d9611e275218d5464"><td class="memItemLeft" align="right" valign="top"><a id="a57fc0acc4e3e760d9611e275218d5464"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART2TaskHandle</b></td></tr>
+<tr class="separator:a57fc0acc4e3e760d9611e275218d5464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fc678145162f28fbb89f077b3d9e01c"><td class="memItemLeft" align="right" valign="top"><a id="a3fc678145162f28fbb89f077b3d9e01c"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART2TaskBuffer</b> [128]</td></tr>
+<tr class="separator:a3fc678145162f28fbb89f077b3d9e01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb9fea3a17b8391c5d05018cc5b5763d"><td class="memItemLeft" align="right" valign="top"><a id="adb9fea3a17b8391c5d05018cc5b5763d"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART2TaskControlBlock</b></td></tr>
+<tr class="separator:adb9fea3a17b8391c5d05018cc5b5763d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ec3f32c24e2f9191a4d446b77c980e1"><td class="memItemLeft" align="right" valign="top"><a id="a0ec3f32c24e2f9191a4d446b77c980e1"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART3TaskHandle</b></td></tr>
+<tr class="separator:a0ec3f32c24e2f9191a4d446b77c980e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89957d6aeeeb36264ba1d47b6571358c"><td class="memItemLeft" align="right" valign="top"><a id="a89957d6aeeeb36264ba1d47b6571358c"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART3TaskBuffer</b> [128]</td></tr>
+<tr class="separator:a89957d6aeeeb36264ba1d47b6571358c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da7c9bd3c283e9c9b1fdaff7de0ba69"><td class="memItemLeft" align="right" valign="top"><a id="a4da7c9bd3c283e9c9b1fdaff7de0ba69"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART3TaskControlBlock</b></td></tr>
+<tr class="separator:a4da7c9bd3c283e9c9b1fdaff7de0ba69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1b3c6b338d711d7902af875721d8b5e"><td class="memItemLeft" align="right" valign="top"><a id="ab1b3c6b338d711d7902af875721d8b5e"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART4TaskHandle</b></td></tr>
+<tr class="separator:ab1b3c6b338d711d7902af875721d8b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6a32d4e76e8a08c418a9db6aff4d998"><td class="memItemLeft" align="right" valign="top"><a id="aa6a32d4e76e8a08c418a9db6aff4d998"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART4TaskBuffer</b> [128]</td></tr>
+<tr class="separator:aa6a32d4e76e8a08c418a9db6aff4d998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19f975ce65e1841a364bc3a836fb9253"><td class="memItemLeft" align="right" valign="top"><a id="a19f975ce65e1841a364bc3a836fb9253"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART4TaskControlBlock</b></td></tr>
+<tr class="separator:a19f975ce65e1841a364bc3a836fb9253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae18d9f163e50ea69ddd337a665f3b8f9"><td class="memItemLeft" align="right" valign="top"><a id="ae18d9f163e50ea69ddd337a665f3b8f9"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>UART6TaskHandle</b></td></tr>
+<tr class="separator:ae18d9f163e50ea69ddd337a665f3b8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec75b02c1a4d5838bb6c38c5ebcf8b2f"><td class="memItemLeft" align="right" valign="top"><a id="aec75b02c1a4d5838bb6c38c5ebcf8b2f"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6TaskBuffer</b> [128]</td></tr>
+<tr class="separator:aec75b02c1a4d5838bb6c38c5ebcf8b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21d2af9db553bd0d065c4d8138626b5a"><td class="memItemLeft" align="right" valign="top"><a id="a21d2af9db553bd0d065c4d8138626b5a"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6TaskControlBlock</b></td></tr>
+<tr class="separator:a21d2af9db553bd0d065c4d8138626b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa424f698debd93286e6ecf733affd673"><td class="memItemLeft" align="right" valign="top"><a id="aa424f698debd93286e6ecf733affd673"></a>
 osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>IMUTaskHandle</b></td></tr>
 <tr class="separator:aa424f698debd93286e6ecf733affd673"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,24 +281,33 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>IMUTaskBuffer</b>
 <tr class="memitem:a9bd34422f9c51c9724d947f46c8d35ab"><td class="memItemLeft" align="right" valign="top"><a id="a9bd34422f9c51c9724d947f46c8d35ab"></a>
 osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>IMUTaskControlBlock</b></td></tr>
 <tr class="separator:a9bd34422f9c51c9724d947f46c8d35ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa09dc533387f9ebef95327853c8b595a"><td class="memItemLeft" align="right" valign="top"><a id="aa09dc533387f9ebef95327853c8b595a"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>rxTaskHandle</b></td></tr>
-<tr class="separator:aa09dc533387f9ebef95327853c8b595a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4f5f44ae6c9b982651f3d31e0cb6423"><td class="memItemLeft" align="right" valign="top"><a id="af4f5f44ae6c9b982651f3d31e0cb6423"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>rxTaskBuffer</b> [512]</td></tr>
-<tr class="separator:af4f5f44ae6c9b982651f3d31e0cb6423"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02464f95c64666dd2dc00619e705ceb7"><td class="memItemLeft" align="right" valign="top"><a id="a02464f95c64666dd2dc00619e705ceb7"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>rxTaskControlBlock</b></td></tr>
-<tr class="separator:a02464f95c64666dd2dc00619e705ceb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6777afabed87550002ee631be769ca74"><td class="memItemLeft" align="right" valign="top"><a id="a6777afabed87550002ee631be769ca74"></a>
-osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>txTaskHandle</b></td></tr>
-<tr class="separator:a6777afabed87550002ee631be769ca74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8334ce7bd4272f0c578ff78bbd28f6fb"><td class="memItemLeft" align="right" valign="top"><a id="a8334ce7bd4272f0c578ff78bbd28f6fb"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>txTaskBuffer</b> [512]</td></tr>
-<tr class="separator:a8334ce7bd4272f0c578ff78bbd28f6fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d3ad79bce824dc2ada66df5a13f641a"><td class="memItemLeft" align="right" valign="top"><a id="a9d3ad79bce824dc2ada66df5a13f641a"></a>
-osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>txTaskControlBlock</b></td></tr>
-<tr class="separator:a9d3ad79bce824dc2ada66df5a13f641a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86821eaed664c48c071665bc3894b140"><td class="memItemLeft" align="right" valign="top"><a id="a86821eaed664c48c071665bc3894b140"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>CommandTaskHandle</b></td></tr>
+<tr class="separator:a86821eaed664c48c071665bc3894b140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bda9758317b7a21f8e124ab50be6d1d"><td class="memItemLeft" align="right" valign="top"><a id="a6bda9758317b7a21f8e124ab50be6d1d"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>CommandTaskBuffer</b> [512]</td></tr>
+<tr class="separator:a6bda9758317b7a21f8e124ab50be6d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c851b3a1c3fbdbf512ac69a523aaa84"><td class="memItemLeft" align="right" valign="top"><a id="a2c851b3a1c3fbdbf512ac69a523aaa84"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>CommandTaskControlBlock</b></td></tr>
+<tr class="separator:a2c851b3a1c3fbdbf512ac69a523aaa84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5b996363967b8aaf360f18eadbf651d"><td class="memItemLeft" align="right" valign="top"><a id="aa5b996363967b8aaf360f18eadbf651d"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>RxTaskHandle</b></td></tr>
+<tr class="separator:aa5b996363967b8aaf360f18eadbf651d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1b128f5417649621f7dd5f9a03d4bd0"><td class="memItemLeft" align="right" valign="top"><a id="aa1b128f5417649621f7dd5f9a03d4bd0"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>RxTaskBuffer</b> [512]</td></tr>
+<tr class="separator:aa1b128f5417649621f7dd5f9a03d4bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdb584e21ef8e432d0ff52c655ece32c"><td class="memItemLeft" align="right" valign="top"><a id="acdb584e21ef8e432d0ff52c655ece32c"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>RxTaskControlBlock</b></td></tr>
+<tr class="separator:acdb584e21ef8e432d0ff52c655ece32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad05fa2ac113dfe10786ba05ad1c22f67"><td class="memItemLeft" align="right" valign="top"><a id="ad05fa2ac113dfe10786ba05ad1c22f67"></a>
+osThreadId&#160;</td><td class="memItemRight" valign="bottom"><b>TxTaskHandle</b></td></tr>
+<tr class="separator:ad05fa2ac113dfe10786ba05ad1c22f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1986bdf371dfac41e6d881286bfc0e3"><td class="memItemLeft" align="right" valign="top"><a id="ad1986bdf371dfac41e6d881286bfc0e3"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>TxTaskBuffer</b> [512]</td></tr>
+<tr class="separator:ad1986bdf371dfac41e6d881286bfc0e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a027101c1feff4b03379bcdbe2801dfb1"><td class="memItemLeft" align="right" valign="top"><a id="a027101c1feff4b03379bcdbe2801dfb1"></a>
+osStaticThreadDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>TxTaskControlBlock</b></td></tr>
+<tr class="separator:a027101c1feff4b03379bcdbe2801dfb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d6af9c7c799cadbfdbfdef3204907d2"><td class="memItemLeft" align="right" valign="top"><a id="a0d6af9c7c799cadbfdbfdef3204907d2"></a>
 osMessageQId&#160;</td><td class="memItemRight" valign="bottom"><b>UART1_reqHandle</b></td></tr>
 <tr class="separator:a0d6af9c7c799cadbfdbfdef3204907d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -353,14 +353,14 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6_reqBuffer</b
 <tr class="memitem:afa08bb64da76de841b72398cfe64b156"><td class="memItemLeft" align="right" valign="top"><a id="afa08bb64da76de841b72398cfe64b156"></a>
 osStaticMessageQDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART6_reqControlBlock</b></td></tr>
 <tr class="separator:afa08bb64da76de841b72398cfe64b156"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gade81e4b71063ca3c76b947f6adf50d88"><td class="memItemLeft" align="right" valign="top">osMessageQId&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___u_a_r_t___handler.html#gade81e4b71063ca3c76b947f6adf50d88">UART_rxHandle</a></td></tr>
-<tr class="separator:gade81e4b71063ca3c76b947f6adf50d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44c56573b190027c106400058c2a1fe6"><td class="memItemLeft" align="right" valign="top"><a id="a44c56573b190027c106400058c2a1fe6"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART_rxBuffer</b> [32 *sizeof(<a class="el" href="struct_u_a_r_tcmd__t.html">UARTcmd_t</a>)]</td></tr>
-<tr class="separator:a44c56573b190027c106400058c2a1fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc7072eff561c639801e29fca10e5f2d"><td class="memItemLeft" align="right" valign="top"><a id="acc7072eff561c639801e29fca10e5f2d"></a>
-osStaticMessageQDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>UART_rxControlBlock</b></td></tr>
-<tr class="separator:acc7072eff561c639801e29fca10e5f2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f2e3ebb92cb44b567285706fa6e6c3c"><td class="memItemLeft" align="right" valign="top">osMessageQId&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___u_a_r_t___handler.html#ga4f2e3ebb92cb44b567285706fa6e6c3c">TXQueueHandle</a></td></tr>
+<tr class="separator:ga4f2e3ebb92cb44b567285706fa6e6c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d708465d981447743dcd28034831cb"><td class="memItemLeft" align="right" valign="top"><a id="a26d708465d981447743dcd28034831cb"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>TXQueueBuffer</b> [32 *sizeof(<a class="el" href="struct_t_x_data__t.html">TXData_t</a>)]</td></tr>
+<tr class="separator:a26d708465d981447743dcd28034831cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1914e57fd70ae8a4ab6faad4b481f713"><td class="memItemLeft" align="right" valign="top"><a id="a1914e57fd70ae8a4ab6faad4b481f713"></a>
+osStaticMessageQDef_t&#160;</td><td class="memItemRight" valign="bottom"><b>TXQueueControlBlock</b></td></tr>
+<tr class="separator:a1914e57fd70ae8a4ab6faad4b481f713"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1823938c87480c88a635c070d3238efb"><td class="memItemLeft" align="right" valign="top"><a id="a1823938c87480c88a635c070d3238efb"></a>
 osMutexId&#160;</td><td class="memItemRight" valign="bottom"><b>PCUARTHandle</b></td></tr>
 <tr class="separator:a1823938c87480c88a635c070d3238efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -439,6 +439,18 @@ static StackType_t&#160;</td><td class="memItemRight" valign="bottom"><b>xIdleSt
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Code for freertos application. </p>
+<p>File Name : <a class="el" href="freertos_8c.html" title="Code for freertos application. ">freertos.c</a> Description : Code for freertos applications</p>
+<p>This notice applies to any and all portions of this file that are not between comment pairs USER CODE BEGIN and USER CODE END. Other portions of this file, whether inserted by the user or by software development tools are owned by their respective copyright owners.</p>
+<p>Copyright (c) 2018 STMicroelectronics International N.V. All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted, provided that the following conditions are met:</p>
+<ol type="1">
+<li>Redistribution of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+<li>Neither the name of STMicroelectronics nor the names of other contributors to this software may be used to endorse or promote products derived from this software without specific written permission.</li>
+<li>This software, including modifications and/or derivative works of this software, must execute solely and exclusively on microcontroller or microprocessor devices manufactured by or for STMicroelectronics.</li>
+<li>Redistribution and use of this software other than as permitted under this license is void and will automatically terminate your rights under this license.</li>
+</ol>
+<p>THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
 <dl class="section author"><dt>Author</dt><dd>Gokul </dd>
 <dd>
 Tyler </dd>
