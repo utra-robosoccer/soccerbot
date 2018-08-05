@@ -1,4 +1,7 @@
 <map id="StartIMUTask" name="StartIMUTask">
-<area shape="rect" id="node2" href="$group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f" title="This function reads the accelerometer using interrupts. " alt="" coords="155,5,361,47"/>
-<area shape="rect" id="node3" href="$group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230" title="This function reads a register from the MPU6050 with interrupts, and stores it into a buffer..." alt="" coords="409,13,589,39"/>
+<area shape="rect" id="node2" href="$group___i_m_u___filter___public___functions.html#ga673920b95d4804093d1c53f3f48e8788" title="Initialize acceleration and angular velocity FIR filters for IMU data. " alt="" coords="181,5,335,32"/>
+<area shape="rect" id="node5" href="$group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f" title="This function reads the accelerometer using interrupts. " alt="" coords="155,57,361,98"/>
+<area shape="rect" id="node3" href="$group___i_m_u___filter___private___functions.html#ga1cd85aa20cefe82040d02b3652d422e2" title="Initialize a velocity filter. " alt="" coords="438,5,561,32"/>
+<area shape="rect" id="node4" href="$group___i_m_u___filter___private___functions.html#ga2ef910506c16ade4a588ee02328c989a" title="Reset a velocity filter. " alt="" coords="637,5,772,32"/>
+<area shape="rect" id="node6" href="$group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230" title="This function reads a register from the MPU6050 with interrupts, and stores it into a buffer..." alt="" coords="409,64,589,91"/>
 </map>

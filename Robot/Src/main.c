@@ -85,6 +85,8 @@ void MX_FREERTOS_Init(void);
  * how this software works (including some diagrams!). Until that time comes,
  * we suggest browsing the Modules and Data Structures sections.
  *
+ * To return to UTRA's website, <a href="http://utrahumanoid.ca/">click me</a>.
+ *
  * \section desc High-level Description
  * Coming soon.
  *
