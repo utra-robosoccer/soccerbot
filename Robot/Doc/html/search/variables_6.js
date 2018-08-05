@@ -10,5 +10,8 @@ var searchData=
   ['min_5fvelocity',['MIN_VELOCITY',['../group___dynamixel_protocol_v1_header.html#gafea72c218c11248d29a2799bea2d31f8',1,'MIN_VELOCITY():&#160;DynamixelProtocolV1.c'],['../group___dynamixel_protocol_v1_header.html#gafea72c218c11248d29a2799bea2d31f8',1,'MIN_VELOCITY():&#160;DynamixelProtocolV1.c']]],
   ['min_5fvoltage',['MIN_VOLTAGE',['../group___dynamixel_protocol_v1_header.html#gafdf5dde7ec9b7245825780f3b1fb7c71',1,'MIN_VOLTAGE():&#160;DynamixelProtocolV1.c'],['../group___dynamixel_protocol_v1_header.html#gafdf5dde7ec9b7245825780f3b1fb7c71',1,'MIN_VOLTAGE():&#160;DynamixelProtocolV1.c']]],
   ['motorhandle',['motorHandle',['../struct_u_a_r_tcmd__t.html#ade6c3413bb42c2dd9ae09422289e533c',1,'UARTcmd_t']]],
+  ['mpufilter_5fblocksizevel',['MPUFilter_blockSizeVel',['../group___i_m_u___filter.html#ga89b9b20cbcca5ad2eedb5f52e0bec122',1,'MPUFilter.c']]],
+  ['mpufilter_5fcoefficientsvel',['MPUFilter_coefficientsVel',['../group___i_m_u___filter.html#ga1d48f9a230def2d0c1087635fad8390e',1,'MPUFilter.c']]],
+  ['mpufilter_5fnumtapsvel',['MPUFilter_numTapsVel',['../group___i_m_u___filter.html#ga58aa69cc5ded92c50f084564e1176ed9',1,'MPUFilter.c']]],
   ['msg',['msg',['../structrobot__goal.html#a3d523ddd4d9b8eafb9241f3c94fc66da',1,'robot_goal::msg()'],['../structrobot__state.html#a3d523ddd4d9b8eafb9241f3c94fc66da',1,'robot_state::msg()']]]
 ];

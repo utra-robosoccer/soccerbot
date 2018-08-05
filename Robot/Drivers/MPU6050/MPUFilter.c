@@ -5,6 +5,7 @@
   * @brief   Digital filtering data structures and functions, for IMU data.
   *
   * @defgroup IMU_Filter IMU Filter
+  * @ingroup  MPU6050
   * @brief    Digital filtering data structures and functions, for IMU data.
   * @{
   *****************************************************************************
