@@ -33,6 +33,7 @@
 // Types, math constants, and math functions
 #include <stdint.h>
 #include <math.h>
+#include <Notification.h>
 
 // Dynamixel actuators
 #include "Dynamixel_HandleTypeDef.h"
@@ -40,7 +41,6 @@
 #include "AX12A/AX12A.h"
 
 // System-level
-#include "sharedMacros.h"
 #include "cmsis_os.h"
 
 

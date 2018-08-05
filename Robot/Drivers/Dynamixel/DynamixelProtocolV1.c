@@ -73,8 +73,8 @@
 
 /********************************* Constants *********************************/
 // Communications
-static const uint32_t TRANSMIT_TIMEOUT    = 10;         /**< Timeout for blocking UART transmissions, in milliseconds */
-static const uint32_t RECEIVE_TIMEOUT     = 10;         /**< Timeout for blocking UART receptions, in milliseconds */
+static const uint32_t TRANSMIT_TIMEOUT    = 1;          /**< Timeout for blocking UART transmissions, in milliseconds */
+static const uint32_t RECEIVE_TIMEOUT     = 1;          /**< Timeout for blocking UART receptions, in milliseconds */
 
 // Default register values
 const uint8_t BROADCAST_ID                = 0xFE;       /**< Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus) */
@@ -144,6 +144,16 @@ static uint8_t arrTransmit[NUM_MOTORS + 1][TX_PACKET_SIZE] = {
 
 /************************ Private Function Prototypes ************************/
 static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length);
+static inline bool Dynamixel_GenericReceive(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t* arr,
+    uint8_t arrSize
+);
+static inline bool Dynamixel_GenericTransmit(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t* arr,
+    uint8_t arrSize
+);
 
 
 
@@ -1157,55 +1167,30 @@ static inline void Dynamixel_BusDirRX(GPIO_TypeDef* port, uint16_t pinNum){
  *          or 3
  * @return  None
  */
-void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs){
-    BaseType_t status;
-    uint32_t notification;
-
-    /* Check validity so that we don't accidentally write something invalid */
+void Dynamixel_DataWriter(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t* args,
+    uint8_t numArgs
+)
+{
+    // Check validity so that we don't accidentally write something invalid
     if(numArgs <= 3){
-        /* Do assignments and computations. */
+        // Do assignments and computations
         uint8_t ID = hdynamixel -> _ID;
         if(ID == BROADCAST_ID){
-            ID = 0; // Since we use the ID as an index into arrTransmit, and since the
-            // broadcast ID is so large in magnitude compared to the other IDs,
-            // we do this so that arrTransmit can be kept small.
+            ID = 0;
         }
-        arrTransmit[ID][3] = 2 + numArgs; // Length of message following length argument (arguments & checksum)
-        arrTransmit[ID][4] = INST_WRITE_DATA; // WRITE DATA instruction
+        arrTransmit[ID][3] = 2 + numArgs;
+        arrTransmit[ID][4] = INST_WRITE_DATA;
         for(uint8_t i = 0; i < numArgs; i ++){
             arrTransmit[ID][5 + i] = args[i];
         }
 
-        /* Checksum. */
+        // Checksum
         arrTransmit[ID][4 + numArgs + 1] = Dynamixel_ComputeChecksum(arrTransmit[ID], 4 + numArgs + 2);
 
-        /* Set data direction for transmit. */
-        Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-        /* Transmit. */
-        switch(IOType) {
-        case IO_DMA:
-            HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
-            do{
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
-                if(status != pdTRUE){
-                    return;
-                }
-            } while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
-            break;
-        case IO_POLL:
-            HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2, TRANSMIT_TIMEOUT);
-            break;
-        case IO_IT:
-            HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 4 + numArgs + 2);
-            do{
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
-                if(status != pdTRUE){
-                    return;
-                }
-            } while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
-            break;
-        }
+        // Transmit
+        Dynamixel_GenericTransmit(hdynamixel, arrTransmit[ID], 4 + numArgs + 2);
     }
 }
 
@@ -1233,117 +1218,58 @@ void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, ui
  *          The 1st byte received will be the LSB and the 2nd byte received
  *          will be the MSB
  */
-uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readAddr, uint8_t readLength){
-    uint8_t rxPacketSize = 0;
-    BaseType_t status;
-    uint32_t notification;
+uint16_t Dynamixel_DataReader(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t readAddr,
+    uint8_t readLength
+)
+{
+    uint16_t retval;
+    uint8_t rxPacketSize;
     uint8_t recvChecksum;
     uint8_t computedChecksum;
-
     uint8_t ID = hdynamixel -> _ID;
+
     if(ID == BROADCAST_ID){
         ID = 0;
     }
 
-    /* Clear array for reception. */
-    // TODO: we really don't need this since the receive function will replace the contents
-    // leaving it here for now so that we can identify invalid receptions easier though.
-    for(uint8_t i = 0; i < BUFF_SIZE_RX; i++){
-        arrReceive[ID][i] = 0;
-    }
-
-    /* Do assignments and computations. */
+    // Do assignments and computations
     arrTransmit[ID][3] = 4; // Length of message minus the obligatory bytes
     arrTransmit[ID][4] = INST_READ_DATA; // READ DATA instruction
     arrTransmit[ID][5] = readAddr; // Write address for register
     arrTransmit[ID][6] = readLength; // Number of bytes to be read from motor
     arrTransmit[ID][7] = Dynamixel_ComputeChecksum(arrTransmit[ID], 8);
 
-
-
-    // Call appropriate UART receive function depending on if 1 or 2 bytes are to be read
-    if(readLength == 1){
-        rxPacketSize = 7;
-    }
-    else{
-        rxPacketSize = 8;
-    }
+    // Are 1 or 2 bytes to be read?
+    rxPacketSize = (readLength == 1) ? 7 : 8;
 
     // Set data direction for transmit
     Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-    // Transmit + Receive
-    switch(IOType) {
-    case IO_DMA:
-        HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-        do{
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
-            if(status != pdTRUE){
-                hdynamixel -> _lastReadIsValid = false;
-                HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
-                return -1;
-            }
-        } while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+    // Transmit read request
+    if(!Dynamixel_GenericTransmit(hdynamixel, arrTransmit[ID], 8)){
+        hdynamixel -> _lastReadIsValid = false;
+        return -1;
+    }
 
-        // Set data direction for receive
-        Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-        HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
-        do{
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-            if(status != pdTRUE){
-                hdynamixel -> _lastReadIsValid = false;
-                HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
-                return -1;
-            }
-        } while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-        break;
-
-    case IO_POLL:
-        HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit[ID], 8, TRANSMIT_TIMEOUT);
-
-        Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-        HAL_UART_Receive(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize, RECEIVE_TIMEOUT);
-        break;
-    case IO_IT:
-        HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arrTransmit[ID], 8);
-        do{
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
-            if(status != pdTRUE){
-                hdynamixel -> _lastReadIsValid = false;
-                HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
-                return -1;
-            }
-        } while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
-
-        Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-        HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arrReceive[ID], rxPacketSize);
-        do{
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-            if(status != pdTRUE){
-                hdynamixel -> _lastReadIsValid = false;
-                HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
-                return -1;
-            }
-        } while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-        break;
+    // Receive requested data
+    if(!Dynamixel_GenericReceive(hdynamixel, arrReceive[ID], rxPacketSize)){
+        hdynamixel -> _lastReadIsValid = false;
+        return -1;
     }
 
     // Check data integrity and place this flag in a field the application can read
     recvChecksum = arrReceive[ID][rxPacketSize - 1];
     computedChecksum = Dynamixel_ComputeChecksum(arrReceive[ID], rxPacketSize);
-    if(computedChecksum == recvChecksum){
-        hdynamixel -> _lastReadIsValid = true;
-    }
-    else{
-        hdynamixel -> _lastReadIsValid = false;
+    hdynamixel -> _lastReadIsValid = (computedChecksum == recvChecksum);
+
+    retval = (uint16_t)arrReceive[ID][5];
+    if(readLength == 2){
+        retval |= arrReceive[ID][6] << 8;
     }
 
-    if(readLength == 1){
-        return (uint16_t)arrReceive[ID][5];
-    }
-    else{
-        return (uint16_t)(arrReceive[ID][5] | (arrReceive[ID][6] << 8));
-    }
+    return retval;
 }
 
 /**
@@ -1376,10 +1302,8 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * @{
  */
 
-// TODO: Update this to use all 3 I/O modes
 /**
  * @brief   Implementation of the REG WRITE instruction with 2 parameters
- * @details Only supports polled I/O currently
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @param   arrSize the size of the array to be written (either 1 or 2)
@@ -1388,59 +1312,63 @@ uint16_t Dynamixel_DataReader(Dynamixel_HandleTypeDef* hdynamixel, uint8_t readA
  * @param   param2 the second parameter
  * @return  None
  */
-void Dynamixel_RegWrite(Dynamixel_HandleTypeDef* hdynamixel, uint8_t arrSize, \
-        uint8_t writeAddr, uint8_t param1, uint8_t param2){
-    uint8_t arrTransmit[arrSize];
+void Dynamixel_RegWrite(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t arrSize,
+    uint8_t writeAddr,
+    uint8_t param1,
+    uint8_t param2
+)
+{
+    uint8_t arrTransmitLocal[arrSize];
 
-    /* Do assignments and computations. */
-    arrTransmit[0] = 0xFF; // Obligatory bytes for starting communication
-    arrTransmit[1] = 0xFF; // Obligatory bytes for starting communication
-    arrTransmit[2] = hdynamixel -> _ID; // Motor ID
-    arrTransmit[3] = arrSize - 4; // Length of message minus the obligatory bytes
-    arrTransmit[4] = INST_REG_WRITE; // REG WRITE instruction
-    arrTransmit[5] = writeAddr;
-    arrTransmit[7] = (arrSize == 8) ? Dynamixel_ComputeChecksum(arrTransmit, arrSize): param2;
+    // Do assignments and computations
+    arrTransmitLocal[0] = 0xFF;
+    arrTransmitLocal[1] = 0xFF;
+    arrTransmitLocal[2] = hdynamixel -> _ID == BROADCAST_ID ? 0 : hdynamixel -> _ID;
+    arrTransmitLocal[3] = arrSize - 4;
+    arrTransmitLocal[4] = INST_REG_WRITE;
+    arrTransmitLocal[5] = writeAddr;
+    arrTransmitLocal[7] = (
+            (arrSize == 8) ?
+            Dynamixel_ComputeChecksum(arrTransmitLocal, arrSize) :
+            param2
+    );
     if(arrSize == 9){
-        arrTransmit[8] = Dynamixel_ComputeChecksum(arrTransmit, arrSize);
+        arrTransmitLocal[8] = Dynamixel_ComputeChecksum(arrTransmitLocal, arrSize);
     }
 
-    /* Set data direction. */
-    Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
-
-    /* Transmit. */
-    HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, arrSize, TRANSMIT_TIMEOUT);
+    // Transmit
+    Dynamixel_GenericTransmit(hdynamixel, arrTransmitLocal, arrSize);
 }
 
-// TODO: Update this to use all 3 I/O modes
 /**
  * @brief   Implementation of the ACTION instruction
- * @details Only supports polled I/O currently. This triggers the
- *          instruction registered by the REG WRITE instruction. This way,
- *          time delays can be reduced for the concurrent motion of several
- *          motors
+ * @details This triggers the instruction registered by the REG WRITE
+ *          instruction. This way, time delays can be reduced for the
+ *          concurrent motion of several motors
  * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
  *          contains the configuration information for the motor
  * @return  None
  */
 void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
-    uint8_t arrTransmit[6];
+    uint8_t arrTransmitLocal[6];
 
-    /* Do assignments and computations. */
-    arrTransmit[0] = 0xFF; // Obligatory bytes for starting communication
-    arrTransmit[1] = 0xFF; // Obligatory bytes for starting communication
-    arrTransmit[2] = hdynamixel -> _ID; // Motor ID
-    arrTransmit[3] = 2; // Length of message minus the obligatory bytes
-    arrTransmit[4] = INST_ACTION; // ACTION instruction
-    arrTransmit[5] = Dynamixel_ComputeChecksum(arrTransmit, 6);
+    // Do assignments and computations
+    arrTransmitLocal[0] = 0xFF;
+    arrTransmitLocal[1] = 0xFF;
+    arrTransmitLocal[2] = hdynamixel -> _ID == BROADCAST_ID ? 0 : hdynamixel -> _ID;
+    arrTransmitLocal[3] = 2;
+    arrTransmitLocal[4] = INST_ACTION;
+    arrTransmitLocal[5] = Dynamixel_ComputeChecksum(arrTransmitLocal, 6);
 
-    /* Set data direction. */
+    // Set data direction
     Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-    /* Transmit. */
-    HAL_UART_Transmit(hdynamixel -> _UART_Handle, arrTransmit, 6, TRANSMIT_TIMEOUT);
+    // Transmit
+    Dynamixel_GenericTransmit(hdynamixel, arrTransmitLocal, sizeof(arrTransmitLocal));
 }
 
-// TODO: Update this to use all 3 I/O modes
 /**
  * @brief   Implementation of the PING instruction
  * @details Used only for returning a status packet or checking the existence
@@ -1453,19 +1381,22 @@ void Dynamixel_Action(Dynamixel_HandleTypeDef* hdynamixel){
 int8_t Dynamixel_Ping(Dynamixel_HandleTypeDef* hdynamixel){
     uint8_t arr[6];
 
-    /* Do assignments and computations. */
-    arr[0] = 0xff; // Obligatory bytes for starting communication
-    arr[1] = 0xff; // Obligatory bytes for starting communication
-    arr[2] = hdynamixel -> _ID; // Motor ID
-    arr[3] = 2; // Length of message minus the obligatory bytes
-    arr[4] = INST_PING; // PING instruction
+    // Do assignments and computations
+    arr[0] = 0xff;
+    arr[1] = 0xff;
+    arr[2] = hdynamixel -> _ID;
+    arr[3] = 2;
+    arr[4] = INST_PING;
     arr[5] = Dynamixel_ComputeChecksum(arr, 6);
 
-    /* Set data direction for transmit. */
+    // Set data direction for transmit
     Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
 
-    /* Transmit. */
-    HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, 6, TRANSMIT_TIMEOUT);
+    // Transmit
+    Dynamixel_GenericTransmit(hdynamixel, arr, sizeof(arr));
+
+    // Receive
+    Dynamixel_GenericReceive(hdynamixel, arr, sizeof(arr));
 
     /* Set data direction for receive. */
     Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
@@ -1643,30 +1574,8 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel){
 
 /**
  * @defgroup DynamixelProtocolV1_Private_Functions Dynamixel Private Functions
- * @brief    Functions only accessible from within the library.
+ * @brief    Functions only accessible from within the library
  * @ingroup  DynamixelProtocolV1
- */
-/*****************************************************************************/
-/*  Computation-based helper functions                                       */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*****************************************************************************/
-/**
- * @defgroup DynamixelProtocolV1_Private_Functions_Computation \
- *           Computation-based helper functions
- * @brief    Computation-based helper functions
- *
- * # Computation-based helper functions #
- *
- * This subsection provides a set of functions which implement functions
- * which execute solely computation-based tasks, such as computing a
- * checksum.
- *
- * @ingroup DynamixelProtocolV1_Private_Functions
  * @{
  */
 
@@ -1691,6 +1600,115 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 }
 
 /**
+ * @brief   Generic function for receiving data. Supports all IO modes
+ * @details When using non-blocking IO, this function will cancel the data
+ *          transfer upon timeout
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   arr pointer to the receive buffer
+ * @param   arrSize the number of bytes to be received
+ * @return  true if no issues, false otherwise
+ */
+static inline bool Dynamixel_GenericReceive(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t* arr,
+    uint8_t arrSize
+)
+{
+    uint32_t notification;
+    BaseType_t status;
+    bool retval = true;
+
+    // Set data direction for receive
+    Dynamixel_BusDirRX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+    switch(IOType) {
+        case IO_DMA:
+            HAL_UART_Receive_DMA(hdynamixel -> _UART_Handle, arr, arrSize);
+
+            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+
+            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                retval = false;
+            }
+            break;
+        case IO_POLL:
+            HAL_UART_Receive(hdynamixel -> _UART_Handle, arr, arrSize, RECEIVE_TIMEOUT);
+            break;
+        case IO_IT:
+            HAL_UART_Receive_IT(hdynamixel -> _UART_Handle, arr, arrSize);
+
+            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+
+            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                retval = false;
+            }
+            break;
+    }
+
+    if(!retval){
+        HAL_UART_AbortReceive(hdynamixel -> _UART_Handle);
+    }
+
+    return retval;
+}
+
+/**
+ * @brief   Generic function for transmitting data. Supports all IO modes
+ * @details When using non-blocking IO, this function will cancel the data
+ *          transfer upon timeout
+ * @param   hdynamixel pointer to a Dynamixel_HandleTypeDef structure that
+ *          contains the configuration information for the motor
+ * @param   arr pointer to the packet to be transmitted
+ * @param   arrSize the number of bytes to be transmitted
+ * @return  true if no issues, false otherwise
+ */
+static inline bool Dynamixel_GenericTransmit(
+    Dynamixel_HandleTypeDef* hdynamixel,
+    uint8_t* arr,
+    uint8_t arrSize
+)
+{
+    uint32_t notification;
+    BaseType_t status;
+    bool retval = true;
+
+    // Set data direction for transmit
+    Dynamixel_BusDirTX(hdynamixel -> _dataDirPort, hdynamixel -> _dataDirPinNum);
+
+    switch(IOType) {
+        case IO_DMA:
+            HAL_UART_Transmit_DMA(hdynamixel -> _UART_Handle, arr, arrSize);
+
+            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
+
+            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                retval = false;
+            }
+            break;
+        case IO_POLL:
+            HAL_UART_Transmit(hdynamixel -> _UART_Handle, arr, arrSize, TRANSMIT_TIMEOUT);
+            break;
+        case IO_IT:
+            HAL_UART_Transmit_IT(hdynamixel -> _UART_Handle, arr, arrSize);
+
+            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_DELAY_TIME);
+
+            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                retval = false;
+            }
+
+            break;
+    }
+
+    if(!retval){
+        HAL_UART_AbortTransmit(hdynamixel -> _UART_Handle);
+    }
+
+    return retval;
+}
+
+/**
   * @}
   */
-/* DynamixelProtocolV1_Private_Functions_Computation */
+/* DynamixelProtocolV1_Private_Functions */
