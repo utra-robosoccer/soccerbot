@@ -172,7 +172,7 @@ Functions</h2></td></tr>
 <p>Initializes a motor handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html" title="Organizes all the information relevant to a motor. ">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
     <tr><td class="paramname">ID</td><td>the ID the motor has. Note that this function will not set the ID in case there are multiple actuators on the same bus </td></tr>
     <tr><td class="paramname">UART_Handle</td><td>the handle to the UART that will be used to communicate with this motor </td></tr>
     <tr><td class="paramname">DataDirPort</td><td>the pointer to the port that the data direction pin for the motor is on </td></tr>
@@ -212,7 +212,7 @@ Here is the caller graph for this function:</div>
 <p>Resets motor control table. </p>
 <p>Resets the control table values of the motor to the Factory Default Value settings. Note that post-reset, motor ID will be 1. Thus, if several motors with ID 1 are connected on the same bus, there will not be a way to assign them unique IDs without first disconnecting them. Need to wait around 500 ms before motor becomes valid again </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html" title="Organizes all the information relevant to a motor. ">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
   </table>
   </dd>
 </dl>
