@@ -93,6 +93,9 @@ $(document).ready(function(){initNavTree('struct_t_x_data__t.html','');});
 </div><!--header-->
 <div class="contents">
 
+<p>This is the data structure copied into the sensor queue, and read by the thread that sends data to the PC. It includes 2 fields: one that indicates the type of data it encapsulates, and the other pointing to the data.  
+ <a href="struct_t_x_data__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_u_a_r_t___handler_8h_source.html">UART_Handler.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -103,7 +106,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:aa92f08987c51e4eb7b92e84944ca2af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This is the data structure copied into the sensor queue, and read by the thread that sends data to the PC. It includes 2 fields: one that indicates the type of data it encapsulates, and the other pointing to the data. The fact that the pointer to the data is of type void* allows points to different types of data to be sent through the same struct, and then typecasted into the appropriate type (based on eDataType) on the receiving end. Thus, this is flexible as it allows any type of sensor data to be sent through the queue </p>
+<div class="textblock"><p>This is the data structure copied into the sensor queue, and read by the thread that sends data to the PC. It includes 2 fields: one that indicates the type of data it encapsulates, and the other pointing to the data. </p>
+<p>The fact that the pointer to the data is of type void* allows pointers to different types of data to be sent through the same struct, and then typecasted into the appropriate type (based on eDataType) on the receiving end. Thus, this is flexible as it allows any type of sensor data to be sent through the queue </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a id="a8cd9aa6c8b7e217e88052cad45c1e206"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cd9aa6c8b7e217e88052cad45c1e206">&#9670;&nbsp;</a></span>eDataType</h2>

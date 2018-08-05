@@ -320,7 +320,7 @@ Here is the caller graph for this function:</div>
 <p>Uses the READ DATA instruction, 0x02, in the motor instruction set. The status packet returned will be of the following form</p>
 <div class="fragment"><div class="line">{0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}</div></div><!-- fragment --><p>Where N = readLength. Also, this function computes the checksum of data using the same algorithm as the motors, and it sets &lsquo;hdynamixel -&gt; _lastReadIsValid&rsquo; if the computations match, and clears this field otherwise. This is a basic data integrity check that reduces the probability of passing invalid data to the application </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html" title="Organizes all the information relevant to a motor. ">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
     <tr><td class="paramname">readAddr</td><td>the address inside the motor memory table where reading is to begin </td></tr>
     <tr><td class="paramname">readLength</td><td>the number of bytes to be read. Must be either 1 or 2 </td></tr>
   </table>
@@ -391,7 +391,7 @@ Here is the caller graph for this function:</div>
 <p>Sends an array of data to a motor as per its configuration details. </p>
 <p>Uses the WRITE DATA instruction, 0x03, in the motor instruction set. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
+    <tr><td class="paramname">hdynamixel</td><td>pointer to a <a class="el" href="struct_dynamixel___handle_type_def.html" title="Organizes all the information relevant to a motor. ">Dynamixel_HandleTypeDef</a> structure that contains the configuration information for the motor </td></tr>
     <tr><td class="paramname">args</td><td>an array of arguments of the form <code>{ADDR, PARAM_1, ... , PARAM_N}</code> </td></tr>
     <tr><td class="paramname">numArgs</td><td>this must be equal to <code>sizeof(args)</code>, and must be either 2 or 3 </td></tr>
   </table>
