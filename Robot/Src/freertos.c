@@ -51,7 +51,7 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-/* USER CODE BEGIN Includes */
+/* USER CODE BEGIN Includes */     
 /**
  * @file    freertos.c
  * @brief   Code for freertos application
@@ -238,7 +238,7 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
@@ -417,7 +417,6 @@ void StartCommandTask(void const * argument)
             }
         }
 
-        // TODO: This didn't really have an effect. Need to figure out why
         if(numIterations % 100 == 0){
             // Every 100 iterations, assert torque enable
             for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
