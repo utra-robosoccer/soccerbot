@@ -67,7 +67,6 @@ var freertos_8c =
     [ "Motor9", "freertos_8c.html#af0ac589cf979a4687cbbf6047713f216", null ],
     [ "PCUARTControlBlock", "freertos_8c.html#a38a6787624391c0a0a1116e9da3203aa", null ],
     [ "PCUARTHandle", "freertos_8c.html#a1823938c87480c88a635c070d3238efb", null ],
-    [ "PI", "freertos_8c.html#a952eac791b596a61bba0a133a3bb439f", null ],
     [ "rxTaskBuffer", "freertos_8c.html#af4f5f44ae6c9b982651f3d31e0cb6423", null ],
     [ "rxTaskControlBlock", "freertos_8c.html#a02464f95c64666dd2dc00619e705ceb7", null ],
     [ "rxTaskHandle", "freertos_8c.html#aa09dc533387f9ebef95327853c8b595a", null ],
