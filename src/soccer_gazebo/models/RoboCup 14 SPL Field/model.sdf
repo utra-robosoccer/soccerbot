@@ -1,0 +1,291 @@
+<sdf version='1.6'>
+    <model name='RoboCup 14 SPL Field'>
+        <static>1</static>
+        <link name='field'>
+            <pose frame=''>0 0 0.01 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>10.4 7.4</size>
+                    </plane>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>100</mu>
+                            <mu2>50</mu2>
+                        </ode>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                    </friction>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                </surface>
+                <max_contacts>10</max_contacts>
+            </collision>
+            <visual name='carpet'>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>10.4 7.4</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>model://robocup09_spl_field/materials/scripts/</uri>
+                        <uri>model://robocup09_spl_field/materials/textures/</uri>
+                        <name>RoboCup/Carpet</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='sideline_1'>
+                <pose frame=''>0 3 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>9.05 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='sideline_2'>
+                <pose frame=''>0 -3 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>9.05 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='endline_1'>
+                <pose frame=''>-4.5 0 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.05 6.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='endline_2'>
+                <pose frame=''>4.5 0 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.05 6.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='halfway_line'>
+                <pose frame=''>0 0 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.05 6.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_1_line_a'>
+                <pose frame=''>-3.9 0 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.05 2.25</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_2_line_a'>
+                <pose frame=''>-4.2 1.1 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.65 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_3_line_a'>
+                <pose frame=''>-4.2 -1.1 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.65 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_1_line_b'>
+                <pose frame=''>3.9 0 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.05 2.25</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_2_line_b'>
+                <pose frame=''>4.2 1.1 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.65 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='area_3_line_b'>
+                <pose frame=''>4.2 -1.1 0.011 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>0.65 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='penalty_a'>
+                <pose frame=''>-3.2 0 0.01 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.0005</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='penalty_b'>
+                <pose frame=''>3.2 0 0.01 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.0005</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='center_point'>
+                <pose frame=''>0 0 0.01 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.0005</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <visual name='center_circle'>
+                <pose frame=''>0 0 0.005 0 -0 0</pose>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 0.75</scale>
+                        <uri>model://robocup14_spl_field/meshes/circle.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.008111 0.030698 0 0 -0 0</pose>
+    </model>
+</sdf>

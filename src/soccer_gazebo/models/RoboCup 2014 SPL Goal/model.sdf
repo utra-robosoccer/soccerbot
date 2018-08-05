@@ -1,0 +1,547 @@
+<sdf version='1.6'>
+    <model name='RoboCup 2014 SPL Goal'>
+        <static>1</static>
+        <link name='left_post'>
+            <pose frame=''>0 0.8 0.45 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.9</length>
+                    </cylinder>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.9</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/ZincYellow</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='left_support_horiz_lower'>
+            <pose frame=''>0.24 0.8 0.01 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='left_support_horiz_upper'>
+            <pose frame=''>0.24 0.8 0.79 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='left_support_vertical'>
+            <pose frame=''>0.44 0.8 0.4 3.14159 1.57079 3.14159</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.8 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.8 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='right_support_horiz_lower'>
+            <pose frame=''>0.24 -0.8 0.01 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='right_support_horiz_upper'>
+            <pose frame=''>0.24 -0.8 0.79 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='right_support_vertical'>
+            <pose frame=''>0.44 -0.8 0.4 3.14159 1.57079 3.14159</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.8 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.8 0.02 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='center_support_horiz_lower'>
+            <pose frame=''>0.44 0 0.01 3.14159 1.57079 3.14159</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.02 1.58 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.02 1.58 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='center_support_horiz_upper'>
+            <pose frame=''>0.44 0 0.79 3.14159 1.57079 3.14159</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.02 1.58 0.02</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.02 1.58 0.02</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/White</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='right_post'>
+            <pose frame=''>0 -0.8 0.45 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.9</length>
+                    </cylinder>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>0.9</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/ZincYellow</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='crossbar'>
+            <pose frame=''>0 0 0.85 1.57 1.57 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>1.5</length>
+                    </cylinder>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <cylinder>
+                        <radius>0.05</radius>
+                        <length>1.5</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>file://media/materials/scripts/gazebo.material</uri>
+                        <name>Gazebo/ZincYellow</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='center_net'>
+            <pose frame=''>0.44 0 0.4 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.01 1.6 0.8</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.01 1.6 0.8</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>model://robocup09_spl_field/materials/scripts/</uri>
+                        <uri>model://robocup09_spl_field/materials/textures/</uri>
+                        <name>RoboCup/Net</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='left_net'>
+            <pose frame=''>0.24 0.8 0.4 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.01 0.76</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.01 0.76</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>model://robocup09_spl_field/materials/scripts/</uri>
+                        <uri>model://robocup09_spl_field/materials/textures/</uri>
+                        <name>RoboCup/Net</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <link name='right_net'>
+            <pose frame=''>0.24 -0.8 0.4 0 -0 0</pose>
+            <collision name='collision'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.01 0.76</size>
+                    </box>
+                </geometry>
+                <max_contacts>10</max_contacts>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <bounce/>
+                    <friction>
+                        <torsional>
+                            <ode/>
+                        </torsional>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='visual'>
+                <geometry>
+                    <box>
+                        <size>0.38 0.01 0.76</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <uri>model://robocup09_spl_field/materials/scripts/</uri>
+                        <uri>model://robocup09_spl_field/materials/textures/</uri>
+                        <name>RoboCup/Net</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>4.38819 -0.032635 0 0 -0 0</pose>
+    </model>
+</sdf>

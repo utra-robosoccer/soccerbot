@@ -26,6 +26,6 @@
   <run_depend>std_msgs</run_depend>
   
   <export>
-    <gazebo_ros gazebo_plugin_path="${prefix}/lib" gazebo_model_path="${prefix}/.." gazebo_media_path="${prefix}/.." />
+    <gazebo_ros gazebo_plugin_path="${prefix}/lib" gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/.." />
   </export>
 </package>
