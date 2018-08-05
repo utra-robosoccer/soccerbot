@@ -34,6 +34,10 @@ char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 #define REM_COEF 16384
 
 /*********************************** Types ************************************/
+/**
+ * @brief Data structure to organize MPU6050 configuration details and sensor
+ *        readings
+ */
 typedef struct{
 	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
 	uint32_t				_BaudRate;				/*!< UART communication baud rate*/

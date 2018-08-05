@@ -28,14 +28,14 @@
 
 
 /********************************** Types ************************************/
-/** Enumerates the types of Dynamixel actuators the library supports */
+/** @brief Enumerates the types of Dynamixel actuators the library supports */
 typedef enum motorTypes_e{
 	AX12ATYPE,      /**< AX12A actuator */
 	MX28TYPE        /**< MX28 actuator  */
 }motorTypes_t;
 
 // TODO: Should also have a resolution divider field for MX28
-/** Organizes all the information relevant to a motor */
+/** @brief Organizes all the information relevant to a motor */
 typedef struct{
     motorTypes_t            _motorType;             /**< Identifies motor as AX12A, MX28, etc.          */
     uint8_t                 _ID;                    /**< Motor identification (0-252)                   */
@@ -48,7 +48,7 @@ typedef struct{
     bool                    _isJointMode;           /**< 1 if motor is joint mode, 0 if wheel mode      */
     UART_HandleTypeDef*     _UART_Handle;           /**< UART handle for motor                          */
     GPIO_TypeDef*           _dataDirPort;           /**< Port data direction pin is on                  */
-uint16_t                _dataDirPinNum;             /**< Data direction pin number                      */
+    uint16_t                _dataDirPinNum;         /**< Data direction pin number                      */
 }Dynamixel_HandleTypeDef;
 
 #endif /* __DYNAMIXEL_HANDLE_TYPE_DEF_H__ */

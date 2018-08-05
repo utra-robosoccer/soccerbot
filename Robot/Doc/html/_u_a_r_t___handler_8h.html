@@ -129,8 +129,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_a_r_tcmd__t.html">UARTcmd_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The container type for motor commands. The control thread sends these to the various UART handlers through the UART queues. The container provides all the information needed to generate the appropriate motor action (reading from or writing to motor command registers)  <a href="struct_u_a_r_tcmd__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_x_data__t.html">TXData_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the data structure copied into the sensor queue, and read by the thread that sends data to the PC. It includes 2 fields: one that indicates the type of data it encapsulates, and the other pointing to the data.  <a href="struct_t_x_data__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -139,10 +141,12 @@ Enumerations</h2></td></tr>
 <a class="el" href="group___u_a_r_t___handler_header.html#gga4be85e025b05b2e3b0db13420d61108fad17815a0716b30a7ad9162fd7e0d2e1c">cmdWritePosition</a>, 
 <a class="el" href="group___u_a_r_t___handler_header.html#gga4be85e025b05b2e3b0db13420d61108faf57c2b26c98315c36c150cdb3e07c461">cmdWriteTorque</a>
  }</td></tr>
+<tr class="memdesc:ga4be85e025b05b2e3b0db13420d61108f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the types of motor commands that can be sent to the UART handlers.  <a href="group___u_a_r_t___handler_header.html#ga4be85e025b05b2e3b0db13420d61108f">More...</a><br /></td></tr>
 <tr class="separator:ga4be85e025b05b2e3b0db13420d61108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1b17be8bc97f384afceaeced2aae04e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___u_a_r_t___handler_header.html#ga1b17be8bc97f384afceaeced2aae04e6">eTXData_t</a> { <a class="el" href="group___u_a_r_t___handler_header.html#gga1b17be8bc97f384afceaeced2aae04e6a7202481aa3407f1714ef002b7902df48">eMotorData</a>, 
 <a class="el" href="group___u_a_r_t___handler_header.html#gga1b17be8bc97f384afceaeced2aae04e6adc7d468c436044599835310b98131f71">eIMUData</a>
  }</td></tr>
+<tr class="memdesc:ga1b17be8bc97f384afceaeced2aae04e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the types of data that can be sent to the sensor queue. This is used so that the reader of the queue will know how to typecast the void pointer so that the data can be interpreted correctly. See <a class="el" href="struct_t_x_data__t.html" title="This is the data structure copied into the sensor queue, and read by the thread that sends data to th...">TXData_t</a> for more details.  <a href="group___u_a_r_t___handler_header.html#ga1b17be8bc97f384afceaeced2aae04e6">More...</a><br /></td></tr>
 <tr class="separator:ga1b17be8bc97f384afceaeced2aae04e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
