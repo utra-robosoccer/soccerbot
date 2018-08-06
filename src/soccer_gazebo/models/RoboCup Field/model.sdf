@@ -1,6 +1,6 @@
 <sdf version='1.6'>
     <model name='RoboCup Field'>
-        <static>1</static>
+        <static>false</static>
         <link name='field'>
             <pose frame=''>0 0 0.01 0 -0 0</pose>
             <collision name='collision'>
@@ -27,6 +27,17 @@
                 </surface>
                 <max_contacts>10</max_contacts>
             </collision>
+            <inertial>
+                <mass>0</mass>
+                <inertia>
+                    <ixx>0</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0</iyy>
+                    <iyz>0</iyz>
+                    <izz>0</izz>
+                </inertia>
+            </inertial>
             <visual name='carpet'>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
@@ -44,7 +55,7 @@
                 </material>
             </visual>
             <visual name='sideline_1'>
-                <pose frame=''>0 3 0.011 0 -0 0</pose>
+                <pose frame=''>0 3 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
@@ -60,7 +71,7 @@
                 </material>
             </visual>
             <visual name='sideline_2'>
-                <pose frame=''>0 -3 0.011 0 -0 0</pose>
+                <pose frame=''>0 -3 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
@@ -76,7 +87,7 @@
                 </material>
             </visual>
             <visual name='endline_1'>
-                <pose frame=''>-4.5 0 0.011 0 -0 0</pose>
+                <pose frame=''>-4.5 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
@@ -92,7 +103,7 @@
                 </material>
             </visual>
             <visual name='endline_2'>
-                <pose frame=''>4.5 0 0.011 0 -0 0</pose>
+                <pose frame=''>4.5 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
@@ -108,7 +119,7 @@
                 </material>
             </visual>
             <visual name='halfway_line'>
-                <pose frame=''>0 0 0.011 0 -0 0</pose>
+                <pose frame=''>0 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
@@ -124,12 +135,12 @@
                 </material>
             </visual>
             <visual name='area_1_line_a'>
-                <pose frame=''>-3.9 0 0.011 0 -0 0</pose>
+                <pose frame=''>-3.5 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.05 2.25</size>
+                        <size>0.05 5</size>
                     </plane>
                 </geometry>
                 <material>
@@ -140,12 +151,12 @@
                 </material>
             </visual>
             <visual name='area_2_line_a'>
-                <pose frame=''>-4.2 1.1 0.011 0 -0 0</pose>
+                <pose frame=''>-4.0 2.5 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.65 0.05</size>
+                        <size>1 0.05</size>
                     </plane>
                 </geometry>
                 <material>
@@ -156,12 +167,12 @@
                 </material>
             </visual>
             <visual name='area_3_line_a'>
-                <pose frame=''>-4.2 -1.1 0.011 0 -0 0</pose>
+                <pose frame=''>-4.0 -2.5 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.65 0.05</size>
+                        <size>1 0.05</size>
                     </plane>
                 </geometry>
                 <material>
@@ -172,12 +183,12 @@
                 </material>
             </visual>
             <visual name='area_1_line_b'>
-                <pose frame=''>3.9 0 0.011 0 -0 0</pose>
+                <pose frame=''>3.5 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.05 2.25</size>
+                        <size>0.05 5</size>
                     </plane>
                 </geometry>
                 <material>
@@ -188,12 +199,12 @@
                 </material>
             </visual>
             <visual name='area_2_line_b'>
-                <pose frame=''>4.2 1.1 0.011 0 -0 0</pose>
+                <pose frame=''>4.0 2.5 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.65 0.05</size>
+                        <size>1 0.05</size>
                     </plane>
                 </geometry>
                 <material>
@@ -204,12 +215,12 @@
                 </material>
             </visual>
             <visual name='area_3_line_b'>
-                <pose frame=''>4.2 -1.1 0.011 0 -0 0</pose>
+                <pose frame=''>4.0 -2.5 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>0.65 0.05</size>
+                        <size>1 0.05</size>
                     </plane>
                 </geometry>
                 <material>
@@ -220,7 +231,7 @@
                 </material>
             </visual>
             <visual name='penalty_a'>
-                <pose frame=''>-3.2 0 0.01 0 -0 0</pose>
+                <pose frame=''>-2.4 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <cylinder>
@@ -236,7 +247,7 @@
                 </material>
             </visual>
             <visual name='penalty_b'>
-                <pose frame=''>3.2 0 0.01 0 -0 0</pose>
+                <pose frame=''>2.4 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <cylinder>
@@ -252,7 +263,7 @@
                 </material>
             </visual>
             <visual name='center_point'>
-                <pose frame=''>0 0 0.01 0 -0 0</pose>
+                <pose frame=''>0 0 0.001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <cylinder>
@@ -268,7 +279,7 @@
                 </material>
             </visual>
             <visual name='center_circle'>
-                <pose frame=''>0 0 0.005 0 -0 0</pose>
+                <pose frame=''>0 0 0.0001 0 -0 0</pose>
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <mesh>
@@ -284,7 +295,7 @@
                 </material>
             </visual>
             <self_collide>0</self_collide>
-            <kinematic>0</kinematic>
+            <kinematic>1</kinematic>
         </link>
         <pose frame=''>0.008111 0.030698 0 0 -0 0</pose>
     </model>

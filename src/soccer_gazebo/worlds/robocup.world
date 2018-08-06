@@ -20,7 +20,7 @@
     </include>
 
     <model name='ground_plane'>
-      <static>1</static>
+      <static>false</static>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -46,6 +46,17 @@
           </surface>
           <max_contacts>10</max_contacts>
         </collision>
+        <inertial>
+          <mass>0</mass>
+          <inertia>
+            <ixx>0.01</ixx>
+            <ixy>0.01</ixy>
+            <ixz>0.01</ixz>
+            <iyy>0.01</iyy>
+            <iyz>0.01</iyz>
+            <izz>0.01</izz>
+          </inertia>
+        </inertial>
         <visual name='visual'>
           <cast_shadows>0</cast_shadows>
           <geometry>
@@ -57,18 +68,16 @@
           <material>
             <script>
               <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Black</name>
+              <name>Gazebo/White</name>
             </script>
           </material>
         </visual>
         <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
+        <kinematic>1</kinematic>
       </link>
     </model>
 
     <gravity>0 0 -9.8</gravity>
-    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
-    <atmosphere type='adiabatic'/>
 
     <physics name='default_physics' default='0' type='ode'>
       <max_step_size>0.001</max_step_size>
@@ -78,8 +87,13 @@
 
     <scene>
       <ambient>0.4 0.4 0.4 1</ambient>
-      <background>0.7 0.7 0.7 1</background>
+      <background>0.1 0.1 0.1 1</background>
       <shadows>1</shadows>
+      <sky>
+          <clouds>
+              <speed>12</speed>
+          </clouds>
+      </sky>
     </scene>
 
     <include>
@@ -99,7 +113,6 @@
 
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <!-- <pose frame=''>0.176347 -0.449336 28.8812 0 1.56 0</pose> -->
         <pose frame=''>1.57 0.79 0.79 0 0.4 -2.7</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
