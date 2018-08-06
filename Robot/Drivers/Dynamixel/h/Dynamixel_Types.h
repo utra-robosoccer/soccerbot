@@ -12,7 +12,6 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 #define __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 
@@ -28,6 +27,13 @@
 
 
 /********************************** Types ************************************/
+/** @brief Enumerates the low-level I/O modes the library supports */
+typedef enum IO_FLAGS{
+    IO_DMA,  /**< Direct memory access */
+    IO_POLL, /**< Polled I/O           */
+    IO_IT    /**< Interrupt-based I/O  */
+}ioFlags_t;
+
 /** @brief Enumerates the types of Dynamixel actuators the library supports */
 typedef enum motorTypes_e{
 	AX12ATYPE,      /**< AX12A actuator */
