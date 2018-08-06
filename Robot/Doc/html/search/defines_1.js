@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['inst_5faction',['INST_ACTION',['../_dynamixel_protocol_v1_8c.html#adea21b73305aa7a5b3317e299c616853',1,'DynamixelProtocolV1.c']]],
-  ['inst_5fping',['INST_PING',['../_dynamixel_protocol_v1_8c.html#acb92e93ddd4b53533b14dc3403346bbf',1,'DynamixelProtocolV1.c']]],
-  ['inst_5fread_5fdata',['INST_READ_DATA',['../_dynamixel_protocol_v1_8c.html#a091b7377c1484006602a48ab24863dfa',1,'DynamixelProtocolV1.c']]],
-  ['inst_5freg_5fwrite',['INST_REG_WRITE',['../_dynamixel_protocol_v1_8c.html#ae2afd415cd9007f4688bf77507f0383e',1,'DynamixelProtocolV1.c']]],
-  ['inst_5freset',['INST_RESET',['../_dynamixel_protocol_v1_8c.html#ad670526ca941302efb4a0d00e7dd43c0',1,'DynamixelProtocolV1.c']]],
-  ['inst_5fsync_5fwrite',['INST_SYNC_WRITE',['../_dynamixel_protocol_v1_8c.html#aeaa4b61ee11d45bd1a0cb932d7abaf77',1,'DynamixelProtocolV1.c']]],
-  ['inst_5fwrite_5fdata',['INST_WRITE_DATA',['../_dynamixel_protocol_v1_8c.html#af5f75dd76b3a7035583f9169576e7138',1,'DynamixelProtocolV1.c']]]
+  ['mx28_5freg_5fd_5fgain',['MX28_REG_D_GAIN',['../_m_x28_8c.html#ac11a2398a8d7534a8f29883060e502e1',1,'MX28.c']]],
+  ['mx28_5freg_5fgoal_5facceleration',['MX28_REG_GOAL_ACCELERATION',['../_m_x28_8c.html#a5a340764800c5729a14c703b04aaf2ac',1,'MX28.c']]],
+  ['mx28_5freg_5fi_5fgain',['MX28_REG_I_GAIN',['../_m_x28_8c.html#ae1afe561c6c5c4d7c829d45ca30d0975',1,'MX28.c']]],
+  ['mx28_5freg_5fmulti_5fturn_5foffset',['MX28_REG_MULTI_TURN_OFFSET',['../_m_x28_8c.html#a7c1551ab3ee7167524bcffba254dbc96',1,'MX28.c']]],
+  ['mx28_5freg_5fp_5fgain',['MX28_REG_P_GAIN',['../_m_x28_8c.html#a04a2cb88cef953fc39994073d722902a',1,'MX28.c']]],
+  ['mx28_5freg_5fresolution_5fdivider',['MX28_REG_RESOLUTION_DIVIDER',['../_m_x28_8c.html#a7d843ee375076566c2e1567babfa0ee5',1,'MX28.c']]]
 ];

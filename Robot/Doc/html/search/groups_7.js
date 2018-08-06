@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['mpu6050',['MPU6050',['../group___m_p_u6050.html',1,'']]],
-  ['mx28',['MX28',['../group___m_x28.html',1,'']]],
-  ['mx28_20_28header_29',['MX28 (header)',['../group___m_x28_header.html',1,'']]]
+  ['library_20configuration',['Library Configuration',['../group___dynamixel_protocol_v1___i_o___public___functions___lib___config.html',1,'']]]
 ];
