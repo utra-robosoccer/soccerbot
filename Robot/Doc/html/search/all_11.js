@@ -2,10 +2,7 @@ var searchData=
 [
   ['setters',['Setters',['../group___a_x12_a___setters.html',1,'']]],
   ['setters',['Setters',['../group___dynamixel_protocol_v1___public___functions___setters.html',1,'']]],
-  ['setup_20functions',['Setup functions',['../group___dynamixel_protocol_v1___public___functions___setup.html',1,'']]],
   ['setters',['Setters',['../group___m_x28___setters.html',1,'']]],
-  ['shared_20macros_20_28header_29',['Shared macros (header)',['../group__shared_macros.html',1,'']]],
-  ['sharedmacros_2eh',['sharedMacros.h',['../shared_macros_8h.html',1,'']]],
   ['start_5fseq',['start_seq',['../structrobot__state.html#ae237ee7fa149fb1a40b8badc494744bb',1,'robot_state']]],
   ['startcommandtask',['StartCommandTask',['../group___threads.html#gae9a7f9b9094fd560310f92b214f2c829',1,'freertos.c']]],
   ['startimutask',['StartIMUTask',['../group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd',1,'freertos.c']]],

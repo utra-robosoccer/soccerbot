@@ -1,17 +1,16 @@
 <map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Src/freertos.c" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Src/freertos.c">
-<area shape="rect" id="node9" href="$usart_8h_source.html" title="usart.h" alt="" coords="1401,288,1464,315"/>
-<area shape="rect" id="node11" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="1409,437,1467,464"/>
-<area shape="rect" id="node12" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="1823,363,1874,389"/>
-<area shape="rect" id="node13" href="$_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="1573,199,1708,240"/>
-<area shape="rect" id="node16" href="$shared_macros_8h.html" title="This file defines macros used throughout various parts of the system that engage in non&#45;blocking I/O ..." alt="" coords="1489,288,1603,315"/>
-<area shape="rect" id="node17" href="$_m_p_u_filter_8h.html" title="Header code for IMU filtering. " alt="" coords="1953,109,2088,151"/>
-<area shape="rect" id="node20" href="$_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="783,117,901,143"/>
-<area shape="rect" id="node21" href="$_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="663,199,826,240"/>
-<area shape="rect" id="node25" href="$_communication_8h.html" title="Header for top&#45;level communication module. " alt="" coords="992,199,1159,240"/>
-<area shape="rect" id="node10" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="1615,512,1677,539"/>
-<area shape="rect" id="node22" href="$_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="501,363,689,389"/>
-<area shape="rect" id="node23" href="$_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="549,288,650,315"/>
-<area shape="rect" id="node24" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="674,288,789,315"/>
-<area shape="rect" id="node27" href="$robot_state_8h.html" title="Defines the RobotState data structure used in communication with the high&#45;level software. RobotState is the data structure sent from the MCU to the PC; it contains sensor data. " alt="" coords="1029,288,1122,315"/>
-<area shape="rect" id="node28" href="$robot_goal_8h.html" title="Defines the RobotGoal data structure used in communication with the high&#45;level software. RobotGoal is the data structure sent from the PC to the MCU; it contains motor trajectories. " alt="" coords="1147,288,1236,315"/>
+<area shape="rect" id="node8" href="$_notification_8h.html" title="This file defines resources used throughout various parts of the system that engage in non&#45;blocking I..." alt="" coords="411,288,508,315"/>
+<area shape="rect" id="node10" href="$usart_8h_source.html" title="usart.h" alt="" coords="1495,288,1557,315"/>
+<area shape="rect" id="node12" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="943,363,1000,389"/>
+<area shape="rect" id="node13" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="347,363,398,389"/>
+<area shape="rect" id="node14" href="$_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="497,199,632,240"/>
+<area shape="rect" id="node17" href="$_m_p_u_filter_8h.html" title="Header code for IMU filtering. " alt="" coords="704,109,839,151"/>
+<area shape="rect" id="node20" href="$_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="863,117,981,143"/>
+<area shape="rect" id="node21" href="$_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="1057,199,1219,240"/>
+<area shape="rect" id="node24" href="$_communication_8h.html" title="Header for top&#45;level communication module. " alt="" coords="1545,199,1712,240"/>
+<area shape="rect" id="node11" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="873,437,934,464"/>
+<area shape="rect" id="node22" href="$_dynamixel___types_8h_source.html" title="h/Dynamixel_Types.h" alt="" coords="1009,288,1155,315"/>
+<area shape="rect" id="node23" href="$_dynamixel___data_8h_source.html" title="h/Dynamixel_Data.h" alt="" coords="1179,288,1318,315"/>
+<area shape="rect" id="node26" href="$robot_state_8h.html" title="Defines the RobotState data structure used in communication with the high&#45;level software. RobotState is the data structure sent from the MCU to the PC; it contains sensor data. " alt="" coords="1633,288,1726,315"/>
+<area shape="rect" id="node27" href="$robot_goal_8h.html" title="Defines the RobotGoal data structure used in communication with the high&#45;level software. RobotGoal is the data structure sent from the PC to the MCU; it contains motor trajectories. " alt="" coords="1751,288,1840,315"/>
 </map>

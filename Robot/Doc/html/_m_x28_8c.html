@@ -87,7 +87,9 @@ $(document).ready(function(){initNavTree('_m_x28_8c.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">MX28.c File Reference</div>  </div>
 </div><!--header-->
@@ -95,23 +97,39 @@ $(document).ready(function(){initNavTree('_m_x28_8c.html','');});
 
 <p>This file implements MX28-specific functions.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="_m_x28_8h_source.html">MX28.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_m_x28_8h_source.html">../h/MX28.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for MX28.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="_m_x28_8c__incl.png" border="0" usemap="#_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_dynamixel_2_m_x28_2_m_x28_8c" alt=""/></div>
 <map name="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_dynamixel_2_m_x28_2_m_x28_8c" id="_d_1_2_users_2_tyler_2_documents_2_s_t_m_2embedded_2soccer-embedded_2_robot_2_drivers_2_dynamixel_2_m_x28_2_m_x28_8c">
-<area shape="rect" id="node2" href="_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="100,109,165,136"/>
-<area shape="rect" id="node3" href="_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="33,184,233,211"/>
-<area shape="rect" id="node6" href="gpio_8h_source.html" title="gpio.h" alt="" coords="195,259,252,285"/>
-<area shape="rect" id="node8" href="main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="226,333,287,360"/>
+<area shape="rect" id="node2" href="_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="101,109,189,136"/>
+<area shape="rect" id="node3" href="_dynamixel___types_8h_source.html" title="Dynamixel_Types.h" alt="" coords="25,259,161,285"/>
+<area shape="rect" id="node9" href="_dynamixel_protocol_v1___i_o_8h_source.html" title="DynamixelProtocolV1_IO.h" alt="" coords="120,184,299,211"/>
+<area shape="rect" id="node6" href="gpio_8h_source.html" title="gpio.h" alt="" coords="35,333,93,360"/>
+<area shape="rect" id="node8" href="main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="68,408,129,435"/>
 </map>
 </div>
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a7c1551ab3ee7167524bcffba254dbc96"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#a7c1551ab3ee7167524bcffba254dbc96">MX28_REG_MULTI_TURN_OFFSET</a>&#160;&#160;&#160;0x14</td></tr>
+<tr class="separator:a7c1551ab3ee7167524bcffba254dbc96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d843ee375076566c2e1567babfa0ee5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#a7d843ee375076566c2e1567babfa0ee5">MX28_REG_RESOLUTION_DIVIDER</a>&#160;&#160;&#160;0x16</td></tr>
+<tr class="separator:a7d843ee375076566c2e1567babfa0ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac11a2398a8d7534a8f29883060e502e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#ac11a2398a8d7534a8f29883060e502e1">MX28_REG_D_GAIN</a>&#160;&#160;&#160;0x1A</td></tr>
+<tr class="separator:ac11a2398a8d7534a8f29883060e502e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1afe561c6c5c4d7c829d45ca30d0975"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#ae1afe561c6c5c4d7c829d45ca30d0975">MX28_REG_I_GAIN</a>&#160;&#160;&#160;0x1B</td></tr>
+<tr class="separator:ae1afe561c6c5c4d7c829d45ca30d0975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04a2cb88cef953fc39994073d722902a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#a04a2cb88cef953fc39994073d722902a">MX28_REG_P_GAIN</a>&#160;&#160;&#160;0x1C</td></tr>
+<tr class="separator:a04a2cb88cef953fc39994073d722902a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a340764800c5729a14c703b04aaf2ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_x28_8c.html#a5a340764800c5729a14c703b04aaf2ac">MX28_REG_GOAL_ACCELERATION</a>&#160;&#160;&#160;0x49</td></tr>
+<tr class="separator:a5a340764800c5729a14c703b04aaf2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaabac5f22c65d45c6e62aec697ac597bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">Dynamixel_DataWriter</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t *args, uint8_t numArgs)</td></tr>
-<tr class="memdesc:gaabac5f22c65d45c6e62aec697ac597bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an array of data to a motor as per its configuration details.  <a href="group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf">More...</a><br /></td></tr>
+<tr class="memitem:gaabac5f22c65d45c6e62aec697ac597bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf">Dynamixel_DataWriter</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, uint8_t *args, uint8_t numArgs)</td></tr>
+<tr class="memdesc:gaabac5f22c65d45c6e62aec697ac597bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an array of data to a motor as per its configuration details.  <a href="group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf">More...</a><br /></td></tr>
 <tr class="separator:gaabac5f22c65d45c6e62aec697ac597bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad86c73a30cc54d228eaee9aa71bedfc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___dynamixel_protocol_v1___public___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5">Dynamixel_SetCWAngleLimit</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel, float minAngle)</td></tr>
 <tr class="memdesc:gad86c73a30cc54d228eaee9aa71bedfc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clockwise angle limit for the current motor.  <a href="group___dynamixel_protocol_v1___public___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5">More...</a><br /></td></tr>
@@ -140,11 +158,121 @@ Functions</h2></td></tr>
 <tr class="memitem:ga7af48559dbbf1774e6dbd04616720075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28___interfaces.html#ga7af48559dbbf1774e6dbd04616720075">MX28_EnterMultiTurnMode</a> (<a class="el" href="struct_dynamixel___handle_type_def.html">Dynamixel_HandleTypeDef</a> *hdynamixel)</td></tr>
 <tr class="memdesc:ga7af48559dbbf1774e6dbd04616720075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates multi-turn mode, which allows the actuator to have a range of controllable position values from -28672 to 28672.  <a href="group___m_x28___interfaces.html#ga7af48559dbbf1774e6dbd04616720075">More...</a><br /></td></tr>
 <tr class="separator:ga7af48559dbbf1774e6dbd04616720075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga139c9378e21c57e8f201af5848f277a2"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#ga139c9378e21c57e8f201af5848f277a2">MX28_MAX_VELOCITY</a> = 117</td></tr>
+<tr class="separator:ga139c9378e21c57e8f201af5848f277a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadf0d5b945b543fb2a28339e1cf9dd8cd"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#gadf0d5b945b543fb2a28339e1cf9dd8cd">MX28_DEFAULT_BAUD_RATE</a> = 0x22</td></tr>
+<tr class="separator:gadf0d5b945b543fb2a28339e1cf9dd8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac54249615a9b7e04c9b1fa60e4b454cf"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#gac54249615a9b7e04c9b1fa60e4b454cf">MX28_DEFAULT_CCW_ANGLE_LIMIT</a> = 0x0FFF</td></tr>
+<tr class="separator:gac54249615a9b7e04c9b1fa60e4b454cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga56d779c22bb17569bf072fa30dc04e9f"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#ga56d779c22bb17569bf072fa30dc04e9f">MX28_DEFAULT_HIGHEST_VOLTAGE_LIMIT</a> = 0xA0</td></tr>
+<tr class="separator:ga56d779c22bb17569bf072fa30dc04e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5a8d044197af3efe7410f73071d0ca3a"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#ga5a8d044197af3efe7410f73071d0ca3a">MX28_DEFAULT_D_GAIN</a> = 0x08</td></tr>
+<tr class="separator:ga5a8d044197af3efe7410f73071d0ca3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae85e4526ce58ff149881704cdd0f36ab"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#gae85e4526ce58ff149881704cdd0f36ab">MX28_DEFAULT_I_GAIN</a> = 0x00</td></tr>
+<tr class="separator:gae85e4526ce58ff149881704cdd0f36ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga773cf0537148dfc14e1e7e7cd675f1a0"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#ga773cf0537148dfc14e1e7e7cd675f1a0">MX28_DEFAULT_P_GAIN</a> = 0x08</td></tr>
+<tr class="separator:ga773cf0537148dfc14e1e7e7cd675f1a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga917e130db5a6d25d4170f05503192da6"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_x28_header.html#ga917e130db5a6d25d4170f05503192da6">MX28_DEFAULT_PUNCH</a> = 0x0000</td></tr>
+<tr class="separator:ga917e130db5a6d25d4170f05503192da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file implements MX28-specific functions. </p>
 <dl class="section author"><dt>Author</dt><dd>Tyler </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ac11a2398a8d7534a8f29883060e502e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac11a2398a8d7534a8f29883060e502e1">&#9670;&nbsp;</a></span>MX28_REG_D_GAIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_D_GAIN&#160;&#160;&#160;0x1A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Derivative gain register </p>
+
+</div>
+</div>
+<a id="a5a340764800c5729a14c703b04aaf2ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a340764800c5729a14c703b04aaf2ac">&#9670;&nbsp;</a></span>MX28_REG_GOAL_ACCELERATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_GOAL_ACCELERATION&#160;&#160;&#160;0x49</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Goal acceleration register </p>
+
+</div>
+</div>
+<a id="ae1afe561c6c5c4d7c829d45ca30d0975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1afe561c6c5c4d7c829d45ca30d0975">&#9670;&nbsp;</a></span>MX28_REG_I_GAIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_I_GAIN&#160;&#160;&#160;0x1B</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Integral gain register </p>
+
+</div>
+</div>
+<a id="a7c1551ab3ee7167524bcffba254dbc96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c1551ab3ee7167524bcffba254dbc96">&#9670;&nbsp;</a></span>MX28_REG_MULTI_TURN_OFFSET</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_MULTI_TURN_OFFSET&#160;&#160;&#160;0x14</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Register to fine-tune "0" position </p>
+
+</div>
+</div>
+<a id="a04a2cb88cef953fc39994073d722902a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04a2cb88cef953fc39994073d722902a">&#9670;&nbsp;</a></span>MX28_REG_P_GAIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_P_GAIN&#160;&#160;&#160;0x1C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Proportional gain register </p>
+
+</div>
+</div>
+<a id="a7d843ee375076566c2e1567babfa0ee5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d843ee375076566c2e1567babfa0ee5">&#9670;&nbsp;</a></span>MX28_REG_RESOLUTION_DIVIDER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MX28_REG_RESOLUTION_DIVIDER&#160;&#160;&#160;0x16</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Register to change how many bits of resolution are used </p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

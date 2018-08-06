@@ -1,5 +1,5 @@
 <map id="FreeRTOS" name="FreeRTOS">
-<area shape="rect" id="node1" href="$group___threads.html" title="These are functions run in the context of their own FreeRTOS threads. " alt="" coords="183,5,251,32"/>
-<area shape="rect" id="node2" href="$group__shared_macros.html" title="Defines macros used throughout various parts of the system that engage in non&#45;blocking I/O transfers..." alt="" coords="136,56,297,83"/>
-<area shape="rect" id="node3" href="$group___callbacks.html" title="Callback functions for unblocking FreeRTOS threads which perform non&#45;blocking I/O. " alt="" coords="177,107,256,133"/>
+<area shape="rect" id="node1" href="$group___notification.html" title="Defines resources used throughout various parts of the system that engage in non&#45;blocking I/O transfe..." alt="" coords="144,5,207,32"/>
+<area shape="rect" id="node2" href="$group___threads.html" title="These are functions run in the context of their own FreeRTOS threads. " alt="" coords="141,56,209,83"/>
+<area shape="rect" id="node3" href="$group___callbacks.html" title="Callback functions for unblocking FreeRTOS threads which perform non&#45;blocking I/O. " alt="" coords="136,107,215,133"/>
 </map>

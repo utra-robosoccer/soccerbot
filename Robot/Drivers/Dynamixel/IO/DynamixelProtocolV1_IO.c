@@ -1,9 +1,10 @@
-/*
+/**
  * @file DynamixelProtocolV1_IO.c
  * @author Tyler
  * @brief Implements low-level IO functions
  *
  * @defgroup DynamixelProtocolV1_IO IO
+ * @ingroup DynamixelProtocolV1
  * @brief Implements low-level IO functions
  * @details
  *     Provides a set of functions which provide flexible
@@ -270,8 +271,8 @@ static inline bool Dynamixel_GenericTransmit(
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 /* DynamixelProtocolV1_IO_Private_Functions */
 
 
@@ -322,8 +323,8 @@ enum IO_FLAGS Dynamixel_GetIOType(){
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 /* DynamixelProtocolV1_IO_Public_Functions_Lib_Config */
 
 /**
@@ -613,8 +614,8 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel){
 /* end - DynamixelProtocolV1_IO_Public_Functions_Primitives */
 
 /**
-  * @}
-  */
+ * @}
+ */
 /* DynamixelProtocolV1_IO_Public_Functions */
 
 /**

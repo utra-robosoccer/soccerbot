@@ -1,5 +1,6 @@
-<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/MX28/MX28.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/MX28/MX28.h">
-<area shape="rect" id="node2" href="$_dynamixel___handle_type_def_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="33,109,233,136"/>
-<area shape="rect" id="node5" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="195,184,252,211"/>
-<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="226,259,287,285"/>
+<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/h/MX28.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/h/MX28.h">
+<area shape="rect" id="node2" href="$_dynamixel___types_8h_source.html" title="Dynamixel_Types.h" alt="" coords="25,184,161,211"/>
+<area shape="rect" id="node8" href="$_dynamixel_protocol_v1___i_o_8h_source.html" title="DynamixelProtocolV1_IO.h" alt="" coords="120,109,299,136"/>
+<area shape="rect" id="node5" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="35,259,93,285"/>
+<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="68,333,129,360"/>
 </map>
