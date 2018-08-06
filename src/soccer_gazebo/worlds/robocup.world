@@ -57,7 +57,7 @@
           <material>
             <script>
               <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
+              <name>Gazebo/Black</name>
             </script>
           </material>
         </visual>
@@ -83,7 +83,7 @@
     </scene>
 
     <include>
-      <uri>model://RoboCup 14 SPL Field</uri>
+      <uri>model://RoboCup Field</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
 

@@ -34,7 +34,7 @@
                 <material>
                     <script>
                         <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/ZincYellow</name>
+                        <name>Gazebo/White</name>
                     </script>
                 </material>
             </visual>
@@ -378,7 +378,7 @@
                 <material>
                     <script>
                         <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/ZincYellow</name>
+                        <name>Gazebo/White</name>
                     </script>
                 </material>
             </visual>
@@ -418,7 +418,7 @@
                 <material>
                     <script>
                         <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/ZincYellow</name>
+                        <name>Gazebo/White</name>
                     </script>
                 </material>
             </visual>
