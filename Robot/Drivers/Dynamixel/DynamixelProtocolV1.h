@@ -34,8 +34,6 @@
 #include <math.h>
 
 // Dynamixel actuators
-#include "h/MX28.h"
-#include "h/AX12A.h"
 #include "h/Dynamixel_Types.h"
 #include "h/Dynamixel_Data.h"
 
