@@ -24,8 +24,8 @@
  */
 
 /********************************* Includes **********************************/
-#include "../h/DynamixelProtocolV1_IO.h"
-#include "../h/Dynamixel_Data.h"
+#include "../../h/DynamixelProtocolV1_IO.h"
+#include "../../h/Dynamixel_Data.h"
 
 /**
  * @brief If defined, this enables non-blocking IO via task notifications.
