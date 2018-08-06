@@ -74,7 +74,7 @@
 #include "../Drivers/MPU6050/MPU6050.h"
 #include "../Drivers/MPU6050/MPUFilter.h"
 #include "UART_Handler.h"
-#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
 /* USER CODE END Includes */
 

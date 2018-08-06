@@ -26,7 +26,7 @@
 
 
 /********************************** Includes **********************************/
-#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "cmsis_os.h"
 
 
