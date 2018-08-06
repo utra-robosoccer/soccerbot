@@ -22,7 +22,8 @@
 
 
 /********************************* Includes **********************************/
-#include "../Dynamixel_HandleTypeDef.h"
+#include "Dynamixel_Types.h"
+#include "DynamixelProtocolV1_IO.h"
 
 
 
