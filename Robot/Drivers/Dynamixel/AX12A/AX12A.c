@@ -15,12 +15,6 @@
 
 
 
-/********************************* Externs ***********************************/
-extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
-
-
-
-
 /********************************** Macros ***********************************/
 // Register addresses
 #define AX12A_REG_CW_COMPLIANCE_MARGIN  0x1A        /**< Clockwise compliance margin register */
