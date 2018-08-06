@@ -1,5 +1,5 @@
 <sdf version='1.6'>
-    <model name='RoboCup 14 SPL Field'>
+    <model name='RoboCup Field'>
         <static>1</static>
         <link name='field'>
             <pose frame=''>0 0 0.01 0 -0 0</pose>
@@ -37,8 +37,8 @@
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://robocup09_spl_field/materials/scripts/</uri>
-                        <uri>model://robocup09_spl_field/materials/textures/</uri>
+                        <uri>model://RoboCup Field/materials/scripts/</uri>
+                        <uri>model://RoboCup Field/materials/textures/</uri>
                         <name>RoboCup/Carpet</name>
                     </script>
                 </material>
