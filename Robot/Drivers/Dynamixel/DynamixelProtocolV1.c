@@ -24,8 +24,6 @@
 /********************************* Includes **********************************/
 #include "DynamixelProtocolV1.h"
 #include "h/DynamixelProtocolV1_IO.h"
-#include "h/AX12A.h"
-#include "h/MX28.h"
 
 
 
