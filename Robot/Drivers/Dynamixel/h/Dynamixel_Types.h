@@ -50,7 +50,6 @@ typedef struct{
     float                   _lastPosition;          /**< Position read from motor                       */
     float                   _lastVelocity;          /**< Velocity read from motor                       */
     float                   _lastLoad;              /**< Load read from motor (% of max torque)         */
-    uint8_t                 _lastLoadDirection;     /**< 1 implies CW | 0 implies CCW                   */
     bool                    _isJointMode;           /**< 1 if motor is joint mode, 0 if wheel mode      */
     UART_HandleTypeDef*     _UART_Handle;           /**< UART handle for motor                          */
     GPIO_TypeDef*           _dataDirPort;           /**< Port data direction pin is on                  */

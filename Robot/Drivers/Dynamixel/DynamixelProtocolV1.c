@@ -22,6 +22,10 @@
   */
 
 /********************************* Includes **********************************/
+#include <math.h>
+
+#include "gpio.h"
+#include "usart.h"
 #include "DynamixelProtocolV1.h"
 #include "h/DynamixelProtocolV1_IO.h"
 
