@@ -13,3 +13,6 @@
 [submodule "src/soccer_description"]
 	path = src/soccer_description
 	url = https://www.github.com/utra-robosoccer/soccer_description
+[submodule "src/soccer_hardware/nodes"]
+	path = src/soccer_hardware/nodes
+	url = https://github.com/utra-robosoccer/soccer-communication
