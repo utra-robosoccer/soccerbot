@@ -4,8 +4,7 @@
   * @author  Tyler
   * @brief   This file provides interfaces for AX12A-specific functions
   *
-  * @defgroup AX12AHeader AX12A (header)
-  * @brief    Header for AX12A, showing the public content
+  * @defgroup AX12AHeader Header
   * @ingroup  AX12A
   * @{
   ******************************************************************************
@@ -28,25 +27,19 @@
 
 
 
-/********************************** Macros ***********************************/
-/* Value limit definitions */
-#define AX12A_MAX_VELOCITY          114	/**< Maximum angular velocity (RPM) */
+/********************************* Constants *********************************/
+// Value limit definitions
+extern const uint8_t AX12A_MAX_VELOCITY;
 
-/* Register addresses */
-#define AX12A_REG_CW_COMPLIANCE_MARGIN	0x1A		/**< Clockwise compliance margin register */
-#define AX12A_REG_CCW_COMPLIANCE_MARGIN	0x1B		/**< Counter-clockwise compliance margin register */
-#define AX12A_REG_CW_COMPLIANCE_SLOPE	0x1C		/**< Clockwise compliance slope register */
-#define AX12A_REG_CCW_COMPLIANCE_SLOPE	0x1D		/**< Counter-clockwise compliance slope register */
-
-/* Default register values */
-#define AX12A_DEFAULT_BAUD_RATE					0x01	/**< Default baud rate register setting */
-#define AX12A_DEFAULT_CCW_ANGLE_LIMIT			0x03FF	/**< Default counter-clockwise angle limit */
-#define AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT		0xBE	/**< Default permitted maximum voltage (0xBE = 140 -> 14.0 V) */
-#define AX12A_DEFAULT_CW_COMPLIANCE_MARGIN		0x01	/**< Default clockwise compliance margin (position error) */
-#define AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN		0x01	/**< Default counter-clockwise compliance margin (position error) */
-#define AX12A_DEFAULT_CW_COMPLIANCE_SLOPE		0x20	/**< Default clockwise compliance slope (torque near goal position) */
-#define AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE		0x20	/**< Default counter-clockwise compliance slope (torque near goal position) */
-#define AX12A_DEFAULT_PUNCH						0x0020	/**< Default punch */
+// Default register values
+extern const uint8_t AX12A_DEFAULT_BAUD_RATE;
+extern const uint16_t AX12A_DEFAULT_CCW_ANGLE_LIMIT;
+extern const uint8_t AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT;
+extern const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN;
+extern const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN;
+extern const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE;
+extern const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE;
+extern const uint16_t AX12A_DEFAULT_PUNCH;
 
 
 

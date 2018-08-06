@@ -21,6 +21,33 @@ extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* a
 
 
 
+/********************************** Macros ***********************************/
+// Register addresses
+#define AX12A_REG_CW_COMPLIANCE_MARGIN  0x1A        /**< Clockwise compliance margin register */
+#define AX12A_REG_CCW_COMPLIANCE_MARGIN 0x1B        /**< Counter-clockwise compliance margin register */
+#define AX12A_REG_CW_COMPLIANCE_SLOPE   0x1C        /**< Clockwise compliance slope register */
+#define AX12A_REG_CCW_COMPLIANCE_SLOPE  0x1D        /**< Counter-clockwise compliance slope register */
+
+
+
+
+/********************************* Constants *********************************/
+// Value limit definitions
+const uint8_t AX12A_MAX_VELOCITY = 114; /**< Maximum angular velocity (RPM) */
+
+// Default register values
+const uint8_t AX12A_DEFAULT_BAUD_RATE              =  0x01;    /**< Default baud rate register setting */
+const uint16_t AX12A_DEFAULT_CCW_ANGLE_LIMIT       =  0x03FF;  /**< Default counter-clockwise angle limit */
+const uint8_t AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT  =  0xBE;    /**< Default permitted maximum voltage (0xBE = 140 -> 14.0 V) */
+const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN   =  0x01;    /**< Default clockwise compliance margin (position error) */
+const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN  =  0x01;    /**< Default counter-clockwise compliance margin (position error) */
+const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE    =  0x20;    /**< Default clockwise compliance slope (torque near goal position) */
+const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE   =  0x20;    /**< Default counter-clockwise compliance slope (torque near goal position) */
+const uint16_t AX12A_DEFAULT_PUNCH                 =  0x0020;  /**< Default punch */
+
+
+
+
 /******************************** Functions **********************************/
 /**
  * @defgroup AX12A AX12A
