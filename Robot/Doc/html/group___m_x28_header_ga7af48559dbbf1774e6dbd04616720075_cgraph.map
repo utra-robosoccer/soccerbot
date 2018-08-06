@@ -1,5 +1,4 @@
 <map id="MX28_EnterMultiTurnMode" name="MX28_EnterMultiTurnMode">
 <area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___public___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5" title="Sets the clockwise angle limit for the current motor. " alt="" coords="235,5,429,32"/>
-<area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___public___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce" title="Sets the counter&#45;clockwise angle limit for the current motor. " alt="" coords="231,56,433,83"/>
-<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="481,31,633,57"/>
+<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___public___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce" title="Sets the counter&#45;clockwise angle limit for the current motor. " alt="" coords="231,56,433,83"/>
 </map>

@@ -7,7 +7,6 @@ var searchData=
   ['_5fid',['_ID',['../struct_dynamixel___handle_type_def.html#ac07cb35228843be781e258bd39485d6a',1,'Dynamixel_HandleTypeDef::_ID()'],['../struct_m_p_u6050___handle_type_def.html#ac07cb35228843be781e258bd39485d6a',1,'MPU6050_HandleTypeDef::_ID()']]],
   ['_5fisjointmode',['_isJointMode',['../struct_dynamixel___handle_type_def.html#af60a557caed956737bcac0114ffb315b',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastload',['_lastLoad',['../struct_dynamixel___handle_type_def.html#ad411c71835cb7b17b9818d2836470d10',1,'Dynamixel_HandleTypeDef']]],
-  ['_5flastloaddirection',['_lastLoadDirection',['../struct_dynamixel___handle_type_def.html#ab2cead07066dc9f83aa1d8ea7f8b4b54',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastposition',['_lastPosition',['../struct_dynamixel___handle_type_def.html#a2e8a4d000bb45bf784fcbb56ebbfc10c',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastreadisvalid',['_lastReadIsValid',['../struct_dynamixel___handle_type_def.html#a9bd336b14eaeadc645922eee290bb0ad',1,'Dynamixel_HandleTypeDef']]],
   ['_5flastvelocity',['_lastVelocity',['../struct_dynamixel___handle_type_def.html#a46adc1a0c9e0288ba60b06cfc345adea',1,'Dynamixel_HandleTypeDef']]],
