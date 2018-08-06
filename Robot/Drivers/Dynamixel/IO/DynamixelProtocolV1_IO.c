@@ -172,8 +172,10 @@ static inline bool Dynamixel_GenericReceive(
     uint8_t arrSize
 )
 {
+#if defined(THREADED)
     uint32_t notification;
     BaseType_t status;
+#endif
     bool retval = true;
 
     // Set data direction for receive
@@ -229,8 +231,10 @@ static inline bool Dynamixel_GenericTransmit(
     uint8_t arrSize
 )
 {
+#if defined(THREADED)
     uint32_t notification;
     BaseType_t status;
+#endif
     bool retval = true;
 
     // Set data direction for transmit
