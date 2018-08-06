@@ -25,15 +25,8 @@
 
 
 /********************************* Includes **********************************/
-// I/O
-#include "gpio.h"
-#include "usart.h"
-
-// Types, math constants, and math functions
 #include <stdint.h>
-#include <math.h>
 
-// Dynamixel actuators
 #include "h/Dynamixel_Types.h"
 #include "h/Dynamixel_Data.h"
 #include "h/AX12A.h"
