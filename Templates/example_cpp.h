@@ -25,8 +25,11 @@
 /********************************* Namespace *********************************/
 /**
  * @addtogroup Namespace
- * @brief Brief namespace description
  * @ingroup Parent_Module_Name
+ *
+ * @brief   Brief namespace (module) description
+ * @details Detailed namespace (module) description
+ *
  * @{
  */
 namespace Namespace {
