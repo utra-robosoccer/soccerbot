@@ -1,17 +1,25 @@
 /**
-  ******************************************************************************
-  * @file    MPU6050.h
-  * @author  Izaak
-  * @author  Jenny
-  * @author  Tyler
-  * @brief   Header code for the MPU6050 library, including the struct in which
-  *          accelerometer and gyroscope data are stored.
-  *@ingroup  MPU6050
-  ******************************************************************************
+  *****************************************************************************
+  * @file    example_cpp.h
+  * @author  TODO -- your name here
+  * @brief   TODO -- briefly describe this file
+  *
+  * @defgroup TODO -- module name defined in template.c with " (header)" after it
+  * @brief    TODO -- brief description of header
+  * @ingroup  TODO -- module name defined in template.c
+  * @{
+  *****************************************************************************
   */
+
+
+
+
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
+/********************************* Includes **********************************/
+#include <stdint.h>
 #include "i2c.h"
 #include "cmsis_os.h"
 #include "usart.h"
@@ -21,6 +29,8 @@
 
 #include "sharedMacros.h"
 #include "MPUFilter.h"
+
+/********************************** Macros ***********************************/
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
@@ -34,61 +44,6 @@ char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
 
-/*********************************** Types ************************************/
-typedef struct{
-	uint8_t					_ID;					/*!< Sensor identification (0-252)					*/
-	uint32_t				_BaudRate;				/*!< UART communication baud rate*/
-	uint8_t					_Sample_Rate;
-	UART_HandleTypeDef*		_UART_Handle;
-	I2C_HandleTypeDef* 		_I2C_Handle;
-	float				_X_GYRO;  			/*!< x-axis angular velocity read from sensor*/
-	float				_Y_GYRO;  			/*!< y-axis angular velocity read from sensor*/
-	float				_Z_GYRO;  			/*!< z-axis angular velocity read from sensor*/
-	float				_X_ACCEL;  			/*!< x-axis acceleration read from sensor*/
-	float				_Y_ACCEL;  			/*!< y-axis acceleration read from sensor*/
-	float				_Z_ACCEL;  			/*!< z-axis acceleration read from sensor*/
-
-	//offsets:
-	float				_X_GYRO_OFFSET;
-	float				_Y_GYRO_OFFSET;
-	float				_Z_GYRO_OFFSET;
-	float				_X_ACCEL_OFFSET;
-	float				_Y_ACCEL_OFFSET;
-	float				_Z_ACCEL_OFFSET;
-
-	//angles in degrees (calculated using _Z_ACCEL_OFFSET)
-	//see page 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
-
-	float				_ROLL;
-	float				_PITCH;
-
-
-}MPU6050_HandleTypeDef;
-
-/**************** Function Definitions ********************************/
-void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
-BaseType_t MPU6050_READ_DATA_IT(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer);
-void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data);
-void MPU6050_set_LPF(MPU6050_HandleTypeDef *sMPU6050, uint8_t lpf);
-uint8_t MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr);
-void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_user_calibration(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_RESET_SENSOR_REG();
-void MPU6050_Clear_Int();
-void MPU6050_Data_Ready_Int();
-void MPU6050_Get_Val_Gyro();
-void MPU6050_Get_Val_Accel();
-void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope_Withoffset_IT(MPU6050_HandleTypeDef *sMPU6050);
-void MPU6050_Read_Gyroscope_Withoffset(MPU6050_HandleTypeDef *sMPU6050);
-
-void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
@@ -260,5 +215,65 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
 #define MPU6050_WAKE_FREQ_1P25      0x0
 #define MPU6050_WAKE_FREQ_2P5       0x1
 #define MPU6050_WAKE_FREQ_5         0x2
+/********************************** Namespace ********************************/
+/*!
+ *  \addtogroup Namespace
+ *  @{
+ */
+namespace MPU6050 {
+/********************************* Constants *********************************/
 
-#endif /* MPU6050_H_ */
+
+
+
+/********************************** Classes **********************************/
+//!  A test class.
+/*!
+  A more elaborate class description.
+*/
+class MPU6050 {
+
+/****************************** Public Members *******************************/
+  public:
+    //! A constructor.
+    /*!
+      The constructor will initialize all aspects of the class, but will not
+      perform any I/O on the MPU6050.
+    */
+    MPU6050();
+    int Write_Reg(uint8_t reg_addr, uint8_t data);
+    uint8_t Read_Reg(uint8_t reg_addr);
+    BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    uint8_t Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    void Read_Gyroscope_Withoffset();
+    void Read_Gyroscope_Withoffset_IT();
+    void Read_Accelerometer_Withoffset();
+    void Read_Accelerometer_Withoffset_IT();
+    int Set_LPF(uint8_t lpf);
+    void Manually_Set_Offsets()
+    void init();
+    //! A destructor.
+    /*!
+      A more elaborate description of the destructor.
+    */
+    ~MPU6050();
+
+
+/****************************** Protected Members ***************************/
+    protected:
+
+
+/****************************** Private Members *****************************/
+    private:
+
+}; //class Class
+
+
+
+} //namespace Namespace
+/**
+ * @}
+ */
+/**/
+
+#endif /* __EXAMPLE_CPP_H__ */
