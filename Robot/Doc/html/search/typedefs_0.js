@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['motortypes_5ft',['motorTypes_t',['../_dynamixel___handle_type_def_8h.html#a87ba55c932e76420eb2051bffd8a6843',1,'Dynamixel_HandleTypeDef.h']]]
+  ['robotgoal',['RobotGoal',['../robot_goal_8h.html#a875a3c769f36f0b48a4a8bd2e3298a85',1,'robotGoal.h']]],
+  ['robotstate',['RobotState',['../robot_state_8h.html#a59798180728614da42300fc426db191e',1,'robotState.h']]]
 ];
