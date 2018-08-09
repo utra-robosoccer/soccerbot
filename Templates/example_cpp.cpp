@@ -3,9 +3,6 @@
   * @file    example_cpp.cpp
   * @author  TODO -- your name here
   * @brief   TODO -- brief description of file
-  *
-  * @defgroup TODO -- module name
-  * @brief    TODO -- description of module
   *****************************************************************************
   */
 
@@ -18,24 +15,26 @@
 
 
 
-/********************************** Macros ***********************************/
-
-/**************************** Anonymous Namespace ****************************/
-namespace {
-          
-/******************************** Local Helpers ******************************/                                              
-
-}
-
-/****************************** Primary Namespace ****************************/
+/******************************** Namespaces *********************************/
 using namespace Namespace;
 
+
+
+
+/********************************** Macros ***********************************/
+
+
+
+
+/******************************** Local Helpers ******************************/ 
+namespace {
+    
+}
+
+
+
+
 /********************************* Constants *********************************/
-
-
-
-
-/********************************** Types ************************************/
 
 
 
@@ -50,63 +49,21 @@ using namespace Namespace;
 
 
 
-/************************ Private Function Prototypes ************************/
-
-
-
-
 /******************************** Functions **********************************/
-/*****************************************************************************/
-/*  Submodule name                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*****************************************************************************/
 /**
- * @defgroup TODO -- define the submodule (something like "Module_SubmoduleName Submodule name")
- * @brief    TODO -- describe submodule here
- *
- * # TODO -- Page title for submodule #
- *
- * TODO -- detailed description of submodule
- *
- * @ingroup TODO -- name of the parent module
- * @{
- */
-
-// TODO: put functions here
-
-/**
- * @}
- */
-/* end TODO -- Module_SubmoduleName */
-
-/*****************************************************************************/
-/*  Submodule name                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*****************************************************************************/
-/**
- * @defgroup Template_Member_Functions Member Functions
- * @brief    TODO -- describe submodule here
-
+ * @defgroup Class_Public_Functions Public Functions
+ * @brief    Brief description as necessary
+ * @details  Detailed description as necessary
  *
  * @ingroup Namespace
  * @{
  */
 
-int Class::testMe(int a, const char *s) {
+int Class::testMe(int a, const char* s) {
     return 1;
 }
 
 /**
  * @}
  */
-/* end Template_Member_Functions */
+/* end - Class_Public_Functions */
