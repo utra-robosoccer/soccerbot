@@ -66,15 +66,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include <Notification.h>
 #include "stm32f4xx_hal.h"
 #include "usart.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "../Drivers/MPU6050/MPU6050.h"
 #include "../Drivers/MPU6050/MPUFilter.h"
-#include "sharedMacros.h"
 #include "UART_Handler.h"
-#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
+#include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
 /* USER CODE END Includes */
 

@@ -96,11 +96,11 @@ $(document).ready(function(){initNavTree('struct_dynamixel___handle_type_def.htm
 <p>Organizes all the information relevant to a motor.  
  <a href="struct_dynamixel___handle_type_def.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="_dynamixel___handle_type_def_8h_source.html">Dynamixel_HandleTypeDef.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_dynamixel___types_8h_source.html">Dynamixel_Types.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a40d2f9e9ebd58c5f18d132d704a79683"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_dynamixel___handle_type_def_8h.html#a87ba55c932e76420eb2051bffd8a6843">motorTypes_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#a40d2f9e9ebd58c5f18d132d704a79683">_motorType</a></td></tr>
+<tr class="memitem:a40d2f9e9ebd58c5f18d132d704a79683"><td class="memItemLeft" align="right" valign="top">motorTypes_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#a40d2f9e9ebd58c5f18d132d704a79683">_motorType</a></td></tr>
 <tr class="separator:a40d2f9e9ebd58c5f18d132d704a79683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac07cb35228843be781e258bd39485d6a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#ac07cb35228843be781e258bd39485d6a">_ID</a></td></tr>
 <tr class="separator:ac07cb35228843be781e258bd39485d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,8 +112,6 @@ Data Fields</h2></td></tr>
 <tr class="separator:a46adc1a0c9e0288ba60b06cfc345adea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad411c71835cb7b17b9818d2836470d10"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#ad411c71835cb7b17b9818d2836470d10">_lastLoad</a></td></tr>
 <tr class="separator:ad411c71835cb7b17b9818d2836470d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2cead07066dc9f83aa1d8ea7f8b4b54"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#ab2cead07066dc9f83aa1d8ea7f8b4b54">_lastLoadDirection</a></td></tr>
-<tr class="separator:ab2cead07066dc9f83aa1d8ea7f8b4b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af60a557caed956737bcac0114ffb315b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#af60a557caed956737bcac0114ffb315b">_isJointMode</a></td></tr>
 <tr class="separator:af60a557caed956737bcac0114ffb315b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc481817957faca32bb883a5a497603"><td class="memItemLeft" align="right" valign="top">UART_HandleTypeDef *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_dynamixel___handle_type_def.html#aefc481817957faca32bb883a5a497603">_UART_Handle</a></td></tr>
@@ -201,21 +199,6 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="ab2cead07066dc9f83aa1d8ea7f8b4b54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2cead07066dc9f83aa1d8ea7f8b4b54">&#9670;&nbsp;</a></span>_lastLoadDirection</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t _lastLoadDirection</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>1 implies CW | 0 implies CCW </p>
-
-</div>
-</div>
 <a id="a2e8a4d000bb45bf784fcbb56ebbfc10c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e8a4d000bb45bf784fcbb56ebbfc10c">&#9670;&nbsp;</a></span>_lastPosition</h2>
 
@@ -268,7 +251,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="_dynamixel___handle_type_def_8h.html#a87ba55c932e76420eb2051bffd8a6843">motorTypes_t</a> _motorType</td>
+          <td class="memname">motorTypes_t _motorType</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -292,7 +275,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Dynamixel/<a class="el" href="_dynamixel___handle_type_def_8h_source.html">Dynamixel_HandleTypeDef.h</a></li>
+<li>D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot/Drivers/Dynamixel/h/<a class="el" href="_dynamixel___types_8h_source.html">Dynamixel_Types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

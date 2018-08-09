@@ -12,6 +12,7 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
+#include <Notification.h>
 #include "i2c.h"
 #include "cmsis_os.h"
 #include "usart.h"
@@ -19,7 +20,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "sharedMacros.h"
 
 uint16_t TOTAL_COUNT;
 uint8_t Acc_X, Acc_Y, Acc_Z;
