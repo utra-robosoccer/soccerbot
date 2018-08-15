@@ -240,7 +240,7 @@ class MPU6050 {
       The constructor will initialize all aspects of the class, but will not
       perform any I/O on the MPU6050.
     */
-    MPU6050();
+    MPU6050(int SensorNum, uint8_t lpf);
     int Write_Reg(uint8_t reg_addr, uint8_t data);
     uint8_t Read_Reg(uint8_t reg_addr);
     BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
@@ -250,7 +250,7 @@ class MPU6050 {
     void Read_Accelerometer_Withoffset();
     void Read_Accelerometer_Withoffset_IT();
     int Set_LPF(uint8_t lpf);
-    void Manually_Set_Offsets()
+    void Manually_Set_Offsets(int SensorNum);
     void init();
     //! A destructor.
     /*!

@@ -134,7 +134,6 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor11, Motor12, Motor13, Motor14, Motor15,
 						Motor16, Motor17, Motor18;
 
-MPU6050_HandleTypeDef IMUdata;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -361,11 +360,14 @@ void StartDefaultTask(void const * argument)
 
     Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
 
-    // IMU initialization
-    IMUdata._I2C_Handle = &hi2c1;
-    MPU6050_init(&IMUdata);
-    MPU6050_manually_set_offsets(&IMUdata);
-    MPU6050_set_LPF(&IMUdata, 4);
+    // Previous .c IMU initialization:
+//    IMUdata._I2C_Handle = &hi2c1;
+//    MPU6050_init(&IMUdata);
+//    MPU6050_manually_set_offsets(&IMUdata);
+//    MPU6050_set_LPF(&IMUdata, 4);
+
+    MPU6050::MPU6050 IMUdata (1,4);
+    IMUdata.init();
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -671,33 +673,7 @@ void StartIMUTask(void const * argument)
 	  do{
 	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
 	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
-
-      // Note that it takes < 1 ms total for the sensor to read both accel and gyro
-	  MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
-	  MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-
-	  // Filter
-	  MPUFilter_writeInput(&azFilter, IMUdata._Z_ACCEL);
-	  IMUdata._Z_ACCEL = MPUFilter_readOutput(&azFilter);
-
-	  MPUFilter_writeInput(&ayFilter, IMUdata._Y_ACCEL);
-	  IMUdata._Y_ACCEL = MPUFilter_readOutput(&ayFilter);
-
-	  MPUFilter_writeInput(&axFilter, IMUdata._X_ACCEL);
-	  IMUdata._X_ACCEL = MPUFilter_readOutput(&axFilter);
-
-	  MPUFilter_writeInput(&vzFilter, IMUdata._Z_GYRO);
-	  IMUdata._Z_GYRO = MPUFilter_readOutput(&vzFilter);
-
-	  MPUFilter_writeInput(&vyFilter, IMUdata._Y_GYRO);
-	  IMUdata._Y_GYRO = MPUFilter_readOutput(&vyFilter);
-
-	  MPUFilter_writeInput(&vxFilter, IMUdata._X_GYRO);
-	  IMUdata._X_GYRO = MPUFilter_readOutput(&vxFilter);
-
-	  // Send to TX thread
-	  dataToSend.pData = &IMUdata;
-	  xQueueSend(UART_rxHandle, &dataToSend, 0);
+	  // TODO: Complete this task, and decide how to use the queue
   }
   /* USER CODE END StartIMUTask */
 }

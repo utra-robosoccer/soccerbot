@@ -81,6 +81,11 @@ const float g = 9.81;
 
 
 /******************************** Functions **********************************/
+MPU6050::MPU6050(int SensorNum, uint8_t lpf){
+    //Initialize the offsets depending on which sensor is used
+    MPU6050::Manually_Set_Offsets(SensorNum);
+    MPU6050::Set_LPF(lpf);
+}
 
 int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(this -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
@@ -213,15 +218,16 @@ int MPU6050::Set_LPF(uint8_t lpf){
     return status;
 }
 
-void MPU6050::Manually_Set_Offsets(){
+void MPU6050::Manually_Set_Offsets(int SensorNum){
+    if (SensorNum==1){
+        this -> _X_ACCEL_OFFSET= (-714.25 * g / ACC_RANGE);
+        this -> _Y_ACCEL_OFFSET= (-767.5 * g / ACC_RANGE);
+        this -> _Z_ACCEL_OFFSET= ((16324 * g / ACC_RANGE) - 9.81);
 
-    this -> _X_ACCEL_OFFSET= (-714.25 * g / ACC_RANGE);
-    this -> _Y_ACCEL_OFFSET= (-767.5 * g / ACC_RANGE);
-    this -> _Z_ACCEL_OFFSET= ((16324 * g / ACC_RANGE) - 9.81);
-
-    this -> _X_GYRO_OFFSET= (float)240/IMU_GY_RANGE;
-    this -> _Y_GYRO_OFFSET= (float)-760/IMU_GY_RANGE;
-    this -> _Z_GYRO_OFFSET= (float)-130/IMU_GY_RANGE;
+        this -> _X_GYRO_OFFSET= (float)240/IMU_GY_RANGE;
+        this -> _Y_GYRO_OFFSET= (float)-760/IMU_GY_RANGE;
+        this -> _Z_GYRO_OFFSET= (float)-130/IMU_GY_RANGE;
+    }
 }
 
 void MPU6050::init(){
