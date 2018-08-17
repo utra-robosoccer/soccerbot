@@ -1,6 +1,6 @@
-<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/MPU6050/MPU6050.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/MPU6050/MPU6050.h">
-<area shape="rect" id="node2" href="$_m_p_u6050_8c.html" title="This. " alt="" coords="5,109,241,165"/>
-<area shape="rect" id="node3" href="$_m_p_u_filter_8h.html" title="Header code for IMU filtering. " alt="" coords="266,109,503,165"/>
-<area shape="rect" id="node5" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="429,213,653,269"/>
-<area shape="rect" id="node4" href="$_m_p_u_filter_8c.html" title="Digital filtering data structures and functions, for IMU data. " alt="" coords="167,213,405,269"/>
+<map id="Robot/Drivers/MPU6050/MPU6050.h" name="Robot/Drivers/MPU6050/MPU6050.h">
+<area shape="rect" id="node2" href="$_m_p_u6050_8c.html" title="This. " alt="" coords="5,95,165,136"/>
+<area shape="rect" id="node3" href="$_m_p_u_filter_8h.html" title="Header code for IMU filtering. " alt="" coords="189,95,349,136"/>
+<area shape="rect" id="node5" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="317,191,456,218"/>
+<area shape="rect" id="node4" href="$_m_p_u_filter_8c.html" title="Digital filtering data structures and functions, for IMU data. " alt="" coords="133,184,293,225"/>
 </map>

@@ -6,7 +6,6 @@ var _m_x28_8c =
     [ "MX28_REG_MULTI_TURN_OFFSET", "_m_x28_8c.html#a7c1551ab3ee7167524bcffba254dbc96", null ],
     [ "MX28_REG_P_GAIN", "_m_x28_8c.html#a04a2cb88cef953fc39994073d722902a", null ],
     [ "MX28_REG_RESOLUTION_DIVIDER", "_m_x28_8c.html#a7d843ee375076566c2e1567babfa0ee5", null ],
-    [ "Dynamixel_DataWriter", "group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf", null ],
     [ "Dynamixel_SetCCWAngleLimit", "group___dynamixel_protocol_v1___public___functions___setters.html#ga6dc6d1d812e06b31972ff0df65f48dce", null ],
     [ "Dynamixel_SetCWAngleLimit", "group___dynamixel_protocol_v1___public___functions___setters.html#gad86c73a30cc54d228eaee9aa71bedfc5", null ],
     [ "MX28_EnterMultiTurnMode", "group___m_x28___interfaces.html#ga7af48559dbbf1774e6dbd04616720075", null ],

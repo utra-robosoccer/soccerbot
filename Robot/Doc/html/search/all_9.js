@@ -15,6 +15,11 @@ var searchData=
   ['inst_5fsync_5fwrite',['INST_SYNC_WRITE',['../group___dynamixel_protocol_v1___i_o.html#gaeaa4b61ee11d45bd1a0cb932d7abaf77',1,'DynamixelProtocolV1_IO.c']]],
   ['inst_5fwrite_5fdata',['INST_WRITE_DATA',['../group___dynamixel_protocol_v1___i_o.html#gaf5f75dd76b3a7035583f9169576e7138',1,'DynamixelProtocolV1_IO.c']]],
   ['instance',['instance',['../struct_m_p_u_filter_vel__t.html#a7e326c8346c2b7cdc44a666043e9bf67',1,'MPUFilterVel_t']]],
+  ['io_5fdma',['IO_DMA',['../_dynamixel___types_8h.html#a2d5f4ea730f273121dc94b9425bc3d55afe0dadbeb5c11e52d0a5e47b6abb73cb',1,'Dynamixel_Types.h']]],
+  ['io_5fflags',['IO_FLAGS',['../_dynamixel___types_8h.html#a2d5f4ea730f273121dc94b9425bc3d55',1,'Dynamixel_Types.h']]],
+  ['io_5fit',['IO_IT',['../_dynamixel___types_8h.html#a2d5f4ea730f273121dc94b9425bc3d55aae07b2754c4d2efc8edc8e759eb79a00',1,'Dynamixel_Types.h']]],
+  ['io_5fpoll',['IO_POLL',['../_dynamixel___types_8h.html#a2d5f4ea730f273121dc94b9425bc3d55a414f6b89d2981af1ec2ed8e110bfc47e',1,'Dynamixel_Types.h']]],
+  ['ioflags_5ft',['ioFlags_t',['../_dynamixel___types_8h.html#ab3c9119b626a718fe260f556242667f8',1,'Dynamixel_Types.h']]],
   ['iotype',['IOType',['../group___dynamixel_protocol_v1___i_o.html#gafc137c1480ff847fd02313b860867b65',1,'DynamixelProtocolV1_IO.c']]],
   ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___m_x28___interfaces.html',1,'']]]
 ];
