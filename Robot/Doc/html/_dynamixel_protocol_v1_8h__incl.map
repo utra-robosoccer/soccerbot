@@ -1,9 +1,9 @@
-<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h">
-<area shape="rect" id="node3" href="$_dynamixel___types_8h_source.html" title="../h/Dynamixel_Types.h" alt="" coords="5,273,164,300"/>
-<area shape="rect" id="node8" href="$_dynamixel___data_8h_source.html" title="../h/Dynamixel_Data.h" alt="" coords="373,199,524,225"/>
-<area shape="rect" id="node9" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="161,124,256,151"/>
-<area shape="rect" id="node11" href="$_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="49,124,137,151"/>
-<area shape="rect" id="node5" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="56,348,113,375"/>
-<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="89,423,150,449"/>
-<area shape="rect" id="node10" href="$_dynamixel_protocol_v1___i_o_8h_source.html" title="DynamixelProtocolV1_IO.h" alt="" coords="119,199,298,225"/>
+<map id="Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h" name="Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h">
+<area shape="rect" id="node3" href="$_dynamixel___types_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="5,244,164,271"/>
+<area shape="rect" id="node8" href="$_dynamixel___data_8h.html" title="../h/Dynamixel_Data.h" alt="" coords="373,169,524,196"/>
+<area shape="rect" id="node9" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="161,95,256,121"/>
+<area shape="rect" id="node11" href="$_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="49,95,137,121"/>
+<area shape="rect" id="node5" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="56,319,113,345"/>
+<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="89,393,150,420"/>
+<area shape="rect" id="node10" href="$_dynamixel_protocol_v1___i_o_8h.html" title="DynamixelProtocolV1_IO.h" alt="" coords="119,169,298,196"/>
 </map>

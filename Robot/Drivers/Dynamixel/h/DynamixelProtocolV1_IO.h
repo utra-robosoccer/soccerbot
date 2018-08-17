@@ -1,8 +1,8 @@
-/*
- * @file DynamixelProtocolV1_IO_Exports.h
+/**
+ * @file DynamixelProtocolV1_IO.h
  * @author Tyler
  *
- * @defgroup DynamixelProtocolV1_IO_Exports_Header Exports
+ * @defgroup DynamixelProtocolV1_IO_Header Header
  * @ingroup DynamixelProtocolV1_IO
  * @{
  */
@@ -10,8 +10,8 @@
 
 
 
-#ifndef DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_EXPORTS_H_
-#define DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_EXPORTS_H_
+#ifndef DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_
+#define DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_
 
 
 
@@ -43,4 +43,4 @@ uint16_t Dynamixel_DataReader(
  */
 /* end - DynamixelProtocolV1_IO_Header */
 
-#endif /* DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_EXPORTS_H_ */
+#endif /* DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_ */

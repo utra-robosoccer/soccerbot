@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['robotgoal',['RobotGoal',['../robot_goal_8h.html#a875a3c769f36f0b48a4a8bd2e3298a85',1,'robotGoal.h']]],
-  ['robotstate',['RobotState',['../robot_state_8h.html#a59798180728614da42300fc426db191e',1,'robotState.h']]]
+  ['ioflags_5ft',['ioFlags_t',['../_dynamixel___types_8h.html#ab3c9119b626a718fe260f556242667f8',1,'Dynamixel_Types.h']]]
 ];

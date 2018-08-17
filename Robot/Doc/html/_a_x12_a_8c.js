@@ -10,7 +10,6 @@ var _a_x12_a_8c =
     [ "AX12A_SetComplianceSlope", "group___a_x12_a___interfaces.html#ga43a54da2ab8d918bcb85fadf7b69dd41", null ],
     [ "AX12A_SetCWComplianceMargin", "group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1", null ],
     [ "AX12A_SetCWComplianceSlope", "group___a_x12_a___setters.html#ga52703a78cb46fc1b207cf9d898950451", null ],
-    [ "Dynamixel_DataWriter", "group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf", null ],
     [ "AX12A_DEFAULT_BAUD_RATE", "group___a_x12_a_header.html#gafe4f59aad48aaaa0082430ad2877e2ec", null ],
     [ "AX12A_DEFAULT_CCW_ANGLE_LIMIT", "group___a_x12_a_header.html#gad2bf3110434af6ea1e292df8bc40fad0", null ],
     [ "AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN", "group___a_x12_a_header.html#ga264758b0e2a6588a51fccedfedd7cda1", null ],
