@@ -1,8 +1,0 @@
-<map id="Robot/Inc/Notification.h" name="Robot/Inc/Notification.h">
-<area shape="rect" id="node2" href="$_dynamixel_protocol_v1___i_o_8c.html" title="Implements low&#45;level IO functions. " alt="" coords="5,80,225,136"/>
-<area shape="rect" id="node3" href="$_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="250,87,410,129"/>
-<area shape="rect" id="node7" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="378,281,517,307"/>
-<area shape="rect" id="node4" href="$_m_p_u6050_8c.html" title="This. " alt="" coords="41,184,201,225"/>
-<area shape="rect" id="node5" href="$_m_p_u_filter_8h.html" title="Header code for IMU filtering. " alt="" coords="225,184,385,225"/>
-<area shape="rect" id="node6" href="$_m_p_u_filter_8c.html" title="Digital filtering data structures and functions, for IMU data. " alt="" coords="194,273,354,315"/>
-</map>

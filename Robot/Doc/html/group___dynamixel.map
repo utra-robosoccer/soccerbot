@@ -1,5 +1,0 @@
-<map id="Dynamixel" name="Dynamixel">
-<area shape="rect" id="node1" href="$group___dynamixel_protocol_v1.html" title="Everything related to implementing the Dynamixel communication protocol, version 1.0 &#160;" alt="" coords="136,5,303,32"/>
-<area shape="rect" id="node2" href="$group___a_x12_a.html" title="Globally&#45;accessible functions for interfacing with AX12A actuators. These functions are specific to A..." alt="" coords="189,56,250,83"/>
-<area shape="rect" id="node3" href="$group___m_x28.html" title="Globally&#45;accessible functions for interfacing with MX28 actuators. These functions are specific to MX..." alt="" coords="192,107,247,133"/>
-</map>
