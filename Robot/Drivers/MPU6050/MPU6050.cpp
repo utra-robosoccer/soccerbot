@@ -81,11 +81,6 @@ const float g = 9.81;
 
 
 /******************************** Functions **********************************/
-MPU6050::MPU6050(int SensorNum, uint8_t lpf){
-    //Initialize the offsets depending on which sensor is used
-    MPU6050::Manually_Set_Offsets(SensorNum);
-    MPU6050::Set_LPF(lpf);
-}
 
 int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(this -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
@@ -94,6 +89,16 @@ int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
 uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
     uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  this &received_byte, 1,1000);
     return status;
+}
+
+void MPU6050::Fill_Struct(IMUStruct * myStruct){
+	*myStruct._X_ACCEL = this->_X_ACCEL;
+	*myStruct._Y_ACCEL = this->_Y_ACCEL;
+	*myStruct._Z_ACCEL = this->_Z_ACCEL;
+
+	*myStruct._X_GYRO = this->_X_GYRO;
+	*myStruct._Y_GYRO = this->_Y_GYRO;
+	*myStruct._Z_GYRO = this->_Z_GYRO;
 }
 
 BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
@@ -169,6 +174,7 @@ void MPU6050::Read_Accelerometer_Withoffset(){
     this ->_PITCH= roll;
 }
 
+
 void MPU6050::Read_Accelerometer_Withoffset_IT(){
     uint8_t output_buffer[6];
     uint32_t notification;
@@ -230,7 +236,7 @@ void MPU6050::Manually_Set_Offsets(int SensorNum){
     }
 }
 
-void MPU6050::init(){
+void MPU6050::init(int SensorNum, uint8_t lpf){
 	MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
 	MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
 	MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
@@ -245,4 +251,7 @@ void MPU6050::init(){
     this -> _X_GYRO_OFFSET=0;
     this -> _Y_GYRO_OFFSET= 0;
     this -> _Z_GYRO_OFFSET= 0;
+
+    this->Manually_Set_Offsets(SensorNum);
+    this->Set_LPF(lpf);
 }

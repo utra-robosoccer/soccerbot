@@ -113,6 +113,9 @@ osMessageQId UART4_reqHandle;
 uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART4_reqControlBlock;
 osMessageQId UART6_reqHandle;
+osMessageQId TXQueueHandle;
+uint8_t TXQueueBuffer[ 32 * sizeof( IMUStruct ) ];
+osStaticMessageQDef_t TXQueueControlBlock;
 uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId UART_rxHandle;
@@ -128,6 +131,8 @@ enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
 				 MOTOR16, MOTOR17, MOTOR18
 };
+
+MPU6050::MPU6050 IMUdata;
 
 Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor6, Motor7, Motor8, Motor9, Motor10,
@@ -264,6 +269,10 @@ void MX_FREERTOS_Init(void) {
   osMessageQStaticDef(UART_rx, 32, UARTcmd_t, UART_rxBuffer, &UART_rxControlBlock);
   UART_rxHandle = osMessageCreate(osMessageQ(UART_rx), NULL);
 
+  /* definition and creation of TXQueue */
+  osMessageQStaticDef(TXQueue, 32, TXData_t, TXQueueBuffer, &TXQueueControlBlock);
+  TXQueueHandle = osMessageCreate(osMessageQ(TXQueue), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -366,8 +375,7 @@ void StartDefaultTask(void const * argument)
 //    MPU6050_manually_set_offsets(&IMUdata);
 //    MPU6050_set_LPF(&IMUdata, 4);
 
-    MPU6050::MPU6050 IMUdata (1,4);
-    IMUdata.init();
+    IMUdata.init(1, 4);
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -654,26 +662,43 @@ void StartIMUTask(void const * argument)
   // is received. This allows one-time setup to complete in a low-priority task.
   xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  /* Infinite loop */
   TXData_t dataToSend;
   dataToSend.eDataType = eIMUData;
 
-  uint32_t notification;
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
 
-  MPUFilterType axFilter, ayFilter, azFilter, vxFilter, vyFilter, vzFilter;
-  MPUFilter_init(&axFilter);
-  MPUFilter_init(&ayFilter);
-  MPUFilter_init(&azFilter);
-  MPUFilter_init(&vxFilter);
-  MPUFilter_init(&vyFilter);
-  MPUFilter_init(&vzFilter);
+  const TickType_t IMU_CYCLE_TIME_MS = 2;
+  uint8_t i = 0;
+  IMUStruct IMUStruct;
+
+  MPUFilter_InitAllFilters();
 
   for(;;)
   {
-	  do{
-	      xTaskNotifyWait(0, NOTIFIED_FROM_TASK, &notification, portMAX_DELAY);
-	  }while((notification & NOTIFIED_FROM_TASK) != NOTIFIED_FROM_TASK);
-	  // TODO: Complete this task, and decide how to use the queue
+      // Service this thread every 2 ms for a 500 Hz sample rate
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+
+      IMUdata.Read_Accelerometer_Withoffset_IT(); // Also updates pitch and roll
+
+      // Gyroscope data is much more volatile/sensitive to changes than
+      // acceleration data. To compensate, we feed in samples to the filter
+      // slower. Good DSP practise? Not sure. To compensate for the high
+      // delays, we also use a filter with fewer taps than the acceleration
+      // filters. Ideally: we would sample faster to reduce aliasing, then
+      // use a filter with a smaller cutoff frequency. However, the filter
+      // designer we are using does not allow us to generate such filters in
+      // the free version, so this is the best we can do unless we use other
+      // software.
+      if (i % 16 == 0) {
+    	  IMUdata.Read_Gyroscope_Withoffset_IT();
+// TODO: convert the MPUFilter_FilterAngularVelocity function
+          //MPUFilter_FilterAngularVelocity();
+      }
+      i++;
+      IMUdata.Fill_Struct(&IMUStruct);
+      dataToSend.pData = &IMUStruct;
+      xQueueSend(TXQueueHandle, &dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
 }
@@ -801,7 +826,7 @@ void StartTxTask(void const * argument)
 
     TXData_t receivedData;
     Dynamixel_HandleTypeDef* motorPtr = NULL;
-    MPU6050_HandleTypeDef* imuPtr = NULL;
+    IMUStruct* imuPtr = NULL;
     char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
 
     HAL_StatusTypeDef status;
@@ -837,7 +862,7 @@ void StartTxTask(void const * argument)
                 }
                 break;
             case eIMUData:
-                imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
+                imuPtr = (IMUStruct*)receivedData.pData;
 
                 if(imuPtr == NULL){ break; }
 

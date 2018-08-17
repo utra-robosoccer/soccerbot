@@ -1,14 +1,13 @@
 /**
-  *****************************************************************************
-  * @file    example_cpp.h
-  * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file
-  *
-  * @defgroup TODO -- module name defined in template.c with " (header)" after it
-  * @brief    TODO -- brief description of header
-  * @ingroup  TODO -- module name defined in template.c
-  * @{
-  *****************************************************************************
+  ******************************************************************************
+  * @file    MPU6050.h
+  * @author  Izaak
+  * @author  Jenny
+  * @author  Tyler
+  * @brief   Header code for the MPU6050 library, including the struct in which
+  *          accelerometer and gyroscope data are stored.
+  *@ingroup  MPU6050
+  ******************************************************************************
   */
 
 
@@ -29,7 +28,7 @@
 
 #include "sharedMacros.h"
 #include "MPUFilter.h"
-
+#include "UART_Handler.h"
 /********************************** Macros ***********************************/
 
 uint16_t TOTAL_COUNT;
@@ -237,10 +236,9 @@ class MPU6050 {
   public:
     //! A constructor.
     /*!
-      The constructor will initialize all aspects of the class, but will not
-      perform any I/O on the MPU6050.
+      The constructor
     */
-    MPU6050(int SensorNum, uint8_t lpf);
+    MPU6050();
     int Write_Reg(uint8_t reg_addr, uint8_t data);
     uint8_t Read_Reg(uint8_t reg_addr);
     BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
@@ -251,7 +249,8 @@ class MPU6050 {
     void Read_Accelerometer_Withoffset_IT();
     int Set_LPF(uint8_t lpf);
     void Manually_Set_Offsets(int SensorNum);
-    void init();
+    void Fill_Struct(IMUStruct * myStruct);
+    void init(int SensorNum, uint8_t lpf);
     //! A destructor.
     /*!
       A more elaborate description of the destructor.
