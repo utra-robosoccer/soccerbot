@@ -1,7 +1,0 @@
-<map id="Robot/Drivers/Dynamixel/AX12A/AX12A.c" name="Robot/Drivers/Dynamixel/AX12A/AX12A.c">
-<area shape="rect" id="node2" href="$_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="98,95,193,121"/>
-<area shape="rect" id="node3" href="$_dynamixel___types_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="25,244,161,271"/>
-<area shape="rect" id="node9" href="$_dynamixel_protocol_v1___i_o_8h.html" title="DynamixelProtocolV1_IO.h" alt="" coords="120,169,299,196"/>
-<area shape="rect" id="node6" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="35,319,93,345"/>
-<area shape="rect" id="node8" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="68,393,129,420"/>
-</map>
