@@ -1,4 +1,4 @@
-/*
+/**
  * @file Dynamixel_Data.h
  * @author Tyler
  *

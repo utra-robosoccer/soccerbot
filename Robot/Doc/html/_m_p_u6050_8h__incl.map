@@ -1,7 +1,7 @@
-<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/MPU6050/MPU6050.h" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/MPU6050/MPU6050.h">
-<area shape="rect" id="node2" href="$_notification_8h.html" title="This file defines resources used throughout various parts of the system that engage in non&#45;blocking I..." alt="" coords="79,109,177,136"/>
-<area shape="rect" id="node5" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="369,109,420,136"/>
-<area shape="rect" id="node9" href="$usart_8h_source.html" title="usart.h" alt="" coords="201,109,263,136"/>
-<area shape="rect" id="node10" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="287,109,345,136"/>
-<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="312,184,373,211"/>
+<map id="Robot/Drivers/MPU6050/MPU6050.h" name="Robot/Drivers/MPU6050/MPU6050.h">
+<area shape="rect" id="node2" href="$_notification_8h.html" title="This file defines resources used throughout various parts of the system that engage in non&#45;blocking I..." alt="" coords="79,95,177,121"/>
+<area shape="rect" id="node5" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="369,95,420,121"/>
+<area shape="rect" id="node9" href="$usart_8h_source.html" title="usart.h" alt="" coords="201,95,263,121"/>
+<area shape="rect" id="node10" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="287,95,345,121"/>
+<area shape="rect" id="node7" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="312,169,373,196"/>
 </map>

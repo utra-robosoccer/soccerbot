@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Dynamixel_HandleTypeDef.h
+  * @file    Dynamixel_Types.h
   * @author  Tyler
   * @brief   This file defines the data structure used by all Dynamixel
   *          actuators, as well as user-defined types it uses
