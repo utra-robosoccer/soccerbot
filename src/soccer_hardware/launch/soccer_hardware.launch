@@ -1,3 +1,4 @@
 <launch>
-	<node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware.py" output="screen" cwd="node" />	
+	<node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware.py" output="screen" cwd="node" />
+	<node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories" />
 </launch>
