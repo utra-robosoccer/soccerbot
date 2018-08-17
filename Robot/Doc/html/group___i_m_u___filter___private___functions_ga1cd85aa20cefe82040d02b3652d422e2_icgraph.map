@@ -1,4 +1,0 @@
-<map id="MPUFilter_initVel" name="MPUFilter_initVel">
-<area shape="rect" id="node2" href="$group___i_m_u___filter___public___functions.html#ga673920b95d4804093d1c53f3f48e8788" title="Initialize acceleration and angular velocity FIR filters for IMU data. " alt="" coords="176,5,331,32"/>
-<area shape="rect" id="node3" href="$group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd" title="This function is executed in the context of the IMUTask thread. During each control cycle..." alt="" coords="379,5,480,32"/>
-</map>

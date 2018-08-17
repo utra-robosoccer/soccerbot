@@ -1,0 +1,3 @@
+<map id="MPU6050_READ_REG" name="MPU6050_READ_REG">
+<area shape="rect" id="node2" href="$d2/d4c/group___init.html#ga321abd28200eb3361e57943172791c8c" title="This function allows you to set the value of the LPF manually. Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM&#45;MPU&#45;6000A.pdf for descriptions of what each value does. " alt="" coords="211,5,345,32"/>
+</map>

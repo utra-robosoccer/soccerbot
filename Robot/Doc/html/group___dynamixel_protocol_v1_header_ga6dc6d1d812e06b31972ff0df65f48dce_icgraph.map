@@ -1,4 +1,0 @@
-<map id="Dynamixel_SetCCWAngleLimit" name="Dynamixel_SetCCWAngleLimit">
-<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1_header.html#ga018df076095889475b42e8e21a26dc1e" title="Sets the control registers such that the rotational angle of the motor is not bounded. " alt="" coords="256,5,447,32"/>
-<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1_header.html#ga2d16a19af6f00b284c750b524fa0079f" title="Sets the control registers such that the rotational angle of the motor is constrained between the def..." alt="" coords="261,56,441,83"/>
-</map>

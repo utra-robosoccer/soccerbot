@@ -1,0 +1,12 @@
+<map id="UART_ProcessEvent" name="UART_ProcessEvent">
+<area shape="rect" id="node2" href="$db/d49/group___dynamixel_protocol_v1___public___functions___getters.html#ga3edc0f39369851f07925e38a83f67f51" title="Reads the angular position of the motor in degrees. " alt="" coords="209,81,367,108"/>
+<area shape="rect" id="node9" href="$d4/de0/group___dynamixel_protocol_v1___public___functions___setters.html#ga67e039f885c6e107121b297cb6388e8c" title="Sets the goal position of the motor in RAM. " alt="" coords="196,183,380,209"/>
+<area shape="rect" id="node11" href="$d4/de0/group___dynamixel_protocol_v1___public___functions___setters.html#ga41f1726bc88a49ab5051ed20f492a0f6" title="Enables or disables torque for current motor. " alt="" coords="203,132,373,159"/>
+<area shape="rect" id="node3" href="$d3/d8e/group___dynamixel_protocol_v1___i_o___header.html#gae0e18eec55a4c1c3600dc8406d21a9c9" title="Reads data back from the motor passed in by reference. " alt="" coords="428,81,587,108"/>
+<area shape="rect" id="node4" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="635,157,839,184"/>
+<area shape="rect" id="node5" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga382d4b7e36403cf22d25bab6da922e3c" title="Set data direction pin high (TX) " alt="" coords="888,81,1031,108"/>
+<area shape="rect" id="node6" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga0f95e7eccf85e619ab94db363a625e2d" title="Generic function for transmitting data. Supports all IO modes. " alt="" coords="644,107,829,133"/>
+<area shape="rect" id="node7" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga938ca4408ac778bae74ced15c09cd0ca" title="Generic function for receiving data. Supports all IO modes. " alt="" coords="647,5,827,32"/>
+<area shape="rect" id="node8" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#gac5fd2275878faa4f159d3404bc6c3083" title="Set data direction pin low (RX) " alt="" coords="887,5,1032,32"/>
+<area shape="rect" id="node10" href="$d3/d8e/group___dynamixel_protocol_v1___i_o___header.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="431,157,583,184"/>
+</map>

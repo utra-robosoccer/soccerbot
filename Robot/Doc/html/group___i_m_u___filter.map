@@ -1,5 +1,0 @@
-<map id="IMU Filter" name="IMU Filter">
-<area shape="rect" id="node1" href="$group___m_p_u6050.html" title="All functions related to the MPU6060 IMU sensor. " alt="" coords="5,31,84,57"/>
-<area shape="rect" id="node2" href="$group___i_m_u___filter___private___functions.html" title="Functions used internally for writing inputs and initialization. " alt="" coords="259,5,376,32"/>
-<area shape="rect" id="node3" href="$group___i_m_u___filter___public___functions.html" title="Functions used outside the module. " alt="" coords="260,56,375,83"/>
-</map>
