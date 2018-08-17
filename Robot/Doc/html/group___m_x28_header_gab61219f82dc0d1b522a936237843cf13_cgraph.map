@@ -1,5 +1,5 @@
 <map id="MX28_SetMultiTurnOffset" name="MX28_SetMultiTurnOffset">
-<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___i_o___public___functions___primitives.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="221,31,373,57"/>
+<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___i_o___header.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="221,31,373,57"/>
 <area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___i_o___private___functions.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="421,5,625,32"/>
 <area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___i_o___private___functions.html#ga0f95e7eccf85e619ab94db363a625e2d" title="Generic function for transmitting data. Supports all IO modes. " alt="" coords="431,56,616,83"/>
 <area shape="rect" id="node5" href="$group___dynamixel_protocol_v1___i_o___private___functions.html#ga382d4b7e36403cf22d25bab6da922e3c" title="Set data direction pin high (TX) " alt="" coords="673,56,816,83"/>
