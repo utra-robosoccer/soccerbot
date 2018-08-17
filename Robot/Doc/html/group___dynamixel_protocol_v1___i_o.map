@@ -1,6 +1,0 @@
-<map id="IO" name="IO">
-<area shape="rect" id="node1" href="$group___dynamixel_protocol_v1.html" title="Everything related to implementing the Dynamixel communication protocol, version 1.0 &#160;" alt="" coords="5,56,172,83"/>
-<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___i_o___private___functions.html" title="Functions only accessible from within the IO library. " alt="" coords="307,5,429,32"/>
-<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___i_o___header.html" title="Header" alt="" coords="337,56,399,83"/>
-<area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___i_o___public___functions.html" title="Functions accessible from outside this file. " alt="" coords="311,107,425,133"/>
-</map>

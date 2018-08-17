@@ -1,6 +1,0 @@
-<map id="Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h" name="Robot/Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h">
-<area shape="rect" id="node2" href="$_dynamixel_protocol_v1_8c.html" title="Top&#45;level module for Dynamixel library (protocol V1.0). Contains common functional code for the AX12A..." alt="" coords="5,95,236,136"/>
-<area shape="rect" id="node3" href="$_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="312,102,489,129"/>
-<area shape="rect" id="node4" href="$freertos_8c.html" title="Code for freertos application. " alt="" coords="205,184,343,211"/>
-<area shape="rect" id="node5" href="$_u_a_r_t___handler_8c.html" title="This file implements a generic event processor for UART events, which occur when commands for the mot..." alt="" coords="368,184,548,211"/>
-</map>

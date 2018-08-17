@@ -1,4 +1,0 @@
-<map id="MPU6050_WRITE_REG" name="MPU6050_WRITE_REG">
-<area shape="rect" id="node2" href="$group___init.html#ga3cf74abb0c6d7d97f578bcb742a704a2" title="This function is used as the first step of initialization of an MPU6050_HandleTypeDef struct..." alt="" coords="232,5,335,32"/>
-<area shape="rect" id="node3" href="$group___init.html#ga321abd28200eb3361e57943172791c8c" title="This function allows you to set the value of the LPF manually. Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM&#45;MPU&#45;6000A.pdf for descriptions of what each value does. " alt="" coords="216,56,351,83"/>
-</map>

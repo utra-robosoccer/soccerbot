@@ -1,7 +1,0 @@
-<map id="Robot/Src/main.c" name="Robot/Src/main.c">
-<area shape="rect" id="node2" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="168,155,229,181"/>
-<area shape="rect" id="node5" href="$dma_8h_source.html" title="dma.h" alt="" coords="28,80,87,107"/>
-<area shape="rect" id="node6" href="$i2c_8h_source.html" title="i2c.h" alt="" coords="111,80,161,107"/>
-<area shape="rect" id="node7" href="$usart_8h_source.html" title="usart.h" alt="" coords="237,80,299,107"/>
-<area shape="rect" id="node8" href="$gpio_8h_source.html" title="gpio.h" alt="" coords="323,80,381,107"/>
-</map>

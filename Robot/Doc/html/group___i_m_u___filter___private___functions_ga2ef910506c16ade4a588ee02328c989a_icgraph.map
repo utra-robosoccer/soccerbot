@@ -1,5 +1,0 @@
-<map id="MPUFilter_resetVel" name="MPUFilter_resetVel">
-<area shape="rect" id="node2" href="$group___i_m_u___filter___private___functions.html#ga1cd85aa20cefe82040d02b3652d422e2" title="Initialize a velocity filter. " alt="" coords="188,5,311,32"/>
-<area shape="rect" id="node3" href="$group___i_m_u___filter___public___functions.html#ga673920b95d4804093d1c53f3f48e8788" title="Initialize acceleration and angular velocity FIR filters for IMU data. " alt="" coords="359,5,513,32"/>
-<area shape="rect" id="node4" href="$group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd" title="This function is executed in the context of the IMUTask thread. During each control cycle..." alt="" coords="561,5,663,32"/>
-</map>
