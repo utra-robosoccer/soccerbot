@@ -219,7 +219,7 @@ char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
  *  \addtogroup Namespace
  *  @{
  */
-namespace MPU6050 {
+namespace MPU6050namespace {
 /********************************* Constants *********************************/
 
 
@@ -232,13 +232,43 @@ namespace MPU6050 {
 */
 class MPU6050 {
 
+
+    uint8_t                 _ID;                    /*!< Sensor identification (0-252)                  */
+    uint32_t                _BaudRate;              /*!< UART communication baud rate*/
+    uint8_t                 _Sample_Rate;
+    UART_HandleTypeDef*     _UART_Handle;
+    I2C_HandleTypeDef*      _I2C_Handle;
+    float                   _X_GYRO;            /*!< x-axis angular velocity read from sensor*/
+    float                   _Y_GYRO;            /*!< y-axis angular velocity read from sensor*/
+    float                   _Z_GYRO;            /*!< z-axis angular velocity read from sensor*/
+    float                   _X_ACCEL;           /*!< x-axis acceleration read from sensor*/
+    float                   _Y_ACCEL;           /*!< y-axis acceleration read from sensor*/
+    float                   _Z_ACCEL;           /*!< z-axis acceleration read from sensor*/
+
+    //offsets:
+    float                   _X_GYRO_OFFSET;
+    float                   _Y_GYRO_OFFSET;
+    float                   _Z_GYRO_OFFSET;
+    float                   _X_ACCEL_OFFSET;
+    float                   _Y_ACCEL_OFFSET;
+    float                   _Z_ACCEL_OFFSET;
+
+    //angles in degrees (calculated using _Z_ACCEL_OFFSET)
+    //see page 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
+
+    float                   _ROLL;
+    float                   _PITCH;
+
+
+    uint8_t                 received_byte;
+
 /****************************** Public Members *******************************/
   public:
     //! A constructor.
     /*!
       The constructor
     */
-    MPU6050();
+    MPU6050(int SensorNum);
     int Write_Reg(uint8_t reg_addr, uint8_t data);
     uint8_t Read_Reg(uint8_t reg_addr);
     BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
@@ -250,7 +280,7 @@ class MPU6050 {
     int Set_LPF(uint8_t lpf);
     void Manually_Set_Offsets(int SensorNum);
     void Fill_Struct(IMUStruct * myStruct);
-    void init(int SensorNum, uint8_t lpf);
+    void init(uint8_t lpf);
     //! A destructor.
     /*!
       A more elaborate description of the destructor.
