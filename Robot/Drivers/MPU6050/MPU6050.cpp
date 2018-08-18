@@ -27,7 +27,7 @@ namespace {
 }
 
 /********************************** Primary Namespace ************************/
-using namespace MPU6050;
+using namespace MPU6050namespace;
 
 
 /********************************* Constants *********************************/
@@ -47,58 +47,32 @@ const float g = 9.81;
 
 /***************************** Private Variables *****************************/
 
-    uint8_t                 _ID;                    /*!< Sensor identification (0-252)                  */
-    uint32_t                _BaudRate;              /*!< UART communication baud rate*/
-    uint8_t                 _Sample_Rate;
-    UART_HandleTypeDef*     _UART_Handle;
-    I2C_HandleTypeDef*      _I2C_Handle;
-    float                   _X_GYRO;            /*!< x-axis angular velocity read from sensor*/
-    float                   _Y_GYRO;            /*!< y-axis angular velocity read from sensor*/
-    float                   _Z_GYRO;            /*!< z-axis angular velocity read from sensor*/
-    float                   _X_ACCEL;           /*!< x-axis acceleration read from sensor*/
-    float                   _Y_ACCEL;           /*!< y-axis acceleration read from sensor*/
-    float                   _Z_ACCEL;           /*!< z-axis acceleration read from sensor*/
-
-    //offsets:
-    float                   _X_GYRO_OFFSET;
-    float                   _Y_GYRO_OFFSET;
-    float                   _Z_GYRO_OFFSET;
-    float                   _X_ACCEL_OFFSET;
-    float                   _Y_ACCEL_OFFSET;
-    float                   _Z_ACCEL_OFFSET;
-
-    //angles in degrees (calculated using _Z_ACCEL_OFFSET)
-    //see page 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
-
-    float                   _ROLL;
-    float                   _PITCH;
-
-
-    uint8_t                 received_byte;
 /************************ Private Function Prototypes ************************/
 
 
 
 
 /******************************** Functions **********************************/
-
+MPU6050::MPU6050(int SensorNum){
+    this->Manually_Set_Offsets(SensorNum);
+}
 int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(this -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
 }
 
 uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
-    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  this &received_byte, 1,1000);
+    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &(this->received_byte), 1,1000);
     return status;
 }
 
 void MPU6050::Fill_Struct(IMUStruct * myStruct){
-	*myStruct._X_ACCEL = this->_X_ACCEL;
-	*myStruct._Y_ACCEL = this->_Y_ACCEL;
-	*myStruct._Z_ACCEL = this->_Z_ACCEL;
+	myStruct->_X_ACCEL = this->_X_ACCEL;
+	myStruct->_Y_ACCEL = this->_Y_ACCEL;
+	myStruct->_Z_ACCEL = this->_Z_ACCEL;
 
-	*myStruct._X_GYRO = this->_X_GYRO;
-	*myStruct._Y_GYRO = this->_Y_GYRO;
-	*myStruct._Z_GYRO = this->_Z_GYRO;
+	myStruct->_X_GYRO = this->_X_GYRO;
+	myStruct->_Y_GYRO = this->_Y_GYRO;
+	myStruct->_Z_GYRO = this->_Z_GYRO;
 }
 
 BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
@@ -107,7 +81,7 @@ BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
 
 uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
 	uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
-	return status
+	return status;
 }
 
 void MPU6050::Read_Gyroscope_Withoffset(){
@@ -129,7 +103,9 @@ void MPU6050::Read_Gyroscope_Withoffset_IT(){
 
     if(MPU6050::Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
         // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
+
+    	// TODO : fix why the generateClocks() function does not work
+    	//generateClocks(1, 1);
         return;
     }
 
@@ -182,7 +158,8 @@ void MPU6050::Read_Accelerometer_Withoffset_IT(){
 
     if(MPU6050::Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H,output_buffer) != HAL_OK){
         // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
+    	// TODO : fix why the generateClocks() function does not work
+        //generateClocks(1, 1);
         return;
     }
 
@@ -236,7 +213,7 @@ void MPU6050::Manually_Set_Offsets(int SensorNum){
     }
 }
 
-void MPU6050::init(int SensorNum, uint8_t lpf){
+void MPU6050::init(uint8_t lpf){
 	MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
 	MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
 	MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
@@ -252,6 +229,5 @@ void MPU6050::init(int SensorNum, uint8_t lpf){
     this -> _Y_GYRO_OFFSET= 0;
     this -> _Z_GYRO_OFFSET= 0;
 
-    this->Manually_Set_Offsets(SensorNum);
     this->Set_LPF(lpf);
 }

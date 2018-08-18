@@ -132,7 +132,7 @@ enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR16, MOTOR17, MOTOR18
 };
 
-MPU6050::MPU6050 IMUdata;
+MPU6050namespace::MPU6050 IMUdata (1);
 
 Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor6, Motor7, Motor8, Motor9, Motor10,
@@ -375,7 +375,7 @@ void StartDefaultTask(void const * argument)
 //    MPU6050_manually_set_offsets(&IMUdata);
 //    MPU6050_set_LPF(&IMUdata, 4);
 
-    IMUdata.init(1, 4);
+    IMUdata.init(4);
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
