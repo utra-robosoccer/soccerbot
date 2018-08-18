@@ -34,8 +34,8 @@
 
 
 /******************************* Public Variables ******************************/
-RobotGoal robotGoal;
-RobotState robotState;
+extern RobotGoal robotGoal;
+extern RobotState robotState;
 
 /**
  * @}

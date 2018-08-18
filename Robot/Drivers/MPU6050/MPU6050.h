@@ -31,14 +31,6 @@
 #include "UART_Handler.h"
 /********************************** Macros ***********************************/
 
-uint16_t TOTAL_COUNT;
-uint8_t Acc_X, Acc_Y, Acc_Z;
-float acc_X;
-int Gyro_X, Gyro_Y, Gyro_Z;
-int Rem_X_Accel,Rem_Y_Accel,Rem_Z_Accel;
-int Rem_X_Gyro,Rem_Y_Gyro,Rem_Z_Gyro;
-char Sign_X_Accel, Sign_Y_Accel, Sign_Z_Accel;
-char Sign_X_Gyro, Sign_Y_Gyro, Sign_Z_Gyro;
 
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
