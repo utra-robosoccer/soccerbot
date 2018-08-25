@@ -107,8 +107,9 @@
     </include>
 
     <include>
+        <name>Test</name>
         <uri>model://RoboCup 2014 SPL Goal</uri>
-          <pose>-4.5 0 0 0 0 3.14</pose>
+        <pose>-4.5 0 0 0 0 3.14</pose>
     </include>
 
     <gui fullscreen='0'>
