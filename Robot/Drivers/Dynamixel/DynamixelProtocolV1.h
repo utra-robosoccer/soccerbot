@@ -22,6 +22,10 @@
 #ifndef __DYNAMIXEL_PROTOCOL_V1_H__
 #define __DYNAMIXEL_PROTOCOL_V1_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 
@@ -151,5 +155,9 @@ void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
  * @}
  */
 /* end DynamixelProtocolV1Header */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DYNAMIXEL_PROTOCOL_V1_H__ */
