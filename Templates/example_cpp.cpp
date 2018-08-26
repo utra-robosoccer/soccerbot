@@ -1,8 +1,11 @@
 /**
   *****************************************************************************
-  * @file    example_cpp.cpp
+  * @file    example.cpp
   * @author  TODO -- your name here
   * @brief   TODO -- brief description of file
+  *
+  * @defgroup TODO -- module name
+  * @brief    TODO -- description of module
   *****************************************************************************
   */
 
