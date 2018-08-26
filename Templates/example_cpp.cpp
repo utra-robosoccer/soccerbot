@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    example.cpp
+  * @file    example_cpp.cpp
   * @author  TODO -- your name here
   * @brief   TODO -- brief description of file
   *****************************************************************************
