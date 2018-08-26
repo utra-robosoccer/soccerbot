@@ -4,8 +4,7 @@
   * @author  TODO -- your name here
   * @brief   TODO -- briefly describe this file
   *
-  * @defgroup TODO -- module name defined in template.c with " (header)" after it
-  * @brief    TODO -- brief description of header
+  * @defgroup Header
   * @ingroup  TODO -- module name defined in template.c
   * @{
   *****************************************************************************
