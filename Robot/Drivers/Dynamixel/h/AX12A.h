@@ -13,9 +13,12 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __AX12A__
 #define __AX12A__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -58,5 +61,9 @@ void AX12A_SetComplianceMargin(Dynamixel_HandleTypeDef* hdynamixel, uint8_t comp
  * @}
  */
 /* end AX12AHeader */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DYNAMIXEL_AX-12A_H__ */

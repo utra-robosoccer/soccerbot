@@ -163,7 +163,10 @@ extern void StartTxTask(void const * argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-
+// For vApplicationGetIdleTaskMemory
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* USER CODE END FunctionPrototypes */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
@@ -172,6 +175,11 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 /* Hook prototypes */
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
+// For vApplicationGetIdleTaskMemory
+#ifdef __cplusplus
+}
+#endif
+
 static StaticTask_t xIdleTaskTCBBuffer;
 static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
 

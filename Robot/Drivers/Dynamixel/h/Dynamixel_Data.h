@@ -14,6 +14,10 @@
 #ifndef DYNAMIXEL_H_DYNAMIXEL_DATA_H_
 #define DYNAMIXEL_H_DYNAMIXEL_DATA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 
@@ -62,5 +66,9 @@ extern const uint16_t MIN_PUNCH;
  * @}
  */
 /* end - Dynamixel_Data */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DYNAMIXEL_H_DYNAMIXEL_DATA_H_ */
