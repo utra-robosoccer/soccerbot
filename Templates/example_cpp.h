@@ -1,8 +1,12 @@
 /**
   *****************************************************************************
-  * @file    example_cpp.h
+  * @file    template.h
   * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file (if necessary)
+  * @brief   TODO -- briefly describe this file
+  *
+  * @defgroup Header
+  * @ingroup  TODO -- module name defined in template.c
+  * @{
   *****************************************************************************
   */
 
@@ -22,15 +26,6 @@
 
 
 /********************************* Namespace *********************************/
-/**
- * @addtogroup Namespace
- * @ingroup Parent_Module_Name
- *
- * @brief   Brief namespace (module) description
- * @details Detailed namespace (module) description
- *
- * @{
- */
 namespace Namespace {
 
 
