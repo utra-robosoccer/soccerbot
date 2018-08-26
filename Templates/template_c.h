@@ -13,7 +13,6 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __TEMPLATE_H__
 #define __TEMPLATE_H__
 
