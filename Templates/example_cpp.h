@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    template.h
+  * @file    example_cpp.h
   * @author  TODO -- your name here
   * @brief   TODO -- briefly describe this file
   *
