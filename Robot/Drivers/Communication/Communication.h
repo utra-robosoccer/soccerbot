@@ -15,9 +15,12 @@
 
 
 
-/******************** Define to prevent recursive inclusion *******************/
 #ifndef __COMMUNICATION_H__
 #define __COMMUNICATION_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -34,12 +37,16 @@
 
 
 /******************************* Public Variables ******************************/
-RobotGoal robotGoal;
-RobotState robotState;
+extern RobotGoal robotGoal;
+extern RobotState robotState;
 
 /**
  * @}
  */
 /* end CommunicationHeader */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __COMMUNICATION_H__ */
