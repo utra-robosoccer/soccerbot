@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    example_cpp.cpp
+  * @file    example.cpp
   * @author  TODO -- your name here
   * @brief   TODO -- brief description of file
   *****************************************************************************
@@ -15,18 +15,7 @@
 
 
 
-/******************************** Namespaces *********************************/
-using namespace Namespace;
-
-
-
-
-/********************************** Macros ***********************************/
-
-
-
-
-/******************************** Local Helpers ******************************/ 
+/******************************* Local Helpers *******************************/ 
 namespace {
     
 }
@@ -59,7 +48,13 @@ namespace {
  * @{
  */
 
-int Class::testMe(int a, const char* s) {
+/**
+ * @brief a test class
+ * @param a describe a here
+ * @param s describe s here
+ * @return describe the significance of the return value here
+ */
+int Class::testMe(int a, const char* s){
     return 1;
 }
 
