@@ -277,7 +277,7 @@ class MPU6050 {
     /*!
       A more elaborate description of the destructor.
     */
-    ~MPU6050();
+    ~MPU6050() {}
 
 
 /****************************** Protected Members ***************************/
