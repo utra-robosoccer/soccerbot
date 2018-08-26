@@ -9,7 +9,6 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __EXAMPLE_CPP_H__
 #define __EXAMPLE_CPP_H__
 
@@ -33,11 +32,6 @@
  * @{
  */
 namespace Namespace {
-
-
-
-
-/********************************** Macros ***********************************/
 
 
 
