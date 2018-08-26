@@ -16,6 +16,10 @@
 #ifndef __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 #define __DYNAMIXEL_HANDLE_TYPE_DEF_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 
@@ -50,5 +54,9 @@ typedef struct{
     GPIO_TypeDef*           _dataDirPort;           /**< Port data direction pin is on                  */
 uint16_t                _dataDirPinNum;             /**< Data direction pin number                      */
 }Dynamixel_HandleTypeDef;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DYNAMIXEL_HANDLE_TYPE_DEF_H__ */
