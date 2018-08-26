@@ -18,9 +18,12 @@
 
 
 
-/******************** Define to prevent recursive inclusion *******************/
 #ifndef __UART_HANDLER_H__
 #define __UART_HANDLER_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -99,5 +102,9 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend);
  * @}
  */
 /* end UART_HandlerHeader */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __UART_HANDLER_H__ */

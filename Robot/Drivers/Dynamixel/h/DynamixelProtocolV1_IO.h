@@ -13,6 +13,10 @@
 #ifndef DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_
 #define DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 
@@ -42,5 +46,9 @@ uint16_t Dynamixel_DataReader(
  * @}
  */
 /* end - DynamixelProtocolV1_IO_Header */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DYNAMIXEL_H_DYNAMIXELPROTOCOLV1_IO_H_ */

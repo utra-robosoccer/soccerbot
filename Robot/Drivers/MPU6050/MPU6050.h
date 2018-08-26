@@ -12,6 +12,12 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 #include <Notification.h>
 #include "i2c.h"
 #include "cmsis_os.h"
@@ -263,5 +269,9 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
 #define MPU6050_WAKE_FREQ_1P25      0x0
 #define MPU6050_WAKE_FREQ_2P5       0x1
 #define MPU6050_WAKE_FREQ_5         0x2
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MPU6050_H_ */
