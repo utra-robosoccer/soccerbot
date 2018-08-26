@@ -97,20 +97,19 @@
     </scene>
 
     <include>
-      <uri>model://RoboCup Field</uri>
+      <uri>model://Test Field</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
 
     <include>
-        <uri>model://RoboCup 2014 SPL Goal</uri>
-        <pose>4.5 0 0 0 0 0</pose>
+        <uri>model://Test Goal</uri>
+        <pose>2.25 0 0 0 0 0</pose>
     </include>
 
-    <include>
-        <name>Test</name>
-        <uri>model://RoboCup 2014 SPL Goal</uri>
-        <pose>-4.5 0 0 0 0 3.14</pose>
-    </include>
+    <!--<include>-->
+      <!--<uri>model://RoboCup 2014 SPL Goal</uri>-->
+        <!--<pose>-4.5 0 0 0 0 3.14</pose>-->
+    <!--</include>-->
 
     <gui fullscreen='0'>
       <camera name='user_camera'>
