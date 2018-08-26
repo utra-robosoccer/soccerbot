@@ -8,7 +8,7 @@ STM32F767ZI
 
 The following patch shows all the options that changed from a blank project initialized from its default settings and only enables Lwip and FreeRTOS. The MPU, flash settings, LwIP, and FreeRTOS need significant configuration changes.
 
-```
+```diff
 diff --git a/./STM32Cube/blank_lwip_rtos/blank_lwip_rtos.ioc b/./soccer-embedded/Development/Ethernet/lwip-rtos-config/lwip-rtos-config/lwip-rtos-config.ioc
 index 8edd3a1..641b5e6 100644
 --- a/./STM32Cube/blank_lwip_rtos/blank_lwip_rtos.ioc
