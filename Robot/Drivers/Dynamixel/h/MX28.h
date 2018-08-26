@@ -13,9 +13,12 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __MX28_H__
 #define __MX28_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -59,5 +62,9 @@ void MX28_EnterMultiTurnMode(Dynamixel_HandleTypeDef* hdynamixel);
  * @}
  */
 /* end MX28Header */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __MX28_H__ */

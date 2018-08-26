@@ -11,6 +11,13 @@
 #ifndef ROBOTGOAL_H_
 #define ROBOTGOAL_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+
 /**
  * @brief Data structure sent from the PC to the MCU. Contains "goal" motor
  *        positions
@@ -20,5 +27,9 @@ typedef struct robot_goal{
 	char msg[80];       /**< Raw message data as bytes sent over a serial
 	                         terminal                                        */
 } RobotGoal;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ROBOTGOAL_H_ */
