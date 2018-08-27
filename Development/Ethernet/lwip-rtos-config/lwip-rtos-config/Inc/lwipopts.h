@@ -94,9 +94,17 @@
 /*----- Default Value for MEMP_NUM_RAW_PCB: 4 ---*/
 #define MEMP_NUM_RAW_PCB 1
 /*----- Default Value for MEMP_NUM_TCP_PCB_LISTEN: 8 ---*/
-#define MEMP_NUM_TCP_PCB_LISTEN 5
+#define MEMP_NUM_TCP_PCB_LISTEN 0
+/*----- Default Value for MEMP_NUM_TCP_SEG: 16 ---*/
+#define MEMP_NUM_TCP_SEG 0
+/*----- Default Value for MEMP_NUM_IGMP_GROUP: 8 ---*/
+#define MEMP_NUM_IGMP_GROUP 0
 /*----- Default Value for MEMP_NUM_SYS_TIMEOUT: 3 ---*/
 #define MEMP_NUM_SYS_TIMEOUT 10
+/*----- Default Value for MEMP_NUM_NETBUF: 2 ---*/
+#define MEMP_NUM_NETBUF 0
+/*----- Default Value for MEMP_NUM_NETCONN: 4 ---*/
+#define MEMP_NUM_NETCONN 0
 /*----- Default Value for PBUF_POOL_SIZE: 16 ---*/
 #define PBUF_POOL_SIZE 11
 /*----- Default Value for PBUF_POOL_BUFSIZE: 592 ---*/
