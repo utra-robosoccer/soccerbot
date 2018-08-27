@@ -90,11 +90,15 @@
 /*----- Default Value for MEM_SIZE: 1600 ---*/
 #define MEM_SIZE 10240
 /*----- Default Value for MEMP_NUM_PBUF: 16 ---*/
-#define MEMP_NUM_PBUF 10
+#define MEMP_NUM_PBUF 0
+/*----- Default Value for MEMP_NUM_RAW_PCB: 4 ---*/
+#define MEMP_NUM_RAW_PCB 1
 /*----- Default Value for MEMP_NUM_TCP_PCB_LISTEN: 8 ---*/
 #define MEMP_NUM_TCP_PCB_LISTEN 5
 /*----- Default Value for MEMP_NUM_SYS_TIMEOUT: 3 ---*/
 #define MEMP_NUM_SYS_TIMEOUT 10
+/*----- Default Value for PBUF_POOL_SIZE: 16 ---*/
+#define PBUF_POOL_SIZE 11
 /*----- Default Value for PBUF_POOL_BUFSIZE: 592 ---*/
 #define PBUF_POOL_BUFSIZE 1524
 /*----- Value in opt.h for LWIP_ETHERNET: LWIP_ARP || PPPOE_SUPPORT -*/
@@ -137,6 +141,8 @@
 #define DEFAULT_UDP_RECVMBOX_SIZE 6
 /*----- Value in opt.h for DEFAULT_ACCEPTMBOX_SIZE: 0 -----*/
 #define DEFAULT_ACCEPTMBOX_SIZE 6
+/*----- Value in opt.h for LWIP_NETCONN: 1 -----*/
+#define LWIP_NETCONN 0
 /*----- Value in opt.h for LWIP_SOCKET: 1 -----*/
 #define LWIP_SOCKET 0
 /*----- Value in opt.h for RECV_BUFSIZE_DEFAULT: INT_MAX -----*/
