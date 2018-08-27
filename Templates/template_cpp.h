@@ -71,3 +71,5 @@ namespace module_name{
  * @}
  */
 /* end - Header */
+
+#endif /* __TEMPLATE_CPP_H__ */
