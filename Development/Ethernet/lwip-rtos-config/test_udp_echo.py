@@ -15,7 +15,7 @@ sock.bind(('', 7))
 
 message = 'this is a message of length 80 chars. asdfghjklasdfghjklasdfghjklasdfghjkl ++++'.encode()
 
-num_samples = 50
+num_samples = 500
 
 times = []
 
