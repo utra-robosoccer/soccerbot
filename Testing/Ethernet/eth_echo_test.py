@@ -6,6 +6,8 @@ import socket
 import sys
 import time
 
+import scheddl
+
 # eth_echo_test.py sends message of given sizes over
 # transmission layer protocols UDP or TCP to an echo server
 # operating on the corresponding protocol. The time to
@@ -45,13 +47,13 @@ ETH_ECHO_TEST = {
 DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # Test parameters
-MESSAGE_SIZES = [1, 10, 80, 100]
-MESSAGE_NUMS_TEST_IN_SEQUENCE = [1, 10, 100]
-MESSAGE_NUM_TRIALS = 3
+MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+MESSAGE_NUMS_TEST_IN_SEQUENCE = [1]
+MESSAGE_NUM_TRIALS = 10
 
 # Network parameters
 PROTOCOL = "UDP"
-MCU_IP_ADDRESS = "192.168.0.53"
+MCU_IP_ADDRESS = "10.0.0.43"
 MCU_PORT = 7
 HOST_PC_PORT = 7
 
@@ -60,7 +62,13 @@ BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 #TIMEOUT = 10000     # Time in ms for PC to timeout and fail a test if MCU hangs
 TCP_RECEIVE_BUFFER_SIZE = 16
 
-RESULTS_TIMES = []
+# Scheduling parameters
+SCHEDDL_SETTING = "deadline"
+SCHEDDL_RUNTIME  = 200000000000
+SCHEDDL_DEADLINE = 500000000000
+SCHEDDL_PERIOD   = 500000000000
+
+# RESULTS_TIMES = []
 RESULTS_LOG = "eth_echo_times_{}_{}.log".format(PROTOCOL, DATE_TIME)
 
 ETH_ECHO_TEST["name"] = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
@@ -73,6 +81,9 @@ ETH_ECHO_TEST["config"]["mcu_port"] = MCU_PORT
 ETH_ECHO_TEST["config"]["host_pc_port"] = HOST_PC_PORT
 ETH_ECHO_TEST["config"]["buffer_size"] = BUFFER_SIZE
 ETH_ECHO_TEST["config"]["tcp_receive_buffer_size"] = TCP_RECEIVE_BUFFER_SIZE
+
+if SCHEDDL_SETTING == "deadline":
+    scheddl.set_deadline(SCHEDDL_RUNTIME, SCHEDDL_DEADLINE, SCHEDDL_PERIOD, scheddl.RESET_ON_FORK)
 
 i_trial = 0
 for msg_size in MESSAGE_SIZES:
@@ -108,7 +119,7 @@ for msg_size in MESSAGE_SIZES:
             times = []
 
             print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
-            print("    ---- Sending message of size {} bytes".format(len(message)))
+            # print("    ---- Sending message of size {} bytes".format(len(message)))
 
             try:
                 if (PROTOCOL == "UDP"):
@@ -138,26 +149,28 @@ for msg_size in MESSAGE_SIZES:
             times_string = ",".join([str(dt) for dt in times])
             test["times"] = times_string
 
-            f = open(RESULTS_LOG, "a")
-            try:
-                f.write("\n" + times_string)
-            except Exception as e:
-                sys.stderr.write("error: Exception {} while writing data".format(e))
-                exit(1)
-            finally:
-                f.close()
+            # f = open(RESULTS_LOG, "a")
+            # try:
+            #     f.write("\n" + times_string)
+            # except Exception as e:
+            #     sys.stderr.write("error: Exception {} while writing data".format(e))
+            #     exit(1)
+            # finally:
+            #     f.close()
 
-            RESULTS_TIMES.extend(times)
+            # RESULTS_TIMES.extend(times)
             ETH_ECHO_TEST["tests"].append(test)
-
+            
             times_array = numpy.array(times)
 
-            print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
+            # print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
             print('    ---- Average echo time: {} s'.format(numpy.average(times_array)))
-            print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
-            print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
+            # print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
+            # print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
+            
+            time.sleep(0.03)
 
-print("Collected {} results".format(len(RESULTS_TIMES)))
+print("Collected {} results".format(len(ETH_ECHO_TEST["tests"])))
 
 with open(ETH_ECHO_TEST["name"], "w") as test_results_json:
     json.dump(ETH_ECHO_TEST, test_results_json)
