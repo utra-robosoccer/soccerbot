@@ -39,7 +39,14 @@ ETH_ECHO_TEST = {
         "mcu_port": "",
         "host_pc_port": "",
         "buffer_size": "",
-        "tcp_receive_buffer_size": ""
+        "tcp_receive_buffer_size": "",
+        "scheduling_type": "",
+        "scheduling_params": {
+            "scheddl_setting": "",
+            "scheddl_runtime": "",
+            "scheddl_deadline": "",
+            "scheddl_period": ""
+        }
     },
     "tests": []
 }
@@ -47,9 +54,10 @@ ETH_ECHO_TEST = {
 DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # Test parameters
-MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+#MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+MESSAGE_SIZES = [80]
 MESSAGE_NUMS_TEST_IN_SEQUENCE = [1]
-MESSAGE_NUM_TRIALS = 10
+MESSAGE_NUM_TRIALS = 100
 
 # Network parameters
 PROTOCOL = "UDP"
@@ -63,13 +71,10 @@ BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 TCP_RECEIVE_BUFFER_SIZE = 16
 
 # Scheduling parameters
-SCHEDDL_SETTING = "deadline"
-SCHEDDL_RUNTIME  = 200000000000
-SCHEDDL_DEADLINE = 500000000000
-SCHEDDL_PERIOD   = 500000000000
-
-# RESULTS_TIMES = []
-RESULTS_LOG = "eth_echo_times_{}_{}.log".format(PROTOCOL, DATE_TIME)
+SCHEDDL_SETTING = ""
+SCHEDDL_RUNTIME  = 300000000000
+SCHEDDL_DEADLINE = 600000000000
+SCHEDDL_PERIOD   = 600000000000
 
 ETH_ECHO_TEST["name"] = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
@@ -81,9 +86,15 @@ ETH_ECHO_TEST["config"]["mcu_port"] = MCU_PORT
 ETH_ECHO_TEST["config"]["host_pc_port"] = HOST_PC_PORT
 ETH_ECHO_TEST["config"]["buffer_size"] = BUFFER_SIZE
 ETH_ECHO_TEST["config"]["tcp_receive_buffer_size"] = TCP_RECEIVE_BUFFER_SIZE
+ETH_ECHO_TEST["config"]["scheduling_type"] = "scheddl_python_module"
+ETH_ECHO_TEST["config"]["scheduling_params"]["scheddl_setting"] = SCHEDDL_SETTING
+ETH_ECHO_TEST["config"]["scheduling_params"]["scheddl_runtime"] = SCHEDDL_RUNTIME
+ETH_ECHO_TEST["config"]["scheduling_params"]["scheddl_deadline"] = SCHEDDL_DEADLINE
+ETH_ECHO_TEST["config"]["scheduling_params"]["scheddl_period"] = SCHEDDL_PERIOD
 
 if SCHEDDL_SETTING == "deadline":
     scheddl.set_deadline(SCHEDDL_RUNTIME, SCHEDDL_DEADLINE, SCHEDDL_PERIOD, scheddl.RESET_ON_FORK)
+    print("Running with SCHEDDL_SETTING \"deadline\"")
 
 i_trial = 0
 for msg_size in MESSAGE_SIZES:
@@ -103,8 +114,7 @@ for msg_size in MESSAGE_SIZES:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             elif PROTOCOL == "TCP":
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            if PROTOCOL == None:
+            else:
                 sys.stderr.write("error: Must specify a protocol")
                 exit(1)
 
@@ -149,28 +159,20 @@ for msg_size in MESSAGE_SIZES:
             times_string = ",".join([str(dt) for dt in times])
             test["times"] = times_string
 
-            # f = open(RESULTS_LOG, "a")
-            # try:
-            #     f.write("\n" + times_string)
-            # except Exception as e:
-            #     sys.stderr.write("error: Exception {} while writing data".format(e))
-            #     exit(1)
-            # finally:
-            #     f.close()
-
-            # RESULTS_TIMES.extend(times)
             ETH_ECHO_TEST["tests"].append(test)
             
             times_array = numpy.array(times)
 
-            # print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
+            print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
             print('    ---- Average echo time: {} s'.format(numpy.average(times_array)))
-            # print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
-            # print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
+            print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
+            print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
             
-            time.sleep(0.03)
+            time.sleep(0.05)
 
 print("Collected {} results".format(len(ETH_ECHO_TEST["tests"])))
 
 with open(ETH_ECHO_TEST["name"], "w") as test_results_json:
     json.dump(ETH_ECHO_TEST, test_results_json)
+
+
