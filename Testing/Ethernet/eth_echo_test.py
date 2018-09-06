@@ -54,8 +54,8 @@ ETH_ECHO_TEST = {
 DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # Test parameters
-# MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
-MESSAGE_SIZES = [80]
+MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+#MESSAGE_SIZES = [80]
 MESSAGE_NUMS_TEST_IN_SEQUENCE = [1]
 MESSAGE_NUM_TRIALS = 100
 
@@ -71,7 +71,7 @@ BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 TCP_RECEIVE_BUFFER_SIZE = 16
 
 # Scheduling parameters
-SCHEDDL_SETTING = "fifo"
+SCHEDDL_SETTING = "rr"
 SCHEDDL_RUNTIME  = 300000000000
 SCHEDDL_DEADLINE = 600000000000
 SCHEDDL_PERIOD   = 600000000000
@@ -99,6 +99,9 @@ if SCHEDDL_SETTING == "deadline":
 elif SCHEDDL_SETTING == "fifo":
     scheddl.set_fifo(SCHEDDL_PRIORITY, scheddl.RESET_ON_FORK)
     print("Running with SCHEDDL_SETTING \"fifo\"")
+elif SCHEDDL_SETTING == "rr":
+    scheddl.set_rr(SCHEDDL_PRIORITY, scheddl.RESET_ON_FORK)
+    print("Running with SCHEDDL_SETTING \"rr\"")
 
 i_trial = 0
 for msg_size in MESSAGE_SIZES:
