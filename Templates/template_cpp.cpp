@@ -52,7 +52,7 @@ namespace{
 
 
 
-}
+} /* anonymous namespace */
 
 
 
