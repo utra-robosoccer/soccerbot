@@ -11,6 +11,8 @@
 // UdpInterface, and mocking classes do not have to care about how the
 // networking functions are implemented under the hood - only the methods
 // called.
+// Another approach rather than having stateful members is to pass a
+// void* to every interface function, and pass data as needed into there.
 class LwipUdpInterface : public UdpInterface {
 public:
 	LwipUdpInterface();
@@ -87,12 +89,17 @@ PcInterface::PcInterface(Protocol_e _protocol) : protocol(_protocol) {
 	// No need to initialize any members here; this is done in PcInterface.h
 }
 
+PcInterface::PcInterface(UdpInterface *_udpInterface) {
+	udpInterface = _udpInterface;
+}
+
 PcInterface::~PcInterface() {
 
 }
 
 bool PcInterface::setup() {
 	// TODO: implement me
+	return udpInterface->udpNew();
 }
 
 bool PcInterface::receive() {

@@ -1,6 +1,10 @@
 #include <PcInterface.h>
 #include <UdpInterface.h>
 
+///// GTEST/GMOCK /////
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
 // PcInterfaceTester contains testing functions that need access to private members
 // but are not to be used under normal circumstances.
 class PcInterfaceTester {
@@ -22,10 +26,6 @@ bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint
 	}
 	return true;
 }
-
-///// GTEST/GMOCK /////
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 
 class MockUdpInterface : public UdpInterface {
 public:
@@ -110,6 +110,14 @@ TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
 	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
 		ASSERT_EQ(txArray[iTxArray], 0);
 	}
+}
+
+TEST(PcInterfaceTests, MockFunctionCallsUdpSetup) {
+	MockUdpInterface udpMockInterface;
+	EXPECT_CALL(udpMockInterface, udpNew()).Times(1);
+
+	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	pcInterfaceTestObject.setup();
 }
 
 // TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
