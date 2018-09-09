@@ -22,6 +22,8 @@ public:
 	bool getRxBuffer(uint8_t *_rxArray) const;
 	bool setTxBuffer(const uint8_t *_txArray);
 	Protocol_e getProtocol();
+
+	friend class PcInterfaceTester;
 private:
 	const Protocol_e protocol = UDP;
 	uint8_t rxBuffer [PC_INTERFACE_BUFFER_SIZE] = {};
@@ -29,6 +31,14 @@ private:
 	// TODO: implement mutexes before integrating with FreeRTOS
 	// rxBuffer mutex
 	// txBuffer mutex
+};
+
+// PcInterfaceTester contains testing functions that need access to private members
+// but are not to be used under normal circumstances.
+class PcInterfaceTester {
+public:
+	static bool setRxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_rxArray);
+	static bool getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_txArray);
 };
 
 #endif
