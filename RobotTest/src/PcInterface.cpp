@@ -30,7 +30,7 @@ bool PcInterface::transmit() {
 // getRxBuffer deep copies all elements, out of rxBuffer to _rxArray.
 // _rxArray must have length == PC_INTERFACE_BUFFER_SIZE.
 bool PcInterface::getRxBuffer(uint8_t *_rxArray) const {
-	// FIXME: assert length of _rxArray
+	// FIXME: return false if length of _rxArray - once <array> is used
 	for (int iRxBuffer = 0; iRxBuffer < PC_INTERFACE_BUFFER_SIZE; iRxBuffer++) {
 		_rxArray[iRxBuffer] = rxBuffer[iRxBuffer];
 	}
@@ -40,7 +40,7 @@ bool PcInterface::getRxBuffer(uint8_t *_rxArray) const {
 // setTxBuffer deep copies all elements, into txBuffer from _txArray.
 // _txArray must have length == PC_INTERFACE_BUFFER_SIZE.
 bool PcInterface::setTxBuffer(const uint8_t *_txArray) {
-	// FIXME: assert length of _txArray
+	// FIXME: return false if length of _txArray - once <array> is used
 	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
 		txBuffer[iTxArray] = _txArray[iTxArray];
 	}
@@ -49,6 +49,20 @@ bool PcInterface::setTxBuffer(const uint8_t *_txArray) {
 
 Protocol_e PcInterface::getProtocol() {
 	return protocol;
+}
+
+bool PcInterfaceTester::setRxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_rxArray) {
+	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
+		pcInterfaceUnderTest.rxBuffer[iRxArray] = _rxArray[iRxArray];
+	}
+	return true;
+}
+
+bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_txArray) {
+	for (int iTxBuffer = 0; iTxBuffer < PC_INTERFACE_BUFFER_SIZE; iTxBuffer++) {
+		_txArray[iTxBuffer] = pcInterfaceUnderTest.txBuffer[iTxBuffer];
+	}
+	return true;
 }
 
 ///// GMOCK /////
@@ -62,10 +76,10 @@ TEST(PcInterfaceTests, MemberProtocolDefaultInitializesToUDP) {
 	ASSERT_EQ(UDP, pcInterfaceTestObject.getProtocol());
 }
 
-// CanInitializeAndGetMemberProtocol tests that a constructor can
+// MemberProtocolCanInitializeAndGet tests that a constructor can
 // initialize and get back the protocol member of PcInterface with
 // all of the values defined in type enum Protocol_e.
-TEST(PcInterfaceTests, CanInitializeAndGetMemberProtocol) {
+TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
 	for (int iProtocol = UDP; iProtocol <= USB_UART; iProtocol++) {
 		Protocol_e protocol = (Protocol_e)iProtocol;
 		PcInterface pcInterfaceTestObject(protocol);
@@ -74,9 +88,9 @@ TEST(PcInterfaceTests, CanInitializeAndGetMemberProtocol) {
 	}
 }
 
-// RxBufferMemberDefaultInitializesToZero tests that the default
-// constructor initializes the rxArray entries to zeroes.
-TEST(PcInterfaceTests, RxBufferMemberDefaultInitializesToZero) {
+// MemberRxBufferDefaultInitializesToZero tests that the default
+// constructor initializes the rxBuffer entries to zeroes.
+TEST(PcInterfaceTests, MemberRxBufferDefaultInitializesToZero) {
 	PcInterface pcInterfaceTestObject;
 	uint8_t rxArray [PC_INTERFACE_BUFFER_SIZE];
 	bool success = pcInterfaceTestObject.getRxBuffer(rxArray);
@@ -87,5 +101,43 @@ TEST(PcInterfaceTests, RxBufferMemberDefaultInitializesToZero) {
 	}
 }
 
-// TODO: add a test for setting TxBuffer.
-// TODO: test for parameterized constructor initializing to zero.
+// MemberRxBufferParameterizedInitializesToZero tests that the
+// parameterized constructor initializes the rxBuffer entries to zeroes.
+TEST(PcInterfaceTests, MemberRxBufferParameterizedInitalizesToZero) {
+	PcInterface pcInterfaceTestObject(UDP);
+	uint8_t rxArray [PC_INTERFACE_BUFFER_SIZE];
+	bool success = pcInterfaceTestObject.getRxBuffer(rxArray);
+	ASSERT_TRUE(success);
+
+	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
+		ASSERT_EQ(rxArray[iRxArray], 0);
+	}
+}
+
+// MemberTxBufferDefaultInitializesToZero tests that the default
+// constructor initializes the txBuffer entries to zeroes.
+TEST(PcInterfaceTests, MemberTxBufferDefaultInitializesToZero) {
+	PcInterface pcInterfaceTestObject;
+	uint8_t txArray [PC_INTERFACE_BUFFER_SIZE];
+	bool success = PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
+	ASSERT_TRUE(success);
+
+	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
+		ASSERT_EQ(txArray[iTxArray], 0);
+	}
+}
+
+// MemberTxBufferParameterizedInitializesToZero tests that the
+// parameterized constructor initializes the txBuffer entries to zeroes.
+TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
+	PcInterface pcInterfaceTestObject(UDP);
+	uint8_t txArray [PC_INTERFACE_BUFFER_SIZE];
+	bool success = PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
+	ASSERT_TRUE(success);
+
+	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
+		ASSERT_EQ(txArray[iTxArray], 0);
+	}
+}
+
+// TODO: add a test for setting TxBuffer and getting from RxBuffer.
