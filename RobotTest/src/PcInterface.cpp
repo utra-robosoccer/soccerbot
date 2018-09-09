@@ -24,7 +24,6 @@ bool PcInterface::transmit() {
 	// TODO: implement me
 }
 
-// NOTE: Consider a setRxBuffer and getTxBuffer for debugging/testing purposes - friend functions?
 // NOTE: Consider using STL to allow arrays of variable length < PC_INTERFACE_BUFFER_SIZE to be input.
 
 // getRxBuffer deep copies all elements, out of rxBuffer to _rxArray.
@@ -65,8 +64,9 @@ bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint
 	return true;
 }
 
-///// GMOCK /////
+///// GTEST/GMOCK /////
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 // MemberProtocolDefaultInitializesToUDP tests that the default
 // constructor of PcInterface initializes the member protocol to UDP.
@@ -140,4 +140,4 @@ TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
 	}
 }
 
-// TODO: add a test for setting TxBuffer and getting from RxBuffer.
+// TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
