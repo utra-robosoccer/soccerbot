@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <UdpInterface.h>
+
 #define PC_INTERFACE_BUFFER_SIZE 1024
 #define PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC 5656
 
@@ -14,8 +16,9 @@ enum Protocol_e {
 class PcInterface {
 public:
 	PcInterface();
-	~PcInterface();
 	PcInterface(Protocol_e _protocol);
+	PcInterface(UdpInterface *_udpInterface);
+	~PcInterface();
 	bool setup();
 	bool receive();
 	bool transmit();
@@ -28,6 +31,7 @@ private:
 	const Protocol_e protocol = UDP;
 	uint8_t rxBuffer [PC_INTERFACE_BUFFER_SIZE] = {};
 	uint8_t txBuffer [PC_INTERFACE_BUFFER_SIZE] = {};
+	UdpInterface *udpInterface = nullptr; // TODO: make const
 	// TODO: implement mutexes before integrating with FreeRTOS
 	// rxBuffer mutex
 	// txBuffer mutex
