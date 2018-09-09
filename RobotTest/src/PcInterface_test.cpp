@@ -112,12 +112,38 @@ TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
 	}
 }
 
-TEST(PcInterfaceTests, MockFunctionCallsUdpSetup) {
+using ::testing::Return;
+
+TEST(PcInterfaceTests, MockFunctionCallsUdpSetupSuccess) {
 	MockUdpInterface udpMockInterface;
-	EXPECT_CALL(udpMockInterface, udpNew()).Times(1);
+	EXPECT_CALL(udpMockInterface, udpRecv()).Times(1).WillOnce(Return(true));
+	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(true));
+	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
 	PcInterface pcInterfaceTestObject(&udpMockInterface);
-	pcInterfaceTestObject.setup();
+	bool success = pcInterfaceTestObject.setup();
+	ASSERT_TRUE(success);
 }
 
+TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnNew) {
+	MockUdpInterface udpMockInterface;
+	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(false));
+
+	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	bool success = pcInterfaceTestObject.setup();
+	ASSERT_FALSE(success);
+}
+
+TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnBind) {
+	MockUdpInterface udpMockInterface;
+	EXPECT_CALL(udpMockInterface, udpRemove()).Times(1).WillOnce(Return(true)); // Assume successful remove call by returning true
+	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(false));
+	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
+
+	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	bool success = pcInterfaceTestObject.setup();
+	ASSERT_FALSE(success);
+}
+
+// TODO: tests for failing on everything?
 // TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
