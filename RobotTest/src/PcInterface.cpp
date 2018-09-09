@@ -28,7 +28,7 @@ public:
 	bool udpDisconnect();
 	bool pbufFree();
 private:
-	// FIXME: These will be of the right types for the networking stack.
+	// FIXME: These need to be of the right types for the networking stack.
 	const int *pcb = nullptr;
 	const int *ipaddr = nullptr;
 	const int port = 0;
@@ -97,15 +97,49 @@ PcInterface::~PcInterface() {
 
 }
 
+// NOTE: this is a good place where err_t (which is set to integer values
+// for each error) might be handy, to tell what kind of error happened.
 bool PcInterface::setup() {
-	// TODO: implement me
-	return udpInterface->udpNew();
+	bool success = false;
+	switch(protocol) {
+	case UDP:
+		success = udpInterface->udpNew();
+		if (success) {
+			success = udpInterface->udpBind();
+			if (success) {
+				udpInterface->udpRecv();
+			}
+			else {
+				udpInterface->udpRemove();
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	return success;
 }
 
+bool PcInterface::input() {
+	switch(protocol) {
+	case UDP:
+		// Should be operating in its own task - receives indefinitely.
+		while (udpInterface->ethernetifInput()) {
+			;
+		}
+		// Should not return.
+		return false;
+	default:
+		return false;
+	}
+}
+
+// Purpose: to make the HW calls and convert packets into array of bytes.
 bool PcInterface::receive() {
-	// TODO: implement me
+
 }
 
+// Purpose: to covert array of bytes into packets and make the HW calls.
 bool PcInterface::transmit() {
 	// TODO: implement me
 }
