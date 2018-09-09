@@ -29,15 +29,15 @@ bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint
 
 class MockUdpInterface : public UdpInterface {
 public:
-	MOCK_METHOD0(udpNew, void*());
-	MOCK_METHOD3(udpBind, int8_t(void*, void*, uint16_t));
-	MOCK_METHOD3(udpRecv, void(void*, void*, void*));
-	MOCK_METHOD1(udpRemove, void(void*));
-	MOCK_METHOD1(ethernetifInput, void(void*));
-	MOCK_METHOD3(udpConnect, int8_t(void*, void*, uint16_t));
-	MOCK_METHOD2(udpSend, int8_t(void*, void*));
-	MOCK_METHOD1(udpDisconnect, void(void*));
-	MOCK_METHOD1(pbufFree, int8_t(void*));
+	MOCK_METHOD0(udpNew, bool());
+	MOCK_METHOD0(udpBind, bool());
+	MOCK_METHOD0(udpRecv, bool());
+	MOCK_METHOD0(udpRemove, bool());
+	MOCK_METHOD0(ethernetifInput, bool());
+	MOCK_METHOD0(udpConnect, bool());
+	MOCK_METHOD0(udpSend, bool());
+	MOCK_METHOD0(udpDisconnect, bool());
+	MOCK_METHOD0(pbufFree, bool());
 };
 
 // MemberProtocolDefaultInitializesToUDP tests that the default

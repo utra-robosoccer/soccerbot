@@ -9,18 +9,21 @@
 // in a child class of this interface.
 // Necessary in order to make the application classes mockable
 // (gmock hooks onto this).
+// Return types are bool to report success/failure with true/false
+// respectively, but could be replaced by some generic error type
+// err_t.
 class UdpInterface {
 public:
 	virtual ~UdpInterface() {}
-	virtual void* udpNew() = 0;
-	virtual int8_t udpBind(void *pcb, void *ipaddr, uint16_t port) = 0;
-	virtual void udpRecv(void *pcb, void *recv, void *recvArgs) = 0;
-	virtual void udpRemove(void *pcb) = 0;
-	virtual void ethernetifInput(void *netif) = 0;
-	virtual int8_t udpConnect(void *pcb, void *ipaddr, uint16_t port) = 0;
-	virtual int8_t udpSend(void *pcb, void *pbuf) = 0;
-	virtual void udpDisconnect(void *pcb) = 0;
-	virtual int8_t pbufFree(void *pbuf) = 0;
+	virtual bool udpNew() = 0;
+	virtual bool udpBind() = 0;
+	virtual bool udpRecv() = 0;
+	virtual bool udpRemove() = 0;
+	virtual bool ethernetifInput() = 0;
+	virtual bool udpConnect() = 0;
+	virtual bool udpSend() = 0;
+	virtual bool udpDisconnect() = 0;
+	virtual bool pbufFree() = 0;
 };
 
 #endif
