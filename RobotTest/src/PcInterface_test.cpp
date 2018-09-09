@@ -1,4 +1,5 @@
 #include <PcInterface.h>
+#include <UdpInterface.h>
 
 // PcInterfaceTester contains testing functions that need access to private members
 // but are not to be used under normal circumstances.
@@ -25,6 +26,19 @@ bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint
 ///// GTEST/GMOCK /////
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+class MockUdpInterface : public UdpInterface {
+public:
+	MOCK_METHOD0(udpNew, void*());
+	MOCK_METHOD3(udpBind, int8_t(void*, void*, uint16_t));
+	MOCK_METHOD3(udpRecv, void(void*, void*, void*));
+	MOCK_METHOD1(udpRemove, void(void*));
+	MOCK_METHOD1(ethernetifInput, void(void*));
+	MOCK_METHOD3(udpConnect, int8_t(void*, void*, uint16_t));
+	MOCK_METHOD2(udpSend, int8_t(void*, void*));
+	MOCK_METHOD1(udpDisconnect, void(void*));
+	MOCK_METHOD1(pbufFree, int8_t(void*));
+};
 
 // MemberProtocolDefaultInitializesToUDP tests that the default
 // constructor of PcInterface initializes the member protocol to UDP.
