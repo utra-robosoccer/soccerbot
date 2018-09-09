@@ -34,12 +34,4 @@ private:
 	// txBuffer mutex
 };
 
-// PcInterfaceTester contains testing functions that need access to private members
-// but are not to be used under normal circumstances.
-class PcInterfaceTester {
-public:
-	static bool setRxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_rxArray);
-	static bool getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_txArray);
-};
-
 #endif
