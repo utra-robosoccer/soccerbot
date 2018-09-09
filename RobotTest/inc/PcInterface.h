@@ -16,7 +16,6 @@ public:
 	PcInterface();
 	~PcInterface();
 	PcInterface(Protocol_e _protocol);
-
 	bool setup();
 	bool receive();
 	bool transmit();
