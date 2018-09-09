@@ -1,4 +1,68 @@
 #include <PcInterface.h>
+#include <UdpInterface.h>
+
+// LwipUdpInterface is the real i.e. hardware-facing implementation of the
+// abstract UdpInterface class. This will call out to LwIP and any
+// lower-level networking functions to implement UDP functionality.
+// For now, it is never used outside of PcInterface, so the class
+// definition and implementation live in PcInterface.cpp.
+class LwipUdpInterface : public UdpInterface {
+	LwipUdpInterface();
+	~LwipUdpInterface();
+	void* udpNew();
+	int8_t udpBind(void *pcb, void *ipaddr, uint16_t port);
+	void udpRecv(void *pcb, void *recv, void *recvArgs);
+	void udpRemove(void *pcb);
+	void ethernetifInput(void *netif);
+	int8_t udpConnect(void *pcb, void *ipaddr, uint16_t port);
+	int8_t udpSend(void *pcb, void *pbuf);
+	void udpDisconnect(void *pcb);
+	int8_t pbufFree(void *pbuf);
+};
+
+LwipUdpInterface::LwipUdpInterface() {
+
+}
+
+LwipUdpInterface::~LwipUdpInterface() {
+
+}
+
+void* LwipUdpInterface::udpNew() {
+	return nullptr;
+}
+
+int8_t LwipUdpInterface::udpBind(void *pcb, void *ipaddr, uint16_t port) {
+	return 0;
+}
+
+void LwipUdpInterface::udpRecv(void *pcb, void *recv, void *recvArgs) {
+
+}
+
+void LwipUdpInterface::udpRemove(void *pcb) {
+
+}
+
+void LwipUdpInterface::ethernetifInput(void *netif) {
+
+}
+
+int8_t LwipUdpInterface::udpConnect(void *pcb, void *ipaddr, uint16_t port) {
+	return 0;
+}
+
+int8_t LwipUdpInterface::udpSend(void *pcb, void *pbuf) {
+	return 0;
+}
+
+void LwipUdpInterface::udpDisconnect(void *pcb) {
+
+}
+
+int8_t LwipUdpInterface::pbufFree(void *pbuf) {
+	return 0;
+}
 
 PcInterface::PcInterface() {
 	// No need to initialize any members here; this is done in PcInterface.h
