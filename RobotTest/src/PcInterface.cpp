@@ -6,18 +6,33 @@
 // lower-level networking functions to implement UDP functionality.
 // For now, it is never used outside of PcInterface, so the class
 // definition and implementation live in PcInterface.cpp.
+// Functions have no parameters, and instead pass the state information
+// they were initialized with (members of this class). This means the PcInterface,
+// UdpInterface, and mocking classes do not have to care about how the
+// networking functions are implemented under the hood - only the methods
+// called.
 class LwipUdpInterface : public UdpInterface {
+public:
 	LwipUdpInterface();
+	// TODO: parameterized constructor.
 	~LwipUdpInterface();
-	void* udpNew();
-	int8_t udpBind(void *pcb, void *ipaddr, uint16_t port);
-	void udpRecv(void *pcb, void *recv, void *recvArgs);
-	void udpRemove(void *pcb);
-	void ethernetifInput(void *netif);
-	int8_t udpConnect(void *pcb, void *ipaddr, uint16_t port);
-	int8_t udpSend(void *pcb, void *pbuf);
-	void udpDisconnect(void *pcb);
-	int8_t pbufFree(void *pbuf);
+	bool udpNew();
+	bool udpBind();
+	bool udpRecv();
+	bool udpRemove();
+	bool ethernetifInput();
+	bool udpConnect();
+	bool udpSend();
+	bool udpDisconnect();
+	bool pbufFree();
+private:
+	// FIXME: These will be of the right types for the networking stack.
+	const int *pcb = nullptr;
+	const int *ipaddr = nullptr;
+	const int port = 0;
+	const int *recvCallback = nullptr;
+	const int *recvArgs = nullptr;
+	const int *netif = nullptr;
 };
 
 LwipUdpInterface::LwipUdpInterface() {
@@ -28,40 +43,40 @@ LwipUdpInterface::~LwipUdpInterface() {
 
 }
 
-void* LwipUdpInterface::udpNew() {
-	return nullptr;
+bool LwipUdpInterface::udpNew() {
+	return true;
 }
 
-int8_t LwipUdpInterface::udpBind(void *pcb, void *ipaddr, uint16_t port) {
-	return 0;
+bool LwipUdpInterface::udpBind() {
+	return true;
 }
 
-void LwipUdpInterface::udpRecv(void *pcb, void *recv, void *recvArgs) {
-
+bool LwipUdpInterface::udpRecv() {
+	return true;
 }
 
-void LwipUdpInterface::udpRemove(void *pcb) {
-
+bool LwipUdpInterface::udpRemove() {
+	return true;
 }
 
-void LwipUdpInterface::ethernetifInput(void *netif) {
-
+bool LwipUdpInterface::ethernetifInput() {
+	return true;
 }
 
-int8_t LwipUdpInterface::udpConnect(void *pcb, void *ipaddr, uint16_t port) {
-	return 0;
+bool LwipUdpInterface::udpConnect() {
+	return true;
 }
 
-int8_t LwipUdpInterface::udpSend(void *pcb, void *pbuf) {
-	return 0;
+bool LwipUdpInterface::udpSend() {
+	return true;
 }
 
-void LwipUdpInterface::udpDisconnect(void *pcb) {
-
+bool LwipUdpInterface::udpDisconnect() {
+	return true;
 }
 
-int8_t LwipUdpInterface::pbufFree(void *pbuf) {
-	return 0;
+bool LwipUdpInterface::pbufFree() {
+	return true;
 }
 
 PcInterface::PcInterface() {
