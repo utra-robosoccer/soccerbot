@@ -145,8 +145,9 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupSuccess) {
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
 	PcInterface pcInterfaceTestObject;
-	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
-	bool success = pcInterfaceTestObject.setup();
+	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	ASSERT_TRUE(success);
+	success = pcInterfaceTestObject.setup();
 	ASSERT_TRUE(success);
 }
 
@@ -155,8 +156,9 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnNew) {
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(false));
 
 	PcInterface pcInterfaceTestObject;
-	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
-	bool success = pcInterfaceTestObject.setup();
+	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	ASSERT_TRUE(success);
+	success = pcInterfaceTestObject.setup();
 	ASSERT_FALSE(success);
 }
 
@@ -166,9 +168,10 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnBind) {
 	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(false));
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
-	PcInterface pcInterfaceTestObject;
-	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
-	bool success = pcInterfaceTestObject.setup();
+	PcInterface pcInterfaceTestObject(UDP);
+	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	ASSERT_TRUE(success);
+	success = pcInterfaceTestObject.setup();
 	ASSERT_FALSE(success);
 }
 
@@ -179,13 +182,40 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpReceive) {
 	EXPECT_CALL(udpMockInterface, waitRecv()).Times(1);
 	EXPECT_CALL(udpMockInterface, ethernetifInput()).Times(1);
 
-	PcInterface pcInterfaceTestObject;
-	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
-	bool success = pcInterfaceTestObject.setup();
+	PcInterface pcInterfaceTestObject(UDP);
+	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.receive();
 	ASSERT_TRUE(success);
 }
 
+TEST(PcInterfaceTests, MockFunctionCallsUdpTransmit) {
+	MockUdpInterface udpMockInterface;
+	EXPECT_CALL(udpMockInterface, pbufFreeTx()).Times(1);
+	EXPECT_CALL(udpMockInterface, udpDisconnect()).Times(1);
+	EXPECT_CALL(udpMockInterface, udpSend()).Times(1);
+	EXPECT_CALL(udpMockInterface, udpConnect()).Times(1);
+	EXPECT_CALL(udpMockInterface, bytesToPacket(_)).Times(1);
+
+	PcInterface pcInterfaceTestObject(UDP);
+	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	ASSERT_TRUE(success);
+	success = pcInterfaceTestObject.transmit();
+	ASSERT_TRUE(success);
+}
+
+TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNull) {
+	PcInterface pcInterfaceTestObject;
+	ASSERT_FALSE(pcInterfaceTestObject.setUdpInterface(nullptr));
+}
+
+TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNotUDP) {
+	PcInterface pcInterfaceTestObject(USB_UART);
+	MockUdpInterface udpMockInterface;
+	ASSERT_FALSE(pcInterfaceTestObject.setUdpInterface(&udpMockInterface));
+}
+
 // TODO: tests for failing on everything - all possible combinations?
 // TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
+// TODO: test coverage for LwipUdpInterface, set up fixtures to test passing
+//       data between rx/txBuffers and pbufs
