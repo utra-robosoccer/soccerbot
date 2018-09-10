@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['main',['main',['../d0/d29/main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main.c']]],
-  ['main_2ec',['main.c',['../d0/d29/main_8c.html',1,'']]],
   ['main_2eh',['main.h',['../d4/dbf/main_8h.html',1,'']]],
   ['max_5fangle',['MAX_ANGLE',['../d9/d76/group___dynamixel___data.html#gaccb2add52210ac77bacac5d48e33b1f0',1,'MAX_ANGLE():&#160;DynamixelProtocolV1.c'],['../d9/d76/group___dynamixel___data.html#gaccb2add52210ac77bacac5d48e33b1f0',1,'MAX_ANGLE():&#160;DynamixelProtocolV1.c']]],
   ['max_5fdelay_5ftime',['MAX_DELAY_TIME',['../d9/dad/group___notification.html#ga92d268dc3052f4e79fedd139859b0c8f',1,'Notification.h']]],
