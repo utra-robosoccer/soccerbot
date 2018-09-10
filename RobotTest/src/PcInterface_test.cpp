@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 using ::testing::Return;
+using ::testing::_;
 
 // PcInterfaceTester contains testing functions that need access to private members
 // but are not to be used under normal circumstances.
@@ -169,6 +170,21 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnBind) {
 	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	bool success = pcInterfaceTestObject.setup();
 	ASSERT_FALSE(success);
+}
+
+TEST(PcInterfaceTests, MockFunctionCallsUdpReceive) {
+	MockUdpInterface udpMockInterface;
+	EXPECT_CALL(udpMockInterface, pbufFreeRx()).Times(1);
+	EXPECT_CALL(udpMockInterface, packetToBytes(_)).Times(1);
+	EXPECT_CALL(udpMockInterface, waitRecv()).Times(1);
+	EXPECT_CALL(udpMockInterface, ethernetifInput()).Times(1);
+
+	PcInterface pcInterfaceTestObject;
+	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	bool success = pcInterfaceTestObject.setup();
+	ASSERT_TRUE(success);
+	success = pcInterfaceTestObject.receive();
+	ASSERT_TRUE(success);
 }
 
 // TODO: tests for failing on everything - all possible combinations?
