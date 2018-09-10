@@ -17,7 +17,6 @@ class PcInterface {
 public:
 	PcInterface();
 	PcInterface(Protocol_e _protocol);
-	PcInterface(UdpInterface *_udpInterface);
 	~PcInterface();
 	bool setup();
 	bool input(); // Needed if any action is required to trigger a receive().
@@ -26,13 +25,16 @@ public:
 	bool getRxBuffer(uint8_t *_rxArray) const;
 	bool setTxBuffer(const uint8_t *_txArray);
 	Protocol_e getProtocol();
+	bool setUdpInterface(UdpInterface *_udpInterface);
+	UdpInterface* getUdpInterface() const;
 
 	friend class PcInterfaceTester;
 private:
-	const Protocol_e protocol = UDP;
-	uint8_t rxBuffer [PC_INTERFACE_BUFFER_SIZE] = {};
-	uint8_t txBuffer [PC_INTERFACE_BUFFER_SIZE] = {};
-	UdpInterface *udpInterface = nullptr; // TODO: make const
+	const Protocol_e protocol = UDP; // NOTE: possibly support multiple protocols at same time? would make this array in that case. right now only designed for one protocol though.
+	uint8_t rxBuffer [PC_INTERFACE_BUFFER_SIZE] = {}; // TODO: synchronize access to this
+	uint8_t txBuffer [PC_INTERFACE_BUFFER_SIZE] = {}; // TODO: synchronize access to this
+	UdpInterface *udpInterface = nullptr;
+	// Other interfaces may be added here.
 	// TODO: implement mutexes before integrating with FreeRTOS
 	// rxBuffer mutex
 	// txBuffer mutex

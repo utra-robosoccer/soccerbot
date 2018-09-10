@@ -23,7 +23,11 @@ public:
 	virtual bool udpConnect() = 0;
 	virtual bool udpSend() = 0;
 	virtual bool udpDisconnect() = 0;
-	virtual bool pbufFree() = 0;
+	virtual bool pbufFreeRx() = 0;
+	virtual bool pbufFreeTx() = 0;
+	virtual bool waitRecv() = 0;
+	virtual bool packetToBytes(uint8_t *_byteArray) = 0;
+	virtual bool bytesToPacket(const uint8_t *_byteArray) = 0;
 };
 
 #endif

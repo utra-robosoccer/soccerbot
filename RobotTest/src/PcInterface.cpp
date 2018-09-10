@@ -18,6 +18,8 @@ public:
 	LwipUdpInterface();
 	// TODO: parameterized constructor.
 	~LwipUdpInterface();
+
+	// Abstract UdpInterface class overrides.
 	bool udpNew();
 	bool udpBind();
 	bool udpRecv();
@@ -26,15 +28,41 @@ public:
 	bool udpConnect();
 	bool udpSend();
 	bool udpDisconnect();
-	bool pbufFree();
+	bool pbufFreeRx();
+	bool pbufFreeTx();
+	bool waitRecv();
+	bool packetToBytes(uint8_t *_byteArray);
+	bool bytesToPacket(const uint8_t *_byteArray);
+
+	// Extra helper functions
+	int* getRecvCallbackArg() const;
+	int* getRecvCallbackPcb() const;
+	int* getRecvCallbackPbuf() const;
+	int* getRecvCallbackAddr() const;
+	int getRecvCallbackPort() const;
+
+	// FIXME: use correct networking stack types in callback function.
+	friend void recvCallback(void *arg, void *pcb, void *p,
+			const void *addr, int port);
 private:
 	// FIXME: These need to be of the right types for the networking stack.
 	const int *pcb = nullptr;
 	const int *ipaddr = nullptr;
+	const int *ipaddrPc = nullptr;
 	const int port = 0;
-	const int *recvCallback = nullptr;
-	const int *recvArgs = nullptr;
+	const int portPc = 0;
 	const int *netif = nullptr;
+	const int *recvSemaphore = nullptr;
+
+	// Set by recvCallback.
+	int *recvCallbackArg = nullptr;
+	int *recvCallbackPcb = nullptr;
+	int *recvCallbackPbuf = nullptr;
+	int *recvCallbackAddr = nullptr;
+	int recvCallbackPort = 0;
+
+	int *txPbuf = nullptr;
+	// TODO: synchronize access to pbufs
 };
 
 LwipUdpInterface::LwipUdpInterface() {
@@ -77,8 +105,52 @@ bool LwipUdpInterface::udpDisconnect() {
 	return true;
 }
 
-bool LwipUdpInterface::pbufFree() {
+bool LwipUdpInterface::pbufFreeRx() {
 	return true;
+}
+
+bool LwipUdpInterface::pbufFreeTx() {
+	return true;
+}
+
+bool LwipUdpInterface::waitRecv() {
+	return true;
+}
+
+bool LwipUdpInterface::packetToBytes(uint8_t *_byteArray) {
+	return true;
+}
+
+bool LwipUdpInterface::bytesToPacket(const uint8_t *_byteArray) {
+	return true;
+}
+
+int* LwipUdpInterface::getRecvCallbackArg() const {
+	return recvCallbackArg;
+}
+
+int* LwipUdpInterface::getRecvCallbackPcb() const {
+	return recvCallbackPcb;
+}
+
+int* LwipUdpInterface::getRecvCallbackPbuf() const {
+	return recvCallbackPbuf;
+}
+
+int* LwipUdpInterface::getRecvCallbackAddr() const {
+	return recvCallbackAddr;
+}
+
+int LwipUdpInterface::getRecvCallbackPort() const {
+	return recvCallbackPort;
+}
+
+namespace {
+	void recvCallback(void *arg, void *pcb, void *p,
+		    const void *addr, int port) {
+		// TODO: write each argument to data members
+		// TODO: release recvSemaphore
+	}
 }
 
 PcInterface::PcInterface() {
@@ -87,10 +159,6 @@ PcInterface::PcInterface() {
 
 PcInterface::PcInterface(Protocol_e _protocol) : protocol(_protocol) {
 	// No need to initialize any members here; this is done in PcInterface.h
-}
-
-PcInterface::PcInterface(UdpInterface *_udpInterface) {
-	udpInterface = _udpInterface;
 }
 
 PcInterface::~PcInterface() {
@@ -103,6 +171,9 @@ bool PcInterface::setup() {
 	bool success = false;
 	switch(protocol) {
 	case UDP:
+		if (!getUdpInterface()) {
+			return false;
+		}
 		success = udpInterface->udpNew();
 		if (success) {
 			success = udpInterface->udpBind();
@@ -120,28 +191,43 @@ bool PcInterface::setup() {
 	return success;
 }
 
-bool PcInterface::input() {
+// NOTE: Consider an input() function that calls only ethernetifInput, which runs
+// in its own thread.
+
+// Purpose: to make the HW calls and convert packets into array of bytes.
+bool PcInterface::receive() {
 	switch(protocol) {
 	case UDP:
-		// Should be operating in its own task - receives indefinitely.
-		while (udpInterface->ethernetifInput()) {
-			;
+		if (!getUdpInterface()) {
+			return false;
 		}
-		// Should not return.
-		return false;
+		udpInterface->ethernetifInput(); // Extract packets from network interface
+		udpInterface->waitRecv(); // Wait for callback to write data members (including packets) to UdpInterface
+		udpInterface->packetToBytes(rxBuffer); // Copy contents of the packets into rxBuffer
+		udpInterface->pbufFreeRx();
+		return true;
 	default:
 		return false;
 	}
 }
 
-// Purpose: to make the HW calls and convert packets into array of bytes.
-bool PcInterface::receive() {
-
-}
-
 // Purpose: to covert array of bytes into packets and make the HW calls.
 bool PcInterface::transmit() {
-	// TODO: implement me
+	switch(protocol) {
+	case UDP:
+		if (!getUdpInterface()) {
+			return false;
+		}
+		udpInterface->bytesToPacket(txBuffer);
+		udpInterface->udpConnect();
+		udpInterface->udpSend();
+		udpInterface->udpDisconnect();
+		udpInterface->pbufFreeTx();
+		// Should not return.
+		return true;
+	default:
+		return false;
+	}
 }
 
 // NOTE: Consider using STL to allow arrays of variable length < PC_INTERFACE_BUFFER_SIZE to be input.
@@ -168,4 +254,16 @@ bool PcInterface::setTxBuffer(const uint8_t *_txArray) {
 
 Protocol_e PcInterface::getProtocol() {
 	return protocol;
+}
+
+bool PcInterface::setUdpInterface(UdpInterface *_udpInterface) {
+	if (!_udpInterface) {
+		return false;
+	}
+	udpInterface = _udpInterface;
+	return true;
+}
+
+UdpInterface* PcInterface::getUdpInterface() const {
+	return udpInterface;
 }
