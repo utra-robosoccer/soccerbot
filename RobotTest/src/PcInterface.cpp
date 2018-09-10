@@ -34,16 +34,8 @@ public:
 	bool packetToBytes(uint8_t *_byteArray);
 	bool bytesToPacket(const uint8_t *_byteArray);
 
-	// Extra helper functions
-	int* getRecvCallbackArg() const;
-	int* getRecvCallbackPcb() const;
-	int* getRecvCallbackPbuf() const;
-	int* getRecvCallbackAddr() const;
-	int getRecvCallbackPort() const;
-
-	// FIXME: use correct networking stack types in callback function.
-	friend void recvCallback(void *arg, void *pcb, void *p,
-			const void *addr, int port);
+	// Helpers
+	void setRecvCallbackPbuf(void* _recvCallbackPbuf);
 private:
 	// FIXME: These need to be of the right types for the networking stack.
 	const int *pcb = nullptr;
@@ -55,15 +47,15 @@ private:
 	const int *recvSemaphore = nullptr;
 
 	// Set by recvCallback.
-	static int *recvCallbackArg = nullptr;
-	static int *recvCallbackPcb = nullptr;
-	static int *recvCallbackPbuf = nullptr;
-	static int *recvCallbackAddr = nullptr;
-	static int recvCallbackPort = 0;
+	void *recvCallbackPbuf = nullptr;
 
 	int *txPbuf = nullptr;
 	// TODO: synchronize access to pbufs
 };
+
+// FIXME: use correct networking stack types in callback function.
+void recvCallback(LwipUdpInterface *arg, void *pcb, void *p,
+		const void *addr, int port);
 
 LwipUdpInterface::LwipUdpInterface() {
 
@@ -125,38 +117,17 @@ bool LwipUdpInterface::bytesToPacket(const uint8_t *_byteArray) {
 	return true;
 }
 
-int* LwipUdpInterface::getRecvCallbackArg() const {
-	return recvCallbackArg;
+void LwipUdpInterface::setRecvCallbackPbuf(void* _recvCallbackPbuf) {
+	recvCallbackPbuf = _recvCallbackPbuf;
 }
 
-int* LwipUdpInterface::getRecvCallbackPcb() const {
-	return recvCallbackPcb;
+void recvCallback(LwipUdpInterface *arg, void *pcb, void *p,
+		const void *addr, int port) {
+	// TODO: synchronize access to these members (stop them getting clobbered before read by PcInterface)
+	arg->setRecvCallbackPbuf(p);
+	// TODO: release recvSemaphore
 }
 
-int* LwipUdpInterface::getRecvCallbackPbuf() const {
-	return recvCallbackPbuf;
-}
-
-int* LwipUdpInterface::getRecvCallbackAddr() const {
-	return recvCallbackAddr;
-}
-
-int LwipUdpInterface::getRecvCallbackPort() const {
-	return recvCallbackPort;
-}
-
-namespace {
-	void recvCallback(void *arg, void *pcb, void *p,
-		    const void *addr, int port) {
-		// TODO: synchronize access to these members
-		LwipUdpInterface::recvCallbackArg = arg;
-		LwipUdpInterface::recvCallbackPcb = pcb;
-		LwipUdpInterface::recvCallbackPbuf = p;
-		LwipUdpInterface::recvCallbackAddr = addr;
-		LwipUdpInterface::recvCallbackPort = port;
-		// TODO: release recvSemaphore
-	}
-}
 
 PcInterface::PcInterface() {
 	// No need to initialize any members here; this is done in PcInterface.h
