@@ -1,5 +1,5 @@
 <map id="MPU6050_READ_DATA_IT" name="MPU6050_READ_DATA_IT">
 <area shape="rect" id="node2" href="$d6/d67/group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f" title="This function reads the accelerometer using interrupts. " alt="" coords="233,5,440,47"/>
 <area shape="rect" id="node4" href="$da/d21/group___gyroscope.html#ga9b0acbb8a05ff008d3bcdc77bd766b6b" title="This function reads the gyroscope using interrupts. " alt="" coords="243,71,430,112"/>
-<area shape="rect" id="node3" href="$d0/d55/group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd" title="This function is executed in the context of the IMUTask thread. During each control cycle..." alt="" coords="488,13,589,39"/>
+<area shape="rect" id="node3" href="$d0/d55/group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd" title="This function is executed in the context of the IMUTask thread. During each control cycle..." alt="" coords="488,46,589,73"/>
 </map>
