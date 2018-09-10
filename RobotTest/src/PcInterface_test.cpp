@@ -7,6 +7,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+using ::testing::Return;
+
 // PcInterfaceTester contains testing functions that need access to private members
 // but are not to be used under normal circumstances.
 class PcInterfaceTester {
@@ -134,8 +136,6 @@ TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
 		ASSERT_EQ(txArray[iTxArray], 0);
 	}
 }
-
-using ::testing::Return;
 
 TEST(PcInterfaceTests, MockFunctionCallsUdpSetupSuccess) {
 	MockUdpInterface udpMockInterface;

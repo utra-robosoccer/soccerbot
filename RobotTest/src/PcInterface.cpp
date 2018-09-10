@@ -55,11 +55,11 @@ private:
 	const int *recvSemaphore = nullptr;
 
 	// Set by recvCallback.
-	int *recvCallbackArg = nullptr;
-	int *recvCallbackPcb = nullptr;
-	int *recvCallbackPbuf = nullptr;
-	int *recvCallbackAddr = nullptr;
-	int recvCallbackPort = 0;
+	static int *recvCallbackArg = nullptr;
+	static int *recvCallbackPcb = nullptr;
+	static int *recvCallbackPbuf = nullptr;
+	static int *recvCallbackAddr = nullptr;
+	static int recvCallbackPort = 0;
 
 	int *txPbuf = nullptr;
 	// TODO: synchronize access to pbufs
@@ -148,7 +148,12 @@ int LwipUdpInterface::getRecvCallbackPort() const {
 namespace {
 	void recvCallback(void *arg, void *pcb, void *p,
 		    const void *addr, int port) {
-		// TODO: write each argument to data members
+		// TODO: synchronize access to these members
+		LwipUdpInterface::recvCallbackArg = arg;
+		LwipUdpInterface::recvCallbackPcb = pcb;
+		LwipUdpInterface::recvCallbackPbuf = p;
+		LwipUdpInterface::recvCallbackAddr = addr;
+		LwipUdpInterface::recvCallbackPort = port;
 		// TODO: release recvSemaphore
 	}
 }
@@ -230,7 +235,7 @@ bool PcInterface::transmit() {
 	}
 }
 
-// NOTE: Consider using STL to allow arrays of variable length < PC_INTERFACE_BUFFER_SIZE to be input.
+// NOTE: Consider using <array> to allow arrays of variable length < PC_INTERFACE_BUFFER_SIZE to be input.
 
 // getRxBuffer deep copies all elements, out of rxBuffer to _rxArray.
 // _rxArray must have length == PC_INTERFACE_BUFFER_SIZE.
