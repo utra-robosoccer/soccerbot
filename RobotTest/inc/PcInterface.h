@@ -19,7 +19,6 @@ public:
 	PcInterface(Protocol_e _protocol);
 	~PcInterface();
 	bool setup();
-	bool input(); // Needed if any action is required to trigger a receive().
 	bool receive();
 	bool transmit();
 	bool getRxBuffer(uint8_t *_rxArray) const;

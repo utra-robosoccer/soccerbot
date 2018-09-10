@@ -1,11 +1,10 @@
-#include <PcInterface.h>
-#include <UdpInterface.h>
-
 #include <cstdint>
 
-///// GTEST/GMOCK /////
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+#include <PcInterface.h>
+#include <UdpInterface.h>
 
 using ::testing::Return;
 using ::testing::_;
