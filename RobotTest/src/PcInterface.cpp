@@ -233,6 +233,9 @@ Protocol_e PcInterface::getProtocol() {
 }
 
 bool PcInterface::setUdpInterface(UdpInterface *_udpInterface) {
+	if (getProtocol() != UDP) {
+		return false;
+	}
 	if (!_udpInterface) {
 		return false;
 	}
