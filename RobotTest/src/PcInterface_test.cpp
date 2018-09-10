@@ -1,6 +1,8 @@
 #include <PcInterface.h>
 #include <UdpInterface.h>
 
+#include <cstdint>
+
 ///// GTEST/GMOCK /////
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -9,18 +11,18 @@
 // but are not to be used under normal circumstances.
 class PcInterfaceTester {
 public:
-	static bool setRxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_rxArray);
-	static bool getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_txArray);
+	static bool setRxBufferDebug(PcInterface &pcInterfaceUnderTest, const uint8_t *_rxArray);
+	static bool getTxBufferDebug(const PcInterface &pcInterfaceUnderTest, uint8_t *_txArray);
 };
 
-bool PcInterfaceTester::setRxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_rxArray) {
+bool PcInterfaceTester::setRxBufferDebug(PcInterface &pcInterfaceUnderTest, const uint8_t *_rxArray) {
 	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
 		pcInterfaceUnderTest.rxBuffer[iRxArray] = _rxArray[iRxArray];
 	}
 	return true;
 }
 
-bool PcInterfaceTester::getTxBufferDebug(PcInterface &pcInterfaceUnderTest, uint8_t *_txArray) {
+bool PcInterfaceTester::getTxBufferDebug(const PcInterface &pcInterfaceUnderTest, uint8_t *_txArray) {
 	for (int iTxBuffer = 0; iTxBuffer < PC_INTERFACE_BUFFER_SIZE; iTxBuffer++) {
 		_txArray[iTxBuffer] = pcInterfaceUnderTest.txBuffer[iTxBuffer];
 	}
@@ -37,7 +39,11 @@ public:
 	MOCK_METHOD0(udpConnect, bool());
 	MOCK_METHOD0(udpSend, bool());
 	MOCK_METHOD0(udpDisconnect, bool());
-	MOCK_METHOD0(pbufFree, bool());
+	MOCK_METHOD0(pbufFreeRx, bool());
+	MOCK_METHOD0(pbufFreeTx, bool());
+	MOCK_METHOD0(waitRecv, bool());
+	MOCK_METHOD1(packetToBytes, bool(uint8_t*));
+	MOCK_METHOD1(bytesToPacket, bool(const uint8_t*));
 };
 
 // MemberProtocolDefaultInitializesToUDP tests that the default
@@ -46,6 +52,23 @@ public:
 TEST(PcInterfaceTests, MemberProtocolDefaultInitializesToUDP) {
 	PcInterface pcInterfaceTestObject;
 	ASSERT_EQ(UDP, pcInterfaceTestObject.getProtocol());
+}
+
+TEST(PcInterfaceTests, MemberUdpInterfaceDefaultInitializesToNull) {
+	PcInterface pcInterfaceTestObject;
+	ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpInterface());
+}
+
+TEST(PcInterfaceTests, MemberUdpInterfaceParameterizedInitializesToNull) {
+	PcInterface pcInterfaceTestObject(UDP);
+	ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpInterface());
+}
+
+TEST(PcInterfaceTests, MemberUdpInterfaceCanSetAndGet) {
+	PcInterface pcInterfaceTestObject;
+	MockUdpInterface udpMockInterface;
+	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
+	ASSERT_EQ(&udpMockInterface, pcInterfaceTestObject.getUdpInterface());
 }
 
 // MemberProtocolCanInitializeAndGet tests that a constructor can
@@ -120,7 +143,8 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupSuccess) {
 	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(true));
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
-	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	PcInterface pcInterfaceTestObject;
+	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	bool success = pcInterfaceTestObject.setup();
 	ASSERT_TRUE(success);
 }
@@ -129,7 +153,8 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnNew) {
 	MockUdpInterface udpMockInterface;
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(false));
 
-	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	PcInterface pcInterfaceTestObject;
+	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	bool success = pcInterfaceTestObject.setup();
 	ASSERT_FALSE(success);
 }
@@ -140,10 +165,11 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnBind) {
 	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(false));
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
-	PcInterface pcInterfaceTestObject(&udpMockInterface);
+	PcInterface pcInterfaceTestObject;
+	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	bool success = pcInterfaceTestObject.setup();
 	ASSERT_FALSE(success);
 }
 
-// TODO: tests for failing on everything?
+// TODO: tests for failing on everything - all possible combinations?
 // TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
