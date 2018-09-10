@@ -35,7 +35,7 @@ The software consists of 10 threads (note: priority = 6 is the highest priority 
 ## Principle of Operation
 The image below shows some of the possible interactions between the components of the system once the scheduler has started. Note how the program flow is largely sequential—not much happens until a command packet is received from the PC. This is an area we are working on improving in our next design iteration.
 
-<img src="Media\Design_RoboCup_2018\Design_RoboCup_2018.png" width="80%" alt="Steady-state flow">
+<img src="..\Media\Design_RoboCup_2018\Design_RoboCup_2018.png" width="80%" alt="Steady-state flow">
 
 
 ## Actuation
@@ -60,7 +60,8 @@ Our plans for the future are focussed on modularizing the system to reduce coupl
 
 Part of the reason for these changes is self-evident while another part is more internal to our organization. Each team has to work together to make sure each others' needs are met, and these needs often evolve after development begins. Examples of this are that the controls team has indicated a desired to add pressure sensors, the electrical team is working on creating custom servo motors to reduce costs, and the reinforcement learning team has indicated a need to control the actuators via velocity control. Although these are all features we will be working on developing in the future, they also have cemented our convictions that a modular program structure will be essential to our future success.
 
+
 ## New Design
 At a high-level, our future design looks something like what's shown below. For more details, please see <a href="https://github.com/utra-robosoccer/soccer-embedded/issues/36">Issue 36</a> on our GitHub page.
 
-<img src="Media\Design_Future_2018\August-6-2018-Design_Full.png" width="80%" alt="Steady-state flow">
+<img src="..\Media\Design_Future_2018\August-6-2018-Design_Full.png" width="80%" alt="Steady-state flow">

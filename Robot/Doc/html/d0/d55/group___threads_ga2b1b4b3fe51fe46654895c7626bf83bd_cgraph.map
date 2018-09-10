@@ -1,7 +1,11 @@
 <map id="StartIMUTask" name="StartIMUTask">
 <area shape="rect" id="node2" href="$d5/dd2/group___i_m_u___filter___public___functions.html#ga673920b95d4804093d1c53f3f48e8788" title="Initialize acceleration and angular velocity FIR filters for IMU data. " alt="" coords="181,5,335,32"/>
 <area shape="rect" id="node5" href="$d6/d67/group___accelerometer.html#gaa77e47e57171275e98f038884d7d228f" title="This function reads the accelerometer using interrupts. " alt="" coords="155,57,361,98"/>
+<area shape="rect" id="node7" href="$da/d21/group___gyroscope.html#ga9b0acbb8a05ff008d3bcdc77bd766b6b" title="This function reads the gyroscope using interrupts. " alt="" coords="165,122,351,163"/>
+<area shape="rect" id="node8" href="$d5/dd2/group___i_m_u___filter___public___functions.html#ga6fe05d6ccad148fcc051d3e731fd8f78" title="Reads Vz, Vy, and Vx from the IMU handle and writes them into their corresponding FIR filters..." alt="" coords="155,188,361,215"/>
 <area shape="rect" id="node3" href="$de/d87/group___i_m_u___filter___private___functions.html#ga1cd85aa20cefe82040d02b3652d422e2" title="Initialize a velocity filter. " alt="" coords="438,5,561,32"/>
 <area shape="rect" id="node4" href="$de/d87/group___i_m_u___filter___private___functions.html#ga2ef910506c16ade4a588ee02328c989a" title="Reset a velocity filter. " alt="" coords="637,5,772,32"/>
-<area shape="rect" id="node6" href="$d3/d37/group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230" title="This function reads a register from the MPU6050 with interrupts, and stores it into a buffer..." alt="" coords="409,64,589,91"/>
+<area shape="rect" id="node6" href="$d3/d37/group___register___r_w.html#gaccf34cd6f47bcbb51ce9f4b4dc687230" title="This function reads a register from the MPU6050 with interrupts, and stores it into a buffer..." alt="" coords="409,88,589,115"/>
+<area shape="rect" id="node9" href="$de/d87/group___i_m_u___filter___private___functions.html#ga432328c7370026e6c18835714c68d320" title="Write an input to the filter. " alt="" coords="419,163,580,189"/>
+<area shape="rect" id="node10" href="$de/d87/group___i_m_u___filter___private___functions.html#ga82ea08aecf1ca8e3d37365769af957ba" title="Read the current filter output. " alt="" coords="414,213,585,240"/>
 </map>
