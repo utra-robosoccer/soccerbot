@@ -1,7 +1,23 @@
-#ifndef UDP_INTERFACE_H
-#define UDP_INTERFACE_H
+/**
+  *****************************************************************************
+  * @file    UdpInterface.h
+  * @author  Robert Fairley
+  * @brief   Defines an abstract interface of UDP networking functions, to be implemented and extended as needed, e.g. by hardware-facing classes, test frameworks.
+  *
+  * @defgroup Header
+  * @defgroup  udp_interface
+  * @{
+  *****************************************************************************
+  */
+
+// NOTE: defgroup used above since there is no .cpp file associated with this class.
+
+#ifndef __UDP_INTERFACE_H__
+#define __UDP_INTERFACE_H__
 
 #include <cstdint>
+
+namespace udp_interface {
 
 // Interface the application with framework-dependent UDP networking code.
 // Extend this interface as the need arises with virtual functions
@@ -30,4 +46,11 @@ public:
 	virtual bool bytesToPacket(const uint8_t *_byteArray) = 0;
 };
 
-#endif
+} // end namespace udp_interface
+
+/**
+ * @}
+ */
+/* end - Header */
+
+#endif /* __UDP_INTERFACE_H__ */
