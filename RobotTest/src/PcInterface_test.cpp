@@ -1,3 +1,18 @@
+/**
+  *****************************************************************************
+  * @file    PcInterface_test.cpp
+  * @author  Robert Fairley
+  * @brief   PcInterface testing/mocking data structures, tests and mocks.
+  *
+  * @defgroup pc_interface_tests
+  * @brief    The pc_interface_tests module contains the structures required for running tests and mocking, and the tests themselves.
+  * @{
+  *****************************************************************************
+  */
+
+// TODO: add license terms from external projects e.g. googletest to our files too?
+// NOTE: consider just doing using namespace pc_interface; ?
+
 #include <cstdint>
 
 #include <gtest/gtest.h>
@@ -9,29 +24,11 @@
 using ::testing::Return;
 using ::testing::_;
 
-// PcInterfaceTester contains testing functions that need access to private members
-// but are not to be used under normal circumstances.
-class PcInterfaceTester {
-public:
-	static bool setRxBufferDebug(PcInterface &pcInterfaceUnderTest, const uint8_t *_rxArray);
-	static bool getTxBufferDebug(const PcInterface &pcInterfaceUnderTest, uint8_t *_txArray);
-};
+// TODO: doxygen documentation for functions once complete
 
-bool PcInterfaceTester::setRxBufferDebug(PcInterface &pcInterfaceUnderTest, const uint8_t *_rxArray) {
-	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
-		pcInterfaceUnderTest.rxBuffer[iRxArray] = _rxArray[iRxArray];
-	}
-	return true;
-}
+namespace {
 
-bool PcInterfaceTester::getTxBufferDebug(const PcInterface &pcInterfaceUnderTest, uint8_t *_txArray) {
-	for (int iTxBuffer = 0; iTxBuffer < PC_INTERFACE_BUFFER_SIZE; iTxBuffer++) {
-		_txArray[iTxBuffer] = pcInterfaceUnderTest.txBuffer[iTxBuffer];
-	}
-	return true;
-}
-
-class MockUdpInterface : public UdpInterface {
+class MockUdpInterface : public udp_interface::UdpInterface {
 public:
 	MOCK_METHOD0(udpNew, bool());
 	MOCK_METHOD0(udpBind, bool());
@@ -52,22 +49,22 @@ public:
 // constructor of PcInterface initializes the member protocol to UDP.
 // This is to make sure protocol is initialized to *something*.
 TEST(PcInterfaceTests, MemberProtocolDefaultInitializesToUDP) {
-	PcInterface pcInterfaceTestObject;
-	ASSERT_EQ(UDP, pcInterfaceTestObject.getProtocol());
+	pc_interface::PcInterface pcInterfaceTestObject;
+	ASSERT_EQ(pc_interface::UDP, pcInterfaceTestObject.getProtocol());
 }
 
 TEST(PcInterfaceTests, MemberUdpInterfaceDefaultInitializesToNull) {
-	PcInterface pcInterfaceTestObject;
+	pc_interface::PcInterface pcInterfaceTestObject;
 	ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpInterface());
 }
 
 TEST(PcInterfaceTests, MemberUdpInterfaceParameterizedInitializesToNull) {
-	PcInterface pcInterfaceTestObject(UDP);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
 	ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpInterface());
 }
 
 TEST(PcInterfaceTests, MemberUdpInterfaceCanSetAndGet) {
-	PcInterface pcInterfaceTestObject;
+	pc_interface::PcInterface pcInterfaceTestObject;
 	MockUdpInterface udpMockInterface;
 	pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_EQ(&udpMockInterface, pcInterfaceTestObject.getUdpInterface());
@@ -77,9 +74,9 @@ TEST(PcInterfaceTests, MemberUdpInterfaceCanSetAndGet) {
 // initialize and get back the protocol member of PcInterface with
 // all of the values defined in type enum Protocol_e.
 TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
-	for (int iProtocol = UDP; iProtocol <= USB_UART; iProtocol++) {
-		Protocol_e protocol = (Protocol_e)iProtocol;
-		PcInterface pcInterfaceTestObject(protocol);
+	for (int iProtocol = pc_interface::UDP; iProtocol <= pc_interface::USB_UART; iProtocol++) {
+		pc_interface::Protocol_e protocol = (pc_interface::Protocol_e)iProtocol;
+		pc_interface::PcInterface pcInterfaceTestObject(protocol);
 
 		ASSERT_EQ(protocol, pcInterfaceTestObject.getProtocol());
 	}
@@ -88,12 +85,12 @@ TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
 // MemberRxBufferDefaultInitializesToZero tests that the default
 // constructor initializes the rxBuffer entries to zeroes.
 TEST(PcInterfaceTests, MemberRxBufferDefaultInitializesToZero) {
-	PcInterface pcInterfaceTestObject;
-	uint8_t rxArray [PC_INTERFACE_BUFFER_SIZE];
+	pc_interface::PcInterface pcInterfaceTestObject;
+	uint8_t rxArray [pc_interface::PC_INTERFACE_BUFFER_SIZE];
 	bool success = pcInterfaceTestObject.getRxBuffer(rxArray);
 	ASSERT_TRUE(success);
 
-	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
+	for (int iRxArray = 0; iRxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
 		ASSERT_EQ(rxArray[iRxArray], 0);
 	}
 }
@@ -101,12 +98,12 @@ TEST(PcInterfaceTests, MemberRxBufferDefaultInitializesToZero) {
 // MemberRxBufferParameterizedInitializesToZero tests that the
 // parameterized constructor initializes the rxBuffer entries to zeroes.
 TEST(PcInterfaceTests, MemberRxBufferParameterizedInitalizesToZero) {
-	PcInterface pcInterfaceTestObject(UDP);
-	uint8_t rxArray [PC_INTERFACE_BUFFER_SIZE];
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
+	uint8_t rxArray [pc_interface::PC_INTERFACE_BUFFER_SIZE];
 	bool success = pcInterfaceTestObject.getRxBuffer(rxArray);
 	ASSERT_TRUE(success);
 
-	for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
+	for (int iRxArray = 0; iRxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE; iRxArray++) {
 		ASSERT_EQ(rxArray[iRxArray], 0);
 	}
 }
@@ -114,12 +111,12 @@ TEST(PcInterfaceTests, MemberRxBufferParameterizedInitalizesToZero) {
 // MemberTxBufferDefaultInitializesToZero tests that the default
 // constructor initializes the txBuffer entries to zeroes.
 TEST(PcInterfaceTests, MemberTxBufferDefaultInitializesToZero) {
-	PcInterface pcInterfaceTestObject;
-	uint8_t txArray [PC_INTERFACE_BUFFER_SIZE];
-	bool success = PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
+	pc_interface::PcInterface pcInterfaceTestObject;
+	uint8_t txArray [pc_interface::PC_INTERFACE_BUFFER_SIZE];
+	bool success = pc_interface::PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
 	ASSERT_TRUE(success);
 
-	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
+	for (int iTxArray = 0; iTxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
 		ASSERT_EQ(txArray[iTxArray], 0);
 	}
 }
@@ -127,12 +124,12 @@ TEST(PcInterfaceTests, MemberTxBufferDefaultInitializesToZero) {
 // MemberTxBufferParameterizedInitializesToZero tests that the
 // parameterized constructor initializes the txBuffer entries to zeroes.
 TEST(PcInterfaceTests, MemberTxBufferParameterizedInitalizesToZero) {
-	PcInterface pcInterfaceTestObject(UDP);
-	uint8_t txArray [PC_INTERFACE_BUFFER_SIZE];
-	bool success = PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
+	uint8_t txArray [pc_interface::PC_INTERFACE_BUFFER_SIZE];
+	bool success = pc_interface::PcInterfaceTester::getTxBufferDebug(pcInterfaceTestObject, txArray);
 	ASSERT_TRUE(success);
 
-	for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
+	for (int iTxArray = 0; iTxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
 		ASSERT_EQ(txArray[iTxArray], 0);
 	}
 }
@@ -143,7 +140,7 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupSuccess) {
 	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(true));
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
-	PcInterface pcInterfaceTestObject;
+	pc_interface::PcInterface pcInterfaceTestObject;
 	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.setup();
@@ -154,7 +151,7 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnNew) {
 	MockUdpInterface udpMockInterface;
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(false));
 
-	PcInterface pcInterfaceTestObject;
+	pc_interface::PcInterface pcInterfaceTestObject;
 	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.setup();
@@ -167,7 +164,7 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpSetupFailOnBind) {
 	EXPECT_CALL(udpMockInterface, udpBind()).Times(1).WillOnce(Return(false));
 	EXPECT_CALL(udpMockInterface, udpNew()).Times(1).WillOnce(Return(true));
 
-	PcInterface pcInterfaceTestObject(UDP);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
 	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.setup();
@@ -181,7 +178,7 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpReceive) {
 	EXPECT_CALL(udpMockInterface, waitRecv()).Times(1);
 	EXPECT_CALL(udpMockInterface, ethernetifInput()).Times(1);
 
-	PcInterface pcInterfaceTestObject(UDP);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
 	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.receive();
@@ -196,7 +193,7 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpTransmit) {
 	EXPECT_CALL(udpMockInterface, udpConnect()).Times(1);
 	EXPECT_CALL(udpMockInterface, bytesToPacket(_)).Times(1);
 
-	PcInterface pcInterfaceTestObject(UDP);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::UDP);
 	bool success = pcInterfaceTestObject.setUdpInterface(&udpMockInterface);
 	ASSERT_TRUE(success);
 	success = pcInterfaceTestObject.transmit();
@@ -204,12 +201,12 @@ TEST(PcInterfaceTests, MockFunctionCallsUdpTransmit) {
 }
 
 TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNull) {
-	PcInterface pcInterfaceTestObject;
+	pc_interface::PcInterface pcInterfaceTestObject;
 	ASSERT_FALSE(pcInterfaceTestObject.setUdpInterface(nullptr));
 }
 
 TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNotUDP) {
-	PcInterface pcInterfaceTestObject(USB_UART);
+	pc_interface::PcInterface pcInterfaceTestObject(pc_interface::USB_UART);
 	MockUdpInterface udpMockInterface;
 	ASSERT_FALSE(pcInterfaceTestObject.setUdpInterface(&udpMockInterface));
 }
@@ -218,3 +215,10 @@ TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNotUDP) {
 // TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
 // TODO: test coverage for LwipUdpInterface, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs
+
+}
+
+/**
+ * @}
+ */
+/* end - pc_interface_test */

@@ -1,7 +1,21 @@
-#ifndef LWIP_UDP_INTERFACE_H
-#define LWIP_UDP_INTERFACE_H
+/**
+  *****************************************************************************
+  * @file    LwipUdpInterface.h
+  * @author  Robert Fairley
+  * @brief   Defines the interface through which UDP and required Lwip network stack data/functions will be accessed.
+  *
+  * @defgroup Header
+  * @ingroup  lwip_udp_interface
+  * @{
+  *****************************************************************************
+  */
+
+#ifndef __LWIP_UDP_INTERFACE_H__
+#define __LWIP_UDP_INTERFACE_H__
 
 #include <UdpInterface.h>
+
+namespace lwip_udp_interface {
 
 // LwipUdpInterface is the real i.e. hardware-facing implementation of the
 // abstract UdpInterface class. This will call out to LwIP and any
@@ -13,7 +27,7 @@
 // called.
 // Another approach rather than having stateful members is to pass a
 // void* to every interface function, and pass data as needed into there.
-class LwipUdpInterface : public UdpInterface {
+class LwipUdpInterface : public udp_interface::UdpInterface {
 public:
 	LwipUdpInterface();
 	// TODO: parameterized constructor.
@@ -53,10 +67,11 @@ private:
 	// TODO: synchronize access to pbufs
 };
 
-namespace {
-	// FIXME: use correct networking stack types in callback function.
-	void recvCallback(void *arg, void *pcb, void *p,
-			const void *addr, int port);
-}
+} // end namespace lwip_udp_interface
 
-#endif
+/**
+ * @}
+ */
+/* end - Header */
+
+#endif /* __LWIP_UDP_INTERFACE_H__ */
