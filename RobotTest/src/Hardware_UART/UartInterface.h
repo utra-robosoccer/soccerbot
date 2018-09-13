@@ -28,6 +28,9 @@
 /********************************* Includes **********************************/
 #include <cstdint>
 
+#define STM32F446xx
+#include <stm32f446xx.h>
+
 #ifdef THREADED
 #include <cmsis_os.h>
 #include "Notification.h"
@@ -53,6 +56,9 @@ enum class IO_Type{
 
 // Classes and structs
 // ----------------------------------------------------------------------------
+// TODO: separate these classes into different files. Then only expose the virtual
+// UartInterface to the test framework
+
 class UartInterface{
 public:
     UartInterface(UART_HandleTypeDef* uartHandlePtr);
