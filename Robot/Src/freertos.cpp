@@ -132,7 +132,7 @@ enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR16, MOTOR17, MOTOR18
 };
 
-MPU6050namespace::MPU6050 IMUdata (1);
+IMUnamespace::MPU6050 IMUdata (1, &hi2c1);
 
 Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor6, Motor7, Motor8, Motor9, Motor10,
@@ -875,7 +875,7 @@ void StartTxTask(void const * argument)
                 if(imuPtr == NULL){ break; }
 
                 // Copy sensor data into the IMU data section of robotState.msg
-                memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
+                memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), 6 * sizeof(float));
 
                 // Set flag indicating IMU data has reported in
                 dataReadyFlags |= 0x80000000;

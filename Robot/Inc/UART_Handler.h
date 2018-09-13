@@ -81,12 +81,12 @@ typedef enum{
  * in queues between tasks.
  */
 typedef struct{
-    float                   _X_GYRO;            /*!< x-axis angular velocity read from sensor*/
-    float                   _Y_GYRO;            /*!< y-axis angular velocity read from sensor*/
-    float                   _Z_GYRO;            /*!< z-axis angular velocity read from sensor*/
-    float                   _X_ACCEL;           /*!< x-axis acceleration read from sensor*/
-    float                   _Y_ACCEL;           /*!< y-axis acceleration read from sensor*/
-    float                   _Z_ACCEL;           /*!< z-axis acceleration read from sensor*/
+    float                   _x_Gyro;            /*!< x-axis angular velocity read from sensor*/
+    float                   _y_Gyro;            /*!< y-axis angular velocity read from sensor*/
+    float                   _z_Gyro;            /*!< z-axis angular velocity read from sensor*/
+    float                   _x_Accel;           /*!< x-axis acceleration read from sensor*/
+    float                   _y_Accel;           /*!< y-axis acceleration read from sensor*/
+    float                   _z_Accel;           /*!< z-axis acceleration read from sensor*/
 }IMUStruct;
 
 /**
