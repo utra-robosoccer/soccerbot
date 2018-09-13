@@ -6,16 +6,16 @@
   * @author  Tyler
   * @brief   Header code for the MPU6050 library, including the struct in which
   *          accelerometer and gyroscope data are stored.
-  *@ingroup  MPU6050
+  *
+  *@defgroup  Header
+  *@ingroup   MPU6050
+  *@{
   ******************************************************************************
   */
 
-
-
-
 /******************** Define to prevent recursive inclusion ******************/
-#ifndef MPU_REGS_H_
-#define MPU_REGS_H_
+#ifndef MPU6050_H_
+#define MPU6050_H_
 
 /********************************* Includes **********************************/
 #include <stdint.h>
@@ -23,18 +23,14 @@
 #include "cmsis_os.h"
 #include "usart.h"
 #include "gpio.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "sharedMacros.h"
 #include "MPUFilter.h"
 #include "UART_Handler.h"
+
 /********************************** Macros ***********************************/
-
-
 #define INT_COEF 16384.0f
 #define REM_COEF 16384
-
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_ADDR    	    0b11010000	// ID
@@ -207,94 +203,162 @@
 #define MPU6050_WAKE_FREQ_2P5       0x1
 #define MPU6050_WAKE_FREQ_5         0x2
 /********************************** Namespace ********************************/
-/*!
- *  \addtogroup Namespace
- *  @{
- */
-namespace MPU6050namespace {
-/********************************* Constants *********************************/
 
-
-
+namespace IMUnamespace {
 
 /********************************** Classes **********************************/
-//!  A test class.
-/*!
-  A more elaborate class description.
-*/
 class MPU6050 {
-
-
-    uint8_t                 _ID;                    /*!< Sensor identification (0-252)                  */
-    uint32_t                _BaudRate;              /*!< UART communication baud rate*/
     uint8_t                 _Sample_Rate;
-    UART_HandleTypeDef*     _UART_Handle;
     I2C_HandleTypeDef*      _I2C_Handle;
-    float                   _X_GYRO;            /*!< x-axis angular velocity read from sensor*/
-    float                   _Y_GYRO;            /*!< y-axis angular velocity read from sensor*/
-    float                   _Z_GYRO;            /*!< z-axis angular velocity read from sensor*/
-    float                   _X_ACCEL;           /*!< x-axis acceleration read from sensor*/
-    float                   _Y_ACCEL;           /*!< y-axis acceleration read from sensor*/
-    float                   _Z_ACCEL;           /*!< z-axis acceleration read from sensor*/
+    float                   _x_Gyro;            /**< x-axis angular velocity read from sensor*/
+    float                   _y_Gyro;            /**< y-axis angular velocity read from sensor*/
+    float                   _z_Gyro;            /**< z-axis angular velocity read from sensor*/
+    float                   _x_Accel;           /**< x-axis acceleration read from sensor*/
+    float                   _y_Accel;           /**< y-axis acceleration read from sensor*/
+    float                   _z_Accel;           /**< z-axis acceleration read from sensor*/
 
     //offsets:
-    float                   _X_GYRO_OFFSET;
-    float                   _Y_GYRO_OFFSET;
-    float                   _Z_GYRO_OFFSET;
-    float                   _X_ACCEL_OFFSET;
-    float                   _Y_ACCEL_OFFSET;
-    float                   _Z_ACCEL_OFFSET;
-
-    //angles in degrees (calculated using _Z_ACCEL_OFFSET)
-    //see page 10 of https://www.nxp.com/docs/en/application-note/AN3461.pdf
-
-    float                   _ROLL;
-    float                   _PITCH;
-
+    float                   _x_GyroOffset;
+    float                   _y_GyroOffset;
+    float                   _z_GyroOffset;
+    float                   _x_AccelOffset;
+    float                   _y_AccelOffset;
+    float                   _z_AccelOffset;
 
     uint8_t                 received_byte;
 
-/****************************** Public Members *******************************/
-  public:
-    //! A constructor.
-    /*!
-      The constructor
-    */
-    MPU6050(int SensorNum);
-    int Write_Reg(uint8_t reg_addr, uint8_t data);
-    uint8_t Read_Reg(uint8_t reg_addr);
-    BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
-    uint8_t Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    public:
+    /**
+     * @brief The constructor for the MPU6050 class, which initializes non-I/O members
+     * @param  SensorNum The integer ID of the sensor being used
+     * @param  I2CHandle A pointer to the I2C_HandleTypeDef being used
+     * @return None
+     */
+    MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle);
+
+    /**
+      * @brief   Reads the gyroscope with offsets without interrupts
+      * @param   None
+      * @return  None
+      */
     void Read_Gyroscope_Withoffset();
+
+    /**
+      * @brief   Reads the gyroscope with interrupts and offsets
+      * @param   None
+      * @return  None
+      */
     void Read_Gyroscope_Withoffset_IT();
+
+    /**
+      * @brief   Reads the accelerometer with offsets without interrupts
+      * @param   None
+      * @return  None
+      */
     void Read_Accelerometer_Withoffset();
+
+    /**
+      * @brief   Reads the accelerometer with interrupts and offsets
+      * @param   None
+      * @return  None
+      */
     void Read_Accelerometer_Withoffset_IT();
-    int Set_LPF(uint8_t lpf);
-    void Manually_Set_Offsets(int SensorNum);
+
+    /**
+      * @brief   Fills an IMUStruct
+      * @param   myStruct The pointer to the struct being filled
+      * @return  None
+      */
     void Fill_Struct(IMUStruct * myStruct);
+
+    /**
+      * @brief   This function is used to initialize all aspects of the IMU
+      *          which require I/O
+      * @param   lpf The uint8_t lpf setting being used
+      * @return  None
+      */
     void init(uint8_t lpf);
-    //! A destructor.
-    /*!
-      A more elaborate description of the destructor.
-    */
+
+    /**
+      * @brief   The MPU6050 desctructor
+      * @param   None
+      * @return  None
+      */
     ~MPU6050() {}
 
-
-/****************************** Protected Members ***************************/
-    protected:
-
-
-/****************************** Private Members *****************************/
     private:
+    /**
+      * @brief   Writes to a register from the MPU6050
+      * @param   reg_addr uint8_t address of the register
+      * @param   data uint8_t data to be written
+      * @return  Status
+      */
+    int Write_Reg(uint8_t reg_addr, uint8_t data);
 
-}; //class Class
+    /**
+      * @brief   Sets the offsets of the sensor
+      * @param   SensorNum The integer ID of the sensor being used
+      * @return  None
+      */
+    void Manually_Set_Offsets(int SensorNum);
 
+    /**
+      * @brief   Sets the offsets of the sensor
+      * @param   lpf The uint8_t setting being used for the built-in LPF
+      * @return  None
+      */
+    int Set_LPF(uint8_t lpf);
 
+    /**
+      * @brief   Reads a byte from a register on the sensor, and stores it
+      *          in the member variable received_byte
+      * @param   reg_addr uint8_t address of the register
+      * @return  Status
+      */
+    uint8_t Read_Reg(uint8_t reg_addr);
 
-} //namespace Namespace
+    /**
+      * @brief   Reads 6 bytes from the sensor with interrupts, and stores them in
+      *          the sensor_buffer
+      * @param   reg_addr uint8_t address of the register
+      * @param   sensor_buffer uint8_t pointer to output buffer
+      * @return  Status
+      */
+
+    BaseType_t Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    /**
+      * @brief   Reads 6 bytes from the sensor, and stores them in
+      *          the sensor_buffer
+      * @param   reg_addr uint8_t address of the register
+      * @param   sensor_buffer uint8_t pointer to output buffer
+      * @return  Status
+      */
+    uint8_t Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer);
+
+    /**
+      * @brief   This function big-bangs the I2C master clock
+      *          https://electronics.stackexchange.com/questions/267972/i2c-busy-flag-strange-behaviour/281046#281046
+      *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
+      *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
+      *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
+      * @param   numClocks The number of times to cycle the I2C master clock
+      * @param   sendStopBits 1 if stop bits are to be sent on SDA
+      * @return  None
+      */
+    void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
+    /**
+      * @brief   Helper function for I2C_ClearBusyFlagErratum.
+      * @param   None
+      * @return  None
+      */
+    static uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port, uint16_t pin, GPIO_PinState state, uint8_t timeout);
+}; //class MPU6050
+
+} //namespace IMUnamespace
+
 /**
  * @}
  */
-/**/
+/* end - Header */
 
-#endif /* __EXAMPLE_CPP_H__ */
+#endif /* MPU6050_H_ */
