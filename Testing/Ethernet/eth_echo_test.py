@@ -1,3 +1,4 @@
+# the following are available with Python Anaconda 3
 from datetime import datetime
 import json
 import numpy
@@ -6,6 +7,8 @@ import socket
 import sys
 import time
 
+# scheddl from the fork https://github.com/rfairley/scheddl must be installed
+# to your python distribution by yourself
 import scheddl
 
 # eth_echo_test.py sends message of given sizes over
@@ -14,9 +17,9 @@ import scheddl
 # receive the echoed packet is measured, giving the latency
 # of transmission between the host PC and echo server.
 # Multiple trials, sizes, and numbers of messages to send in
-# sequence may be specified. Numerical time data for echoes
-# is outputted in a JSON file, and statistical information
-# is printed to the stdout console. Numerical data is to be
+# sequence between thread yields of this program may be specified.
+# Numerical time data for echoes is outputted in a JSON file, and
+# test progress is printed to the console. Numerical data is to be
 # later parsed for graphing and analysis.
 
 # The script will be helpful to guage performance improvements on PC<->MCU
@@ -57,11 +60,12 @@ DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
 #MESSAGE_SIZES = [80]
 MESSAGE_NUMS_TEST_IN_SEQUENCE = [1]
-MESSAGE_NUM_TRIALS = 100
+MESSAGE_NUM_TRIALS = 10
 
 # Network parameters
 PROTOCOL = "UDP"
-MCU_IP_ADDRESS = "10.0.0.43"
+# MCU_IP_ADDRESS = "10.0.0.43" # Static IP address set on the MCU
+MCU_IP_ADDRESS = "127.0.0.1" # Loopback device - OK for testing without board attached
 MCU_PORT = 7
 HOST_PC_PORT = 7
 
@@ -170,14 +174,10 @@ for msg_size in MESSAGE_SIZES:
 
             times_array = numpy.array(times)
 
-            print('    ---- Total time: {} s'.format(numpy.sum(times_array)))
-            print('    ---- Average echo time: {} s'.format(numpy.average(times_array)))
-            print('    ---- Standard deviation: {} s'.format(numpy.std(times_array)))
-            print('    ---- Maximum: {} s, Minimum: {} s'.format(numpy.amax(times_array), numpy.amin(times_array)))
-
+            print("    ---- done")
             time.sleep(0.05)
 
-print("Collected {} results".format(len(ETH_ECHO_TEST["tests"])))
+print("Ran {} tests, written to file {}".format(len(ETH_ECHO_TEST["tests"]), ETH_ECHO_TEST["name"]))
 
 with open(ETH_ECHO_TEST["name"], "w") as test_results_json:
     json.dump(ETH_ECHO_TEST, test_results_json)
