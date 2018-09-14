@@ -1,10 +1,11 @@
 /**
   *****************************************************************************
-  * @file    UartInterface_test.cpp
+  * @file    UartDriver_test.cpp
   * @author  Tyler Gamvrelis
   * @brief   TODO -- brief description of file
   *
-  * @defgroup UartInterface_test
+  * @defgroup UartDriver_test
+  * @ingroup  UART
   * @brief    TODO -- description of module
   * @{
   *****************************************************************************
@@ -14,7 +15,7 @@
 
 
 /********************************* Includes **********************************/
-#include "UartInterface.h"
+#include "UartDriver.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -59,4 +60,4 @@ TEST(UartInterfaceTests, IOTypeDefaultsToPolled) {
 /**
  * @}
  */
-/* end - HalUartInterface_test */
+/* end - UartDriver_test */
