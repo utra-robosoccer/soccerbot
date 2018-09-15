@@ -92,6 +92,9 @@ static MPUFilterVel_t vzFilter;
  * @{
  */
 
+// TODO: figure out how to link to the dsp library so we can use the
+// filtering functions
+
 /**
  * @brief  Write an input to the filter
  * @param  pThis Pointer to filter container
@@ -99,7 +102,7 @@ static MPUFilterVel_t vzFilter;
  * @return None
  */
 static inline void MPUFilter_writeInputVel(MPUFilterVel_t * pThis, float input){
-    arm_fir_f32( &pThis->instance, &input, &pThis->output, 1 );
+//    arm_fir_f32( &pThis->instance, &input, &pThis->output, 1 );
 };
 
 /**
@@ -129,10 +132,10 @@ static void MPUFilter_resetVel( MPUFilterVel_t * pThis )
  */
 static void MPUFilter_initVel( MPUFilterVel_t * pThis )
 {
-    arm_fir_init_f32(&pThis->instance, MPUFilter_numTapsVel,
-            (float*)MPUFilter_coefficientsVel, pThis->state,
-            MPUFilter_blockSizeVel
-    );
+//    arm_fir_init_f32(&pThis->instance, MPUFilter_numTapsVel,
+//            (float*)MPUFilter_coefficientsVel, pThis->state,
+//            MPUFilter_blockSizeVel
+//    );
     MPUFilter_resetVel( pThis );
 }
 
