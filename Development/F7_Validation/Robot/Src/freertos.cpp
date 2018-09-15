@@ -88,9 +88,9 @@ osStaticThreadDef_t UART1TaskControlBlock;
 osThreadId UART2TaskHandle;
 uint32_t UART2TaskBuffer[ 128 ];
 osStaticThreadDef_t UART2TaskControlBlock;
-osThreadId UART3TaskHandle;
-uint32_t UART3TaskBuffer[ 128 ];
-osStaticThreadDef_t UART3TaskControlBlock;
+osThreadId UART5TaskHandle;
+uint32_t UART5TaskBuffer[ 128 ];
+osStaticThreadDef_t UART5TaskControlBlock;
 osThreadId UART4TaskHandle;
 uint32_t UART4TaskBuffer[ 128 ];
 osStaticThreadDef_t UART4TaskControlBlock;
@@ -115,9 +115,9 @@ osStaticMessageQDef_t UART1_reqControlBlock;
 osMessageQId UART2_reqHandle;
 uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART2_reqControlBlock;
-osMessageQId UART3_reqHandle;
-uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART3_reqControlBlock;
+osMessageQId UART5_reqHandle;
+uint8_t UART5_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t UART5_reqControlBlock;
 osMessageQId UART4_reqHandle;
 uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART4_reqControlBlock;
@@ -152,7 +152,7 @@ static volatile uint32_t error;
 void StartDefaultTask(void const * argument);
 extern void StartUART1Task(void const * argument);
 extern void StartUART2Task(void const * argument);
-extern void StartUART3Task(void const * argument);
+extern void StartUART5Task(void const * argument);
 extern void StartUART4Task(void const * argument);
 extern void StartUART6Task(void const * argument);
 extern void StartIMUTask(void const * argument);
@@ -229,9 +229,9 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(UART2Task, StartUART2Task, osPriorityNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
   UART2TaskHandle = osThreadCreate(osThread(UART2Task), NULL);
 
-  /* definition and creation of UART3Task */
-  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
-  UART3TaskHandle = osThreadCreate(osThread(UART3Task), NULL);
+  /* definition and creation of UART5Task */
+  osThreadStaticDef(UART5Task, StartUART5Task, osPriorityNormal, 0, 128, UART5TaskBuffer, &UART5TaskControlBlock);
+  UART5TaskHandle = osThreadCreate(osThread(UART5Task), NULL);
 
   /* definition and creation of UART4Task */
   osThreadStaticDef(UART4Task, StartUART4Task, osPriorityNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
@@ -270,9 +270,9 @@ void MX_FREERTOS_Init(void) {
   osMessageQStaticDef(UART2_req, 16, UARTcmd_t, UART2_reqBuffer, &UART2_reqControlBlock);
   UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
 
-  /* definition and creation of UART3_req */
-  osMessageQStaticDef(UART3_req, 16, UARTcmd_t, UART3_reqBuffer, &UART3_reqControlBlock);
-  UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
+  /* definition and creation of UART5_req */
+  osMessageQStaticDef(UART5_req, 16, UARTcmd_t, UART5_reqBuffer, &UART5_reqControlBlock);
+  UART5_reqHandle = osMessageCreate(osMessageQ(UART5_req), NULL);
 
   /* definition and creation of UART4_req */
   osMessageQStaticDef(UART4_req, 16, UARTcmd_t, UART4_reqBuffer, &UART4_reqControlBlock);
@@ -339,12 +339,12 @@ void StartCommandTask(void const * argument)
     Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
     Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
     Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-    Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor13, 13, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor14, 14, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor15, 15, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor16, 16, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor17, 17, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
+    Dynamixel_Init(&Motor18, 18, &huart5, GPIOB, GPIO_PIN_2, AX12ATYPE);
 
 
     Dynamixel_HandleTypeDef* arrDynamixel[18] = {&Motor1,&Motor2,&Motor3,&Motor4,
@@ -384,12 +384,12 @@ void StartCommandTask(void const * argument)
     (Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
     (Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
     (Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
-    (Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
+    (Motorcmd[MOTOR13]).qHandle = UART5_reqHandle;
+    (Motorcmd[MOTOR14]).qHandle = UART5_reqHandle;
+    (Motorcmd[MOTOR15]).qHandle = UART5_reqHandle;
+    (Motorcmd[MOTOR16]).qHandle = UART5_reqHandle;
+    (Motorcmd[MOTOR17]).qHandle = UART5_reqHandle;
+    (Motorcmd[MOTOR18]).qHandle = UART5_reqHandle;
 
     Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
 
@@ -405,7 +405,7 @@ void StartCommandTask(void const * argument)
     xTaskNotify(TxTaskHandle, 1UL, eNoAction);
     xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
     xTaskNotify(UART2TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART3TaskHandle, 1UL, eNoAction);
+    xTaskNotify(UART5TaskHandle, 1UL, eNoAction);
     xTaskNotify(UART4TaskHandle, 1UL, eNoAction);
     xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
     xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
@@ -553,9 +553,9 @@ void StartUART2Task(void const * argument)
 }
 
 /**
-  * @brief  This function is executed in the context of the UART3_
+  * @brief  This function is executed in the context of the UART5_
   *         thread. It processes all commands for the motors
-  *         physically connected to UART3, and initiates the I/O
+  *         physically connected to UART5, and initiates the I/O
   *         calls to them. Whenever it processes read commands for
   *         a motor, it sends the data received to the
   *         multi-writer sensor queue, which is read only by the
@@ -565,7 +565,7 @@ void StartUART2Task(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART3Task(void const * argument)
+void StartUART5Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -577,7 +577,7 @@ void StartUART3Task(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(UART5_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage, &dataToSend);
     }
 }
@@ -734,7 +734,7 @@ void StartRxTask(void const * argument)
 
     uint32_t notification;
 
-    HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+    HAL_UART_Receive_DMA(&huart3, (uint8_t*)buffRx, sizeof(buffRx));
 
     for (;;)
     {
@@ -755,7 +755,7 @@ void StartRxTask(void const * argument)
             // the RX thread blocks itself and never wakes up since a RX transfer was never
             // initialized.
             xSemaphoreTake(PCUARTHandle, 1);
-            status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
+            status = HAL_UART_Receive_DMA(&huart3, (uint8_t*)buffRx, sizeof(buffRx));
             xSemaphoreGive(PCUARTHandle);
         }while(status != HAL_OK);
 
@@ -874,7 +874,7 @@ void StartTxTask(void const * argument)
             // the RX thread blocks itself and never wakes up since a RX transfer was never
             // initialized.
             xSemaphoreTake(PCUARTHandle, 1);
-            status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
+            status = HAL_UART_Transmit_DMA(&huart3, (uint8_t*)&robotState, sizeof(RobotState));
             xSemaphoreGive(PCUARTHandle);
         }while(status != HAL_OK);
 
@@ -931,7 +931,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        if(huart == &huart5){
+        if(huart == &huart3){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         if(huart == &huart1){
@@ -940,8 +940,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
         else if(huart == &huart2){
             xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart3){
-            xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == &huart5){
+            xTaskNotifyFromISR(UART5TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == &huart4){
             xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
@@ -968,7 +968,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart5) {
+    if (huart == &huart3) {
         xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     if(huart == &huart1){
@@ -977,8 +977,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     else if(huart == &huart2){
         xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart3){
-        xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == &huart5){
+        xTaskNotifyFromISR(UART5TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == &huart4){
         xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
