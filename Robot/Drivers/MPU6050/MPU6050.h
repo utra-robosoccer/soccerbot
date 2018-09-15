@@ -161,23 +161,6 @@ class MPU6050 {
       */
     uint8_t Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer);
 
-    /**
-      * @brief   This function big-bangs the I2C master clock
-      *          https://electronics.stackexchange.com/questions/267972/i2c-busy-flag-strange-behaviour/281046#281046
-      *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
-      *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
-      *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
-      * @param   numClocks The number of times to cycle the I2C master clock
-      * @param   sendStopBits 1 if stop bits are to be sent on SDA
-      * @return  None
-      */
-    void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
-    /**
-      * @brief   Helper function for I2C_ClearBusyFlagErratum.
-      * @param   None
-      * @return  None
-      */
-    static uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port, uint16_t pin, GPIO_PinState state, uint8_t timeout);
 }; //class MPU6050
 
 } //namespace IMUnamespace
