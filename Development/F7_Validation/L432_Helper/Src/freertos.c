@@ -51,7 +51,8 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-/* USER CODE BEGIN Includes */     
+/* USER CODE BEGIN Includes */
+#include <stdbool.h>
 #include "usart.h"
 
 typedef struct{
@@ -166,8 +167,8 @@ void StartDefaultTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 #define NOTIFIED_FROM_TX_ISR 0x80
-#define NOTIFIED_FROM_RX_ISR 0x60
-#define NOTIFIED_FROM_TASK 0x40
+#define NOTIFIED_FROM_RX_ISR 0x40
+#define NOTIFIED_FROM_TASK 0x20
 
 #define INST_WRITE_DATA 0x03
 #define INST_READ_DATA 0x02
@@ -176,21 +177,29 @@ void StartDefaultTask(void const * argument)
 #define REG_CURRENT_POSITION 0x24
 
 
-static inline BaseType_t waitUntilNotifiedOrTimeout(
+inline bool CHECK_NOTIFICATION(uint32_t val, uint32_t notificationMask){
+    return (val & notificationMask) == notificationMask;
+}
+
+
+static bool waitUntilNotifiedOrTimeout(
     uint32_t notificationVal,
     TickType_t timeout
 )
 {
     uint32_t notification;
     BaseType_t status;
+    bool retval = true;
 
     // Wait until notified from ISR. Clear no bits on entry in case the notification
     // came while a higher priority task was executing.
-    do{
-        status = xTaskNotifyWait(0, notificationVal, &notification, pdMS_TO_TICKS(timeout));
-    }while((notification & notificationVal) != notificationVal);
+    status = xTaskNotifyWait(0, notificationVal, &notification, pdMS_TO_TICKS(timeout));
 
-    return status;
+    if((status != pdTRUE) || !CHECK_NOTIFICATION(notification, notificationVal)){
+        retval = false;
+    }
+
+    return retval;
 }
 
 
@@ -208,43 +217,124 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 }
 
 
+volatile uint8_t byte;
 void StartRX(void const * argument){
-    BaseType_t status;
-    uint8_t buf[9] = {0};
+    bool status = true;
+    bool valid;
+
+    volatile uint8_t buff;
+
+    uint8_t inst;
+    uint8_t reg;
+
     Data_t data;
 
+    enum {H1, H2, ID, LEN, INST, REG, ARG1, ARG2, CHSM} state = H1;
+
+    HAL_UART_Receive_IT(&huart1, &buff, 1);
+
     for(;;){
-        HAL_UART_Receive_IT(&huart1, buf, 4);
+        status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
 
-        status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 30);
-
-        if((status == pdTRUE) && ((buf[3] == 5) || (buf[3] == 4))){
-            data.id = buf[2]; // store the id
-
-            // Here we check the byte which indicates the length
-            // of the data in the packet.
-            // Assume that 5 is for set goal position and 4 is for
-            // read position
-            HAL_UART_Receive_IT(&huart1, &buf[4], buf[3]);
-            status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
-
-            if((buf[4] == INST_WRITE_DATA) && (buf[5] == REG_GOAL_POSITION)){
-                data.pos = buf[6] | (buf[7] << 8); // store the goal position
-            }
-            else if((buf[4] == INST_READ_DATA) && (buf[5] == REG_CURRENT_POSITION)){
-                xQueueSend(toBeSentQHandle, &data, 0);
-            }
+        if(status){
+            byte = buff;
+        }
+        else{
+            HAL_UART_AbortReceive(&huart1);
+            buff = 0;
         }
 
-        if(status != pdTRUE){
-            HAL_UART_AbortReceive(&huart1);
+        HAL_UART_Receive_IT(&huart1, &buff, 1);
+
+        valid = true;
+        if(status){
+            // Processing based on current state
+            switch(state){
+                case H1:
+                    valid = (byte == 0xFF);
+                    break;
+                case H2:
+                    valid = (byte == 0xFF);
+                    break;
+                case ID:
+                    valid = (byte <= 18);
+                    if(valid){
+                        data.id = byte;
+                    }
+                    break;
+                case LEN:
+                    if(byte > 5){
+                        // Should not have length greater than 5 for the
+                        // commands we are emulating (in fact it should
+                        // only be 4 for read or 5 for write)
+                        valid = false;
+                    }
+                    break;
+                case INST:
+                    if(byte == INST_WRITE_DATA){
+                        inst = INST_WRITE_DATA;
+                    }
+                    else if(byte == INST_READ_DATA){
+                        inst = INST_READ_DATA;
+                    }
+                    else{
+                        // Only support these 2 instructions for now
+                        valid = false;
+                    }
+                    break;
+                case REG:
+                    if((inst == INST_WRITE_DATA) && (byte == REG_GOAL_POSITION)){
+                        reg = REG_GOAL_POSITION;
+                    }
+                    else if((inst == INST_READ_DATA) && (byte == REG_CURRENT_POSITION)){
+                        reg = REG_CURRENT_POSITION;
+                    }
+                    else{
+                        // Only support using these 2 registers for now
+                        valid = false;
+                    }
+                    break;
+                case ARG1:
+                    if(inst == INST_WRITE_DATA){
+                        // Low data byte
+                        data.pos = byte;
+                    }
+                    break;
+                case ARG2:
+                    if(inst == INST_WRITE_DATA){
+                        // High data byte
+                        data.pos = (data.pos & 0xFF) | (byte << 8);
+                    }
+                    else if(inst == INST_READ_DATA){
+                        // Need to delay for at least 100 microsec,
+                        // but without using a hardware timer or changing
+                        // OS trap rate, this is the best we can do
+                        osDelay(pdMS_TO_TICKS(1));
+                        xQueueSend(toBeSentQHandle, &data, 0);
+                    }
+                    break;
+                case CHSM:
+                    break;
+                default:
+                    // should never reach here
+                    break;
+            }
+
+            // Update state
+            if(valid && (state != CHSM)){
+                ++state;
+            }
+            else{
+                state = H1;
+                byte = 0;
+            }
         }
     }
 }
 
 
 void StartTX(void const * argument){
-    BaseType_t status;
+    bool status;
     uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
     uint8_t err = 0; // add some variance to the data
@@ -266,7 +356,7 @@ void StartTX(void const * argument){
 
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_TX_ISR, 2);
 
-        if(status != pdTRUE){
+        if(!status){
             HAL_UART_AbortTransmit(&huart1);
         }
     }
@@ -278,7 +368,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 
     if(huart == &huart1){
         xTaskNotifyFromISR(
-            StartTX,
+            TXHandle,
             NOTIFIED_FROM_TX_ISR,
             eSetBits,
             &xHigherPriorityTaskWoken
@@ -294,7 +384,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
     if(huart == &huart1){
         xTaskNotifyFromISR(
-            StartRX,
+            RXHandle,
             NOTIFIED_FROM_RX_ISR,
             eSetBits,
             &xHigherPriorityTaskWoken
