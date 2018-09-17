@@ -17,6 +17,6 @@ for filename in filenames:
         csv_file.write("size,sum,average,median,std_dev,max,min,times\n")
     with open(csv_filename, "a") as csv_file:
         for size, results in json_data.items():
-            csv_file.write("{},{},{},{},{},{},{},{}\n".format(size, results["sum"], results["average"], results["median"], results["std_dev"], results["max"], results["min"], ",".join(results["the_times"]))
+            csv_file.write("{},{},{},{},{},{},{},{}\n".format(size, results["sum"], results["average"], results["median"], results["std_dev"], results["max"], results["min"], ",".join([str(e) for e in results["the_times"]])))
     print("Done for file {}".format(csv_filename))
 
