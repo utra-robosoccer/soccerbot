@@ -219,111 +219,28 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 
 void StartRX(void const * argument){
     bool status = true;
-    bool valid;
 
-    volatile uint8_t buff = 0;
-    volatile uint8_t byte;
-
-    uint8_t inst;
-    uint8_t reg;
-
+    volatile uint8_t buff[8] = {0};
     Data_t data;
 
-    enum {H1, H2, ID, LEN, INST, REG, ARG1, ARG2, CHSM} state = H1;
-
-    HAL_UART_Receive_IT(&huart1, buff, 1);
-
     for(;;){
+        HAL_UART_Receive_IT(&huart1, buff, 8);
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
 
         if(!status){
             HAL_UART_AbortReceive(&huart1);
-            buff = 0;
-            HAL_UART_Receive_IT(&huart1, &buff, 1);
+            memset(buff, 0, sizeof(buff));
         }
         else{
-            byte = buff;
-            HAL_UART_Receive_IT(&huart1, &buff, 1);
-
-            // Processing based on current state
-            valid = true;
-            switch(state){
-                case H1:
-                    valid = (byte == 0xFF);
-                    break;
-                case H2:
-                    valid = (byte == 0xFF);
-                    break;
-                case ID:
-                    valid = (byte <= 18);
-                    if(valid){
-                        data.id = byte;
-                    }
-                    break;
-                case LEN:
-                    if(byte > 5){
-                        // Should not have length greater than 5 for the
-                        // commands we are emulating (in fact it should
-                        // only be 4 for read or 5 for write)
-                        valid = false;
-                    }
-                    break;
-                case INST:
-                    if(byte == INST_WRITE_DATA){
-                        inst = INST_WRITE_DATA;
-                    }
-                    else if(byte == INST_READ_DATA){
-                        inst = INST_READ_DATA;
-                    }
-                    else{
-                        // Only support these 2 instructions for now
-                        valid = false;
-                    }
-                    break;
-                case REG:
-                    if((inst == INST_WRITE_DATA) && (byte == REG_GOAL_POSITION)){
-                        reg = REG_GOAL_POSITION;
-                    }
-                    else if((inst == INST_READ_DATA) && (byte == REG_CURRENT_POSITION)){
-                        reg = REG_CURRENT_POSITION;
-                    }
-                    else{
-                        // Only support using these 2 registers for now
-                        valid = false;
-                    }
-                    break;
-                case ARG1:
-                    if(inst == INST_WRITE_DATA){
-                        // Low data byte
-                        data.pos = byte;
-                    }
-                    break;
-                case ARG2:
-                    if(inst == INST_WRITE_DATA){
-                        // High data byte
-                        data.pos = (data.pos & 0xFF) | (byte << 8);
-                    }
-                    else if(inst == INST_READ_DATA){
-                        // Need to delay for at least 100 microsec,
-                        // but without using a hardware timer or changing
-                        // OS trap rate, this is the best we can do
-                        osDelay(pdMS_TO_TICKS(1));
-                        xQueueSend(toBeSentQHandle, &data, 0);
-                    }
-                    break;
-                case CHSM:
-                    break;
-                default:
-                    // should never reach here
-                    break;
+            if(buff[4] == INST_WRITE_DATA){
+                data.id = buff[2];
+                data.pos = buff[6] | (buff[7] << 8);
+                HAL_UART_Receive_IT(&huart1, buff, 1); // CHKSM
+                status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 1);
             }
-
-            // Update state
-            if(valid && (state != CHSM)){
-                ++state;
-            }
-            else{
-                state = H1;
+            else if(buff[4] == INST_READ_DATA){
+                osDelay(pdMS_TO_TICKS(1));
+                xQueueSend(toBeSentQHandle, &data, 0);
             }
         }
     }
@@ -334,18 +251,19 @@ void StartTX(void const * argument){
     bool status;
     uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
-    uint8_t err = 0; // add some variance to the data
+
+    int8_t var = -32; // add some variance to the data
 
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
-        ++err;
-        if(err > 64){
-            err = 0;
+        ++var;
+        if(var > 32){
+            var = -32;
         }
 
         buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + err; // low byte
+        buf[5] = (data.pos & 0xFF) + var; // low byte
         buf[6] = (data.pos >> 8) & 0xFF; // high byte
         buf[7] = Dynamixel_ComputeChecksum(buf, sizeof(buf));
 
