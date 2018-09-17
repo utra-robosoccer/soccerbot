@@ -51,7 +51,7 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-/* USER CODE BEGIN Includes */
+/* USER CODE BEGIN Includes */     
 #include <stdbool.h>
 #include "usart.h"
 
@@ -217,12 +217,12 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
 }
 
 
-volatile uint8_t byte;
 void StartRX(void const * argument){
     bool status = true;
     bool valid;
 
-    volatile uint8_t buff;
+    volatile uint8_t buff = 0;
+    volatile uint8_t byte;
 
     uint8_t inst;
     uint8_t reg;
@@ -231,24 +231,22 @@ void StartRX(void const * argument){
 
     enum {H1, H2, ID, LEN, INST, REG, ARG1, ARG2, CHSM} state = H1;
 
-    HAL_UART_Receive_IT(&huart1, &buff, 1);
+    HAL_UART_Receive_IT(&huart1, buff, 1);
 
     for(;;){
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
 
-        if(status){
-            byte = buff;
-        }
-        else{
+        if(!status){
             HAL_UART_AbortReceive(&huart1);
             buff = 0;
+            HAL_UART_Receive_IT(&huart1, &buff, 1);
         }
+        else{
+            byte = buff;
+            HAL_UART_Receive_IT(&huart1, &buff, 1);
 
-        HAL_UART_Receive_IT(&huart1, &buff, 1);
-
-        valid = true;
-        if(status){
             // Processing based on current state
+            valid = true;
             switch(state){
                 case H1:
                     valid = (byte == 0xFF);
@@ -326,7 +324,6 @@ void StartRX(void const * argument){
             }
             else{
                 state = H1;
-                byte = 0;
             }
         }
     }
