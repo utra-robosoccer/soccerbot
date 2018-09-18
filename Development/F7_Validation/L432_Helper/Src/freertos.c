@@ -53,6 +53,7 @@
 
 /* USER CODE BEGIN Includes */     
 #include <stdbool.h>
+#include <string.h>
 #include "usart.h"
 
 typedef struct{
@@ -203,44 +204,83 @@ static bool waitUntilNotifiedOrTimeout(
 }
 
 
-static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
+static inline uint8_t sumBytes(uint8_t* arr, size_t len){
     uint8_t accumulate = 0;
 
-    /* Loop through the array starting from the 2nd element of the array and
-     * finishing before the last since the last is where the checksum will
-     * be stored */
-    for(uint8_t i = 2; i < length - 1; i++){
+    for(size_t i = 0; i < len; ++i){
         accumulate += arr[i];
     }
 
-    return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
+    return accumulate;
 }
 
+
+#define NUM_MOTORS 18
+uint16_t motorDataTable[NUM_MOTORS] = {0};
 
 void StartRX(void const * argument){
     bool status = true;
 
     volatile uint8_t buff[8] = {0};
+    volatile uint8_t checksumRecv;
+
     Data_t data;
 
+    uint8_t id;
+    uint8_t len;
+    uint8_t inst;
+    uint8_t addr;
+    uint8_t data_low;
+    uint8_t data_high;
+    bool checksumIsValid;
+
     for(;;){
-        HAL_UART_Receive_IT(&huart1, buff, 8);
+        HAL_UART_Receive_IT(&huart1, (uint8_t*)buff, 8);
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
 
         if(!status){
             HAL_UART_AbortReceive(&huart1);
-            memset(buff, 0, sizeof(buff));
+            memset((uint8_t*)buff, 0, sizeof(buff));
         }
         else{
-            if(buff[4] == INST_WRITE_DATA){
-                data.id = buff[2];
-                data.pos = buff[6] | (buff[7] << 8);
-                HAL_UART_Receive_IT(&huart1, buff, 1); // CHKSM
+            id = buff[2];
+            len = buff[3];
+            inst = buff[4];
+            addr = buff[5];
+
+            if(inst == INST_WRITE_DATA){
+                data_low = buff[6];
+                data_high = buff[7];
+
+                // Receive checksum
+                HAL_UART_Receive_IT(&huart1, (uint8_t*)&checksumRecv, 1);
                 status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 1);
+
+                if(!status){
+                    HAL_UART_AbortReceive(&huart1);
+                    checksumRecv = 0;
+                }
+                else if(id <= NUM_MOTORS){
+                    checksumIsValid = ((sumBytes((uint8_t*)buff, 8) + checksumRecv) == 0);
+
+                    if(checksumIsValid){
+                        data.pos = data_low | (data_high << 8);
+
+                        motorDataTable[id] = data.pos;
+                    }
+                }
             }
             else if(buff[4] == INST_READ_DATA){
-                osDelay(pdMS_TO_TICKS(1));
-                xQueueSend(toBeSentQHandle, &data, 0);
+                checksumRecv = buff[7];
+                checksumIsValid = ((sumBytes((uint8_t*)buff, 7) + checksumRecv) == 0);
+
+                data.id = id;
+                data.pos = motorDataTable[id];
+
+                if(checksumIsValid){
+                    osDelay(pdMS_TO_TICKS(1));
+                    xQueueSend(toBeSentQHandle, &data, 0);
+                }
             }
         }
     }
@@ -265,7 +305,7 @@ void StartTX(void const * argument){
         buf[2] = data.id;
         buf[5] = (data.pos & 0xFF) + var; // low byte
         buf[6] = (data.pos >> 8) & 0xFF; // high byte
-        buf[7] = Dynamixel_ComputeChecksum(buf, sizeof(buf));
+        buf[7] = ~sumBytes(buf, 6);
 
         HAL_UART_Transmit_DMA(&huart1, buf, 8);
 
