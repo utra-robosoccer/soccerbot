@@ -288,34 +288,21 @@ void StartRX(void const * argument){
 
 
 // x^6 + x^5 + 1 with period 63
-static const uint8_t POLY_MASK = 0b00110000;
+static const uint8_t POLY_MASK = 0b0110000;
 
 /**
- * @brief  Generates a pseudo-random noise sequence based on a linear feedback
- *         shift register, which repeats after a period dependent on the
- *         polynomial structure.
- * @return Pseudo-random noise byte
+ * @brief Updates the contents of the linear feedback shift register passed in.
+ *        At any given time, its contents will contain a psuedorandom sequence
+ *        which repeats after a period dependent on the polynomial structure.
+ * @param lfsr Pointer to shift register contents. Holds output prn sequence
  */
-static inline uint8_t get_noise(void){
-    static uint8_t lfsr = 0x2F; // Seed for PRNG
+static inline void update_lfsr(uint8_t* lfsr){
+    uint8_t stream_in = *lfsr & 1;
+    *lfsr >>= 1;
 
-    uint8_t feedback_line = lfsr & 1;
-    lfsr >>= 1;
-
-    // For any binary digit A:
-    //     A xor 0 = A
-    //     A xor 1 = !A
-    //
-    // The 1's in the polynomial indicate bits that the feedback line is
-    // connected to via modulo-2 adders (i.e. xor). Given the above rules,
-    // we only need to compute this addition when the feedback line is a 1
-    // since there is no update to the lfsr contents (besides the shift)
-    // when the feedback line is 0
-    if(feedback_line == 1){
-        lfsr ^= POLY_MASK;
+    if(stream_in == 1){
+        *lfsr ^= POLY_MASK;
     }
-
-    return lfsr;
 }
 
 
@@ -324,11 +311,16 @@ void StartTX(void const * argument){
     uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
 
+    int8_t prn = 0x2F; // seed value for PRNG
+
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
+        // Generate new pseudo-random number
+        update_lfsr(&prn);
+
         buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + get_noise(); // low byte + noise
+        buf[5] = (data.pos & 0xFF) + prn; // low byte with statistical noise
         buf[6] = (data.pos >> 8) & 0xFF; // high byte
         buf[7] = ~sumBytes(buf, 6);
 
