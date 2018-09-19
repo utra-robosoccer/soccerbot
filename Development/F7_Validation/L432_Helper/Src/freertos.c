@@ -222,8 +222,11 @@ static uint16_t motorDataTable[NUM_MOTORS] = {0};
 
 void StartRX(void const * argument){
     bool status = true;
+    bool checksumIsValid;
 
-    volatile uint8_t buff[8] = {0};
+    volatile uint8_t buff[9] = {0};
+    uint8_t computedChecksum;
+
     Data_t data;
 
     for(;;){
@@ -236,26 +239,36 @@ void StartRX(void const * argument){
         }
         else{
             if(buff[4] == INST_WRITE_DATA){
-                HAL_UART_Receive_IT(&huart1, (uint8_t*)buff, 1); // CHKSM
+                HAL_UART_Receive_IT(&huart1, (uint8_t*)&buff[8], 1); // CHKSM
                 status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 1);
 
-                if(buff[5] == REG_GOAL_POSITION){
-                    uint8_t id = buff[2];
-                    if(id <= NUM_MOTORS){
-                        motorDataTable[id] = buff[6] | (buff[7] << 8);
+                computedChecksum = Dynamixel_ComputeChecksum((uint8_t*)buff, sizeof(buff));
+                checksumIsValid = (computedChecksum == buff[8]);
+
+                if(checksumIsValid){
+                    if(buff[5] == REG_GOAL_POSITION){
+                        uint8_t id = buff[2];
+                        if(id <= NUM_MOTORS){
+                            motorDataTable[id] = buff[6] | (buff[7] << 8);
+                        }
                     }
                 }
             }
             else if(buff[4] == INST_READ_DATA){
                 if(buff[5] == REG_CURRENT_POSITION){
 
-                    uint8_t id = buff[2];
-                    if(id <= NUM_MOTORS){
-                        data.id = id;
-                        data.pos = motorDataTable[id];
+                    computedChecksum = Dynamixel_ComputeChecksum((uint8_t*)buff, 8);
+                    checksumIsValid = (computedChecksum == buff[7]);
 
-                        osDelay(pdMS_TO_TICKS(1));
-                        xQueueSend(toBeSentQHandle, &data, 0);
+                    if(checksumIsValid){
+                        uint8_t id = buff[2];
+                        if(id <= NUM_MOTORS){
+                            data.id = id;
+                            data.pos = motorDataTable[id];
+
+                            osDelay(pdMS_TO_TICKS(1));
+                            xQueueSend(toBeSentQHandle, &data, 0);
+                        }
                     }
                 }
             }
