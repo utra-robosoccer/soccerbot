@@ -76,8 +76,3 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
-
-/**
- * @}
- */
-/* end TODO -- Module_SubmoduleName */

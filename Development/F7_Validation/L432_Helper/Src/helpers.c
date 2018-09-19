@@ -37,11 +37,3 @@ bool waitUntilNotifiedOrTimeout(
 
     return retval;
 }
-
-
-
-
-/**
- * @}
- */
-/* end - Helpers */
