@@ -287,40 +287,23 @@ void StartRX(void const * argument){
 }
 
 
-// x^6 + x^5 + 1 with period 63
-static const uint8_t POLY_MASK = 0b0110000;
-
-/**
- * @brief Updates the contents of the linear feedback shift register passed in.
- *        At any given time, its contents will contain a psuedorandom sequence
- *        which repeats after a period dependent on the polynomial structure.
- * @param lfsr Pointer to shift register contents. Holds output prn sequence
- */
-static inline void update_lfsr(uint8_t* lfsr){
-    uint8_t stream_in = *lfsr & 1;
-    *lfsr >>= 1;
-
-    if(stream_in == 1){
-        *lfsr ^= POLY_MASK;
-    }
-}
-
-
 void StartTX(void const * argument){
     bool status;
     uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
 
-    int8_t prn = 0x2F; // seed value for PRNG
+    int8_t var = -32; // add some variance to the data
 
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
-        // Generate new pseudo-random number
-        update_lfsr(&prn);
+        ++var;
+        if(var > 32){
+            var = -32;
+        }
 
         buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + prn; // low byte with statistical noise
+        buf[5] = (data.pos & 0xFF) + var; // low byte
         buf[6] = (data.pos >> 8) & 0xFF; // high byte
         buf[7] = ~sumBytes(buf, 6);
 
