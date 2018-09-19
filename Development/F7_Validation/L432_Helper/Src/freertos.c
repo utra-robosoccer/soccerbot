@@ -56,10 +56,10 @@
 #include <string.h>
 #include "usart.h"
 
-typedef struct{
-    uint8_t id;
-    uint16_t pos;
-}Data_t;
+#include "types.h"
+#include "lfsr.h"
+#include "helpers.h"
+#include "tx_helpers.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -167,9 +167,7 @@ void StartDefaultTask(void const * argument)
 }
 
 /* USER CODE BEGIN Application */
-#define NOTIFIED_FROM_TX_ISR 0x80
 #define NOTIFIED_FROM_RX_ISR 0x40
-#define NOTIFIED_FROM_TASK 0x20
 
 #define INST_WRITE_DATA 0x03
 #define INST_READ_DATA 0x02
@@ -177,45 +175,6 @@ void StartDefaultTask(void const * argument)
 #define REG_GOAL_POSITION 0x1E
 #define REG_CURRENT_POSITION 0x24
 
-
-inline bool CHECK_NOTIFICATION(uint32_t val, uint32_t notificationMask){
-    return (val & notificationMask) == notificationMask;
-}
-
-
-static bool waitUntilNotifiedOrTimeout(
-    uint32_t notificationVal,
-    TickType_t timeout
-)
-{
-    uint32_t notification;
-    BaseType_t status;
-    bool retval = true;
-
-    // Wait until notified from ISR. Clear no bits on entry in case the notification
-    // came while a higher priority task was executing.
-    status = xTaskNotifyWait(0, notificationVal, &notification, pdMS_TO_TICKS(timeout));
-
-    if((status != pdTRUE) || !CHECK_NOTIFICATION(notification, notificationVal)){
-        retval = false;
-    }
-
-    return retval;
-}
-
-
-static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
-    uint8_t accumulate = 0;
-
-    /* Loop through the array starting from the 2nd element of the array and
-     * finishing before the last since the last is where the checksum will
-     * be stored */
-    for(uint8_t i = 2; i < length - 1; i++){
-        accumulate += arr[i];
-    }
-
-    return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
-}
 
 #define NUM_MOTORS 18
 static uint16_t motorDataTable[NUM_MOTORS] = {0};
@@ -277,75 +236,16 @@ void StartRX(void const * argument){
 }
 
 
-// x^6 + x^5 + 1 with period 63
-static const uint8_t POLY_MASK = 0b00110000;
-
-/**
- * @brief  Generates a pseudo-random noise sequence based on a linear feedback
- *         shift register, which repeats after a period dependent on the
- *         polynomial structure.
- * @return Pseudo-random noise byte
- */
-static uint8_t get_noise(void){
-    static uint8_t lfsr = 0x2F; // Seed for PRNG
-
-    uint8_t feedback_line = lfsr & 1;
-    lfsr >>= 1;
-
-    // For any binary digit A:
-    //     A xor 0 = A
-    //     A xor 1 = !A
-    //
-    // The 1's in the polynomial indicate bits that the feedback line is
-    // connected to via modulo-2 adders (i.e. xor). Given the above rules,
-    // we only need to compute this addition when the feedback line is a 1
-    // since there is no update to the lfsr contents (besides the shift)
-    // when the feedback line is 0
-    if(feedback_line == 1){
-        lfsr ^= POLY_MASK;
-    }
-
-    return lfsr;
-}
-
-
 void StartTX(void const * argument){
-    bool status;
-    volatile uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
 
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
-        buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + (get_noise() >> 2) - 16; // low byte + noise
-        buf[6] = (data.pos >> 8) & 0xFF; // high byte
-        buf[7] = Dynamixel_ComputeChecksum((uint8_t*)buf, sizeof(buf));
+        update_buffer_contents(&data);
 
-        HAL_UART_Transmit_DMA(&huart1, (uint8_t*)buf, 8);
-
-        status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_TX_ISR, 2);
-
-        if(!status){
-            HAL_UART_AbortTransmit(&huart1);
-        }
+        transmit_buffer_contents();
     }
-}
-
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-    if(huart == &huart1){
-        xTaskNotifyFromISR(
-            TXHandle,
-            NOTIFIED_FROM_TX_ISR,
-            eSetBits,
-            &xHigherPriorityTaskWoken
-        );
-    }
-
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 
