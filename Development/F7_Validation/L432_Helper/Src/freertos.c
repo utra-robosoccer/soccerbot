@@ -53,6 +53,7 @@
 
 /* USER CODE BEGIN Includes */     
 #include <stdbool.h>
+#include <string.h>
 #include "usart.h"
 
 typedef struct{
@@ -216,6 +217,8 @@ static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
     return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
 }
 
+#define NUM_MOTORS 18
+static uint16_t motorDataTable[NUM_MOTORS] = {0};
 
 void StartRX(void const * argument){
     bool status = true;
@@ -224,50 +227,89 @@ void StartRX(void const * argument){
     Data_t data;
 
     for(;;){
-        HAL_UART_Receive_IT(&huart1, buff, 8);
+        HAL_UART_Receive_DMA(&huart1, (uint8_t*)buff, 8);
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
 
         if(!status){
             HAL_UART_AbortReceive(&huart1);
-            memset(buff, 0, sizeof(buff));
+            memset((uint8_t*)buff, 0, sizeof(buff));
         }
         else{
             if(buff[4] == INST_WRITE_DATA){
-                data.id = buff[2];
-                data.pos = buff[6] | (buff[7] << 8);
-                HAL_UART_Receive_IT(&huart1, buff, 1); // CHKSM
+                HAL_UART_Receive_IT(&huart1, (uint8_t*)buff, 1); // CHKSM
                 status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 1);
+
+                if(buff[5] == REG_GOAL_POSITION){
+                    uint8_t id = buff[2];
+                    if(id <= NUM_MOTORS){
+                        motorDataTable[id] = buff[6] | (buff[7] << 8);
+                    }
+                }
             }
             else if(buff[4] == INST_READ_DATA){
-                osDelay(pdMS_TO_TICKS(1));
-                xQueueSend(toBeSentQHandle, &data, 0);
+                if(buff[5] == REG_CURRENT_POSITION){
+
+                    uint8_t id = buff[2];
+                    if(id <= NUM_MOTORS){
+                        data.id = id;
+                        data.pos = motorDataTable[id];
+
+                        osDelay(pdMS_TO_TICKS(1));
+                        xQueueSend(toBeSentQHandle, &data, 0);
+                    }
+                }
             }
         }
     }
 }
 
 
+// x^6 + x^5 + 1 with period 63
+static const uint8_t POLY_MASK = 0b00110000;
+
+/**
+ * @brief  Generates a pseudo-random noise sequence based on a linear feedback
+ *         shift register, which repeats after a period dependent on the
+ *         polynomial structure.
+ * @return Pseudo-random noise byte
+ */
+static uint8_t get_noise(void){
+    static uint8_t lfsr = 0x2F; // Seed for PRNG
+
+    uint8_t feedback_line = lfsr & 1;
+    lfsr >>= 1;
+
+    // For any binary digit A:
+    //     A xor 0 = A
+    //     A xor 1 = !A
+    //
+    // The 1's in the polynomial indicate bits that the feedback line is
+    // connected to via modulo-2 adders (i.e. xor). Given the above rules,
+    // we only need to compute this addition when the feedback line is a 1
+    // since there is no update to the lfsr contents (besides the shift)
+    // when the feedback line is 0
+    if(feedback_line == 1){
+        lfsr ^= POLY_MASK;
+    }
+
+    return lfsr;
+}
+
+
 void StartTX(void const * argument){
     bool status;
-    uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
+    volatile uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
-
-    int8_t var = -32; // add some variance to the data
 
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
-        ++var;
-        if(var > 32){
-            var = -32;
-        }
-
         buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + var; // low byte
+        buf[5] = (data.pos & 0xFF) + (get_noise() >> 2) - 16; // low byte + noise
         buf[6] = (data.pos >> 8) & 0xFF; // high byte
-        buf[7] = Dynamixel_ComputeChecksum(buf, sizeof(buf));
+        buf[7] = Dynamixel_ComputeChecksum((uint8_t*)buf, sizeof(buf));
 
-        HAL_UART_Transmit_DMA(&huart1, buf, 8);
+        HAL_UART_Transmit_DMA(&huart1, (uint8_t*)buf, 8);
 
         status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_TX_ISR, 2);
 
