@@ -55,10 +55,11 @@
 #include <stdbool.h>
 #include "usart.h"
 
-typedef struct{
-    uint8_t id;
-    uint16_t pos;
-}Data_t;
+#include "types.h"
+#include "lfsr.h"
+#include "helpers.h"
+#include "tx_helpers.h"
+#include "rx_helpers.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -166,147 +167,30 @@ void StartDefaultTask(void const * argument)
 }
 
 /* USER CODE BEGIN Application */
-#define NOTIFIED_FROM_TX_ISR 0x80
-#define NOTIFIED_FROM_RX_ISR 0x40
-#define NOTIFIED_FROM_TASK 0x20
-
-#define INST_WRITE_DATA 0x03
-#define INST_READ_DATA 0x02
-
-#define REG_GOAL_POSITION 0x1E
-#define REG_CURRENT_POSITION 0x24
-
-
-inline bool CHECK_NOTIFICATION(uint32_t val, uint32_t notificationMask){
-    return (val & notificationMask) == notificationMask;
-}
-
-
-static bool waitUntilNotifiedOrTimeout(
-    uint32_t notificationVal,
-    TickType_t timeout
-)
-{
-    uint32_t notification;
-    BaseType_t status;
-    bool retval = true;
-
-    // Wait until notified from ISR. Clear no bits on entry in case the notification
-    // came while a higher priority task was executing.
-    status = xTaskNotifyWait(0, notificationVal, &notification, pdMS_TO_TICKS(timeout));
-
-    if((status != pdTRUE) || !CHECK_NOTIFICATION(notification, notificationVal)){
-        retval = false;
-    }
-
-    return retval;
-}
-
-
-static inline uint8_t Dynamixel_ComputeChecksum(uint8_t *arr, int length){
-    uint8_t accumulate = 0;
-
-    /* Loop through the array starting from the 2nd element of the array and
-     * finishing before the last since the last is where the checksum will
-     * be stored */
-    for(uint8_t i = 2; i < length - 1; i++){
-        accumulate += arr[i];
-    }
-
-    return (~accumulate) & 0xFF; // Lower 8 bits of the logical NOT of the sum
-}
-
 
 void StartRX(void const * argument){
-    bool status = true;
-
-    volatile uint8_t buff[8] = {0};
-    Data_t data;
+    bool statusIsOkay;
 
     for(;;){
-        HAL_UART_Receive_IT(&huart1, buff, 8);
-        status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 2);
+        statusIsOkay = receive();
 
-        if(!status){
-            HAL_UART_AbortReceive(&huart1);
-            memset(buff, 0, sizeof(buff));
-        }
-        else{
-            if(buff[4] == INST_WRITE_DATA){
-                data.id = buff[2];
-                data.pos = buff[6] | (buff[7] << 8);
-                HAL_UART_Receive_IT(&huart1, buff, 1); // CHKSM
-                status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_RX_ISR, 1);
-            }
-            else if(buff[4] == INST_READ_DATA){
-                osDelay(pdMS_TO_TICKS(1));
-                xQueueSend(toBeSentQHandle, &data, 0);
-            }
+        if(statusIsOkay){
+            processData();
         }
     }
 }
 
 
 void StartTX(void const * argument){
-    bool status;
-    uint8_t buf[8] = {0xFF, 0xFF, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
     Data_t data;
-
-    int8_t var = -32; // add some variance to the data
 
     for(;;){
         while(xQueueReceive(toBeSentQHandle, &data, portMAX_DELAY) != pdTRUE);
 
-        ++var;
-        if(var > 32){
-            var = -32;
-        }
+        update_buffer_contents(&data);
 
-        buf[2] = data.id;
-        buf[5] = (data.pos & 0xFF) + var; // low byte
-        buf[6] = (data.pos >> 8) & 0xFF; // high byte
-        buf[7] = Dynamixel_ComputeChecksum(buf, sizeof(buf));
-
-        HAL_UART_Transmit_DMA(&huart1, buf, 8);
-
-        status = waitUntilNotifiedOrTimeout(NOTIFIED_FROM_TX_ISR, 2);
-
-        if(!status){
-            HAL_UART_AbortTransmit(&huart1);
-        }
+        transmit_buffer_contents();
     }
-}
-
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-    if(huart == &huart1){
-        xTaskNotifyFromISR(
-            TXHandle,
-            NOTIFIED_FROM_TX_ISR,
-            eSetBits,
-            &xHigherPriorityTaskWoken
-        );
-    }
-
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-}
-
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-    if(huart == &huart1){
-        xTaskNotifyFromISR(
-            RXHandle,
-            NOTIFIED_FROM_RX_ISR,
-            eSetBits,
-            &xHigherPriorityTaskWoken
-        );
-    }
-
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 /* USER CODE END Application */
