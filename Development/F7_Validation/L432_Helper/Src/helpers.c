@@ -4,7 +4,7 @@
   * @author  Tyler
   *
   * @defgroup Helpers
-  * @brief    Helpers for computation and OS
+  * @brief    Helpers for computation and OS-related things
   *****************************************************************************
   */
 
@@ -18,6 +18,7 @@
 
 
 /******************************** Functions **********************************/
+/** @see header */
 bool waitUntilNotifiedOrTimeout(
     uint32_t notificationVal,
     TickType_t timeout
