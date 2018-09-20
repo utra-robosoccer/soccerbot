@@ -3,7 +3,9 @@
   * @file    lfsr.h
   * @author  Tyler
   *
-  * @ingroup LFSR
+  * @defgroup LFSR
+  * @brief Routines related to pseudo-random noise generation via a linear
+  *        feedback shift register
   * @{
   *****************************************************************************
   */
@@ -46,7 +48,7 @@
  *          the taps to the modulo-2 adders from the feedback line
  * @return  Pseudo-random noise byte
  */
-inline void lfsr_get_noise(uint32_t* lfsr, const uint32_t polynomial){
+inline void lfsr_update(uint32_t* lfsr, const uint32_t polynomial){
     uint32_t feedback_line = *lfsr & 1;
     *lfsr >>= 1;
 

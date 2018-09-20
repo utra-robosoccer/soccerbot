@@ -4,7 +4,7 @@
   * @author  Tyler
   *
   * @defgroup Types
-  * @brief Defines some types shared throughout program
+  * @brief Defines types shared throughout the program
   * @{
   *****************************************************************************
   */
@@ -25,9 +25,12 @@
 
 
 /********************************** Types ************************************/
+/**
+ * @brief Container for passing data between threads
+ */
 typedef struct{
-    uint8_t id;
-    uint16_t pos;
+    uint8_t id;   /**< ID of motor data                             */
+    uint16_t pos; /**< Only support sending back position right now */
 }Data_t;
 
 
