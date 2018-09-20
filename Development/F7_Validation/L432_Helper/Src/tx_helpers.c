@@ -51,11 +51,15 @@ void update_buffer_contents(Data_t* data){
     static uint32_t lfsr = 0x2F; // Seed value
     static uint32_t polynomial = POLY_MASK_PERIOD_63;
 
+    // Add statistical noise to the data
     lfsr_update(&lfsr, polynomial);
-    int8_t noise = (lfsr >> 2) - 16;
+    int8_t noise = (lfsr >> 2) - 8;
+    if(data->pos + noise > 0){
+        data->pos = data->pos + noise;
+    }
 
     buf[2] = data->id;
-    buf[5] = (data->pos & 0xFF) + noise; // low byte + noise
+    buf[5] = (data->pos & 0xFF); // low byte
     buf[6] = (data->pos >> 8) & 0xFF; // high byte
     buf[7] = Dynamixel_ComputeChecksum((uint8_t*)buf, sizeof(buf));
 }
