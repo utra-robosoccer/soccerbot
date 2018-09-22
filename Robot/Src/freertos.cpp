@@ -722,7 +722,7 @@ void StartRxTask(void const * argument)
     {
     	waitForNotificationRX();
     	updateStatusToPC();
-        parsePacket();
+        receiveDataBuffer();
     }
 }
 

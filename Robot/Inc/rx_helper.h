@@ -47,7 +47,7 @@ extern "C" {
 
 
 /***************************** Function prototypes ***************************/
-void parsePacket(void);
+void receiveDataBuffer(void);
 void initiateDMATransfer(void);
 void updateStatusToPC(void);
 void waitForNotificationRX(void);
