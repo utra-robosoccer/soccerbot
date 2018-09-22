@@ -84,7 +84,7 @@ void updateStatusToPC(void) {//
 	} while (status != HAL_OK);
 }
 
-void parsePacket(void) {
+void receiveDataBuffer(void) {
 	for (uint8_t i = 0; i < sizeof(buffRx); i++) {
 		if (startSeqCount == 4) {
 			// This control block is entered when the header sequence of
