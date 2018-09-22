@@ -7,33 +7,59 @@ import sys
 
 filenames = sys.argv[1:]
 
+def nearest_decimal_up(num):
+    decimal_up = pow(10, -15) # Unlikely to get values lower than this
+    while decimal_up < num:
+        decimal_up *= 10
+    return decimal_up
+
 for filename in filenames:
     json_data = {}
     with open(filename, "r") as json_file:
         json_data = json.load(json_file)
-
-    x = [int(k) for k, v in json_data.items()]
-    y = [v["average"] for k, v in json_data.items()]
-    x_a = numpy.array(x)
-    y_a = numpy.array(y)
-
-    # Normalize the x axis
-    xi = range(numpy.amax(x_a) + 1)
-    y_n = [json_data[str(k)]["average"] if k in x else numpy.nan for k in xi]
-    y_err = [json_data[str(k)]["std_dev"] if k in x else numpy.nan for k in xi]
-
-    xi_a = numpy.array(xi)
-    y_n_a = numpy.array(y_n)
-    y_err_a = numpy.array(y_err)
-
     
-    lines = plt.plot(xi_a, y_n_a)
-    plt.errorbar(xi_a, y_n_a, y_err_a, None, '', 'k', 1.5, 3)
+    # Collect the x values there is a measurement for
+    y_collected = {}
+    x_collected = numpy.array([int(k) for k, v in json_data.items()])
+    y_collected["average"] = numpy.array([v["average"] for k, v in json_data.items()])
+    y_collected["max"] = numpy.array([v["max"] for k, v in json_data.items()])
+
+    # Normalize the x axis according to lowest unit
+    x_normalized = []
+    unit = 0
+    while unit < numpy.amax(x_collected) + 1:
+        x_normalized.append(int(unit))
+        unit += 1
+
+    # Generate the y values based on the x coordinate existing in measured values
+    y = {}
+    y["average"] = numpy.array([json_data[str(k)]["average"] if k in x_collected else numpy.nan for k in x_normalized])
+    y["std_dev"] = ([json_data[str(k)]["std_dev"] if k in x_collected else numpy.nan for k in x_normalized])
+    y["max"] = numpy.array([json_data[str(k)]["max"] if k in x_collected else numpy.nan for k in x_normalized])
+
+    plt.figure()
+
+    plt.subplot(211)
+
+    lines = plt.plot(x_normalized, y["average"])
+    plt.errorbar(x_normalized, y["average"], y["std_dev"], ecolor='k', elinewidth=1.5, capsize=3)
     plt.setp(lines, color='b', marker='.', ms=5)
     plt.xlabel('message size (bytes)')
     plt.ylabel('average echo time (seconds)')
-    plt.title(filename)
-    plt.axis([0, numpy.amax(x_a), 0, numpy.amax(y_a) * 1.1])
+    plt.title('Average echo time - ' + filename)
+    plt.axis([0, numpy.amax(x_collected), 0, nearest_decimal_up(numpy.amax(y_collected["average"]))])
+
+    plt.subplot(212)
+
+    lines = plt.plot(x_normalized, y["max"])
+    plt.setp(lines, color='r', marker='.', ms=5)
+    plt.xlabel('message size (bytes)')
+    plt.ylabel('max echo time (seconds)')
+    plt.title('Average echo time - ' + filename)
+    plt.axis([0, numpy.amax(x_collected), 0, nearest_decimal_up(numpy.amax(y_collected["max"]))])
+
+    print (numpy.amax(y_collected["max"]))
+    plt.suptitle('Ethernet echo test statistics')
     plt.show()
 
     # TODO: add subplot for max, subplot for distribution
