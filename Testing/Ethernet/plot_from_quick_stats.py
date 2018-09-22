@@ -5,6 +5,7 @@ import json
 import sys
 
 # TODO: use re to properly format filenames
+# TODO: use another window drawing tool instead of matplotlib.pyplot to have scrollable window of plots
 
 filenames = sys.argv[1:]
 
@@ -36,7 +37,7 @@ for filename in filenames:
     y["max"] = numpy.array([json_data[str(k)]["max"] if k in x_collected else numpy.nan for k in x_normalized])
     y["times"] = [numpy.array(json_data[str(k)]["the_times"]) for k in x_collected]
 
-    plt.figure(figsize=(4, 8))
+    plt.figure(figsize=(4, 8), dpi=80)
 
     plt.subplot(211)
 
@@ -59,17 +60,16 @@ for filename in filenames:
     
     plt.subplots_adjust(left  = 0.125, right = 0.9, bottom = 0.1, top = 0.9, wspace = 0.2, hspace = 0.360)
     plt.suptitle('Ethernet echo test statistics')
-
-
-    plt.figure(figsize=(4, x_collected.size))
     
+    plt.figure(figsize=(4, x_collected.size), dpi=80)
     for i in range(x_collected.size):
         plt.subplot(x_collected.size, 1, i + 1)
-        plt.hist(y["times"][i], 50, density=1, facecolor='g', alpha=0.75)
+        plt.hist(y["times"][i], 50, density=False, facecolor='g', alpha=0.75)
         plt.title('Histogram of echo times for message size ' + str(x_collected[i]) + ' bytes')
         plt.xlabel('time (seconds)')
-        plt.ylabel('probability')
+        plt.ylabel('count')
 
     plt.subplots_adjust(left  = 0.125, right = 0.9, bottom = 0.1, top = 0.9, wspace = 0.2, hspace = 0.360)
+    plt.suptitle('Echo times histograms')
 
 plt.show()
