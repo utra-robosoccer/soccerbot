@@ -47,7 +47,10 @@ extern "C" {
 
 
 /***************************** Function prototypes ***************************/
-
+void shiftNotificationMask(void);
+void copySensorDataToSend(void);
+void transmitStatusFromPC(void);
+void waitForNotificationTX(void);
 
 
 

@@ -50,7 +50,7 @@ extern "C" {
 void parsePacket(void);
 void initiateDMATransfer(void);
 void updateStatusToPC(void);
-void waitForNotification(void);
+void waitForNotificationRX(void);
 void initializeVars(void);
 
 /****************************** Inline Functions *****************************/

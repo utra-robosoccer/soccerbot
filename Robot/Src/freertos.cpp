@@ -77,6 +77,7 @@
 #include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
 #include "rx_helper.h"
+#include "tx_helper.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -719,7 +720,7 @@ void StartRxTask(void const * argument)
 
     for (;;)
     {
-    	waitForNotification();
+    	waitForNotificationRX();
     	updateStatusToPC();
         parsePacket();
     }
@@ -740,66 +741,13 @@ void StartRxTask(void const * argument)
 void StartTxTask(void const * argument)
 {
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-
-    for(uint8_t i = 1; i <= 12; i++){
-        NOTIFICATION_MASK |= (1 << i);
-    }
+    shiftNotificationMask();
 
     for(;;)
     {
-        while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
-            while(xQueueReceive(TXQueueHandle, &receivedData, portMAX_DELAY) != pdTRUE);
-
-            switch(receivedData.eDataType){
-            case eMotorData:
-                motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
-
-                if(motorPtr == NULL){ break; }
-
-                // Validate data and store it in robotState
-                if(motorPtr->_ID <= NUM_MOTORS){
-                    // Copy sensor data for this motor into its section of robotState.msg
-                    memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)], &(motorPtr->_lastPosition), sizeof(float));
-
-                    // Set flag indicating the motor with this id has reported in with position data
-                    dataReadyFlags |= (1 << motorPtr->_ID);
-                }
-                break;
-            case eIMUData:
-                imuPtr = (MPU6050_HandleTypeDef*)receivedData.pData;
-
-                if(imuPtr == NULL){ break; }
-
-                // Copy sensor data into the IMU data section of robotState.msg
-                memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
-
-                // Set flag indicating IMU data has reported in
-                dataReadyFlags |= 0x80000000;
-                break;
-            default:
-                break;
-            }
-        }
-        dataReadyFlags = 0; // Clear all flags
-
-        do{
-            // This do-while loop with the mutex inside of it makes calls to the UART module
-            // responsible for PC communication atomic. This attempts to solve the following
-            // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-            // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-            // returns immediately when it detects that the uart module is already locked. Then
-            // the RX thread blocks itself and never wakes up since a RX transfer was never
-            // initialized.
-            xSemaphoreTake(PCUARTHandle, 1);
-            status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
-            xSemaphoreGive(PCUARTHandle);
-        }while(status != HAL_OK);
-
-        // Wait until notified from ISR. Clear no bits on entry in case the notification
-        // came while a higher priority task was executing.
-        do{
-            xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
-        }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+        copySensorDataToSend();
+        transmitStatusFromPC();
+        waitForNotificationTX();
     }
 }
 
