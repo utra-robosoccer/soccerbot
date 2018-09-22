@@ -58,7 +58,7 @@ void initiateDMATransfer(void) {
 	HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx, sizeof(buffRx));
 }
 
-void waitForNotification(void) {
+void waitForNotificationRX(void) {
 	// Wait until notified from ISR. Clear no bits on entry in case the notification
 	// comes before this statement is executed (which is rather unlikely as long as
 	// this task has the highest priority, but overall this is a better decision in
