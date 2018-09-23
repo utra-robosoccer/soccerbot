@@ -71,7 +71,7 @@ void Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::vTaskDelayUntil
         const TickType_t xTimeIncrement
         ){
 
-    return vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
+    vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
 }
 
 osStatus Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::osDelay (

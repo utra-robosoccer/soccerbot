@@ -11,7 +11,7 @@
   *****************************************************************************
   */
 
-
+#include "FreeRTOSInterface.h"
 namespace {
 
 class MockFreeRTOSInterface : public FreeRTOS_Interface::FreeRTOSInterface {
