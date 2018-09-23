@@ -5,12 +5,11 @@
   * @brief   Defines an abstract interface of FreeRTOS functions.
   *
   * @defgroup Header
-  * @defgroup FreeRTOS_Interface
+  * @ingroup FreeRTOS_Interface
   * @{
   *****************************************************************************
   */
 
-// NOTE: defgroup used above since there is no .cpp file associated with this class.
 
 #ifndef __FREERTOS_INTERFACE_H__
 #define __FREERTOS_INTERFACE_H__
