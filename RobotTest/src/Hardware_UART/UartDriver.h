@@ -40,14 +40,15 @@ public:
     UartDriver();
     ~UartDriver() {}
 
+    void setUartInterface(UARTInterface* hw_if);
     void setUartPtr(UART_HandleTypeDef* uartHandlePtr);
-    void setIOType(IO_Type io_type);
     IO_Type getIOType(void) const;
+    void setIOType(IO_Type io_type);
 
     // TODO: if we have an err_t type, we could use it to indicate both HAL and
     // FreeRTOS issues, so here that would be good as the ideal return type would
     // be able to indicate both an issue with the hardware AND with the OS (e.g. a
-    // timeout)
+    // timeout). Also, I think these functions can be const-qualified
     bool transmit(uint8_t* arrTransmit, size_t numBytes);
     bool receive(uint8_t* arrReceive, size_t numBytes);
 
@@ -69,6 +70,13 @@ template <class UARTInterface> UartDriver<UARTInterface>::UartDriver(){
 
 }
 
+template <class UARTInterface> void UartDriver<UARTInterface>::setUartInterface(
+    UARTInterface* hw_if
+)
+{
+    this->hw_if = hw_if;
+}
+
 template <class UARTInterface> void UartDriver<UARTInterface>::setUartPtr(
     UART_HandleTypeDef* uartHandlePtr
 )
@@ -76,7 +84,10 @@ template <class UARTInterface> void UartDriver<UARTInterface>::setUartPtr(
     hw_if->setUartPtr(uartHandlePtr);
 }
 
-template <class UARTInterface> void UartDriver<UARTInterface>::setIOType(IO_Type io_type){
+template <class UARTInterface> void UartDriver<UARTInterface>::setIOType(
+    IO_Type io_type
+)
+{
     this->io_type = io_type;
 }
 
@@ -90,28 +101,35 @@ template <class UARTInterface> bool UartDriver<UARTInterface>::transmit(
 )
 {
 #if defined(THREADED)
-    uint32_t notification;
-    BaseType_t status;
+    uint32_t notification = 0;
+    BaseType_t status = pdFALSE;
 #endif
-    bool retval = true;
+    bool retval = false;
 
     switch(io_type) {
 #if defined(THREADED)
         case IO_Type::DMA:
-            hw_if->transmitDMA(arrTransmit, numBytes);
+            if(hw_if->transmitDMA(arrTransmit, numBytes) == HAL_OK){
+                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
-
-            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                    retval = false;
+                }
+            }
+            else{
                 retval = false;
             }
             break;
         case IO_Type::IT:
-            hw_if->transmitIT(arrTransmit, numBytes);
+            if(hw_if->transmitIT(arrTransmit, numBytes) == HAL_OK){
 
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
+                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
-            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                    retval = false;
+                }
+            }
+            else{
                 retval = false;
             }
             break;
@@ -135,28 +153,34 @@ template <class UARTInterface> bool UartDriver<UARTInterface>::receive(
 )
 {
 #if defined(THREADED)
-    uint32_t notification;
-    BaseType_t status;
+    uint32_t notification = 0;
+    BaseType_t status = pdFALSE;
 #endif
-    bool retval = true;
+    bool retval = false;
 
     switch(io_type) {
 #if defined(THREADED)
         case IO_Type::DMA:
-            hw_if->receiveDMA(arrReceive, numBytes);
+            if(hw_if->receiveDMA(arrReceive, numBytes) == HAL_OK){
+                status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
-
-            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                    retval = false;
+                }
+            }
+            else{
                 retval = false;
             }
             break;
         case IO_Type::IT:
-            hw_if->receiveIT(arrReceive, numBytes);
+            if(hw_if->receiveIT(arrReceive, numBytes) == HAL_OK){
+                status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
-            status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
-
-            if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                    retval = false;
+                }
+            }
+            else{
                 retval = false;
             }
             break;

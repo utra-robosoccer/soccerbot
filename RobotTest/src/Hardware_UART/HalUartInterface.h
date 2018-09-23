@@ -40,9 +40,12 @@ namespace uart{
 // Types & enums
 // ----------------------------------------------------------------------------
 enum class IO_Type{
-    POLL,
+    POLL
+#ifdef THREADED
+    ,
     IT,
     DMA
+#endif
 };
 
 
@@ -67,6 +70,7 @@ public:
         size_t numBytes,
         uint32_t timeout
     );
+#ifdef THREADED
     HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes);
     HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes);
     HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes);
@@ -74,6 +78,7 @@ public:
 
     void abortTransmit();
     void abortReceive();
+#endif
 
 private:
     UART_HandleTypeDef* uartHandlePtr = nullptr;
