@@ -84,7 +84,7 @@ TEST(UartInterfaceTests, CanSetIOType){
     ASSERT_EQ(uart::IO_Type::DMA, UARTxDriver.getIOType());
 }
 
-TEST(UartInterfaceTests, MockFunctionCallsTransmitPollForPollIOType) {
+TEST(UartInterfaceTests, MockFunctionCallsTransmitPollForPollIOType){
     MockUartInterface UartInterface;
     uart::UartDriver<MockUartInterface> UARTxDriver;
     UARTxDriver.setUartInterface(&UartInterface);
@@ -97,45 +97,99 @@ TEST(UartInterfaceTests, MockFunctionCallsTransmitPollForPollIOType) {
     EXPECT_CALL(UartInterface, transmitPoll(_, _, _)).Times(1).WillOnce(Return(HAL_OK));
 
     uint8_t arr[10] = {0};
-    bool success = UARTxDriver.transmit(arr, sizeof(arr));
-    ASSERT_TRUE(success);
+    UARTxDriver.transmit(arr, sizeof(arr));
 }
 
-//// Failing; needs OS mocks
-//TEST(UartInterfaceTests, MockFunctionCallsTransmitITForITIOType) {
-//    MockUartInterface UartInterface;
-//    uart::UartDriver<MockUartInterface> UARTxDriver;
-//    UARTxDriver.setUartInterface(&UartInterface);
-//
-//    UART_HandleTypeDef UARTx = {0};
-//    UARTxDriver.setUartPtr(&UARTx);
-//
-//    UARTxDriver.setIOType(uart::IO_Type::IT);
-//
-//    EXPECT_CALL(UartInterface, transmitIT(_, _)).Times(1).WillOnce(Return(HAL_OK));
-//
-//    uint8_t arr[10] = {0};
-//    bool success = UARTxDriver.transmit(arr, sizeof(arr));
-//    ASSERT_TRUE(success);
-//}
-//
-//// Failing; needs OS mocks
-//TEST(UartInterfaceTests, MockFunctionCallsTransmitDMAForDMAIOType) {
-//    MockUartInterface UartInterface;
-//    uart::UartDriver<MockUartInterface> UARTxDriver;
-//    UARTxDriver.setUartInterface(&UartInterface);
-//
-//    UART_HandleTypeDef UARTx = {0};
-//    UARTxDriver.setUartPtr(&UARTx);
-//
-//    UARTxDriver.setIOType(uart::IO_Type::DMA);
-//
-//    EXPECT_CALL(UartInterface, transmitDMA(_, _)).Times(1).WillOnce(Return(HAL_OK));
-//
-//    uint8_t arr[10] = {0};
-//    bool success = UARTxDriver.transmit(arr, sizeof(arr));
-//    ASSERT_TRUE(success);
-//}
+// Failing; needs OS mocks
+TEST(UartInterfaceTests, MockFunctionCallsTransmitITForITIOType){
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+    UARTxDriver.setUartInterface(&UartInterface);
+
+    UART_HandleTypeDef UARTx = {0};
+    UARTxDriver.setUartPtr(&UARTx);
+
+    UARTxDriver.setIOType(uart::IO_Type::IT);
+
+    EXPECT_CALL(UartInterface, transmitIT(_, _)).Times(1).WillOnce(Return(HAL_OK));
+
+    uint8_t arr[10] = {0};
+    UARTxDriver.transmit(arr, sizeof(arr));
+}
+
+// Failing; needs OS mocks
+TEST(UartInterfaceTests, MockFunctionCallsTransmitDMAForDMAIOType){
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+    UARTxDriver.setUartInterface(&UartInterface);
+
+    UART_HandleTypeDef UARTx = {0};
+    UARTxDriver.setUartPtr(&UARTx);
+
+    UARTxDriver.setIOType(uart::IO_Type::DMA);
+
+    EXPECT_CALL(UartInterface, transmitDMA(_, _)).Times(1).WillOnce(Return(HAL_OK));
+
+    uint8_t arr[10] = {0};
+    UARTxDriver.transmit(arr, sizeof(arr));
+}
+
+// Failing; needs OS mocks
+TEST(UartInterfaceTests, PollTransmitFailsAndIsAbortedWhenUartInterfaceFails){
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+    UARTxDriver.setUartInterface(&UartInterface);
+
+    UART_HandleTypeDef UARTx = {0};
+    UARTxDriver.setUartPtr(&UARTx);
+
+    UARTxDriver.setIOType(uart::IO_Type::POLL);
+
+    EXPECT_CALL(UartInterface, transmitPoll(_, _, _)).Times(1).WillOnce(Return(HAL_ERROR));
+    EXPECT_CALL(UartInterface, abortTransmit()).Times(1);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+    ASSERT_FALSE(success);
+}
+
+// Failing; needs OS mocks
+TEST(UartInterfaceTests, ITTransmitFailsAndIsAbortedWhenUartInterfaceFails){
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+    UARTxDriver.setUartInterface(&UartInterface);
+
+    UART_HandleTypeDef UARTx = {0};
+    UARTxDriver.setUartPtr(&UARTx);
+
+    UARTxDriver.setIOType(uart::IO_Type::POLL);
+
+    EXPECT_CALL(UartInterface, transmitIT(_, _)).Times(1).WillOnce(Return(HAL_ERROR));
+    EXPECT_CALL(UartInterface, abortTransmit()).Times(1);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+    ASSERT_FALSE(success);
+}
+
+// Failing; needs OS mocks
+TEST(UartInterfaceTests, DMATransmitFailsAndIsAbortedWhenUartInterfaceFails){
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+    UARTxDriver.setUartInterface(&UartInterface);
+
+    UART_HandleTypeDef UARTx = {0};
+    UARTxDriver.setUartPtr(&UARTx);
+
+    UARTxDriver.setIOType(uart::IO_Type::POLL);
+
+    EXPECT_CALL(UartInterface, transmitDMA(_, _)).Times(1).WillOnce(Return(HAL_ERROR));
+    EXPECT_CALL(UartInterface, abortTransmit()).Times(1);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+    ASSERT_FALSE(success);
+}
 
 } // end anonymous namespace
 
