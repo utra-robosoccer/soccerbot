@@ -1,11 +1,11 @@
 /**
   *****************************************************************************
-  * @file    UdpInterface.h
-  * @author  Robert Fairley
-  * @brief   Defines an abstract interface of UDP networking functions, to be implemented and extended as needed, e.g. by hardware-facing classes, test frameworks.
+  * @file    FreeRTOSInterface.h
+  * @author  Izaak Niksan
+  * @brief   Defines an abstract interface of FreeRTOS functions.
   *
   * @defgroup Header
-  * @defgroup  udp_interface
+  * @defgroup FreeRTOS_Interface
   * @{
   *****************************************************************************
   */
@@ -17,40 +17,56 @@
 
 #include <cstdint>
 
-namespace udp_interface {
+namespace FreeRTOS_Interface {
 
-// Interface the application with framework-dependent UDP networking code.
-// Extend this interface as the need arises with virtual functions
-// and generic parameters. Then, implement the UDP code
-// in a child class of this interface.
-// Necessary in order to make the application classes mockable
-// (gmock hooks onto this).
-// Return types are bool to report success/failure with true/false
-// respectively, but could be replaced by some generic error type
-// err_t.
-class UdpInterface {
+class FreeRTOSInterface {
 public:
-    virtual ~UdpInterface() {}
-    virtual bool udpNew() = 0;
-    virtual bool udpBind() = 0;
-    virtual bool udpRecv() = 0;
-    virtual bool udpRemove() = 0;
-    virtual bool ethernetifInput() = 0;
-    virtual bool udpConnect() = 0;
-    virtual bool udpSend() = 0;
-    virtual bool udpDisconnect() = 0;
-    virtual bool pbufFreeRx() = 0;
-    virtual bool pbufFreeTx() = 0;
-    virtual bool waitRecv() = 0;
-    virtual bool packetToBytes(uint8_t *_byteArray) = 0;
-    virtual bool bytesToPacket(const uint8_t *_byteArray) = 0;
+
+    virtual ~FreeRTOSInterface() {}
+
+    virtual BaseType_t xTaskNotifyWait(
+                uint32_t ulBitsToClearOnEntry,
+                uint32_t ulBitsToClearOnExit,
+                uint32_t *pulNotificationValue,
+                TickType_t xTicksToWait
+            ) = 0;
+
+    virtual BaseType_t xQueueReceive(
+            QueueHandle_t xQueue,
+            void *pvBuffer,
+            TickType_t xTicksToWait
+            ) = 0;
+
+    virtual BaseType_t xQueueSend(
+            QueueHandle_t xQueue,
+            const void * pvItemToQueue,
+            TickType_t xTicksToWait
+            ) = 0;
+
+    virtual BaseType_t xSemaphoreTake(
+            SemaphoreHandle_t xSemaphore,
+            TickType_t xBlockTime
+            ) = 0;
+
+    virtual BaseType_t xSemaphoreGive(
+            SemaphoreHandle_t xSemaphore
+            ) = 0;
+
+    virtual void vTaskDelayUntil(
+            TickType_t * const pxPreviousWakeTime,
+            const TickType_t xTimeIncrement
+            ) = 0;
+
+    virtual osStatus osDelay (
+            uint32_t millisec
+            ) = 0;
 };
 
-} // end namespace udp_interface
+} // end namespace FreeRTOS_Interface
 
 /**
  * @}
  */
 /* end - Header */
 
-#endif /* __UDP_INTERFACE_H__ */
+#endif /* __FREERTOS_INTERFACE_H__ */
