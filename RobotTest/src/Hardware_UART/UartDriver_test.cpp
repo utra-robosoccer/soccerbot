@@ -31,8 +31,9 @@ using ::testing::_;
 namespace{
 // Classes and structs
 // ----------------------------------------------------------------------------
-class MockUartInterface : public uart::UartInterface {
+class MockUartInterface{
 public:
+    MOCK_METHOD1(setUartPtr, void(UART_HandleTypeDef*));
     MOCK_METHOD3(transmitPoll, HAL_StatusTypeDef(uint8_t*, size_t, uint32_t));
     MOCK_METHOD3(receivePoll, HAL_StatusTypeDef(uint8_t*, size_t, uint32_t));
     MOCK_METHOD2(transmitDMA, HAL_StatusTypeDef(uint8_t*, size_t));
@@ -50,8 +51,12 @@ public:
 // Functions
 // ----------------------------------------------------------------------------
 TEST(UartInterfaceTests, IOTypeDefaultsToPolled) {
+    MockUartInterface UartInterface;
+    uart::UartDriver<MockUartInterface> UARTxDriver;
+
     UART_HandleTypeDef UARTx;
-    uart::UartDriver UARTxDriver(&UARTx);
+    UARTxDriver.setUartPtr(&UARTx);
+
     ASSERT_EQ(uart::IO_Type::POLL, UARTxDriver.getIOType());
 }
 

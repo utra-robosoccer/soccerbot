@@ -1,13 +1,13 @@
 /**
   *****************************************************************************
-  * @file    UartInterface.cpp
+  * @file    HalUartInterface.cpp
   * @author  Tyler Gamvrelis
   * @brief   TODO -- brief description of file
   *
   * @defgroup UART
   * @brief    TODO -- description of module
   *
-  * @defgroup UartInterface
+  * @defgroup HalUartInterface
   * @ingroup  UART
   * @brief    TODO -- description of module
   * @{
@@ -18,7 +18,7 @@
 
 
 /********************************* Includes **********************************/
-#include "UartInterface.h"
+#include "HalUartInterface.h"
 
 
 
@@ -27,11 +27,16 @@ namespace uart{
 /***************************** UartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------
-UartInterface::UartInterface(UART_HandleTypeDef* uartHandlePtr){
+void HalUartInterface::setUartPtr(UART_HandleTypeDef* uartHandlePtr){
     this->uartHandlePtr = uartHandlePtr;
 }
 
-HAL_StatusTypeDef UartInterface::transmitPoll(uint8_t* arrTransmit, size_t numBytes, uint32_t timeout){
+HAL_StatusTypeDef HalUartInterface::transmitPoll(
+    uint8_t* arrTransmit,
+    size_t numBytes,
+    uint32_t timeout
+)
+{
     HAL_StatusTypeDef status =  HAL_UART_Transmit(
         uartHandlePtr,
         arrTransmit,
@@ -42,7 +47,12 @@ HAL_StatusTypeDef UartInterface::transmitPoll(uint8_t* arrTransmit, size_t numBy
     return status;
 }
 
-HAL_StatusTypeDef UartInterface::receivePoll(uint8_t* arrReceive, size_t numBytes, uint32_t timeout){
+HAL_StatusTypeDef HalUartInterface::receivePoll(
+    uint8_t* arrReceive,
+    size_t numBytes,
+    uint32_t timeout
+)
+{
     HAL_StatusTypeDef status =  HAL_UART_Receive(
         uartHandlePtr,
         arrReceive,
@@ -53,7 +63,7 @@ HAL_StatusTypeDef UartInterface::receivePoll(uint8_t* arrReceive, size_t numByte
     return status;
 }
 
-HAL_StatusTypeDef UartInterface::transmitIT(uint8_t* arrTransmit, size_t numBytes){
+HAL_StatusTypeDef HalUartInterface::transmitIT(uint8_t* arrTransmit, size_t numBytes){
     HAL_StatusTypeDef status =  HAL_UART_Transmit_IT(
         uartHandlePtr,
         arrTransmit,
@@ -63,7 +73,7 @@ HAL_StatusTypeDef UartInterface::transmitIT(uint8_t* arrTransmit, size_t numByte
     return status;
 }
 
-HAL_StatusTypeDef UartInterface::receiveIT(uint8_t* arrReceive, size_t numBytes){
+HAL_StatusTypeDef HalUartInterface::receiveIT(uint8_t* arrReceive, size_t numBytes){
     HAL_StatusTypeDef status =  HAL_UART_Receive_IT(
         uartHandlePtr,
         arrReceive,
@@ -73,7 +83,7 @@ HAL_StatusTypeDef UartInterface::receiveIT(uint8_t* arrReceive, size_t numBytes)
     return status;
 }
 
-HAL_StatusTypeDef UartInterface::transmitDMA(uint8_t* arrTransmit, size_t numBytes){
+HAL_StatusTypeDef HalUartInterface::transmitDMA(uint8_t* arrTransmit, size_t numBytes){
     HAL_StatusTypeDef status =  HAL_UART_Transmit_DMA(
         uartHandlePtr,
         arrTransmit,
@@ -83,7 +93,7 @@ HAL_StatusTypeDef UartInterface::transmitDMA(uint8_t* arrTransmit, size_t numByt
     return status;
 }
 
-HAL_StatusTypeDef UartInterface::receiveDMA(uint8_t* arrReceive, size_t numBytes){
+HAL_StatusTypeDef HalUartInterface::receiveDMA(uint8_t* arrReceive, size_t numBytes){
     HAL_StatusTypeDef status =  HAL_UART_Receive_DMA(
         uartHandlePtr,
         arrReceive,
@@ -93,11 +103,11 @@ HAL_StatusTypeDef UartInterface::receiveDMA(uint8_t* arrReceive, size_t numBytes
     return status;
 }
 
-void UartInterface::abortTransmit(){
+void HalUartInterface::abortTransmit(){
     HAL_UART_AbortTransmit(uartHandlePtr);
 }
 
-void UartInterface::abortReceive(){
+void HalUartInterface::abortReceive(){
     HAL_UART_AbortReceive(uartHandlePtr);
 }
 
@@ -106,4 +116,4 @@ void UartInterface::abortReceive(){
 /**
  * @}
  */
-/* end - UartInterface */
+/* end - HalUartInterface */
