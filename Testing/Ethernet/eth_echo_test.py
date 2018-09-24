@@ -31,6 +31,12 @@ import scheddl
 def gen_random_string(n):
     return ''.join([str(chr(ord(' ') + (random.randint(1, ord('~') - ord(' ')) % (ord('~') - ord(' '))))) for i in range(n)])
 
+def clean_name_arg(name):
+    clean_name = []
+    for i in range(len(name)):
+        clean_name.append("-") if name[i] == " " else clean_name.append(name[i])
+    return "".join(clean_name)
+
 ETH_ECHO_TEST = {
     "name": "",
     "config": {
@@ -84,6 +90,27 @@ SCHEDDL_PRIORITY = 1
 
 # Computed parameters
 OUTPUT_JSON_NAME = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
+
+# Overwrite any variables if command line arguments are given
+arguments = sys.argv[1:]
+for arg in arguments:
+    if arg == "-h":
+        print("options:\n    -h    show help output\n    -n    test name, also used as test output file name")
+        exit(0)
+
+name_arg = ""
+for arg in arguments:
+    if arg == "-n":
+        try:
+            name_arg = arguments[arguments.index(arg) + 1]
+        except:
+            print("error in name argument")
+            exit(1)
+        finally:
+            name_arg = clean_name_arg(name_arg)
+
+if name_arg != "":
+    OUTPUT_JSON_NAME = name_arg + ".json"
 
 ETH_ECHO_TEST["name"] = OUTPUT_JSON_NAME
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
