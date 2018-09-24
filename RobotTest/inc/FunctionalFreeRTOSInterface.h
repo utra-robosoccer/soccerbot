@@ -15,7 +15,7 @@
 #define __FUNCTIONAL_FREERTOS_INTERFACE_H__
 
 /********************************* Includes **********************************/
-// Headers with type definitions for FreeRTOS, such as task.h, are all included within cmsis_os.h
+// Headers for FreeRTOS, such as task.h, are all included within cmsis_os.h
 #include <cmsis_os.h>
 #include <FreeRTOSInterface.h>
 
