@@ -713,7 +713,6 @@ void StartIMUTask(void const * argument)
   */
 void StartRxTask(void const * argument)
 {
-    // Receiving// Sending
 	initializeVars();
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
     initiateDMATransfer();

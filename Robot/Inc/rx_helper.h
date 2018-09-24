@@ -1,18 +1,14 @@
 /**
   *****************************************************************************
-  * @file    template.h
-  * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file
-  *
-  * @defgroup Header
-  * @ingroup  TODO -- module name defined in template.c
-  * @{
+  * @file    rx_helper.h
+  * @author  Hannah
+  * @brief   Header for helper file for function StartRXTask in freertos.cpp
   *****************************************************************************
   */
 
 
-#ifndef __RX_HELPER_H__
-#define __RX_HELPER_H__
+#ifndef RX_HELPER_H
+#define RX_HELPER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,29 +19,6 @@ extern "C" {
 /********************************* Includes **********************************/
 #include <stdint.h>
 
-
-
-
-/********************************** Macros ***********************************/
-
-
-
-
-/********************************* Constants *********************************/
-
-
-
-
-/********************************** Types ************************************/
-
-
-
-
-/****************************** Public Variables *****************************/
-
-
-
-
 /***************************** Function prototypes ***************************/
 void receiveDataBuffer(void);
 void initiateDMATransfer(void);
@@ -53,17 +26,10 @@ void updateStatusToPC(void);
 void waitForNotificationRX(void);
 void initializeVars(void);
 
-/****************************** Inline Functions *****************************/
 
 
-
-
-/**
- * @}
- */
-/* end TODO -- module name defined on line 7 */
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __RX_HELPER_H__ */
+#endif /* RX_HELPER_H */
