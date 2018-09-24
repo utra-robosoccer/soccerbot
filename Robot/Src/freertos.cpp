@@ -713,7 +713,7 @@ void StartIMUTask(void const * argument)
   */
 void StartRxTask(void const * argument)
 {
-	initializeVars();
+    initializeVars();
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
     initiateDMATransfer();
 
@@ -773,10 +773,10 @@ void StartTxTask(void const * argument)
   */
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
-	// This callback runs after the interrupt data transfer from the sensor to the mcu is finished
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xTaskNotifyFromISR(IMUTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    // This callback runs after the interrupt data transfer from the sensor to the mcu is finished
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xTaskNotifyFromISR(IMUTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 /**
@@ -812,7 +812,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
         }
         else if(huart == &huart6){
             xTaskNotifyFromISR(UART6TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-        }
+        }   
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 }
