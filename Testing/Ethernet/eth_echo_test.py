@@ -27,6 +27,12 @@ import scheddl
 # serve as a measure of how robust the system is (i.e. at
 # what message size, and number of simultaneous transmissions
 # does the system fail).
+#
+# Command line arguments will make it easier to run eth_echo_test.py
+# as part of a larger testing script (written in e.g. bash).
+#
+# TODO: skeleton csv file to include in repo as a method of plotting
+# TODO: readme for how to use all the Ethernet testing files
 
 def gen_random_string(n):
     return ''.join([str(chr(ord(' ') + (random.randint(1, ord('~') - ord(' ')) % (ord('~') - ord(' '))))) for i in range(n)])
@@ -108,7 +114,7 @@ OUTPUT_JSON_NAME = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
 arguments = sys.argv[1:]
 for arg in arguments:
     if arg == "-h":
-        print("options:\n    -h    show help output\n    -n    test name, also used as test output file name")
+        print("options:\n    -h    show help output\n    -n    test name, also used as test output file name\n    -t    number of trials for each message size\n    -i    interval of time in milliseconds to wait after each trial\n    -p    networking protocol to use (UDP or TCP)\n    --mcu-ipaddr    the IP address of the MCU\n    --mcu-port    port to send packets to on the MCU\n    --pc-port    port on the PC to bind socket to\n")
         exit(0)
 
 args = {}
@@ -129,7 +135,7 @@ for arg in arguments:
         args["protocol"] = get_next_arg(arg, arguments)
     elif arg == "--mcu-ipaddr":
         args["mcu_ipaddr"] = get_next_arg(arg, arguments)
-    elif arg == "--mcu_port":
+    elif arg == "--mcu-port":
         args["mcu_port"] = get_next_arg(arg, arguments)
         args["mcu_port"] = int(args["mcu_port"])
     # else if arg == "--pc-ipaddr": just keep in mind for now
@@ -137,6 +143,7 @@ for arg in arguments:
         args["pc_port"] = get_next_arg(arg, arguments)
         args["pc_port"] = int(args["pc_port"])
 
+# XXX: need to actually test passing in all of these from command line
 if "name" in args:
     OUTPUT_JSON_NAME = args["name"]
 elif "sizes" in args:
@@ -153,7 +160,6 @@ elif "mcu_port" in args:
     MCU_PORT = args["mcu_port"]
 elif "pc_port" in args:
     HOST_PC_PORT = args["pc_port"]
-
 
 ETH_ECHO_TEST["name"] = OUTPUT_JSON_NAME
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
@@ -211,6 +217,9 @@ for msg_size in MESSAGE_SIZES:
 
             print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
 
+            # TODO: should handle timeouts here, if recv is stuck (using python select), and allow several attempts if timeout occurs
+            # TODO: should mark timed out data somehow with e.g. NaN
+            # TODO: check each received packet for a "stamp" done by the MCU, to confirm the MCU opened it
             try:
                 if (PROTOCOL == "UDP"):
                     for i in range(num_echoes):
@@ -244,6 +253,8 @@ for msg_size in MESSAGE_SIZES:
             times_array = numpy.array(times)
 
             print("    ---- done -- time: {:.2e}".format(numpy.sum(times_array)))
+            
+            # TODO: see if thread_yield can be used here instead
             time.sleep(TRIAL_INTERVAL)
 
 print("Ran {} tests, written to file {}".format(len(ETH_ECHO_TEST["tests"]), OUTPUT_JSON_NAME))
