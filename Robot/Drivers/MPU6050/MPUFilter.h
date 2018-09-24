@@ -28,12 +28,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 
+/******************** Define to prevent recursive inclusion ******************/
 #ifndef __MPUFILTER_H__
 #define __MPUFILTER_H__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 
@@ -55,10 +52,6 @@ extern "C" {
 
 /***************************** Function prototypes ***************************/
 void MPUFilter_InitAllFilters();
-void MPUFilter_FilterAngularVelocity(MPU6050_HandleTypeDef* IMUdata);
-
-#ifdef __cplusplus
-}
-#endif
+void MPUFilter_FilterAngularVelocity();
 
 #endif /* __MPUFILTER_H__ */
