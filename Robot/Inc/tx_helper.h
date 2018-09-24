@@ -1,20 +1,13 @@
 /**
   *****************************************************************************
   * @file    tx_helper.h
-  * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file
-  *
-  * @defgroup Header
-  * @ingroup  TODO -- module name defined in template.c
-  * @{
+  * @author  Hannah
+  * @brief   Header file for helper functions for StartTXTask in freertos.cpp
   *****************************************************************************
   */
 
-
-
-
-#ifndef __TX_HELPER_H__
-#define __TX_HELPER_H__
+#ifndef TX_HELPER_H
+#define TX_HELPER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,26 +15,6 @@ extern "C" {
 
 /********************************* Includes **********************************/
 #include <stdint.h>
-
-
-
-
-/********************************** Macros ***********************************/
-
-
-
-
-/********************************* Constants *********************************/
-
-
-
-
-/********************************** Types ************************************/
-
-
-
-
-/****************************** Public Variables *****************************/
 
 
 
@@ -54,17 +27,8 @@ void waitForNotificationTX(void);
 
 
 
-/****************************** Inline Functions *****************************/
-
-
-
-
-/**
- * @}
- */
-/* end TODO -- module name defined on line 7 */
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __TX_HELPER_H__ */
+#endif /* TX_HELPER_H */

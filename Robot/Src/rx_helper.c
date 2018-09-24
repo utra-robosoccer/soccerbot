@@ -1,11 +1,13 @@
 /**
  *****************************************************************************
  * @file    rx_helper.c
- * @author  TODO -- your name here
- * @brief   TODO -- brief description of file
+ * @author  Hannah
+ * @brief   Helper file for function StartRXTask in freertos.cpp
  *
- * @defgroup TODO -- module name
- * @brief    TODO -- description of module
+ * @defgroup Helpers
+ * @ingroup  Threads
+ * @brief Helper functions to help read-ability of freertos.cpp
+ * @{
  *****************************************************************************
  */
 
@@ -17,12 +19,6 @@
 #include "../Drivers/Communication/robotState.h"
 #include "../Drivers/Communication/Communication.h"
 #include "usart.h"
-
-/********************************** Macros ***********************************/
-
-/********************************* Constants *********************************/
-
-/********************************** Types ************************************/
 
 /****************************** Public Variables *****************************/
 extern osThreadId CommandTaskHandle;
@@ -36,17 +32,41 @@ static uint8_t buffRx[92];
 static uint8_t startSeqCount;
 static uint8_t totalBytesRead;
 
-HAL_StatusTypeDef status;
-uint32_t notification;
+static HAL_StatusTypeDef status;
+static uint32_t notification;
 
-/************************ Private Function Prototypes ************************/
+/********************************  Functions  ********************************/
+/*****************************************************************************/
+/*  StartRxTask Helper Functions                                             */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*                                                                           */
+/*****************************************************************************/
+/**
+ * @defgroup RxHelperFunctions StartRxTask Helper Functions
+ * @brief    Helper functions for StartRxTask()
+ *
+ * # StartRXTask Helper Functions #
+ *
+ * This subsection includes helper functions for the StartRXTask function in
+ * freertos.cpp in order to make the the file more readable.
+ *
+ * @{
+ */
 
-/*******************************  Function  *****************************/
+/**
+ * @brief   Initialize the private variables for StartRxTask
+ * @param 	None
+ * @return  None
+ */
 void initializeVars(void) {
-	//sending
-	robotGoal.id = 0;
+    //sending
+    robotGoal.id = 0;
 	robotGoalDataPtr = robotGoalData;
-	startSeqCount = 0;
+    startSeqCount = 0;
 	totalBytesRead = 0;
 	//receiving
 	robotState.id = 0;
@@ -54,29 +74,43 @@ void initializeVars(void) {
 	robotState.end_seq = 0;
 }
 
+/**
+ * @brief   Initiate DMA receive transfer using DMA
+ * @param 	None
+ * @return  None
+ */
 void initiateDMATransfer(void) {
 	HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx, sizeof(buffRx));
 }
 
+/**
+ * @brief   Wait until notified from ISR.
+ * @details Clear no bits on entry in case the notification
+ * 			comes before this statement is executed (which is rather unlikely as long as
+ * 			this task has the highest priority, but overall this is a better decision in
+ * 			case priorities are changed in the future and someone forgets about this.
+ * @param 	None
+ * @return  None
+ */
 void waitForNotificationRX(void) {
-	// Wait until notified from ISR. Clear no bits on entry in case the notification
-	// comes before this statement is executed (which is rather unlikely as long as
-	// this task has the highest priority, but overall this is a better decision in
-	// case priorities are changed in the future and someone forgets about this.
 	do {
 		xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
 	} while ((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 }
 
-void updateStatusToPC(void) {//
+/**
+ * @brief   Makes calls to the UART module responsible for PC communication atomic
+ * @details This attempts to solve the following scenario:
+ * 			the TX thread is in the middle of executing the call to HAL_UART_Transmit
+ * 			when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
+ * 			returns immediately when it detects that the UART module is already locked. Then
+ * 			the RX thread blocks itself and never wakes up since a RX transfer was never
+ * 			initialized.
+ * @param 	None
+ * @return  None
+ */
+void updateStatusToPC(void) {
 	do {
-		// This do-while loop with the mutex inside of it makes calls to the UART module
-		// responsible for PC communication atomic. This attempts to solve the following
-		// scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-		// when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-		// returns immediately when it detects that the uart module is already locked. Then
-		// the RX thread blocks itself and never wakes up since a RX transfer was never
-		// initialized.
 		xSemaphoreTake(PCUARTHandle, 1);
 		status = HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx,
 				sizeof(buffRx));
@@ -84,6 +118,14 @@ void updateStatusToPC(void) {//
 	} while (status != HAL_OK);
 }
 
+/**
+ * @brief   Reads the received data buffer
+ * @details Once verified that the header sequence is valid and the correct number of bytes
+ * 			are read, the function copies robotGoalData to robotGoal and updates robotGoal id
+ * 			to robotState id. Then, the function wakes up control task and MPU task by notifying.
+ * @param 	None
+ * @return  None
+ */
 void receiveDataBuffer(void) {
 	for (uint8_t i = 0; i < sizeof(buffRx); i++) {
 		if (startSeqCount == 4) {
@@ -123,31 +165,15 @@ void receiveDataBuffer(void) {
 	}
 
 }
-/******************************** Functions **********************************/
-/*****************************************************************************/
-/*  Submodule name                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*                                                                           */
-/*****************************************************************************/
-/**
- * @defgroup TODO -- define the submodule (something like "Module_SubmoduleName Submodule name")
- * @brief    TODO -- describe submodule here
- *
- * # TODO -- Page title for submodule #
- *
- * TODO -- detailed description of submodule
- *
- * @ingroup TODO -- name of the parent module
- * @{
- */
 
-// TODO: put functions here
 /**
  * @}
  */
-/* end TODO -- Module_SubmoduleName */
+/* end - RxHelperFunctions */
+
+/**
+ * @}
+ */
+/* end Helpers */
+
 
