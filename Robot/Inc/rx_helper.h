@@ -2,7 +2,7 @@
  *****************************************************************************
  * @file    rx_helper.h
  * @author  Hannah
- * @brief   Header for helper file for function StartRXTask in freertos.cpp
+ * @brief   Header for the helper file used to aid StartRXTask() in freertos.cpp
  *****************************************************************************
  */
 
