@@ -65,13 +65,13 @@ static uint32_t notification;
 void initializeVars(void) {
     //sending
     robotGoal.id = 0;
-	robotGoalDataPtr = robotGoalData;
+    robotGoalDataPtr = robotGoalData;
     startSeqCount = 0;
-	totalBytesRead = 0;
-	//receiving
-	robotState.id = 0;
-	robotState.start_seq = UINT32_MAX;
-	robotState.end_seq = 0;
+    totalBytesRead = 0;
+    //receiving
+    robotState.id = 0;
+    robotState.start_seq = UINT32_MAX;
+    robotState.end_seq = 0;
 }
 
 /**
@@ -80,7 +80,7 @@ void initializeVars(void) {
  * @return  None
  */
 void initiateDMATransfer(void) {
-	HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx, sizeof(buffRx));
+    HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx, sizeof(buffRx));
 }
 
 /**
@@ -93,9 +93,9 @@ void initiateDMATransfer(void) {
  * @return  None
  */
 void waitForNotificationRX(void) {
-	do {
-		xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
-	} while ((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
+    do {
+        xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
+    } while ((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 }
 
 /**
@@ -110,12 +110,12 @@ void waitForNotificationRX(void) {
  * @return  None
  */
 void updateStatusToPC(void) {
-	do {
-		xSemaphoreTake(PCUARTHandle, 1);
-		status = HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx,
-				sizeof(buffRx));
-		xSemaphoreGive(PCUARTHandle);
-	} while (status != HAL_OK);
+    do {
+        xSemaphoreTake(PCUARTHandle, 1);
+        status = HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx,
+                sizeof(buffRx));
+        xSemaphoreGive(PCUARTHandle);
+    } while (status != HAL_OK);
 }
 
 /**
@@ -127,42 +127,42 @@ void updateStatusToPC(void) {
  * @return  None
  */
 void receiveDataBuffer(void) {
-	for (uint8_t i = 0; i < sizeof(buffRx); i++) {
-		if (startSeqCount == 4) {
-			// This control block is entered when the header sequence of
-			// 0xFFFFFFFF has been received; thus we know the data we
-			// receive will be in tact
+    for (uint8_t i = 0; i < sizeof(buffRx); i++) {
+        if (startSeqCount == 4) {
+            // This control block is entered when the header sequence of
+            // 0xFFFFFFFF has been received; thus we know the data we
+            // receive will be in tact
 
-			*robotGoalDataPtr = buffRx[i];
-			robotGoalDataPtr++;
-			totalBytesRead++;
+            *robotGoalDataPtr = buffRx[i];
+            robotGoalDataPtr++;
+            totalBytesRead++;
 
-			if (totalBytesRead == sizeof(RobotGoal)) {
-				// If, after the last couple of receive interrupts, we have
-				// received sizeof(RobotGoal) bytes, then we copy the data
-				// buffer into the robotGoal structure and wake the control
-				// thread to distribute states to each actuator
-				memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-				robotState.id = robotGoal.id;
+            if (totalBytesRead == sizeof(RobotGoal)) {
+                // If, after the last couple of receive interrupts, we have
+                // received sizeof(RobotGoal) bytes, then we copy the data
+                // buffer into the robotGoal structure and wake the control
+                // thread to distribute states to each actuator
+                memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+                robotState.id = robotGoal.id;
 
-				// Reset the variables to help with reception of a RobotGoal
-				robotGoalDataPtr = robotGoalData;
-				startSeqCount = 0;
-				totalBytesRead = 0;
+                // Reset the variables to help with reception of a RobotGoal
+                robotGoalDataPtr = robotGoalData;
+                startSeqCount = 0;
+                totalBytesRead = 0;
 
-				xTaskNotify(CommandTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake control task
-				xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake MPU task
-				continue;
-			}
-		} else {
-			// This control block is used to verify that the data header is in tact
-			if (buffRx[i] == 0xFF) {
-				startSeqCount++;
-			} else {
-				startSeqCount = 0;
-			}
-		}
-	}
+                xTaskNotify(CommandTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
+                xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
+                continue;
+            }
+        } else {
+            // This control block is used to verify that the data header is in tact
+            if (buffRx[i] == 0xFF) {
+                startSeqCount++;
+            } else {
+                startSeqCount = 0;
+            }
+        }
+    }
 
 }
 
@@ -175,5 +175,4 @@ void receiveDataBuffer(void) {
  * @}
  */
 /* end Helpers */
-
 

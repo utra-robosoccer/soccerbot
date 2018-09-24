@@ -1,10 +1,10 @@
 /**
-  *****************************************************************************
-  * @file    tx_helper.h
-  * @author  Hannah
-  * @brief   Header file for helper functions for StartTXTask in freertos.cpp
-  *****************************************************************************
-  */
+ *****************************************************************************
+ * @file    tx_helper.h
+ * @author  Hannah
+ * @brief   Header file for helper functions for StartTXTask in freertos.cpp
+ *****************************************************************************
+ */
 
 #ifndef TX_HELPER_H
 #define TX_HELPER_H
@@ -16,16 +16,11 @@ extern "C" {
 /********************************* Includes **********************************/
 #include <stdint.h>
 
-
-
-
 /***************************** Function prototypes ***************************/
 void shiftNotificationMask(void);
 void copySensorDataToSend(void);
 void transmitStatusFromPC(void);
 void waitForNotificationTX(void);
-
-
 
 #ifdef __cplusplus
 }
