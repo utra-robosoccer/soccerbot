@@ -2,7 +2,7 @@
  *****************************************************************************
  * @file    tx_helper.c
  * @author  Hannah
- * @brief   Helper file for function StartTXTask in freertos.cpp
+ * @brief   Helper file for the function StartTXTask() in freertos.cpp
  *****************************************************************************
  */
 
@@ -53,7 +53,7 @@ static uint32_t NOTIFICATION_MASK = 0x80000000;
  */
 
 /**
- * @brief   Shift bits of NOTIFICATION_MASK
+ * @brief   Shifts bits of NOTIFICATION_MASK
  * @param 	None
  * @return  None
  */
@@ -65,7 +65,7 @@ void shiftNotificationMask(void) {
 
 /**
  * @brief   Validates and copies sensor data to transmit
- * @details This functions receives two types of sensor data(motor and IMU) and updates to
+ * @details This function receives two types of sensor data(motor and IMU) and updates to
  * 			the according section of robotState.msg.
  * @param 	None
  * @return  None
@@ -135,7 +135,7 @@ void transmitStatusFromPC(void) {
 }
 
 /**
- * @brief   Wait until notified from ISR
+ * @brief   Waits until notified from ISR
  * @details Clear no bits on entry in case the notification came while a higher priority task
  * 			was executing.
  * @param 	None

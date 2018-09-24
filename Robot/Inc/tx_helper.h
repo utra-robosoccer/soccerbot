@@ -2,7 +2,7 @@
  *****************************************************************************
  * @file    tx_helper.h
  * @author  Hannah
- * @brief   Header file for helper functions for StartTXTask in freertos.cpp
+ * @brief   Header for the helper file used to aid StartTxTask() in freertos.cpp
  *****************************************************************************
  */
 

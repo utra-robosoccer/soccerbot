@@ -2,11 +2,11 @@
  *****************************************************************************
  * @file    rx_helper.c
  * @author  Hannah
- * @brief   Helper file for function StartRXTask in freertos.cpp
+ * @brief   Helper file for the function StartRXTask in freertos.cpp
  *
  * @defgroup Helpers
  * @ingroup  Threads
- * @brief Helper functions to help read-ability of freertos.cpp
+ * @brief Helper functions to help the read-ability of freertos.cpp
  * @{
  *****************************************************************************
  */
@@ -51,14 +51,14 @@ static uint32_t notification;
  *
  * # StartRXTask Helper Functions #
  *
- * This subsection includes helper functions for the StartRXTask function in
+ * This subsection includes helper functions for the StartRXTask() function in
  * freertos.cpp in order to make the the file more readable.
  *
  * @{
  */
 
 /**
- * @brief   Initialize the private variables for StartRxTask
+ * @brief   Initializes the private variables for StartRxTask
  * @param 	None
  * @return  None
  */
@@ -75,7 +75,7 @@ void initializeVars(void) {
 }
 
 /**
- * @brief   Initiate DMA receive transfer using DMA
+ * @brief   Initiates DMA receive transfer using DMA
  * @param 	None
  * @return  None
  */
@@ -84,11 +84,11 @@ void initiateDMATransfer(void) {
 }
 
 /**
- * @brief   Wait until notified from ISR.
- * @details Clear no bits on entry in case the notification
+ * @brief   Waits until notified from ISR.
+ * @details This function clears no bits on entry in case the notification
  * 			comes before this statement is executed (which is rather unlikely as long as
- * 			this task has the highest priority, but overall this is a better decision in
- * 			case priorities are changed in the future and someone forgets about this.
+ * 			this task has the highest priority), but overall this is a better decision in
+ * 			case priorities are changed in the future.
  * @param 	None
  * @return  None
  */
