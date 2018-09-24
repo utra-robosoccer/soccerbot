@@ -18,8 +18,7 @@
 
 namespace FreeRTOS_Interface {
 
-template<class FreeRTOSClass>
-class FreeRTOSClass: class FreeRTOSInterface {
+class FreeRTOSInterface {
 public:
 
     virtual ~FreeRTOSInterface() {}
