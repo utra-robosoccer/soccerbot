@@ -34,8 +34,21 @@ def gen_random_string(n):
 def clean_name_arg(name):
     clean_name = []
     for i in range(len(name)):
-        clean_name.append("-") if name[i] == " " else clean_name.append(name[i])
+        clean_name.append("_") if name[i] == " " else clean_name.append(name[i])
     return "".join(clean_name)
+
+def get_next_arg(arg, arguments):
+    next_arg = ""
+    try:
+        next_arg = arguments[arguments.index(arg) + 1]
+        if name_arg[0] == "-":
+            exit(1)
+    except:
+        print("argument error")
+        exit(1)
+    finally:
+        return next_arg
+
 
 ETH_ECHO_TEST = {
     "name": "",
@@ -79,7 +92,7 @@ HOST_PC_PORT = 7
 BUFFER_SIZE = 4096  # Size in bytes of buffer for PC to receive message
 #TIMEOUT = 10000     # Time in ms for PC to timeout and fail a test if MCU hangs
 TCP_RECEIVE_BUFFER_SIZE = 16
-TRIAL_INTERVAL = 0.05
+TRIAL_INTERVAL = 0.05 # milliseconds
 
 # Scheduling parameters
 SCHEDDL_SETTING = "rr"
@@ -98,19 +111,49 @@ for arg in arguments:
         print("options:\n    -h    show help output\n    -n    test name, also used as test output file name")
         exit(0)
 
-name_arg = ""
+args = {}
 for arg in arguments:
     if arg == "-n":
-        try:
-            name_arg = arguments[arguments.index(arg) + 1]
-        except:
-            print("error in name argument")
-            exit(1)
-        finally:
-            name_arg = clean_name_arg(name_arg)
+        args["name"] = get_next_arg(arg, arguments)
+        args["name"] = clean_name_arg(args["name"]) + ".json"
+    elif arg == "-s":
+        args["sizes"] = get_next_arg(arg, arguments)
+        args["sizes"] = args["sizes"].split(",")
+    elif arg == "-t":
+        args["num_trials"] = get_next_arg(arg, arguments)
+        args["num_trials"] = int(args["num_trials"])
+    elif arg == "-i":
+        args["trial_interval"] = get_next_arg(arg, arguments)
+        args["trial_interval"] = float(int(args["trial_interval"])) / 1000
+    elif arg == "-p":
+        args["protocol"] = get_next_arg(arg, arguments)
+    elif arg == "--mcu-ipaddr":
+        args["mcu_ipaddr"] = get_next_arg(arg, arguments)
+    elif arg == "--mcu_port":
+        args["mcu_port"] = get_next_arg(arg, arguments)
+        args["mcu_port"] = int(args["mcu_port"])
+    # else if arg == "--pc-ipaddr": just keep in mind for now
+    elif arg == "--pc-port":
+        args["pc_port"] = get_next_arg(arg, arguments)
+        args["pc_port"] = int(args["pc_port"])
 
-if name_arg != "":
-    OUTPUT_JSON_NAME = name_arg + ".json"
+if "name" in args:
+    OUTPUT_JSON_NAME = args["name"]
+elif "sizes" in args:
+    MESSAGE_SIZES = args["sizes"]
+elif "num_trials" in args:
+    MESSAGE_NUM_TRIALS = args["num_trials"]
+elif "trial_interval" in args:
+    TRIAL_INTERVAL = args["trial_interval"]
+elif "protocol" in args:
+    PROTOCOL = args["protocol"]
+elif "mcu_ipaddr" in args:
+    MCU_IP_ADDRESS = args["mcu_ipaddr"]
+elif "mcu_port" in args:
+    MCU_PORT = args["mcu_port"]
+elif "pc_port" in args:
+    HOST_PC_PORT = args["pc_port"]
+
 
 ETH_ECHO_TEST["name"] = OUTPUT_JSON_NAME
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
