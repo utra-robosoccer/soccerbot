@@ -2,14 +2,9 @@
   *****************************************************************************
   * @file    HalUartInterface.cpp
   * @author  Tyler Gamvrelis
-  * @brief   TODO -- brief description of file
-  *
-  * @defgroup UART
-  * @brief    TODO -- description of module
   *
   * @defgroup HalUartInterface
-  * @ingroup  UART
-  * @brief    TODO -- description of module
+  * @brief    Implements UartInterface using HAL functions
   * @{
   *****************************************************************************
   */
@@ -24,9 +19,13 @@
 
 
 namespace uart{
-/***************************** UartInterface ******************************/
+/***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------
+HalUartInterface::HalUartInterface(){
+
+}
+
 void HalUartInterface::setUartPtr(UART_HandleTypeDef* uartHandlePtr){
     this->uartHandlePtr = uartHandlePtr;
 }

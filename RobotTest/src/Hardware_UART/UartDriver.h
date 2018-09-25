@@ -2,7 +2,8 @@
   *****************************************************************************
   * @file    UartDriver.h
   * @author  Tyler Gamvrelis
-  * @brief   TODO -- brief description of file
+  * @brief   Manages the usage of a particular UART, taking care of hardware-
+  *          level calls and OS-level calls, and passing up statuses
   *
   * @defgroup Header
   * @ingroup  UART
@@ -13,8 +14,14 @@
 
 
 
-#ifndef __UART_DRIVER_H__
-#define __UART_DRIVER_H__
+#ifndef UART_DRIVER_H
+#define UART_DRIVER_H
+
+
+
+
+/********************************** Macros ***********************************/
+#define THREADED 1
 
 
 
@@ -208,4 +215,4 @@ template <class UARTInterface> bool UartDriver<UARTInterface>::receive(
  */
 /* end - Header */
 
-#endif /* __UART_DRIVER_H__ */
+#endif /* UART_DRIVER_H */
