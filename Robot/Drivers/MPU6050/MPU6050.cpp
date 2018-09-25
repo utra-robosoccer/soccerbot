@@ -4,44 +4,61 @@
   * @author  Izaak
   * @author  Tyler
   * @author  Jenny
-  * @brief   All functions related to the MPU6060 IMU sensor.
+  * @brief   Implements all functions in the MPU6060 class.
   *
   * @defgroup MPU6050
+  * @brief    Module for the MPU6050 IMU sensor
   * @{
   *****************************************************************************
   */
+
+
+
 
 /********************************* Includes **********************************/
 #include "MPU6050.h"
 #include <math.h>
 
-/********************************** Anonymous Namespace **********************/
+
+/******************************** File-local *********************************/
 namespace {
+// Constants
+// ----------------------------------------------------------------------------
+constexpr float g = 9.81;
 
-/**
-  * @brief   This function big-bangs the I2C master clock
-  *          https://electronics.stackexchange.com/questions/267972/i2c-busy-flag-strange-behaviour/281046#281046
-  *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
-  *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
-  *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
-  * @param   numClocks The number of times to cycle the I2C master clock
-  * @param   sendStopBits 1 if stop bits are to be sent on SDA
-  * @return  None
-  */
-void generateClocks(uint8_t numClocks, uint8_t sendStopBits);
-/**
-  * @brief   Helper function for I2C_ClearBusyFlagErratum.
-  * @param   None
-  * @return  None
-  */
-static uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port, uint16_t pin, GPIO_PinState state, uint8_t timeout);
+constexpr uint8_t MPU6050_ADDR=            0b11010000;  // ID
+constexpr uint8_t MPU6050_RA_GYRO_CONFIG=      0x1B;
+constexpr uint8_t MPU6050_RA_ACCEL_CONFIG=     0x1C;
+constexpr uint8_t MPU6050_RA_I2C_MST_CTRL=     0x24;
+constexpr uint8_t MPU6050_RA_SMPLRT_DIV=       0x19;
 
-/********************************** Local Helpers ****************************/
+// Unit coefficient constants
+constexpr uint8_t IMU_GY_RANGE=                131; // divide by this to get degrees per second
+constexpr float ACC_RANGE =                    16384.0; //divide to get in units of g
+
+// Output
+constexpr uint8_t MPU6050_RA_ACCEL_XOUT_H=     0x3B;
+constexpr uint8_t MPU6050_RA_GYRO_XOUT_H=      0x43;
+constexpr uint8_t MPU6050_RA_PWR_MGMT_1=       0x6B;
+constexpr uint8_t MPU6050_RA_PWR_MGMT_2=       0x6C;
+
+// Sample Rate DIV
+constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
+
+
+// Functions
+// ----------------------------------------------------------------------------
+
 // Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
 // I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
 // not been thoroughly tested.
 //
 // Overall, use these functions with EXTREME caution.
+/**
+  * @brief   Helper function for I2C_ClearBusyFlagErratum.
+  * @param   None
+  * @return  None
+  */
 uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port,
         uint16_t pin,
         GPIO_PinState state,
@@ -60,6 +77,16 @@ uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port,
     return ret;
 }
 
+/**
+  * @brief   This function big-bangs the I2C master clock
+  *          https://electronics.stackexchange.com/questions/267972/i2c-busy-flag-strange-behaviour/281046#281046
+  *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
+  *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
+  *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
+  * @param   numClocks The number of times to cycle the I2C master clock
+  * @param   sendStopBits 1 if stop bits are to be sent on SDA
+  * @return  None
+  */
 void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     static struct I2C_Module{
         I2C_HandleTypeDef*   instance;
@@ -143,38 +170,15 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
 
     HAL_I2C_Init(handler);
 }
-}
+} // end anonymous namespace
 
 
-/********************************** Primary Namespace ************************/
+
+
+/********************************* MPU6050 ***********************************/
 using IMUnamespace::MPU6050;
-
-
-/********************************* Constants *********************************/
-
-constexpr float g = 9.81;
-
-constexpr uint8_t MPU6050_ADDR=            0b11010000;  // ID
-constexpr uint8_t MPU6050_RA_GYRO_CONFIG=      0x1B;
-constexpr uint8_t MPU6050_RA_ACCEL_CONFIG=     0x1C;
-constexpr uint8_t MPU6050_RA_I2C_MST_CTRL=     0x24;
-constexpr uint8_t MPU6050_RA_SMPLRT_DIV=       0x19;
-
-//since we are using the 0 setting for MPU6050_RA_GYRO_CONFIG, we define :
-constexpr uint8_t IMU_GY_RANGE=                131; // divide by this to get degrees per second
-//since we are using the 0 setting for MPU6050_RA_ACCEL_CONFIG, we define :
-constexpr float ACC_RANGE =                    16384.0; //divide to get in units of g
-
-/**********************Output************************/
-constexpr uint8_t MPU6050_RA_ACCEL_XOUT_H=     0x3B;
-constexpr uint8_t MPU6050_RA_GYRO_XOUT_H=      0x43;
-constexpr uint8_t MPU6050_RA_PWR_MGMT_1=       0x6B;
-constexpr uint8_t MPU6050_RA_PWR_MGMT_2=       0x6C;
-
-/*****************Sample Rate DIV*******************/
-constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
-
-/******************************** Functions **********************************/
+// Public
+// ----------------------------------------------------------------------------
 MPU6050::MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle){
     this->Manually_Set_Offsets(SensorNum);
 
@@ -189,50 +193,16 @@ MPU6050::MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle){
     this -> received_byte = 0;
     this -> _I2C_Handle = I2CHandle;
 }
-int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
-    return HAL_I2C_Mem_Write(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) reg_addr,
-            1,
-            &data,
-            1,
-            10
-            );
-}
 
-uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
-    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) reg_addr,
-            1,
-            &(this->received_byte),
-            1,
-            1000);
-    return status;
-}
+void MPU6050::init(uint8_t lpf){
+    MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
+    MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
+    MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
+    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_1, 0);
+    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
+    MPU6050::Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
 
-void MPU6050::Fill_Struct(IMUStruct * myStruct){
-    myStruct->_x_Accel = this->_x_Accel;
-    myStruct->_y_Accel = this->_y_Accel;
-    myStruct->_z_Accel = this->_z_Accel;
-
-    myStruct->_x_Gyro = this->_x_Gyro;
-    myStruct->_y_Gyro = this->_y_Gyro;
-    myStruct->_z_Gyro = this->_z_Gyro;
-}
-
-BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
-    return HAL_I2C_Mem_Read_IT(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) Reg_addr,
-            1,
-            sensor_buffer,
-            6);
-}
-
-uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
-    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
-    return status;
+    this->Set_LPF(lpf);
 }
 
 void MPU6050::Read_Gyroscope_Withoffset(){
@@ -287,7 +257,6 @@ void MPU6050::Read_Accelerometer_Withoffset(){
     this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
 }
 
-
 void MPU6050::Read_Accelerometer_Withoffset_IT(){
     uint8_t output_buffer[6];
     uint32_t notification;
@@ -313,6 +282,54 @@ void MPU6050::Read_Accelerometer_Withoffset_IT(){
     this ->_x_Accel = -(X_A * g / ACC_RANGE-(this ->_x_AccelOffset));
     this ->_y_Accel = -(Y_A * g / ACC_RANGE-(this ->_y_AccelOffset));
     this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
+}
+
+void MPU6050::Fill_Struct(IMUStruct * myStruct){
+    myStruct->_x_Accel = this->_x_Accel;
+    myStruct->_y_Accel = this->_y_Accel;
+    myStruct->_z_Accel = this->_z_Accel;
+
+    myStruct->_x_Gyro = this->_x_Gyro;
+    myStruct->_y_Gyro = this->_y_Gyro;
+    myStruct->_z_Gyro = this->_z_Gyro;
+}
+
+// Private
+// ----------------------------------------------------------------------------
+int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
+    return HAL_I2C_Mem_Write(this -> _I2C_Handle,
+            (uint16_t) MPU6050_ADDR,
+            (uint16_t) reg_addr,
+            1,
+            &data,
+            1,
+            10
+            );
+}
+
+uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
+    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,
+            (uint16_t) MPU6050_ADDR,
+            (uint16_t) reg_addr,
+            1,
+            &(this->received_byte),
+            1,
+            1000);
+    return status;
+}
+
+BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
+    return HAL_I2C_Mem_Read_IT(this -> _I2C_Handle,
+            (uint16_t) MPU6050_ADDR,
+            (uint16_t) Reg_addr,
+            1,
+            sensor_buffer,
+            6);
+}
+
+uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
+    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
+    return status;
 }
 
 int MPU6050::Set_LPF(uint8_t lpf){
@@ -341,16 +358,6 @@ void MPU6050::Manually_Set_Offsets(int SensorNum){
     }
 }
 
-void MPU6050::init(uint8_t lpf){
-    MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
-    MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
-    MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
-    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_1, 0);
-    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
-    MPU6050::Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
-
-    this->Set_LPF(lpf);
-}
 
 /**
  * @}
