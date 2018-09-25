@@ -19,18 +19,13 @@
 
 
 
-/********************************** Macros ***********************************/
-#define THREADED 1
-
-
-
-
 /********************************* Includes **********************************/
 #include <cstdint>
 
 #define STM32F446xx
 #include <stm32f446xx.h>
 #include "usart.h"
+#include "UartInterface.h"
 
 
 
@@ -53,31 +48,33 @@ enum class IO_Type{
 
 // Classes and structs
 // ----------------------------------------------------------------------------
-class HalUartInterface{
+class HalUartInterface : UartInterface{
 public:
     HalUartInterface();
     ~HalUartInterface() {}
 
-    void setUartPtr(UART_HandleTypeDef* uartHandlePtr);
+    void setUartPtr(UART_HandleTypeDef* uartHandlePtr) override final;
 
     HAL_StatusTypeDef transmitPoll(
         uint8_t* arrTransmit,
         size_t numBytes,
         uint32_t timeout
-    );
+    ) override final;
+
     HAL_StatusTypeDef receivePoll(
         uint8_t* arrReceive,
         size_t numBytes,
         uint32_t timeout
-    );
-#ifdef THREADED
-    HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes);
-    HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes);
-    HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes);
-    HAL_StatusTypeDef receiveDMA(uint8_t* arrReceive, size_t numBytes);
+    ) override final;
 
-    void abortTransmit();
-    void abortReceive();
+#ifdef THREADED
+    HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes) override final;
+    HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes) override final;
+    HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes) override final;
+    HAL_StatusTypeDef receiveDMA(uint8_t* arrReceive, size_t numBytes) override final;
+
+    void abortTransmit() override final;
+    void abortReceive() override final;
 #endif
 
 private:

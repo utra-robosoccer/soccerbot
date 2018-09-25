@@ -31,7 +31,7 @@ using ::testing::_;
 namespace{
 // Classes and structs
 // ----------------------------------------------------------------------------
-class MockUartInterface{
+class MockUartInterface : public uart::UartInterface{
 public:
     MOCK_METHOD1(setUartPtr, void(UART_HandleTypeDef*));
     MOCK_METHOD3(transmitPoll, HAL_StatusTypeDef(uint8_t*, size_t, uint32_t));
