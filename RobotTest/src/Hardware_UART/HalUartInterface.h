@@ -2,10 +2,9 @@
   *****************************************************************************
   * @file    HalUartInterface.h
   * @author  Tyler Gamvrelis
-  * @brief   TODO -- brief description of file
   *
-  * @defgroup Header
-  * @ingroup  HalUartInterface
+  * @defgroup HalUartInterface
+  * @brief    TODO
   * @{
   *****************************************************************************
   */
@@ -30,22 +29,8 @@
 
 
 
-/******************************* uart_interface ******************************/
-namespace uart{
-// Types & enums
-// ----------------------------------------------------------------------------
-enum class IO_Type{
-    POLL
-#ifdef THREADED
-    ,
-    IT,
-    DMA
-#endif
-};
-
-
-
-
+/****************************** HalUartInterface *****************************/
+namespace UART{
 // Classes and structs
 // ----------------------------------------------------------------------------
 class HalUartInterface : UartInterface{
@@ -81,7 +66,7 @@ private:
     UART_HandleTypeDef* uartHandlePtr = nullptr;
 };
 
-} // end namespace uart
+} // end namespace UART
 
 
 

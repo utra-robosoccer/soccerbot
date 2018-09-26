@@ -2,11 +2,11 @@
   *****************************************************************************
   * @file    UartDriver.h
   * @author  Tyler Gamvrelis
-  * @brief   Manages the usage of a particular UART, taking care of hardware-
-  *          level calls and OS-level calls, and passing up statuses
   *
   * @defgroup Header
-  * @ingroup  UART
+  * @ingroup  UartDriver
+  * @brief    Manages the usage of a particular UART, taking care of hardware-
+  *           level calls and OS-level calls, and passing up statuses
   * @{
   *****************************************************************************
   */
@@ -27,27 +27,31 @@
 
 
 /********************************* Includes **********************************/
-#include "HalUartInterface.h"
+#include "UartInterface.h"
 
 #ifdef THREADED
 #include "cmsis_os.h"
 #include "Notification.h"
+#include "FreeRTOSInterface.h"
+using namespace FreeRTOS_Interface;
 #endif
 
 
 
 
-/******************************* uart_interface ******************************/
-namespace uart{
+/******************************** UartDriver *********************************/
+namespace UART{
 // Classes and structs
 // ----------------------------------------------------------------------------
-template <class UARTInterface>
 class UartDriver{
 public:
     UartDriver();
     ~UartDriver() {}
 
-    void setUartInterface(UARTInterface* hw_if);
+    void setUartInterface(UartInterface* hw_if);
+#ifdef THREADED
+    void setOSInterface(FreeRTOSInterface* os_if);
+#endif
     void setUartPtr(UART_HandleTypeDef* uartHandlePtr);
     IO_Type getIOType(void) const;
     void setIOType(IO_Type io_type);
@@ -60,152 +64,36 @@ public:
     bool receive(uint8_t* arrReceive, size_t numBytes);
 
 private:
+    /**
+     * @brief IO Type used by the driver, i.e. whether the driver uses polled,
+     *        interrupt-driven, or DMA-driven IO
+     */
     IO_Type io_type = IO_Type::POLL;
-    UARTInterface* hw_if = nullptr;
+
+    /**
+     * @brief Pointer to the object handling direct calls to the UART hardware
+     */
+    UartInterface* hw_if = nullptr;
 #ifdef THREADED
-    static constexpr uint32_t TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
+    /** @brief Maximum time allowed for a polled IO transfer */
+    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
+
+    /**
+     * @brief Maximum time allowed for a thread to block on an asynchronous
+     *        transfer
+     */
     static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
+
+    /** @brief Pointer to the object handling system calls to the OS */
+    FreeRTOSInterface* os_if = nullptr;
 #endif
 #ifndef THREADED
-    constexpr uint32_t TRANSFER_TIMEOUT = 2;
+    /** @brief Maximum time allowed for a polled IO transfer */
+    constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
 #endif
 };
 
-// Public
-// ----------------------------------------------------------------------------
-template <class UARTInterface> UartDriver<UARTInterface>::UartDriver(){
-
-}
-
-template <class UARTInterface> void UartDriver<UARTInterface>::setUartInterface(
-    UARTInterface* hw_if
-)
-{
-    this->hw_if = hw_if;
-}
-
-template <class UARTInterface> void UartDriver<UARTInterface>::setUartPtr(
-    UART_HandleTypeDef* uartHandlePtr
-)
-{
-    hw_if->setUartPtr(uartHandlePtr);
-}
-
-template <class UARTInterface> void UartDriver<UARTInterface>::setIOType(
-    IO_Type io_type
-)
-{
-    this->io_type = io_type;
-}
-
-template <class UARTInterface> IO_Type UartDriver<UARTInterface>::getIOType(void) const{
-    return this->io_type;
-}
-
-template <class UARTInterface> bool UartDriver<UARTInterface>::transmit(
-    uint8_t* arrTransmit,
-    size_t numBytes
-)
-{
-#if defined(THREADED)
-    uint32_t notification = 0;
-    BaseType_t status = pdFALSE;
-#endif
-    bool retval = false;
-
-    switch(io_type) {
-#if defined(THREADED)
-        case IO_Type::DMA:
-            if(hw_if->transmitDMA(arrTransmit, numBytes) == HAL_OK){
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
-
-                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
-                    retval = false;
-                }
-            }
-            else{
-                retval = false;
-            }
-            break;
-        case IO_Type::IT:
-            if(hw_if->transmitIT(arrTransmit, numBytes) == HAL_OK){
-
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
-
-                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
-                    retval = false;
-                }
-            }
-            else{
-                retval = false;
-            }
-            break;
-#endif
-        case IO_Type::POLL:
-        default:
-            retval = (hw_if->transmitPoll(arrTransmit, numBytes, TRANSFER_TIMEOUT) == HAL_OK);
-            break;
-    }
-
-    if(retval != HAL_OK){
-        hw_if->abortTransmit();
-    }
-
-    return retval;
-}
-
-template <class UARTInterface> bool UartDriver<UARTInterface>::receive(
-    uint8_t* arrReceive,
-    size_t numBytes
-)
-{
-#if defined(THREADED)
-    uint32_t notification = 0;
-    BaseType_t status = pdFALSE;
-#endif
-    bool retval = false;
-
-    switch(io_type) {
-#if defined(THREADED)
-        case IO_Type::DMA:
-            if(hw_if->receiveDMA(arrReceive, numBytes) == HAL_OK){
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
-
-                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
-                    retval = false;
-                }
-            }
-            else{
-                retval = false;
-            }
-            break;
-        case IO_Type::IT:
-            if(hw_if->receiveIT(arrReceive, numBytes) == HAL_OK){
-                status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
-
-                if(status != pdTRUE || !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
-                    retval = false;
-                }
-            }
-            else{
-                retval = false;
-            }
-            break;
-#endif
-        case IO_Type::POLL:
-        default:
-            retval = (hw_if->receivePoll(arrReceive, numBytes, TRANSFER_TIMEOUT) == HAL_OK);
-            break;
-    }
-
-    if(retval != HAL_OK){
-        hw_if->abortReceive();
-    }
-
-    return retval;
-}
-
-} // end namespace uart_interface
+} // end namespace UART
 
 
 
