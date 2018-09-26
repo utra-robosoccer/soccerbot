@@ -85,10 +85,10 @@ tmp/
 .worksheet
 
 ### Eclipse Patch ###
-# Eclipse Core
+# Eclipse Core		
 #.project
 .metadata/
-# JDT-specific (Eclipse Java Development Tools)
+# JDT-specific (Eclipse Java Development Tools)		
 #.classpath
 
 # STM Microelectronics stuff
@@ -96,4 +96,3 @@ tmp/
 RemoteSystemsTempFiles/
 .metadata/
 Robot/.settings/language.settings.xml
-RobotTest/.settings/language.settings.xml
