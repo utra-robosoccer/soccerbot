@@ -72,9 +72,7 @@ void shiftNotificationMask(void) {
  */
 void copySensorDataToSend(void) {
     while ((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK) {
-        while (xQueueReceive(TXQueueHandle, &receivedData, portMAX_DELAY)
-                != pdTRUE)
-            ;
+        while (xQueueReceive(TXQueueHandle, &receivedData, portMAX_DELAY) != pdTRUE);
 
         switch (receivedData.eDataType) {
         case eMotorData:
