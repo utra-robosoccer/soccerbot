@@ -66,6 +66,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="FunctionalFreeRTOSInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -130,6 +131,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="FunctionalFreeRTOSInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
