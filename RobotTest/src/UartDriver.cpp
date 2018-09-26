@@ -5,7 +5,8 @@
   * @brief   TODO -- brief description of file
   *
   * @defgroup UartDriver
-  * @brief    TODO
+  * @brief    Manages the usage of a particular UART, taking care of hardware-
+  *           level calls, OS-level calls, and passing up statuses
   * @{
   *****************************************************************************
   */
@@ -27,8 +28,20 @@ UartDriver::UartDriver(){
 
 }
 
-void UartDriver::setUartInterface(UartInterface* hw_if){
-    this->hw_if = hw_if;
+void UartDriver::setUartInterface(
+    UartInterface* hw_if,
+    UART_HandleTypeDef* uartHandlePtr
+)
+{
+    if(hw_if != nullptr){
+        this->hw_if = hw_if;
+
+        if(uartHandlePtr != nullptr){
+            hw_if->setUartPtr(uartHandlePtr);
+        }
+
+        hw_is_initialized = true;
+    }
 }
 
 #ifdef THREADED
@@ -36,10 +49,6 @@ void UartDriver::setOSInterface(FreeRTOSInterface* os_if){
     this->os_if = os_if;
 }
 #endif
-
-void UartDriver::setUartPtr(UART_HandleTypeDef* uartHandlePtr){
-    hw_if->setUartPtr(uartHandlePtr);
-}
 
 void UartDriver::setIOType(IO_Type io_type){
     this->io_type = io_type;
@@ -60,7 +69,7 @@ bool UartDriver::transmit(
 #endif
     bool retval = false;
 
-    if(hw_if != nullptr){
+    if(hw_is_initialized){
         switch(io_type) {
 #if defined(THREADED)
             case IO_Type::DMA:
@@ -111,7 +120,7 @@ bool UartDriver::receive(
 #endif
     bool retval = false;
 
-    if(hw_if != nullptr){
+    if(hw_is_initialized){
         switch(io_type) {
 #if defined(THREADED)
             case IO_Type::DMA:
@@ -152,6 +161,7 @@ bool UartDriver::receive(
 }
 
 } // end namespace uart
+
 
 
 

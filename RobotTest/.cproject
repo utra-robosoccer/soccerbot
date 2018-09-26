@@ -33,7 +33,6 @@
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Robot/Inc"/>
-									<listOptionValue builtIn="false" value="../../Robot/Drivers/STM32F4xx_HAL_Driver/Legacy"/>
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../inc"/>

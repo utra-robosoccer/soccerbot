@@ -5,8 +5,6 @@
   *
   * @defgroup Header
   * @ingroup  UartDriver
-  * @brief    Manages the usage of a particular UART, taking care of hardware-
-  *           level calls and OS-level calls, and passing up statuses
   * @{
   *****************************************************************************
   */
@@ -21,6 +19,8 @@
 
 
 /********************************** Macros ***********************************/
+// Flag for whether or not to use the non-blocking driver features supported
+// by the OS (FreeRTOS). This is resolved at compile time
 #define THREADED 1
 
 
@@ -48,13 +48,12 @@ public:
     UartDriver();
     ~UartDriver() {}
 
-    void setUartInterface(UartInterface* hw_if);
+    void setUartInterface(UartInterface* hw_if, UART_HandleTypeDef* uartHandlePtr);
 #ifdef THREADED
     void setOSInterface(FreeRTOSInterface* os_if);
 #endif
-    void setUartPtr(UART_HandleTypeDef* uartHandlePtr);
-    IO_Type getIOType(void) const;
     void setIOType(IO_Type io_type);
+    IO_Type getIOType(void) const;
 
     // TODO: if we have an err_t type, we could use it to indicate both HAL and
     // FreeRTOS issues, so here that would be good as the ideal return type would
@@ -74,6 +73,12 @@ private:
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
     UartInterface* hw_if = nullptr;
+
+    /**
+     * @brief true if the UartInterface has been set and its UART_HandleTypeDef
+     *        pointer has been set, otherwise false
+     */
+    bool hw_is_initialized = false;
 #ifdef THREADED
     /** @brief Maximum time allowed for a polled IO transfer */
     static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);

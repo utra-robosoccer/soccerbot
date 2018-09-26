@@ -5,6 +5,7 @@
   * @author  Tyler Gamvrelis
   *
   * @defgroup MockFreeRTOSInterface
+  * @addtogroup Mocks
   * @{
   *****************************************************************************
   */
@@ -27,10 +28,15 @@ using namespace FreeRTOS_Interface;
 
 
 
+
 /************************** Test_FreeRTOS_Interface **************************/
-namespace Test_FreeRTOS_Interface{
+namespace MOCKS{
 // Classes and structs
 // ----------------------------------------------------------------------------
+/**
+ * @class Mock object which implements FreeRTOSInterface for unit testing
+ *        purposes
+ */
 class MockFreeRTOSInterface : public FreeRTOSInterface {
 public:
     MOCK_METHOD4(
@@ -92,9 +98,6 @@ public:
     );
 };
 
-
-
-
 } // end namespace Test_FreeRTOS_Interface
 
 
@@ -103,6 +106,6 @@ public:
 /**
  * @}
  */
-/* end - Header */
+/* end - MockFreeRTOSInterface */
 
 #endif /* MOCK_FREERTOS_INTERFACE_H */

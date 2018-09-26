@@ -4,6 +4,7 @@
   * @author  Tyler Gamvrelis
   *
   * @defgroup MockUartInterface
+  * @addtogroup Mocks
   * @{
   *****************************************************************************
   */
@@ -28,9 +29,12 @@ using namespace UART;
 
 
 /***************************** Test_UartInterface ****************************/
-namespace Test_UartInterface{
+namespace MOCKS{
 // Classes and structs
 // ----------------------------------------------------------------------------
+/**
+ * @class Mock object which implements UartInterface for unit testing purposes
+ */
 class MockUartInterface : public UartInterface{
 public:
     MOCK_METHOD1(setUartPtr, void(UART_HandleTypeDef*));
@@ -43,9 +47,6 @@ public:
     MOCK_METHOD0(abortTransmit, void());
     MOCK_METHOD0(abortReceive, void());
 };
-
-
-
 
 } // end namespace Test_FreeRTOS_Interface
 

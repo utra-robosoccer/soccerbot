@@ -4,7 +4,6 @@
   * @author  Tyler Gamvrelis
   *
   * @defgroup HalUartInterface
-  * @brief    TODO
   * @{
   *****************************************************************************
   */
@@ -33,12 +32,14 @@
 namespace UART{
 // Classes and structs
 // ----------------------------------------------------------------------------
+/**
+ * @class Concrete implementation of the abstract UartInterface class, to be
+ *        used in production builds
+ */
 class HalUartInterface : UartInterface{
 public:
     HalUartInterface();
     ~HalUartInterface() {}
-
-    void setUartPtr(UART_HandleTypeDef* uartHandlePtr) override final;
 
     HAL_StatusTypeDef transmitPoll(
         uint8_t* arrTransmit,
@@ -63,6 +64,10 @@ public:
 #endif
 
 private:
+    /**
+     * @brief Address of the container for the UART module associated with this
+     *        object
+     */
     UART_HandleTypeDef* uartHandlePtr = nullptr;
 };
 
