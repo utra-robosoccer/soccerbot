@@ -2,11 +2,10 @@
   *****************************************************************************
   * @file    UartDriver_test.cpp
   * @author  Tyler Gamvrelis
-  * @brief   TODO -- brief description of file
   *
   * @defgroup UartDriver_test
   * @ingroup  UART
-  * @brief    TODO -- description of module
+  * @brief    UartDriver unit tests
   * @{
   *****************************************************************************
   */
@@ -51,9 +50,10 @@ TEST(UartInterfaceTests, CanSetUartInterface){
 TEST(UartInterfaceTests, CanSetUartPtr){
     MockUartInterface uart;
     UartDriver UARTxDriver;
-    UARTxDriver.setUartInterface(&uart);
 
     UART_HandleTypeDef UARTx = {0};
+
+    UARTxDriver.setUartInterface(&uart);
 
     EXPECT_CALL(uart, setUartPtr(_)).Times(1);
     UARTxDriver.setUartPtr(&UARTx);
@@ -73,6 +73,89 @@ TEST(UartInterfaceTests, CanSetIOType){
     ASSERT_EQ(UART::IO_Type::DMA, UARTxDriver.getIOType());
 }
 
+TEST(UartInterfaceTests, TransmitFailsOnNullUartInterface){
+    UartDriver UARTxDriver;
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, ReceiveFailsOnNullUartInterface){
+    UartDriver UARTxDriver;
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.receive(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, TransmitFailsWhenisInitializedIsFalse){
+    MockUartInterface uart;
+    UartDriver UARTxDriver;
+
+    UARTxDriver.setUartInterface(&uart);
+    UARTxDriver.setIOType(UART::IO_Type::IT);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, TransmitITFailsOnNullFreeRTOSInterface){
+    MockUartInterface uart;
+    UartDriver UARTxDriver;
+
+    UARTxDriver.setUartInterface(&uart);
+    UARTxDriver.setIOType(UART::IO_Type::IT);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, TransmitDMAFailsOnNullFreeRTOSInterface){
+    MockUartInterface uart;
+    UartDriver UARTxDriver;
+
+    UARTxDriver.setUartInterface(&uart);
+    UARTxDriver.setIOType(UART::IO_Type::DMA);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.transmit(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, ReceiveITFailsOnNullFreeRTOSInterface){
+    MockUartInterface uart;
+    UartDriver UARTxDriver;
+
+    UARTxDriver.setUartInterface(&uart);
+    UARTxDriver.setIOType(UART::IO_Type::IT);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.receive(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
+TEST(UartInterfaceTests, ReceiveDMAFailsOnNullFreeRTOSInterface){
+    MockUartInterface uart;
+    UartDriver UARTxDriver;
+
+    UARTxDriver.setUartInterface(&uart);
+    UARTxDriver.setIOType(UART::IO_Type::DMA);
+
+    uint8_t arr[10] = {0};
+    bool success = UARTxDriver.receive(arr, sizeof(arr));
+
+    ASSERT_FALSE(success);
+}
+
 TEST(UartInterfaceTests, MockFunctionCallsTransmitPollForPollIOType){
     MockUartInterface uart;
     UartDriver UARTxDriver;
@@ -80,7 +163,6 @@ TEST(UartInterfaceTests, MockFunctionCallsTransmitPollForPollIOType){
 
     UART_HandleTypeDef UARTx = {0};
     UARTxDriver.setUartPtr(&UARTx);
-
     UARTxDriver.setIOType(UART::IO_Type::POLL);
 
     EXPECT_CALL(uart, transmitPoll(_, _, _)).Times(1).WillOnce(Return(HAL_OK));
