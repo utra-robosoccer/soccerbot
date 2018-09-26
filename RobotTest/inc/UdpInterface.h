@@ -5,7 +5,6 @@
   * @brief   Defines an abstract interface of UDP networking functions, to be implemented and extended as needed, e.g. by hardware-facing classes, test frameworks.
   *
   * @defgroup Header
-  * @defgroup udp_interface
   * @{
   *****************************************************************************
   */
