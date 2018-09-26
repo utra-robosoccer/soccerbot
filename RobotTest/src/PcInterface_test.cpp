@@ -221,4 +221,4 @@ TEST(PcInterfaceTests, MemberFunctionSetUdpInterfaceFailsOnNotUDP) {
 /**
  * @}
  */
-/* end - pc_interface_tests */
+/* end - pc_interface_test */
