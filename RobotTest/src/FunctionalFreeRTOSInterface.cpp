@@ -13,7 +13,15 @@
   */
 
 
+
+
+#include <cstdint>
+#include "cmsis_os.h"
+
 #include "FunctionalFreeRTOSInterface.h"
+
+
+
 
 namespace Functional_FreeRTOS_Interface{
 
@@ -83,7 +91,7 @@ osStatus FunctionalFreeRTOSInterface::OS_osDelay (
     return osDelay(millisec);
 }
 
-} // end namespace Functional_FreeRTOS_Interface{
+} // end namespace Functional_FreeRTOS_Interface
 
 /**
  * @}
