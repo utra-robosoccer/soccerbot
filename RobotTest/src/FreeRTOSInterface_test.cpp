@@ -18,10 +18,6 @@
 
 #include "FreeRTOSInterface.h"
 
-using ::testing::Return;
-using ::testing::_;
-
-
 namespace {
 
 class MockFreeRTOSInterface : public FreeRTOS_Interface::FreeRTOSInterface {
