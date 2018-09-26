@@ -13,17 +13,19 @@
   */
 
 
-#include <FunctionalFreeRTOSInterface.h>
+#include "FunctionalFreeRTOSInterface.h"
 
-Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::FunctionalFreeRTOSInterface() {
+namespace Functional_FreeRTOS_Interface{
 
-}
-
-Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::~FunctionalFreeRTOSInterface() {
+FunctionalFreeRTOSInterface::FunctionalFreeRTOSInterface() {
 
 }
 
-BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xTaskNotifyWait(
+FunctionalFreeRTOSInterface::~FunctionalFreeRTOSInterface() {
+
+}
+
+BaseType_t FunctionalFreeRTOSInterface::OS_xTaskNotifyWait(
         uint32_t ulBitsToClearOnEntry,
         uint32_t ulBitsToClearOnExit,
         uint32_t *pulNotificationValue,
@@ -33,7 +35,7 @@ BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xTaskNoti
     return xTaskNotifyWait(ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait);
 }
 
-BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xQueueReceive(
+BaseType_t FunctionalFreeRTOSInterface::OS_xQueueReceive(
         QueueHandle_t xQueue,
         void *pvBuffer,
         TickType_t xTicksToWait
@@ -42,7 +44,7 @@ BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xQueueRec
     return xQueueReceive(xQueue, pvBuffer, xTicksToWait);
 }
 
-BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xQueueSend(
+BaseType_t FunctionalFreeRTOSInterface::OS_xQueueSend(
         QueueHandle_t xQueue,
         const void * pvItemToQueue,
         TickType_t xTicksToWait
@@ -51,7 +53,7 @@ BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xQueueSen
     return xQueueSend(xQueue, pvItemToQueue, xTicksToWait);
 }
 
-BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xSemaphoreTake(
+BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreTake(
         SemaphoreHandle_t xSemaphore,
         TickType_t xBlockTime
         ){
@@ -59,14 +61,14 @@ BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xSemaphor
     return xSemaphoreTake(xSemaphore, xBlockTime);
 }
 
-BaseType_t Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::xSemaphoreGive(
+BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreGive(
         SemaphoreHandle_t xSemaphore
         ){
 
     return xSemaphoreGive(xSemaphore);
 }
 
-void Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::vTaskDelayUntil(
+void FunctionalFreeRTOSInterface::OS_vTaskDelayUntil(
         TickType_t * const pxPreviousWakeTime,
         const TickType_t xTimeIncrement
         ){
@@ -74,12 +76,14 @@ void Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::vTaskDelayUntil
     vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
 }
 
-osStatus Functional_FreeRTOS_Interface::FunctionalFreeRTOSInterface::osDelay (
+osStatus FunctionalFreeRTOSInterface::OS_osDelay (
         uint32_t millisec
         ){
 
     return osDelay(millisec);
 }
+
+} // end namespace Functional_FreeRTOS_Interface{
 
 /**
  * @}
