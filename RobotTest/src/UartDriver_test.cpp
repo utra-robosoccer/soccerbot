@@ -340,7 +340,6 @@ TEST(UartInterfaceTests, MockFunctionCallsReceiveDMAForDMAIOType){
     UARTxDriver.receive(arr, sizeof(arr));
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, PollReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     MockUartInterface uart;
     UartDriver UARTxDriver;
@@ -359,7 +358,6 @@ TEST(UartInterfaceTests, PollReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, ITReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     MockUartInterface uart;
     UartDriver UARTxDriver;
@@ -378,7 +376,6 @@ TEST(UartInterfaceTests, ITReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, DMAReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     MockUartInterface uart;
     UartDriver UARTxDriver;
@@ -397,7 +394,6 @@ TEST(UartInterfaceTests, DMAReceiveFailsAndIsAbortedWhenUartInterfaceFails){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, PollReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
@@ -418,7 +414,6 @@ TEST(UartInterfaceTests, PollReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, ITReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
@@ -439,7 +434,6 @@ TEST(UartInterfaceTests, ITReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, DMAReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
@@ -460,7 +454,6 @@ TEST(UartInterfaceTests, DMAReceiveFailsAndIsAbortedWhenOSBlockTimesOut){
     ASSERT_FALSE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, PollReceiveCanSucceed){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
@@ -480,7 +473,6 @@ TEST(UartInterfaceTests, PollReceiveCanSucceed){
     ASSERT_TRUE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, ITReceiveCanSucceed){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
@@ -500,7 +492,6 @@ TEST(UartInterfaceTests, ITReceiveCanSucceed){
     ASSERT_TRUE(success);
 }
 
-// Failing; needs OS mocks
 TEST(UartInterfaceTests, DMAReceiveCanSucceed){
     MockUartInterface uart;
     MockFreeRTOSInterface os;
