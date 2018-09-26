@@ -2,9 +2,9 @@
   *****************************************************************************
   * @file    UartInterface.h
   * @author  Tyler Gamvrelis
-  * @brief   Interface implemented by concrete & mock UART objects
   *
   * @defgroup UartInterface
+  * @brief    Interface implemented by concrete & mock UART objects
   * @{
   *****************************************************************************
   */
@@ -28,8 +28,22 @@
 
 
 
-/******************************* uart_interface ******************************/
-namespace uart{
+/******************************* UartInterface *******************************/
+namespace UART{
+// Types & enums
+// ----------------------------------------------------------------------------
+enum class IO_Type{
+    POLL
+#ifdef THREADED
+    ,
+    IT,
+    DMA
+#endif
+};
+
+
+
+
 // Classes and structs
 // ----------------------------------------------------------------------------
 // TODO: could make these functions return err_t
@@ -62,7 +76,7 @@ public:
 #endif
 };
 
-} // end namespace uart
+} // end namespace UART
 
 
 
