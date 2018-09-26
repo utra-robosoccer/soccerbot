@@ -13,8 +13,8 @@
 
 
 
-#ifndef __TEMPLATE_CPP_H__
-#define __TEMPLATE_CPP_H__
+#ifndef TEMPLATE_CPP_H
+#define TEMPLATE_CPP_H
 
 
 
@@ -72,4 +72,4 @@ namespace module_name{
  */
 /* end - Header */
 
-#endif /* __TEMPLATE_CPP_H__ */
+#endif /* TEMPLATE_CPP_H */
