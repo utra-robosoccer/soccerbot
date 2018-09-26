@@ -16,8 +16,8 @@
 
 
 /******************** Define to prevent recursive inclusion ******************/
-#ifndef EXAMPLE_H
-#define EXAMPLE_H
+#ifndef __EXAMPLE_H__
+#define __EXAMPLE_H__
 
 
 
@@ -71,4 +71,4 @@ uint32_t Days_WeeksToDays(uint32_t weeks);
  */
 /* end ModuleNameHeader */
 
-#endif /* EXAMPLE_H */
+#endif /* __EXAMPLE_H__ */

@@ -13,8 +13,8 @@
 
 
 
-#ifndef TEMPLATE_H
-#define TEMPLATE_H
+#ifndef __TEMPLATE_H__
+#define __TEMPLATE_H__
 
 
 
@@ -60,4 +60,4 @@
  */
 /* end TODO -- module name defined on line 7 */
 
-#endif /* TEMPLATE_H */
+#endif /* __TEMPLATE_H__ */
