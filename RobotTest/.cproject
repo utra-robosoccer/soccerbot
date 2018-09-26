@@ -65,7 +65,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -129,7 +129,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
