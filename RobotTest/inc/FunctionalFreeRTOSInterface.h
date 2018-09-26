@@ -11,55 +11,65 @@
   *****************************************************************************
   */
 
-#ifndef __FUNCTIONAL_FREERTOS_INTERFACE_H__
-#define __FUNCTIONAL_FREERTOS_INTERFACE_H__
+
+
+
+#ifndef FUNCTIONAL_FREERTOS_INTERFACE_H
+#define FUNCTIONAL_FREERTOS_INTERFACE_H
+
+
+
 
 /********************************* Includes **********************************/
 // Headers for FreeRTOS, such as task.h, are all included within cmsis_os.h
-#include <cmsis_os.h>
-#include <FreeRTOSInterface.h>
+#include "FreeRTOSInterface.h"
 
+
+
+
+/************************ Functional_FreeRTOS_Interface **********************/
 namespace Functional_FreeRTOS_Interface {
-
+// Classes and structs
+// ----------------------------------------------------------------------------
 class FunctionalFreeRTOSInterface : public FreeRTOS_Interface::FreeRTOSInterface{
 public:
-    FunctionalFreeRTOSInterface() {}
-    ~FunctionalFreeRTOSInterface() {}
+    FunctionalFreeRTOSInterface();
+    ~FunctionalFreeRTOSInterface();
 
-    BaseType_t xTaskNotifyWait(
+    BaseType_t OS_xTaskNotifyWait(
             uint32_t ulBitsToClearOnEntry,
             uint32_t ulBitsToClearOnExit,
             uint32_t *pulNotificationValue,
             TickType_t xTicksToWait
             );
 
-    BaseType_t xQueueReceive(
+    BaseType_t OS_xQueueReceive(
             QueueHandle_t xQueue,
             void *pvBuffer,
             TickType_t xTicksToWait
             );
 
-    BaseType_t xQueueSend(
+    BaseType_t OS_xQueueSend(
             QueueHandle_t xQueue,
             const void * pvItemToQueue,
             TickType_t xTicksToWait
             );
 
-    BaseType_t xSemaphoreTake(
+    BaseType_t OS_xSemaphoreTake(
             SemaphoreHandle_t xSemaphore,
             TickType_t xBlockTime
             );
 
-    BaseType_t xSemaphoreGive(
+    BaseType_t OS_xSemaphoreGive(
             SemaphoreHandle_t xSemaphore
             );
 
-    void vTaskDelayUntil(
+    void OS_vTaskDelayUntil(
             TickType_t * const pxPreviousWakeTime,
             const TickType_t xTimeIncrement
             );
 
-    osStatus osDelay (
+    osStatus OS_osDelay (
             uint32_t millisec
             );
 };
@@ -71,4 +81,4 @@ public:
  */
 /* end - Header */
 
-#endif /* __FUNCTIONAL_FREERTOS_INTERFACE_H__ */
+#endif /* FUNCTIONAL_FREERTOS_INTERFACE_H */
