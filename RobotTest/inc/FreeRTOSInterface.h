@@ -11,8 +11,8 @@
   */
 
 
-#ifndef __FREERTOS_INTERFACE_H__
-#define __FREERTOS_INTERFACE_H__
+#ifndef FREERTOS_INTERFACE_H__
+#define FREERTOS_INTERFACE_H__
 
 #include <cstdint>
 
@@ -68,4 +68,4 @@ public:
  */
 /* end - Header */
 
-#endif /* __FREERTOS_INTERFACE_H__ */
+#endif /* FREERTOS_INTERFACE_H__ */
