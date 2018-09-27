@@ -48,19 +48,63 @@ public:
     UartDriver();
     ~UartDriver() {}
 
+    /**
+     * @brief Initializes the handle to the low-level hardware routines, and
+     *        associates a particular UART module on the board with this driver
+     * @param hw_if Pointer to the hardware-facing object handling the
+     *        low-level UART routines
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
+     */
     void setUartInterface(UartInterface* hw_if, UART_HandleTypeDef* uartHandlePtr);
 #ifdef THREADED
+    /**
+     * @brief Initializes the handle to the system calls provided by the OS
+     * @param os_if Pointer to the object handling the calls to the OS
+     */
     void setOSInterface(FreeRTOSInterface* os_if);
 #endif
+    /**
+     * @brief Configures the driver to use a particular IO type. This is used
+     *        to change it between using blocking and asynchronous transfers
+     * @param io_type The type of IO to be used by the driver
+     */
     void setIOType(IO_Type io_type);
+
+    /**
+     * @brief  Returns the IO type currently being used by the driver
+     * @return The IO type currently being used by the driver
+     */
     IO_Type getIOType(void) const;
 
-    // TODO: if we have an err_t type, we could use it to indicate both HAL and
-    // FreeRTOS issues, so here that would be good as the ideal return type would
-    // be able to indicate both an issue with the hardware AND with the OS (e.g. a
-    // timeout). Also, I think these functions can be const-qualified
-    bool transmit(uint8_t* arrTransmit, size_t numBytes);
-    bool receive(uint8_t* arrReceive, size_t numBytes);
+    /**
+     * @brief  Instruct the driver to transmit data from the UART that was set
+     *         by setUartInterface, and using the IO transfer mode set by
+     *         setIOType.
+     * @param  arrTransmit The byte array to be sent
+     * @param  numBytes The number of bytes to be sent from the array
+     * @return True if the transfer succeeded, otherwise false
+     * @note   Some reasons why false may be returned include:
+     *           -# Incomplete initialization of the driver
+     *           -# UartInterface returns an error upon requesting a transfer
+     *           -# OS block time is exceeded
+     */
+    bool transmit(uint8_t* arrTransmit, size_t numBytes) const;
+
+    /**
+     * @brief  Instruct the driver to receive data from the UART that was set
+     *         by setUartInterface, and using the IO transfer mode set by
+     *         setIOType.
+     * @param  arrReceive The byte array which the received data is to be
+     *         written into
+     * @param  numBytes The number of bytes to be received
+     * @return True if the transfer succeeded, otherwise false
+     * @note   Some reasons why false may be returned include:
+     *           -# Incomplete initialization of the driver
+     *           -# UartInterface returns an error upon requesting a transfer
+     *           -# OS block time is exceeded
+     */
+    bool receive(uint8_t* arrReceive, size_t numBytes) const;
 
 private:
     /**

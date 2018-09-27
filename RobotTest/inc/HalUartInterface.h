@@ -3,7 +3,8 @@
   * @file    HalUartInterface.h
   * @author  Tyler Gamvrelis
   *
-  * @defgroup HalUartInterface
+  * @defgroup   HalUartInterface
+  * @addtogroup UART
   * @{
   *****************************************************************************
   */
