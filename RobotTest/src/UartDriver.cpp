@@ -2,11 +2,11 @@
   *****************************************************************************
   * @file    UartDriver.cpp
   * @author  Tyler Gamvrelis
-  * @brief   TODO -- brief description of file
   *
-  * @defgroup UartDriver
-  * @brief    Manages the usage of a particular UART, taking care of hardware-
-  *           level calls, OS-level calls, and passing up statuses
+  * @defgroup   UartDriver
+  * @addtogroup UART
+  * @brief      Manages the usage of a particular UART, taking care of
+  *             hardware-level calls, OS-level calls, and passing up statuses
   * @{
   *****************************************************************************
   */
@@ -61,7 +61,7 @@ IO_Type UartDriver::getIOType(void) const{
 bool UartDriver::transmit(
     uint8_t* arrTransmit,
     size_t numBytes
-)
+) const
 {
 #if defined(THREADED)
     uint32_t notification = 0;
@@ -112,7 +112,7 @@ bool UartDriver::transmit(
 bool UartDriver::receive(
     uint8_t* arrReceive,
     size_t numBytes
-)
+) const
 {
 #if defined(THREADED)
     uint32_t notification = 0;

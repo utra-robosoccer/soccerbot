@@ -3,8 +3,9 @@
   * @file    UartInterface.h
   * @author  Tyler Gamvrelis
   *
-  * @defgroup UartInterface
-  * @brief    Interface implemented by concrete & mock UART objects
+  * @defgroup   UartInterface
+  * @addtogroup UART
+  * @brief      Interface implemented by concrete & mock UART objects
   * @{
   *****************************************************************************
   */
@@ -98,9 +99,8 @@ public:
 
 #ifdef THREADED
     /**
-     * @brief   Interrupt-driven transmission
-     * @details Can only be stopped upon the transfer finishing or calling
-     *          abortTransmit()
+     * @brief   Interrupt-driven transmission. Can only be stopped upon the
+     *          transfer finishing or by calling abortTransmit()
      * @param   arrTransmit Pointer to the array of bytes to be sent
      * @param   numBytes The number of bytes to be sent
      * @return  0 if success, otherwise an error code from 1 to 3
@@ -108,9 +108,8 @@ public:
     virtual HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes) = 0;
 
     /**
-     * @brief   Interrupt-driven reception
-     * @details Can only be stopped upon the transfer finishing or calling
-     *          abortReceive()
+     * @brief   Interrupt-driven reception. Can only be stopped upon the
+     *          transfer finishing or by calling abortTransmit()
      * @param   arrTransmit Pointer to the receive buffer
      * @param   numBytes The number of bytes to be received
      * @return  0 if success, otherwise an error code from 1 to 3
@@ -118,9 +117,8 @@ public:
     virtual HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes) = 0;
 
     /**
-     * @brief   DMA-driven transmission
-     * @details Can only be stopped upon the transfer finishing or calling
-     *          abortTransmit()
+     * @brief   DMA-driven transmission. Can only be stopped upon the transfer
+     *          finishing or by calling abortTransmit()
      * @param   arrTransmit Pointer to the array of bytes to be sent
      * @param   numBytes The number of bytes to be sent
      * @return  0 if success, otherwise an error code from 1 to 3
@@ -128,9 +126,8 @@ public:
     virtual HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes) = 0;
 
     /**
-     * @brief   DMA-driven reception
-     * @details Can only be stopped upon the transfer finishing or calling
-     *          abortReceive()
+     * @brief   DMA-driven reception. Can only be stopped upon the transfer
+     *          finishing or by calling abortTransmit()
      * @param   arrTransmit Pointer to the receive buffer
      * @param   numBytes The number of bytes to be received
      * @return  0 if success, otherwise an error code from 1 to 3
