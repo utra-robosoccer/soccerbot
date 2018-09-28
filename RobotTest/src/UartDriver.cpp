@@ -77,7 +77,7 @@ bool UartDriver::transmit(
                     if(hw_if->transmitDMA(arrTransmit, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
                             retval = true;
                         }
                     }
@@ -88,7 +88,7 @@ bool UartDriver::transmit(
                     if(hw_if->transmitIT(arrTransmit, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
                             retval = true;
                         }
                     }
@@ -128,7 +128,7 @@ bool UartDriver::receive(
                     if(hw_if->receiveDMA(arrReceive, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
                             retval = true;
                         }
                     }
@@ -139,7 +139,7 @@ bool UartDriver::receive(
                     if(hw_if->receiveIT(arrReceive, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && !CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
                             retval = true;
                         }
                     }

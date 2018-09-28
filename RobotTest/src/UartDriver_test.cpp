@@ -25,6 +25,8 @@
 #include <gmock/gmock.h>
 
 
+using ::testing::DoAll;
+using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
@@ -349,7 +351,8 @@ TEST(UartInterfaceTests, ITTransmitCanSucceed){
     UARTxDriver.setIOType(UART::IO_Type::IT);
 
     EXPECT_CALL(uart, transmitIT(_, _)).Times(1).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_)).Times(1).WillOnce(Return(pdTRUE));
+    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_))
+        .Times(1).WillOnce(DoAll(SetArgPointee<2>(NOTIFIED_FROM_TX_ISR),Return(pdTRUE)));
 
     uint8_t arr[10] = {0};
     bool success = UARTxDriver.transmit(arr, sizeof(arr));
@@ -368,7 +371,8 @@ TEST(UartInterfaceTests, DMATransmitCanSucceed){
     UARTxDriver.setIOType(UART::IO_Type::DMA);
 
     EXPECT_CALL(uart, transmitDMA(_, _)).Times(1).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_)).Times(1).WillOnce(Return(pdTRUE));
+    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_))
+        .Times(1).WillOnce(DoAll(SetArgPointee<2>(NOTIFIED_FROM_TX_ISR),Return(pdTRUE)));
 
     uint8_t arr[10] = {0};
     bool success = UARTxDriver.transmit(arr, sizeof(arr));
@@ -550,7 +554,8 @@ TEST(UartInterfaceTests, ITReceiveCanSucceed){
     UARTxDriver.setIOType(UART::IO_Type::IT);
 
     EXPECT_CALL(uart, receiveIT(_, _)).Times(1).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_)).Times(1).WillOnce(Return(pdTRUE));
+    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_))
+        .Times(1).WillOnce(DoAll(SetArgPointee<2>(NOTIFIED_FROM_RX_ISR),Return(pdTRUE)));
 
     uint8_t arr[10] = {0};
     bool success = UARTxDriver.receive(arr, sizeof(arr));
@@ -569,7 +574,8 @@ TEST(UartInterfaceTests, DMAReceiveCanSucceed){
     UARTxDriver.setIOType(UART::IO_Type::DMA);
 
     EXPECT_CALL(uart, receiveDMA(_, _)).Times(1).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_)).Times(1).WillOnce(Return(pdTRUE));
+    EXPECT_CALL(os, OS_xTaskNotifyWait(_,_,_,_))
+        .Times(1).WillOnce(DoAll(SetArgPointee<2>(NOTIFIED_FROM_RX_ISR),Return(pdTRUE)));
 
     uint8_t arr[10] = {0};
     bool success = UARTxDriver.receive(arr, sizeof(arr));
