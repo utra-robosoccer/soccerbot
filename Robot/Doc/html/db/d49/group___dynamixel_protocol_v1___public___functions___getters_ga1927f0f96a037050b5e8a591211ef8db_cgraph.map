@@ -1,8 +1,0 @@
-<map id="Dynamixel_IsJointMode" name="Dynamixel_IsJointMode">
-<area shape="rect" id="node2" href="$d3/d8e/group___dynamixel_protocol_v1___i_o___header.html#gae0e18eec55a4c1c3600dc8406d21a9c9" title="Reads data back from the motor passed in by reference. " alt="" coords="212,81,371,108"/>
-<area shape="rect" id="node3" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="419,5,623,32"/>
-<area shape="rect" id="node4" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga382d4b7e36403cf22d25bab6da922e3c" title="Set data direction pin high (TX) " alt="" coords="672,81,815,108"/>
-<area shape="rect" id="node5" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga0f95e7eccf85e619ab94db363a625e2d" title="Generic function for transmitting data. Supports all IO modes. " alt="" coords="428,107,613,133"/>
-<area shape="rect" id="node6" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga938ca4408ac778bae74ced15c09cd0ca" title="Generic function for receiving data. Supports all IO modes. " alt="" coords="431,157,611,184"/>
-<area shape="rect" id="node7" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#gac5fd2275878faa4f159d3404bc6c3083" title="Set data direction pin low (RX) " alt="" coords="671,157,816,184"/>
-</map>

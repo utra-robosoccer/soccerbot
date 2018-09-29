@@ -29,7 +29,7 @@ extern "C" {
 
 
 /********************************** Includes **********************************/
-#include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
+#include "../Drivers/Dynamixel/DynamixelProtocolV1.h"
 #include "cmsis_os.h"
 
 
@@ -37,8 +37,7 @@ extern "C" {
 
 /*********************************** Types ************************************/
 /**
- * @brief Enumerates the types of motor commands that can be sent to the UART
- *        handlers
+ * Enumerates the types of motor commands that can be sent to the UART handlers
  */
 typedef enum{
 	cmdReadPosition,    /**< Command to read motor position */
@@ -47,10 +46,10 @@ typedef enum{
 }eUARTcmd_t;
 
 /**
- * @brief The container type for motor commands. The control thread sends these
- *        to the various UART handlers through the UART queues. The container
- *        provides all the information needed to generate the appropriate motor
- *        action (reading from or writing to motor command registers)
+ * This is the container type for motor commands. The control thread sends these
+ * to the various UART handlers through the UART queues. The container provides
+ * all the information needed to generate the appropriate motor action (reading
+ * from or writing to motor command registers)
  */
 typedef struct {
 	eUARTcmd_t 					type;          /**< Indicates the type of motor
@@ -65,10 +64,10 @@ typedef struct {
 }UARTcmd_t;
 
 /**
- * @brief Enumerates the types of data that can be sent to the sensor queue.
- *        This is used so that the reader of the queue will know how to
- *        typecast the void pointer so that the data can be interpreted
- *        correctly. See TXData_t for more details
+ * Enumerates the types of data that can be sent to the sensor queue. This is
+ * used so that the reader of the queue will know how to typecast the void
+ * pointer so that the data can be interpreted correctly. See TXData_t for
+ * more details
  */
 typedef enum{
 	eMotorData,     /**< Indicates that the pointer is a

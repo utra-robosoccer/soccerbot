@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['header',['Header',['../d5/df6/group___a_x12_a_header.html',1,'']]],
-  ['header',['Header',['../d3/d8e/group___dynamixel_protocol_v1___i_o___header.html',1,'']]],
-  ['header',['Header',['../d5/d08/group___dynamixel_protocol_v1_header.html',1,'']]],
-  ['header',['Header',['../db/ddc/group___m_x28_header.html',1,'']]],
-  ['header',['Header',['../d9/dad/group___notification.html',1,'']]]
+  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___a_x12_a___interfaces.html',1,'']]],
+  ['interfaces_20for_20_20_20_20_20_20_20_20_20_20previously_2ddefined_20functions',['Interfaces for          previously-defined functions',['../group___dynamixel_protocol_v1___public___functions___interfaces.html',1,'']]],
+  ['init',['Init',['../group___init.html',1,'']]],
+  ['interfaces_20for_20previously_2ddefined_20functions',['Interfaces for previously-defined functions',['../group___m_x28___interfaces.html',1,'']]]
 ];
