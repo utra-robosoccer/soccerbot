@@ -172,7 +172,6 @@ void MPUFilter_InitAllFilters(){
  */
 void MPUFilter_FilterAngularVelocity(){
 	// TODO : add this function to a new class
-	printf("WARNING: MPUFilter_FilterAngularVelocity() not implemented!");
 //    MPUFilter_writeInputVel(&vzFilter, IMUdata->_Z_GYRO);
 //    IMUdata->_Z_GYRO = MPUFilter_readOutputVel(&vzFilter);
 //

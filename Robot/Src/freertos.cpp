@@ -853,7 +853,7 @@ void StartTxTask(void const * argument)
                 if(imuPtr == NULL){ break; }
 
                 // Copy sensor data into the IMU data section of robotState.msg
-                memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), 6 * sizeof(float));
+                memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), sizeof(IMUStruct));
 
                 // Set flag indicating IMU data has reported in
                 dataReadyFlags |= 0x80000000;
