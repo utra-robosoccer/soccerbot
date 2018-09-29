@@ -19,7 +19,6 @@ extern "C" {
 
 
 /** @brief Data structure sent from the MCU to the PC. Contains sensor data */
->>>>>>> Master
 typedef struct robot_state {
 	uint32_t start_seq; /**< Start sequence to attach to message (for data
 	                         integrity purposes)                             */

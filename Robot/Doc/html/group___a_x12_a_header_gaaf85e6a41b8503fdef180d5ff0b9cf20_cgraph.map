@@ -1,5 +1,0 @@
-<map id="AX12A_SetComplianceMargin" name="AX12A_SetComplianceMargin">
-<area shape="rect" id="node2" href="$group___a_x12_a___setters.html#gaa63744a89c07f50119d0d4f79a8345c1" title="Sets the clockwise compliance margin for the current motor. " alt="" coords="253,5,470,32"/>
-<area shape="rect" id="node4" href="$group___a_x12_a___setters.html#ga9335097bc945f1da3520d0e0d98109df" title="Sets the counter&#45;clockwise compliance margin for the current motor. " alt="" coords="248,56,475,83"/>
-<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="523,31,675,57"/>
-</map>

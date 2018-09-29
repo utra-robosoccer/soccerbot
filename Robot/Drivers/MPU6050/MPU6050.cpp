@@ -4,16 +4,10 @@
   * @author  Izaak
   * @author  Tyler
   * @author  Jenny
-<<<<<<< HEAD
-  * @brief   All functions related to the MPU6060 IMU sensor.
-  *
-  * @defgroup MPU6050
-=======
   * @brief   Implements all functions in the MPU6060 class.
   *
   * @defgroup MPU6050
   * @brief    Module for the MPU6050 IMU sensor
->>>>>>> Master
   * @{
   *****************************************************************************
   */
@@ -54,7 +48,6 @@ constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
 // not been thoroughly tested.
 //
 // Overall, use these functions with EXTREME caution.
-
 /**
   * @brief   Helper function for I2C_ClearBusyFlagErratum.
   * @param   None
@@ -263,7 +256,6 @@ void MPU6050::Read_Accelerometer_Withoffset(){
     this ->_y_Accel = -(Y_A * g / ACC_RANGE-(this ->_y_AccelOffset));
     this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
 }
-
 
 void MPU6050::Read_Accelerometer_Withoffset_IT(){
     uint8_t output_buffer[6];

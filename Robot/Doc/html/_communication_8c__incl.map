@@ -1,7 +1,0 @@
-<map id="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Communication/Communication.c" name="D:/Users/Tyler/Documents/STM/embedded/soccer&#45;embedded/Robot/Drivers/Communication/Communication.c">
-<area shape="rect" id="node2" href="$_communication_8h.html" title="Header for top&#45;level communication module. " alt="" coords="217,124,339,151"/>
-<area shape="rect" id="node6" href="$usart_8h_source.html" title="usart.h" alt="" coords="297,199,360,225"/>
-<area shape="rect" id="node9" href="$robot_state_8h.html" title="Defines the RobotState data structure used in communication with the high&#45;level software. RobotState is the data structure sent from the MCU to the PC; it contains sensor data. " alt="" coords="385,199,478,225"/>
-<area shape="rect" id="node10" href="$robot_goal_8h.html" title="Defines the RobotGoal data structure used in communication with the high&#45;level software. RobotGoal is the data structure sent from the PC to the MCU; it contains motor trajectories. " alt="" coords="503,199,592,225"/>
-<area shape="rect" id="node8" href="$main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="331,273,393,300"/>
-</map>
