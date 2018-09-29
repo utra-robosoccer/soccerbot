@@ -23,6 +23,7 @@
 /********************************* Includes **********************************/
 // Headers for FreeRTOS, such as task.h, are all included within cmsis_os.h
 #include "FreeRTOSInterface.h"
+using namespace FreeRTOS_Interface;
 
 
 
@@ -31,47 +32,47 @@
 namespace Functional_FreeRTOS_Interface {
 // Classes and structs
 // ----------------------------------------------------------------------------
-class FunctionalFreeRTOSInterface : public FreeRTOS_Interface::FreeRTOSInterface{
+class FunctionalFreeRTOSInterface : public FreeRTOSInterface{
 public:
     FunctionalFreeRTOSInterface();
     ~FunctionalFreeRTOSInterface();
 
     BaseType_t OS_xTaskNotifyWait(
-            uint32_t ulBitsToClearOnEntry,
-            uint32_t ulBitsToClearOnExit,
-            uint32_t *pulNotificationValue,
-            TickType_t xTicksToWait
-            );
+        uint32_t ulBitsToClearOnEntry,
+        uint32_t ulBitsToClearOnExit,
+        uint32_t *pulNotificationValue,
+        TickType_t xTicksToWait
+    ) override final;
 
     BaseType_t OS_xQueueReceive(
-            QueueHandle_t xQueue,
-            void *pvBuffer,
-            TickType_t xTicksToWait
-            );
+        QueueHandle_t xQueue,
+        void *pvBuffer,
+        TickType_t xTicksToWait
+    ) override final;
 
     BaseType_t OS_xQueueSend(
-            QueueHandle_t xQueue,
-            const void * pvItemToQueue,
-            TickType_t xTicksToWait
-            );
+        QueueHandle_t xQueue,
+        const void * pvItemToQueue,
+        TickType_t xTicksToWait
+    ) override final;
 
     BaseType_t OS_xSemaphoreTake(
-            SemaphoreHandle_t xSemaphore,
-            TickType_t xBlockTime
-            );
+        SemaphoreHandle_t xSemaphore,
+        TickType_t xBlockTime
+    ) override final;
 
     BaseType_t OS_xSemaphoreGive(
-            SemaphoreHandle_t xSemaphore
-            );
+        SemaphoreHandle_t xSemaphore
+    ) override final;
 
     void OS_vTaskDelayUntil(
-            TickType_t * const pxPreviousWakeTime,
-            const TickType_t xTimeIncrement
-            );
+        TickType_t * const pxPreviousWakeTime,
+        const TickType_t xTimeIncrement
+    ) override final;
 
     osStatus OS_osDelay (
-            uint32_t millisec
-            );
+        uint32_t millisec
+    ) override final;
 };
 
 } // end namespace Functional_FreeRTOS_Interface
