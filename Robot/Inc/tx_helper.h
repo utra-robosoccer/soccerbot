@@ -9,10 +9,6 @@
 #ifndef TX_HELPER_H
 #define TX_HELPER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /********************************* Includes **********************************/
 #include <stdint.h>
 
@@ -21,9 +17,5 @@ void shiftNotificationMask(void);
 void copySensorDataToSend(void);
 void transmitStatusFromPC(void);
 void waitForNotificationTX(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* TX_HELPER_H */
