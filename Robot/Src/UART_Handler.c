@@ -25,7 +25,7 @@
  * Sensor data queue. This module writes current positions of motors into this
  * queue
  */
-extern osMessageQId UART_rxHandle;
+extern osMessageQId TXQueueHandle;
 
 
 
@@ -45,7 +45,7 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
         case cmdReadPosition:
             Dynamixel_GetPosition(cmdPtr->motorHandle);
             DataToSend->pData = cmdPtr->motorHandle;
-            xQueueSend(UART_rxHandle, DataToSend, 0);
+            xQueueSend(TXQueueHandle, DataToSend, 0);
             break;
         case cmdWritePosition:
             Dynamixel_SetGoalPosition(cmdPtr->motorHandle, cmdPtr->value);

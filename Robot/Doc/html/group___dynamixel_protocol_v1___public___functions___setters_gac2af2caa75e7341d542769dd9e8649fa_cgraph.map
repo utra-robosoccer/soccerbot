@@ -1,5 +1,0 @@
-<map id="Dynamixel_SetGoalVelocity" name="Dynamixel_SetGoalVelocity">
-<area shape="rect" id="node2" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="237,31,389,57"/>
-<area shape="rect" id="node3" href="$group___dynamixel_protocol_v1___private___functions___computation.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="437,5,641,32"/>
-<area shape="rect" id="node4" href="$group___dynamixel_protocol_v1___public___functions___l_l___t_x___r_x.html#ga382d4b7e36403cf22d25bab6da922e3c" title="Set data direction pin high (TX) " alt="" coords="468,56,611,83"/>
-</map>

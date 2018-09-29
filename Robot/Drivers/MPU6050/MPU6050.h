@@ -4,12 +4,7 @@
   * @author  Izaak
   * @author  Jenny
   * @author  Tyler
-<<<<<<< HEAD
-  * @brief   Header code for the MPU6050 library, including the struct in which
-  *          accelerometer and gyroscope data are stored.
-=======
   * @brief   Header code for the MPU6050 class
->>>>>>> Master
   *
   *@defgroup  Header
   *@ingroup   MPU6050
@@ -59,6 +54,14 @@ public:
      * @return None
      */
     MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle);
+
+    /**
+      * @brief   This function is used to initialize all aspects of the IMU
+      *          which require I/O
+      * @param   lpf The uint8_t lpf setting being used
+      * @return  None
+      */
+    void init(uint8_t lpf);
 
     /**
       * @brief   Reads the gyroscope with offsets without interrupts

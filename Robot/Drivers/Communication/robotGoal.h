@@ -19,7 +19,8 @@ extern "C" {
 
 
 /**
- * Data structure sent from the PC to the MCU. Contains "goal" motor positions
+ * @brief Data structure sent from the PC to the MCU. Contains "goal" motor
+ *        positions
  */
 typedef struct robot_goal{
 	uint32_t id;        /**< Message ID */
