@@ -38,41 +38,41 @@ public:
     virtual ~FreeRTOSInterface() {}
 
     virtual BaseType_t OS_xTaskNotifyWait(
-                uint32_t ulBitsToClearOnEntry,
-                uint32_t ulBitsToClearOnExit,
-                uint32_t *pulNotificationValue,
-                TickType_t xTicksToWait
-            ) = 0;
+        uint32_t ulBitsToClearOnEntry,
+        uint32_t ulBitsToClearOnExit,
+        uint32_t *pulNotificationValue,
+        TickType_t xTicksToWait
+    ) = 0;
 
     virtual BaseType_t OS_xQueueReceive(
-            QueueHandle_t xQueue,
-            void *pvBuffer,
-            TickType_t xTicksToWait
-            ) = 0;
+        QueueHandle_t xQueue,
+        void *pvBuffer,
+        TickType_t xTicksToWait
+    ) = 0;
 
     virtual BaseType_t OS_xQueueSend(
-            QueueHandle_t xQueue,
-            const void * pvItemToQueue,
-            TickType_t xTicksToWait
-            ) = 0;
+        QueueHandle_t xQueue,
+        const void * pvItemToQueue,
+        TickType_t xTicksToWait
+    ) = 0;
 
     virtual BaseType_t OS_xSemaphoreTake(
-            SemaphoreHandle_t xSemaphore,
-            TickType_t xBlockTime
-            ) = 0;
+        SemaphoreHandle_t xSemaphore,
+        TickType_t xBlockTime
+    ) = 0;
 
     virtual BaseType_t OS_xSemaphoreGive(
-            SemaphoreHandle_t xSemaphore
-            ) = 0;
+        SemaphoreHandle_t xSemaphore
+    ) = 0;
 
     virtual void OS_vTaskDelayUntil(
-            TickType_t * const pxPreviousWakeTime,
-            const TickType_t xTimeIncrement
-            ) = 0;
+        TickType_t * const pxPreviousWakeTime,
+        const TickType_t xTimeIncrement
+    ) = 0;
 
     virtual osStatus OS_osDelay (
-            uint32_t millisec
-            ) = 0;
+        uint32_t millisec
+    ) = 0;
 };
 
 } // end namespace FreeRTOS_Interface
