@@ -10,42 +10,15 @@
 
 
 /********************************* Includes ************************************/
-#include "../h/MX28.h"
+#include "MX28.h"
 
 
 
 
 /********************************* Externs *************************************/
+extern void Dynamixel_DataWriter(Dynamixel_HandleTypeDef* hdynamixel, uint8_t* args, uint8_t numArgs);
 extern void Dynamixel_SetCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float minAngle); // (EEPROM)
 extern void Dynamixel_SetCCWAngleLimit(Dynamixel_HandleTypeDef* hdynamixel, float maxAngle); // (EEPROM)
-
-
-
-
-/********************************** Macros ***********************************/
-// Register addresses
-#define MX28_REG_MULTI_TURN_OFFSET              0x14    /**< Register to fine-tune "0" position */
-#define MX28_REG_RESOLUTION_DIVIDER             0x16    /**< Register to change how many bits of resolution are used */
-#define MX28_REG_D_GAIN                         0x1A    /**< Derivative gain register */
-#define MX28_REG_I_GAIN                         0x1B    /**< Integral gain register */
-#define MX28_REG_P_GAIN                         0x1C    /**< Proportional gain register */
-#define MX28_REG_GOAL_ACCELERATION              0x49    /**< Goal acceleration register */
-
-
-
-
-/********************************* Constants *********************************/
-// Value limit definitions
-const uint8_t MX28_MAX_VELOCITY = 117; /**< Maximum angular velocity (RPM) */
-
-// Default register value definitions
-const uint8_t MX28_DEFAULT_BAUD_RATE              =   0x22;    /**< Default baud rate register setting */
-const uint16_t MX28_DEFAULT_CCW_ANGLE_LIMIT       =   0x0FFF;  /**< Default counter-clockwise angle limit */
-const uint8_t MX28_DEFAULT_HIGHEST_VOLTAGE_LIMIT  =   0xA0;    /**< Default permitted maximum voltage (0xA0 = 160 -> 16.0 V) */
-const uint8_t MX28_DEFAULT_D_GAIN                 =   0x08;    /**< Default derivative gain parameter value */
-const uint8_t MX28_DEFAULT_I_GAIN                 =   0x00;    /**< Default integral gain parameter value */
-const uint8_t MX28_DEFAULT_P_GAIN                 =   0x08;    /**< Default proportional gain parameter value */
-const uint16_t MX28_DEFAULT_PUNCH                 =   0x0000;  /**< Default punch */
 
 
 

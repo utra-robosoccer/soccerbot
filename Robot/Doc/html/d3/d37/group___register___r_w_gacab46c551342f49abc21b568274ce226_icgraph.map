@@ -1,4 +1,0 @@
-<map id="MPU6050_READ_REG" name="MPU6050_READ_REG">
-<area shape="rect" id="node2" href="$d2/d4c/group___init.html#ga321abd28200eb3361e57943172791c8c" title="This function allows you to set the value of the LPF manually. Please see https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM&#45;MPU&#45;6000A.pdf for descriptions of what each value does. " alt="" coords="211,5,345,32"/>
-<area shape="rect" id="node3" href="$d0/d55/group___threads.html#gae9a7f9b9094fd560310f92b214f2c829" title="This function is executed in the context of the commandTask thread. It initializes all data structure..." alt="" coords="393,5,531,32"/>
-</map>
