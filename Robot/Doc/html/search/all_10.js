@@ -30,8 +30,8 @@ var searchData=
   ['robot_5fgoal',['robot_goal',['../d4/d35/structrobot__goal.html',1,'']]],
   ['robot_5fstate',['robot_state',['../d5/de7/structrobot__state.html',1,'']]],
   ['robot_5fstate_5fmpu_5fdata_5foffset',['ROBOT_STATE_MPU_DATA_OFFSET',['../d2/dea/robot_state_8h.html#a5e8c90e0a2de956501bf71d9dcd7a6fc',1,'robotState.h']]],
-  ['robotgoal',['robotGoal',['../d2/d99/group___communication.html#ga26279af13a015bc5d25fdff1ed1202fc',1,'robotGoal():&#160;Communication.c'],['../d2/d6a/robot_goal_8h.html#a875a3c769f36f0b48a4a8bd2e3298a85',1,'RobotGoal():&#160;robotGoal.h']]],
+  ['robotgoal',['robotGoal',['../d2/d99/group___communication.html#ga26279af13a015bc5d25fdff1ed1202fc',1,'robotGoal():&#160;Communication.c'],['../d3/d73/group___communication_header.html#ga26279af13a015bc5d25fdff1ed1202fc',1,'robotGoal():&#160;Communication.c'],['../d2/d6a/robot_goal_8h.html#a875a3c769f36f0b48a4a8bd2e3298a85',1,'RobotGoal():&#160;robotGoal.h']]],
   ['robotgoal_2eh',['robotGoal.h',['../d2/d6a/robot_goal_8h.html',1,'']]],
-  ['robotstate',['robotState',['../d2/d99/group___communication.html#gac506966b1e773431c55862462858c0a1',1,'robotState():&#160;Communication.c'],['../d2/dea/robot_state_8h.html#a59798180728614da42300fc426db191e',1,'RobotState():&#160;robotState.h']]],
+  ['robotstate',['robotState',['../d2/d99/group___communication.html#gac506966b1e773431c55862462858c0a1',1,'robotState():&#160;Communication.c'],['../d3/d73/group___communication_header.html#gac506966b1e773431c55862462858c0a1',1,'robotState():&#160;Communication.c'],['../d2/dea/robot_state_8h.html#a59798180728614da42300fc426db191e',1,'RobotState():&#160;robotState.h']]],
   ['robotstate_2eh',['robotState.h',['../d2/dea/robot_state_8h.html',1,'']]]
 ];

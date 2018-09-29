@@ -144,7 +144,7 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor11, Motor12, Motor13, Motor14, Motor15,
 						Motor16, Motor17, Motor18;
 
-MPU6050_HandleTypeDef IMUdata;
+IMUnamespace::MPU6050 IMUdata (1, &hi2c1);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -395,11 +395,7 @@ void StartCommandTask(void const * argument)
 
     Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
 
-    // IMU initialization
-    IMUdata._I2C_Handle = &hi2c1;
-    MPU6050_init(&IMUdata);
-    MPU6050_manually_set_offsets(&IMUdata);
-    MPU6050_set_LPF(&IMUdata, 6); // 5 Hz bandwidth
+    IMUdata.init(6);// 5 Hz bandwidth
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -658,47 +654,50 @@ void StartUART6Task(void const * argument)
   */
 void StartIMUTask(void const * argument)
 {
-    // Here, we use task notifications to block this task from running until a notification
-    // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+  /* USER CODE BEGIN StartIMUTask */
+  // Here, we use task notifications to block this task from running until a notification
+  // is received. This allows one-time setup to complete in a low-priority task.
+  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-    /* Infinite loop */
-    TXData_t dataToSend;
-    dataToSend.eDataType = eIMUData;
+  TXData_t dataToSend;
+  dataToSend.eDataType = eIMUData;
 
-    TickType_t xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
 
-    const TickType_t IMU_CYCLE_TIME_MS = 2;
-    uint8_t i = 0;
+  const TickType_t IMU_CYCLE_TIME_MS = 2;
+  uint8_t i = 0;
+  IMUStruct IMUStruct;
 
-    MPUFilter_InitAllFilters();
+  MPUFilter_InitAllFilters();
 
-    for(;;)
-    {
-        // Service this thread every 2 ms for a 500 Hz sample rate
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+  for(;;)
+  {
+      // Service this thread every 2 ms for a 500 Hz sample rate
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-        MPU6050_Read_Accelerometer_Withoffset_IT(&IMUdata); // Also updates pitch and roll
+      IMUdata.Read_Accelerometer_Withoffset_IT(); // Also updates pitch and roll
 
-        // Gyroscope data is much more volatile/sensitive to changes than
-        // acceleration data. To compensate, we feed in samples to the filter
-        // slower. Good DSP practise? Not sure. To compensate for the high
-        // delays, we also use a filter with fewer taps than the acceleration
-        // filters. Ideally: we would sample faster to reduce aliasing, then
-        // use a filter with a smaller cutoff frequency. However, the filter
-        // designer we are using does not allow us to generate such filters in
-        // the free version, so this is the best we can do unless we use other
-        // software.
-        if (i % 16 == 0) {
-            MPU6050_Read_Gyroscope_Withoffset_IT(&IMUdata);
-            MPUFilter_FilterAngularVelocity(&IMUdata);
-        }
-        i++;
-
-        dataToSend.pData = &IMUdata;
-        xQueueSend(TXQueueHandle, &dataToSend, 0);
-    }
+      // Gyroscope data is much more volatile/sensitive to changes than
+      // acceleration data. To compensate, we feed in samples to the filter
+      // slower. Good DSP practise? Not sure. To compensate for the high
+      // delays, we also use a filter with fewer taps than the acceleration
+      // filters. Ideally: we would sample faster to reduce aliasing, then
+      // use a filter with a smaller cutoff frequency. However, the filter
+      // designer we are using does not allow us to generate such filters in
+      // the free version, so this is the best we can do unless we use other
+      // software.
+      if (i % 16 == 0) {
+          IMUdata.Read_Gyroscope_Withoffset_IT();
+// TODO: convert the MPUFilter_FilterAngularVelocity function
+          //MPUFilter_FilterAngularVelocity();
+      }
+      i++;
+      IMUdata.Fill_Struct(&IMUStruct);
+      dataToSend.pData = &IMUStruct;
+      xQueueSend(TXQueueHandle, &dataToSend, 0);
+  }
+  /* USER CODE END StartIMUTask */
 }
 
 /**
