@@ -9,10 +9,6 @@
 #ifndef RX_HELPER_H
 #define RX_HELPER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /********************************* Includes **********************************/
 #include <stdint.h>
 
@@ -22,9 +18,5 @@ void initiateDMATransfer(void);
 void updateStatusToPC(void);
 void waitForNotificationRX(void);
 void initializeVars(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* RX_HELPER_H */

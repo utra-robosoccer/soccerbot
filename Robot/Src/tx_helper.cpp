@@ -23,8 +23,8 @@ extern osThreadId TXQueueHandle;
 
 /***************************** Private Variables *****************************/
 static TXData_t receivedData;
-static Dynamixel_HandleTypeDef* motorPtr = NULL;
-static MPU6050_HandleTypeDef* imuPtr = NULL;
+static Dynamixel_HandleTypeDef* motorPtr = nullptr;
+static IMUStruct* imuPtr = nullptr;
 static char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
 
 static HAL_StatusTypeDef status;
@@ -93,14 +93,12 @@ void copySensorDataToSend(void) {
             }
             break;
         case eIMUData:
-            imuPtr = (MPU6050_HandleTypeDef*) receivedData.pData;
+            imuPtr = (IMUStruct*)receivedData.pData;
 
-            if (imuPtr == NULL) {
-                break;
-            }
+            if(imuPtr == NULL){ break; }
 
             // Copy sensor data into the IMU data section of robotState.msg
-            memcpy(pIMUXGyroData, (&imuPtr->_X_GYRO), 6 * sizeof(float));
+            memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), sizeof(IMUStruct));
 
             // Set flag indicating IMU data has reported in
             dataReadyFlags |= 0x80000000;
