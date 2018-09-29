@@ -76,6 +76,8 @@
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
+#include "rx_helper.h"
+#include "tx_helper.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -710,90 +712,14 @@ void StartIMUTask(void const * argument)
   */
 void StartRxTask(void const * argument)
 {
-    uint8_t robotGoalData[sizeof(RobotGoal)];
-    uint8_t *robotGoalDataPtr;
-    uint8_t buffRx[92];
-    uint8_t startSeqCount;
-    uint8_t totalBytesRead;
-
-    // Receiving
-    robotGoal.id = 0;
-    robotGoalDataPtr = robotGoalData;
-    startSeqCount = 0;
-    totalBytesRead = 0;
-
-    // Sending
-    robotState.id = 0;
-    robotState.start_seq = UINT32_MAX;
-    robotState.end_seq = 0;
-
+    initializeVars();
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    initiateDMATransfer();
 
-    HAL_StatusTypeDef status;
-
-    uint32_t notification;
-
-    HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
-
-    for (;;)
-    {
-        // Wait until notified from ISR. Clear no bits on entry in case the notification
-        // comes before this statement is executed (which is rather unlikely as long as
-        // this task has the highest priority, but overall this is a better decision in
-        // case priorities are changed in the future and someone forgets about this.
-        do{
-            xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
-        }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
-        do{
-            // This do-while loop with the mutex inside of it makes calls to the UART module
-            // responsible for PC communication atomic. This attempts to solve the following
-            // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-            // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-            // returns immediately when it detects that the uart module is already locked. Then
-            // the RX thread blocks itself and never wakes up since a RX transfer was never
-            // initialized.
-            xSemaphoreTake(PCUARTHandle, 1);
-            status = HAL_UART_Receive_DMA(&huart5, (uint8_t*)buffRx, sizeof(buffRx));
-            xSemaphoreGive(PCUARTHandle);
-        }while(status != HAL_OK);
-
-        for (uint8_t i = 0; i < sizeof(buffRx); i++) {
-            if (startSeqCount == 4) {
-                // This control block is entered when the header sequence of
-                // 0xFFFFFFFF has been received; thus we know the data we
-                // receive will be in tact
-
-                *robotGoalDataPtr = buffRx[i];
-                robotGoalDataPtr++;
-                totalBytesRead++;
-
-                if (totalBytesRead == sizeof(RobotGoal)) {
-                    // If, after the last couple of receive interrupts, we have
-                    // received sizeof(RobotGoal) bytes, then we copy the data
-                    // buffer into the robotGoal structure and wake the control
-                    // thread to distribute states to each actuator
-                    memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-                    robotState.id = robotGoal.id;
-
-                    // Reset the variables to help with reception of a RobotGoal
-                    robotGoalDataPtr = robotGoalData;
-                    startSeqCount = 0;
-                    totalBytesRead = 0;
-
-                    xTaskNotify(CommandTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake control task
-                    xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits); // Wake MPU task
-                    continue;
-                }
-            }else{
-                // This control block is used to verify that the data header is in tact
-                if (buffRx[i] == 0xFF) {
-                    startSeqCount++;
-                } else {
-                    startSeqCount = 0;
-                }
-            }
-        }
+    for (;;) {
+        waitForNotificationRX();
+        updateStatusToPC();
+        receiveDataBuffer();
     }
 }
 
@@ -812,76 +738,13 @@ void StartRxTask(void const * argument)
 void StartTxTask(void const * argument)
 {
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-
-    TXData_t receivedData;
-    Dynamixel_HandleTypeDef* motorPtr = NULL;
-    IMUStruct* imuPtr = NULL;
-    char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
-
-    HAL_StatusTypeDef status;
-    uint32_t notification;
-    uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
-
-    uint32_t NOTIFICATION_MASK = 0x80000000;
-    for(uint8_t i = 1; i <= 12; i++){
-        NOTIFICATION_MASK |= (1 << i);
-    }
+    shiftNotificationMask();
 
     for(;;)
     {
-        while((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK){
-            while(xQueueReceive(TXQueueHandle, &receivedData, portMAX_DELAY) != pdTRUE);
-
-            switch(receivedData.eDataType){
-            case eMotorData:
-                motorPtr = (Dynamixel_HandleTypeDef*)receivedData.pData;
-
-                if(motorPtr == NULL){ break; }
-
-                // Validate data and store it in robotState
-                if(motorPtr->_ID <= NUM_MOTORS){
-                    // Copy sensor data for this motor into its section of robotState.msg
-                    memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)], &(motorPtr->_lastPosition), sizeof(float));
-
-                    // Set flag indicating the motor with this id has reported in with position data
-                    dataReadyFlags |= (1 << motorPtr->_ID);
-                }
-                break;
-            case eIMUData:
-                imuPtr = (IMUStruct*)receivedData.pData;
-
-                if(imuPtr == NULL){ break; }
-
-                // Copy sensor data into the IMU data section of robotState.msg
-                memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), sizeof(IMUStruct));
-
-                // Set flag indicating IMU data has reported in
-                dataReadyFlags |= 0x80000000;
-                break;
-            default:
-                break;
-            }
-        }
-        dataReadyFlags = 0; // Clear all flags
-
-        do{
-            // This do-while loop with the mutex inside of it makes calls to the UART module
-            // responsible for PC communication atomic. This attempts to solve the following
-            // scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
-            // when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
-            // returns immediately when it detects that the uart module is already locked. Then
-            // the RX thread blocks itself and never wakes up since a RX transfer was never
-            // initialized.
-            xSemaphoreTake(PCUARTHandle, 1);
-            status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*)&robotState, sizeof(RobotState));
-            xSemaphoreGive(PCUARTHandle);
-        }while(status != HAL_OK);
-
-        // Wait until notified from ISR. Clear no bits on entry in case the notification
-        // came while a higher priority task was executing.
-        do{
-            xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
-        }while((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
+        copySensorDataToSend();
+        transmitStatusFromPC();
+        waitForNotificationTX();
     }
 }
 
