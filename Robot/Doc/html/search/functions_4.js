@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['main',['main',['../d0/d29/main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main.c']]],
   ['mpu6050_5finit',['MPU6050_init',['../d2/d4c/group___init.html#ga3cf74abb0c6d7d97f578bcb742a704a2',1,'MPU6050_init(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c'],['../d2/d4c/group___init.html#ga3cf74abb0c6d7d97f578bcb742a704a2',1,'MPU6050_init(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c']]],
   ['mpu6050_5fmanually_5fset_5foffsets',['MPU6050_manually_set_offsets',['../d2/d4c/group___init.html#ga81e3804d58deb9dc212008fb5196c15c',1,'MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c'],['../d2/d4c/group___init.html#ga81e3804d58deb9dc212008fb5196c15c',1,'MPU6050_manually_set_offsets(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c']]],
   ['mpu6050_5fread_5faccelerometer_5fwithoffset',['MPU6050_Read_Accelerometer_Withoffset',['../d6/d67/group___accelerometer.html#ga4c2d8f15dc8945177a87c32601d8d06a',1,'MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c'],['../d6/d67/group___accelerometer.html#ga4c2d8f15dc8945177a87c32601d8d06a',1,'MPU6050_Read_Accelerometer_Withoffset(MPU6050_HandleTypeDef *sMPU6050):&#160;MPU6050.c']]],

@@ -24,14 +24,7 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "Robot", "index.html", [
-    [ "Welcome", "index.html", [
-      [ "Introduction", "index.html#intro_sec", null ],
-      [ "High-level Description", "index.html#desc", [
-        [ "Dataflow", "index.html#desc_dataflow", null ],
-        [ "Actuators", "index.html#desc_actuators", null ],
-        [ "Sensors", "index.html#desc_sensors", null ]
-      ] ]
-    ] ],
+    [ "Welcome!", "index.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -59,10 +52,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d5/d08/group___dynamixel_protocol_v1_header.html#gabccfff965b8862b0bc7cd5733e25f98a",
-"d8/d4c/freertos_8c.html#aa424f698debd93286e6ecf733affd673",
-"dd/d37/_m_p_u6050_8h.html#a2ec4ac3fb609fb44febcccb136689656",
-"globals_t.html"
+"d5/d9c/_notification_8h.html",
+"d9/dad/group___notification.html#ga5dbaf00a681489785e8c6024ba552b9a",
+"dd/d37/_m_p_u6050_8h.html#acd4c638a6f677a42ecb9a3d7612d087a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
