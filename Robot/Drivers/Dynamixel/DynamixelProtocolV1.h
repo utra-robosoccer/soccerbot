@@ -18,7 +18,6 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
 #ifndef __DYNAMIXEL_PROTOCOL_V1_H__
 #define __DYNAMIXEL_PROTOCOL_V1_H__
 
