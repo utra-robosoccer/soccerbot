@@ -11,7 +11,15 @@
 #ifndef ROBOTSTATE_H_
 #define ROBOTSTATE_H_
 
-/** Data structure sent from the MCU to the PC. Contains sensor data */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+
+/** @brief Data structure sent from the MCU to the PC. Contains sensor data */
+>>>>>>> Master
 typedef struct robot_state {
 	uint32_t start_seq; /**< Start sequence to attach to message (for data
 	                         integrity purposes)                             */
@@ -24,5 +32,9 @@ typedef struct robot_state {
 
 #define ROBOT_STATE_MPU_DATA_OFFSET 48 /**< Buffer offset at which MPU6050 data
                                             is inserted                       */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ROBOTSTATE_H_ */
