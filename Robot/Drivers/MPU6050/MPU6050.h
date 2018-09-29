@@ -35,6 +35,14 @@
 
 /********************************* MPU6050 ***********************************/
 namespace IMUnamespace {
+// Constants
+// ----------------------------------------------------------------------------
+constexpr float g = 9.81;
+
+// Unit coefficient constants
+constexpr uint8_t IMU_GY_RANGE = 131; /**< divide by this to get degrees per second */
+constexpr float ACC_RANGE = 16384.0;  /**< divide to get in units of g */
+
 // Classes and structs
 // ----------------------------------------------------------------------------
 class MPU6050 {
@@ -144,9 +152,19 @@ private:
       * @param   SensorNum The integer ID of the sensor being used
       * @return  None
       */
-    void Manually_Set_Offsets(int SensorNum);
+    inline void Manually_Set_Offsets(int SensorNum){
+        if (SensorNum==1){
+            this -> _x_AccelOffset= (-714.25 * g / ACC_RANGE);
+            this -> _y_AccelOffset= (-767.5 * g / ACC_RANGE);
+            this -> _z_AccelOffset= ((16324 * g / ACC_RANGE) - 9.81);
 
-    uint8_t                 _Sample_Rate;
+            this -> _x_GyroOffset= (float)240/IMU_GY_RANGE;
+            this -> _y_GyroOffset= (float)-760/IMU_GY_RANGE;
+            this -> _z_GyroOffset= (float)-130/IMU_GY_RANGE;
+        }
+    }
+
+    uint16_t                _Sample_Rate;
     I2C_HandleTypeDef*      _I2C_Handle;
     float                   _x_Gyro;            /**< x-axis angular velocity read from sensor*/
     float                   _y_Gyro;            /**< y-axis angular velocity read from sensor*/

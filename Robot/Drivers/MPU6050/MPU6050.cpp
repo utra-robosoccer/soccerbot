@@ -24,17 +24,11 @@
 namespace {
 // Constants
 // ----------------------------------------------------------------------------
-constexpr float g = 9.81;
-
 constexpr uint8_t MPU6050_ADDR=            0b11010000;  // ID
 constexpr uint8_t MPU6050_RA_GYRO_CONFIG=      0x1B;
 constexpr uint8_t MPU6050_RA_ACCEL_CONFIG=     0x1C;
 constexpr uint8_t MPU6050_RA_I2C_MST_CTRL=     0x24;
 constexpr uint8_t MPU6050_RA_SMPLRT_DIV=       0x19;
-
-// Unit coefficient constants
-constexpr uint8_t IMU_GY_RANGE=                131; // divide by this to get degrees per second
-constexpr float ACC_RANGE =                    16384.0; //divide to get in units of g
 
 // Output
 constexpr uint8_t MPU6050_RA_ACCEL_XOUT_H=     0x3B;
@@ -180,18 +174,24 @@ using IMUnamespace::MPU6050;
 // Public
 // ----------------------------------------------------------------------------
 MPU6050::MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle){
-    this->Manually_Set_Offsets(SensorNum);
-
     // Initialize all the variables
-    this -> _Sample_Rate = 8000/ (1+ MPU6050_CLOCK_DIV_296);
+    this -> _Sample_Rate = (uint16_t)(8000 / (1 + MPU6050_CLOCK_DIV_296));
     this -> _x_Accel = 0;
     this -> _y_Accel = 0;
     this -> _z_Accel = 0;
     this -> _x_Gyro = 0;
     this -> _y_Gyro = 0;
     this -> _z_Gyro = 0;
+    this -> _x_AccelOffset = 0;
+    this -> _y_AccelOffset = 0;
+    this -> _z_AccelOffset = 0;
+    this -> _x_GyroOffset = 0;
+    this -> _y_GyroOffset = 0;
+    this -> _z_GyroOffset = 0;
     this -> received_byte = 0;
     this -> _I2C_Handle = I2CHandle;
+
+    this->Manually_Set_Offsets(SensorNum);
 }
 
 void MPU6050::init(uint8_t lpf){
@@ -247,7 +247,7 @@ void MPU6050::Read_Gyroscope_Withoffset_IT(){
 
 void MPU6050::Read_Accelerometer_Withoffset(){
     uint8_t output_buffer[6];
-    MPU6050:Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+    MPU6050::Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
     int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
@@ -345,19 +345,6 @@ int MPU6050::Set_LPF(uint8_t lpf){
     int status=MPU6050::Write_Reg(26, current_value);
     return status;
 }
-
-void MPU6050::Manually_Set_Offsets(int SensorNum){
-    if (SensorNum==1){
-        this -> _x_AccelOffset= (-714.25 * g / ACC_RANGE);
-        this -> _y_AccelOffset= (-767.5 * g / ACC_RANGE);
-        this -> _z_AccelOffset= ((16324 * g / ACC_RANGE) - 9.81);
-
-        this -> _x_GyroOffset= (float)240/IMU_GY_RANGE;
-        this -> _y_GyroOffset= (float)-760/IMU_GY_RANGE;
-        this -> _z_GyroOffset= (float)-130/IMU_GY_RANGE;
-    }
-}
-
 
 /**
  * @}
