@@ -77,16 +77,16 @@ typedef enum{
 }eTXData_t;
 
 /**
- * This is the data structure which represents the data of the IMU, which is sent
- * in queues between tasks.
+ * @brief The data structure which represents the data of the IMU, which is sent
+ * in queues between tasks
  */
 typedef struct{
-    float                   _x_Gyro;            /*!< x-axis angular velocity read from sensor*/
-    float                   _y_Gyro;            /*!< y-axis angular velocity read from sensor*/
-    float                   _z_Gyro;            /*!< z-axis angular velocity read from sensor*/
-    float                   _x_Accel;           /*!< x-axis acceleration read from sensor*/
-    float                   _y_Accel;           /*!< y-axis acceleration read from sensor*/
-    float                   _z_Accel;           /*!< z-axis acceleration read from sensor*/
+    float                   _x_Gyro;  /**< x-axis angular velocity read from sensor */
+    float                   _y_Gyro;  /**< y-axis angular velocity read from sensor */
+    float                   _z_Gyro;  /**< z-axis angular velocity read from sensor */
+    float                   _x_Accel; /**< x-axis acceleration read from sensor     */
+    float                   _y_Accel; /**< y-axis acceleration read from sensor     */
+    float                   _z_Accel; /**< z-axis acceleration read from sensor     */
 }IMUStruct;
 
 /**
