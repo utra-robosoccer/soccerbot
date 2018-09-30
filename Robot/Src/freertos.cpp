@@ -58,6 +58,7 @@
  * @author  Gokul
  * @author  Tyler
  * @author  Izaak
+ * @author  Hannah
  *
  * @defgroup FreeRTOS FreeRTOS
  * @brief    Everything related to FreeRTOS
@@ -77,7 +78,6 @@
 #include "../Drivers/Communication/Communication.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
-
 #include "imu_helper.h"
 /* USER CODE END Includes */
 
@@ -694,7 +694,7 @@ void StartIMUTask(void const * argument)
       if (i % 16 == 0) {
           IMUdata.Read_Gyroscope_Withoffset_IT();
           IMUdata.Fill_Struct(&IMUStruct);
-          Helpers::filterAngularVelocity(IMUdata);
+          Helpers::filterAngularVelocity(IMUStruct);
       }
       else{
           IMUdata.Fill_Struct(&IMUStruct);
