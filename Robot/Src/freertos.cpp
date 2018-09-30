@@ -72,12 +72,13 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "../Drivers/MPU6050/MPU6050.h"
-#include "../Drivers/MPU6050/MPUFilter.h"
 #include "UART_Handler.h"
 #include "../Drivers/Dynamixel/ProtocolV1/DynamixelProtocolV1.h"
 #include "../Drivers/Communication/Communication.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
+
+#include "imu_helper.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -436,41 +437,41 @@ void StartCommandTask(void const * argument)
         // thread that's listening will receive it and send it to the motor
         for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
             switch(i){
-                case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
+                case MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
                     break;
-                case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
+                case MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
                     break;
-                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
+                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
                     break;
-                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
+                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
                     break;
-                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
+                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
                     break;
-                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
+                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
                     break;
                 default:
                     break;
@@ -667,9 +668,11 @@ void StartIMUTask(void const * argument)
 
   const TickType_t IMU_CYCLE_TIME_MS = 2;
   uint8_t i = 0;
-  IMUStruct IMUStruct;
 
-  MPUFilter_InitAllFilters();
+  IMUStruct IMUStruct;
+  dataToSend.pData = &IMUStruct;
+
+  Helpers::initAngularVelocityFilters();
 
   for(;;)
   {
@@ -687,14 +690,16 @@ void StartIMUTask(void const * argument)
       // designer we are using does not allow us to generate such filters in
       // the free version, so this is the best we can do unless we use other
       // software.
+      ++i;
       if (i % 16 == 0) {
           IMUdata.Read_Gyroscope_Withoffset_IT();
-// TODO: convert the MPUFilter_FilterAngularVelocity function
-          //MPUFilter_FilterAngularVelocity();
+          IMUdata.Fill_Struct(&IMUStruct);
+          Helpers::filterAngularVelocity(IMUdata);
       }
-      i++;
-      IMUdata.Fill_Struct(&IMUStruct);
-      dataToSend.pData = &IMUStruct;
+      else{
+          IMUdata.Fill_Struct(&IMUStruct);
+      }
+
       xQueueSend(TXQueueHandle, &dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
