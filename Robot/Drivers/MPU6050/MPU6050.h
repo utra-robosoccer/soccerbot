@@ -15,8 +15,8 @@
 
 
 
-#ifndef MPU6050_H_
-#define MPU6050_H_
+#ifndef MPU6050_H
+#define MPU6050_H
 
 
 
@@ -29,7 +29,6 @@
 #include "gpio.h"
 
 #include "Notification.h"
-#include "MPUFilter.h"
 #include "UART_Handler.h"
 
 
@@ -191,4 +190,4 @@ private:
  */
 /* end - Header */
 
-#endif /* MPU6050_H_ */
+#endif /* MPU6050_H */
