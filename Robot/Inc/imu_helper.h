@@ -42,7 +42,7 @@ void initAngularVelocityFilters();
  *        read and stored in the MPU6050 object where it was previously read
  * @param IMUdata Reference to MPU6050 object
  */
-void filterAngularVelocity(MPU6050& imu);
+void filterAngularVelocity(IMUStruct& imu);
 
 } // end namespace Helpers
 

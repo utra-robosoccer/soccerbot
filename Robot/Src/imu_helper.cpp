@@ -81,9 +81,9 @@ void initAngularVelocityFilters(){
 }
 
 void filterAngularVelocity(IMUStruct& imu){
-    velocityFilters[VFilter::VX].update(&imu._x_Gyro, &imu._x_Gyro, 1);
-    velocityFilters[VFilter::VY].update(&imu._y_Gyro, &imu._y_Gyro, 1);
-    velocityFilters[VFilter::VZ].update(&imu._z_Gyro, &imu._z_Gyro, 1);
+    velocityFilters[static_cast<int>(VFilter::VX)].update(&imu._x_Gyro, &imu._x_Gyro, 1);
+    velocityFilters[static_cast<int>(VFilter::VY)].update(&imu._y_Gyro, &imu._y_Gyro, 1);
+    velocityFilters[static_cast<int>(VFilter::VZ)].update(&imu._z_Gyro, &imu._z_Gyro, 1);
 }
 
 } // end namespace Helpers
