@@ -4,10 +4,9 @@
  * @author  Hannah
  * @brief   Helper file for the function StartRXTask in freertos.cpp
  *
- * @defgroup RX_Helpers RX Helpers
+ * @defgroup Helpers
+ * @ingroup  Threads
  * @brief Helper functions to help the read-ability of freertos.cpp
- * @addtogroup Helpers
- * @ingroup Threads
  * @{
  *****************************************************************************
  */
@@ -48,7 +47,7 @@ static uint32_t notification;
 /*****************************************************************************/
 /**
  * @defgroup RxHelperFunctions StartRxTask Helper Functions
- * @ingroup RX_Helpers
+ * @ingroup Helpers
  * @brief Helper functions for StartRxTask()
  *
  * # StartRXTask Helper Functions #
@@ -153,7 +152,7 @@ void receiveDataBuffer(void) {
                 totalBytesRead = 0;
 
                 xTaskNotify(CommandTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake control task
-                xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake MPU task
+                xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake IMU task
                 continue;
             }
         } else {
@@ -176,5 +175,5 @@ void receiveDataBuffer(void) {
 /**
  * @}
  */
-/* end - RX_Helpers */
+/* end - Helpers */
 

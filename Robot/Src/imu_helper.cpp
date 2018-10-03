@@ -3,7 +3,7 @@
   * @file    imu_helper.cpp
   * @author  Tyler Gamvrelis
   *
-  * @defgroup IMU_Helper IMU Helper
+  * @addtogroup IMU_Helper IMU Helper
   * @addtogroup Helpers
   * @{
   *****************************************************************************
@@ -48,22 +48,23 @@ static constexpr uint32_t velBlockSize = 1;
 
 
 
-// Variables
-// ----------------------------------------------------------------------------
-/** @brief Angular velocity filters along x-, y-, and z-axes */
-static dsp::fir_f32<velNumTaps, velBlockSize> velocityFilters[3];
-
-
-
-
 // Classes and structs
 // ----------------------------------------------------------------------------
 /** @brief Indexes into the velocityFilters array */
 enum class VFilter : uint8_t{
     VX = 0,
-    VY = 1,
-    VZ = 2
+    VY,
+    VZ,
+    NUM_VFILTERS
 };
+
+
+
+
+// Variables
+// ----------------------------------------------------------------------------
+/** @brief Angular velocity filters along x-, y-, and z-axes */
+static dsp::fir_f32<velNumTaps, velBlockSize> velocityFilters[static_cast<int>(VFilter::NUM_VFILTERS)];
 
 } // end anonymous namespace
 
