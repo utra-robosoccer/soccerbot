@@ -3,10 +3,6 @@
  * @file    tx_helper.c
  * @author  Hannah
  * @brief   Helper file for the function StartTXTask() in freertos.cpp
- *
- * @defgroup TX_Helpers TX Helpers
- * @addtogroup Helpers
- * @{
  *****************************************************************************
  */
 
@@ -151,4 +147,4 @@ void waitForNotificationTX(void) {
 /**
  * @}
  */
-/* end - TX_Helpers */
+/* end - TxHelperFunctions */

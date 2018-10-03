@@ -5,6 +5,7 @@
   * @brief   Helper file for the IMU thread in the main program flow
   *
   * @defgroup Header
+  * @addtogroup Helpers
   * @{
   *****************************************************************************
   */
@@ -19,7 +20,6 @@
 
 
 /********************************* Includes **********************************/
-//#include "MPU6050.h"
 #include "../Drivers/MPU6050/MPU6050.h"
 
 using namespace IMUnamespace;
