@@ -18,20 +18,11 @@
 
 
 
-/********************************** Macros ***********************************/
-// Flag for whether or not to use the non-blocking driver features supported
-// by the OS (FreeRTOS). This is resolved at compile time
-#define THREADED 1
-
-
-
-
 /********************************* Includes **********************************/
 #include "UartInterface.h"
 
-#ifdef THREADED
+#if defined(THREADED)
 #include "cmsis_os.h"
-#include "Notification.h"
 #include "FreeRTOSInterface.h"
 using namespace FreeRTOS_Interface;
 #endif
@@ -63,7 +54,7 @@ public:
      *        the configuration information for the desired UART module
      */
     void setUartInterface(UartInterface* hw_if, UART_HandleTypeDef* uartHandlePtr);
-#ifdef THREADED
+#if defined(THREADED)
     /**
      * @brief Initializes the handle to the system calls provided by the OS
      * @param os_if Pointer to the object handling the calls to the OS
@@ -129,7 +120,7 @@ private:
      *        pointer has been set, otherwise false
      */
     bool hw_is_initialized = false;
-#ifdef THREADED
+#if defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
     static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
 
@@ -142,7 +133,7 @@ private:
     /** @brief Pointer to the object handling system calls to the OS */
     FreeRTOSInterface* os_if = nullptr;
 #endif
-#ifndef THREADED
+#if !defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
     constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
 #endif

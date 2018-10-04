@@ -17,6 +17,10 @@
 /********************************* Includes **********************************/
 #include "UartDriver.h"
 
+#if defined(THREADED)
+#include "Notification.h"
+#endif
+
 
 
 
@@ -44,7 +48,7 @@ void UartDriver::setUartInterface(
     }
 }
 
-#ifdef THREADED
+#if defined(THREADED)
 void UartDriver::setOSInterface(FreeRTOSInterface* os_if){
     this->os_if = os_if;
 }

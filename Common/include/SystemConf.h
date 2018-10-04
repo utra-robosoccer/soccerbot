@@ -27,6 +27,10 @@
 #error "invalid build configuration! Must define STM32F446xx or STM32F767xx"
 #endif
 
+// Flag for whether or not to use the non-blocking driver features supported
+// by the OS (FreeRTOS). This is resolved at compile time
+#define THREADED
+
 /**
  * @}
  */

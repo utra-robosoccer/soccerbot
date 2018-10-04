@@ -19,9 +19,6 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
-
-#include "usart.h"
 #include "UartInterface.h"
 
 
@@ -54,7 +51,7 @@ public:
         uint32_t timeout
     ) override final;
 
-#ifdef THREADED
+#if defined(THREADED)
     HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes) override final;
     HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes) override final;
     HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes) override final;

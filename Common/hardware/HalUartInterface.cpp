@@ -66,7 +66,7 @@ HAL_StatusTypeDef HalUartInterface::receivePoll(
     return status;
 }
 
-#ifdef THREADED
+#if defined(THREADED)
 HAL_StatusTypeDef HalUartInterface::transmitIT(uint8_t* arrTransmit, size_t numBytes){
     HAL_StatusTypeDef status =  HAL_UART_Transmit_IT(
         uartHandlePtr,
@@ -106,6 +106,11 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(uint8_t* arrReceive, size_t numBy
 
     return status;
 }
+
+// extern declaration needed here for F767 build
+// TODO: clean this up when refactoring Dynamixel
+extern HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart);
+extern HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
 
 void HalUartInterface::abortTransmit(){
     HAL_UART_AbortTransmit(uartHandlePtr);
