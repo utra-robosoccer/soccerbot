@@ -20,12 +20,9 @@
 
 
 /********************************* Includes **********************************/
-#ifndef STM32F446xx
-#define STM32F446xx
-#endif
-#include <stm32f446xx.h>
-
 #include <cstdint>
+
+#include "SystemConf.h"
 #include "cmsis_os.h"
 
 

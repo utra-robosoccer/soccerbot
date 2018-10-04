@@ -21,11 +21,7 @@
 
 /********************************* Includes **********************************/
 #include <cstdint>
-
-#ifndef STM32F446xx
-#define STM32F446xx
-#endif
-#include <stm32f446xx.h>
+#include "SystemConf.h"
 #include "usart.h"
 
 
