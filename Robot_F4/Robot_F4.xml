@@ -9,8 +9,8 @@
 <!ATTLIST board id CDATA #REQUIRED>
 ]>
 <targetDefinitions>
-  <board id="Robot">
-    <name>Robot</name>
+  <board id="Robot_F4">
+    <name>Robot_F4</name>
     <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
     <mcuId>stm32f446retx</mcuId>
