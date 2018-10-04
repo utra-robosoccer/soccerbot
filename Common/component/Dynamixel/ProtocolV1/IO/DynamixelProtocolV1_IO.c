@@ -27,14 +27,10 @@
 #include "../../h/DynamixelProtocolV1_IO.h"
 #include "../../h/Dynamixel_Data.h"
 
-/**
- * @brief If defined, this enables non-blocking IO via task notifications.
- *        Otherwise, only blocking (polled) IO will be compiled
- */
-#define THREADED
+#include "SystemConf.h"
 
 #if defined(THREADED)
-#include <Notification.h>
+#include "Notification.h"
 #include "cmsis_os.h"
 #endif
 

@@ -37,7 +37,7 @@ namespace UART{
  */
 enum class IO_Type{
     POLL /**< Polled IO          */
-#ifdef THREADED
+#if defined(THREADED)
     ,
     IT, /**< Interrupt-driven IO */
     DMA /**< DMA-driven IO       */
@@ -95,7 +95,7 @@ public:
         uint32_t timeout
     ) = 0;
 
-#ifdef THREADED
+#if defined(THREADED)
     /**
      * @brief   Interrupt-driven transmission. Can only be stopped upon the
      *          transfer finishing or by calling abortTransmit()
