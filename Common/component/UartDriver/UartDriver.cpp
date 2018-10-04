@@ -3,10 +3,10 @@
   * @file    UartDriver.cpp
   * @author  Tyler Gamvrelis
   *
-  * @defgroup   UartDriver
-  * @addtogroup UART
-  * @brief      Manages the usage of a particular UART, taking care of
-  *             hardware-level calls, OS-level calls, and passing up statuses
+  * @defgroup UartDriver
+  * @ingroup UART
+  * @brief Manages the usage of a particular UART, taking care of
+  *        hardware-level calls, OS-level calls, and passing up statuses
   * @{
   *****************************************************************************
   */
@@ -172,4 +172,4 @@ bool UartDriver::receive(
 /**
  * @}
  */
-/* end - module name */
+/* end - UartDriver */

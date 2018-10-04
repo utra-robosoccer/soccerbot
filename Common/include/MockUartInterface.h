@@ -4,7 +4,7 @@
   * @author  Tyler Gamvrelis
   *
   * @defgroup MockUartInterface
-  * @addtogroup Mocks
+  * @ingroup Mocks
   * @{
   *****************************************************************************
   */
@@ -33,7 +33,7 @@ namespace MOCKS{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class Mock object which implements UartInterface for unit testing purposes
+ * @class MockUartInterface Implements UartInterface for unit testing purposes
  */
 class MockUartInterface : public UartInterface{
 public:

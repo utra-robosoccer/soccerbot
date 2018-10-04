@@ -3,9 +3,9 @@
   * @file    UartInterface.h
   * @author  Tyler Gamvrelis
   *
-  * @defgroup   UartInterface
-  * @addtogroup UART
-  * @brief      Interface implemented by concrete & mock UART objects
+  * @defgroup UartInterface
+  * @ingroup UART
+  * @brief Interface implemented by concrete & mock UART objects
   * @{
   *****************************************************************************
   */
@@ -51,10 +51,10 @@ enum class IO_Type{
 // ----------------------------------------------------------------------------
 // TODO: could make these functions return err_t
 /**
- * @class Abstract class defining the interface that a hardware-facing UART
- *        object must have. This object takes care of directly interfacing
- *        with the hardware as it is instructed, without knowledge of the
- *        application logic
+ * @class UartInterface Abstract class defining the interface that a
+ *        hardware-facing UART object must have. This object takes care of
+ *        directly interfacing with the hardware as it is instructed, without
+ *        knowledge of the application logic
  */
 class UartInterface{
 public:
