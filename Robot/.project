@@ -25,4 +25,21 @@
 		<nature>fr.ac6.mcu.ide.core.MCUProjectNature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>app</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/app</locationURI>
+		</link>
+		<link>
+			<name>component</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/component</locationURI>
+		</link>
+		<link>
+			<name>hardware</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/hardware</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

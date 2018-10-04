@@ -15,9 +15,9 @@
 #include "rx_helper.h"
 #include "Notification.h"
 #include "cmsis_os.h"
-#include "../Drivers/Communication/robotGoal.h"
-#include "../Drivers/Communication/robotState.h"
-#include "../Drivers/Communication/Communication.h"
+#include "robotGoal.h"
+#include "robotState.h"
+#include "Communication.h"
 #include "usart.h"
 
 /****************************** Public Variables *****************************/
