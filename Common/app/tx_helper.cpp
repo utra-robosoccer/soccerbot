@@ -10,11 +10,10 @@
 #include "tx_helper.h"
 #include "cmsis_os.h"
 #include "UART_Handler.h"
-#include "../Drivers/Dynamixel/h/Dynamixel_Types.h"
-#include "../Drivers/Communication/robotState.h"
-#include "../Drivers/Communication/Communication.h"
-#include "../Drivers/Dynamixel/h/Dynamixel_Data.h"
-#include "../Drivers/MPU6050/MPU6050.h"
+#include "DynamixelProtocolV1.h"
+#include "robotState.h"
+#include "Communication.h"
+#include "MPU6050.h"
 #include "Notification.h"
 
 /********************************** Externs ***********************************/
