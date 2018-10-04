@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Robot</name>
+	<name>Robot_F4</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -29,17 +29,23 @@
 		<link>
 			<name>app</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Common/app</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Common/app</locationURI>
 		</link>
 		<link>
 			<name>component</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Common/component</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Common/component</locationURI>
 		</link>
 		<link>
 			<name>hardware</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Common/hardware</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Common/hardware</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/soccer-embedded</value>
+		</variable>
+	</variableList>
 </projectDescription>
