@@ -23,14 +23,11 @@
 
 /********************************* Includes **********************************/
 #include <stdint.h>
-#include "i2c.h"
-#include "cmsis_os.h"
-#include "usart.h"
-#include "gpio.h"
-
 #include "Notification.h"
-#include "MPUFilter.h"
+#include "cmsis_os.h"
 #include "UART_Handler.h"
+
+
 
 
 /********************************* MPU6050 ***********************************/

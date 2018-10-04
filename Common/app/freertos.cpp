@@ -66,8 +66,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
-#include <Notification.h>
-#include "stm32f4xx_hal.h"
+#include "Notification.h"
+#include "SystemConf.h"
 #include "usart.h"
 #include "gpio.h"
 #include "i2c.h"
@@ -436,41 +436,41 @@ void StartCommandTask(void const * argument)
         // thread that's listening will receive it and send it to the motor
         for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
             switch(i){
-                case MOTOR1: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR2: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR3: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR9: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/PI + 150;
+                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR12: Motorcmd[i].value = positions[i]*180/PI + 150;
+                case MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
-                case MOTOR13: Motorcmd[i].value = positions[i]*180/PI + 150; // Left shoulder
+                case MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
                     break;
-                case MOTOR14: Motorcmd[i].value = positions[i]*180/PI + 60; // Left elbow
+                case MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
                     break;
-                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Right shoulder
+                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
                     break;
-                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/PI + 240; // Right elbow
+                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
                     break;
-                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck pan
+                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
                     break;
-                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/PI + 150; // Neck tilt
+                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
                     break;
                 default:
                     break;

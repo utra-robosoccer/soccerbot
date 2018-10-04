@@ -28,10 +28,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 
+/********************************** Macros ***********************************/
+// Note: This needs to be defined before arm_math.h is included
+#if defined(STM32F446xx)
+#define ARM_MATH_CM4     // Use ARM Cortex M4
+
+#elif defined(STM32F767xx)
+#define ARM_MATH_CM7     // Use ARM Cortex M7
+#endif
+
+
+
+
 /********************************* Includes **********************************/
 #include "MPUFilter.h"
-#include <stdlib.h> // For malloc/free
+#include <arm_math.h>   // Include CMSIS header
 #include <string.h> // For memset
+#include "MPU6050.h"
 
 
 

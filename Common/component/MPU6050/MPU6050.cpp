@@ -18,6 +18,12 @@
 /********************************* Includes **********************************/
 #include "MPU6050.h"
 #include <math.h>
+#include "i2c.h"
+#ifdef STM32F446xx
+#include "gpio.h"
+#endif
+
+
 
 
 /******************************** File-local *********************************/
@@ -40,12 +46,16 @@ constexpr uint8_t MPU6050_RA_PWR_MGMT_2=       0x6C;
 constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
 
 
+
+
 // Functions
 // ----------------------------------------------------------------------------
-
+// We only need these functions for a silicon issue that affects the F446RE and
+// not the F767ZI
+#ifdef STM32F446xx
 // Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
 // I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
-// not been thoroughly tested.
+// not been thoroughly tested, but we know it works
 //
 // Overall, use these functions with EXTREME caution.
 /**
@@ -164,6 +174,8 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
 
     HAL_I2C_Init(handler);
 }
+#endif
+
 } // end anonymous namespace
 
 
@@ -223,8 +235,10 @@ void MPU6050::Read_Gyroscope_Withoffset_IT(){
     BaseType_t status;
 
     if(MPU6050::Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+#ifdef STM32F446xx
         // Try fix for flag bit silicon bug
         generateClocks(1, 1);
+#endif
         return;
     }
 
@@ -263,9 +277,10 @@ void MPU6050::Read_Accelerometer_Withoffset_IT(){
     BaseType_t status;
 
     if(MPU6050::Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H,output_buffer) != HAL_OK){
+#ifdef STM32F446xx
         // Try fix for flag bit silicon bug
         generateClocks(1, 1);
-        return;
+#endif
     }
 
     do{
@@ -297,38 +312,51 @@ void MPU6050::Fill_Struct(IMUStruct * myStruct){
 // Private
 // ----------------------------------------------------------------------------
 int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
-    return HAL_I2C_Mem_Write(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) reg_addr,
-            1,
-            &data,
-            1,
-            10
-            );
+    return HAL_I2C_Mem_Write(
+        this -> _I2C_Handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        &data,
+        1,
+        10
+    );
 }
 
 uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
-    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) reg_addr,
-            1,
-            &(this->received_byte),
-            1,
-            1000);
+    uint8_t status = HAL_I2C_Mem_Read(
+        this -> _I2C_Handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        &(this->received_byte),
+        1,
+        1000
+    );
     return status;
 }
 
 BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
-    return HAL_I2C_Mem_Read_IT(this -> _I2C_Handle,
-            (uint16_t) MPU6050_ADDR,
-            (uint16_t) Reg_addr,
-            1,
-            sensor_buffer,
-            6);
+    return HAL_I2C_Mem_Read_IT(
+        this -> _I2C_Handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) Reg_addr,
+        1,
+        sensor_buffer,
+        6
+    );
 }
 
 uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
-    uint8_t status = HAL_I2C_Mem_Read(this -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
+    uint8_t status = HAL_I2C_Mem_Read(
+        this -> _I2C_Handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) Reg_addr,
+        1,
+        sensor_buffer,
+        6,
+        1000
+    );
     return status;
 }
 
