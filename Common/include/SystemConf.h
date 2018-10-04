@@ -2,11 +2,12 @@
   *****************************************************************************
   * @file    SystemConf.h
   * @author  Tyler
-  * @brief   Enables support for various STM32 microcontrollers by choosing
-  *          the appropriate headers to import depending on the build
-  *          variables
+  *
   *
   * @defgroup System
+  * @brief Enables support for various STM32 microcontrollers by choosing
+  *        the appropriate headers to import depending on the build
+  *        variables
   * @{
   *****************************************************************************
   */
@@ -27,8 +28,10 @@
 #error "invalid build configuration! Must define STM32F446xx or STM32F767xx"
 #endif
 
-// Flag for whether or not to use the non-blocking driver features supported
-// by the OS (FreeRTOS). This is resolved at compile time
+/**
+ * @brief Flag for whether or not to use the non-blocking driver features
+ * supported by the OS (FreeRTOS). This is resolved at compile time
+ */
 #define THREADED
 
 /**

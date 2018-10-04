@@ -4,7 +4,7 @@
   * @author  Tyler Gamvrelis
   *
   * @defgroup Header
-  * @ingroup  UartDriver
+  * @ingroup UartDriver
   * @{
   *****************************************************************************
   */
@@ -35,10 +35,10 @@ namespace UART{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class Manages the usage of a particular UART, taking care of hardware-level
- *        calls, OS-level calls, and passing up statuses. OS support is
- *        selected at compile time based on whether the THREADED macro is
- *        defined
+ * @class UartDriver Manages the usage of a particular UART, taking care of
+ *        hardware-level calls, OS-level calls, and passing up statuses. OS
+ *        support is selected at compile time based on whether the THREADED
+ *        macro is defined
  */
 class UartDriver{
 public:
