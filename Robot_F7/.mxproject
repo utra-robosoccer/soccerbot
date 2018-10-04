@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/F7_Validation/Robot/Inc
+HeaderPath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/F7_Validation/Robot_F7/Inc
 HeaderFiles=gpio.h;dma.h;FreeRTOSConfig.h;i2c.h;usart.h;stm32f7xx_it.h;stm32f7xx_hal_conf.h;main.h;
-SourcePath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/F7_Validation/Robot/Src
+SourcePath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Development/F7_Validation/Robot_F7/Src
 SourceFiles=gpio.c;dma.c;freertos.c;i2c.c;usart.c;stm32f7xx_it.c;stm32f7xx_hal_msp.c;stm32f7xx_hal_timebase_TIM.c;main.c;
 
 [PreviousLibFiles]
