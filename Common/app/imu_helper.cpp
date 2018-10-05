@@ -13,8 +13,8 @@
 
 
 /********************************* Includes **********************************/
-#include "dsp.h"
 #include "imu_helper.h"
+#include "dsp.h"
 
 
 
