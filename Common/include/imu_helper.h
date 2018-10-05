@@ -20,9 +20,7 @@
 
 
 /********************************* Includes **********************************/
-#include "../Drivers/MPU6050/MPU6050.h"
-
-using namespace IMUnamespace;
+#include "UART_Handler.h"
 
 
 

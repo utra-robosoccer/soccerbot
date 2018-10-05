@@ -72,10 +72,10 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "MPU6050.h"
-#include "MPUFilter.h"
 #include "UART_Handler.h"
 #include "DynamixelProtocolV1.h"
 #include "Communication.h"
+#include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
 /* USER CODE END Includes */
@@ -667,9 +667,11 @@ void StartIMUTask(void const * argument)
 
   const TickType_t IMU_CYCLE_TIME_MS = 2;
   uint8_t i = 0;
-  IMUStruct IMUStruct;
 
-  MPUFilter_InitAllFilters();
+  IMUStruct myIMUStruct;
+  dataToSend.pData = &myIMUStruct;
+
+  Helpers::initAngularVelocityFilters();
 
   for(;;)
   {
@@ -687,14 +689,16 @@ void StartIMUTask(void const * argument)
       // designer we are using does not allow us to generate such filters in
       // the free version, so this is the best we can do unless we use other
       // software.
+      ++i;
       if (i % 16 == 0) {
           IMUdata.Read_Gyroscope_Withoffset_IT();
-// TODO: convert the MPUFilter_FilterAngularVelocity function
-          //MPUFilter_FilterAngularVelocity();
+          IMUdata.Fill_Struct(&myIMUStruct);
+          Helpers::filterAngularVelocity(myIMUStruct);
       }
-      i++;
-      IMUdata.Fill_Struct(&IMUStruct);
-      dataToSend.pData = &IMUStruct;
+      else{
+          IMUdata.Fill_Struct(&myIMUStruct);
+      }
+
       xQueueSend(TXQueueHandle, &dataToSend, 0);
   }
   /* USER CODE END StartIMUTask */
