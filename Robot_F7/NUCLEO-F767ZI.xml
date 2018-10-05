@@ -12,8 +12,8 @@
 <targetDefinitions>
   <board id="nucleo-f767zi">
     <name>NUCLEO-F767ZI</name>
-    <dbgIF>JTAG</dbgIF>
     <dbgIF>SWD</dbgIF>
+    <dbgIF>JTAG</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
     <mcuId>stm32f767zitx</mcuId>
   </board>
