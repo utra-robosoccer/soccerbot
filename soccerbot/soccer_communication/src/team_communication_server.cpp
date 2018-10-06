@@ -1,12 +1,12 @@
 
-/* TEAM_COMMUNICATION NODE:
- * team_communication_server:
+/* soccer_communication NODE:
+ * soccer_communication_server:
  * 		receives local_model.msg sent by every robots' personal_model node.
  * 		and merge them together with the robot's local_model. then send
  * 		it as team_data.msg to team_update_model node
  * team-communciation_client:
  * 		receives local_model.msg of the robot from personal_model node.
- * 		then send it to the other robots' team_communication_server node.
+ * 		then send it to the other robots' soccer_communication_server node.
  *
  * **2
  * 		temporary using local_model.msg saved in msg directory.
@@ -25,9 +25,9 @@
 #include <iostream>
 #include <string>
 #include <std_msgs/String.h>
-#include <team_communication/local_model.h>
-#include <team_communication/team_local_model.h>
-#include <team_communication/team_data.h>
+#include <soccer_communication/local_model.h>
+#include <soccer_communication/team_local_model.h>
+#include <soccer_communication/team_data.h>
 
 #define ROBOT_ID_MIN 0
 #define PLAYER_NUM 5
@@ -36,14 +36,14 @@
 using namespace std;
 
 ros::Publisher pub;
-static team_communication::local_model team_models[PLAYER_NUM];
+static soccer_communication::local_model team_models[PLAYER_NUM];
 
-static void parser_rcv(char* buff, team_communication::team_data& msg)
+static void parser_rcv(char* buff, soccer_communication::team_data& msg)
 {
 	uint8_t robotID = 0;
 	uint8_t min = ROBOT_ID_MIN;
 	uint8_t max = PLAYER_NUM;
-	team_communication::local_model model;
+	soccer_communication::local_model model;
 	
 	if( NULL == buff )
 		goto exit;
@@ -93,14 +93,14 @@ static void models_init(void)
 int main(int argc, char **argv)
 {
 	//ros setup
-	ros::init(argc, argv, "team_communication_server");
+	ros::init(argc, argv, "soccer_communication_server");
 	ros::NodeHandle n;
 
 	//init team_models
 	models_init();
 	
 	// increase the capacity of each if needed
-	pub = n.advertise<team_communication::team_data>("team_data", 1);
+	pub = n.advertise<soccer_communication::team_data>("team_data", 1);
 	
 	
 	//broadcast server setup
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
 	while(ros::ok())
 	{
 		char buff[1024] = "\0";
-		team_communication::team_data msg;
+		soccer_communication::team_data msg;
 		unsigned int len = sizeof(my_addr);
 		
 		recvfrom(s, buff, sizeof(buff),0,(sockaddr*)&my_addr, &len);
