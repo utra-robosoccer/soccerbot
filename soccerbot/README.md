@@ -10,7 +10,9 @@ Debian packages needed for robots (sudo apt-get install)
 - python-catkin-tools
 
 IDE recommended
-- Lion Setup https://github.com/ethz-asl/programming_guidelines/wiki/CLion
+- Use Jetbrains installer (https://github.com/ethz-asl/programming_guidelines/wiki/CLion)
+- CLion Setup https://github.com/ethz-asl/programming_guidelines/wiki/CLion
+- Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
 
 ```bash
 cd ~/catkin_ws/src
@@ -34,7 +36,7 @@ export ROS_IP=$MY_IP
 #export ROS_MASTER_URI=http://$ROS_IP:11311
 ```
 
-You should be ready to go now. To run the robot:
+You should be ready to go now. Before running, setup your CLion IDE (above),  To run the robot:
 
 ```bash
 roslaunch soccerbot soccerbot.launch
