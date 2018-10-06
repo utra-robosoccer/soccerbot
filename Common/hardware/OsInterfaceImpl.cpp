@@ -1,13 +1,14 @@
 /**
   *****************************************************************************
-  * @file    FunctionalFreeRTOSInterface.cpp
+  * @file    OsInterfaceImpl.cpp
   * @author  Izaak Niksan
   * @brief   Implements the FreeRTOS wrapper class, which makes direct calls
   *          to the true functions defined in the FreeRTOS library
   *
-  * @defgroup Functional_FreeRTOS_Interface
-  * @brief    The FunctionalFreeRTOSInterface module provides an interface to
-  *           true FreeRTOS functionality
+  * @defgroup Implementation
+  * @ingroup  OS
+  * @brief    The OsInterfaceImpl module provides an interface to true FreeRTOS
+  *           functionality
   * @{
   *****************************************************************************
   */
@@ -16,37 +17,42 @@
 
 
 /********************************* Includes **********************************/
+#include <OsInterfaceImpl.h>
 #include <cstdint>
 #include "cmsis_os.h"
 
-#include "FunctionalFreeRTOSInterface.h"
 
 
 
 
-/********************** Functional_FreeRTOS_Interface ************************/
-namespace Functional_FreeRTOS_Interface{
+/****************************** OsInterfaceImpl ******************************/
+namespace os{
 // Classes and structs
 // ----------------------------------------------------------------------------
-FunctionalFreeRTOSInterface::FunctionalFreeRTOSInterface() {
+OsInterfaceImpl::OsInterfaceImpl() {
 
 }
 
-FunctionalFreeRTOSInterface::~FunctionalFreeRTOSInterface() {
+OsInterfaceImpl::~OsInterfaceImpl() {
 
 }
 
-BaseType_t FunctionalFreeRTOSInterface::OS_xTaskNotifyWait(
+BaseType_t OsInterfaceImpl::OS_xTaskNotifyWait(
     uint32_t ulBitsToClearOnEntry,
     uint32_t ulBitsToClearOnExit,
     uint32_t *pulNotificationValue,
     TickType_t xTicksToWait
 ) const
 {
-    return xTaskNotifyWait(ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait);
+    return xTaskNotifyWait(
+        ulBitsToClearOnEntry,
+        ulBitsToClearOnExit,
+        pulNotificationValue,
+        xTicksToWait
+    );
 }
 
-BaseType_t FunctionalFreeRTOSInterface::OS_xQueueReceive(
+BaseType_t OsInterfaceImpl::OS_xQueueReceive(
     QueueHandle_t xQueue,
     void *pvBuffer,
     TickType_t xTicksToWait
@@ -55,7 +61,7 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xQueueReceive(
     return xQueueReceive(xQueue, pvBuffer, xTicksToWait);
 }
 
-BaseType_t FunctionalFreeRTOSInterface::OS_xQueueSend(
+BaseType_t OsInterfaceImpl::OS_xQueueSend(
     QueueHandle_t xQueue,
     const void * pvItemToQueue,
     TickType_t xTicksToWait
@@ -64,7 +70,7 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xQueueSend(
     return xQueueSend(xQueue, pvItemToQueue, xTicksToWait);
 }
 
-BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreTake(
+BaseType_t OsInterfaceImpl::OS_xSemaphoreTake(
     SemaphoreHandle_t xSemaphore,
     TickType_t xBlockTime
 ) const
@@ -72,14 +78,14 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreTake(
     return xSemaphoreTake(xSemaphore, xBlockTime);
 }
 
-BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreGive(
+BaseType_t OsInterfaceImpl::OS_xSemaphoreGive(
     SemaphoreHandle_t xSemaphore
 ) const
 {
     return xSemaphoreGive(xSemaphore);
 }
 
-void FunctionalFreeRTOSInterface::OS_vTaskDelayUntil(
+void OsInterfaceImpl::OS_vTaskDelayUntil(
     TickType_t * const pxPreviousWakeTime,
     const TickType_t xTimeIncrement
 ) const
@@ -87,16 +93,16 @@ void FunctionalFreeRTOSInterface::OS_vTaskDelayUntil(
     vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
 }
 
-osStatus FunctionalFreeRTOSInterface::OS_osDelay (
+osStatus OsInterfaceImpl::OS_osDelay (
     uint32_t millisec
 ) const
 {
     return osDelay(millisec);
 }
 
-} // end namespace Functional_FreeRTOS_Interface
+} // end namespace os
 
 /**
  * @}
  */
-/* end - Functional_FreeRTOS_Interface */
+/* end - Implementation */

@@ -81,7 +81,7 @@ public:
     MOCK_CONST_METHOD1(abortReceive, void(const UART_HandleTypeDef*));
 };
 
-} // end namespace Test_FreeRTOS_Interface
+} // end namespace mocks
 
 
 

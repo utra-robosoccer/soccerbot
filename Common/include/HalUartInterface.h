@@ -84,10 +84,9 @@ public:
         const UART_HandleTypeDef* uartHandlePtr
     ) const override final;
 #endif
-
 };
 
-} // end namespace UART
+} // end namespace uart
 
 
 

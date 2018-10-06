@@ -44,7 +44,7 @@ UartDriver::UartDriver(){
      *        the configuration information for the desired UART module
      */
 UartDriver::UartDriver(
-    FreeRTOSInterface* os_if,
+    OsInterface* os_if,
     UartInterface* hw_if,
     UART_HandleTypeDef* uartHandlePtr
 ) :
