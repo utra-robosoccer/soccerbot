@@ -68,8 +68,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1536888710.199466637.433444362.1275900696" name="/" resourcePath="Common/hardware">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1978848273" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1476988130" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.571284048"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.763344409" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1389876713"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1771856113" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1270051068"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1550830475" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.400916607"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.106972392" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1509217548"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1421341349" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.99127665"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src|Common/app|Common/component|Common/include|component|app|hardware/HalUartInterface.cpp|include|inc|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Common/hardware|Common/hardware/HalUartInterface.cpp|src|Common/app|Common/component|Common/include|component|app|hardware/HalUartInterface.cpp|include|inc|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/PcInterface"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
 					</sourceEntries>
@@ -142,6 +152,16 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1536888710.199466637.433444362.2145105316.906118854" name="/" resourcePath="Common/hardware">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1300472124" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.527247109" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1781619301"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.479410822" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.757203753"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.534086980" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1297562013"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1658650527" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.929424994"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.435776200" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1852029335"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1360609456" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.610078147"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
