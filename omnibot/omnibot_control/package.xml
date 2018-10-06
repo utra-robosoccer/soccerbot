@@ -1,30 +1,20 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>omnibot_control</name>
   <version>0.0.0</version>
   <description>The omnibot_control package</description>
-
-  <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
+  <maintainer email="jiashen.wang@mail.utoronto.com">Jason Wang</maintainer>
 
   <license>BSD</license>
 
-  <url type="website">http://http://gazebosim.org/w/index.php?title=Tutorials/1.9/Using_A_URDF_In_Gazebo</url>
-  <url type="bugtracker">https://github.com/osrf/gazebo_ros_demos/issues</url>
-  <url type="repository">https://github.com/osrf/gazebo_ros_demos</url>
-
-  <author email="davetcoleman@gmail.com">Dave Coleman</author>
+  <author email="vuwij@me.com">Jason Wang</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>controller_manager</run_depend>
-  <run_depend>joint_state_controller</run_depend>
-  <run_depend>robot_state_publisher</run_depend>
-
-  <run_depend>rqt_gui</run_depend>
-  <run_depend>effort_controllers</run_depend>
-
-
-  <export>
-  </export>
+  <depend>controller_manager</depend>
+  <depend>joint_state_controller</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>rqt_gui</depend>
+  <depend>effort_controllers</depend>
 
 </package>
