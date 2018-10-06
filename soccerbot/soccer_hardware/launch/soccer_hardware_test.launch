@@ -1,4 +1,0 @@
-<launch>
-	<node name="test_trajectories" pkg="soccer_hardware" type="test_trajectories" cwd="node" />	
-	<node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware" />
-</launch>

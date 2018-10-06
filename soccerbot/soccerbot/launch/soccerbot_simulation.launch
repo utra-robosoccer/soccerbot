@@ -1,0 +1,9 @@
+<launch>
+    <node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories" />
+    <include file="$(find soccer_gazebo)/launch/soccerbot_soccerfield.launch"/>
+
+    <include file="$(find soccer_transforms)/launch/soccer_transforms.launch"/>
+
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" />
+
+</launch>
