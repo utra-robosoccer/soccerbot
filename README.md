@@ -10,7 +10,7 @@ Debian packages needed for robots (sudo apt-get install)
 - python-catkin-tools
 
 IDE recommended
-- Use Jetbrains installer (https://github.com/ethz-asl/programming_guidelines/wiki/CLion)
+- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
 - CLion Setup https://github.com/ethz-asl/programming_guidelines/wiki/CLion
 - Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
 
