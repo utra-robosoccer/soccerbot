@@ -18,6 +18,7 @@ git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  T
 cd soccer_ws
 git checkout initials_branchname
 cd ~/catkin_ws
+sudo rosdep update
 rosdep install --from-paths src --ignore-src -r -y # To install all dependencies
 catkin build soccerbot
 source devel/setup.bash # Needs to be done everytime you finish building
