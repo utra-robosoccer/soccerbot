@@ -12,4 +12,4 @@ uint8 dropInTeam
 uint16 dropInTime
 uint16 secsRemaining
 uint16 secondaryTime
-team_communication/teamInfo[2] Teams
+teamInfo[2] Teams
