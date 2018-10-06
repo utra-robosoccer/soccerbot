@@ -30,7 +30,7 @@ using namespace FreeRTOS_Interface;
 
 
 /************************** Test_FreeRTOS_Interface **************************/
-namespace MOCKS{
+namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -39,7 +39,7 @@ namespace MOCKS{
  */
 class MockFreeRTOSInterface : public FreeRTOSInterface {
 public:
-    MOCK_METHOD4(
+    MOCK_CONST_METHOD4(
         OS_xTaskNotifyWait,
         BaseType_t(
             uint32_t ulBitsToClearOnEntry,
@@ -49,7 +49,7 @@ public:
         )
     );
 
-    MOCK_METHOD3(
+    MOCK_CONST_METHOD3(
         OS_xQueueReceive,
         BaseType_t(
             QueueHandle_t xQueue,
@@ -58,7 +58,7 @@ public:
         )
     );
 
-    MOCK_METHOD3(
+    MOCK_CONST_METHOD3(
         OS_xQueueSend,
         BaseType_t(
             QueueHandle_t xQueue,
@@ -67,7 +67,7 @@ public:
         )
     );
 
-    MOCK_METHOD2(
+    MOCK_CONST_METHOD2(
         OS_xSemaphoreTake,
         BaseType_t(
             SemaphoreHandle_t xSemaphore,
@@ -75,14 +75,14 @@ public:
         )
     );
 
-    MOCK_METHOD1(
+    MOCK_CONST_METHOD1(
         OS_xSemaphoreGive,
         BaseType_t(
             SemaphoreHandle_t xSemaphore
         )
     );
 
-    MOCK_METHOD2(
+    MOCK_CONST_METHOD2(
         OS_vTaskDelayUntil,
         void(
             TickType_t* const pxPreviousWakeTime,
@@ -90,7 +90,7 @@ public:
         )
     );
 
-    MOCK_METHOD1(
+    MOCK_CONST_METHOD1(
         OS_osDelay,
         osStatus(
             uint32_t millisec

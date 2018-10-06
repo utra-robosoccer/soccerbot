@@ -23,13 +23,13 @@
 #include <gmock/gmock.h>
 
 #include "UartInterface.h"
-using namespace UART;
+using namespace uart;
 
 
 
 
 /***************************** Test_UartInterface ****************************/
-namespace MOCKS{
+namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -37,15 +37,48 @@ namespace MOCKS{
  */
 class MockUartInterface : public UartInterface{
 public:
-    MOCK_METHOD1(setUartPtr, void(UART_HandleTypeDef*));
-    MOCK_METHOD3(transmitPoll, HAL_StatusTypeDef(uint8_t*, size_t, uint32_t));
-    MOCK_METHOD3(receivePoll, HAL_StatusTypeDef(uint8_t*, size_t, uint32_t));
-    MOCK_METHOD2(transmitDMA, HAL_StatusTypeDef(uint8_t*, size_t));
-    MOCK_METHOD2(receiveDMA, HAL_StatusTypeDef(uint8_t*, size_t));
-    MOCK_METHOD2(transmitIT, HAL_StatusTypeDef(uint8_t*, size_t));
-    MOCK_METHOD2(receiveIT, HAL_StatusTypeDef(uint8_t*, size_t));
-    MOCK_METHOD0(abortTransmit, void());
-    MOCK_METHOD0(abortReceive, void());
+    MOCK_CONST_METHOD4(
+        transmitPoll,
+        HAL_StatusTypeDef(
+            const UART_HandleTypeDef*,
+            uint8_t*,
+            size_t,
+            uint32_t
+        )
+    );
+
+    MOCK_CONST_METHOD4(
+        receivePoll,
+        HAL_StatusTypeDef(
+            const UART_HandleTypeDef*,
+            uint8_t*,
+            size_t,
+            uint32_t
+        )
+    );
+
+    MOCK_CONST_METHOD3(
+        transmitDMA,
+        HAL_StatusTypeDef(const UART_HandleTypeDef*, uint8_t*, size_t)
+    );
+
+    MOCK_CONST_METHOD3(
+        receiveDMA,
+        HAL_StatusTypeDef(const UART_HandleTypeDef*, uint8_t*, size_t)
+    );
+
+    MOCK_CONST_METHOD3(
+        transmitIT,
+        HAL_StatusTypeDef(const UART_HandleTypeDef*, uint8_t*, size_t)
+    );
+
+    MOCK_CONST_METHOD3(
+        receiveIT,
+        HAL_StatusTypeDef(const UART_HandleTypeDef*, uint8_t*, size_t)
+    );
+
+    MOCK_CONST_METHOD1(abortTransmit, void(const UART_HandleTypeDef*));
+    MOCK_CONST_METHOD1(abortReceive, void(const UART_HandleTypeDef*));
 };
 
 } // end namespace Test_FreeRTOS_Interface
