@@ -21,7 +21,7 @@
 /********************************** Externs **********************************/
 // extern declaration needed here for F767 build
 // TODO: clean this up when refactoring Dynamixel
-#ifdef STM32F767xx
+#if defined(STM32F767xx)
 extern HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart);
 extern HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
 #endif
@@ -49,7 +49,7 @@ HAL_StatusTypeDef HalUartInterface::transmitPoll(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Transmit(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrTransmit,
         numBytes,
         timeout
@@ -66,7 +66,7 @@ HAL_StatusTypeDef HalUartInterface::receivePoll(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Receive(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrReceive,
         numBytes,
         timeout
@@ -83,7 +83,7 @@ HAL_StatusTypeDef HalUartInterface::transmitIT(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Transmit_IT(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrTransmit,
         numBytes
     );
@@ -98,7 +98,7 @@ HAL_StatusTypeDef HalUartInterface::receiveIT(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Receive_IT(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrReceive,
         numBytes
     );
@@ -113,7 +113,7 @@ HAL_StatusTypeDef HalUartInterface::transmitDMA(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Transmit_DMA(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrTransmit,
         numBytes
     );
@@ -128,7 +128,7 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
 ) const
 {
     HAL_StatusTypeDef status =  HAL_UART_Receive_DMA(
-        uartHandlePtr,
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr),
         arrReceive,
         numBytes
     );
@@ -140,14 +140,18 @@ void HalUartInterface::abortTransmit(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
-    HAL_UART_AbortTransmit(uartHandlePtr);
+    HAL_UART_AbortTransmit(
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr)
+    );
 }
 
 void HalUartInterface::abortReceive(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
-    HAL_UART_AbortReceive(uartHandlePtr);
+    HAL_UART_AbortReceive(
+        const_cast<UART_HandleTypeDef*>(uartHandlePtr)
+    );
 }
 #endif
 
