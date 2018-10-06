@@ -1,9 +1,22 @@
 <launch>
     <arg name="vision" default="false" />
 
-    <!-- Soccer hardware -->
+    <!-- Connection to the robot -->
     <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
 
-    <!-- Camera -->
-    <include file="$(find soccerbot)/launch/modules/vision.launch" />
+    <!-- Model and transformations -->
+    <include file="$(find soccer_transforms)/launch/soccer_transforms.launch"/>
+
+    <!-- Computer Vision and Camera -->
+    <group if="$(arg vision)">
+        <include file="$(find soccerbot)/launch/modules/vision.launch" />
+    </group>
+
+    <!-- Control -->
+
+    <!-- TODO -->
+
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz"/>
+
 </launch>

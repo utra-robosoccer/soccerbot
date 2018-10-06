@@ -1,9 +1,3 @@
 <launch>
-    <arg name="vision" default="false" />
-
-    <!-- Soccer hardware -->
-    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
-
-    <!-- Camera -->
-    <include file="$(find soccerbot)/launch/modules/vision.launch" />
+    <!-- TODO -->
 </launch>

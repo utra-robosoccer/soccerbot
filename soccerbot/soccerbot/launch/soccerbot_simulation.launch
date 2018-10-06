@@ -1,9 +1,23 @@
 <launch>
-    <node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories" />
+    <!-- Environment -->
     <include file="$(find soccer_gazebo)/launch/soccerbot_soccerfield.launch"/>
 
+    <!-- Command for trajectories -->
+    <node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories" />
+
+    <!-- Model and transformations -->
     <include file="$(find soccer_transforms)/launch/soccer_transforms.launch"/>
 
-    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" />
+    <!-- Computer Vision and Camera -->
+    <group if="$(arg vision)">
+        <include file="$(find soccerbot)/launch/modules/vision.launch" />
+    </group>
+
+    <!-- Control -->
+
+    <!-- TODO -->
+
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz"/>
 
 </launch>
