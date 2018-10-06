@@ -665,7 +665,7 @@ void StartIMUTask(void const * argument)
 
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
-    IMUStruct myIMUStruct;
+    imu::IMUStruct_t myIMUStruct;
     TXData_t dataToSend = {eIMUData, &myIMUStruct};
     TickType_t xLastWakeTime = xTaskGetTickCount();
     uint8_t numSamples = 0;

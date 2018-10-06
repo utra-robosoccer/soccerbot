@@ -20,7 +20,6 @@
 
 
 /********************************* Includes **********************************/
-#include "UART_Handler.h"
 #include "MPU6050.h"
 
 
@@ -42,16 +41,17 @@ void initImuProcessor();
  *        location these were read from
  * @param[in, out] IMUStruct Reference to IMU data container
  */
-void processImuData(IMUStruct& imu);
+void processImuData(imu::IMUStruct_t& imu);
 
 /**
- * @brief   Reads Ax, Ay, Az, Vx, Vy, Vz from IMU sensor
- * @details Angular velocity is only read every 16 samples
+ * @brief   Reads Ax, Ay, Az, Vx, Vy, Vz from IMU sensor (not all of these are
+ *          read every cycle; angular velocity is read less frequently as it is
+ *          quite noisy)
  * @param   IMUdata Reference to the MPU6050 object, which manages interactions
  *          with that sensor
- * @param   numSamples The number of samples that have been acquired so far, up to
- *          some multiple of 16
- * @return  true if angular velocity was read, otherwise false
+ * @param   numSamples The number of samples that have been acquired so far, up
+ *          to some multiple of 16
+ * @return  true if the data processor should be run, otherwise false
  */
 bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples);
 

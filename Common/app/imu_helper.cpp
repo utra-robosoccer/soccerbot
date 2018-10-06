@@ -83,7 +83,7 @@ void initImuProcessor(){
     }
 }
 
-void processImuData(IMUStruct& imu){
+void processImuData(imu::IMUStruct_t& imu){
     velocityFilters[static_cast<int>(VFilter::VX)].update(
         &imu._x_Gyro,
         &imu._x_Gyro,
