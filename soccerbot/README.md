@@ -14,6 +14,7 @@ IDE recommended
 
 ```bash
 cd catkin_ws/src
+cd ..
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
 rosdep install --from-paths src --ignore-src -r -y # To install all dependencies
 catkin build soccerbot
