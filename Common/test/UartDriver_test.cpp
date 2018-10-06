@@ -16,10 +16,10 @@
 /********************************* Includes **********************************/
 #include "UartDriver.h"
 #include "FreeRTOSInterface.h"
+#include "Notification.h"
 
 #include "MockUartInterface.h"
 #include "MockFreeRTOSInterface.h"
-
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
