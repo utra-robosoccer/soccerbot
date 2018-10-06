@@ -299,7 +299,7 @@ void MPU6050::Read_Accelerometer_Withoffset_IT(){
     this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
 }
 
-void MPU6050::Fill_Struct(IMUStruct * myStruct){
+void MPU6050::Fill_Struct(IMUStruct_t* myStruct){
     myStruct->_x_Accel = this->_x_Accel;
     myStruct->_y_Accel = this->_y_Accel;
     myStruct->_z_Accel = this->_z_Accel;

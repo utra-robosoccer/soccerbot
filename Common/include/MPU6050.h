@@ -42,6 +42,20 @@ constexpr float ACC_RANGE = 16384.0;  /**< divide to get in units of g */
 
 // Classes and structs
 // ----------------------------------------------------------------------------
+/**
+ * @brief The data structure which represents the data of the IMU, which is sent
+ * in queues between tasks
+ */
+typedef struct{
+    float _x_Gyro;  /**< x-axis angular velocity read from sensor */
+    float _y_Gyro;  /**< y-axis angular velocity read from sensor */
+    float _z_Gyro;  /**< z-axis angular velocity read from sensor */
+    float _x_Accel; /**< x-axis acceleration read from sensor     */
+    float _y_Accel; /**< y-axis acceleration read from sensor     */
+    float _z_Accel; /**< z-axis acceleration read from sensor     */
+}IMUStruct_t;
+
+
 class MPU6050 {
 public:
     /**
@@ -93,7 +107,7 @@ public:
       * @param   myStruct The pointer to the struct being filled
       * @return  None
       */
-    void Fill_Struct(IMUStruct * myStruct);
+    void Fill_Struct(IMUStruct_t* myStruct);
 
     /**
       * @brief   The MPU6050 desctructor
