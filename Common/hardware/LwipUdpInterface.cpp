@@ -1,14 +1,14 @@
 /**
- *****************************************************************************
- * @file    LwipUdpInterface.cpp
- * @author  Robert Fairley
- * @brief   Implements Lwip/UDP interface-facing functions, and means to access network stack data.
- *
- * @defgroup lwip_udp_interface
- * @brief    The lwip_udp_interface module provides an abstraction layer to the LwIP network stack, so that network parameters and actions are hidden from other components, and means to access only necessary data is provided.
- * @{
- *****************************************************************************
- */
+  *****************************************************************************
+  * @file    LwipUdpInterface.cpp
+  * @author  Robert Fairley
+  * @brief   Implements Lwip/UDP interface-facing functions, and means to access network stack data.
+  *
+  * @defgroup lwip_udp_interface
+  * @brief    Provides an abstraction layer to the LwIP network stack, so that network parameters and actions are hidden from other components, and means to access only necessary data is provided.
+  * @{
+  *****************************************************************************
+  */
 
 #include <LwipUdpInterface.h>
 

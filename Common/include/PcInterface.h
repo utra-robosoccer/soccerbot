@@ -1,14 +1,14 @@
 /**
- *****************************************************************************
- * @file    PcInterface.h
- * @author  Robert Fairley
- * @brief   Defines and implements a interface through which the PC is accessed, independent of the underlying hardware communication protocol.
- *
- * @defgroup Header
- * @ingroup  pc_interface
- * @{
- *****************************************************************************
- */
+  *****************************************************************************
+  * @file    PcInterface.h
+  * @author  Robert Fairley
+  * @brief   Defines and implements a interface through which the PC is accessed, independent of the underlying hardware communication protocol.
+  *
+  * @defgroup Header
+  * @ingroup  pc_interface
+  * @{
+  *****************************************************************************
+  */
 
 #ifndef PC_INTERFACE_H
 #define PC_INTERFACE_H
