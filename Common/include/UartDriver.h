@@ -31,7 +31,7 @@ using namespace FreeRTOS_Interface;
 
 
 /******************************** UartDriver *********************************/
-namespace UART{
+namespace uart{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -43,8 +43,24 @@ namespace UART{
 class UartDriver{
 public:
     UartDriver();
-    ~UartDriver() {}
 
+#if defined(THREADED)
+    /**
+     * @brief Initializes the handle to the low-level hardware routines,
+     *        associates a particular UART module on the board with this
+     *        driver, and initializes the handle to the OS for system calls
+     * @param hw_if Pointer to the hardware-facing object handling the
+     *        low-level UART routines
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
+     * @param os_if Pointer to the object handling the calls to the OS
+     */
+    UartDriver(
+        FreeRTOSInterface* os_if,
+        UartInterface* hw_if,
+        UART_HandleTypeDef* uartHandlePtr
+    );
+#else
     /**
      * @brief Initializes the handle to the low-level hardware routines, and
      *        associates a particular UART module on the board with this driver
@@ -53,14 +69,14 @@ public:
      * @param uartHandlePtr Pointer to a structure that contains
      *        the configuration information for the desired UART module
      */
-    void setUartInterface(UartInterface* hw_if, UART_HandleTypeDef* uartHandlePtr);
-#if defined(THREADED)
-    /**
-     * @brief Initializes the handle to the system calls provided by the OS
-     * @param os_if Pointer to the object handling the calls to the OS
-     */
-    void setOSInterface(FreeRTOSInterface* os_if);
+    UartDriver(
+        UartInterface* hw_if,
+        UART_HandleTypeDef* uartHandlePtr
+    );
 #endif
+
+    ~UartDriver() {}
+
     /**
      * @brief Configures the driver to use a particular IO type. This is used
      *        to change it between using blocking and asynchronous transfers
@@ -113,7 +129,13 @@ private:
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
-    UartInterface* hw_if = nullptr;
+    const UartInterface* hw_if = nullptr;
+
+    /**
+     * @brief Address of the container for the UART module associated with this
+     *        object
+     */
+    const UART_HandleTypeDef* uartHandlePtr = nullptr;
 
     /**
      * @brief true if the UartInterface has been set and its UART_HandleTypeDef
@@ -131,7 +153,7 @@ private:
     static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
 
     /** @brief Pointer to the object handling system calls to the OS */
-    FreeRTOSInterface* os_if = nullptr;
+    const FreeRTOSInterface* os_if = nullptr;
 #endif
 #if !defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
@@ -139,7 +161,7 @@ private:
 #endif
 };
 
-} // end namespace UART
+} // end namespace uart
 
 
 
