@@ -1,3 +1,15 @@
+/**
+  *****************************************************************************
+  * @file    MockUdpInterface.h
+  * @author  Robert Fairley
+  * @brief   Mock class for UdpInterface using gmock.
+  *
+  * @defgroup Header
+  * @ingroup  udp_interface
+  * @{
+  *****************************************************************************
+  */
+
 #ifndef MOCK_UDP_INTERFACE_H
 #define MOCK_UDP_INTERFACE_H
 

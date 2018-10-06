@@ -1,3 +1,14 @@
+/**
+  *****************************************************************************
+  * @file    UdpDriver_test.cpp
+  * @author  Robert Fairley
+  * @brief   Unit tests for UDP driver.
+  *
+  * @defgroup udp_driver_test
+  * @brief    Unit tests for the UdpDriver class.
+  * @{
+  *****************************************************************************
+  */
 
 #include <MockFreeRTOSInterface.h>
 #include <MockUdpInterface.h>
