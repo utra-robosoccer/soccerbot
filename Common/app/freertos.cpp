@@ -133,6 +133,8 @@ osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
 
 /* USER CODE BEGIN Variables */
+namespace{
+
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
 				 MOTOR6, MOTOR7, MOTOR8, MOTOR9, MOTOR10,
 				 MOTOR11, MOTOR12, MOTOR13, MOTOR14, MOTOR15,
@@ -144,10 +146,12 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor11, Motor12, Motor13, Motor14, Motor15,
 						Motor16, Motor17, Motor18;
 
-IMUnamespace::MPU6050 IMUdata (1, &hi2c1);
+imu::MPU6050 IMUdata (1, &hi2c1);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
+
+}
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -654,54 +658,36 @@ void StartUART6Task(void const * argument)
   */
 void StartIMUTask(void const * argument)
 {
-  /* USER CODE BEGIN StartIMUTask */
-  // Here, we use task notifications to block this task from running until a notification
-  // is received. This allows one-time setup to complete in a low-priority task.
-  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* USER CODE BEGIN StartIMUTask */
+    // Here, we use task notifications to block this task from running until a notification
+    // is received. This allows one-time setup to complete in a low-priority task.
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-  TXData_t dataToSend;
-  dataToSend.eDataType = eIMUData;
+    constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
-  TickType_t xLastWakeTime;
-  xLastWakeTime = xTaskGetTickCount();
+    IMUStruct myIMUStruct;
+    TXData_t dataToSend = {eIMUData, &myIMUStruct};
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    uint8_t numSamples = 0;
+    bool needsProcessing = false;
 
-  const TickType_t IMU_CYCLE_TIME_MS = 2;
-  uint8_t i = 0;
+    app::initImuProcessor();
 
-  IMUStruct myIMUStruct;
-  dataToSend.pData = &myIMUStruct;
+    for(;;)
+    {
+        // Service this thread every 2 ms for a 500 Hz sample rate
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-  Helpers::initAngularVelocityFilters();
+        needsProcessing = app::readFromSensor(IMUdata, &numSamples);
+        IMUdata.Fill_Struct(&myIMUStruct);
 
-  for(;;)
-  {
-      // Service this thread every 2 ms for a 500 Hz sample rate
-      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+        if(needsProcessing){
+            app::processImuData(myIMUStruct);
+        }
 
-      IMUdata.Read_Accelerometer_Withoffset_IT(); // Also updates pitch and roll
-
-      // Gyroscope data is much more volatile/sensitive to changes than
-      // acceleration data. To compensate, we feed in samples to the filter
-      // slower. Good DSP practise? Not sure. To compensate for the high
-      // delays, we also use a filter with fewer taps than the acceleration
-      // filters. Ideally: we would sample faster to reduce aliasing, then
-      // use a filter with a smaller cutoff frequency. However, the filter
-      // designer we are using does not allow us to generate such filters in
-      // the free version, so this is the best we can do unless we use other
-      // software.
-      ++i;
-      if (i % 16 == 0) {
-          IMUdata.Read_Gyroscope_Withoffset_IT();
-          IMUdata.Fill_Struct(&myIMUStruct);
-          Helpers::filterAngularVelocity(myIMUStruct);
-      }
-      else{
-          IMUdata.Fill_Struct(&myIMUStruct);
-      }
-
-      xQueueSend(TXQueueHandle, &dataToSend, 0);
-  }
-  /* USER CODE END StartIMUTask */
+        xQueueSend(TXQueueHandle, &dataToSend, 0);
+    }
+    /* USER CODE END StartIMUTask */
 }
 
 /**

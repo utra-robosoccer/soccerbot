@@ -31,8 +31,8 @@ using ::testing::Return;
 using ::testing::_;
 
 
-using namespace UART;
-using namespace MOCKS;
+using namespace uart;
+using namespace mocks;
 
 
 

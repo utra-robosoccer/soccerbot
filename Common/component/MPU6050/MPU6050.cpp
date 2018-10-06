@@ -182,7 +182,7 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
 
 
 /********************************* MPU6050 ***********************************/
-using IMUnamespace::MPU6050;
+using imu::MPU6050;
 // Public
 // ----------------------------------------------------------------------------
 MPU6050::MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle){
