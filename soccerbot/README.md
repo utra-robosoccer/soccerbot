@@ -13,9 +13,11 @@ IDE recommended
 - Lion Setup https://github.com/ethz-asl/programming_guidelines/wiki/CLion
 
 ```bash
-cd catkin_ws/src
-cd ..
+cd ~/catkin_ws/src
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
+cd soccer_ws
+git checkout initials_branchname
+cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y # To install all dependencies
 catkin build soccerbot
 source devel/setup.bash # Needs to be done everytime you finish building
