@@ -1,12 +1,12 @@
 
-/* TEAM_COMMUNICATION NODE:
- * team_communication_server:
+/* soccer_communication NODE:
+ * soccer_communication_server:
  * 		receives local_model.msg sent by every robots' personal_model node.
  * 		and merge them together with the robot's local_model. then send
  * 		it as team_data.msg to team_update_model node
  * team-communciation_client:
  * 		receives local_model.msg of the robot from personal_model node.
- * 		then send it to the other robots' team_communication_server node.
+ * 		then send it to the other robots' soccer_communication_server node.
  *
  * *1
  * 		temporary leave the callback functions for strategy.msg/robot_state.msg/global_model blank !!!
@@ -26,8 +26,8 @@
 #include <netdb.h>
 #include <std_msgs/Int32.h>   //temporary
 #include <std_msgs/String.h>
-#include <team_communication/local_model.h>
-#include <team_communication/team_local_model.h>
+#include <soccer_communication/local_model.h>
+#include <soccer_communication/team_local_model.h>
 
 //#include <behaviour/strategy.h>
 //#include <robot_control/robot_state.h>
@@ -38,9 +38,9 @@
 
 using namespace std;
 
-team_communication::local_model personal_model;
+soccer_communication::local_model personal_model;
 
-static void callbackLocalModel(const team_communication::local_model::ConstPtr& msg)
+static void callbackLocalModel(const soccer_communication::local_model::ConstPtr& msg)
 {
 	printf("called\n");
 	personal_model.x = msg->x;
@@ -90,7 +90,7 @@ static void personal_model_init(void)
 
 int main(int argc, char **argv) {
 
-    ros::init(argc, argv, "team_communication_client");
+    ros::init(argc, argv, "soccer_communication_client");
     ros::NodeHandle n;
     ros::Rate loop_rate(1);
     personal_model_init();

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>team_communication</name>
+  <name>soccer_communication</name>
   <version>0.0.0</version>
-  <description>The team_communication package</description>
+  <description>Communication with other robots</description>
 
   <maintainer email="vuwij@me.com">Jason</maintainer>
 
