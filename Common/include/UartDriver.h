@@ -31,7 +31,7 @@ using namespace FreeRTOS_Interface;
 
 
 /******************************** UartDriver *********************************/
-namespace UART{
+namespace uart{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**

@@ -33,15 +33,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 
-/********************************** Macros ***********************************/
-// Note: This needs to be defined before arm_math.h is included
-#define ARM_MATH_CM4 // Use ARM Cortex M4
-
-
-
-
 /********************************* Includes **********************************/
-#include "stm32f446xx.h" // __FPU_PRESENT == 1 ==> generate FPU instructions
+#include "SystemConf.h" // Need to include this before arm_math
 #include <arm_math.h> // Include CMSIS header
 #include <string.h> // For memset
 
@@ -53,8 +46,8 @@ namespace dsp{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class Wrapper class for arm_fir_f32 C object. Implements a FIR with float
- * data type
+ * @class fir_f32 Wrapper for arm_fir_f32 C object. Implements a FIR with float
+ *        data type
  */
 template<uint16_t T_numTaps, uint32_t T_blockSize>
 class fir_f32{

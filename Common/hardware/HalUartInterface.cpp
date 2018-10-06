@@ -29,7 +29,7 @@ extern HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
 
 
 
-namespace UART{
+namespace uart{
 /***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------

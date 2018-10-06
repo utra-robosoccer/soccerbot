@@ -30,7 +30,7 @@ using namespace FreeRTOS_Interface;
 
 
 /************************** Test_FreeRTOS_Interface **************************/
-namespace MOCKS{
+namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**

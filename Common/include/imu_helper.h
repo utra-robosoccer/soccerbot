@@ -21,26 +21,39 @@
 
 /********************************* Includes **********************************/
 #include "UART_Handler.h"
+#include "MPU6050.h"
 
 
 
 
 /********************************* Helpers ***********************************/
-namespace Helpers{
+namespace app{
 // Functions
 // ----------------------------------------------------------------------------
 /**
- * @brief Initialize angular velocity FIR filters for IMU data
+ * @brief Initialize the data processor. Right now, this just initializes the
+ *        angular velocity FIR filters
  */
-void initAngularVelocityFilters();
+void initImuProcessor();
 
 /**
- * @brief Reads Vz, Vy, and Vx from the MPU6050 object and writes them into
- *        their corresponding FIR filters. The output of each FIR filter is
- *        read and stored in the MPU6050 object where it was previously read
- * @param IMUdata Reference to MPU6050 object
+ * @brief Generic processor for IMU data. Right now, it writes Vx, Vy, Vz into
+ *        their corresponding FIR filters and reads the output into the same
+ *        location these were read from
+ * @param[in, out] IMUStruct Reference to IMU data container
  */
-void filterAngularVelocity(IMUStruct& imu);
+void processImuData(IMUStruct& imu);
+
+/**
+ * @brief   Reads Ax, Ay, Az, Vx, Vy, Vz from IMU sensor
+ * @details Angular velocity is only read every 16 samples
+ * @param   IMUdata Reference to the MPU6050 object, which manages interactions
+ *          with that sensor
+ * @param   numSamples The number of samples that have been acquired so far, up to
+ *          some multiple of 16
+ * @return  true if angular velocity was read, otherwise false
+ */
+bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples);
 
 } // end namespace Helpers
 

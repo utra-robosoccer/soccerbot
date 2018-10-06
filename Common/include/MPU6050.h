@@ -6,8 +6,8 @@
   * @author  Tyler
   * @brief   Header code for the MPU6050 class
   *
-  *@defgroup  Header
-  *@ingroup   MPU6050
+  *@defgroup Header
+  *@ingroup  MPU6050
   *@{
   ******************************************************************************
   */
@@ -31,7 +31,7 @@
 
 
 /********************************* MPU6050 ***********************************/
-namespace IMUnamespace {
+namespace imu{
 // Constants
 // ----------------------------------------------------------------------------
 constexpr float g = 9.81;
