@@ -1,12 +1,12 @@
 /**
   *****************************************************************************
-  * @file    FunctionalFreeRTOSInterface.h
+  * @file    OsInterfaceImpl.h
   * @author  Izaak Niksan
   * @brief   An interface to various production FreeRTOS functions, which serves
   *          as a wrapper to the true functionality of the OS.
   *
   * @defgroup Header
-  * @ingroup  Functional_FreeRTOS_Interface
+  * @ingroup  OS
   * @{
   *****************************************************************************
   */
@@ -14,28 +14,27 @@
 
 
 
-#ifndef FUNCTIONAL_FREERTOS_INTERFACE_H
-#define FUNCTIONAL_FREERTOS_INTERFACE_H
+#ifndef OS_INTERFACE_IMPL_H
+#define OS_INTERFACE_IMPL_H
 
 
 
 
 /********************************* Includes **********************************/
 // Headers for FreeRTOS, such as task.h, are all included within cmsis_os.h
-#include "FreeRTOSInterface.h"
-using namespace FreeRTOS_Interface;
+#include "OsInterface.h"
 
 
 
 
-/************************ Functional_FreeRTOS_Interface **********************/
-namespace Functional_FreeRTOS_Interface {
+/****************************** OsInterfaceImpl ******************************/
+namespace os{
 // Classes and structs
 // ----------------------------------------------------------------------------
-class FunctionalFreeRTOSInterface : public FreeRTOSInterface{
+class OsInterfaceImpl : public OsInterface{
 public:
-    FunctionalFreeRTOSInterface();
-    ~FunctionalFreeRTOSInterface();
+    OsInterfaceImpl();
+    ~OsInterfaceImpl();
 
     BaseType_t OS_xTaskNotifyWait(
         uint32_t ulBitsToClearOnEntry,
@@ -75,11 +74,11 @@ public:
     ) const override final;
 };
 
-} // end namespace Functional_FreeRTOS_Interface
+} // end namespace os
 
 /**
  * @}
  */
 /* end - Header */
 
-#endif /* FUNCTIONAL_FREERTOS_INTERFACE_H */
+#endif /* OS_INTERFACE_IMPL_H */

@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    MockFreeRTOSInterface.h
+  * @file    MockOsInterface.h
   * @author  Izaak Niksan
   * @author  Tyler Gamvrelis
   *
-  * @defgroup MockFreeRTOSInterface
+  * @defgroup MockOsInterface
   * @ingroup Mocks
   * @{
   *****************************************************************************
@@ -13,8 +13,8 @@
 
 
 
-#ifndef MOCK_FREERTOS_INTERFACE_H
-#define MOCK_FREERTOS_INTERFACE_H
+#ifndef MOCK_OS_INTERFACE_H
+#define MOCK_OS_INTERFACE_H
 
 
 
@@ -22,22 +22,22 @@
 /********************************* Includes **********************************/
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "OsInterface.h"
 
-#include "FreeRTOSInterface.h"
-using namespace FreeRTOS_Interface;
-
-
+using os::OsInterface;
 
 
-/************************** Test_FreeRTOS_Interface **************************/
+
+
+/****************************** MockOsInterface ******************************/
 namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class MockFreeRTOSInterface Implements FreeRTOSInterface for unit testing
+ * @class MockOsInterface Implements OsInterface for unit testing
  *        purposes
  */
-class MockFreeRTOSInterface : public FreeRTOSInterface {
+class MockOsInterface : public OsInterface {
 public:
     MOCK_CONST_METHOD4(
         OS_xTaskNotifyWait,
@@ -98,7 +98,7 @@ public:
     );
 };
 
-} // end namespace Test_FreeRTOS_Interface
+} // end namespace mocks
 
 
 
@@ -106,6 +106,6 @@ public:
 /**
  * @}
  */
-/* end - MockFreeRTOSInterface */
+/* end - MockOsInterface */
 
-#endif /* MOCK_FREERTOS_INTERFACE_H */
+#endif /* MOCK_OS_INTERFACE_H */

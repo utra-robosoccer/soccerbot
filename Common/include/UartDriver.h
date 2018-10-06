@@ -23,8 +23,8 @@
 
 #if defined(THREADED)
 #include "cmsis_os.h"
-#include "FreeRTOSInterface.h"
-using namespace FreeRTOS_Interface;
+#include "OsInterface.h"
+using os::OsInterface;
 #endif
 
 
@@ -56,7 +56,7 @@ public:
      * @param os_if Pointer to the object handling the calls to the OS
      */
     UartDriver(
-        FreeRTOSInterface* os_if,
+        OsInterface* os_if,
         UartInterface* hw_if,
         UART_HandleTypeDef* uartHandlePtr
     );
@@ -153,7 +153,7 @@ private:
     static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
 
     /** @brief Pointer to the object handling system calls to the OS */
-    const FreeRTOSInterface* os_if = nullptr;
+    const OsInterface* os_if = nullptr;
 #endif
 #if !defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
