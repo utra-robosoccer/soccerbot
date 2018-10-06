@@ -1,14 +1,14 @@
-///**
-// *****************************************************************************
-// * @file    PcInterface_test.cpp
-// * @author  Robert Fairley
-// * @brief   PcInterface testing/mocking data structures, tests and mocks.
-// *
-// * @defgroup pc_interface_test
-// * @brief    The pc_interface_test module contains the structures required for running tests and mocking, and the tests themselves.
-// * @{
-// *****************************************************************************
-// */
+/**
+*****************************************************************************
+* @file    PcInterface_test.cpp
+* @author  Robert Fairley
+* @brief   Unit tests for PcInterface.
+*
+* @defgroup pc_interface_test
+* @brief    Unit tests and mocking for the PcInterface class.
+* @{
+*****************************************************************************
+*/
 
 // TODO: add license terms from external projects e.g. googletest to our files too?
 // NOTE: consider just doing using namespace pc_interface; ?

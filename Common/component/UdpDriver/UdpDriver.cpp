@@ -1,14 +1,16 @@
 /**
- *****************************************************************************
- * @file    template_cpp.cpp
- * @author  TODO -- your name here
- * @brief   TODO -- brief description of file
- *
- * @defgroup TODO -- module name
- * @brief    TODO -- description of module
- * @{
- *****************************************************************************
- */
+  *****************************************************************************
+  * @file    udp_driver.cpp
+  * @author  Robert Fairley
+  * @brief   Interface for UDP connection driver.
+  *
+  * @defgroup udp_driver
+  * @brief    Manages the usage of a UDP connection, attaching to a lwIP UDP PCB and ethernet interface.
+  * @{
+  *****************************************************************************
+  */
+
+// May rename to LwipUdpDriver as it is specific to lwIP.
 
 // TOOD: check defgroups are correct in cpp and h
 #include <UdpDriver.h>
