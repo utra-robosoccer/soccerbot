@@ -28,7 +28,7 @@
 *.lib
 
 # Executables
-#*.exe
+*.exe
 *.out
 *.app
 
@@ -85,14 +85,16 @@ tmp/
 .worksheet
 
 ### Eclipse Patch ###
-# Eclipse Core		
+# Eclipse Core
 #.project
 .metadata/
-# JDT-specific (Eclipse Java Development Tools)		
+# JDT-specific (Eclipse Java Development Tools)
 #.classpath
 
 # STM Microelectronics stuff
 **/Debug/
 RemoteSystemsTempFiles/
 .metadata/
-Robot/.settings/language.settings.xml
+*/language.settings.xml
+RobotTest/.settings/language.settings.xml
+Robot_F4/.settings/language.settings.xml

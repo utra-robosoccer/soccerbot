@@ -1,8 +1,0 @@
-<map id="Robot/Drivers/Dynamixel/h/AX12A.h" name="Robot/Drivers/Dynamixel/h/AX12A.h">
-<area shape="rect" id="node2" href="$df/d36/_a_x12_a_8c.html" title="This file implements AX12A&#45;specific functions. " alt="" coords="5,95,169,136"/>
-<area shape="rect" id="node3" href="$dd/d59/_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="193,95,424,136"/>
-<area shape="rect" id="node4" href="$d0/dc4/_dynamixel_protocol_v1_8c.html" title="Top&#45;level module for Dynamixel library (protocol V1.0). Contains common functional code for the AX12A..." alt="" coords="40,184,271,225"/>
-<area shape="rect" id="node5" href="$d4/d29/_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="347,191,524,218"/>
-<area shape="rect" id="node6" href="$d8/d4c/freertos_8c.html" title="Code for freertos application. " alt="" coords="239,273,378,300"/>
-<area shape="rect" id="node7" href="$df/d58/_u_a_r_t___handler_8c.html" title="This file implements a generic event processor for UART events, which occur when commands for the mot..." alt="" coords="403,273,583,300"/>
-</map>
