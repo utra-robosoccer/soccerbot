@@ -69,6 +69,9 @@ osThreadId defaultTaskHandle;
 extern struct netif gnetif;
 struct udp_pcb * echo_server_pcb;
 
+#define BUFFER_SIZE 1000
+uint8_t buf[BUFFER_SIZE];
+
 //ip_addr_t gateway;
 
 /* USER CODE END Variables */
@@ -182,20 +185,37 @@ void StartDefaultTask(void const * argument)
 
 void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
 	    const ip_addr_t *addr, u16_t port) {
-	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
 
 	/* Connect to the remote client */
-	  udp_connect(echo_server_pcb, addr, 7);
+	  udp_connect(echo_server_pcb, addr, port);
+
+	  pbuf_copy_partial(p, buf + 7, p->len, 0);
+
+	  int cmd_len = 20;
+	  struct pbuf *pret = pbuf_alloc(PBUF_TRANSPORT, cmd_len, PBUF_RAM);
+
+	  buf[0] = '*';
+	  buf[1] = '_';
+	  buf[2] = 'M';
+	  buf[3] = 'C';
+	  buf[4] = 'U';
+	  buf[5] = '_';
+	  buf[6] = '*';
+
+	  //pbuf_copy(pret, p);
+	  pbuf_take(pret, buf, cmd_len);
 
 	  /* Tell the client that we have accepted it */
-	  udp_send(echo_server_pcb, p);
+	  udp_send(echo_server_pcb, pret);
+	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 
 	  /* free the UDP connection, so we can accept new clients */
 	  udp_disconnect(echo_server_pcb);
 
 	  /* Free the p buffer */
+	  pbuf_free(pret);
 	  pbuf_free(p);
-
 }
      
 /* USER CODE END Application */

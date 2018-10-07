@@ -82,15 +82,15 @@ ETH_ECHO_TEST = {
 DATE_TIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # Test parameters
-MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
-#MESSAGE_SIZES = [80]
+#MESSAGE_SIZES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+MESSAGE_SIZES = [10]
 MESSAGE_NUMS_TEST_IN_SEQUENCE = [1]
 MESSAGE_NUM_TRIALS = 10
 
 # Network parameters
 PROTOCOL = "UDP"
-# MCU_IP_ADDRESS = "10.0.0.43" # Static IP address set on the MCU
-MCU_IP_ADDRESS = "127.0.0.1" # Loopback device - OK for testing without board attached
+MCU_IP_ADDRESS = "10.0.0.43" # Static IP address set on the MCU
+#MCU_IP_ADDRESS = "127.0.0.1" # Loopback device - OK for testing without board attached
 MCU_PORT = 7
 HOST_PC_PORT = 7
 
@@ -213,6 +213,7 @@ for msg_size in MESSAGE_SIZES:
                 sock.connect(server_address)
 
             message = test["message"].encode()
+            print("sent " + test["message"])
             times = []
 
             print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
@@ -226,6 +227,7 @@ for msg_size in MESSAGE_SIZES:
                         t0 = time.perf_counter()
                         sent = sock.sendto(message, server_address)
                         data, server = sock.recvfrom(BUFFER_SIZE)
+                        print("received " + str(data))
                         t1 = time.perf_counter()
                         times.append(t1 - t0)
                 elif (PROTOCOL == "TCP"):
