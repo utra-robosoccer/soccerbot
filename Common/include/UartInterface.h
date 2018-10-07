@@ -28,7 +28,7 @@
 
 
 /******************************* UartInterface *******************************/
-namespace UART{
+namespace uart{
 // Types & enums
 // ----------------------------------------------------------------------------
 /**
@@ -61,14 +61,9 @@ public:
     virtual ~UartInterface() {}
 
     /**
-     * @brief Associates the class with a particular UART module on the MCU
-     * @param uartHandlePtr Pointer to a structure that contains
-     *        the configuration information for the desired UART module
-     */
-    virtual void setUartPtr(UART_HandleTypeDef* uartHandlePtr) = 0;
-
-    /**
      * @brief  Polled (blocking) transmission
+     * @param  uartHandlePtr Pointer to a structure that contains
+     *         the configuration information for the desired UART module
      * @param  arrTransmit Pointer to the array of bytes to be sent
      * @param  numBytes The number of bytes to be sent
      * @param  timeout The number of ms to wait before the data transfer to
@@ -76,13 +71,16 @@ public:
      * @return 0 if success, otherwise an error code from 1 to 3
      */
     virtual HAL_StatusTypeDef transmitPoll(
+        const UART_HandleTypeDef* uartHandlePtr,
         uint8_t* arrTransmit,
         size_t numBytes,
         uint32_t timeout
-    ) = 0;
+    ) const = 0;
 
     /**
      * @brief  Polled (blocking) reception
+     * @param  uartHandlePtr Pointer to a structure that contains
+     *         the configuration information for the desired UART module
      * @param  arrReceive Pointer to the receive buffer
      * @param  numBytes The number of bytes to be received
      * @param  timeout The number of ms to wait before the data transfer to
@@ -90,29 +88,42 @@ public:
      * @return 0 if success, otherwise an error code from 1 to 3
      */
     virtual HAL_StatusTypeDef receivePoll(
+        const UART_HandleTypeDef* uartHandlePtr,
         uint8_t* arrReceive,
         size_t numBytes,
         uint32_t timeout
-    ) = 0;
+    ) const = 0;
 
 #if defined(THREADED)
     /**
-     * @brief   Interrupt-driven transmission. Can only be stopped upon the
-     *          transfer finishing or by calling abortTransmit()
-     * @param   arrTransmit Pointer to the array of bytes to be sent
-     * @param   numBytes The number of bytes to be sent
-     * @return  0 if success, otherwise an error code from 1 to 3
+     * @brief  Interrupt-driven transmission. Can only be stopped upon the
+     *         transfer finishing or by calling abortTransmit()
+     * @param  uartHandlePtr Pointer to a structure that contains
+     *         the configuration information for the desired UART module
+     * @param  arrTransmit Pointer to the array of bytes to be sent
+     * @param  numBytes The number of bytes to be sent
+     * @return 0 if success, otherwise an error code from 1 to 3
      */
-    virtual HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes) = 0;
+    virtual HAL_StatusTypeDef transmitIT(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrTransmit,
+        size_t numBytes
+    ) const = 0;
 
     /**
-     * @brief   Interrupt-driven reception. Can only be stopped upon the
-     *          transfer finishing or by calling abortTransmit()
-     * @param   arrTransmit Pointer to the receive buffer
-     * @param   numBytes The number of bytes to be received
-     * @return  0 if success, otherwise an error code from 1 to 3
+     * @brief  Interrupt-driven reception. Can only be stopped upon the
+     *         transfer finishing or by calling abortTransmit()
+     * @param  uartHandlePtr Pointer to a structure that contains
+     *         the configuration information for the desired UART module
+     * @param  arrTransmit Pointer to the receive buffer
+     * @param  numBytes The number of bytes to be received
+     * @return 0 if success, otherwise an error code from 1 to 3
      */
-    virtual HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes) = 0;
+    virtual HAL_StatusTypeDef receiveIT(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrReceive,
+        size_t numBytes
+    ) const = 0;
 
     /**
      * @brief   DMA-driven transmission. Can only be stopped upon the transfer
@@ -121,30 +132,48 @@ public:
      * @param   numBytes The number of bytes to be sent
      * @return  0 if success, otherwise an error code from 1 to 3
      */
-    virtual HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes) = 0;
+    virtual HAL_StatusTypeDef transmitDMA(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrTransmit,
+        size_t numBytes
+    ) const = 0;
 
     /**
-     * @brief   DMA-driven reception. Can only be stopped upon the transfer
-     *          finishing or by calling abortTransmit()
-     * @param   arrTransmit Pointer to the receive buffer
-     * @param   numBytes The number of bytes to be received
-     * @return  0 if success, otherwise an error code from 1 to 3
+     * @brief  DMA-driven reception. Can only be stopped upon the transfer
+     *         finishing or by calling abortTransmit()
+     * @param  uartHandlePtr Pointer to a structure that contains
+     *         the configuration information for the desired UART module
+     * @param  arrTransmit Pointer to the receive buffer
+     * @param  numBytes The number of bytes to be received
+     * @return 0 if success, otherwise an error code from 1 to 3
      */
-    virtual HAL_StatusTypeDef receiveDMA(uint8_t* arrReceive, size_t numBytes) = 0;
+    virtual HAL_StatusTypeDef receiveDMA(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrReceive,
+        size_t numBytes
+    ) const = 0;
 
     /**
      * @brief Aborts an asynchronous transmission
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
      */
-    virtual void abortTransmit() = 0;
+    virtual void abortTransmit(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const = 0;
 
     /**
      * @brief Aborts an asynchronous reception
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
      */
-    virtual void abortReceive() = 0;
+    virtual void abortReceive(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const = 0;
 #endif
 };
 
-} // end namespace UART
+} // end namespace uart
 
 
 
