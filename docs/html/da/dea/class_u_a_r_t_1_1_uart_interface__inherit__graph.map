@@ -1,0 +1,4 @@
+<map id="UART::UartInterface" name="UART::UartInterface">
+<area shape="rect" id="node2" href="$dd/dd8/class_m_o_c_k_s_1_1_mock_uart_interface.html" title="MOCKS::MockUartInterface" alt="" coords="5,80,188,107"/>
+<area shape="rect" id="node3" href="$d8/deb/class_u_a_r_t_1_1_hal_uart_interface.html" title="UART::HalUartInterface" alt="" coords="212,80,368,107"/>
+</map>

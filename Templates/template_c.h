@@ -13,9 +13,8 @@
 
 
 
-/******************** Define to prevent recursive inclusion ******************/
-#ifndef __TEMPLATE_H__
-#define __TEMPLATE_H__
+#ifndef TEMPLATE_H
+#define TEMPLATE_H
 
 
 
@@ -61,4 +60,4 @@
  */
 /* end TODO -- module name defined on line 7 */
 
-#endif /* __TEMPLATE_H__ */
+#endif /* TEMPLATE_H */

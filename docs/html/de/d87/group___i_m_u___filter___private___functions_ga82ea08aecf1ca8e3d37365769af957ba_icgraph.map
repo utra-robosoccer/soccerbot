@@ -1,0 +1,4 @@
+<map id="MPUFilter_readOutputVel" name="MPUFilter_readOutputVel">
+<area shape="rect" id="node2" href="$d5/dd2/group___i_m_u___filter___public___functions.html#ga6fe05d6ccad148fcc051d3e731fd8f78" title="Reads Vz, Vy, and Vx from the IMU handle and writes them into their corresponding FIR filters..." alt="" coords="224,5,431,32"/>
+<area shape="rect" id="node3" href="$d0/d55/group___threads.html#ga2b1b4b3fe51fe46654895c7626bf83bd" title="This function is executed in the context of the IMUTask thread. During each control cycle..." alt="" coords="479,5,580,32"/>
+</map>
