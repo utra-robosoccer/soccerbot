@@ -110,11 +110,14 @@ SCHEDDL_PRIORITY = 1
 # Computed parameters
 OUTPUT_JSON_NAME = "eth_echo_test_{}_{}.json".format(PROTOCOL, DATE_TIME)
 
+# Script parameters
+SHOW_MESSAGES = False
+
 # Overwrite any variables if command line arguments are given
 arguments = sys.argv[1:]
 for arg in arguments:
     if arg == "-h":
-        print("options:\n    -h    show help output\n    -n    test name, also used as test output file name\n    -t    number of trials for each message size\n    -i    interval of time in milliseconds to wait after each trial\n    -p    networking protocol to use (UDP or TCP)\n    --mcu-ipaddr    the IP address of the MCU\n    --mcu-port    port to send packets to on the MCU\n    --pc-port    port on the PC to bind socket to\n")
+        print("options:\n    -h    show help output\n    -n    test name, also used as test output file name\n    -t    number of trials for each message size\n    -i    interval of time in milliseconds to wait after each trial\n    -p    networking protocol to use (UDP or TCP)\n    --mcu-ipaddr    the IP address of the MCU\n    --mcu-port    port to send packets to on the MCU\n    --pc-port    port on the PC to bind socket to\n    --show-messages    if specified, show the bytes sent and received as chars\n")
         exit(0)
 
 args = {}
@@ -142,6 +145,8 @@ for arg in arguments:
     elif arg == "--pc-port":
         args["pc_port"] = get_next_arg(arg, arguments)
         args["pc_port"] = int(args["pc_port"])
+    elif arg == "--show-messages":
+        args["show_messages"] = True
 
 # XXX: need to actually test passing in all of these from command line
 if "name" in args:
@@ -160,6 +165,8 @@ elif "mcu_port" in args:
     MCU_PORT = args["mcu_port"]
 elif "pc_port" in args:
     HOST_PC_PORT = args["pc_port"]
+elif "show_messages" in args:
+    SHOW_MESSAGES = args["show_messages"]
 
 ETH_ECHO_TEST["name"] = OUTPUT_JSON_NAME
 ETH_ECHO_TEST["config"]["message_sizes"] = str(MESSAGE_SIZES)
@@ -213,34 +220,40 @@ for msg_size in MESSAGE_SIZES:
                 sock.connect(server_address)
 
             message = test["message"].encode()
-            print("sent " + test["message"])
+            
+            print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
+            
+            if SHOW_MESSAGES == True:
+                print("    sent " + str(message))
             times = []
 
-            print("---- Running {} test: message_size: {} | num_echoes: {} | trial: {}".format(PROTOCOL, msg_size, num_echoes, i_trial))
 
             # TODO: should handle timeouts here, if recv is stuck (using python select), and allow several attempts if timeout occurs
             # TODO: should mark timed out data somehow with e.g. NaN
-            # TODO: check each received packet for a "stamp" done by the MCU, to confirm the MCU opened it
             try:
                 if (PROTOCOL == "UDP"):
                     for i in range(num_echoes):
                         t0 = time.perf_counter()
                         sent = sock.sendto(message, server_address)
                         data, server = sock.recvfrom(BUFFER_SIZE)
-                        print("received " + str(data))
                         t1 = time.perf_counter()
                         times.append(t1 - t0)
+                        if SHOW_MESSAGES == True:
+                            print("    received " + str(data))
                 elif (PROTOCOL == "TCP"):
                     for i in range(num_echoes):
                         t0 = time.perf_counter()
                         sent = sock.sendall(message)
                         amount_received = 0
                         amount_expected = len(message)
+                        data = None
                         while amount_received < amount_expected:
                             data = sock.recv(TCP_RECEIVE_BUFFER_SIZE)
                             amount_received += len(data)
                         t1 = time.perf_counter()
                         times.append(t1 - t0)
+                        if SHOW_MESSAGES == True:
+                            print("    received " + str(data))
             except Exception as e:
                 sys.stderr.write("error: Exception {} while echoing".format(e))
                 exit(1)
