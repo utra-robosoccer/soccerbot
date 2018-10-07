@@ -15,6 +15,8 @@
 #include <cstdint>
 
 #include "PcInterface.h"
+
+// TODO: for PcInterface to work on F4, need to have if defined(board) to include this or not
 #include "MockUdpInterface.h"
 
 #include <gtest/gtest.h>

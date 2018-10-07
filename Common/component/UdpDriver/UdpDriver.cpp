@@ -12,6 +12,8 @@
 
 // May rename to LwipUdpDriver as it is specific to lwIP.
 
+// TODO: use const_cast
+
 // TOOD: check defgroups are correct in cpp and h
 #include <UdpDriver.h>
 

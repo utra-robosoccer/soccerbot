@@ -42,7 +42,7 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xTaskNotifyWait(
     uint32_t *pulNotificationValue,
     TickType_t xTicksToWait
 )
-{
+const {
     return xTaskNotifyWait(ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait);
 }
 
@@ -51,7 +51,7 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xQueueReceive(
     void *pvBuffer,
     TickType_t xTicksToWait
 )
-{
+const {
     return xQueueReceive(xQueue, pvBuffer, xTicksToWait);
 }
 
@@ -60,7 +60,7 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xQueueSend(
     const void * pvItemToQueue,
     TickType_t xTicksToWait
 )
-{
+const {
     return xQueueSend(xQueue, pvItemToQueue, xTicksToWait);
 }
 
@@ -68,14 +68,14 @@ BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreTake(
     SemaphoreHandle_t xSemaphore,
     TickType_t xBlockTime
 )
-{
+const {
     return xSemaphoreTake(xSemaphore, xBlockTime);
 }
 
 BaseType_t FunctionalFreeRTOSInterface::OS_xSemaphoreGive(
     SemaphoreHandle_t xSemaphore
 )
-{
+const {
     return xSemaphoreGive(xSemaphore);
 }
 
@@ -83,14 +83,14 @@ void FunctionalFreeRTOSInterface::OS_vTaskDelayUntil(
     TickType_t * const pxPreviousWakeTime,
     const TickType_t xTimeIncrement
 )
-{
+const {
     vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
 }
 
 osStatus FunctionalFreeRTOSInterface::OS_osDelay (
     uint32_t millisec
 )
-{
+const {
     return osDelay(millisec);
 }
 

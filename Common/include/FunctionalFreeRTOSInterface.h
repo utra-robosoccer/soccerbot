@@ -42,37 +42,37 @@ public:
         uint32_t ulBitsToClearOnExit,
         uint32_t *pulNotificationValue,
         TickType_t xTicksToWait
-    ) override final;
+    ) const override final;
 
     BaseType_t OS_xQueueReceive(
         QueueHandle_t xQueue,
         void *pvBuffer,
         TickType_t xTicksToWait
-    ) override final;
+    ) const override final;
 
     BaseType_t OS_xQueueSend(
         QueueHandle_t xQueue,
         const void * pvItemToQueue,
         TickType_t xTicksToWait
-    ) override final;
+    ) const override final;
 
     BaseType_t OS_xSemaphoreTake(
         SemaphoreHandle_t xSemaphore,
         TickType_t xBlockTime
-    ) override final;
+    ) const override final;
 
     BaseType_t OS_xSemaphoreGive(
         SemaphoreHandle_t xSemaphore
-    ) override final;
+    ) const override final;
 
     void OS_vTaskDelayUntil(
         TickType_t * const pxPreviousWakeTime,
         const TickType_t xTimeIncrement
-    ) override final;
+    ) const override final;
 
     osStatus OS_osDelay (
         uint32_t millisec
-    ) override final;
+    ) const override final;
 };
 
 } // end namespace Functional_FreeRTOS_Interface
