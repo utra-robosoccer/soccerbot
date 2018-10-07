@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    MockFreeRTOSInterface.h
+  * @file    MockOsInterface.h
   * @author  Izaak Niksan
   * @author  Tyler Gamvrelis
   *
-  * @defgroup MockFreeRTOSInterface
+  * @defgroup MockOsInterface
   * @ingroup Mocks
   * @{
   *****************************************************************************
@@ -13,8 +13,8 @@
 
 
 
-#ifndef MOCK_FREERTOS_INTERFACE_H
-#define MOCK_FREERTOS_INTERFACE_H
+#ifndef MOCK_OS_INTERFACE_H
+#define MOCK_OS_INTERFACE_H
 
 
 
@@ -22,24 +22,24 @@
 /********************************* Includes **********************************/
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "OsInterface.h"
 
-#include "FreeRTOSInterface.h"
-using namespace FreeRTOS_Interface;
-
-
+using os::OsInterface;
 
 
-/************************** Test_FreeRTOS_Interface **************************/
-namespace MOCKS{
+
+
+/****************************** MockOsInterface ******************************/
+namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class MockFreeRTOSInterface Implements FreeRTOSInterface for unit testing
+ * @class MockOsInterface Implements OsInterface for unit testing
  *        purposes
  */
-class MockFreeRTOSInterface : public FreeRTOSInterface {
+class MockOsInterface : public OsInterface {
 public:
-    MOCK_METHOD4(
+    MOCK_CONST_METHOD4(
         OS_xTaskNotifyWait,
         BaseType_t(
             uint32_t ulBitsToClearOnEntry,
@@ -49,7 +49,7 @@ public:
         )
     );
 
-    MOCK_METHOD3(
+    MOCK_CONST_METHOD3(
         OS_xQueueReceive,
         BaseType_t(
             QueueHandle_t xQueue,
@@ -58,7 +58,7 @@ public:
         )
     );
 
-    MOCK_METHOD3(
+    MOCK_CONST_METHOD3(
         OS_xQueueSend,
         BaseType_t(
             QueueHandle_t xQueue,
@@ -67,7 +67,7 @@ public:
         )
     );
 
-    MOCK_METHOD2(
+    MOCK_CONST_METHOD2(
         OS_xSemaphoreTake,
         BaseType_t(
             SemaphoreHandle_t xSemaphore,
@@ -75,14 +75,14 @@ public:
         )
     );
 
-    MOCK_METHOD1(
+    MOCK_CONST_METHOD1(
         OS_xSemaphoreGive,
         BaseType_t(
             SemaphoreHandle_t xSemaphore
         )
     );
 
-    MOCK_METHOD2(
+    MOCK_CONST_METHOD2(
         OS_vTaskDelayUntil,
         void(
             TickType_t* const pxPreviousWakeTime,
@@ -90,7 +90,7 @@ public:
         )
     );
 
-    MOCK_METHOD1(
+    MOCK_CONST_METHOD1(
         OS_osDelay,
         osStatus(
             uint32_t millisec
@@ -98,7 +98,7 @@ public:
     );
 };
 
-} // end namespace Test_FreeRTOS_Interface
+} // end namespace mocks
 
 
 
@@ -106,6 +106,6 @@ public:
 /**
  * @}
  */
-/* end - MockFreeRTOSInterface */
+/* end - MockOsInterface */
 
-#endif /* MOCK_FREERTOS_INTERFACE_H */
+#endif /* MOCK_OS_INTERFACE_H */

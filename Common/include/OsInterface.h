@@ -1,11 +1,11 @@
 /**
   *****************************************************************************
-  * @file    FreeRTOSInterface.h
+  * @file    OsInterface.h
   * @author  Izaak Niksan
   * @brief   Defines an abstract interface of FreeRTOS functions.
   *
-  * @defgroup Header
-  * @ingroup FreeRTOS_Interface
+  * @defgroup Interface
+  * @ingroup  OS
   * @{
   *****************************************************************************
   */
@@ -13,8 +13,8 @@
 
 
 
-#ifndef FREERTOS_INTERFACE_H
-#define FREERTOS_INTERFACE_H
+#ifndef OS_INTERFACE_H
+#define OS_INTERFACE_H
 
 
 
@@ -28,57 +28,57 @@
 
 
 
-/***************************** FreeRTOS_Interface ****************************/
-namespace FreeRTOS_Interface {
+/******************************* OsInterface *********************************/
+namespace os{
 // Classes and structs
 // ----------------------------------------------------------------------------
-class FreeRTOSInterface {
+class OsInterface {
 public:
-    virtual ~FreeRTOSInterface() {}
+    virtual ~OsInterface() {}
 
     virtual BaseType_t OS_xTaskNotifyWait(
         uint32_t ulBitsToClearOnEntry,
         uint32_t ulBitsToClearOnExit,
         uint32_t *pulNotificationValue,
         TickType_t xTicksToWait
-    ) = 0;
+    ) const = 0;
 
     virtual BaseType_t OS_xQueueReceive(
         QueueHandle_t xQueue,
         void *pvBuffer,
         TickType_t xTicksToWait
-    ) = 0;
+    ) const = 0;
 
     virtual BaseType_t OS_xQueueSend(
         QueueHandle_t xQueue,
         const void * pvItemToQueue,
         TickType_t xTicksToWait
-    ) = 0;
+    ) const = 0;
 
     virtual BaseType_t OS_xSemaphoreTake(
         SemaphoreHandle_t xSemaphore,
         TickType_t xBlockTime
-    ) = 0;
+    ) const = 0;
 
     virtual BaseType_t OS_xSemaphoreGive(
         SemaphoreHandle_t xSemaphore
-    ) = 0;
+    ) const = 0;
 
     virtual void OS_vTaskDelayUntil(
         TickType_t * const pxPreviousWakeTime,
         const TickType_t xTimeIncrement
-    ) = 0;
+    ) const = 0;
 
     virtual osStatus OS_osDelay (
         uint32_t millisec
-    ) = 0;
+    ) const = 0;
 };
 
-} // end namespace FreeRTOS_Interface
+} // end namespace os
 
 /**
  * @}
  */
 /* end - Header */
 
-#endif /* FREERTOS_INTERFACE_H */
+#endif /* OS_INTERFACE_H */
