@@ -30,9 +30,6 @@ import scheddl
 #
 # Command line arguments will make it easier to run eth_echo_test.py
 # as part of a larger testing script (written in e.g. bash).
-#
-# TODO: skeleton csv file to include in repo as a method of plotting
-# TODO: readme for how to use all the Ethernet testing files
 
 def gen_random_string(n):
     return ''.join([str(chr(ord(' ') + (random.randint(1, ord('~') - ord(' ')) % (ord('~') - ord(' '))))) for i in range(n)])
