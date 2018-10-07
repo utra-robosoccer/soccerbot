@@ -10,7 +10,7 @@
   *****************************************************************************
   */
 
-#include <MockFreeRTOSInterface.h>
+#include <MockOsInterface.h>
 #include <MockUdpInterface.h>
 #include <UdpDriver.h>
 
@@ -25,8 +25,8 @@ constexpr u16_t TEST_PORT = 7;
 constexpr u16_t TEST_PORT_PC = 6340;
 const udp_interface::UdpInterface *NON_NULL_PTR_UDP_INTERFACE =
         (udp_interface::UdpInterface *) 0x71;
-const FreeRTOS_Interface::FreeRTOSInterface *NON_NULL_PTR_FREERTOS_INTERFACE =
-        (FreeRTOS_Interface::FreeRTOSInterface *) 0x72;
+const os::OsInterface *NON_NULL_PTR_FREERTOS_INTERFACE =
+        (os::OsInterface *) 0x72;
 struct udp_pcb *NON_NULL_PTR_PCB = (struct udp_pcb *) 0x51;
 struct pbuf_t *NON_NULL_PTR_PBUF = (struct pbuf_t *) 0x61;
 
@@ -81,14 +81,14 @@ TEST(UdpDriverTests, TxPbufDefaultInitializesToNull) {
 }
 
 TEST(UdpDriverTests, RxPbufDefaultInitializesToNullThreaded) {
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockOsInterface mockOsInterface;
     udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getRxPbufThreaded(), nullptr);
 }
 
 TEST(UdpDriverTests, TxPbufDefaultInitializesToNullThreaded) {
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockOsInterface mockOsInterface;
     udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getTxPbufThreaded(), nullptr);
@@ -119,21 +119,21 @@ TEST(UdpDriverTests, CanInitializePortPcWithParameterizedConstructor) {
 }
 
 TEST(UdpDriverTests, CanInitializeUdpInterfaceWithParameterizedConstructor) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
             ZERO_U16_T, &mockUdpInterface, nullptr);
     ASSERT_EQ(udpDriverUnderTest.getUdpInterface(), &mockUdpInterface);
 }
 
 TEST(UdpDriverTests, CanInitializeOsInterfaceWithParameterizedConstructor) {
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockOsInterface mockOsInterface;
     udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getOsInterface(), &mockOsInterface);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, udpRecv(_, _, _)).Times(1);
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
@@ -147,7 +147,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnNew) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(nullptr));
 
     UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
@@ -157,7 +157,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnNew) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, udpRemove(_)).Times(1); // Assume removal happens without error
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_USE));
@@ -171,8 +171,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveSuccess) {
-    MOCKS::MockUdpInterface mockUdpInterface;
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, pbufFree(_)).Times(1).WillOnce(
             Return((u8_t) 1));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
@@ -186,8 +186,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveSuccess) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnSemaphoreTake) {
-    MOCKS::MockUdpInterface mockUdpInterface;
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdFALSE));
     EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
@@ -199,8 +199,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnSemaphoreTake) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnPbufFreeNoneFreed) {
-    MOCKS::MockUdpInterface mockUdpInterface;
-    MOCKS::MockFreeRTOSInterface mockOsInterface;
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, pbufFree(_)).Times(1).WillOnce(
             Return((u8_t) 0));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
@@ -214,7 +214,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnPbufFreeNoneFreed) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitSuccess) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, pbufFree(_)).Times(1).WillOnce(
             Return((u8_t) 1));
     EXPECT_CALL(mockUdpInterface, udpDisconnect(_)).Times(1);
@@ -230,7 +230,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitSuccess) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnConnect) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
             Return(ERR_VAL)); // use ERR_VAL; anything but ERR_OK works
 
@@ -241,7 +241,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnConnect) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnSend) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, udpSend(_, _)).Times(1).WillOnce(
             Return(ERR_VAL));
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
@@ -254,7 +254,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnSend) {
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnPbufFreeNoneFreed) {
-    MOCKS::MockUdpInterface mockUdpInterface;
+    mocks::MockUdpInterface mockUdpInterface;
     EXPECT_CALL(mockUdpInterface, pbufFree(_)).Times(1).WillOnce(
             Return((u8_t) 0));
     EXPECT_CALL(mockUdpInterface, udpDisconnect(_)).Times(1);

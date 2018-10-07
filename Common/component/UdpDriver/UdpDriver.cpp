@@ -29,7 +29,7 @@ UdpDriver::UdpDriver() {
 UdpDriver::UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
         const u16_t portIn, const u16_t portPcIn,
         const udp_interface::UdpInterface *udpInterfaceIn,
-        const FreeRTOS_Interface::FreeRTOSInterface *osInterfaceIn) :
+        const os::OsInterface *osInterfaceIn) :
         ipaddr(ipaddrIn), ipaddrPc(ipaddrPcIn), port(portIn), portPc(portPcIn), udpInterface(
                 udpInterfaceIn), osInterface(osInterfaceIn) {
     // TODO: call semaphore create functions
@@ -104,7 +104,7 @@ const udp_interface::UdpInterface* UdpDriver::getUdpInterface() const {
     return udpInterface;
 }
 
-const FreeRTOS_Interface::FreeRTOSInterface* UdpDriver::getOsInterface() const {
+const os::OsInterface* UdpDriver::getOsInterface() const {
     return osInterface;
 }
 

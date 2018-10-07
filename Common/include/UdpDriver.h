@@ -14,7 +14,7 @@
 #define UDP_DRIVER_H
 
 #include <UdpInterface.h>
-#include <FreeRTOSInterface.h>
+#include <OsInterface.h>
 
 namespace udp_driver {
 
@@ -26,7 +26,7 @@ public:
     UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
             const u16_t portIn, const u16_t portPcIn,
             const udp_interface::UdpInterface *udpInterfaceIn,
-            const FreeRTOS_Interface::FreeRTOSInterface *osInterfaceIn);
+            const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
     bool setup();
@@ -45,7 +45,7 @@ public:
 
     // Read-only unless set function provided
     const udp_interface::UdpInterface* getUdpInterface() const;
-    const FreeRTOS_Interface::FreeRTOSInterface* getOsInterface() const;
+    const os::OsInterface* getOsInterface() const;
     struct pbuf* getRxPbuf() const;
     struct pbuf* getTxPbuf() const;
     struct pbuf* getRxPbufThreaded() const;
@@ -65,7 +65,7 @@ private:
 
     // No set function provided
     const udp_interface::UdpInterface *udpInterface = nullptr;
-    const FreeRTOS_Interface::FreeRTOSInterface *osInterface = nullptr;
+    const os::OsInterface *osInterface = nullptr;
 
     // References to non-const structures
     struct udp_pcb *pcb = nullptr;

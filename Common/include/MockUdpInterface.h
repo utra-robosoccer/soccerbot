@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace MOCKS {
+namespace mocks {
 
 class MockUdpInterface: public udp_interface::UdpInterface {
 public:

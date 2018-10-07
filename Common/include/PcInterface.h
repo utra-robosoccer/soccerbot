@@ -16,7 +16,7 @@
 #include <cstdint>
 #include <UdpDriver.h>
 #include <UartDriver.h>
-#include <FreeRTOSInterface.h>
+#include <OsInterface.h>
 
 namespace pc_interface {
 
@@ -41,22 +41,22 @@ public:
     bool setRxBuffer(const uint8_t *rxArrayIn);
     bool setTxBuffer(const uint8_t *txArrayIn);
     bool setUdpDriver(udp_driver::UdpDriver *udpDriverIn);
-    bool setUartDriver(UART::UartDriver *uartDriverIn);
-    bool setOsInterface(FreeRTOS_Interface::FreeRTOSInterface *osInterfaceIn);
+    bool setUartDriver(uart::UartDriver *uartDriverIn);
+    bool setOsInterface(os::OsInterface *osInterfaceIn);
 
     bool getRxBuffer(uint8_t *rxArrayOut) const;
     bool getTxBuffer(uint8_t *txArrayOut) const;
     PcProtocol getProtocol() const;
     udp_driver::UdpDriver* getUdpDriver() const;
-    UART::UartDriver* getUartDriver() const;
-    FreeRTOS_Interface::FreeRTOSInterface* getOsInterface() const;
+    uart::UartDriver* getUartDriver() const;
+    os::OsInterface* getOsInterface() const;
 
 private:
     const PcProtocol protocol = PcProtocol::UDP;
 
     udp_driver::UdpDriver *udpDriver = nullptr;
-    UART::UartDriver *uartDriver = nullptr;
-    FreeRTOS_Interface::FreeRTOSInterface *osInterface = nullptr;
+    uart::UartDriver *uartDriver = nullptr;
+    os::OsInterface *osInterface = nullptr;
 
     uint8_t rxBuffer[PC_INTERFACE_BUFFER_SIZE] = { };
     uint8_t txBuffer[PC_INTERFACE_BUFFER_SIZE] = { };
