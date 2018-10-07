@@ -100,7 +100,7 @@ udp_driver::UdpDriver* PcInterface::getUdpDriver() const {
     return udpDriver;
 }
 
-bool PcInterface::setUartDriver(UART::UartDriver *uartDriverIn) {
+bool PcInterface::setUartDriver(uart::UartDriver *uartDriverIn) {
     if (getProtocol() != PcProtocol::USB_UART) {
         return false;
     }
@@ -111,12 +111,12 @@ bool PcInterface::setUartDriver(UART::UartDriver *uartDriverIn) {
     return true;
 }
 
-UART::UartDriver* PcInterface::getUartDriver() const {
+uart::UartDriver* PcInterface::getUartDriver() const {
     return uartDriver;
 }
 
 bool PcInterface::setOsInterface(
-        FreeRTOS_Interface::FreeRTOSInterface *osInterfaceIn) {
+        os::OsInterface *osInterfaceIn) {
     if (!osInterfaceIn) {
         return false;
     }
@@ -124,7 +124,7 @@ bool PcInterface::setOsInterface(
     return true;
 }
 
-FreeRTOS_Interface::FreeRTOSInterface* PcInterface::getOsInterface() const {
+os::OsInterface* PcInterface::getOsInterface() const {
     return osInterface;
 }
 
