@@ -35,11 +35,6 @@ void LwipUdpInterface::udpRemove(struct udp_pcb *pcb) const {
     udp_remove(pcb);
 }
 
-// TODO: should implement error checking here
-void LwipUdpInterface::ethernetifInput(void const * argument) const {
-    ethernetif_input(argument);
-}
-
 err_t LwipUdpInterface::udpConnect(struct udp_pcb *pcb, const ip_addr_t *ipaddr,
         u16_t port) const {
     return udp_connect(pcb, ipaddr, port);
