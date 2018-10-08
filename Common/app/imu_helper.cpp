@@ -21,50 +21,6 @@
 
 /******************************** File-local *********************************/
 namespace{
-// Constants
-// ----------------------------------------------------------------------------
-/******************************* SOURCE LICENSE *********************************
-Copyright (c) 2018 MicroModeler.
-
-A non-exclusive, nontransferable, perpetual, royalty-free license is granted to the Licensee to
-use the following Information for academic, non-profit, or government-sponsored research purposes.
-Use of the following Information under this License is restricted to NON-COMMERCIAL PURPOSES ONLY.
-Commercial use of the following Information requires a separately executed written license agreement.
-
-This Information is distributed WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-******************************* END OF LICENSE *********************************/
-// Link with library: libarm_cortexM4_mathL.a (or equivalent)
-// Add CMSIS/Lib/GCC to the library search path
-// Add CMSIS/Include to the include search path
-// A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
-/**
- * @brief Filter coefficients for angular velocity filter. (11 - 1) / 2 = 5
- *        sample delay. Coefficients generated using MicroModeler DSP, a free
- *        online tool.
- */
-static const float velocityCoefficients[11] =
-{
-    0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315,
-    0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841
-};
-
-/**
- * @brief Number of taps in the velocity filter (equal to number of
- *        coefficients)
- */
-static constexpr uint16_t velNumTaps = 11;
-
-/**
- * @brief Number of input samples to be buffered before updating filter
- *        output
- */
-static constexpr uint32_t velBlockSize = 1;
-
-
-
-
 // Classes and structs
 // ----------------------------------------------------------------------------
 /** @brief Indexes into the velocityFilters array */
@@ -81,7 +37,7 @@ enum class VFilter : uint8_t{
 // Variables
 // ----------------------------------------------------------------------------
 /** @brief Angular velocity filters along x-, y-, and z-axes */
-static dsp::fir_f32<velNumTaps, velBlockSize> velocityFilters[
+static dsp::imuVelocityFilter velocityFilters[
     static_cast<int>(VFilter::NUM_VFILTERS)
 ];
 
@@ -95,8 +51,8 @@ namespace app{
 // Functions
 // ----------------------------------------------------------------------------
 void initImuProcessor(){
-    for(auto filter : velocityFilters){
-        filter.init(velNumTaps, (float*)velocityCoefficients, velBlockSize);
+    for(auto& filter : velocityFilters){
+        filter.init();
     }
 }
 
