@@ -41,7 +41,7 @@ bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
 }
 
 TEST(UdpDriverTests, IpAddrDefaultInitializesToZeroIpAddrT) {
-    udp_driver::UdpDriver udpDriverUnderTest;
+    udp_driver::UdpDriver udpDriverUnderTest; // TODO: should modify constructor to pass in "MOCK" or "REAL" rather than pass in a the interface
     ASSERT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
 }
 
@@ -182,7 +182,6 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveSuccess) {
             Return((u8_t) 1));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdTRUE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);
@@ -195,7 +194,6 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnSemaphoreTake) {
     mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdFALSE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);
@@ -210,7 +208,6 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnPbufFreeNoneFreed) {
             Return((u8_t) 0));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdTRUE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);

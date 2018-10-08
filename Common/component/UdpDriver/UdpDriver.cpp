@@ -57,13 +57,12 @@ bool UdpDriver::setup() {
     return success;
 }
 
+// ethernetif_input needs to be called before this
 // Should have more error checking where void is returned where possible
 bool UdpDriver::receive(uint8_t *rxArrayOut) {
     if (!getUdpInterface()) {
         return false;
     }
-
-    udpInterface->ethernetifInput(gnetif); // Extract packets from network interface
 
     BaseType_t osError = osInterface->OS_xSemaphoreTake(recvSemaphore,
             SEMAPHORE_WAIT_NUM_TICKS); // Wait for callback to write data members (including packets) to UdpInterface
