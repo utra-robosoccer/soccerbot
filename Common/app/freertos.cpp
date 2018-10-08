@@ -146,7 +146,7 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor11, Motor12, Motor13, Motor14, Motor15,
 						Motor16, Motor17, Motor18;
 
-imu::MPU6050 IMUdata (1, &hi2c1);
+imu::MPU6050 IMUdata (&hi2c1);
 
 bool setupIsDone = false;
 static volatile uint32_t error;

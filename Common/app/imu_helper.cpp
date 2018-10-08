@@ -58,18 +58,18 @@ void initImuProcessor(){
 
 void processImuData(imu::IMUStruct_t& imu){
     velocityFilters[static_cast<int>(VFilter::VX)].update(
-        &imu._x_Gyro,
-        &imu._x_Gyro,
+        &imu.x_Gyro,
+        &imu.x_Gyro,
         1
     );
     velocityFilters[static_cast<int>(VFilter::VY)].update(
-        &imu._y_Gyro,
-        &imu._y_Gyro,
+        &imu.y_Gyro,
+        &imu.y_Gyro,
         1
     );
     velocityFilters[static_cast<int>(VFilter::VZ)].update(
-        &imu._z_Gyro,
-        &imu._z_Gyro,
+        &imu.z_Gyro,
+        &imu.z_Gyro,
         1
     );
 }
@@ -77,7 +77,7 @@ void processImuData(imu::IMUStruct_t& imu){
 bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
     bool retval = false;
 
-    IMUdata.Read_Accelerometer_Withoffset_IT();
+    IMUdata.Read_Accelerometer_IT();
 
     // Gyroscope data is much more volatile/sensitive to changes than
     // acceleration data. To compensate, we feed in samples to the filter
@@ -90,7 +90,7 @@ bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
     // software.
     ++*numSamples;
     if(*numSamples % 16 == 0){
-        IMUdata.Read_Gyroscope_Withoffset_IT();
+        IMUdata.Read_Gyroscope_IT();
         retval = true;
     }
 
