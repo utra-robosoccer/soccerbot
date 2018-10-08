@@ -1,9 +1,10 @@
 /**
   *****************************************************************************
-  * @file    MPUFilter.h
+  * @file    dsp.h
   * @author  Tyler
   *
-  * @ingroup  DSP
+  * @defgroup Header
+  * @ingroup DSP
   *****************************************************************************
   */
 
@@ -19,7 +20,6 @@
 /********************************* Includes **********************************/
 #include "SystemConf.h" // Need to include this before arm_math
 #include <arm_math.h> // Include CMSIS header
-#include <string.h> // For memset
 
 
 
@@ -30,46 +30,21 @@ namespace dsp{
 // ----------------------------------------------------------------------------
 /**
  * @class fir_f32 Wrapper for arm_fir_f32 C object. Implements a FIR with float
- *        data type
+ *        data type. This class is abstract and it is expected that derived
+ *        classes will be filters suited for a specific purpose with fixed-size
+ *        state buffers
  */
-template<uint16_t T_numTaps, uint32_t T_blockSize>
 class fir_f32{
 public:
+    virtual ~fir_f32();
+
     /**
-     * @brief Initialize the filter. Writes go into the filter buffer if
-     *        blockSize > 1, and after blockSize samples have been written,
-     *        the shift register contents are updated
-     * @param numTaps The number of taps in the filter (equal to number of
-     *        coefficients
-     * @param pCoeffs Pointer to the array of filter coefficients
-     * @param blockSize The number of input samples to buffer before updating
-     *        the filter output
+     * @brief Initialize the filter
      * @param startVal The starting value
      */
-    inline void init(
-        uint16_t numTaps,
-        float32_t* pCoeffs,
-        uint32_t blockSize,
+    virtual void init(
         float startVal = 0
-    )
-    {
-        arm_fir_init_f32(
-            &instance,
-            numTaps,
-            pCoeffs,
-            state,
-            blockSize
-        );
-
-        if(startVal == 0){
-            memset(state, startVal, sizeof(state));
-        }
-        else{
-            for(size_t i = 0; i < sizeof(state); ++i){
-                state[i] = startVal;
-            }
-        }
-    }
+    ) = 0;
 
     /**
      * @brief  Write an input (or block of inputs) into the filter
@@ -79,13 +54,38 @@ public:
      * @param  blockSize Number of samples to be processed in this batch
      * @note   (count(dataSrc) == count(dataDest) == blockSize) must be true
      */
-    inline void update(float* dataSrc, float* dataDest, uint32_t blockSize){
-        arm_fir_f32(&instance, dataSrc, dataDest, blockSize);
-    }
+    void update(float* dataSrc, float* dataDest, uint32_t blockSize);
+
+protected:
+    arm_fir_instance_f32 instance; /**< Filter instance */
+};
+
+
+/**
+ * @class imuVelocityFilter FIR filter for angular velocity data from the IMU
+ */
+class imuVelocityFilter : public fir_f32{
+public:
+    imuVelocityFilter();
+    ~imuVelocityFilter();
+
+    /**
+     * @brief Initialize the filter by configuring its coefficients, state
+     *        buffer and block size
+     * @param startVal The starting value
+     */
+    void init(
+        float startVal = 0
+    ) override final;
 
 private:
-    arm_fir_instance_f32 instance;                  /**< Filter instance               */
-    float32_t state[T_numTaps + T_blockSize] = {0}; /**< Previous inputs and new input */
+    /**
+     * @brief Filter coefficients for angular velocity filter. Coefficients
+     *        generated using MicroModeler DSP, a free online tool
+     */
+    static const float32_t velCoeff[11];
+
+    float32_t state[12]; /**< Filter state */
 };
 
 } // end namespace dsp
