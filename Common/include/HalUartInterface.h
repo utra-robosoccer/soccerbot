@@ -37,39 +37,56 @@ public:
     HalUartInterface();
     ~HalUartInterface();
 
-    void setUartPtr(UART_HandleTypeDef* uartHandlePtr) override final;
-
     HAL_StatusTypeDef transmitPoll(
+        const UART_HandleTypeDef* uartHandlePtr,
         uint8_t* arrTransmit,
         size_t numBytes,
         uint32_t timeout
-    ) override final;
+    ) const override final;
 
     HAL_StatusTypeDef receivePoll(
+        const UART_HandleTypeDef* uartHandlePtr,
         uint8_t* arrReceive,
         size_t numBytes,
         uint32_t timeout
-    ) override final;
+    ) const override final;
 
 #if defined(THREADED)
-    HAL_StatusTypeDef transmitIT(uint8_t* arrTransmit, size_t numBytes) override final;
-    HAL_StatusTypeDef receiveIT(uint8_t* arrReceive, size_t numBytes) override final;
-    HAL_StatusTypeDef transmitDMA(uint8_t* arrTransmit, size_t numBytes) override final;
-    HAL_StatusTypeDef receiveDMA(uint8_t* arrReceive, size_t numBytes) override final;
+    HAL_StatusTypeDef transmitIT(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrTransmit,
+        size_t numBytes
+    ) const override final;
 
-    void abortTransmit() override final;
-    void abortReceive() override final;
+    HAL_StatusTypeDef receiveIT(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrReceive,
+        size_t numBytes
+    ) const override final;
+
+    HAL_StatusTypeDef transmitDMA(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrTransmit,
+        size_t numBytes
+    ) const override final;
+
+    HAL_StatusTypeDef receiveDMA(
+        const UART_HandleTypeDef* uartHandlePtr,
+        uint8_t* arrReceive,
+        size_t numBytes
+    ) const override final;
+
+    void abortTransmit(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const override final;
+
+    void abortReceive(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const override final;
 #endif
-
-private:
-    /**
-     * @brief Address of the container for the UART module associated with this
-     *        object
-     */
-    UART_HandleTypeDef* uartHandlePtr = nullptr;
 };
 
-} // end namespace UART
+} // end namespace uart
 
 
 

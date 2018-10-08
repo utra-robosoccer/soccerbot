@@ -120,14 +120,14 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="include|hardware|app|component|Drivers|Inc|Middlewares|Src|startup" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="include|hardware|app|component|Drivers|Inc|Middlewares|Src|startup" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="app"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="hardware"/>
+						<entry excluding="PcInterface|UdpDriver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
+						<entry excluding="LwipUdpInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="hardware"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
@@ -251,11 +251,11 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -275,16 +275,28 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.94282395;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.557606498">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957;fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1085673112">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957;fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1085673112">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957;fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.583718450;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.735752699">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.152389886;cdt.managedbuild.tool.gnu.cpp.compiler.input.2074198707">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791.;cdt.managedbuild.tool.gnu.c.compiler.mingw.base.2092657724;cdt.managedbuild.tool.gnu.c.compiler.input.1831537162">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
