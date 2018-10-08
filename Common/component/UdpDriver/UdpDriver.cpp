@@ -26,7 +26,7 @@ UdpDriver::UdpDriver() {
 
 }
 
-UdpDriver::UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
+UdpDriver::UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
         const u16_t portIn, const u16_t portPcIn,
         const udp_interface::UdpInterface *udpInterfaceIn,
         const os::OsInterface *osInterfaceIn) :
@@ -48,7 +48,7 @@ bool UdpDriver::setup() {
     if (!pcb) {
         return false;
     }
-    success = (udpInterface->udpBind(pcb, ipaddr, port) == ERR_OK);
+    success = (udpInterface->udpBind(pcb, &ipaddr, port) == ERR_OK);
     if (success) {
         udpInterface->udpRecv(pcb, recvCallback, this);
     } else {
@@ -87,7 +87,7 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn) {
     if (!bytesToPacket(txArrayIn)) {
         return false;
     }
-    if (udpInterface->udpConnect(pcb, ipaddrPc, portPc) != ERR_OK) {
+    if (udpInterface->udpConnect(pcb, &ipaddrPc, portPc) != ERR_OK) {
         return false;
     }
     if (udpInterface->udpSend(pcb, getTxPbuf()) != ERR_OK) {
@@ -171,11 +171,11 @@ bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn) {
     return true;
 }
 
-const ip_addr_t* UdpDriver::getIpaddr() const {
+const ip_addr_t UdpDriver::getIpaddr() const {
     return ipaddr;
 }
 
-const ip_addr_t* UdpDriver::getIpaddrPc() const {
+const ip_addr_t UdpDriver::getIpaddrPc() const {
     return ipaddrPc;
 }
 

@@ -20,6 +20,7 @@
 #include <lwip/netif.h>
 #include <lwip/udp.h>
 #include <ethernetif.h>
+#include <lwip/arch.h>
 
 namespace udp_interface {
 
