@@ -23,7 +23,7 @@ constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
 class UdpDriver {
 public:
     UdpDriver();
-    UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
+    UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
             const u16_t portIn, const u16_t portPcIn,
             const udp_interface::UdpInterface *udpInterfaceIn,
             const os::OsInterface *osInterfaceIn);
@@ -50,16 +50,16 @@ public:
     struct pbuf* getTxPbuf() const;
     struct pbuf* getRxPbufThreaded() const;
     struct pbuf* getTxPbufThreaded() const;
-    const ip_addr_t* getIpaddr() const;
-    const ip_addr_t* getIpaddrPc() const;
+    const ip_addr_t getIpaddr() const;
+    const ip_addr_t getIpaddrPc() const;
     u16_t getPort() const;
     u16_t getPortPc() const;
     struct udp_pcb* getPcb() const;
     struct netif* getNetif() const;
 
 private:
-    const ip_addr_t *ipaddr = nullptr;
-    const ip_addr_t *ipaddrPc = nullptr;
+    const ip_addr_t ipaddr = {0x0};
+    const ip_addr_t ipaddrPc = {0x0};
     const u16_t port = 0;
     const u16_t portPc = 0;
 
