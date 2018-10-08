@@ -32,7 +32,7 @@ UdpDriver::UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
         const os::OsInterface *osInterfaceIn) :
         ipaddr(ipaddrIn), ipaddrPc(ipaddrPcIn), port(portIn), portPc(portPcIn), udpInterface(
                 udpInterfaceIn), osInterface(osInterfaceIn) {
-    // TODO: call semaphore create functions
+
 }
 
 UdpDriver::~UdpDriver() {
@@ -41,6 +41,20 @@ UdpDriver::~UdpDriver() {
 
 bool UdpDriver::setup() {
     bool success = false;
+
+    /* definition and creation of UdpDriverRxPbuf */
+    osMutexStaticDef(UdpDriverRxPbuf, &rxSemaphoreControlBlock);
+    rxSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverRxPbuf));
+
+    /* definition and creation of UdpDriverTxPbuf */
+    osMutexStaticDef(UdpDriverTxPbuf, &txSemaphoreControlBlock);
+    txSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverTxPbuf));
+
+    /* Create the semaphores(s) */
+    /* definition and creation of UdpDriverRecv */
+    osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
+    recvSemaphore = osInterface->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
+
     if (!getUdpInterface()) {
         return false;
     }
@@ -150,11 +164,6 @@ bool UdpDriver::giveRecvSemaphore() {
     return true;
 }
 
-bool UdpDriver::setNetif(struct netif *gnetifIn) {
-    gnetif = gnetifIn;
-    return true;
-}
-
 bool UdpDriver::setPcb(struct udp_pcb *pcbIn) {
     pcb = pcbIn;
     return true;
@@ -188,10 +197,6 @@ u16_t UdpDriver::getPortPc() const {
 
 struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
-}
-
-struct netif *UdpDriver::getNetif() const {
-    return gnetif;
 }
 
 void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
