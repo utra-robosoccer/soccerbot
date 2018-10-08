@@ -185,25 +185,16 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
 using imu::MPU6050;
 // Public
 // ----------------------------------------------------------------------------
-MPU6050::MPU6050(int SensorNum, I2C_HandleTypeDef* I2CHandle){
+MPU6050::MPU6050(I2C_HandleTypeDef* I2CHandle){
     // Initialize all the variables
-    this -> _Sample_Rate = (uint16_t)(8000 / (1 + MPU6050_CLOCK_DIV_296));
-    this -> _x_Accel = 0;
-    this -> _y_Accel = 0;
-    this -> _z_Accel = 0;
-    this -> _x_Gyro = 0;
-    this -> _y_Gyro = 0;
-    this -> _z_Gyro = 0;
-    this -> _x_AccelOffset = 0;
-    this -> _y_AccelOffset = 0;
-    this -> _z_AccelOffset = 0;
-    this -> _x_GyroOffset = 0;
-    this -> _y_GyroOffset = 0;
-    this -> _z_GyroOffset = 0;
+    this -> x_Accel = 0;
+    this -> y_Accel = 0;
+    this -> z_Accel = 0;
+    this -> x_Gyro = 0;
+    this -> y_Gyro = 0;
+    this -> z_Gyro = 0;
     this -> received_byte = 0;
-    this -> _I2C_Handle = I2CHandle;
-
-    this->Manually_Set_Offsets(SensorNum);
+    this -> I2C_Handle = I2CHandle;
 }
 
 void MPU6050::init(uint8_t lpf){
@@ -217,19 +208,19 @@ void MPU6050::init(uint8_t lpf){
     this->Set_LPF(lpf);
 }
 
-void MPU6050::Read_Gyroscope_Withoffset(){
+void MPU6050::Read_Gyroscope(){
     uint8_t output_buffer[6];
     MPU6050::Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
     int16_t X = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t Y = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t Z = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->_x_Gyro = (float)X/IMU_GY_RANGE-(this ->_x_GyroOffset);
-    this ->_y_Gyro = (float)Y/IMU_GY_RANGE-(this ->_y_GyroOffset);
-    this ->_z_Gyro = (float)Z/IMU_GY_RANGE-(this ->_z_GyroOffset);
+    this ->x_Gyro = (float)(X) / IMU_GY_RANGE;
+    this ->y_Gyro = (float)(Y) / IMU_GY_RANGE;
+    this ->z_Gyro = (float)(Z) / IMU_GY_RANGE;
 }
 
-void MPU6050::Read_Gyroscope_Withoffset_IT(){
+void MPU6050::Read_Gyroscope_IT(){
     uint8_t output_buffer[6];
     uint32_t notification;
     BaseType_t status;
@@ -254,29 +245,29 @@ void MPU6050::Read_Gyroscope_Withoffset_IT(){
     int16_t Z = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
 
-    this ->_x_Gyro = (float)X/IMU_GY_RANGE-(this ->_x_GyroOffset);
-    this ->_y_Gyro = (float)Y/IMU_GY_RANGE-(this ->_y_GyroOffset);
-    this ->_z_Gyro = (float)Z/IMU_GY_RANGE-(this ->_z_GyroOffset);
+    this ->x_Gyro = (float)(X) / IMU_GY_RANGE;
+    this ->y_Gyro = (float)(Y) / IMU_GY_RANGE;
+    this ->z_Gyro = (float)(Z) / IMU_GY_RANGE;
 }
 
-void MPU6050::Read_Accelerometer_Withoffset(){
+void MPU6050::Read_Accelerometer(){
     uint8_t output_buffer[6];
     MPU6050::Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
     int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->_x_Accel = -( X_A * g / ACC_RANGE-(this ->_x_AccelOffset));
-    this ->_y_Accel = -(Y_A * g / ACC_RANGE-(this ->_y_AccelOffset));
-    this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
+    this ->x_Accel = -( X_A * g / ACC_RANGE);
+    this ->y_Accel = -(Y_A * g / ACC_RANGE);
+    this ->z_Accel = -(Z_A * g / ACC_RANGE);
 }
 
-void MPU6050::Read_Accelerometer_Withoffset_IT(){
+void MPU6050::Read_Accelerometer_IT(){
     uint8_t output_buffer[6];
     uint32_t notification;
     BaseType_t status;
 
-    if(MPU6050::Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H,output_buffer) != HAL_OK){
+    if(MPU6050::Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H,output_buffer)){
 #ifdef STM32F446xx
         // Try fix for flag bit silicon bug
         generateClocks(1, 1);
@@ -294,26 +285,26 @@ void MPU6050::Read_Accelerometer_Withoffset_IT(){
     int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->_x_Accel = -(X_A * g / ACC_RANGE-(this ->_x_AccelOffset));
-    this ->_y_Accel = -(Y_A * g / ACC_RANGE-(this ->_y_AccelOffset));
-    this ->_z_Accel = -(Z_A * g / ACC_RANGE-(this ->_z_AccelOffset));
+    this ->x_Accel = -(X_A * g / ACC_RANGE);
+    this ->y_Accel = -(Y_A * g / ACC_RANGE);
+    this ->z_Accel = -(Z_A * g / ACC_RANGE);
 }
 
 void MPU6050::Fill_Struct(IMUStruct_t* myStruct){
-    myStruct->_x_Accel = this->_x_Accel;
-    myStruct->_y_Accel = this->_y_Accel;
-    myStruct->_z_Accel = this->_z_Accel;
+    myStruct->x_Accel = this->x_Accel;
+    myStruct->y_Accel = this->y_Accel;
+    myStruct->z_Accel = this->z_Accel;
 
-    myStruct->_x_Gyro = this->_x_Gyro;
-    myStruct->_y_Gyro = this->_y_Gyro;
-    myStruct->_z_Gyro = this->_z_Gyro;
+    myStruct->x_Gyro = this->x_Gyro;
+    myStruct->y_Gyro = this->y_Gyro;
+    myStruct->z_Gyro = this->z_Gyro;
 }
 
 // Private
 // ----------------------------------------------------------------------------
-int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
+HAL_StatusTypeDef MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(
-        this -> _I2C_Handle,
+        this -> I2C_Handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
@@ -323,9 +314,9 @@ int MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     );
 }
 
-uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
-    uint8_t status = HAL_I2C_Mem_Read(
-        this -> _I2C_Handle,
+HAL_StatusTypeDef MPU6050::Read_Reg(uint8_t reg_addr){
+    return HAL_I2C_Mem_Read(
+        this -> I2C_Handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
@@ -333,12 +324,11 @@ uint8_t MPU6050::Read_Reg(uint8_t reg_addr){
         1,
         1000
     );
-    return status;
 }
 
-BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
+HAL_StatusTypeDef MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
     return HAL_I2C_Mem_Read_IT(
-        this -> _I2C_Handle,
+        this -> I2C_Handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) Reg_addr,
         1,
@@ -347,9 +337,9 @@ BaseType_t MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
     );
 }
 
-uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
-    uint8_t status = HAL_I2C_Mem_Read(
-        this -> _I2C_Handle,
+HAL_StatusTypeDef MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
+    return HAL_I2C_Mem_Read(
+        this -> I2C_Handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) Reg_addr,
         1,
@@ -357,21 +347,25 @@ uint8_t MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
         6,
         1000
     );
-    return status;
 }
 
-int MPU6050::Set_LPF(uint8_t lpf){
-    // the LPF reg is decimal 26
-    uint8_t current_value;
-    uint8_t bitmask=7; // 00000111
+bool MPU6050::Set_LPF(uint8_t lpf){
+    bool retval = false;
+    if(lpf <= 6){
+        // the LPF reg is decimal 26
+        uint8_t current_value;
+        uint8_t bitmask=7; // 00000111
 
-    MPU6050::Read_Reg(26); //read the current value of the LPF reg, and save it to received_byte
-    current_value=this->received_byte;
+        MPU6050::Read_Reg(26); //read the current value of the LPF reg, and save it to received_byte
+        current_value=this->received_byte;
 
-    // note that this reg also contains unneeded fsync data which should be preserved
-    current_value = (current_value & (~bitmask)) | lpf;
-    int status=MPU6050::Write_Reg(26, current_value);
-    return status;
+        // note that this reg also contains unneeded fsync data which should be preserved
+        current_value = (current_value & (~bitmask)) | lpf;
+        if(MPU6050::Write_Reg(26, current_value) == HAL_OK){
+            retval = true;
+        }
+    }
+    return retval;
 }
 
 /**

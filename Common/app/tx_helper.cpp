@@ -104,7 +104,7 @@ void copySensorDataToSend(void) {
             if(imuPtr == NULL){ break; }
 
             // Copy sensor data into the IMU data section of robotState.msg
-            memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), sizeof(imu::IMUStruct_t));
+            memcpy(pIMUXGyroData, (&imuPtr->x_Gyro), sizeof(imu::IMUStruct_t));
 
             // Set flag indicating IMU data has reported in
             dataReadyFlags |= 0x80000000;
