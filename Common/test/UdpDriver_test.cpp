@@ -139,6 +139,7 @@ TEST(UdpDriverTests, CanInitializeOsInterfaceWithParameterizedConstructor) {
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpRecv(_, _, _)).Times(1);
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
@@ -146,23 +147,25 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
             Return(NON_NULL_PTR_PCB));
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_TRUE(success);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnNew) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(nullptr));
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_FALSE(success);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpRemove(_)).Times(1); // Assume removal happens without error
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_USE));
@@ -170,7 +173,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
             Return(NON_NULL_PTR_PCB));
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_FALSE(success);
 }

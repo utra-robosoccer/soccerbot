@@ -39,7 +39,6 @@ public:
     bool giveRecvSemaphore();
 
     bool setPcb(struct udp_pcb *pcbIn);
-    bool setNetif(struct netif *gnetifIn);
     bool setRxPbuf(struct pbuf *rxPbufIn);
     bool setTxPbuf(struct pbuf *txPbufIn);
 
@@ -55,7 +54,6 @@ public:
     u16_t getPort() const;
     u16_t getPortPc() const;
     struct udp_pcb* getPcb() const;
-    struct netif* getNetif() const;
 
 private:
     const ip_addr_t ipaddr = {0x0};
@@ -69,15 +67,17 @@ private:
 
     // References to non-const structures
     struct udp_pcb *pcb = nullptr;
-    struct netif *gnetif = nullptr;
     struct pbuf *rxPbuf = nullptr;
     struct pbuf *txPbuf = nullptr;
 
     // mutable as they do not represent external state of class - can be modified in const functions
     // Initialized within constructor
-    mutable SemaphoreHandle_t rxSemaphore;
-    mutable SemaphoreHandle_t txSemaphore;
-    mutable SemaphoreHandle_t recvSemaphore;
+    mutable osMutexId rxSemaphore;
+    mutable osStaticMutexDef_t rxSemaphoreControlBlock;
+    mutable osMutexId txSemaphore;
+    mutable osStaticMutexDef_t txSemaphoreControlBlock;
+    mutable osSemaphoreId recvSemaphore;
+    mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
 };
 
 } // end namespace udp_driver
