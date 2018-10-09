@@ -62,8 +62,10 @@ private:
     uint8_t txBuffer[PC_INTERFACE_BUFFER_SIZE] = { };
 
     // To initialize within constructor
-    mutable SemaphoreHandle_t rxMutex;
-    mutable SemaphoreHandle_t txMutex;
+    mutable osMutexId rxMutex;
+    mutable osStaticMutexDef_t rxMutexControlBlock;
+    mutable osMutexId txMutex;
+    mutable osStaticMutexDef_t txMutexControlBlock;
 
     // This will be initialized as the eventHandler thread in our system
     osThreadId readerThread;

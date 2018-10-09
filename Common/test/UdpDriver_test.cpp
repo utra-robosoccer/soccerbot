@@ -19,8 +19,9 @@
 
 // TODO: should move the consts to defines. Only works as const because they are literal type.
 constexpr u16_t ZERO_U16_T = 0;
-const ip_addr_t *TEST_IP_ADDR = (ip_addr_t *) 0xC0A80008;
-const ip_addr_t *TEST_IP_ADDR_PC = (ip_addr_t *) 0xC0A80002;
+const ip_addr_t ZERO_IP_ADDR_T = {0x0};
+const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 constexpr u16_t TEST_PORT = 7;
 constexpr u16_t TEST_PORT_PC = 6340;
 const udp_interface::UdpInterface *NON_NULL_PTR_UDP_INTERFACE =
@@ -35,14 +36,18 @@ using ::testing::_;
 
 using namespace udp_driver;
 
-TEST(UdpDriverTests, IpAddrDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getIpaddr(), nullptr);
+bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
+	return lhs.addr == rhs.addr;
 }
 
-TEST(UdpDriverTests, IpAddrPcDefaultInitializesToNull) {
+TEST(UdpDriverTests, IpAddrDefaultInitializesToZeroIpAddrT) {
+    udp_driver::UdpDriver udpDriverUnderTest; // TODO: should modify constructor to pass in "MOCK" or "REAL" rather than pass in a the interface
+    ASSERT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
+}
+
+TEST(UdpDriverTests, IpAddrPcDefaultInitializesToZeroIpAddrT) {
     udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getIpaddrPc(), nullptr);
+    ASSERT_EQ(udpDriverUnderTest.getIpaddrPc(), ZERO_IP_ADDR_T);
 }
 
 TEST(UdpDriverTests, PortDefaultInitializesToZero) {
@@ -82,90 +87,93 @@ TEST(UdpDriverTests, TxPbufDefaultInitializesToNull) {
 
 TEST(UdpDriverTests, RxPbufDefaultInitializesToNullThreaded) {
     mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getRxPbufThreaded(), nullptr);
 }
 
 TEST(UdpDriverTests, TxPbufDefaultInitializesToNullThreaded) {
     mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getTxPbufThreaded(), nullptr);
 }
 
 TEST(UdpDriverTests, CanInitializeIpaddrWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(TEST_IP_ADDR, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(TEST_IP_ADDR, ZERO_IP_ADDR_T, ZERO_U16_T,
             ZERO_U16_T, nullptr, nullptr);
     ASSERT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpaddr());
 }
 
 TEST(UdpDriverTests, CanInitializeIpaddrPcWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, TEST_IP_ADDR_PC,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, TEST_IP_ADDR_PC,
             ZERO_U16_T, ZERO_U16_T, nullptr, nullptr);
     ASSERT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpaddrPc());
 }
 
 TEST(UdpDriverTests, CanInitializePortWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, TEST_PORT,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, TEST_PORT,
             ZERO_U16_T, nullptr, nullptr);
     ASSERT_EQ(TEST_PORT, udpDriverUnderTest.getPort());
 }
 
 TEST(UdpDriverTests, CanInitializePortPcWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
             TEST_PORT_PC, nullptr, nullptr);
     ASSERT_EQ(TEST_PORT_PC, udpDriverUnderTest.getPortPc());
 }
 
 TEST(UdpDriverTests, CanInitializeUdpInterfaceWithParameterizedConstructor) {
     mocks::MockUdpInterface mockUdpInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
             ZERO_U16_T, &mockUdpInterface, nullptr);
     ASSERT_EQ(udpDriverUnderTest.getUdpInterface(), &mockUdpInterface);
 }
 
 TEST(UdpDriverTests, CanInitializeOsInterfaceWithParameterizedConstructor) {
     mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T,
+    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
             ZERO_U16_T, nullptr, &mockOsInterface);
     ASSERT_EQ(udpDriverUnderTest.getOsInterface(), &mockOsInterface);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpRecv(_, _, _)).Times(1);
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
     EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(
             Return(NON_NULL_PTR_PCB));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_TRUE(success);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnNew) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(nullptr));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_FALSE(success);
 }
 
 TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
     mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockUdpInterface, udpRemove(_)).Times(1); // Assume removal happens without error
     EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
             Return(ERR_USE));
     EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(
             Return(NON_NULL_PTR_PCB));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
-            &mockUdpInterface, nullptr);
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
+            &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.setup();
     ASSERT_FALSE(success);
 }
@@ -177,9 +185,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveSuccess) {
             Return((u8_t) 1));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdTRUE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.receive(nullptr);
     ASSERT_TRUE(success);
@@ -190,9 +197,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnSemaphoreTake) {
     mocks::MockOsInterface mockOsInterface;
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdFALSE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.receive(nullptr);
     ASSERT_FALSE(success);
@@ -205,9 +211,8 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveFailsOnPbufFreeNoneFreed) {
             Return((u8_t) 0));
     EXPECT_CALL(mockOsInterface, OS_xSemaphoreTake(_, _)).Times(1).WillOnce(
             Return(pdTRUE));
-    EXPECT_CALL(mockUdpInterface, ethernetifInput(_)).Times(1);
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, &mockOsInterface);
     bool success = udpDriverUnderTest.receive(nullptr);
     ASSERT_FALSE(success);
@@ -223,7 +228,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitSuccess) {
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, nullptr);
     bool success = udpDriverUnderTest.transmit(nullptr);
     ASSERT_TRUE(success);
@@ -234,7 +239,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnConnect) {
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
             Return(ERR_VAL)); // use ERR_VAL; anything but ERR_OK works
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, nullptr);
     bool success = udpDriverUnderTest.transmit(nullptr);
     ASSERT_FALSE(success);
@@ -247,7 +252,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnSend) {
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, nullptr);
     bool success = udpDriverUnderTest.transmit(nullptr);
     ASSERT_FALSE(success);
@@ -263,7 +268,7 @@ TEST(UdpDriverTests, FunctionCallsCorrectOrderTransmitFailsOnPbufFreeNoneFreed) 
     EXPECT_CALL(mockUdpInterface, udpConnect(_, _, _)).Times(1).WillOnce(
             Return(ERR_OK));
 
-    UdpDriver udpDriverUnderTest(nullptr, nullptr, ZERO_U16_T, ZERO_U16_T,
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
             &mockUdpInterface, nullptr);
     bool success = udpDriverUnderTest.transmit(nullptr);
     ASSERT_FALSE(success);
