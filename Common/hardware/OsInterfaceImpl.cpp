@@ -100,11 +100,18 @@ osStatus OsInterfaceImpl::OS_osDelay (
     return osDelay(millisec);
 }
 
-osMutexId OsInterfaceImpl::OS_osMutexCreate (const osMutexDef_t *mutex_def) const {
+osMutexId OsInterfaceImpl::OS_osMutexCreate (
+  const osMutexDef_t *mutex_def
+) const
+{
     return osMutexCreate(mutex_def);
 }
 
-osSemaphoreId OsInterfaceImpl::OS_osSemaphoreCreate (const osSemaphoreDef_t *semaphore_def, int32_t count) const {
+osSemaphoreId OsInterfaceImpl::OS_osSemaphoreCreate (
+  const osSemaphoreDef_t *semaphore_def,
+  int32_t count
+) const
+{
     return osSemaphoreCreate(semaphore_def, count);
 }
 
