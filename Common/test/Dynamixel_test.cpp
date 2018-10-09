@@ -18,6 +18,7 @@
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"
+#include "MockGpioInterface.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -31,6 +32,7 @@ using ::testing::_;
 using uart::UartDriver;
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;
+using mocks::MockGpioInterface;
 using dynamixel::Motor;
 using dynamixel::PinConfig;
 
@@ -43,6 +45,7 @@ namespace{
 // ----------------------------------------------------------------------------
 MockUartInterface uart;
 MockOsInterface os;
+MockGpioInterface gpio;
 UART_HandleTypeDef UARTx = {0};
 UartDriver UARTxDriver(&os, &uart, &UARTx);
 
@@ -55,8 +58,8 @@ PinConfig pc = {&dataDirPort, dataDirPinNum};
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST(Dynamixel, ShouldConstruct){
-    Motor m(1, &UARTxDriver, pc);
+TEST(Dynamixel, CanBeCreated){
+    Motor m(1, &UARTxDriver, &gpio, pc);
 }
 
 

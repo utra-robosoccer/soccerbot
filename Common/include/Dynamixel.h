@@ -21,8 +21,10 @@
 /********************************* Includes **********************************/
 #include <cstdint>
 #include "UartDriver.h"
+#include "GpioInterface.h"
 
 using uart::UartDriver;
+using gpio::GpioInterface;
 
 
 
@@ -60,7 +62,13 @@ struct PinConfig{
 class Motor{
 public:
     // Setup functions
-    Motor(uint8_t id, UartDriver* uartDriverPtr, PinConfig& pinConfig);
+    Motor(
+        uint8_t id,
+        UartDriver* uartDriverPtr,
+        GpioInterface* gpioIfPtr,
+        PinConfig& pinConfig
+     );
+
     ~Motor();
 //    void reset();
 //
@@ -113,13 +121,14 @@ private:
         RX
     };
 
-//    void changeBusDir(Direction dir);
-//    void computeChecksum(uint8_t *arr, size_t length);
+    void changeBusDir(Direction dir);
+    void computeChecksum(uint8_t *arr, size_t length);
 
     uint8_t id;            /**< Motor identification (0-252, 0xFE) */
     bool lastReadIsValid;  /**< 1 if checksum verified for last read, 0 o.w. */
 //    bool isJointMode;      /**< true if motor is in joint mode, false if in wheel mode */
     const UartDriver* uartDriver; /**< @see UartDriver */
+    const GpioInterface* gpioIf;  /**< @see GpioInterface */
     const PinConfig pinConfig;    /**< @see PinConfig */
 };
 
