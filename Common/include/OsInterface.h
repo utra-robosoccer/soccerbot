@@ -73,8 +73,14 @@ public:
         uint32_t millisec
     ) const = 0;
 
-    virtual osMutexId OS_osMutexCreate (const osMutexDef_t *mutex_def) const = 0;
-    virtual osSemaphoreId OS_osSemaphoreCreate (const osSemaphoreDef_t *semaphore_def, int32_t count) const = 0;
+    virtual osMutexId OS_osMutexCreate (
+      const osMutexDef_t *mutex_def
+    ) const = 0;
+
+    virtual osSemaphoreId OS_osSemaphoreCreate (
+      const osSemaphoreDef_t *semaphore_def,
+      int32_t count
+    ) const = 0;
 };
 
 } // end namespace os
