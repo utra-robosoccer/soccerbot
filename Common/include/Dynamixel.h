@@ -20,11 +20,7 @@
 
 /********************************* Includes **********************************/
 #include <cstdint>
-#include "UartDriver.h"
-#include "GpioInterface.h"
-
-using uart::UartDriver;
-using gpio::GpioInterface;
+#include "DaisyChain.h"
 
 
 
@@ -52,21 +48,12 @@ namespace dynamixel{
 
 // Classes and structs
 // ----------------------------------------------------------------------------
-/** @brief GPIO port & pin for half duplex UART direction control */
-struct PinConfig{
-    GPIO_TypeDef* dataDirPort; /**< Port data direction pin is on */
-    uint16_t dataDirPinNum;    /**< Data direction pin number     */
-};
-
-
 class Motor{
 public:
     // Setup functions
     Motor(
         uint8_t id,
-        UartDriver* uartDriverPtr,
-        GpioInterface* gpioIfPtr,
-        PinConfig& pinConfig
+        DaisyChain* daisyChain
      );
 
     ~Motor();
@@ -116,19 +103,10 @@ protected:
 //    void dataReader(uint8_t readAddr, size_t readLength);
 
 private:
-    using Direction = enum class Direction{
-        RX,
-        TX
-    };
-
-    void changeBusDir(Direction dir);
-
     uint8_t id;            /**< Motor identification (0-252, 0xFE) */
     bool lastReadIsValid;  /**< 1 if checksum verified for last read, 0 o.w. */
 //    bool isJointMode;      /**< true if motor is in joint mode, false if in wheel mode */
-    const UartDriver* uartDriver; /**< @see UartDriver */
-    const GpioInterface* gpioIf;  /**< @see GpioInterface */
-    const PinConfig pinConfig;    /**< @see PinConfig */
+    const DaisyChain* daisyChain; /**< @see DaisyChain */
 };
 
 

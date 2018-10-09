@@ -1,11 +1,11 @@
 /**
   *****************************************************************************
-  * @file    Dynamixel_test.cpp
+  * @file    DaisyChain_test.cpp
   * @author  Tyler Gamvrelis
   *
   * @defgroup Test
-  * @ingroup  Dynamixel
-  * @brief    Dynamixel test driver
+  * @ingroup  DaisyChain
+  * @brief    Unit test driver for TODO
   * @{
   *****************************************************************************
   */
@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "Dynamixel.h"
+#include "DaisyChain.h"
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"
@@ -25,7 +25,6 @@
 
 
 using ::testing::DoAll;
-using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
@@ -33,7 +32,7 @@ using uart::UartDriver;
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;
 using mocks::MockGpioInterface;
-using dynamixel::Motor;
+
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
 
@@ -47,18 +46,19 @@ namespace{
 MockUartInterface uart;
 MockOsInterface os;
 MockGpioInterface gpio;
+
 UART_HandleTypeDef UARTx = {0};
 UartDriver UARTxDriver(&os, &uart, &UARTx);
-
 GPIO_TypeDef dataDirPort;
 
 DaisyChainParams p;
 
 
 
+
 // Classes & structs
 // ----------------------------------------------------------------------------
-class DynamixelTest : public ::testing::Test {
+class DaisyChainShould : public ::testing::Test {
 protected:
     void SetUp() override {
         p.uartDriver = &UARTxDriver;
@@ -73,15 +73,26 @@ protected:
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST_F(DynamixelTest, CanBeCreated){
+TEST_F(DaisyChainShould, Construct){
     DaisyChain chain(p);
-    Motor m(1, &chain);
 }
 
-TEST_F(DynamixelTest, CanSetGoalPosition){
+TEST_F(DaisyChainShould, SetCallGpioFunctionUponTransmissionRequest){
     DaisyChain chain(p);
-    Motor m(1, &chain);
-    m.setGoalPosition(150.0);
+
+    char msg[] = "hey!";
+
+    EXPECT_CALL(gpio, writePin);
+    chain.requestTransmission((uint8_t*)msg, sizeof(msg));
+}
+
+TEST_F(DaisyChainShould, SetCallGpioFunctionUponReceptionRequest){
+    DaisyChain chain(p);
+
+    uint8_t buf[10];
+
+    EXPECT_CALL(gpio, writePin);
+    chain.requestReception(buf, 5);
 }
 
 

@@ -99,6 +99,7 @@
 					<sourceEntries>
 						<entry excluding="Common/app|Common/hardware|Common/hardware/HalUartInterface.cpp|src|Common/component|component|app|hardware/HalUartInterface.cpp|include|inc|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel1"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/PcInterface"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
@@ -196,6 +197,7 @@
 					<sourceEntries>
 						<entry excluding="Common/test/PcInterface_test.cpp|Common/test/UdpDriver_test.cpp|Common/include|Common/app|Common/hardware|Common/component|src|app|hardware/HalUartInterface.cpp|include|inc|component|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel1"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
 					</sourceEntries>
