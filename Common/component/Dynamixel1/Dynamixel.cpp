@@ -147,15 +147,11 @@ namespace dynamixel{
 // ----------------------------------------------------------------------------
 Motor::Motor(
     uint8_t id,
-    UartDriver* uartDriverPtr,
-    GpioInterface* gpioIfPtr,
-    PinConfig& pinConfig
+    DaisyChain* daisyChain
 )
     :
         id(id),
-        uartDriver(uartDriverPtr),
-        gpioIf(gpioIfPtr),
-        pinConfig(pinConfig)
+        daisyChain(daisyChain)
 {
     lastReadIsValid = false;
 }
@@ -231,7 +227,7 @@ void Motor::dataWriter(
         arrTransmit[4 + numArgs + 1] = computeChecksum(arrTransmit, 4 + numArgs + 2);
 
         // Transmit
-        uartDriver->transmit(arrTransmit, 4 + numArgs + 2);
+        daisyChain->requestTransmission(arrTransmit, 4 + numArgs + 2);
     }
 }
 
@@ -240,26 +236,7 @@ void Motor::dataWriter(
 
 // Private
 // ----------------------------------------------------------------------------
-void Motor::changeBusDir(Direction dir){
-    switch(dir){
-        case Direction::RX:
-            gpioIf->writePin(
-                pinConfig.dataDirPort,
-                pinConfig.dataDirPinNum,
-                GPIO_PIN_RESET
-            );
-            break;
-        case Direction::TX:
-            gpioIf->writePin(
-                pinConfig.dataDirPort,
-                pinConfig.dataDirPinNum,
-                GPIO_PIN_SET
-            );
-            break;
-        default:
-            break;
-    }
-}
+
 
 }
 

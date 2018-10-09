@@ -3,9 +3,9 @@
   * @file    UartDriver_test.cpp
   * @author  Tyler Gamvrelis
   *
-  * @defgroup UartDriver_test
+  * @defgroup Test
   * @ingroup UART
-  * @brief UartDriver unit tests
+  * @brief UartDriver test driver
   * @{
   *****************************************************************************
   */
