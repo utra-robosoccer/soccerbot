@@ -643,40 +643,6 @@ u32_t sys_now(void)
 
 /* USER CODE END 6 */
 
-/**
-  * @brief  This function sets the netif link status.
-  * @param  netif: the network interface
-  * @retval None
-  */  
-void ethernetif_set_link(void const *argument)
-{
-  uint32_t regvalue = 0;
-  struct link_str *link_arg = (struct link_str *)argument;
-  
-  for(;;)
-  {
-    /* Read PHY_BSR*/
-    HAL_ETH_ReadPHYRegister(&heth, PHY_BSR, &regvalue);
-    
-    regvalue &= PHY_LINKED_STATUS;
-    
-    /* Check whether the netif link down and the PHY link is up */
-    if(!netif_is_link_up(link_arg->netif) && (regvalue))
-    {
-      /* network cable is connected */ 
-      netif_set_link_up(link_arg->netif);        
-    }
-    else if(netif_is_link_up(link_arg->netif) && (!regvalue))
-    {
-      /* network cable is dis-connected */
-      netif_set_link_down(link_arg->netif);
-    }
-    
-    /* Suspend thread for 200 ms */
-    osDelay(200);
-  }
-}
-
 /* USER CODE BEGIN 7 */
 
 /* USER CODE END 7 */
