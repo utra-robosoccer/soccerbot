@@ -62,6 +62,11 @@ TEST(Dynamixel, CanBeCreated){
     Motor m(1, &UARTxDriver, &gpio, pc);
 }
 
+TEST(Dynamixel, CanSetGoalPosition){
+    Motor m(1, &UARTxDriver, &gpio, pc);
+    m.setGoalPosition(150.0);
+}
+
 
 
 } // end anonymous namespace

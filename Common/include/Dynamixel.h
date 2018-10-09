@@ -88,7 +88,7 @@ public:
     // RAM
 //    void torqueEnable(uint8_t isEnabled);
 //    void lEDEnable(uint8_t isEnabled);
-//    void setGoalPosition(float goalAngle);
+    void setGoalPosition(float goalAngle);
 //    void setGoalVelocity(float goalVelocity);
 //    void setGoalTorque(float goalTorque);
 //    void lockEEPROM();
@@ -112,17 +112,16 @@ public:
 //    void enterJointMode();
 
 protected:
-//    void dataWriter(uint8_t* args, size_t numArgs);
+    void dataWriter(uint8_t* args, size_t numArgs);
 //    void dataReader(uint8_t readAddr, size_t readLength);
 
 private:
     using Direction = enum class Direction{
-        TX,
-        RX
+        RX,
+        TX
     };
 
     void changeBusDir(Direction dir);
-    void computeChecksum(uint8_t *arr, size_t length);
 
     uint8_t id;            /**< Motor identification (0-252, 0xFE) */
     bool lastReadIsValid;  /**< 1 if checksum verified for last read, 0 o.w. */
