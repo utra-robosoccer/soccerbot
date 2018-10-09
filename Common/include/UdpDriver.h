@@ -23,7 +23,7 @@ constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
 class UdpDriver {
 public:
     UdpDriver();
-    UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
+    UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
             const u16_t portIn, const u16_t portPcIn,
             const udp_interface::UdpInterface *udpInterfaceIn,
             const os::OsInterface *osInterfaceIn);
@@ -39,7 +39,6 @@ public:
     bool giveRecvSemaphore();
 
     bool setPcb(struct udp_pcb *pcbIn);
-    bool setNetif(struct netif *gnetifIn);
     bool setRxPbuf(struct pbuf *rxPbufIn);
     bool setTxPbuf(struct pbuf *txPbufIn);
 
@@ -50,16 +49,15 @@ public:
     struct pbuf* getTxPbuf() const;
     struct pbuf* getRxPbufThreaded() const;
     struct pbuf* getTxPbufThreaded() const;
-    const ip_addr_t* getIpaddr() const;
-    const ip_addr_t* getIpaddrPc() const;
+    const ip_addr_t getIpaddr() const;
+    const ip_addr_t getIpaddrPc() const;
     u16_t getPort() const;
     u16_t getPortPc() const;
     struct udp_pcb* getPcb() const;
-    struct netif* getNetif() const;
 
 private:
-    const ip_addr_t *ipaddr = nullptr;
-    const ip_addr_t *ipaddrPc = nullptr;
+    const ip_addr_t ipaddr = {0x0};
+    const ip_addr_t ipaddrPc = {0x0};
     const u16_t port = 0;
     const u16_t portPc = 0;
 
@@ -69,15 +67,17 @@ private:
 
     // References to non-const structures
     struct udp_pcb *pcb = nullptr;
-    struct netif *gnetif = nullptr;
     struct pbuf *rxPbuf = nullptr;
     struct pbuf *txPbuf = nullptr;
 
     // mutable as they do not represent external state of class - can be modified in const functions
     // Initialized within constructor
-    mutable SemaphoreHandle_t rxSemaphore;
-    mutable SemaphoreHandle_t txSemaphore;
-    mutable SemaphoreHandle_t recvSemaphore;
+    mutable osMutexId rxSemaphore;
+    mutable osStaticMutexDef_t rxSemaphoreControlBlock;
+    mutable osMutexId txSemaphore;
+    mutable osStaticMutexDef_t txSemaphoreControlBlock;
+    mutable osSemaphoreId recvSemaphore;
+    mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
 };
 
 } // end namespace udp_driver

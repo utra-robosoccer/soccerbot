@@ -72,6 +72,14 @@ public:
     osStatus OS_osDelay (
         uint32_t millisec
     ) const override final;
+
+    osMutexId OS_osMutexCreate (
+      const osMutexDef_t *mutex_def
+    ) const override final;
+    
+    osSemaphoreId OS_osSemaphoreCreate (
+      const osSemaphoreDef_t *semaphore_def, int32_t count
+    ) const override final;
 };
 
 } // end namespace os

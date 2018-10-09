@@ -29,6 +29,15 @@ PcInterface::~PcInterface() {
 
 bool PcInterface::setup() {
     bool success = false;
+
+    /* definition and creation of PcInterfaceRx */
+    osMutexStaticDef(PcInterfaceRx, &rxMutexControlBlock);
+    rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceRx));
+
+    /* definition and creation of PcInterfaceTx */
+    osMutexStaticDef(PcInterfaceTx, &txMutexControlBlock);
+    rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceTx));
+
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->setup();
