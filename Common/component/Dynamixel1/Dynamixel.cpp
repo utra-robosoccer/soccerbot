@@ -14,6 +14,8 @@
 /********************************* Includes **********************************/
 #include "Dynamixel.h"
 
+#include <math.h>
+
 
 
 
@@ -147,13 +149,15 @@ namespace dynamixel{
 // ----------------------------------------------------------------------------
 Motor::Motor(
     uint8_t id,
-    DaisyChain* daisyChain
+    DaisyChain* daisyChain,
+    ResolutionDivider divider
 )
     :
         id(id),
+        resolutionDivider(static_cast<uint16_t>(divider)),
         daisyChain(daisyChain)
 {
-    lastReadIsValid = false;
+    lastPosition = INFINITY;
 }
 
 Motor::~Motor(){
@@ -161,8 +165,8 @@ Motor::~Motor(){
 }
 
 void Motor::setGoalPosition(float goalAngle){
-    /* Check for input validity. If input not valid, replace goalAngle with closest
-     * valid value to ensure code won't halt. */
+    // Check for input validity. If input not valid, replace goalAngle with
+    // closest valid value to ensure code won't halt
     if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
         if(goalAngle > MIN_ANGLE){
             goalAngle = MAX_ANGLE;
@@ -172,22 +176,29 @@ void Motor::setGoalPosition(float goalAngle){
         }
     }
 
-    /* Translate the angle from degrees into a 10- or 12-bit number. */
-//    uint16_t normalized_value = 0;
-//    if(hdynamixel -> _motorType == AX12ATYPE){
-//        normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
-//    }
-//    else if(hdynamixel -> _motorType == MX28TYPE){
-//        normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 4095);
-//    }
-    uint16_t normalized_value = (uint16_t)(goalAngle / MAX_ANGLE * 1023);
+    // Translate the angle from degrees into a binary code with the resolution
+    // selected at construction
+    uint16_t normalized_value = (goalAngle / MAX_ANGLE) * resolutionDivider;
 
-    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF); // Low byte of goal position
-    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF); // High byte of goal position
+    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF);
+    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF);
 
-    /* Write data to motor. */
+    // Write data to motor
     uint8_t args[3] = {REG_GOAL_POSITION, lowByte, highByte};
     dataWriter(args, sizeof(args));
+}
+
+bool Motor::getPosition(float& retVal){
+    // Read data from motor
+    uint16_t raw = 0;
+    bool success = dataReader(REG_CURRENT_POSITION, 2, raw);
+
+    // Parse data and write it into motor
+    if(success){
+        retVal = (raw * MAX_ANGLE / resolutionDivider);
+    }
+
+    return success;
 }
 
 
@@ -195,40 +206,86 @@ void Motor::setGoalPosition(float goalAngle){
 
 // Protected
 // ----------------------------------------------------------------------------
-/**
- * @brief   Sends an array of data to a motor as per its configuration details
- * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
- * @param   args an array of arguments of the form `{ADDR, PARAM_1, ... ,
- *          PARAM_N}`
- * @param   numArgs this must be equal to `sizeof(args)`, and must be either 2
- *          or 3
- * @return  None
- */
-void Motor::dataWriter(
+bool Motor::dataWriter(
     uint8_t* args,
     size_t numArgs
 )
 {
-    // Check validity so that we don't accidentally write something invalid
-    if(numArgs <= 3){
-        uint8_t arrTransmit[9];
-
-        arrTransmit[0] = 0xFF;
-        arrTransmit[1] = 0xFF;
-        arrTransmit[2] = id;
-        arrTransmit[3] = 2 + numArgs;
-        arrTransmit[4] = INST_WRITE_DATA;
-
-        for(uint8_t i = 0; i < numArgs; i ++){
-            arrTransmit[5 + i] = args[i];
-        }
-
-        // Checksum
-        arrTransmit[4 + numArgs + 1] = computeChecksum(arrTransmit, 4 + numArgs + 2);
-
-        // Transmit
-        daisyChain->requestTransmission(arrTransmit, 4 + numArgs + 2);
+    // Check validity so that we don't accidentally make a read request that is
+    // invalid or we cannot support due to our implementation
+    if(numArgs > 3){
+        return false;
     }
+
+    uint8_t arrTransmit[9];
+
+    arrTransmit[0] = 0xFF;
+    arrTransmit[1] = 0xFF;
+    arrTransmit[2] = id;
+    arrTransmit[3] = 2 + numArgs;
+    arrTransmit[4] = INST_WRITE_DATA;
+
+    for(uint8_t i = 0; i < numArgs; i ++){
+        arrTransmit[5 + i] = args[i];
+    }
+
+    // Checksum
+    arrTransmit[4 + numArgs + 1] = computeChecksum(
+        arrTransmit,
+        4 + numArgs + 2
+    );
+
+    // Transmit
+    return daisyChain->requestTransmission(arrTransmit, 4 + numArgs + 2);
+}
+
+bool Motor::dataReader(
+    uint8_t readAddr,
+    uint8_t readLength,
+    uint16_t& retVal
+)
+{
+    // Check validity so that we don't accidentally make a read request that is
+    // invalid or we cannot support due to our implementation
+    if(readLength > 2){
+        return false;
+    }
+
+    uint8_t arr[8];
+
+    arr[0] = 0xFF;
+    arr[1] = 0xFF;
+    arr[2] = id;
+    arr[3] = 4;
+    arr[4] = INST_READ_DATA;
+    arr[5] = readAddr;
+    arr[6] = readLength;
+    arr[7] = computeChecksum(arr, 8);
+
+    // Transmit read request
+    if(!daisyChain->requestTransmission(arr, 8)){
+        return false;
+    }
+
+    // Receive requested data
+    uint8_t rxPacketSize = (readLength == 1) ? 7 : 8;
+    if(!daisyChain->requestReception(arr, rxPacketSize)){
+        return false;
+    }
+
+    // Check data integrity before passing data to application
+    uint8_t recvChecksum = arr[rxPacketSize - 1];
+    uint8_t computedChecksum = computeChecksum(arr, rxPacketSize);
+    bool success = (computedChecksum == recvChecksum);
+
+    if(success){
+        retVal = (uint16_t)arr[5];
+        if(readLength == 2){
+            retVal |= (arr[6] << 8);
+        }
+    }
+
+    return success;
 }
 
 

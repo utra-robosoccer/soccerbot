@@ -17,45 +17,7 @@
 
 
 
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
-/******************************** File-local *********************************/
-namespace{
-// Constants
-// ----------------------------------------------------------------------------
-
-
-// Types & enums
-// ----------------------------------------------------------------------------
-
-
-
-
-// Classes and structs
-// ----------------------------------------------------------------------------
-
-
-
-
-// Variables
-// ----------------------------------------------------------------------------
-
-
-
-
-// Functions
-// ----------------------------------------------------------------------------
-
-} // end anonymous namespace
-
-
-
-
+// TODO: choose better namespace for this
 namespace dynamixel{
 /******************************** DaisyChain *********************************/
 // Public
@@ -86,10 +48,6 @@ bool DaisyChain::requestReception(uint8_t* buf, size_t bufSize) const{
 
 
 
-// Protected
-// ----------------------------------------------------------------------------
-
-
 
 // Private
 // ----------------------------------------------------------------------------
@@ -97,14 +55,14 @@ void DaisyChain::changeBusDir(Direction dir) const{
     switch(dir){
         case Direction::RX:
             gpioif->writePin(
-                dataDirPort,
+                const_cast<GPIO_TypeDef*>(dataDirPort),
                 dataDirPinNum,
                 GPIO_PIN_RESET
             );
             break;
         case Direction::TX:
             gpioif->writePin(
-                dataDirPort,
+                const_cast<GPIO_TypeDef*>(dataDirPort),
                 dataDirPinNum,
                 GPIO_PIN_SET
             );

@@ -36,6 +36,7 @@ using mocks::MockGpioInterface;
 using dynamixel::Motor;
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
+using dynamixel::ResolutionDivider;
 
 
 
@@ -75,13 +76,22 @@ protected:
 // ----------------------------------------------------------------------------
 TEST_F(DynamixelTest, CanBeCreated){
     DaisyChain chain(p);
-    Motor m(1, &chain);
+    Motor m1(1, &chain, ResolutionDivider::AX12A);
+    Motor m2(1, &chain, ResolutionDivider::MX28);
 }
 
 TEST_F(DynamixelTest, CanSetGoalPosition){
     DaisyChain chain(p);
-    Motor m(1, &chain);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
     m.setGoalPosition(150.0);
+}
+
+TEST_F(DynamixelTest, CanGetGoalPosition){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    float angle = 0;
+    ASSERT_TRUE(m.getPosition(angle));
 }
 
 

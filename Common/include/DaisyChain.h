@@ -28,27 +28,9 @@ using gpio::GpioInterface;
 
 
 
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
 /************************** insert module name here **************************/
+// TODO: pick better namespace for this component
 namespace dynamixel{
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
-// Types & enums
-// ----------------------------------------------------------------------------
-
-
-
-
 // Classes and structs
 // ----------------------------------------------------------------------------
 struct DaisyChainParams{
@@ -74,26 +56,13 @@ private:
 
     void changeBusDir(Direction dir) const;
 
-    const UartDriver* uartDriver; /**< @see UartDriver */
-    const GpioInterface* gpioif;  /**< @see GpioInterface */
-    GPIO_TypeDef* dataDirPort; /**< Port data direction pin is on */
-    uint16_t dataDirPinNum;    /**< Data direction pin number     */
+    const UartDriver* uartDriver;    /**< @see UartDriver               */
+    const GpioInterface* gpioif;     /**< @see GpioInterface            */
+    const GPIO_TypeDef* dataDirPort; /**< Port data direction pin is on */
+    const uint16_t dataDirPinNum;    /**< Data direction pin number     */
 };
 
-
-
-// Functions
-// ----------------------------------------------------------------------------
-
-
-
-
-} // end namespace module_name
-
-
-
-
-/***************************** Inline functions ******************************/
+} // end namespace dynamixel
 
 
 
@@ -101,6 +70,6 @@ private:
 /**
  * @}
  */
-/* end - Header */
+/* end - DaisyChain */
 
 #endif /* DAISY_CHAIN_H */
