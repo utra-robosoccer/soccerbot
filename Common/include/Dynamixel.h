@@ -42,6 +42,11 @@ namespace dynamixel{
 
 // Types & enums
 // ----------------------------------------------------------------------------
+// TODO(tyler) could update this to be a "MotorSpec" class, which contains
+// a valid set of values (limits, defaults, other constants) for each
+// motor supported by the library. Motor would then have these all as
+// constants set at construction, or maybe it would contain a pointer to the
+// struct of constants (maybe such setters and getters can be inlined)
 /**
  * @brief Enumerates the resolution dividers of the motors supported by the
  *        library
@@ -90,22 +95,53 @@ public:
 //    void setStatusReturnLevel(uint8_t status_data);
 //    void setAlarmLED(uint8_t alarm_LED_data);
 //    void setAlarmShutdown(uint8_t alarm_shutdown_data);
+
     // RAM
-//    void torqueEnable(uint8_t isEnabled);
-//    void lEDEnable(uint8_t isEnabled);
+    /**
+     * @brief Enables or disables torque for current motor
+     * @param isEnabled
+     *            - if 1, then generates torque by impressing power to the motor
+     *            - if 0, then interrupts power to the motor to prevent it from
+     *              generating torque
+     * @return true if successful, otherwise false
+     */
+    bool enableTorque(bool isEnabled);
 
     /**
-     * @brief   Sets the goal position of the motor in RAM
+     * @brief Sets the state of the motor's LED
+     * @param isEnabled
+     *            - if 1, LED is on
+     *            - if 0, LED is off
+     * @return true if successful, otherwise false
+     */
+    bool enableLed(bool isEnabled);
+
+    /**
+     * @brief Sets the goal position of the motor in RAM
      * @details Takes a double between 0 and 300, encodes this position in an
      *          upper and lower byte pair, and sends this information (along
      *          with requisites) to the motor
-     * @param   goalAngle the desired angular position. Arguments between 0 and
-     *          300 are valid. Note that 150 corresponds to the middle position
+     * @param goalAngle the desired angular position. Arguments between 0 and
+     *        300 are valid. Note that 150 corresponds to the middle position
+     * @return true if successful, otherwise false
      */
-    void setGoalPosition(float goalAngle);
+    bool setGoalPosition(float goalAngle);
+
 //    void setGoalVelocity(float goalVelocity);
-//    void setGoalTorque(float goalTorque);
-//    void lockEEPROM();
+
+    /**
+     * @brief Sets the torque limit for the motor in RAM
+     * @param goalTorque The percentage of the maximum possible torque (max:
+     *        100). Gets converted into a 10-bit number
+     * @return true if successful, otherwise false
+     */
+    bool setGoalTorque(float goalTorque);
+
+    /**
+     * @brief Locks the EEPROM until the next power cycle
+     * @return true if successful, otherwise false
+     */
+    bool lockEEPROM();
 //    void setPunch(float punch);
 //
     // Getters (use READ DATA instruction)
