@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>soccer_common</name>
+  <version>0.0.0</version>
+  <description>Contains common files refered by other modules</description>
+  <maintainer email="vuwij@me.com">vuwij@me.com</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
