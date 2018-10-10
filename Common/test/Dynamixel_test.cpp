@@ -80,45 +80,62 @@ TEST_F(DynamixelTest, CanBeCreated){
     Motor m2(1, &chain, ResolutionDivider::MX28);
 }
 
+TEST_F(DynamixelTest, CanSetId){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setId(2);
+}
+
+TEST_F(DynamixelTest, CanSetReturnDelayTime){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setReturnDelayTime(150);
+}
+
 TEST_F(DynamixelTest, CanEnableTorque){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    auto status = m.enableTorque(true);
-    ASSERT_TRUE(status);
 
-    status = m.enableTorque(false);
-    ASSERT_TRUE(status);
+    m.enableTorque(true);
+    m.enableTorque(false);
 }
 
 TEST_F(DynamixelTest, CanEnableLed){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    auto status = m.enableLed(true);
-    ASSERT_TRUE(status);
 
-    status = m.enableLed(false);
-    ASSERT_TRUE(status);
+    m.enableLed(true);
+    m.enableLed(false);
 }
 
 TEST_F(DynamixelTest, CanSetGoalPosition){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    auto status = m.setGoalPosition(150.0);
-    ASSERT_TRUE(status);
+
+    m.setGoalPosition(150.0);
 }
 
 TEST_F(DynamixelTest, CanSetGoalTorque){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    auto status = m.setGoalTorque(100.0);
-    ASSERT_TRUE(status);
+
+    m.setGoalTorque(100.0);
 }
 
 TEST_F(DynamixelTest, CanLockEEPROM){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    auto status = m.lockEEPROM();
-    ASSERT_TRUE(status);
+
+    m.lockEEPROM();
+}
+
+TEST_F(DynamixelTest, CanSetPunch){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setPunch(10.0);
 }
 
 TEST_F(DynamixelTest, CanGetGoalPosition){
@@ -126,11 +143,40 @@ TEST_F(DynamixelTest, CanGetGoalPosition){
     Motor m(1, &chain, ResolutionDivider::AX12A);
 
     float angle = 0;
-    auto status = m.getPosition(angle);
-    ASSERT_TRUE(status);
+    m.getPosition(angle);
 }
 
+//TEST_F(DynamixelTest, CanGetVelocity){
+//    DaisyChain chain(p);
+//    Motor m(1, &chain, ResolutionDivider::AX12A);
+//
+//    float rpm = 0;
+//    m.getVelocity(rpm);
+//}
 
+TEST_F(DynamixelTest, CanGetLoad){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    float load = 0;
+    m.getLoad(load);
+}
+
+TEST_F(DynamixelTest, CanGetVoltage){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    float voltage = 0;
+    m.getVoltage(voltage);
+}
+
+TEST_F(DynamixelTest, CanGetTemperature){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    uint8_t temp = 0;
+    m.getTemperature(temp);
+}
 
 } // end anonymous namespace
 

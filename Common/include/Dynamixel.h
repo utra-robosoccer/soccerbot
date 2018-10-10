@@ -83,10 +83,31 @@ public:
 //    void reset();
 //
     // Setters (use the WRITE DATA instruction)
-//    // EEPROM
-//    void setID(uint8_t ID);
+    // EEPROM
+    /**
+     * @brief Sets the ID (identification number) for the current motor
+     * @details Note that the instruction will be broadcasted using the current ID.
+     *          As such, if the ID is not known, the motor ID should be initialized
+     *          to the broadcast ID (0xFE) in the constructor
+     *
+     *          Default value: 1
+     * @param id the number between 0 and 252 or equal to 254 to identify the
+     *        motor. If 0xFE (254), any messages broadcasted to that ID will be
+     *        broadcasted to all motors
+     * @return true if successful, otherwise false
+     */
+    bool setId(uint8_t id);
+
 //    void setBaudRate(uint32_t baud);
-//    void setReturnDelayTime(uint16_t microSec);
+
+    /**
+     * @brief Sets the time, in microseconds, that the motor should wait before
+     *        returning a status packet
+     * @param microSec the time in microseconds to delay. Arguments in range
+     *        [2, 508] are valid
+     * @return true if successful, otherwise false
+     */
+    bool setReturnDelayTime(uint16_t microSec);
 //    void setCWAngleLimit(float minAngle);
 //    void setCCWAngleLimit(float maxAngle);
 //    void setHighestVoltageLimit(float highestVoltage);
@@ -99,28 +120,20 @@ public:
     // RAM
     /**
      * @brief Enables or disables torque for current motor
-     * @param isEnabled
-     *            - if 1, then generates torque by impressing power to the motor
-     *            - if 0, then interrupts power to the motor to prevent it from
-     *              generating torque
+     * @param isEnabled true if torque should be set to on, otherwise false
      * @return true if successful, otherwise false
      */
     bool enableTorque(bool isEnabled);
 
     /**
      * @brief Sets the state of the motor's LED
-     * @param isEnabled
-     *            - if 1, LED is on
-     *            - if 0, LED is off
+     * @param isEnabled true if the LED should be turned on, otherwise false
      * @return true if successful, otherwise false
      */
     bool enableLed(bool isEnabled);
 
     /**
      * @brief Sets the goal position of the motor in RAM
-     * @details Takes a double between 0 and 300, encodes this position in an
-     *          upper and lower byte pair, and sends this information (along
-     *          with requisites) to the motor
      * @param goalAngle the desired angular position. Arguments between 0 and
      *        300 are valid. Note that 150 corresponds to the middle position
      * @return true if successful, otherwise false
@@ -142,19 +155,52 @@ public:
      * @return true if successful, otherwise false
      */
     bool lockEEPROM();
-//    void setPunch(float punch);
-//
+
+    /**
+     * @brief Sets a quantity proportional to the minimum current supplied to the
+     *        motor during operation. WARNING: setting this to 100.0 will cause
+     *        the actuators to heat up very rapidly!
+     * @details Units are not specified in the datasheet, and therefore this
+     *          function is not entirely useful without sufficient testing
+     * @param punch for now, arguments in range [0, 100.0] are valid
+     * @return true if successful, otherwise false
+     */
+    bool setPunch(float punch);
+
     // Getters (use READ DATA instruction)
     /**
      * @brief Reads the angular position of the motor in degrees
-     * @param[out] retVal R-val return type
+     * @param[out] retVal R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
     bool getPosition(float& retVal);
-//    void getVelocity();
-//    void getLoad();
-//    float getVoltage();
-//    uint8_t getTemperature();
+
+
+//    bool getVelocity(float& retVal);
+
+    /**
+     * @brief Reads the "load", the percentage of the maximum torque the motor
+     *        is exerting. Counterclockwise loads are positive and clockwise
+     *        are negative
+     * @param[out] retVal R-val return type (not modified upon failure)
+     * @return true if successful, otherwise false
+     */
+    bool getLoad(float& retVal);
+
+    /**
+     * @brief   Reads the motor supply voltage
+     * @param[out] retVal R-val return type
+     * @return true if successful, otherwise false
+     */
+    bool getVoltage(float& retVal);
+
+    /**
+     * @brief Reads the internal motor temperature. Results are in degrees
+     *        Celsius
+     * @param[out] retVal R-val return type (not modified upon failure)
+     * @return true if successful, otherwise false
+     */
+    bool getTemperature(uint8_t& retVal);
 //    bool isRegistered();
 //    bool isMoving();
 //    bool isJointMode();
@@ -168,19 +214,19 @@ public:
 
 protected:
     /**
-     * @brief   Sends an array of data to a motor as per its configuration details
+     * @brief Sends an array of data to a motor as per its configuration details
      * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
-     * @param   args an array of arguments of the form `{ADDR, PARAM_1, ... ,
-     *          PARAM_N}`
-     * @param   numArgs this must be equal to `sizeof(args)`, and must be either 2
-     *          or 3
-     * @return  true if successful, otherwise false
+     * @param args an array of arguments of the form `{ADDR, PARAM_1, ... ,
+     *        PARAM_N}`
+     * @param numArgs this must be equal to `sizeof(args)`, and must be either 2
+     *        or 3
+     * @return true if successful, otherwise false
      */
     bool dataWriter(uint8_t* args, size_t numArgs);
 
     /**
-     * @brief   Reads data of a specified length from a given address in the
-     *          motor
+     * @brief Reads data of a specified length from a given address in the
+     *        motor
      * @details Uses the READ DATA instruction, 0x02, in the motor instruction set.
      *          The status packet returned will be of the following form
      *
@@ -189,11 +235,11 @@ protected:
      *          @endcode
      *
      *          Where N = readLength
-     * @param   readAddr The address inside the motor memory table where reading
-     *          is to begin
-     * @param   readLength The number of bytes to be read. Must be either 1 or 2
+     * @param readAddr The address inside the motor memory table where reading
+     *        is to begin
+     * @param readLength The number of bytes to be read. Must be either 1 or 2
      * @param[out] val R-value return type
-     * @return  true if successful and checksums match, otherwise false
+     * @return true if successful and checksums match, otherwise false
      */
     bool dataReader(uint8_t readAddr, uint8_t readLength, uint16_t& retVal);
 
