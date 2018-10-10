@@ -1,5 +1,7 @@
 <launch>
     <arg name="vision" default="false" />
+    <arg name="darknet" value="false" />
+    <arg name="field_name" default="robocup" />
 
     <!-- Connection to the robot -->
     <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
@@ -9,7 +11,15 @@
 
     <!-- Computer Vision and Camera -->
     <group if="$(arg vision)">
-        <include file="$(find soccerbot)/launch/modules/vision.launch" />
+        <include file="$(find soccerbot)/launch/modules/vision.launch">
+            <arg name="simulation" value="true" />
+            <arg name="darknet" default="$(arg darknet)" />
+        </include>
+        <include file="$(find soccerbot)/launch/modules/localization.launch">
+            <arg name="field_name" default="$(arg field_name)" />
+            <arg name="global_frame_id" default="map"/>
+            <arg name="scan_topic" default="scan"/>
+        </include>
     </group>
 
     <!-- Control -->

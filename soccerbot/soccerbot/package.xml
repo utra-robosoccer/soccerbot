@@ -14,6 +14,7 @@
   <depend>soccer_msgs</depend>
   <depend>soccer_transforms</depend>
   <depend>soccer_communication</depend>
+  <depend>soccer_common</depend>
   <depend>usb_cam</depend>
   <depend>amcl</depend>
 </package>
