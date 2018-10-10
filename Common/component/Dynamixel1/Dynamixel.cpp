@@ -1,7 +1,9 @@
 /**
   *****************************************************************************
-  * @file    Dynamixel.cpp
-  * @author  Tyler Gamvrelis
+  * @file   Dynamixel.cpp
+  * @author Tyler Gamvrelis
+  * @author Gokul Dharan
+  * @author Hannah Lee
   *
   * @ingroup Dynamixel
   * @{
@@ -71,29 +73,29 @@ constexpr uint8_t REG_MOVING              = 0x2E; /**< Motor motion register */
 
 /********************************* Constants *********************************/
 // Default register values
-constexpr uint8_t BROADCAST_ID                = 0xFE;       /**< Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus) */
-constexpr uint8_t DEFAULT_ID                  = 0x01;       /**< Default motor ID */
-constexpr uint8_t DEFAULT_RETURN_DELAY        = 0xFA;       /**< Default time motor waits before returning status packet (microseconds) */
-constexpr uint16_t DEFAULT_CW_ANGLE_LIMIT     = 0x0000;     /**< Default clockwise angle limit */
-constexpr uint8_t DEFAULT_LOW_VOLTAGE_LIMIT   = 0x3C;       /**< Default permitted minimum voltage (0x3C = 60 -> 6.0 V) */
-constexpr uint16_t DEFAULT_MAXIMUM_TORQUE     = 0x03FF;     /**< Default maximum torque limit (10-bit resolution percentage) */
-constexpr uint8_t DEFAULT_STATUS_RETURN_LEVEL = 0x02;       /**< Default condition(s) under which a status packet will be returned (all) */
-constexpr uint8_t DEFAULT_ALARM_LED           = 0x24;       /**< Default condition(s) under which the alarm LED will be set */
-constexpr uint8_t DEFAULT_ALARM_SHUTDOWN      = 0x24;       /**< Default condition(s) under which the motor will shut down due to an alarm */
-constexpr uint8_t DEFAULT_TORQUE_ENABLE       = 0x00;       /**< Default motor power state */
-constexpr uint8_t DEFAULT_LED_ENABLE          = 0x00;       /**< Default LED state */
-constexpr uint8_t DEFAULT_EEPROM_LOCK         = 0x00;       /**< Default value for the EEPROM lock */
+constexpr uint8_t BROADCAST_ID                = 0xFE;   /**< Motor broadcast ID (i.e. messages sent to this ID will be sent to all motors on the bus) */
+constexpr uint8_t DEFAULT_ID                  = 0x01;   /**< Default motor ID */
+constexpr uint8_t DEFAULT_RETURN_DELAY        = 0xFA;   /**< Default time motor waits before returning status packet (microseconds) */
+constexpr uint16_t DEFAULT_CW_ANGLE_LIMIT     = 0x0000; /**< Default clockwise angle limit */
+constexpr uint8_t DEFAULT_LOW_VOLTAGE_LIMIT   = 0x3C;   /**< Default permitted minimum voltage (0x3C = 60 -> 6.0 V) */
+constexpr uint16_t DEFAULT_MAXIMUM_TORQUE     = 0x03FF; /**< Default maximum torque limit (10-bit resolution percentage) */
+constexpr uint8_t DEFAULT_STATUS_RETURN_LEVEL = 0x02;   /**< Default condition(s) under which a status packet will be returned (all) */
+constexpr uint8_t DEFAULT_ALARM_LED           = 0x24;   /**< Default condition(s) under which the alarm LED will be set */
+constexpr uint8_t DEFAULT_ALARM_SHUTDOWN      = 0x24;   /**< Default condition(s) under which the motor will shut down due to an alarm */
+constexpr uint8_t DEFAULT_TORQUE_ENABLE       = 0x00;   /**< Default motor power state */
+constexpr uint8_t DEFAULT_LED_ENABLE          = 0x00;   /**< Default LED state */
+constexpr uint8_t DEFAULT_EEPROM_LOCK         = 0x00;   /**< Default value for the EEPROM lock */
 
 // Value limit definitions
-constexpr float MIN_VELOCITY = 1.0;        /**< Minimum angular velocity (RPM) */
-constexpr float MAX_ANGLE    = 300.0;      /**< Maximum angular position (joint mode) */
-constexpr float MIN_ANGLE    = 0.0;        /**< Minimum angular position (joint mode) */
-constexpr float MAX_TORQUE   = 100.0;      /**< Maximum torque (percent of maximum) */
-constexpr float MIN_TORQUE   = 0.0;        /**< Minimum torque (percent of maximum) */
-constexpr float MAX_VOLTAGE  = 14.0;       /**< Maximum operating voltage */
-constexpr float MIN_VOLTAGE  = 6.0;        /**< Minimum operating voltage */
-constexpr uint16_t MAX_PUNCH = 1023;       /**< Maximum punch (proportional to minimum current) */
-constexpr uint16_t MIN_PUNCH = 0;          /**< Minimum punch (proportional to minimum current) */
+constexpr float MIN_VELOCITY = 1.0;   /**< Minimum angular velocity (RPM) */
+constexpr float MAX_ANGLE    = 300.0; /**< Maximum angular position (joint mode) */
+constexpr float MIN_ANGLE    = 0.0;   /**< Minimum angular position (joint mode) */
+constexpr float MAX_TORQUE   = 100.0; /**< Maximum torque (percent of maximum) */
+constexpr float MIN_TORQUE   = 0.0;   /**< Minimum torque (percent of maximum) */
+constexpr float MAX_VOLTAGE  = 14.0;  /**< Maximum operating voltage */
+constexpr float MIN_VOLTAGE  = 6.0;   /**< Minimum operating voltage */
+constexpr uint16_t MAX_PUNCH = 1023;  /**< Maximum punch (proportional to minimum current) */
+constexpr uint16_t MIN_PUNCH = 0;     /**< Minimum punch (proportional to minimum current) */
 
 
 
@@ -157,23 +159,31 @@ Motor::Motor(
         resolutionDivider(static_cast<uint16_t>(divider)),
         daisyChain(daisyChain)
 {
-    lastPosition = INFINITY;
+
 }
 
 Motor::~Motor(){
 
 }
 
-void Motor::setGoalPosition(float goalAngle){
-    // Check for input validity. If input not valid, replace goalAngle with
-    // closest valid value to ensure code won't halt
-    if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
-        if(goalAngle > MIN_ANGLE){
-            goalAngle = MAX_ANGLE;
-        }
-        else{
-            goalAngle = MIN_ANGLE;
-        }
+bool Motor::enableTorque(bool isEnabled){
+    // Write data to motor
+    uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::enableLed(bool isEnabled){
+    // Write data to motor
+    uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setGoalPosition(float goalAngle){
+    if(goalAngle < MIN_ANGLE){
+        goalAngle = MIN_ANGLE;
+    }
+    else if(goalAngle > MAX_ANGLE){
+        goalAngle = MAX_ANGLE;
     }
 
     // Translate the angle from degrees into a binary code with the resolution
@@ -185,7 +195,32 @@ void Motor::setGoalPosition(float goalAngle){
 
     // Write data to motor
     uint8_t args[3] = {REG_GOAL_POSITION, lowByte, highByte};
-    dataWriter(args, sizeof(args));
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setGoalTorque(float goalTorque){
+    if(goalTorque < 0){
+        goalTorque = 0;
+    }
+    else if(goalTorque > 100.0){
+        goalTorque = 100.0;
+    }
+
+    // Translate the input from percentage into and 10-bit number
+    uint16_t normalized_value = (uint16_t)(goalTorque / 100 * 1023);
+
+    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF);
+    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF);
+
+    // Write data to motor
+    uint8_t args[3] = {REG_GOAL_TORQUE, lowByte, highByte};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::lockEEPROM(){
+    // Write data to motor
+    uint8_t args[2] = {REG_LOCK_EEPROM, 1};
+    return dataWriter(args, sizeof(args));
 }
 
 bool Motor::getPosition(float& retVal){
@@ -193,7 +228,7 @@ bool Motor::getPosition(float& retVal){
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_POSITION, 2, raw);
 
-    // Parse data and write it into motor
+    // Parse data and write it into R-val
     if(success){
         retVal = (raw * MAX_ANGLE / resolutionDivider);
     }

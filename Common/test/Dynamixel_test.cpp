@@ -80,10 +80,45 @@ TEST_F(DynamixelTest, CanBeCreated){
     Motor m2(1, &chain, ResolutionDivider::MX28);
 }
 
+TEST_F(DynamixelTest, CanEnableTorque){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+    auto status = m.enableTorque(true);
+    ASSERT_TRUE(status);
+
+    status = m.enableTorque(false);
+    ASSERT_TRUE(status);
+}
+
+TEST_F(DynamixelTest, CanEnableLed){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+    auto status = m.enableLed(true);
+    ASSERT_TRUE(status);
+
+    status = m.enableLed(false);
+    ASSERT_TRUE(status);
+}
+
 TEST_F(DynamixelTest, CanSetGoalPosition){
     DaisyChain chain(p);
     Motor m(1, &chain, ResolutionDivider::AX12A);
-    m.setGoalPosition(150.0);
+    auto status = m.setGoalPosition(150.0);
+    ASSERT_TRUE(status);
+}
+
+TEST_F(DynamixelTest, CanSetGoalTorque){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+    auto status = m.setGoalTorque(100.0);
+    ASSERT_TRUE(status);
+}
+
+TEST_F(DynamixelTest, CanLockEEPROM){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+    auto status = m.lockEEPROM();
+    ASSERT_TRUE(status);
 }
 
 TEST_F(DynamixelTest, CanGetGoalPosition){
@@ -91,7 +126,8 @@ TEST_F(DynamixelTest, CanGetGoalPosition){
     Motor m(1, &chain, ResolutionDivider::AX12A);
 
     float angle = 0;
-    ASSERT_TRUE(m.getPosition(angle));
+    auto status = m.getPosition(angle);
+    ASSERT_TRUE(status);
 }
 
 
