@@ -30,13 +30,19 @@ using ::testing::Return;
 using ::testing::_;
 
 using uart::UartDriver;
+
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;
 using mocks::MockGpioInterface;
+
 using dynamixel::Motor;
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
 using dynamixel::ResolutionDivider;
+using dynamixel::VoltageLimit;
+using dynamixel::StatusReturnLevel;
+using dynamixel::AlarmType;
+using dynamixel::AlarmCondition;
 
 
 
@@ -92,6 +98,55 @@ TEST_F(DynamixelTest, CanSetReturnDelayTime){
     Motor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setReturnDelayTime(150);
+}
+
+TEST_F(DynamixelTest, CanSetVoltageLimits){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setVoltageLimit(VoltageLimit::HIGHEST, 14.0);
+    m.setVoltageLimit(VoltageLimit::LOWEST, 6.0);
+
+    // TODO: move to separate unit test for bounds checks
+    ASSERT_FALSE(m.setVoltageLimit(VoltageLimit::HIGHEST, 9000.0));
+    ASSERT_FALSE(m.setVoltageLimit(VoltageLimit::LOWEST, 0));
+}
+
+TEST_F(DynamixelTest, CanSetMaxTorque){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setMaxTorque(100.0);
+
+    // TODO: move to separate unit test for bounds checks
+    ASSERT_FALSE(m.setMaxTorque(-1.0));
+    ASSERT_FALSE(m.setMaxTorque(101.0));
+}
+
+TEST_F(DynamixelTest, CanSetStatusReturnLevel){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setStatusReturnLevel(StatusReturnLevel::PING_ONLY);
+    m.setStatusReturnLevel(StatusReturnLevel::READS_ONLY);
+    m.setStatusReturnLevel(StatusReturnLevel::ALL_COMMANDS);
+
+    // Bounds check should cause this to return false
+    // TODO: move to separate unit test for bounds checks
+    ASSERT_FALSE(m.setStatusReturnLevel(StatusReturnLevel::NUM_LEVELS));
+}
+
+TEST_F(DynamixelTest, CanSetAlarm){
+    DaisyChain chain(p);
+    Motor m(1, &chain, ResolutionDivider::AX12A);
+
+    m.setAlarm(AlarmType::LED, AlarmCondition::INPUT_VOLTAGE_ERR);
+    m.setAlarm(AlarmType::SHUTDOWN, AlarmCondition::OVERHEATING_ERR);
+
+    // Bounds checks should cause these to return false
+    // TODO: move to separate unit test for bounds checks
+    ASSERT_FALSE(m.setAlarm(AlarmType::LED, AlarmCondition::NUM_CONDITIONS));
+    ASSERT_FALSE(m.setAlarm(AlarmType::NUM_TYPES, AlarmCondition::OVERHEATING_ERR));
 }
 
 TEST_F(DynamixelTest, CanEnableTorque){

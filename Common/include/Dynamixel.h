@@ -47,13 +47,47 @@ namespace dynamixel{
 // motor supported by the library. Motor would then have these all as
 // constants set at construction, or maybe it would contain a pointer to the
 // struct of constants (maybe such setters and getters can be inlined)
-/**
- * @brief Enumerates the resolution dividers of the motors supported by the
- *        library
- */
+
+/** @brief Resolution dividers for the motors supported by the library */
 enum class ResolutionDivider : uint16_t{
     AX12A = 1023,
     MX28 = 4095
+};
+
+/** @brief Voltage limits that can be set. @see setVoltageLimit */
+enum class VoltageLimit{
+    HIGHEST, /**< Set the highest voltage the motor will operate at */
+    LOWEST   /**< Set the lowest voltage the motor will operate at  */
+};
+
+/** @brief Cases the motor can be configured to return a status packet for */
+enum class StatusReturnLevel : uint8_t{
+    PING_ONLY = 0,
+    READS_ONLY = 1,
+    ALL_COMMANDS = 2,
+    NUM_LEVELS
+};
+
+/** @brief Actions the motor can take when an alarm condition is satisfied */
+enum class AlarmType : uint8_t{
+    LED,
+    SHUTDOWN,
+    NUM_TYPES
+};
+
+/**
+ * @brief Conditions for which the motor can be programmed to respond with an
+ *        alarm action
+ */
+enum class AlarmCondition : uint8_t{
+    INPUT_VOLTAGE_ERR = 0,
+    ANGLE_LIMIT_ERR = 1, /**< Goal angle is set beyond the limits */
+    OVERHEATING_ERR = 2,
+    RANGE_ERR = 3,
+    CHECKSUM_ERR = 4,
+    OVERLOAD_ERR = 5,    /**< Motor cannot exert enough torque    */
+    INSTRUCTION_ERR = 7,
+    NUM_CONDITIONS
 };
 
 
@@ -81,7 +115,7 @@ public:
 
     ~Motor();
 //    void reset();
-//
+
     // Setters (use the WRITE DATA instruction)
     // EEPROM
     /**
@@ -108,14 +142,44 @@ public:
      * @return true if successful, otherwise false
      */
     bool setReturnDelayTime(uint16_t microSec);
+
 //    void setCWAngleLimit(float minAngle);
 //    void setCCWAngleLimit(float maxAngle);
-//    void setHighestVoltageLimit(float highestVoltage);
-//    void setLowestVoltageLimit(float lowestVoltage);
-//    void setMaxTorque(float maxTorque);
-//    void setStatusReturnLevel(uint8_t status_data);
-//    void setAlarmLED(uint8_t alarm_LED_data);
-//    void setAlarmShutdown(uint8_t alarm_shutdown_data);
+
+    /**
+     * @brief Sets the highest or lowest operating voltage limit for the motor
+     *        Default register value: 140 (0xBE) which is 14.0 volts
+     * @param limit the voltage limit to set
+     * @param voltage the value to set the limit to, in volts
+     * @return true if successful, otherwise false
+     */
+    bool setVoltageLimit(VoltageLimit limit, float voltage);
+
+    /**
+     * @brief Sets the maximum torque limit for all motor operations
+     * @details Default value: 0x3FF (100%)
+     * @param   maxTorque the maximum torque as a percentage (max: 100.0). Gets
+     *          converted to a 10-bit number
+     * @return true if successful, otherwise false
+     */
+    bool setMaxTorque(float maxTorque);
+
+    /**
+     * @brief Sets the conditions under which a status packet will be returned
+     * @param level The status return level. @see StatusReturnLevel
+     * @return true if successful, otherwise false
+     */
+    bool setStatusReturnLevel(StatusReturnLevel level);
+
+    /**
+     * @brief Sets the conditions under which the motor will enter an alarm
+     *        state. Each condition which is enabled can be programmed to turn
+     *        on the motor's LED and/or disable the motor's torque ("shut
+     *        down")
+     * @details Register bits may be set simultaneously in the motor
+     * @return true if successful, otherwise false
+     */
+    bool setAlarm(AlarmType type, AlarmCondition condition);
 
     // RAM
     /**
