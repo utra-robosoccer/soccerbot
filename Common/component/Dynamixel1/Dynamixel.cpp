@@ -194,6 +194,79 @@ bool Motor::setReturnDelayTime(uint16_t microSec){
     return dataWriter(args, sizeof(args));
 }
 
+bool Motor::setVoltageLimit(VoltageLimit limit, float voltage){
+    if((voltage < MIN_VOLTAGE) || (voltage > MAX_VOLTAGE)){
+        return false;
+    }
+
+    uint8_t args[2];
+    switch(limit){
+        case VoltageLimit::HIGHEST:
+            args[0] = REG_HIGH_VOLTAGE_LIMIT;
+            break;
+        case VoltageLimit::LOWEST:
+            args[0] = REG_LOW_VOLTAGE_LIMIT;
+            break;
+        default:
+            return false;
+    }
+
+    args[1] = static_cast<uint8_t>(voltage * 10);
+
+    // Write data to motor
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setMaxTorque(float maxTorque){
+    if((maxTorque < MIN_TORQUE) || (maxTorque > MAX_TORQUE)){
+        return false;
+    }
+
+    // Translate the input from percentage into a 10-bit number
+    uint16_t normalized_value = (uint16_t)(maxTorque / 100 * 1023);
+
+    uint8_t lowByte = normalized_value & 0xFF;
+    uint8_t highByte = (normalized_value >> 8) & 0xFF;
+
+    // Write data to motor
+    uint8_t args[3] = {REG_MAX_TORQUE, lowByte, highByte};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setStatusReturnLevel(StatusReturnLevel level){
+    if(level >= StatusReturnLevel::NUM_LEVELS){
+        return false;
+    }
+
+    // Write data to motor
+    uint8_t args[2] = {REG_STATUS_RETURN_LEVEL, static_cast<uint8_t>(level)};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setAlarm(AlarmType type, AlarmCondition condition){
+    if((type >= AlarmType::NUM_TYPES) ||
+       (condition >= AlarmCondition::NUM_CONDITIONS))
+    {
+        return false;
+    }
+
+    uint8_t args[2];
+    switch(type){
+        case AlarmType::LED:
+            args[0] = REG_ALARM_LED;
+            break;
+        case AlarmType::SHUTDOWN:
+            args[0] = REG_ALARM_SHUTDOWN;
+            break;
+        default:
+            return false;
+    }
+
+    // Write data to motor
+    args[1] = static_cast<uint8_t>(condition);
+    return dataWriter(args, sizeof(args));
+}
+
 bool Motor::enableTorque(bool isEnabled){
     // Write data to motor
     uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
