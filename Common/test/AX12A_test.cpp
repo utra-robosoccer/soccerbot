@@ -1,11 +1,11 @@
 /**
   *****************************************************************************
-  * @file    DaisyChain_test.cpp
+  * @file    AX12A_test.cpp
   * @author  Tyler Gamvrelis
   *
-  * @defgroup DaisyChain_Test
-  * @ingroup  DaisyChain
-  * @brief    Unit test driver for DaisyChain
+  * @defgroup AX12A_Test
+  * @ingroup  Dynamixel
+  * @brief    AX12A test driver
   * @{
   *****************************************************************************
   */
@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "DaisyChain.h"
+#include "AX12A.h"
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"
@@ -23,18 +23,18 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-
-using ::testing::DoAll;
-using ::testing::Return;
 using ::testing::_;
 
 using uart::UartDriver;
+
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;
 using mocks::MockGpioInterface;
 
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
+using dynamixel::ResolutionDivider;
+using dynamixel::AX12A;
 
 
 
@@ -46,19 +46,18 @@ namespace{
 MockUartInterface uart;
 MockOsInterface os;
 MockGpioInterface gpio;
-
 UART_HandleTypeDef UARTx = {0};
 UartDriver UARTxDriver(&os, &uart, &UARTx);
+
 GPIO_TypeDef dataDirPort;
 
 DaisyChainParams p;
 
 
 
-
 // Classes & structs
 // ----------------------------------------------------------------------------
-class DaisyChainShould : public ::testing::Test {
+class AX12ATest : public ::testing::Test {
 protected:
     void SetUp() override {
         p.uartDriver = &UARTxDriver;
@@ -73,36 +72,10 @@ protected:
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST_F(DaisyChainShould, Construct){
+TEST_F(AX12ATest, CanBeCreated){
     DaisyChain chain(p);
+    AX12A m1(1, &chain, ResolutionDivider::AX12A);
 }
-
-// We cannot really test much more than this for transmit without totally
-// whiteboxing the test, which isn't good as we may change the implementation
-// soon to buffer the requests then package them as a sync write command
-TEST_F(DaisyChainShould, SetCallGpioFunctionUponTransmissionRequest){
-    DaisyChain chain(p);
-
-    char msg[] = "hey!";
-
-    EXPECT_CALL(gpio, writePin);
-    auto status = chain.requestTransmission((uint8_t*)msg, sizeof(msg));
-    EXPECT_TRUE(status);
-}
-
-// We cannot really test much more than this for transmit without totally
-// whiteboxing the test, which doesn't tell us anything useful in this case
-TEST_F(DaisyChainShould, SetCallGpioFunctionUponReceptionRequest){
-    DaisyChain chain(p);
-
-    uint8_t buf[10];
-
-    EXPECT_CALL(gpio, writePin);
-    auto status = chain.requestReception(buf, 5);
-    EXPECT_TRUE(status);
-}
-
-
 
 } // end anonymous namespace
 
@@ -112,4 +85,4 @@ TEST_F(DaisyChainShould, SetCallGpioFunctionUponReceptionRequest){
 /**
  * @}
  */
-/* end - DaisyChain_Test */
+/* end - AX12A_Test */
