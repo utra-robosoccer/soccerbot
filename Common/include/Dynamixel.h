@@ -25,18 +25,89 @@
 
 
 
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
 /************************** insert module name here **************************/
 namespace dynamixel{
 // Constants
 // ----------------------------------------------------------------------------
-// TODO(tyler) export default values and limiting values here
+
+// Default register values
+// ----------------------------------------------------------------------------
+/**
+ * @brief Motor broadcast ID (i.e. messages sent to this ID will be sent to all
+ *        motors on the bus)
+ */
+constexpr uint8_t BROADCAST_ID                = 0xFE;
+
+/** @brief Default motor ID */
+constexpr uint8_t DEFAULT_ID                  = 0x01;
+
+/**
+ * @brief Default time motor waits before returning status packet (microseconds)
+ */
+constexpr uint16_t DEFAULT_RETURN_DELAY       = 500;
+
+/** @brief Default clockwise angle limit */
+constexpr float DEFAULT_CW_ANGLE_LIMIT        = 0.0;
+
+/** @brief Default permitted minimum voltage (0x3C = 60 -> 6.0 V) */
+constexpr float DEFAULT_LOW_VOLTAGE_LIMIT     = 6.0;
+
+/** @brief Default maximum torque limit (10-bit resolution percentage) */
+constexpr float DEFAULT_MAXIMUM_TORQUE        = 100.0;
+
+/**
+ * @brief Default condition(s) under which a status packet will be returned
+ *        (all)
+ */
+constexpr uint8_t DEFAULT_STATUS_RETURN_LEVEL = 0x02;
+
+/** @brief Default condition(s) under which the alarm LED will be set */
+constexpr uint8_t DEFAULT_ALARM_LED           = 0x24;
+
+/**
+ * @brief Default condition(s) under which the motor will shut down due to an
+ *        alarm
+ */
+constexpr uint8_t DEFAULT_ALARM_SHUTDOWN      = 0x24;
+
+/** @brief Default motor power state */
+constexpr bool DEFAULT_TORQUE_ENABLE          = false;
+
+/** @brief Default LED state */
+constexpr bool DEFAULT_LED_ENABLE             = false;
+
+/** @brief Default value for the EEPROM lock */
+constexpr uint8_t DEFAULT_EEPROM_LOCK         = 0x00;
+
+
+// Value limit definitions
+// ----------------------------------------------------------------------------
+/** @brief Minimum angular velocity (RPM) */
+constexpr float MIN_VELOCITY = 1.0;
+
+/** @brief Maximum angular position (joint mode) */
+constexpr float MAX_ANGLE    = 300.0;
+
+/** @brief Minimum angular position (joint mode) */
+constexpr float MIN_ANGLE    = 0.0;
+
+/** @brief Maximum torque (percent of maximum) */
+constexpr float MAX_TORQUE   = 100.0;
+
+/** @brief Minimum torque (percent of maximum) */
+constexpr float MIN_TORQUE   = 0.0;
+
+/** @brief Maximum operating voltage */
+constexpr float MAX_VOLTAGE  = 14.0;
+
+/** @brief Minimum operating voltage */
+constexpr float MIN_VOLTAGE  = 6.0;
+
+/** @brief Maximum punch (proportional to minimum current) */
+constexpr float MAX_PUNCH = 100.0;
+
+/** @brief Minimum punch (proportional to minimum current) */
+constexpr float MIN_PUNCH = 0.0;
 
 
 
