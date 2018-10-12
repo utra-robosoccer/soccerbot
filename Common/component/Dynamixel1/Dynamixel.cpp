@@ -159,11 +159,33 @@ Motor::Motor(
         resolutionDivider(static_cast<uint16_t>(divider)),
         daisyChain(daisyChain)
 {
-
+    m_isJointMode = false;
 }
 
 Motor::~Motor(){
 
+}
+
+bool Motor::reset(){
+    uint8_t arrTransmit[6];
+
+    arrTransmit[0] = 0xff;
+    arrTransmit[1] = 0xff;
+    arrTransmit[2] = id;
+    arrTransmit[3] = 2;
+    arrTransmit[4] = INST_RESET;
+    arrTransmit[5] = computeChecksum(arrTransmit, 6);
+
+    bool success = daisyChain->requestTransmission(
+        arrTransmit,
+        sizeof(arrTransmit)
+    );
+
+    if(success){
+        id = DEFAULT_ID;
+    }
+
+    return success;
 }
 
 bool Motor::setId(uint8_t id){
@@ -182,19 +204,53 @@ bool Motor::setId(uint8_t id){
     return success;
 }
 
-bool Motor::setReturnDelayTime(uint16_t microSec){
+bool Motor::setReturnDelayTime(uint16_t microSec) const{
     if((microSec < 2) || (microSec > 508)){
         return false;
     }
 
-    uint8_t motor_data = (uint8_t)(microSec / 2);
+    uint8_t motor_data = static_cast<uint8_t>(microSec >> 1);
 
     /* Write data to motor. */
     uint8_t args[2] = {REG_RETURN_DELAY_TIME, motor_data};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setVoltageLimit(VoltageLimit limit, float voltage){
+bool Motor::setCWAngleLimit(float minAngle) const{
+    if((minAngle < MIN_ANGLE) || (minAngle > MAX_ANGLE)){
+        return false;
+    }
+
+    uint16_t normalized_value = static_cast<uint16_t>(
+        minAngle / MAX_ANGLE * resolutionDivider
+    );
+
+    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+
+    // Write data to motor
+    uint8_t args[3] = {REG_CW_ANGLE_LIMIT, lowByte, highByte};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setCCWAngleLimit(float maxAngle) const{
+    if((maxAngle < MIN_ANGLE) || (maxAngle > MAX_ANGLE)){
+        return false;
+    }
+
+    uint16_t normalized_value = static_cast<uint16_t>(
+            maxAngle / MAX_ANGLE * resolutionDivider
+    );
+
+    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+
+    // Write data to motor
+    uint8_t args[3] = {REG_CCW_ANGLE_LIMIT, lowByte, highByte};
+    return dataWriter(args, sizeof(args));
+}
+
+bool Motor::setVoltageLimit(VoltageLimit limit, float voltage) const{
     if((voltage < MIN_VOLTAGE) || (voltage > MAX_VOLTAGE)){
         return false;
     }
@@ -217,13 +273,15 @@ bool Motor::setVoltageLimit(VoltageLimit limit, float voltage){
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setMaxTorque(float maxTorque){
+bool Motor::setMaxTorque(float maxTorque) const{
     if((maxTorque < MIN_TORQUE) || (maxTorque > MAX_TORQUE)){
         return false;
     }
 
     // Translate the input from percentage into a 10-bit number
-    uint16_t normalized_value = (uint16_t)(maxTorque / 100 * 1023);
+    uint16_t normalized_value = static_cast<uint16_t>(
+        maxTorque / 100 * 1023
+    );
 
     uint8_t lowByte = normalized_value & 0xFF;
     uint8_t highByte = (normalized_value >> 8) & 0xFF;
@@ -233,7 +291,7 @@ bool Motor::setMaxTorque(float maxTorque){
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setStatusReturnLevel(StatusReturnLevel level){
+bool Motor::setStatusReturnLevel(StatusReturnLevel level) const{
     if(level >= StatusReturnLevel::NUM_LEVELS){
         return false;
     }
@@ -243,7 +301,7 @@ bool Motor::setStatusReturnLevel(StatusReturnLevel level){
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setAlarm(AlarmType type, AlarmCondition condition){
+bool Motor::setAlarm(AlarmType type, AlarmCondition condition) const{
     if((type >= AlarmType::NUM_TYPES) ||
        (condition >= AlarmCondition::NUM_CONDITIONS))
     {
@@ -267,58 +325,62 @@ bool Motor::setAlarm(AlarmType type, AlarmCondition condition){
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::enableTorque(bool isEnabled){
+bool Motor::enableTorque(bool isEnabled) const{
     // Write data to motor
     uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::enableLed(bool isEnabled){
+bool Motor::enableLed(bool isEnabled) const{
     // Write data to motor
     uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setGoalPosition(float goalAngle){
+bool Motor::setGoalPosition(float goalAngle) const{
     if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
         return false;
     }
 
     // Translate the angle from degrees into a binary code with the resolution
     // selected at construction
-    uint16_t normalized_value = (goalAngle / MAX_ANGLE) * resolutionDivider;
+    uint16_t normalized_value = static_cast<uint16_t>(
+        (goalAngle / MAX_ANGLE) * resolutionDivider
+    );
 
-    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF);
-    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF);
+    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
     uint8_t args[3] = {REG_GOAL_POSITION, lowByte, highByte};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setGoalTorque(float goalTorque){
+bool Motor::setGoalTorque(float goalTorque) const{
     if((goalTorque < 0) || (goalTorque > 100.0)){
         return false;
     }
 
     // Translate the input from percentage into and 10-bit number
-    uint16_t normalized_value = (uint16_t)(goalTorque / 100 * 1023);
+    uint16_t normalized_value = static_cast<uint16_t>(
+        goalTorque / 100 * 1023
+    );
 
-    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF);
-    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF);
+    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
     uint8_t args[3] = {REG_GOAL_TORQUE, lowByte, highByte};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::lockEEPROM(){
+bool Motor::lockEEPROM() const{
     // Write data to motor
     uint8_t args[2] = {REG_LOCK_EEPROM, 1};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setPunch(float punch){
+bool Motor::setPunch(float punch) const{
     if((punch < 0) || (punch > 100.0)){
         return false;
     }
@@ -326,15 +388,15 @@ bool Motor::setPunch(float punch){
     // Translate the punch into a 10-bit number
     uint16_t normalized_value = static_cast<uint16_t>(punch / 100.0 * 1023);
 
-    uint8_t lowByte = (uint8_t)(normalized_value & 0xFF);
-    uint8_t highByte = (uint8_t)((normalized_value >> 8) & 0xFF);
+    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
     uint8_t args[3] = {REG_PUNCH, lowByte, highByte};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::getPosition(float& retVal){
+bool Motor::getPosition(float& retVal) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_POSITION, 2, raw);
@@ -347,9 +409,7 @@ bool Motor::getPosition(float& retVal){
     return success;
 }
 
-//bool Motor::getVelocity(float& retVal);
-
-bool Motor::getLoad(float& retVal){
+bool Motor::getLoad(float& retVal) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_LOAD, 2, raw);
@@ -370,7 +430,7 @@ bool Motor::getLoad(float& retVal){
     return success;
 }
 
-bool Motor::getVoltage(float& retVal){
+bool Motor::getVoltage(float& retVal) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_VOLTAGE, 1, raw);
@@ -383,13 +443,111 @@ bool Motor::getVoltage(float& retVal){
     return success;
 }
 
-bool Motor::getTemperature(uint8_t& retVal){
+bool Motor::getTemperature(uint8_t& retVal) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_TEMPERATURE, 1, raw);
 
     if(success){
         retVal = static_cast<uint8_t>(raw);
     }
+
+    return success;
+}
+
+bool Motor::isJointMode(bool& retVal){
+    // Read data from motor
+    uint16_t retValCW;
+    bool success = dataReader(REG_CW_ANGLE_LIMIT, 2, retValCW);
+
+    if(!success){
+        return false;
+    }
+
+    uint16_t retValCCW;
+    success = dataReader(REG_CCW_ANGLE_LIMIT, 2, retValCCW);
+
+    if(!success){
+        return false;
+    }
+
+    retVal = (retValCW == retValCCW);
+    m_isJointMode = retVal;
+
+    return success;
+}
+
+bool Motor::ping(uint8_t& retVal) const{
+    uint8_t arrTransmit[6];
+
+    arrTransmit[0] = 0xff;
+    arrTransmit[1] = 0xff;
+    arrTransmit[2] = id;
+    arrTransmit[3] = 2;
+    arrTransmit[4] = INST_PING;
+    arrTransmit[5] = computeChecksum(arrTransmit, 6);
+
+    // Transmit read request
+    bool success = daisyChain->requestTransmission(
+        arrTransmit,
+        sizeof(arrTransmit)
+    );
+
+    if(!success){
+        return false;
+    }
+
+    // Receive requested data
+    success = daisyChain->requestReception(
+        arrTransmit,
+        sizeof(arrTransmit)
+    );
+
+    if(success){
+        retVal = arrTransmit[2];
+    }
+
+    return success;
+}
+
+bool Motor::isMoving(bool& retVal) const{
+    uint16_t raw = 0;
+    bool success = dataReader(REG_MOVING, 1, raw);
+
+    if(success){
+        retVal = static_cast<bool>(raw & 1);
+    }
+
+    return success;
+}
+
+bool Motor::enterWheelMode(){
+    bool success = setCWAngleLimit(0);
+    if(!success){
+        return false;
+    }
+
+    success = setCCWAngleLimit(0);
+    if(!success){
+        return false;
+    }
+
+    m_isJointMode = 0;
+
+    return success;
+}
+
+bool Motor::enterJointMode(){
+    bool success = setCWAngleLimit(MIN_ANGLE);
+    if(!success){
+        return false;
+    }
+
+    success = setCCWAngleLimit(MAX_ANGLE);
+    if(!success){
+        return false;
+    }
+
+    m_isJointMode = true;
 
     return success;
 }
@@ -402,7 +560,7 @@ bool Motor::getTemperature(uint8_t& retVal){
 bool Motor::dataWriter(
     uint8_t* args,
     size_t numArgs
-)
+)  const
 {
     // Check validity so that we don't accidentally make a read request that is
     // invalid or we cannot support due to our implementation
@@ -436,7 +594,7 @@ bool Motor::dataReader(
     uint8_t readAddr,
     uint8_t readLength,
     uint16_t& retVal
-)
+) const
 {
     // Check validity so that we don't accidentally make a read request that is
     // invalid or we cannot support due to our implementation

@@ -36,18 +36,13 @@
 namespace dynamixel{
 // Constants
 // ----------------------------------------------------------------------------
+// TODO(tyler) export default values and limiting values here
 
 
 
 
 // Types & enums
 // ----------------------------------------------------------------------------
-// TODO(tyler) could update this to be a "MotorSpec" class, which contains
-// a valid set of values (limits, defaults, other constants) for each
-// motor supported by the library. Motor would then have these all as
-// constants set at construction, or maybe it would contain a pointer to the
-// struct of constants (maybe such setters and getters can be inlined)
-
 /** @brief Resolution dividers for the motors supported by the library */
 enum class ResolutionDivider : uint16_t{
     AX12A = 1023,
@@ -102,6 +97,8 @@ public:
      *        motor out in the field (i.e. no I/O is performed to set the ID).
      *        Additionally, the caller must choose the correct
      *        ResolutionDivider for the actuator being used.
+     * @note The motor is initialized to use joint mode by default. Using
+     *       wheel mode must always be specified afterward via function call
      * @param id The ID used in command packets sent for this motor
      * @param daisyChain I/O manager class for the port this motor is attached
      *        to
@@ -113,11 +110,27 @@ public:
         ResolutionDivider divider
     );
 
-    ~Motor();
-//    void reset();
+    virtual ~Motor();
+
+    /**
+     * @brief Resets motor control table
+     * @details Resets the control table values of the motor to the factory
+     *          default value settings. Note that post-reset, the motor ID will
+     *          be 1. Thus, if several motors with ID 1 are connected on the
+     *          same bus, there will not be a way to assign them unique IDs
+     *          without first disconnecting them. Need to wait a short amount
+     *          of time before the motor can be commanded again (500 ms is
+     *          definitely safe, but you can probably get away with less)
+     * @return true if successful, otherwise false
+     */
+    bool reset();
+
 
     // Setters (use the WRITE DATA instruction)
+    // ------------------------------------------------------------------------
+
     // EEPROM
+    // ------------------------------------------------------------------------
     /**
      * @brief Sets the ID (identification number) for the current motor
      * @details Note that the instruction will be broadcasted using the current ID.
@@ -132,8 +145,6 @@ public:
      */
     bool setId(uint8_t id);
 
-//    void setBaudRate(uint32_t baud);
-
     /**
      * @brief Sets the time, in microseconds, that the motor should wait before
      *        returning a status packet
@@ -141,10 +152,31 @@ public:
      *        [2, 508] are valid
      * @return true if successful, otherwise false
      */
-    bool setReturnDelayTime(uint16_t microSec);
+    bool setReturnDelayTime(uint16_t microSec) const;
 
-//    void setCWAngleLimit(float minAngle);
-//    void setCCWAngleLimit(float maxAngle);
+    /**
+     * @brief Sets the clockwise angle limit for the current motor
+     * @details If maxAngle for CCW angle limit is 0 AND minAngle for CW angle
+     *          limit is 0, then motor is in wheel mode where it can
+     *          continuously rotate. Otherwise, motor is in joint mode where
+     *          its motion is constrained between the set bounds
+     * @param minAngle the minimum angle for all motor operations. Arguments
+     *        between 0 and 300 are valid
+     * @return true if successful, otherwise false
+     */
+    bool setCWAngleLimit(float minAngle) const;
+
+    /**
+     * @brief Sets the counter-clockwise angle limit for the current motor
+     * @details If maxAngle for CCW angle limit is 0 AND minAngle for CW angle
+     *          limit is 0, then motor is in wheel mode where it can
+     *          continuously rotate. Otherwise, motor is in joint mode where
+     *          its motion is constrained between the set bounds
+     * @param maxAngle the maximum angle for all motor operations. Arguments
+     *        between 0 and 300 are valid
+     * @return true if successful, otherwise false
+     */
+    bool setCCWAngleLimit(float maxAngle) const;
 
     /**
      * @brief Sets the highest or lowest operating voltage limit for the motor
@@ -153,23 +185,23 @@ public:
      * @param voltage the value to set the limit to, in volts
      * @return true if successful, otherwise false
      */
-    bool setVoltageLimit(VoltageLimit limit, float voltage);
+    bool setVoltageLimit(VoltageLimit limit, float voltage) const;
 
     /**
      * @brief Sets the maximum torque limit for all motor operations
      * @details Default value: 0x3FF (100%)
-     * @param   maxTorque the maximum torque as a percentage (max: 100.0). Gets
-     *          converted to a 10-bit number
+     * @param maxTorque the maximum torque as a percentage (max: 100.0). Gets
+     *        converted to a 10-bit number
      * @return true if successful, otherwise false
      */
-    bool setMaxTorque(float maxTorque);
+    bool setMaxTorque(float maxTorque) const;
 
     /**
      * @brief Sets the conditions under which a status packet will be returned
      * @param level The status return level. @see StatusReturnLevel
      * @return true if successful, otherwise false
      */
-    bool setStatusReturnLevel(StatusReturnLevel level);
+    bool setStatusReturnLevel(StatusReturnLevel level) const;
 
     /**
      * @brief Sets the conditions under which the motor will enter an alarm
@@ -179,22 +211,23 @@ public:
      * @details Register bits may be set simultaneously in the motor
      * @return true if successful, otherwise false
      */
-    bool setAlarm(AlarmType type, AlarmCondition condition);
+    bool setAlarm(AlarmType type, AlarmCondition condition) const;
 
     // RAM
+    // ------------------------------------------------------------------------
     /**
      * @brief Enables or disables torque for current motor
      * @param isEnabled true if torque should be set to on, otherwise false
      * @return true if successful, otherwise false
      */
-    bool enableTorque(bool isEnabled);
+    bool enableTorque(bool isEnabled) const;
 
     /**
      * @brief Sets the state of the motor's LED
      * @param isEnabled true if the LED should be turned on, otherwise false
      * @return true if successful, otherwise false
      */
-    bool enableLed(bool isEnabled);
+    bool enableLed(bool isEnabled) const;
 
     /**
      * @brief Sets the goal position of the motor in RAM
@@ -202,9 +235,7 @@ public:
      *        300 are valid. Note that 150 corresponds to the middle position
      * @return true if successful, otherwise false
      */
-    bool setGoalPosition(float goalAngle);
-
-//    void setGoalVelocity(float goalVelocity);
+    bool setGoalPosition(float goalAngle) const;
 
     /**
      * @brief Sets the torque limit for the motor in RAM
@@ -212,13 +243,13 @@ public:
      *        100). Gets converted into a 10-bit number
      * @return true if successful, otherwise false
      */
-    bool setGoalTorque(float goalTorque);
+    bool setGoalTorque(float goalTorque) const;
 
     /**
      * @brief Locks the EEPROM until the next power cycle
      * @return true if successful, otherwise false
      */
-    bool lockEEPROM();
+    bool lockEEPROM() const;
 
     /**
      * @brief Sets a quantity proportional to the minimum current supplied to the
@@ -229,18 +260,17 @@ public:
      * @param punch for now, arguments in range [0, 100.0] are valid
      * @return true if successful, otherwise false
      */
-    bool setPunch(float punch);
+    bool setPunch(float punch) const;
+
 
     // Getters (use READ DATA instruction)
+    // ------------------------------------------------------------------------
     /**
      * @brief Reads the angular position of the motor in degrees
      * @param[out] retVal R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getPosition(float& retVal);
-
-
-//    bool getVelocity(float& retVal);
+    bool getPosition(float& retVal) const;
 
     /**
      * @brief Reads the "load", the percentage of the maximum torque the motor
@@ -249,14 +279,14 @@ public:
      * @param[out] retVal R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getLoad(float& retVal);
+    bool getLoad(float& retVal) const;
 
     /**
      * @brief   Reads the motor supply voltage
      * @param[out] retVal R-val return type
      * @return true if successful, otherwise false
      */
-    bool getVoltage(float& retVal);
+    bool getVoltage(float& retVal) const;
 
     /**
      * @brief Reads the internal motor temperature. Results are in degrees
@@ -264,17 +294,60 @@ public:
      * @param[out] retVal R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getTemperature(uint8_t& retVal);
-//    bool isRegistered();
-//    bool isMoving();
-//    bool isJointMode();
-//
-//    // Other motor instruction functions
-//    int8_t ping();
-//
-//    // Interfaces for previously-defined functions
-//    void enterWheelMode(float goalVelocity);
-//    void enterJointMode();
+    bool getTemperature(uint8_t& retVal) const;
+
+    /**
+     * @brief   Indicates whether the motor is operating in joint mode or wheel
+     *          mode
+     * @details Reads the CW (addr: 0x06) and CCW (addr: 0x08) angle limits. If
+     *          both are 0, motor is in wheel mode and can spin indefinitely.
+     *          Otherwise, motor is in joint mode and has angle limits set
+     * @param[out] retVal true if in joint mode, false if in wheel mode
+     * @return true if successful, otherwise false
+     */
+    bool isJointMode(bool& retVal);
+
+    // Other motor instruction functions
+    /**
+     * @brief Implementation of the PING instruction
+     * @details Used only for returning a status packet or checking the
+     *          existence of a motor with a specified ID. Does not command any
+     *          operations
+     * @param[out] The motor ID seen in status packet if received a valid
+     *          status packet, otherwise the max uint8_t value
+     * @return true if successful, otherwise false
+     */
+    bool ping(uint8_t& retVal) const;
+
+    /**
+     * @brief Indicates whether the motor is in motion
+     * @param retVal true if motor is moving, otherwise false
+     * @return true if successful, otherwise false
+     */
+    bool isMoving(bool& retVal) const;
+
+    /**
+     * @brief Sets the control registers such that the rotational angle of the
+     *        motor is not bounded
+     * @note To prevent undesired behaviour, the goal velocity should be
+     *       set right after calling this function since the motor could easily
+     *       rotate out of control after a successful call to this function
+     * @return true if successful, otherwise false
+     */
+    bool enterWheelMode();
+
+    /**
+     * @brief Sets the control registers such that the rotational angle of the
+     *        motor is constrained between the values in the angle limit
+     *        registers
+     * @return true if successful, otherwise false
+     */
+    bool enterJointMode();
+
+    /** @brief See child implementation for details */
+    virtual bool setBaudRate(uint32_t baud) const = 0;
+    virtual bool setGoalVelocity(float goalVelocity) const = 0;
+    virtual bool getVelocity(float& retVal) const = 0;
 
 protected:
     /**
@@ -286,7 +359,7 @@ protected:
      *        or 3
      * @return true if successful, otherwise false
      */
-    bool dataWriter(uint8_t* args, size_t numArgs);
+    bool dataWriter(uint8_t* args, size_t numArgs) const;
 
     /**
      * @brief Reads data of a specified length from a given address in the
@@ -305,29 +378,23 @@ protected:
      * @param[out] val R-value return type
      * @return true if successful and checksums match, otherwise false
      */
-    bool dataReader(uint8_t readAddr, uint8_t readLength, uint16_t& retVal);
+    bool dataReader(
+        uint8_t readAddr,
+        uint8_t readLength,
+        uint16_t& retVal
+    ) const;
 
 private:
-    uint8_t id;                       /**< Motor identification (0-252, 0xFE) */
-//    bool isJointMode;                 /**< true if motor is in joint mode, false if in wheel mode */
-    const uint16_t resolutionDivider; /**< @see ResolutionDivider             */
-    const DaisyChain* daisyChain;     /**< @see DaisyChain                    */
+    /** @brief Motor identification (0-252, 0xFE) */
+    uint8_t id;
+
+    /** @brief true if motor is in joint mode, false if in wheel mode */
+    bool m_isJointMode;
+    const uint16_t resolutionDivider; /**< @see ResolutionDivider            */
+    const DaisyChain* daisyChain;     /**< @see DaisyChain                   */
 };
 
-
-
-// Functions
-// ----------------------------------------------------------------------------
-
-
-
-
-} // end namespace Dynamixel
-
-
-
-
-/***************************** Inline functions ******************************/
+} // end namespace dynamixel
 
 
 
