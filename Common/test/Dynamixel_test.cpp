@@ -77,8 +77,6 @@ protected:
 
 // Functions
 // ----------------------------------------------------------------------------
-// TODO(tyler) refactor these tests to be bounds checks where possible. If we
-// can do a bounds check, we can obviously call the function
 TEST_F(DynamixelTest, CanBeCreated){
     DaisyChain chain(p);
     MockMotor m1(1, &chain, ResolutionDivider::AX12A);
@@ -92,58 +90,73 @@ TEST_F(DynamixelTest, CanResetMotor){
     m.reset();
 }
 
-TEST_F(DynamixelTest, CanSetId){
+TEST_F(DynamixelTest, setIdBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setId(2);
+    m.setId(10);
+
+    ASSERT_FALSE(m.setId(0xFD));
+    ASSERT_FALSE(m.setId(0xFF));
 }
 
-TEST_F(DynamixelTest, CanSetReturnDelayTime){
+TEST_F(DynamixelTest, setReturnDelayTimeBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setReturnDelayTime(150);
+
+    ASSERT_FALSE(m.setReturnDelayTime(0));
+    ASSERT_FALSE(m.setReturnDelayTime(510));
 }
 
-TEST_F(DynamixelTest, CanSetCWAngleLimit){
+TEST_F(DynamixelTest, setCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setCWAngleLimit(0);
+    m.setCWAngleLimit(dynamixel::MIN_ANGLE);
+
+    ASSERT_FALSE(m.setCWAngleLimit(dynamixel::MIN_ANGLE - 1));
+    ASSERT_FALSE(m.setCWAngleLimit(dynamixel::MAX_ANGLE + 1));
 }
 
-TEST_F(DynamixelTest, CanSetCCWAngleLimit){
+TEST_F(DynamixelTest, setCCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setCCWAngleLimit(300);
+    m.setCCWAngleLimit(dynamixel::MAX_ANGLE);
+
+    ASSERT_FALSE(m.setCCWAngleLimit(dynamixel::MIN_ANGLE - 1));
+    ASSERT_FALSE(m.setCCWAngleLimit(dynamixel::MAX_ANGLE + 1));
 }
 
-TEST_F(DynamixelTest, CanSetVoltageLimits){
+TEST_F(DynamixelTest, setVoltageLimitsBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setVoltageLimit(VoltageLimit::HIGHEST, 14.0);
-    m.setVoltageLimit(VoltageLimit::LOWEST, 6.0);
+    m.setVoltageLimit(VoltageLimit::HIGHEST, dynamixel::MAX_VOLTAGE);
+    m.setVoltageLimit(VoltageLimit::LOWEST, dynamixel::MIN_VOLTAGE);
 
-    // TODO: move to separate unit test for bounds checks
-    ASSERT_FALSE(m.setVoltageLimit(VoltageLimit::HIGHEST, 9000.0));
-    ASSERT_FALSE(m.setVoltageLimit(VoltageLimit::LOWEST, 0));
+    ASSERT_FALSE(
+        m.setVoltageLimit(VoltageLimit::HIGHEST, dynamixel::MAX_VOLTAGE + 1)
+    );
+
+    ASSERT_FALSE(
+        m.setVoltageLimit(VoltageLimit::LOWEST, dynamixel::MIN_VOLTAGE - 1)
+    );
 }
 
-TEST_F(DynamixelTest, CanSetMaxTorque){
+TEST_F(DynamixelTest, setMaxTorqueBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setMaxTorque(100.0);
 
-    // TODO: move to separate unit test for bounds checks
     ASSERT_FALSE(m.setMaxTorque(-1.0));
     ASSERT_FALSE(m.setMaxTorque(101.0));
 }
 
-TEST_F(DynamixelTest, CanSetStatusReturnLevel){
+TEST_F(DynamixelTest, setStatusReturnLevelBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
@@ -151,22 +164,21 @@ TEST_F(DynamixelTest, CanSetStatusReturnLevel){
     m.setStatusReturnLevel(StatusReturnLevel::READS_ONLY);
     m.setStatusReturnLevel(StatusReturnLevel::ALL_COMMANDS);
 
-    // Bounds check should cause this to return false
-    // TODO: move to separate unit test for bounds checks
     ASSERT_FALSE(m.setStatusReturnLevel(StatusReturnLevel::NUM_LEVELS));
 }
 
-TEST_F(DynamixelTest, CanSetAlarm){
+TEST_F(DynamixelTest, setAlarmBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setAlarm(AlarmType::LED, AlarmCondition::INPUT_VOLTAGE_ERR);
     m.setAlarm(AlarmType::SHUTDOWN, AlarmCondition::OVERHEATING_ERR);
 
-    // Bounds checks should cause these to return false
-    // TODO: move to separate unit test for bounds checks
     ASSERT_FALSE(m.setAlarm(AlarmType::LED, AlarmCondition::NUM_CONDITIONS));
-    ASSERT_FALSE(m.setAlarm(AlarmType::NUM_TYPES, AlarmCondition::OVERHEATING_ERR));
+
+    ASSERT_FALSE(
+        m.setAlarm(AlarmType::NUM_TYPES, AlarmCondition::OVERHEATING_ERR)
+    );
 }
 
 TEST_F(DynamixelTest, CanEnableTorque){
@@ -185,18 +197,24 @@ TEST_F(DynamixelTest, CanEnableLed){
     m.enableLed(false);
 }
 
-TEST_F(DynamixelTest, CanSetGoalPosition){
+TEST_F(DynamixelTest, setGoalPositionBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setGoalPosition(150.0);
+
+    ASSERT_FALSE(m.setGoalPosition(dynamixel::MIN_ANGLE - 1));
+    ASSERT_FALSE(m.setGoalPosition(dynamixel::MAX_ANGLE + 1));
 }
 
-TEST_F(DynamixelTest, CanSetGoalTorque){
+TEST_F(DynamixelTest, setGoalTorqueBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setGoalTorque(100.0);
+
+    ASSERT_FALSE(m.setGoalTorque(dynamixel::MIN_TORQUE - 1));
+    ASSERT_FALSE(m.setGoalTorque(dynamixel::MAX_TORQUE + 1));
 }
 
 TEST_F(DynamixelTest, CanLockEEPROM){
@@ -211,6 +229,9 @@ TEST_F(DynamixelTest, CanSetPunch){
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
     m.setPunch(10.0);
+
+    ASSERT_FALSE(m.setPunch(dynamixel::MIN_PUNCH - 1));
+    ASSERT_FALSE(m.setPunch(dynamixel::MAX_PUNCH + 1));
 }
 
 TEST_F(DynamixelTest, CanGetGoalPosition){
@@ -257,8 +278,8 @@ TEST_F(DynamixelTest, CanPing){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    uint8_t id;
-    m.ping(id);
+    uint8_t retrievedId;
+    m.ping(retrievedId);
 }
 
 TEST_F(DynamixelTest, CanCheckIfIsMoving){
