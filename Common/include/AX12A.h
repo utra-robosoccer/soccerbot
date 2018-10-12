@@ -31,18 +31,39 @@ namespace dynamixel{
 
 // Default register values
 // ----------------------------------------------------------------------------
-//extern const uint8_t AX12A_DEFAULT_BAUD_RATE;
-//extern const uint16_t AX12A_DEFAULT_CCW_ANGLE_LIMIT;
-//extern const uint8_t AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT;
-//extern const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN;
-//extern const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN;
-//extern const uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE;
-//extern const uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE;
-//extern const uint16_t AX12A_DEFAULT_PUNCH;
+// TODO(tyler) convert these to values of the proper type (i.e. stuff the user
+// would be able to use
+/** @brief Default baud rate register setting */
+constexpr uint8_t AX12A_DEFAULT_BAUD_RATE              =  0x01;
+
+/** @brief Default counter-clockwise angle limit */
+constexpr uint16_t AX12A_DEFAULT_CCW_ANGLE_LIMIT       =  0x03FF;
+
+/** @brief Default permitted maximum voltage (0xBE = 140 -> 14.0 V) */
+constexpr uint8_t AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT  =  0xBE;
+
+/** @brief Default clockwise compliance margin (position error) */
+constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN   =  0x01;
+
+/** @brief Default counter-clockwise compliance margin (position error) */
+constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN  =  0x01;
+
+/** @brief Default clockwise compliance slope (torque near goal position) */
+constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE    =  0x20;
+
+/**
+ * @brief Default counter-clockwise compliance slope (torque near goal
+ *        position)
+ */
+constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE   =  0x20;
+
+/** @brief Default punch */
+constexpr uint16_t AX12A_DEFAULT_PUNCH                 =  0x0020;
 
 // Value limit definitions
 // ----------------------------------------------------------------------------
-//extern const uint8_t AX12A_MAX_VELOCITY;
+/** @brief Maximum angular velocity (RPM) */
+constexpr uint8_t AX12A_MAX_VELOCITY = 114;
 
 
 
@@ -60,8 +81,7 @@ public:
     /** @see Motor */
     AX12A(
         uint8_t id,
-        DaisyChain* daisyChain,
-        ResolutionDivider divider
+        DaisyChain* daisyChain
     );
 
     ~AX12A();
@@ -69,8 +89,26 @@ public:
 
     // Setters (use the WRITE DATA instruction)
     // ------------------------------------------------------------------------
-    // RAM
+
+    // EEPROM
+    // ------------------------------------------------------------------------
+    /**
+     * @brief Sets the baud rate for communication with the motor
+     * @param baud the baud rate, valid for arguments in range [7844, 1000000]
+     * @return true if successful, otherwise false
+     */
     bool setBaudRate(uint32_t baud) const override;
+
+    // RAM
+    // ------------------------------------------------------------------------
+    /**
+     * @brief Sets the goal velocity of the motor in RAM
+     * @param goalVelocity the goal velocity in RPM. Arguments of 0-114 are
+     *        valid when in joint mode. 0 corresponds to MAX motion in joint
+     *        mode, and minimum motion in wheel mode. In wheel mode, negative
+     *        arguments correspond to CW rotation
+     * @return true if successful, otherwise false
+     */
     bool setGoalVelocity(float goalVelocity) const override;
 
     // TODO: Consider making these use enums
@@ -85,6 +123,11 @@ public:
 
     // Getters (use the READ DATA instruction)
     // ------------------------------------------------------------------------
+    /**
+     * @brief Reads the angular velocity of the motor, in RPM
+     * @param[out] retVal R-val return type (not modified upon failure)
+     * @return true if successful, otherwise false
+     */
     bool getVelocity(float& retVal) const override;
 };
 
