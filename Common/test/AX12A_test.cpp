@@ -74,7 +74,37 @@ protected:
 // ----------------------------------------------------------------------------
 TEST_F(AX12ATest, CanBeCreated){
     DaisyChain chain(p);
-    AX12A m1(1, &chain, ResolutionDivider::AX12A);
+    AX12A m(1, &chain);
+}
+
+TEST_F(AX12ATest, setBaudRateBoundsCheckPasses){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    m.setBaudRate(1000000);
+    m.setBaudRate(7844);
+
+    ASSERT_FALSE(m.setBaudRate(1000000 + 1));
+    ASSERT_FALSE(m.setBaudRate(7844 - 1));
+}
+
+TEST_F(AX12ATest, setGoalVelocityBoundsCheckPasses){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY);
+    m.setGoalVelocity(dynamixel::MIN_VELOCITY);
+
+    ASSERT_FALSE(m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY + 1));
+    ASSERT_FALSE(m.setGoalVelocity(dynamixel::MIN_VELOCITY - 1));
+}
+
+TEST_F(AX12ATest, CanGetVelocity){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    float currentVelocity = 0;
+    m.getVelocity(currentVelocity);
 }
 
 } // end anonymous namespace

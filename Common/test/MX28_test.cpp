@@ -74,8 +74,39 @@ protected:
 // ----------------------------------------------------------------------------
 TEST_F(MX28Test, CanBeCreated){
     DaisyChain chain(p);
-    MX28 m1(1, &chain, ResolutionDivider::MX28);
+    MX28 m(1, &chain);
 }
+
+TEST_F(MX28Test, setBaudRateBoundsCheckPasses){
+    DaisyChain chain(p);
+    MX28 m(1, &chain);
+
+    m.setBaudRate(3500000);
+    m.setBaudRate(9600);
+
+    ASSERT_FALSE(m.setBaudRate(9600 - 1));
+    ASSERT_FALSE(m.setBaudRate(3500000 + 1));
+}
+
+TEST_F(MX28Test, setGoalVelocityBoundsCheckPasses){
+    DaisyChain chain(p);
+    MX28 m(1, &chain);
+
+    m.setGoalVelocity(dynamixel::MX28_MAX_VELOCITY);
+    m.setGoalVelocity(dynamixel::MIN_VELOCITY);
+
+    ASSERT_FALSE(m.setGoalVelocity(dynamixel::MX28_MAX_VELOCITY + 1));
+    ASSERT_FALSE(m.setGoalVelocity(dynamixel::MIN_VELOCITY - 1));
+}
+
+TEST_F(MX28Test, CanGetVelocity){
+    DaisyChain chain(p);
+    MX28 m(1, &chain);
+
+    float currentVelocity = 0;
+    m.getVelocity(currentVelocity);
+}
+
 
 } // end anonymous namespace
 

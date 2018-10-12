@@ -108,9 +108,6 @@ constexpr uint8_t REG_LED_ENABLE          = 0x19;
 /** @brief Goal position register (0x1E = low byte, 0x1F = high byte) */
 constexpr uint8_t REG_GOAL_POSITION       = 0x1E;
 
-/** @brief Goal velocity register (0x20 = low byte, 0x21 = high byte) */
-constexpr uint8_t REG_GOAL_VELOCITY       = 0x20;
-
 /** @brief Goal torque register (0x22 = low byte, 0x23 = high byte) */
 constexpr uint8_t REG_GOAL_TORQUE         = 0x22;
 
@@ -122,9 +119,6 @@ constexpr uint8_t REG_PUNCH               = 0x30;
 
 /** @brief Current position register (0x24 = low byte, 0x25 = high byte) */
 constexpr uint8_t REG_CURRENT_POSITION    = 0x24;
-
-/** @brief Current velocity register (0x26 = low byte, 0x27 = high byte) */
-constexpr uint8_t REG_CURRENT_VELOCITY    = 0x26;
 
 /** @brief Current load register (0x28 = low byte, 0x29 = high byte) */
 constexpr uint8_t REG_CURRENT_LOAD        = 0x28;
@@ -185,7 +179,7 @@ Motor::Motor(
         resolutionDivider(static_cast<uint16_t>(divider)),
         daisyChain(daisyChain)
 {
-    m_isJointMode = false;
+    m_isJointMode = true;
 }
 
 Motor::~Motor(){

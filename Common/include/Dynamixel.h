@@ -30,6 +30,17 @@ namespace dynamixel{
 // Constants
 // ----------------------------------------------------------------------------
 
+// Register addresses
+// ----------------------------------------------------------------------------
+/** @brief Baud rate register */
+constexpr uint8_t REG_BAUD_RATE           = 0x04;
+
+/** @brief Goal velocity register (0x20 = low byte, 0x21 = high byte) */
+constexpr uint8_t REG_GOAL_VELOCITY       = 0x20;
+
+/** @brief Current velocity register (0x26 = low byte, 0x27 = high byte) */
+constexpr uint8_t REG_CURRENT_VELOCITY    = 0x26;
+
 // Default register values
 // ----------------------------------------------------------------------------
 /**
@@ -455,12 +466,13 @@ protected:
         uint16_t& retVal
     ) const;
 
+    /** @brief true if motor is in joint mode, false if in wheel mode */
+    bool m_isJointMode;
+
 private:
     /** @brief Motor identification (0-252, 0xFE) */
     uint8_t id;
 
-    /** @brief true if motor is in joint mode, false if in wheel mode */
-    bool m_isJointMode;
     const uint16_t resolutionDivider; /**< @see ResolutionDivider            */
     const DaisyChain* daisyChain;     /**< @see DaisyChain                   */
 };
