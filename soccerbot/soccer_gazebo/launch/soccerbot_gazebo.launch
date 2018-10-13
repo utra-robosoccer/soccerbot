@@ -30,6 +30,6 @@
     <include file="$(find soccer_control)/launch/soccer_control.launch" />
 
     <!-- Converts SoccerGoal to Gazebo simulation -->
-    <node name="robotGoalToGazebo" pkg="soccer_hardware" type="draw_trajectories" />
+    <node name="robotGoalToGazebo" pkg="soccer_transforms" type="draw_trajectories" />
 
 </launch>
