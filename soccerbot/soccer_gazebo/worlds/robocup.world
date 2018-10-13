@@ -14,11 +14,6 @@
       <direction>-0.5 0.1 -0.9</direction>
     </light>
 
-    <include>
-		<uri>model://robocup_3Dsim_ball</uri>
-		<pose>2 0 0.2 0 0 0</pose>
-    </include>
-
     <model name='ground_plane'>
       <static>false</static>
       <link name='link'>
@@ -47,14 +42,14 @@
           <max_contacts>10</max_contacts>
         </collision>
         <inertial>
-          <mass>0</mass>
+          <mass>0.01</mass>
           <inertia>
-            <ixx>0.01</ixx>
-            <ixy>0.01</ixy>
-            <ixz>0.01</ixz>
-            <iyy>0.01</iyy>
-            <iyz>0.01</iyz>
-            <izz>0.01</izz>
+            <ixx>0.0000001</ixx>
+            <ixy>0.0000001</ixy>
+            <ixz>0.0000001</ixz>
+            <iyy>0.0000001</iyy>
+            <iyz>0.0000001</iyz>
+            <izz>0.0000001</izz>
           </inertia>
         </inertial>
         <visual name='visual'>
@@ -72,7 +67,6 @@
             </script>
           </material>
         </visual>
-        <self_collide>0</self_collide>
         <kinematic>1</kinematic>
       </link>
     </model>
@@ -95,6 +89,11 @@
           </clouds>
       </sky>
     </scene>
+
+    <include>
+      <uri>model://robocup_3Dsim_ball</uri>
+      <pose>2 0 0.2 0 0 0</pose>
+    </include>
 
     <include>
       <uri>model://RoboCup Field</uri>
