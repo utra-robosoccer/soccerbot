@@ -33,13 +33,9 @@ namespace UART{
 /***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------
-HalUartInterface::HalUartInterface(){
+HalUartInterface::HalUartInterface(){;}
 
-}
-
-HalUartInterface::~HalUartInterface(){
-
-}
+HalUartInterface::~HalUartInterface(){;}
 
 void HalUartInterface::setUartPtr(UART_HandleTypeDef* uartHandlePtr){
     this->uartHandlePtr = uartHandlePtr;
