@@ -304,6 +304,15 @@ TEST_F(MotorTest, CanEnterJointMode){
     m.enterJointMode();
 }
 
+TEST_F(MotorTest, ParsesKnownStatusPacketProperly){
+    // TODO: look at Dynamixel manual and pick out a byte array from their
+    // examples. Pass this array through the entire flow and make sure the
+    // result passed to the MockUartInterface is entirely correct. Make sure
+    // whatever is read back (well, "fake" read back) succeeds at checksum
+    // verification. Basically, this is a regression test
+    ASSERT_FALSE(true);
+}
+
 } // end anonymous namespace
 
 
