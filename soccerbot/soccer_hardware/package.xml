@@ -10,5 +10,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>soccer_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>rospy</depend>
+  <depend>python-numpy</depend>
+  <depend>soccer_transforms</depend>
 
 </package>
