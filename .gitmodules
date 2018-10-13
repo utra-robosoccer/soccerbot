@@ -8,5 +8,5 @@
 	path = soccerbot/soccer_description
 	url = https://www.github.com/utra-robosoccer/soccer_description
 [submodule "soccerbot/soccer_hardware/nodes"]
-	path = soccerbot/soccer_hardware/nodes
+	path = soccerbot/soccer_hardware/src/soccer-communication
 	url = https://github.com/utra-robosoccer/soccer-communication

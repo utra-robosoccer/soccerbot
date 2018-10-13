@@ -15,6 +15,10 @@
   <depend>soccer_transforms</depend>
   <depend>soccer_communication</depend>
   <depend>soccer_common</depend>
+  <depend>soccer_hardware</depend>
   <depend>usb_cam</depend>
   <depend>amcl</depend>
+  <depend>controller_manager</depend>
+  <depend>ros_control</depend>
+
 </package>

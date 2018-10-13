@@ -13,5 +13,7 @@
   <depend>rospy</depend>
   <depend>tf2</depend>
   <depend>tf2_ros</depend>
+  <depend>std_msgs</depend>
+  <depend>soccer_msgs</depend>
 
 </package>

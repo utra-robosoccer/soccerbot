@@ -6,7 +6,8 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rospy
+  std_msgs
+  soccer_msgs
   tf2
   tf2_ros
 )
@@ -29,3 +30,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
+
+add_executable(draw_trajectories src/draw_trajectories.cpp)
+add_dependencies(draw_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(draw_trajectories ${catkin_LIBRARIES})
