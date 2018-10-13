@@ -36,21 +36,23 @@ namespace i2c {
 // Classes and Structs
 class I2CInterface {
 public:
+	virtual I2CInterface();
 	virtual ~I2CInterface();
-
-//	HAL-related members
-	virtual HAL_StatusTypeDef memWrite(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
-			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
-			uint32_t Timeout) const = 0; //HAL_I2C_Mem_Write
-	virtual HAL_StatusTypeDef memRead(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
-			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
-			uint32_t Timeout) const = 0; //HAL_I2C_Mem_Read
-	virtual HAL_StatusTypeDef memWriteIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
-			uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
-			uint16_t Size) const = 0; //HAL_I2C_Mem_Write_IT
-	virtual HAL_StatusTypeDef memReadIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
-			uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
-			uint16_t Size) const = 0;	//HAL_I2C_Mem_Read_IT
+//	virtual void assignHandle(I2C_HandleTypeDef *hi2c) = 0;
+//
+////	HAL-related members
+//	virtual HAL_StatusTypeDef memWrite(uint16_t DevAddress, uint16_t MemAddress,
+//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
+//			uint32_t Timeout) = 0; //HAL_I2C_Mem_Write
+//	virtual HAL_StatusTypeDef memRead(uint16_t DevAddress, uint16_t MemAddress,
+//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
+//			uint32_t Timeout) = 0; //HAL_I2C_Mem_Read
+//	virtual HAL_StatusTypeDef memWriteIT(uint16_t DevAddress,
+//			uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
+//			uint16_t Size) = 0; //HAL_I2C_Mem_Write_IT
+//	virtual HAL_StatusTypeDef memReadIT(uint16_t DevAddress,
+//			uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
+//			uint16_t Size) = 0;	//HAL_I2C_Mem_Read_IT
 
 };
 

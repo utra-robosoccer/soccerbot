@@ -5,52 +5,34 @@
  *      Author: Hannah
  */
 
-/**
- *****************************************************************************
- * @file    template_cpp.h
- * @author  TODO -- your name here
- * @brief   TODO -- briefly describe this file
- *
- * @defgroup Header
- * @ingroup  TODO -- module name defined in template_cpp.cpp
- * @{
- *****************************************************************************
- */
+#ifndef COMMON_HALI2CINTERFACE_H_
+#define COMMON_HALI2CINTERFACE_H_
 
-#ifndef HALI2CINTERFACE_H
-#define HALI2CINTERFACE_H
-
-/********************************* Includes **********************************/
 #include "I2CInterface.h"
+#include "stm32f4xx_hal_i2c.h"
+#include "MPU6050.h"
 
-
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-/************************** insert module name here **************************/
-namespace i2c{
+using namespace i2c;
 
 class HALI2CInterface : public I2CInterface {
-
 public:
 	HALI2CInterface();
 	~HALI2CInterface();
-//
-//	void assignHandle(I2C_HandleTypeDef *hi2c) override;	//HAL_I2C_Init
-//	HAL_StatusTypeDef memWrite(uint16_t DevAddress, uint16_t MemAddress,
-//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
-//			uint32_t Timeout) override; //HAL_I2C_Mem_Write
-//	HAL_StatusTypeDef memRead(uint16_t DevAddress, uint16_t MemAddress,
-//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
-//			uint32_t Timeout) override; //HAL_I2C_Mem_Read
-//	HAL_StatusTypeDef memWriteIT(uint16_t DevAddress, uint16_t MemAddress,
-//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size) override; //HAL_I2C_Mem_Write_IT
-//	HAL_StatusTypeDef memReadIT(uint16_t DevAddress, uint16_t MemAddress,
-//			uint16_t MemAddSize, uint8_t *pData, uint16_t Size) override;//HAL_I2C_Mem_Read_IT
-//private:
-//	I2C_HandleTypeDef *hi2c = nullptr; //virtual
+	void assignHandle(I2C_HandleTypeDef *i2cHandlePtr) const override;	//HAL_I2C_Init
+	HAL_StatusTypeDef memWrite(uint16_t DevAddress, uint16_t MemAddress,
+			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
+			uint32_t Timeout) const override; //HAL_I2C_Mem_Write
+	HAL_StatusTypeDef memRead(uint16_t DevAddress, uint16_t MemAddress,
+			uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
+			uint32_t Timeout) const override; //HAL_I2C_Mem_Read
+	HAL_StatusTypeDef memWriteIT(uint16_t DevAddress, uint16_t MemAddress,
+			uint16_t MemAddSize, uint8_t *pData, uint16_t Size) const override; //HAL_I2C_Mem_Write_IT
+	HAL_StatusTypeDef memReadIT(uint16_t DevAddress, uint16_t MemAddress,
+			uint16_t MemAddSize, uint8_t *pData, uint16_t Size) const override;//HAL_I2C_Mem_Read_IT
+private:
+	I2C_HandleTypeDef *i2cHandlePtr = nullptr; //virtual
 };
 
-}
 
-#endif /* HALI2CINTERFACE_H*/
+
+#endif /* COMMON_HALI2CINTERFACE_H_ */
