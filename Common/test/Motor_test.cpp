@@ -24,6 +24,10 @@
 #include <gmock/gmock.h>
 
 using ::testing::_;
+using ::testing::Args;
+using ::testing::ElementsAreArray;
+using ::testing::SetArrayArgument;
+using ::testing::Return;
 
 using uart::UartDriver;
 
@@ -304,13 +308,28 @@ TEST_F(MotorTest, CanEnterJointMode){
     m.enterJointMode();
 }
 
-TEST_F(MotorTest, ParsesKnownStatusPacketProperly){
-    // TODO: look at Dynamixel manual and pick out a byte array from their
-    // examples. Pass this array through the entire flow and make sure the
-    // result passed to the MockUartInterface is entirely correct. Make sure
-    // whatever is read back (well, "fake" read back) succeeds at checksum
-    // verification. Basically, this is a regression test
-    ASSERT_FALSE(true);
+TEST_F(MotorTest, ParsesReadDataExampleProperly){
+    DaisyChain chain(p);
+    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+
+    // AX12A datasheet page 20, section 4-2
+    uint8_t expectedTxArray[] = {0xFF, 0xFF, 0x01, 0x04, 0x02, 0x2B, 0x01, 0xCC};
+    uint8_t mockedRxArray[] = {0xFF, 0xFF, 0x01, 0x03, 0x00, 0x20, 0xDB};
+
+    EXPECT_CALL(uart, transmitPoll(_, _, _, _))
+        .With(Args<1, 2>(ElementsAreArray(expectedTxArray)))
+        .WillOnce(Return(HAL_OK));
+
+    EXPECT_CALL(uart, receivePoll(_, _, _, _))
+        .WillOnce(DoAll(
+                SetArrayArgument<1>(mockedRxArray, mockedRxArray + sizeof(mockedRxArray)),
+                Return(HAL_OK)
+            )
+        );
+
+    uint8_t temp = 0;
+    ASSERT_TRUE(m.getTemperature(temp));
+    ASSERT_TRUE(temp == 32);
 }
 
 } // end anonymous namespace
