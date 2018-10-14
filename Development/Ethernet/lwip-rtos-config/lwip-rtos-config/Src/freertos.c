@@ -63,9 +63,16 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
+uint32_t defaultTaskBuffer[ 640 ];
+osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId ethernetInputTaHandle;
+uint32_t ethernetInputTaBuffer[ 640 ];
+osStaticThreadDef_t ethernetInputTaControlBlock;
 osThreadId txTaskHandle;
+uint32_t txTaskBuffer[ 512 ];
+osStaticThreadDef_t txTaskControlBlock;
 osSemaphoreId recvSemHandle;
+osStaticSemaphoreDef_t recvSemControlBlock;
 
 /* USER CODE BEGIN Variables */
 
@@ -133,7 +140,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the semaphores(s) */
   /* definition and creation of recvSem */
-  osSemaphoreDef(recvSem);
+  osSemaphoreStaticDef(recvSem, &recvSemControlBlock);
   recvSemHandle = osSemaphoreCreate(osSemaphore(recvSem), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -146,15 +153,15 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640);
+  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of ethernetInputTa */
-  osThreadDef(ethernetInputTa, StartEthernetInputTask, osPriorityNormal, 0, 640);
+  osThreadStaticDef(ethernetInputTa, StartEthernetInputTask, osPriorityNormal, 0, 640, ethernetInputTaBuffer, &ethernetInputTaControlBlock);
   ethernetInputTaHandle = osThreadCreate(osThread(ethernetInputTa), NULL);
 
   /* definition and creation of txTask */
-  osThreadDef(txTask, StartTxTask, osPriorityNormal, 0, 512);
+  osThreadStaticDef(txTask, StartTxTask, osPriorityNormal, 0, 512, txTaskBuffer, &txTaskControlBlock);
   txTaskHandle = osThreadCreate(osThread(txTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
