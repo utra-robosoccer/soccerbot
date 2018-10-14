@@ -113,19 +113,11 @@ bool AX12A::getVelocity(float& retVal) const{
 }
 
 bool AX12A::setCwComplianceMargin(uint8_t cwComplianceMargin) const{
-    if(cwComplianceMargin == 0){
-        return false;
-    }
-
     uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, cwComplianceMargin};
     return dataWriter(arr, sizeof(arr));
 }
 
 bool AX12A::setCcwComplianceMargin(uint8_t ccwComplianceMargin) const{
-    if(ccwComplianceMargin == 0){
-        return false;
-    }
-
     uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, ccwComplianceMargin};
     return dataWriter(arr, sizeof(arr));
 }

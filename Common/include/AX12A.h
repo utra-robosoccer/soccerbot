@@ -4,6 +4,7 @@
   * @author  Tyler
   *
   * @defgroup AX12A
+  * @brief AX12A-specific functionality
   * @ingroup Dynamixel
   * @{
   *****************************************************************************
@@ -24,52 +25,41 @@
 
 
 
-/*********************************** Motor ***********************************/
+/*********************************** AX12A ***********************************/
 namespace dynamixel{
 // Constants
 // ----------------------------------------------------------------------------
 
 // Default register values
 // ----------------------------------------------------------------------------
-// TODO(tyler) convert these to values of the proper type (i.e. stuff the user
-// would be able to use
 /** @brief Default baud rate register setting */
-constexpr uint8_t AX12A_DEFAULT_BAUD_RATE              =  0x01;
+constexpr uint8_t AX12A_DEFAULT_BAUD_RATE = 0x01;
 
 /** @brief Default counter-clockwise angle limit */
-constexpr uint16_t AX12A_DEFAULT_CCW_ANGLE_LIMIT       =  0x03FF;
+constexpr float AX12A_DEFAULT_CCW_ANGLE_LIMIT = 300.0;
 
-/** @brief Default permitted maximum voltage (0xBE = 140 -> 14.0 V) */
-constexpr uint8_t AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT  =  0xBE;
+/** @brief Default permitted maximum voltage */
+constexpr float AX12A_DEFAULT_HIGHEST_VOLTAGE_LIMIT = 14.0;
 
-/** @brief Default clockwise compliance margin (position error) */
-constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN   =  0x01;
+/** @brief Default clockwise compliance margin */
+constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN = 0x01;
 
-/** @brief Default counter-clockwise compliance margin (position error) */
-constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN  =  0x01;
+/** @brief Default counter-clockwise compliance margin */
+constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN = 0x01;
 
-/** @brief Default clockwise compliance slope (torque near goal position) */
-constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE    =  5;
+/** @brief Default clockwise compliance slope */
+constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE = 5;
 
-/**
- * @brief Default counter-clockwise compliance slope (torque near goal
- *        position)
- */
-constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE   =  5;
+/** @brief Default counter-clockwise compliance slope */
+constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE = 5;
 
 /** @brief Default punch */
-constexpr float AX12A_DEFAULT_PUNCH                 =  3.13; // 0x0020 reg val
+constexpr float AX12A_DEFAULT_PUNCH = 3.13; // 0x0020 reg val
 
 // Value limit definitions
 // ----------------------------------------------------------------------------
 /** @brief Maximum angular velocity (RPM) */
-constexpr uint8_t AX12A_MAX_VELOCITY = 114;
-
-
-
-
-// Types & enums
-// ----------------------------------------------------------------------------
+constexpr float AX12A_MAX_VELOCITY = 114.0;
 
 
 
@@ -141,7 +131,7 @@ public:
      *        the level of torque is more heavily reduced as the goal position
      *        is approached; a lower value indicates that the torque will not
      *        be reduced much as the goal position is approached
-     * @param cwComplianceSlope arguments in range [1, 7], with 1 being the
+     * @param cwComplianceSlope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */
@@ -153,7 +143,7 @@ public:
      *        that the level of torque is more heavily reduced as the goal
      *        position is approached; a lower value indicates that the torque
      *         will not be reduced much as the goal position is approached
-     * @param ccwComplianceSlope arguments in range [1, 7], with 1 being the
+     * @param ccwComplianceSlope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */
@@ -164,7 +154,7 @@ public:
      *        slopes
      * @see setCcwComplianceSlope
      * @see setCwComplianceSlope
-     * @param complianceSlope arguments in range [1, 7], with 1 being the
+     * @param complianceSlope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */

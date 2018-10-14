@@ -107,57 +107,57 @@ TEST_F(AX12ATest, CanGetVelocity){
     m.getVelocity(currentVelocity);
 }
 
-TEST_F(AX12ATest, setCwComplianceMarginBoundsCheckPasses){
+TEST_F(AX12ATest, CanSetCwComplianceMargin){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    uint8_t cwMargin = 1; // 0.25 degrees
+    uint8_t cwMargin = 1; // 0.29 degrees
     m.setCwComplianceMargin(cwMargin);
     m.setCwComplianceMargin(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_MARGIN);
-
-    ASSERT_FALSE(m.setComplianceMargin(0));
 }
 
-TEST_F(AX12ATest, setCcwComplianceMarginBoundsCheckPasses){
+TEST_F(AX12ATest, CanSetCcwComplianceMargin){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    uint8_t cwMargin = 8; // 2 degrees
+    uint8_t cwMargin = 8; // 2.32 degrees
     m.setCcwComplianceMargin(cwMargin);
     m.setCcwComplianceMargin(dynamixel::AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN);
-
-    ASSERT_FALSE(m.setComplianceMargin(0));
 }
 
-TEST_F(AX12ATest, CanSetCwComplianceSlope){
+TEST_F(AX12ATest, setCwComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setCwComplianceSlope();
+    m.setCwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE);
+
+    ASSERT_FALSE(m.setCwComplianceSlope(8));
 }
 
-TEST_F(AX12ATest, CanSetCcwComplianceSlope){
+TEST_F(AX12ATest, setCcwComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setCcwComplianceSlope();
+    m.setCcwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE);
+
+    ASSERT_FALSE(m.setCcwComplianceSlope(8));
 }
 
-TEST_F(AX12ATest, CanSetComplianceSlope){
+TEST_F(AX12ATest, setComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setComplianceSlope();
+    m.setComplianceSlope(5);
+
+    ASSERT_FALSE(m.setComplianceSlope(8));
 }
 
-TEST_F(AX12ATest, setComplianceMarginBoundsCheckPasses){
+TEST_F(AX12ATest, CanSetComplianceMargin){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    uint8_t margin = 4; // 1 degree
+    uint8_t margin = 4; // 1.16 degrees
     m.setComplianceMargin(margin);
-
-    ASSERT_FALSE(m.setComplianceMargin(0));
 }
 
 } // end anonymous namespace
