@@ -38,6 +38,9 @@ public:
     virtual err_t udpSend(struct udp_pcb *pcb, struct pbuf *p) const = 0;
     virtual void udpDisconnect(struct udp_pcb *pcb) const = 0;
     virtual u8_t pbufFree(struct pbuf *p) const = 0;
+    virtual struct pbuf* pbufAlloc(pbuf_layer layer, u16_t length, pbuf_type type) const = 0;
+    virtual u16_t pbufCopyPartial(const struct pbuf *buf, void *dataptr, u16_t len, u16_t offset) const = 0;
+    virtual err_t pbufTake(struct pbuf *buf, const void *dataptr, u16_t len) const = 0;
 };
 
 } // end namespace udp_interface

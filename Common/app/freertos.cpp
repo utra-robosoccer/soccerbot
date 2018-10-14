@@ -88,10 +88,10 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
-uint32_t defaultTaskBuffer[128];
+uint32_t defaultTaskBuffer[640];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId UART1TaskHandle;
-uint32_t UART1TaskBuffer[128];
+uint32_t UART1TaskBuffer[640];
 osStaticThreadDef_t UART1TaskControlBlock;
 osThreadId UART2TaskHandle;
 uint32_t UART2TaskBuffer[128];
@@ -109,13 +109,13 @@ osThreadId IMUTaskHandle;
 uint32_t IMUTaskBuffer[128];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId CommandTaskHandle;
-uint32_t CommandTaskBuffer[512];
+uint32_t CommandTaskBuffer[640];
 osStaticThreadDef_t CommandTaskControlBlock;
 osThreadId RxTaskHandle;
-uint32_t RxTaskBuffer[512];
+uint32_t RxTaskBuffer[640];
 osStaticThreadDef_t RxTaskControlBlock;
 osThreadId TxTaskHandle;
-uint32_t TxTaskBuffer[512];
+uint32_t TxTaskBuffer[640];
 osStaticThreadDef_t TxTaskControlBlock;
 osMessageQId UART1_reqHandle;
 uint8_t UART1_reqBuffer[16 * sizeof(UARTcmd_t)];
@@ -170,11 +170,13 @@ bool setupIsDone = false;
 static volatile uint32_t error;
 
 ip_addr_t mcuIpAddr = {0xC0A8002B};
-ip_addr_t pcIpAddr = {0xC0A80001};
+ip_addr_t pcIpAddr = IP_ADDR_ANY;
 os::OsInterfaceImpl osInterface;
 lwip_udp_interface::LwipUdpInterface udpInterface;
 udp_driver::UdpDriver udpDriver(mcuIpAddr, pcIpAddr, 7, 7, &udpInterface, &osInterface);
 extern struct netif gnetif;
+pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UDP);
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -189,6 +191,7 @@ extern void StartCommandTask(void const * argument);
 extern void StartRxTask(void const * argument);
 extern void StartTxTask(void const * argument);
 
+extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
@@ -250,12 +253,12 @@ void MX_FREERTOS_Init(void) {
 
     /* Create the thread(s) */
     /* definition and creation of defaultTask */
-    osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128,
+    osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640,
             defaultTaskBuffer, &defaultTaskControlBlock);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* definition and creation of UART1Task */
-    osThreadStaticDef(UART1Task, StartUART1Task, osPriorityNormal, 0, 128,
+    osThreadStaticDef(UART1Task, StartUART1Task, osPriorityNormal, 0, 640,
             UART1TaskBuffer, &UART1TaskControlBlock);
     UART1TaskHandle = osThreadCreate(osThread(UART1Task), NULL);
 
@@ -285,17 +288,17 @@ void MX_FREERTOS_Init(void) {
     IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
     /* definition and creation of CommandTask */
-    osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0,
-            512, CommandTaskBuffer, &CommandTaskControlBlock);
+    osThreadStaticDef(CommandTask, StartCommandTask, osPriorityNormal, 0,
+            640, CommandTaskBuffer, &CommandTaskControlBlock);
     CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
     /* definition and creation of RxTask */
-    osThreadStaticDef(RxTask, StartRxTask, osPriorityRealtime, 0, 512,
+    osThreadStaticDef(RxTask, StartRxTask, osPriorityNormal, 0, 640,
             RxTaskBuffer, &RxTaskControlBlock);
     RxTaskHandle = osThreadCreate(osThread(RxTask), NULL);
 
     /* definition and creation of TxTask */
-    osThreadStaticDef(TxTask, StartTxTask, osPriorityHigh, 0, 512, TxTaskBuffer,
+    osThreadStaticDef(TxTask, StartTxTask, osPriorityNormal, 0, 640, TxTaskBuffer,
             &TxTaskControlBlock);
     TxTaskHandle = osThreadCreate(osThread(TxTask), NULL);
 
@@ -343,6 +346,7 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument) {
 
     /* USER CODE BEGIN StartDefaultTask */
+
     /* Infinite loop */
     for (;;) {
         osDelay(1);
@@ -370,6 +374,9 @@ void StartDefaultTask(void const * argument) {
  * @ingroup Threads
  */
 void StartCommandTask(void const * argument) {
+
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
 //    Dynamixel_SetIOType(IO_POLL); // Configure IO
 //
 //    Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
@@ -548,7 +555,7 @@ void StartCommandTask(void const * argument) {
 //        }
 //
 //        numIterations++;
-        osDelay(1);
+        ethernetif_input(&gnetif);
     }
 }
 
@@ -574,13 +581,22 @@ void StartUART1Task(void const * argument) {
 //    TXData_t dataToSend;
 //    dataToSend.eDataType = eMotorData;
 
+    uint8_t buffer[1024] = {0};
+
     for (;;) {
+         xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
+         pcInterface.getRxBuffer(buffer);
+         pcInterface.setTxBuffer(buffer);
+
+         xTaskNotify(TxTaskHandle, 1UL, eNoAction);
+
 //        while (xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY)
 //                != pdTRUE)
 //            ;
 //        UART_ProcessEvent(&cmdMessage, &dataToSend);
 
-        osDelay(1);
+        //osDelay(1);
     }
 }
 
@@ -781,9 +797,18 @@ void StartRxTask(void const * argument) {
 //    initializeVars();
 //    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 //    initiateDMATransfer();
+    /* init code for LWIP */
+      MX_LWIP_Init();
 
-    pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UDP);
     pcInterface.setUdpDriver(&udpDriver);
+    pcInterface.setOsInterface(&osInterface);
+
+    pcInterface.setup();
+
+
+
+    xTaskNotify(CommandTaskHandle, 1UL, eNoAction);
+
 
     //uint8_t buffer[1024] = {};
 
@@ -791,8 +816,11 @@ void StartRxTask(void const * argument) {
 //        waitForNotificationRX();
 //        updateStatusToPC();
 //        receiveDataBuffer();
-        ethernetif_input(&gnetif);
+
+
         pcInterface.receive();
+        xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
+        xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
     }
 }
 
@@ -813,10 +841,14 @@ void StartTxTask(void const * argument) {
 //    shiftNotificationMask();
 
     for (;;) {
+          xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
+          pcInterface.transmit();
+          xTaskNotify(RxTaskHandle, 1UL, eNoAction);
 //        copySensorDataToSend();
 //        transmitStatusFromPC();
 //        waitForNotificationTX();
-       osDelay(1);
+       //osDelay(1);
     }
 }
 

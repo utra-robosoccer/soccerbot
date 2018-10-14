@@ -76,8 +76,8 @@ private:
     mutable osStaticMutexDef_t rxSemaphoreControlBlock;
     mutable osMutexId txSemaphore;
     mutable osStaticMutexDef_t txSemaphoreControlBlock;
-    mutable osSemaphoreId recvSemaphore;
-    mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
+    mutable osMutexId recvSemaphore;
+    mutable osStaticMutexDef_t recvSemaphoreControlBlock;
 };
 
 } // end namespace udp_driver

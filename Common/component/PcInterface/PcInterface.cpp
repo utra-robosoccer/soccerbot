@@ -30,17 +30,17 @@ PcInterface::~PcInterface() {
 bool PcInterface::setup() {
     bool success = false;
 
-    /* definition and creation of PcInterfaceRx */
     osMutexStaticDef(PcInterfaceRx, &rxMutexControlBlock);
     rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceRx));
 
-    /* definition and creation of PcInterfaceTx */
     osMutexStaticDef(PcInterfaceTx, &txMutexControlBlock);
     rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceTx));
 
     switch (protocol) {
     case PcProtocol::UDP:
+
         success = udpDriver->setup();
+
         break;
     default:
         break;
@@ -73,20 +73,20 @@ bool PcInterface::transmit() {
 }
 
 bool PcInterface::getRxBuffer(uint8_t *rxArrayOut) const {
-    osInterface->OS_xSemaphoreTake(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
     for (int iRxBuffer = 0; iRxBuffer < PC_INTERFACE_BUFFER_SIZE; iRxBuffer++) {
         rxArrayOut[iRxBuffer] = rxBuffer[iRxBuffer];
     }
-    osInterface->OS_xSemaphoreGive(rxMutex);
+    osMutexRelease(rxMutex);
     return true;
 }
 
 bool PcInterface::setTxBuffer(const uint8_t *txArrayIn) {
-    osInterface->OS_xSemaphoreTake(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
     for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
         txBuffer[iTxArray] = txArrayIn[iTxArray];
     }
-    osInterface->OS_xSemaphoreGive(txMutex);
+    osMutexRelease(txMutex);
     return true;
 }
 
@@ -138,22 +138,22 @@ os::OsInterface* PcInterface::getOsInterface() const {
 }
 
 bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn) {
-    osInterface->OS_xSemaphoreTake(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
     for (int iRxArray = 0; iRxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE;
             iRxArray++) {
         rxBuffer[iRxArray] = rxArrayIn[iRxArray];
     }
-    osInterface->OS_xSemaphoreGive(rxMutex);
+    osMutexRelease(rxMutex);
     return true;
 }
 
 bool PcInterface::getTxBuffer(uint8_t *txArrayOut) const {
-    osInterface->OS_xSemaphoreTake(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
     for (int iTxBuffer = 0; iTxBuffer < pc_interface::PC_INTERFACE_BUFFER_SIZE;
             iTxBuffer++) {
         txArrayOut[iTxBuffer] = txBuffer[iTxBuffer];
     }
-    osInterface->OS_xSemaphoreGive(txMutex);
+    osMutexRelease(txMutex);
     return true;
 }
 
