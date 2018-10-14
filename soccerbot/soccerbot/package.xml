@@ -20,5 +20,6 @@
   <depend>amcl</depend>
   <depend>controller_manager</depend>
   <depend>ros_control</depend>
+  <depend>map_server</depend>
 
 </package>

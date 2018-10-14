@@ -24,7 +24,6 @@ int main(int argc, char** argv) {
             TransformStamped robotHeadLocation = tfBuffer.lookupTransform("base_link", "camera", ros::Time(0));
             headLocationPublisher.publish(robotHeadLocation);
         } catch (tf2::TransformException & ex) {
-            ROS_ERROR_STREAM(ex.what());
             rate.sleep();
             continue;
         }
