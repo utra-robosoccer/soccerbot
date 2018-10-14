@@ -107,6 +107,59 @@ TEST_F(AX12ATest, CanGetVelocity){
     m.getVelocity(currentVelocity);
 }
 
+TEST_F(AX12ATest, setCwComplianceMarginBoundsCheckPasses){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    uint8_t cwMargin = 1; // 0.25 degrees
+    m.setCwComplianceMargin(cwMargin);
+    m.setCwComplianceMargin(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_MARGIN);
+
+    ASSERT_FALSE(m.setComplianceMargin(0));
+}
+
+TEST_F(AX12ATest, setCcwComplianceMarginBoundsCheckPasses){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    uint8_t cwMargin = 8; // 2 degrees
+    m.setCcwComplianceMargin(cwMargin);
+    m.setCcwComplianceMargin(dynamixel::AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN);
+
+    ASSERT_FALSE(m.setComplianceMargin(0));
+}
+
+TEST_F(AX12ATest, CanSetCwComplianceSlope){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    m.setCwComplianceSlope();
+}
+
+TEST_F(AX12ATest, CanSetCcwComplianceSlope){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    m.setCcwComplianceSlope();
+}
+
+TEST_F(AX12ATest, CanSetComplianceSlope){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    m.setComplianceSlope();
+}
+
+TEST_F(AX12ATest, setComplianceMarginBoundsCheckPasses){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    uint8_t margin = 4; // 1 degree
+    m.setComplianceMargin(margin);
+
+    ASSERT_FALSE(m.setComplianceMargin(0));
+}
+
 } // end anonymous namespace
 
 

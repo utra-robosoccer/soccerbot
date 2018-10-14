@@ -17,6 +17,30 @@
 
 
 
+/******************************** File-local *********************************/
+namespace{
+// Constants
+// ----------------------------------------------------------------------------
+
+// Register addresses
+// ----------------------------------------------------------------------------
+/** @brief Clockwise compliance margin register */
+constexpr uint8_t AX12A_REG_CW_COMPLIANCE_MARGIN  = 0x1A;
+
+/** @brief Counter-clockwise compliance margin register */
+constexpr uint8_t AX12A_REG_CCW_COMPLIANCE_MARGIN = 0x1B;
+
+/** @brief Clockwise compliance slope register */
+constexpr uint8_t AX12A_REG_CW_COMPLIANCE_SLOPE   = 0x1C;
+
+/** @brief Counter-clockwise compliance slope register */
+constexpr uint8_t AX12A_REG_CCW_COMPLIANCE_SLOPE  = 0x1D;
+
+} // end anonymous namespace
+
+
+
+
 namespace dynamixel{
 /*********************************** AX12A ***********************************/
 // Public
@@ -84,6 +108,66 @@ bool AX12A::getVelocity(float& retVal) const{
 
     uint16_t modifier = m_isJointMode ? 1023 : 2047;
     retVal = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
+
+    return success;
+}
+
+bool AX12A::setCwComplianceMargin(uint8_t cwComplianceMargin) const{
+    if(cwComplianceMargin == 0){
+        return false;
+    }
+
+    uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, cwComplianceMargin};
+    return dataWriter(arr, sizeof(arr));
+}
+
+bool AX12A::setCcwComplianceMargin(uint8_t ccwComplianceMargin) const{
+    if(ccwComplianceMargin == 0){
+        return false;
+    }
+
+    uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, ccwComplianceMargin};
+    return dataWriter(arr, sizeof(arr));
+}
+
+bool AX12A::setCwComplianceSlope(uint8_t cwComplianceSlope) const{
+    if(cwComplianceSlope > 7){
+        return false;
+    }
+
+    uint8_t step = 1 << cwComplianceSlope;
+
+    uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_SLOPE, step};
+    return dataWriter(arr, sizeof(arr));
+}
+
+bool AX12A::setCcwComplianceSlope(uint8_t ccwComplianceSlope) const{
+    if(ccwComplianceSlope > 7){
+        return false;
+    }
+
+    uint8_t step = 1 << ccwComplianceSlope;
+
+    uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_SLOPE, step};
+    return dataWriter(arr, sizeof(arr));
+}
+
+bool AX12A::setComplianceSlope(uint8_t complianceSlope) const{
+    bool success = setCcwComplianceSlope(complianceSlope);
+
+    if(success){
+        success = setCwComplianceSlope(complianceSlope);
+    }
+
+    return success;
+}
+
+bool AX12A::setComplianceMargin(uint8_t complianceMargin) const{
+    bool success = setCcwComplianceMargin(complianceMargin);
+
+    if(success){
+        success = setCwComplianceMargin(complianceMargin);
+    }
 
     return success;
 }

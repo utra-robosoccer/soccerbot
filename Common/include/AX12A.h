@@ -49,16 +49,16 @@ constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_MARGIN   =  0x01;
 constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN  =  0x01;
 
 /** @brief Default clockwise compliance slope (torque near goal position) */
-constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE    =  0x20;
+constexpr uint8_t AX12A_DEFAULT_CW_COMPLIANCE_SLOPE    =  5;
 
 /**
  * @brief Default counter-clockwise compliance slope (torque near goal
  *        position)
  */
-constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE   =  0x20;
+constexpr uint8_t AX12A_DEFAULT_CCW_COMPLIANCE_SLOPE   =  5;
 
 /** @brief Default punch */
-constexpr uint16_t AX12A_DEFAULT_PUNCH                 =  0x0020;
+constexpr float AX12A_DEFAULT_PUNCH                 =  3.13; // 0x0020 reg val
 
 // Value limit definitions
 // ----------------------------------------------------------------------------
@@ -111,14 +111,74 @@ public:
      */
     bool setGoalVelocity(float goalVelocity) const override;
 
-    // TODO: Consider making these use enums
-    void setCWComplianceMargin(uint8_t CWcomplianceMargin);
-    void setCCWComplianceMargin(uint8_t CCWcomplianceMargin);
-    void setCWComplianceSlope(uint8_t CWcomplianceSlope);
-    void setCCWComplianceSlope(uint8_t CCWcomplianceSlope);
+    /**
+     * @brief Sets the motor's clockwise compliance margin, that is, the
+     *        acceptable error between the current and goal position, if the
+     *        current position is CW of the goal position
+     * @details ~0.29 times the argument passed in equals the the CW compliance
+     *          margin that the motor is set to have
+     * @param ccwComplianceMargin the CW compliance margin. Arguments in range
+     *        [0, 255]
+     * @return true if successful, otherwise false
+     */
+    bool setCwComplianceMargin(uint8_t cwComplianceMargin) const;
 
-    void setComplianceSlope(uint8_t complianceSlope);
-    void setComplianceMargin(uint8_t complianceSlope);
+    /**
+     * @brief Sets the motor's counter-clockwise compliance margin, that is,
+     *        the acceptable error between the current and goal position, if
+     *        the current position is CW of the goal position
+     * @details ~0.29 times the argument passed in equals the the CCW
+     *          compliance margin that the motor is set to have
+     * @param ccwComplianceMargin the CCW compliance margin. Arguments in
+     *        range [0, 255]
+     * @return true if successful, otherwise false
+     */
+    bool setCcwComplianceMargin(uint8_t ccwComplianceMargin) const;
+
+    /**
+     * @brief Sets the motor's clockwise compliance slope, that is, the level
+     *        of torque near the goal position. A higher value indicates that
+     *        the level of torque is more heavily reduced as the goal position
+     *        is approached; a lower value indicates that the torque will not
+     *        be reduced much as the goal position is approached
+     * @param cwComplianceSlope arguments in range [1, 7], with 1 being the
+     *        least flexible
+     * @return true if successful, otherwise false
+     */
+    bool setCwComplianceSlope(uint8_t cwComplianceSlope) const;
+
+    /**
+     * @brief Sets the motor's counter-clockwise compliance slope, that is, the
+     *        level of torque near the goal position. A higher value indicates
+     *        that the level of torque is more heavily reduced as the goal
+     *        position is approached; a lower value indicates that the torque
+     *         will not be reduced much as the goal position is approached
+     * @param ccwComplianceSlope arguments in range [1, 7], with 1 being the
+     *        least flexible
+     * @return true if successful, otherwise false
+     */
+    bool setCcwComplianceSlope(uint8_t ccwComplianceSlope) const;
+
+    /**
+     * @brief Sets the motor's counter-clockwise and clockwise compliance
+     *        slopes
+     * @see setCcwComplianceSlope
+     * @see setCwComplianceSlope
+     * @param complianceSlope arguments in range [1, 7], with 1 being the
+     *        least flexible
+     * @return true if successful, otherwise false
+     */
+    bool setComplianceSlope(uint8_t complianceSlope) const;
+
+    /**
+     * @brief Sets the motor's counter-clockwise and clockwise compliance
+     *        margins
+     * @see setCcwComplianceMargin
+     * @see setCwComplianceMargin
+     * @param complianceMargin arguments in range [0, 255]
+     * @return true if successful, otherwise false
+     */
+    bool setComplianceMargin(uint8_t complianceMargin) const;
 
 
     // Getters (use the READ DATA instruction)
