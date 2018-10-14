@@ -80,7 +80,7 @@ TEST_F(DaisyChainShould, Construct){
 // We cannot really test much more than this for transmit without totally
 // whiteboxing the test, which isn't good as we may change the implementation
 // soon to buffer the requests then package them as a sync write command
-TEST_F(DaisyChainShould, SetCallGpioFunctionUponTransmissionRequest){
+TEST_F(DaisyChainShould, CallSetGpioFunctionUponTransmissionRequest){
     DaisyChain chain(p);
 
     char msg[] = "hey!";
@@ -92,7 +92,7 @@ TEST_F(DaisyChainShould, SetCallGpioFunctionUponTransmissionRequest){
 
 // We cannot really test much more than this for transmit without totally
 // whiteboxing the test, which doesn't tell us anything useful in this case
-TEST_F(DaisyChainShould, SetCallGpioFunctionUponReceptionRequest){
+TEST_F(DaisyChainShould, CallSetGpioFunctionUponReceptionRequest){
     DaisyChain chain(p);
 
     uint8_t buf[10];

@@ -17,6 +17,36 @@
 
 
 
+/******************************** File-local *********************************/
+namespace{
+// Constants
+// ----------------------------------------------------------------------------
+
+// Register addresses
+// ----------------------------------------------------------------------------
+/** @brief Register to fine-tune "0" position */
+constexpr uint8_t MX28_REG_MULTI_TURN_OFFSET  = 0x14;
+
+/** @brief Register to change how many bits of resolution are used */
+constexpr uint8_t MX28_REG_RESOLUTION_DIVIDER = 0x16;
+
+/** @brief Derivative gain register */
+constexpr uint8_t MX28_REG_D_GAIN             = 0x1A;
+
+/** @brief Integral gain register */
+constexpr uint8_t MX28_REG_I_GAIN             = 0x1B;
+
+/** @brief Proportional gain register */
+constexpr uint8_t MX28_REG_P_GAIN             = 0x1C;
+
+/** @brief Goal acceleration register */
+constexpr uint8_t MX28_REG_GOAL_ACCELERATION  = 0x49;
+
+} // end anonymous namespace
+
+
+
+
 namespace dynamixel{
 /*********************************** MX28 ***********************************/
 // Public
@@ -101,6 +131,32 @@ bool MX28::getVelocity(float& retVal) const{
     retVal = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
 
     return success;
+}
+
+bool MX28::setGoalAcceleration(float goalAcceleration) const{
+    if((goalAcceleration > 2180) || (goalAcceleration < 0)){
+        return false;
+    }
+
+    uint8_t accelArg = static_cast<int8_t>(goalAcceleration / 8.583);
+
+    uint8_t args[2] = {MX28_REG_GOAL_ACCELERATION, accelArg};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setDGain(uint8_t DGain) const{
+    uint8_t args[2] = {MX28_REG_D_GAIN, DGain};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setIGain(uint8_t IGain) const{
+    uint8_t args[2] = {MX28_REG_I_GAIN, IGain};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setPGain(uint8_t PGain) const{
+    uint8_t args[2] = {MX28_REG_P_GAIN, PGain};
+    return dataWriter(args, sizeof(args));
 }
 
 }

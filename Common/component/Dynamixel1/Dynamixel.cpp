@@ -15,7 +15,6 @@
 
 /********************************* Includes **********************************/
 #include "Dynamixel.h"
-
 #include <math.h>
 
 
@@ -229,7 +228,7 @@ bool Motor::setReturnDelayTime(uint16_t microSec) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setCWAngleLimit(float minAngle) const{
+bool Motor::setCwAngleLimit(float minAngle) const{
     if((minAngle < MIN_ANGLE) || (minAngle > MAX_ANGLE)){
         return false;
     }
@@ -246,7 +245,7 @@ bool Motor::setCWAngleLimit(float minAngle) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setCCWAngleLimit(float maxAngle) const{
+bool Motor::setCcwAngleLimit(float maxAngle) const{
     if((maxAngle < MIN_ANGLE) || (maxAngle > MAX_ANGLE)){
         return false;
     }
@@ -534,12 +533,12 @@ bool Motor::isMoving(bool& retVal) const{
 }
 
 bool Motor::enterWheelMode(){
-    bool success = setCWAngleLimit(0);
+    bool success = setCwAngleLimit(0);
     if(!success){
         return false;
     }
 
-    success = setCCWAngleLimit(0);
+    success = setCcwAngleLimit(0);
     if(!success){
         return false;
     }
@@ -550,12 +549,12 @@ bool Motor::enterWheelMode(){
 }
 
 bool Motor::enterJointMode(){
-    bool success = setCWAngleLimit(MIN_ANGLE);
+    bool success = setCwAngleLimit(MIN_ANGLE);
     if(!success){
         return false;
     }
 
-    success = setCCWAngleLimit(MAX_ANGLE);
+    success = setCcwAngleLimit(MAX_ANGLE);
     if(!success){
         return false;
     }
@@ -576,7 +575,10 @@ bool Motor::dataWriter(
 )  const
 {
     // Check validity so that we don't accidentally make a read request that is
-    // invalid or we cannot support due to our implementation
+    // invalid or we cannot support due to our implementation.
+    // We cannot dynamically allocate an array to hold all the data to be
+    // transmitted, so 3 args was chosen as the cutoff since our use cases
+    // don't require more than that
     if(numArgs > 3){
         return false;
     }
@@ -610,7 +612,10 @@ bool Motor::dataReader(
 ) const
 {
     // Check validity so that we don't accidentally make a read request that is
-    // invalid or we cannot support due to our implementation
+    // invalid or we cannot support due to our implementation.
+    // Since we cannot dynamically allocate an array to hold all the returned
+    // data, we chose 2 as the cutoff. This supports our use cases just fine,
+    // but in the future it could be tweaked if need be
     if(readLength > 2){
         return false;
     }

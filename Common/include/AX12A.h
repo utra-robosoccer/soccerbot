@@ -33,7 +33,7 @@ namespace dynamixel{
 // Default register values
 // ----------------------------------------------------------------------------
 /** @brief Default baud rate register setting */
-constexpr uint8_t AX12A_DEFAULT_BAUD_RATE = 0x01;
+constexpr uint32_t AX12A_DEFAULT_BAUD_RATE = 1000000;
 
 /** @brief Default counter-clockwise angle limit */
 constexpr float AX12A_DEFAULT_CCW_ANGLE_LIMIT = 300.0;

@@ -81,7 +81,7 @@ TEST_F(AX12ATest, setBaudRateBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setBaudRate(1000000);
+    m.setBaudRate(dynamixel::AX12A_DEFAULT_BAUD_RATE);
     m.setBaudRate(7844);
 
     ASSERT_FALSE(m.setBaudRate(1000000 + 1));
@@ -97,14 +97,6 @@ TEST_F(AX12ATest, setGoalVelocityBoundsCheckPasses){
 
     ASSERT_FALSE(m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY + 1));
     ASSERT_FALSE(m.setGoalVelocity(dynamixel::MIN_VELOCITY - 1));
-}
-
-TEST_F(AX12ATest, CanGetVelocity){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-
-    float currentVelocity = 0;
-    m.getVelocity(currentVelocity);
 }
 
 TEST_F(AX12ATest, CanSetCwComplianceMargin){
@@ -158,6 +150,14 @@ TEST_F(AX12ATest, CanSetComplianceMargin){
 
     uint8_t margin = 4; // 1.16 degrees
     m.setComplianceMargin(margin);
+}
+
+TEST_F(AX12ATest, CanGetVelocity){
+    DaisyChain chain(p);
+    AX12A m(1, &chain);
+
+    float currentVelocity = 0;
+    m.getVelocity(currentVelocity);
 }
 
 } // end anonymous namespace
