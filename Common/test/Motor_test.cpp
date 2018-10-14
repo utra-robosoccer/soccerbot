@@ -114,20 +114,20 @@ TEST_F(MotorTest, setCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setCWAngleLimit(dynamixel::MIN_ANGLE);
+    m.setCwAngleLimit(dynamixel::MIN_ANGLE);
 
-    ASSERT_FALSE(m.setCWAngleLimit(dynamixel::MIN_ANGLE - 1));
-    ASSERT_FALSE(m.setCWAngleLimit(dynamixel::MAX_ANGLE + 1));
+    ASSERT_FALSE(m.setCwAngleLimit(dynamixel::MIN_ANGLE - 1));
+    ASSERT_FALSE(m.setCwAngleLimit(dynamixel::MAX_ANGLE + 1));
 }
 
 TEST_F(MotorTest, setCCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);
 
-    m.setCCWAngleLimit(dynamixel::MAX_ANGLE);
+    m.setCcwAngleLimit(dynamixel::MAX_ANGLE);
 
-    ASSERT_FALSE(m.setCCWAngleLimit(dynamixel::MIN_ANGLE - 1));
-    ASSERT_FALSE(m.setCCWAngleLimit(dynamixel::MAX_ANGLE + 1));
+    ASSERT_FALSE(m.setCcwAngleLimit(dynamixel::MIN_ANGLE - 1));
+    ASSERT_FALSE(m.setCcwAngleLimit(dynamixel::MAX_ANGLE + 1));
 }
 
 TEST_F(MotorTest, setVoltageLimitsBoundsCheckPasses){

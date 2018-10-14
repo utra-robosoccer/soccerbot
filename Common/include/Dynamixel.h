@@ -2,9 +2,11 @@
   *****************************************************************************
   * @file    Dynamixel.h
   * @author  Tyler
-  * @brief   TODO -- briefly describe this file
   *
   * @defgroup Dynamixel
+  * @defgroup Motor
+  * @brief Dynamixel motor base class
+  * @ingroup Dynamixel
   * @{
   *****************************************************************************
   */
@@ -169,6 +171,7 @@ enum class AlarmCondition : uint8_t{
 
 
 
+
 // Classes and structs
 // ----------------------------------------------------------------------------
 class Motor{
@@ -215,9 +218,9 @@ public:
     // ------------------------------------------------------------------------
     /**
      * @brief Sets the ID (identification number) for the current motor
-     * @details Note that the instruction will be broadcasted using the current ID.
-     *          As such, if the ID is not known, the motor ID should be initialized
-     *          to the broadcast ID (0xFE) in the constructor
+     * @details Note that the instruction will be broadcasted using the current
+     *          ID. As such, if the ID is not known, the motor ID should be
+     *          initialized to the broadcast ID (0xFE) in the constructor.
      *
      *          Default value: 1
      * @param id the number between 0 and 252 or equal to 254 to identify the
@@ -246,7 +249,7 @@ public:
      *        between 0 and 300 are valid
      * @return true if successful, otherwise false
      */
-    bool setCWAngleLimit(float minAngle) const;
+    bool setCwAngleLimit(float minAngle) const;
 
     /**
      * @brief Sets the counter-clockwise angle limit for the current motor
@@ -258,7 +261,7 @@ public:
      *        between 0 and 300 are valid
      * @return true if successful, otherwise false
      */
-    bool setCCWAngleLimit(float maxAngle) const;
+    bool setCcwAngleLimit(float maxAngle) const;
 
     /**
      * @brief Sets the highest or lowest operating voltage limit for the motor
@@ -433,12 +436,12 @@ public:
 
 protected:
     /**
-     * @brief Sends an array of data to a motor as per its configuration details
-     * @details Uses the WRITE DATA instruction, 0x03, in the motor instruction set.
+     * @brief Sends an array of data to a motor using the WRITE_DATA
+     *        instruction
      * @param args an array of arguments of the form `{ADDR, PARAM_1, ... ,
      *        PARAM_N}`
-     * @param numArgs this must be equal to `sizeof(args)`, and must be either 2
-     *        or 3
+     * @param numArgs this must be equal to `sizeof(args)`, and must be either
+     *        2 or 3 based on the current implementation
      * @return true if successful, otherwise false
      */
     bool dataWriter(uint8_t* args, size_t numArgs) const;
@@ -446,8 +449,8 @@ protected:
     /**
      * @brief Reads data of a specified length from a given address in the
      *        motor
-     * @details Uses the READ DATA instruction, 0x02, in the motor instruction set.
-     *          The status packet returned will be of the following form
+     * @details Uses the READ DATA instruction, 0x02, in the motor instruction
+     *          set. The status packet returned will be of the following form
      *
      *          @code{.c}
      *          {0xFF, 0xFF, ID, LENGTH, ERR, PARAM_1,...,PARAM_N, CHECKSUM}
@@ -473,8 +476,8 @@ private:
     /** @brief Motor identification (0-252, 0xFE) */
     uint8_t id;
 
-    const uint16_t resolutionDivider; /**< @see ResolutionDivider            */
-    const DaisyChain* daisyChain;     /**< @see DaisyChain                   */
+    const uint16_t resolutionDivider; /**< @see ResolutionDivider */
+    const DaisyChain* daisyChain;     /**< @see DaisyChain */
 };
 
 } // end namespace dynamixel
@@ -485,6 +488,6 @@ private:
 /**
  * @}
  */
-/* end - Dynamixel */
+/* end - Motor */
 
 #endif /* DYNAMIXEL_H */
