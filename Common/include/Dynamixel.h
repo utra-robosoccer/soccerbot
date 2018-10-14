@@ -334,11 +334,11 @@ public:
     bool lockEEPROM() const;
 
     /**
-     * @brief Sets a quantity proportional to the minimum current supplied to the
-     *        motor during operation. WARNING: setting this to 100.0 will cause
-     *        the actuators to heat up very rapidly!
-     * @details Units are not specified in the datasheet, and therefore this
-     *          function is not entirely useful without sufficient testing
+     * @brief Sets a quantity proportional to the minimum current supplied to
+     *        the motor during operation. Increasing this quantity will
+     *        increase the output torque. WARNING: setting this to 100.0 will
+     *        cause the actuators to heat up very rapidly!
+     * @details Units are not specified in the datasheet
      * @param punch for now, arguments in range [0, 100.0] are valid
      * @return true if successful, otherwise false
      */

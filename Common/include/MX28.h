@@ -112,15 +112,15 @@ public:
      * @param goalAcceleration the target acceleration in degree/s^2
      * @return true if successful, otherwise false
      */
-    void setGoalAcceleration(float goalAcceleration);
+    void setGoalAcceleration(float goalAcceleration) const;
 
     // TODO: Consider making these use enums
-    void setMultiTurnOffset(int16_t offset);
-    void enterMultiTurnMode();
+    void setMultiTurnOffset(int16_t offset) const;
+    void enterMultiTurnMode() const;
 
-    void setDGain(uint8_t DGain);
-    void setIGain(uint8_t IGain);
-    void setPGain(uint8_t PGain);
+    void setDGain(uint8_t DGain) const;
+    void setIGain(uint8_t IGain) const;
+    void setPGain(uint8_t PGain) const;
 
 
     // Getters (use the READ DATA instruction)
