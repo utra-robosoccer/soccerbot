@@ -21,7 +21,7 @@ cd soccer_ws
 git checkout initials_branchname
 cd ~/catkin_ws
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y # To install all dependencies
+rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version)
 catkin build soccerbot
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
