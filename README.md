@@ -8,6 +8,9 @@ Debian packages needed for robots (sudo apt-get install)
 - git
 - git-gui
 - python-catkin-tools
+- vim
+- net-tools
+- indicator-ip
 
 IDE recommended
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
@@ -21,15 +24,17 @@ cd soccer_ws
 git checkout initials_branchname
 cd ~/catkin_ws
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y # To install all dependencies
+rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version)
 catkin build soccerbot
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
 
-Edit your .bashrc, it should look like this, but you have to run ifconfig to see the correct interface for your Wifi
+Edit your .bashrc, 
+- it should look like this, but you have to run ifconfig to see the correct interface for your Wifi (replace wlp110s0)
+- Remember to have the correct distro (melodic or kinetic)
 
 ```bash
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 MY_IP=$(ifconfig wlp110s0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 export ROS_IP=$MY_IP
