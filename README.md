@@ -10,6 +10,7 @@ Debian packages needed for robots (sudo apt-get install)
 - python-catkin-tools
 - vim
 - net-tools
+- indicator-ip
 
 IDE recommended
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
