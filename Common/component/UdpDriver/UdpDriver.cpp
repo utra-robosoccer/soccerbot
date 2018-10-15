@@ -26,13 +26,13 @@ UdpDriver::UdpDriver() {
 
 }
 
-UdpDriver::UdpDriver(const ip_addr_t *ipaddrIn, const ip_addr_t *ipaddrPcIn,
+UdpDriver::UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
         const u16_t portIn, const u16_t portPcIn,
         const udp_interface::UdpInterface *udpInterfaceIn,
         const os::OsInterface *osInterfaceIn) :
         ipaddr(ipaddrIn), ipaddrPc(ipaddrPcIn), port(portIn), portPc(portPcIn), udpInterface(
                 udpInterfaceIn), osInterface(osInterfaceIn) {
-    // TODO: call semaphore create functions
+
 }
 
 UdpDriver::~UdpDriver() {
@@ -41,6 +41,20 @@ UdpDriver::~UdpDriver() {
 
 bool UdpDriver::setup() {
     bool success = false;
+
+    /* definition and creation of UdpDriverRxPbuf */
+    osMutexStaticDef(UdpDriverRxPbuf, &rxSemaphoreControlBlock);
+    rxSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverRxPbuf));
+
+    /* definition and creation of UdpDriverTxPbuf */
+    osMutexStaticDef(UdpDriverTxPbuf, &txSemaphoreControlBlock);
+    txSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverTxPbuf));
+
+    /* Create the semaphores(s) */
+    /* definition and creation of UdpDriverRecv */
+    osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
+    recvSemaphore = osInterface->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
+
     if (!getUdpInterface()) {
         return false;
     }
@@ -48,7 +62,7 @@ bool UdpDriver::setup() {
     if (!pcb) {
         return false;
     }
-    success = (udpInterface->udpBind(pcb, ipaddr, port) == ERR_OK);
+    success = (udpInterface->udpBind(pcb, &ipaddr, port) == ERR_OK);
     if (success) {
         udpInterface->udpRecv(pcb, recvCallback, this);
     } else {
@@ -57,13 +71,12 @@ bool UdpDriver::setup() {
     return success;
 }
 
+// ethernetif_input needs to be called before this
 // Should have more error checking where void is returned where possible
 bool UdpDriver::receive(uint8_t *rxArrayOut) {
     if (!getUdpInterface()) {
         return false;
     }
-
-    udpInterface->ethernetifInput(gnetif); // Extract packets from network interface
 
     BaseType_t osError = osInterface->OS_xSemaphoreTake(recvSemaphore,
             SEMAPHORE_WAIT_NUM_TICKS); // Wait for callback to write data members (including packets) to UdpInterface
@@ -87,7 +100,7 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn) {
     if (!bytesToPacket(txArrayIn)) {
         return false;
     }
-    if (udpInterface->udpConnect(pcb, ipaddrPc, portPc) != ERR_OK) {
+    if (udpInterface->udpConnect(pcb, &ipaddrPc, portPc) != ERR_OK) {
         return false;
     }
     if (udpInterface->udpSend(pcb, getTxPbuf()) != ERR_OK) {
@@ -151,11 +164,6 @@ bool UdpDriver::giveRecvSemaphore() {
     return true;
 }
 
-bool UdpDriver::setNetif(struct netif *gnetifIn) {
-    gnetif = gnetifIn;
-    return true;
-}
-
 bool UdpDriver::setPcb(struct udp_pcb *pcbIn) {
     pcb = pcbIn;
     return true;
@@ -171,11 +179,11 @@ bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn) {
     return true;
 }
 
-const ip_addr_t* UdpDriver::getIpaddr() const {
+const ip_addr_t UdpDriver::getIpaddr() const {
     return ipaddr;
 }
 
-const ip_addr_t* UdpDriver::getIpaddrPc() const {
+const ip_addr_t UdpDriver::getIpaddrPc() const {
     return ipaddrPc;
 }
 
@@ -189,10 +197,6 @@ u16_t UdpDriver::getPortPc() const {
 
 struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
-}
-
-struct netif *UdpDriver::getNetif() const {
-    return gnetif;
 }
 
 void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,

@@ -29,6 +29,7 @@ using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
+
 using uart::UartDriver;
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;

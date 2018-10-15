@@ -19,7 +19,7 @@
 
 #include <lwip/netif.h>
 #include <lwip/udp.h>
-#include <ethernetif.h>
+#include <lwip/arch.h>
 
 namespace udp_interface {
 
@@ -33,7 +33,6 @@ public:
     virtual void udpRecv(struct udp_pcb *pcb, udp_recv_fn recv,
             void *recv_arg) const = 0;
     virtual void udpRemove(struct udp_pcb *pcb) const = 0;
-    virtual void ethernetifInput(void const * argument) const = 0;
     virtual err_t udpConnect(struct udp_pcb *pcb, const ip_addr_t *ipaddr,
             u16_t port) const = 0;
     virtual err_t udpSend(struct udp_pcb *pcb, struct pbuf *p) const = 0;
