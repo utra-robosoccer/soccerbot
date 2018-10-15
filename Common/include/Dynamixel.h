@@ -21,7 +21,6 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
 #include "DaisyChain.h"
 
 
@@ -209,6 +208,14 @@ public:
      * @return true if successful, otherwise false
      */
     bool reset();
+
+    /**
+     * @brief Returns the software ID for this motor
+     * @return the ID this data structure was initialized with
+     */
+    uint8_t id(){
+        return m_id;
+    }
 
 
     // Setters (use the WRITE DATA instruction)
@@ -474,7 +481,7 @@ protected:
 
 private:
     /** @brief Motor identification (0-252, 0xFE) */
-    uint8_t id;
+    uint8_t m_id;
 
     const uint16_t resolutionDivider; /**< @see ResolutionDivider */
     const DaisyChain* daisyChain;     /**< @see DaisyChain */

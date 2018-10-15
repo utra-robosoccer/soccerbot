@@ -66,7 +66,7 @@ constexpr float AX12A_MAX_VELOCITY = 114.0;
 
 // Classes and structs
 // ----------------------------------------------------------------------------
-class AX12A : Motor{
+class AX12A : public Motor{
 public:
     /** @see Motor */
     AX12A(

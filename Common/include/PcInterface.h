@@ -13,7 +13,7 @@
 #ifndef PC_INTERFACE_H
 #define PC_INTERFACE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <UdpDriver.h>
 #include <UartDriver.h>
 #include <OsInterface.h>

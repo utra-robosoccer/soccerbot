@@ -94,6 +94,22 @@ TEST_F(MotorTest, CanResetMotor){
     m.reset();
 }
 
+TEST_F(MotorTest, IdReturnsIdSetAtInitialization){
+    DaisyChain chain(p);
+
+    MockMotor m0(1, &chain, ResolutionDivider::AX12A);
+    ASSERT_EQ(m0.id(), 1);
+
+    MockMotor m1(2, &chain, ResolutionDivider::AX12A);
+    ASSERT_EQ(m1.id(), 2);
+
+    MockMotor m2(18, &chain, ResolutionDivider::AX12A);
+    ASSERT_EQ(m2.id(), 18);
+
+    MockMotor m3(42, &chain, ResolutionDivider::AX12A);
+    ASSERT_NE(m3.id(), 0);
+}
+
 TEST_F(MotorTest, setIdBoundsCheckPasses){
     DaisyChain chain(p);
     MockMotor m(1, &chain, ResolutionDivider::AX12A);

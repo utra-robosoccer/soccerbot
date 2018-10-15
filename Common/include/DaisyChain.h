@@ -18,7 +18,7 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
+#include <stdint.h>
 #include "UartDriver.h"
 #include "GpioInterface.h"
 

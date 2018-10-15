@@ -32,7 +32,7 @@ namespace uart{
  * @class Concrete implementation of the abstract UartInterface class, to be
  *        used in production builds
  */
-class HalUartInterface : UartInterface{
+class HalUartInterface : public UartInterface{
 public:
     HalUartInterface();
     ~HalUartInterface();

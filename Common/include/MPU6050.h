@@ -23,9 +23,9 @@
 
 /********************************* Includes **********************************/
 #include <stdint.h>
+#include <uart_handler.h>
 #include "Notification.h"
 #include "cmsis_os.h"
-#include "UART_Handler.h"
 
 
 

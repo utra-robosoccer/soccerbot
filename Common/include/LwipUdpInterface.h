@@ -13,7 +13,7 @@
 #ifndef LWIP_UDP_INTERFACE_H
 #define LWIP_UDP_INTERFACE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <UdpInterface.h>
 
 namespace lwip_udp_interface {
