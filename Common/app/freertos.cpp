@@ -88,7 +88,7 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
-uint32_t defaultTaskBuffer[640];
+uint32_t defaultTaskBuffer[128];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId UART1TaskHandle;
 uint32_t UART1TaskBuffer[640];
@@ -169,8 +169,8 @@ IMUnamespace::MPU6050 IMUdata(1, &hi2c1);
 bool setupIsDone = false;
 static volatile uint32_t error;
 
-ip_addr_t mcuIpAddr = {0xC0A8002B};
-ip_addr_t pcIpAddr = IP_ADDR_ANY;
+ip_addr_t mcuIpAddr = *(IP_ADDR_ANY);
+ip_addr_t pcIpAddr = {0xC0A80001}; // need to check this is correct. 192.168.0.1
 os::OsInterfaceImpl osInterface;
 lwip_udp_interface::LwipUdpInterface udpInterface;
 udp_driver::UdpDriver udpDriver(mcuIpAddr, pcIpAddr, 7, 7, &udpInterface, &osInterface);
@@ -253,7 +253,7 @@ void MX_FREERTOS_Init(void) {
 
     /* Create the thread(s) */
     /* definition and creation of defaultTask */
-    osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640,
+    osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityBelowNormal, 0, 128,
             defaultTaskBuffer, &defaultTaskControlBlock);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
@@ -263,27 +263,27 @@ void MX_FREERTOS_Init(void) {
     UART1TaskHandle = osThreadCreate(osThread(UART1Task), NULL);
 
     /* definition and creation of UART2Task */
-    osThreadStaticDef(UART2Task, StartUART2Task, osPriorityNormal, 0, 128,
+    osThreadStaticDef(UART2Task, StartUART2Task, osPriorityBelowNormal, 0, 128,
             UART2TaskBuffer, &UART2TaskControlBlock);
     UART2TaskHandle = osThreadCreate(osThread(UART2Task), NULL);
 
     /* definition and creation of UART3Task */
-    osThreadStaticDef(UART3Task, StartUART3Task, osPriorityNormal, 0, 128,
+    osThreadStaticDef(UART3Task, StartUART3Task, osPriorityBelowNormal, 0, 128,
             UART3TaskBuffer, &UART3TaskControlBlock);
     UART3TaskHandle = osThreadCreate(osThread(UART3Task), NULL);
 
     /* definition and creation of UART4Task */
-    osThreadStaticDef(UART4Task, StartUART4Task, osPriorityNormal, 0, 128,
+    osThreadStaticDef(UART4Task, StartUART4Task, osPriorityBelowNormal, 0, 128,
             UART4TaskBuffer, &UART4TaskControlBlock);
     UART4TaskHandle = osThreadCreate(osThread(UART4Task), NULL);
 
     /* definition and creation of UART6Task */
-    osThreadStaticDef(UART6Task, StartUART6Task, osPriorityNormal, 0, 128,
+    osThreadStaticDef(UART6Task, StartUART6Task, osPriorityBelowNormal, 0, 128,
             UART6TaskBuffer, &UART6TaskControlBlock);
     UART6TaskHandle = osThreadCreate(osThread(UART6Task), NULL);
 
     /* definition and creation of IMUTask */
-    osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128,
+    osThreadStaticDef(IMUTask, StartIMUTask, osPriorityBelowNormal, 0, 128,
             IMUTaskBuffer, &IMUTaskControlBlock);
     IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
@@ -375,7 +375,10 @@ void StartDefaultTask(void const * argument) {
  */
 void StartCommandTask(void const * argument) {
 
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    /* init code for LWIP */
+        MX_LWIP_Init();
+        xTaskNotify(RxTaskHandle, 1UL, eNoAction);
+
 
 //    Dynamixel_SetIOType(IO_POLL); // Configure IO
 //
@@ -555,7 +558,8 @@ void StartCommandTask(void const * argument) {
 //        }
 //
 //        numIterations++;
-        ethernetif_input(&gnetif);
+        //ethernetif_input(&gnetif);
+        osDelay(1);
     }
 }
 
@@ -797,17 +801,17 @@ void StartRxTask(void const * argument) {
 //    initializeVars();
 //    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 //    initiateDMATransfer();
-    /* init code for LWIP */
-      MX_LWIP_Init();
 
     pcInterface.setUdpDriver(&udpDriver);
     pcInterface.setOsInterface(&osInterface);
+
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
 
     pcInterface.setup();
 
 
 
-    xTaskNotify(CommandTaskHandle, 1UL, eNoAction);
 
 
     //uint8_t buffer[1024] = {};

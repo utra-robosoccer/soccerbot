@@ -48,14 +48,14 @@ bool UdpDriver::setup() {
     osMutexStaticDef(UdpDriverTxPbuf, &txSemaphoreControlBlock);
     txSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverTxPbuf));
 
-    osMutexStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
-    recvSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverRecv));
+    osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
+    recvSemaphore = osInterface->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
 
     // XXX: hacky way to initialize the mutex with a zero count.
     // Should probably use semaphore instead, not mutex and find a way to
     // properly initialize that with 0 count.
-    osMutexWait(recvSemaphore, osWaitForever);
-
+    //osSemaphoreWait(recvSemaphore, osWaitForever);
+    //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     if (!getUdpInterface()) {
         return false;
     }
@@ -64,7 +64,7 @@ bool UdpDriver::setup() {
     if (!pcb) {
         return false;
     }
-    success = (udpInterface->udpBind(pcb, IP_ADDR_ANY, port) == ERR_OK);
+    success = (udpInterface->udpBind(pcb, &ipaddr, port) == ERR_OK);
     if (success) {
         udpInterface->udpRecv(pcb, recvCallback, this);
     } else {
@@ -80,7 +80,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut) {
         return false;
     }
 
-    osMutexWait(recvSemaphore, osWaitForever); // Wait for callback to write data members (including packets) to UdpInterface
+    osSemaphoreWait(recvSemaphore, osWaitForever); // Wait for callback to write data members (including packets) to UdpInterface
 
     if (!packetToBytes(rxArrayOut)) { // Copy contents of the packets into rxBuffer
         return false;
@@ -166,7 +166,7 @@ struct pbuf* UdpDriver::getTxPbuf() const {
 }
 
 bool UdpDriver::giveRecvSemaphore() {
-    osMutexRelease(recvSemaphore);
+    osSemaphoreRelease(recvSemaphore);
     return true;
 }
 
