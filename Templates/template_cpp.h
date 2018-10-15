@@ -1,11 +1,10 @@
 /**
   *****************************************************************************
-  * @file    template_cpp.h
-  * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file
+  * @file
+  * @author  TODO
   *
-  * @defgroup Header
-  * @ingroup  TODO -- module name defined in template_cpp.cpp
+  * @defgroup TODO
+  * @ingroup TODO
   * @{
   *****************************************************************************
   */
@@ -24,15 +23,8 @@
 
 
 
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
 /************************** insert module name here **************************/
-namespace module_name{
+namespace TODO{
 // Constants
 // ----------------------------------------------------------------------------
 
@@ -55,9 +47,7 @@ namespace module_name{
 // ----------------------------------------------------------------------------
 
 
-
-
-} // end namespace module_name
+} // end namespace TODO
 
 
 
@@ -70,6 +60,6 @@ namespace module_name{
 /**
  * @}
  */
-/* end - Header */
+/* end - TODO */
 
 #endif /* TEMPLATE_CPP_H */
