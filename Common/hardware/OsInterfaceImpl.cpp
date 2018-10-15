@@ -18,7 +18,7 @@
 
 /********************************* Includes **********************************/
 #include "OsInterfaceImpl.h"
-#include <cstdint>
+#include <stdint.h>
 #include "cmsis_os.h"
 
 

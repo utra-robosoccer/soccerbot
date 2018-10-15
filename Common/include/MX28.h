@@ -70,7 +70,7 @@ constexpr float MX28_MAX_VELOCITY = 117.0;
 
 // Classes and structs
 // ----------------------------------------------------------------------------
-class MX28 : Motor{
+class MX28 : public Motor{
 public:
     /** @see Motor */
     MX28(

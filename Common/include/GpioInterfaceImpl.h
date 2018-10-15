@@ -36,7 +36,7 @@ public:
     GPIO_PinState readPin(
          GPIO_TypeDef* GPIOx,
          uint16_t GPIO_Pin
-     ) const override final = 0;
+     ) const override final;
 
     void writePin(
         GPIO_TypeDef* GPIOx,

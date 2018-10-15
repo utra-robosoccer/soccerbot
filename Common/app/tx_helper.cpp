@@ -7,10 +7,10 @@
  */
 
 /********************************* Includes **********************************/
+#include "uart_handler.h"
 #include "tx_helper.h"
 #include "cmsis_os.h"
-#include "UART_Handler.h"
-#include "DynamixelProtocolV1.h"
+#include "PeripheralInstances.h"
 #include "robotState.h"
 #include "Communication.h"
 #include "MPU6050.h"
@@ -22,7 +22,7 @@ extern osThreadId TXQueueHandle;
 
 /***************************** Private Variables *****************************/
 static TXData_t receivedData;
-static Dynamixel_HandleTypeDef* motorPtr = nullptr;
+static MotorData_t* motorDataPtr = nullptr;
 static imu::IMUStruct_t* imuPtr = nullptr;
 
 static char* const pIMUXGyroData = &robotState.msg[
@@ -80,22 +80,25 @@ void copySensorDataToSend(void) {
 
         switch (receivedData.eDataType) {
         case eMotorData:
-            motorPtr = (Dynamixel_HandleTypeDef*) receivedData.pData;
+            motorDataPtr = static_cast<MotorData_t*>(receivedData.pData);
 
-            if (motorPtr == NULL) {
+            if (motorDataPtr == NULL) {
                 break;
             }
 
             // Validate data and store it in robotState
-            if (motorPtr->_ID <= NUM_MOTORS) {
+            if (motorDataPtr->id <= periph::NUM_MOTORS) {
                 // Copy sensor data for this motor into its section of
                 // robotState.msg
-                memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)],
-                        &(motorPtr->_lastPosition), sizeof(float));
+                memcpy(
+                    &robotState.msg[4 * (motorDataPtr->id - 1)],
+                    &(motorDataPtr->payload),
+                    sizeof(float)
+                );
 
                 // Set flag indicating the motor with this id has reported in
                 // with position data
-                dataReadyFlags |= (1 << motorPtr->_ID);
+                dataReadyFlags |= (1 << motorDataPtr->id);
             }
             break;
         case eIMUData:

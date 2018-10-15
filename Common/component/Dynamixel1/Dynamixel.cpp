@@ -167,7 +167,7 @@ Motor::Motor(
     ResolutionDivider divider
 )
     :
-        id(id),
+        m_id(id),
         resolutionDivider(static_cast<uint16_t>(divider)),
         daisyChain(daisyChain)
 {
@@ -183,7 +183,7 @@ bool Motor::reset(){
 
     arrTransmit[0] = 0xff;
     arrTransmit[1] = 0xff;
-    arrTransmit[2] = id;
+    arrTransmit[2] = m_id;
     arrTransmit[3] = 2;
     arrTransmit[4] = INST_RESET;
     arrTransmit[5] = computeChecksum(arrTransmit, 6);
@@ -194,7 +194,7 @@ bool Motor::reset(){
     );
 
     if(success){
-        id = DEFAULT_ID;
+        m_id = DEFAULT_ID;
     }
 
     return success;
@@ -210,7 +210,7 @@ bool Motor::setId(uint8_t id){
     bool success = dataWriter(args, sizeof(args));
 
     if(success){
-        this->id = id;
+        this->m_id = id;
     }
 
     return success;
@@ -493,7 +493,7 @@ bool Motor::ping(uint8_t& retVal) const{
 
     arrTransmit[0] = 0xff;
     arrTransmit[1] = 0xff;
-    arrTransmit[2] = id;
+    arrTransmit[2] = m_id;
     arrTransmit[3] = 2;
     arrTransmit[4] = INST_PING;
     arrTransmit[5] = computeChecksum(arrTransmit, 6);
@@ -587,7 +587,7 @@ bool Motor::dataWriter(
 
     arrTransmit[0] = 0xFF;
     arrTransmit[1] = 0xFF;
-    arrTransmit[2] = id;
+    arrTransmit[2] = m_id;
     arrTransmit[3] = 2 + numArgs;
     arrTransmit[4] = INST_WRITE_DATA;
 
@@ -624,7 +624,7 @@ bool Motor::dataReader(
 
     arr[0] = 0xFF;
     arr[1] = 0xFF;
-    arr[2] = id;
+    arr[2] = m_id;
     arr[3] = 4;
     arr[4] = INST_READ_DATA;
     arr[5] = readAddr;
