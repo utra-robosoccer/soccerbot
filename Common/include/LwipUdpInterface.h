@@ -26,7 +26,6 @@ public:
     void udpRecv(struct udp_pcb *pcb, udp_recv_fn recv, void *recv_arg) const
             override final;
     void udpRemove(struct udp_pcb *pcb) const override final;
-    void ethernetifInput(void const * argument) const override final;
     err_t udpConnect(struct udp_pcb *pcb, const ip_addr_t *ipaddr,
             u16_t port) const override final;
     err_t udpSend(struct udp_pcb *pcb, struct pbuf *p) const override final;

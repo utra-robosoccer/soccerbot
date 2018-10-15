@@ -96,6 +96,21 @@ public:
             uint32_t millisec
         )
     );
+
+    MOCK_CONST_METHOD1(
+        OS_osMutexCreate,
+        osMutexId(
+            const osMutexDef_t *
+        )
+    );
+
+    MOCK_CONST_METHOD2(
+        OS_osSemaphoreCreate,
+        osSemaphoreId(
+            const osSemaphoreDef_t *,
+            int32_t
+        )
+    );
 };
 
 } // end namespace mocks
