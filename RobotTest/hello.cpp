@@ -6,5 +6,7 @@
  */
 
 #include "I2CInterface.h"
+#include <cstdint>
+
 using namespace i2c;
 

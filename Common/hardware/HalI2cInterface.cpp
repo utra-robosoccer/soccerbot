@@ -27,7 +27,7 @@ HALI2CInterface::HALI2CInterface() {;}
 HALI2CInterface::~HALI2CInterface() {;}
 
 void HALI2CInterface::assignHandle(I2C_HandleTypeDef *i2cHandlePtr) const {
-	this->_I2C_Handle = i2cHandlePtr;
+	this->i2cHandlePtr = i2cHandlePtr;
 
 HAL_StatusTypeDef HALI2CInterface::memWrite(uint16_t DevAddress, uint16_t MemAddress,
 		uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout) const { //HAL_I2C_Mem_Write
