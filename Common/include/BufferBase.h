@@ -17,7 +17,6 @@
 /********************************** Includes **********************************/
 #include <cstdio>
 #include <memory>
-#include <stdint.h>
 #include "UART_Handler.h"
 
 namespace buffer {
