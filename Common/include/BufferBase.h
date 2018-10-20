@@ -4,7 +4,7 @@
   * @author  Gokul Dharan
   * @brief   Defines an abstract buffer class to be implemented and extended as needed
   *
-  * @defgroup Header
+  * @defgroup Buffer
   * @{
   *****************************************************************************
   */
@@ -25,7 +25,7 @@ namespace buffer {
 
 /*********************************** Types ************************************/
 /**
- * @brief Generic templated buffer type
+ * @class Generic templated buffer class
  */
 
 template <class T>
@@ -67,9 +67,11 @@ private:
 	bool m_empty = true;
 };
 
+
 /**
- * @brief Easily extendable master class that holds all relevant buffers
+ * @class Easily extendable master class that holds all relevant buffers
  */
+
 class BufferMaster
 {
 public:
