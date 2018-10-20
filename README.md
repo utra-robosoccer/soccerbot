@@ -21,6 +21,7 @@ IDE recommended
 
 ```bash
 cd ~/catkin_ws/src
+catkin_init_workspace
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
 cd soccer_ws
 git checkout initials_branchname
