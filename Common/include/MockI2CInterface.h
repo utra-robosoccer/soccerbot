@@ -1,20 +1,15 @@
-/*
- * MockI2CInterface.h
- *
- *  Created on: Oct 6, 2018
- *      Author: Hannah
- */
 /**
  *****************************************************************************
- * @file    template_cpp.h
- * @author  TODO -- your name here
- * @brief   TODO -- briefly describe this file
+ * @file    MockI2CInterface.h
+ * @author  Hannah L
+ * @brief   Defines the MockI2CInterface class using gmock
  *
- * @defgroup Header
- * @ingroup  TODO -- module name defined in template_cpp.cpp
+ * @defgroup MockI2CInterface
+ * @ingroup  I2C
  * @{
  *****************************************************************************
  */
+
 #ifndef COMMON_INCLUDE_MOCKI2CINTERFACE_H_
 #define COMMON_INCLUDE_MOCKI2CINTERFACE_H_
 
@@ -23,10 +18,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-/********************************** Globals **********************************/
-// Constants
-// ----------------------------------------------------------------------------
-/************************** insert module name here **************************/
+/***************************** Mock I2C Interface ****************************/
 using namespace i2c;
 namespace mocks{
 
@@ -44,10 +36,8 @@ public:
 	MOCK_CONST_METHOD5(memRead_IT , HAL_StatusTypeDef(uint16_t DevAddress, uint16_t MemAddress,
 						uint16_t MemAddSize, uint8_t *pData, uint16_t Size));
 }
-// Constanst/ Types & enums
-// ----------------------------------------------------------------------------
 
-}// end namespace module_name
+}// end namespace i2c
 
 
 #endif /* COMMON_INCLUDE_MOCKI2CINTERFACE_H_ */
