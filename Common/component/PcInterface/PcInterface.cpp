@@ -15,12 +15,12 @@
 namespace pc_interface {
 
 PcInterface::PcInterface() {
-
 }
 
-PcInterface::PcInterface(PcProtocol protocolIn) :
-        protocol(protocolIn) {
-
+PcInterface::PcInterface(PcProtocol protocolIn, udp_driver::UdpDriver *udpDriverIn,
+        uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn) :
+        protocol(protocolIn), udpDriver(udpDriverIn), uartDriver(uartDriverIn),
+        osInterface(osInterfaceIn) {
 }
 
 PcInterface::~PcInterface() {
@@ -34,14 +34,14 @@ bool PcInterface::setup() {
     rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceRx));
 
     osMutexStaticDef(PcInterfaceTx, &txMutexControlBlock);
-    rxMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceTx));
+    txMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceTx));
 
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->setup();
         break;
-    case PcProtocol::USB_UART:
-        success = uartDriver->setup(rxBuffer, PC_INTERFACE_BUFFER_SIZE);
+    case PcProtocol::UART:
+        success = uartDriver->setup();
         break;
     default:
         break;
@@ -49,15 +49,14 @@ bool PcInterface::setup() {
     return success;
 }
 
-bool PcInterface::receive() {
+bool PcInterface::receive(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->receive(rxBuffer);
         break;
-    case PcProtocol::USB_UART:
-        // XXX: replace PC_INTERFACE_BUFFER_SIZE with some command size, allow this to be passed into receive()
-        success = uartDriver->receive(rxBuffer, pc_interface::PC_INTERFACE_BUFFER_SIZE);
+    case PcProtocol::UART:
+        success = uartDriver->receive(rxBuffer, numBytes);
         break;
     default:
         return false;
@@ -65,14 +64,14 @@ bool PcInterface::receive() {
     return success;
 }
 
-bool PcInterface::transmit() {
+bool PcInterface::transmit(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->transmit(txBuffer);
         break;
-    case PcProtocol::USB_UART:
-        success = uartDriver->transmit(txBuffer, pc_interface::PC_INTERFACE_BUFFER_SIZE);
+    case PcProtocol::UART:
+        success = uartDriver->transmit(txBuffer, numBytes);
         break;
     default:
         return false;
@@ -80,21 +79,27 @@ bool PcInterface::transmit() {
     return success;
 }
 
-bool PcInterface::getRxBuffer(uint8_t *rxArrayOut) const {
-    osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iRxBuffer = 0; iRxBuffer < PC_INTERFACE_BUFFER_SIZE; iRxBuffer++) {
+bool PcInterface::getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const {
+    if (sizeof(rxBuffer) >= numBytes) {
+        return false;
+    }
+    osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    for (int iRxBuffer = 0; iRxBuffer < numBytes; iRxBuffer++) {
         rxArrayOut[iRxBuffer] = rxBuffer[iRxBuffer];
     }
-    osMutexRelease(rxMutex);
+    osInterface->OS_osMutexRelease(rxMutex);
     return true;
 }
 
-bool PcInterface::setTxBuffer(const uint8_t *txArrayIn) {
-    osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iTxArray = 0; iTxArray < PC_INTERFACE_BUFFER_SIZE; iTxArray++) {
+bool PcInterface::setTxBuffer(const uint8_t *txArrayIn, const size_t numBytes) {
+    if (sizeof(txBuffer) >= numBytes) {
+        return false;
+    }
+    osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    for (int iTxArray = 0; iTxArray < numBytes; iTxArray++) {
         txBuffer[iTxArray] = txArrayIn[iTxArray];
     }
-    osMutexRelease(txMutex);
+    osInterface->OS_osMutexRelease(txMutex);
     return true;
 }
 
@@ -102,66 +107,41 @@ PcProtocol PcInterface::getProtocol() const {
     return protocol;
 }
 
-bool PcInterface::setUdpDriver(udp_driver::UdpDriver *udpDriverIn) {
-    if (getProtocol() != PcProtocol::UDP) {
-        return false;
-    }
-    if (!udpDriverIn) {
-        return false;
-    }
-    udpDriver = udpDriverIn;
-    return true;
-}
-
 udp_driver::UdpDriver* PcInterface::getUdpDriver() const {
     return udpDriver;
-}
-
-bool PcInterface::setUartDriver(uart::UartDriver *uartDriverIn) {
-    if (getProtocol() != PcProtocol::USB_UART) {
-        return false;
-    }
-    if (!uartDriverIn) {
-        return false;
-    }
-    uartDriver = uartDriverIn;
-    return true;
 }
 
 uart::UartDriver* PcInterface::getUartDriver() const {
     return uartDriver;
 }
 
-bool PcInterface::setOsInterface(
-        os::OsInterface *osInterfaceIn) {
-    if (!osInterfaceIn) {
-        return false;
-    }
-    osInterface = osInterfaceIn;
-    return true;
-}
-
 os::OsInterface* PcInterface::getOsInterface() const {
     return osInterface;
 }
 
-bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn) {
-    osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE;
+bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes) {
+    if (sizeof(rxBuffer) >= numBytes) {
+        return false;
+    }
+    osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    for (int iRxArray = 0; iRxArray < numBytes;
             iRxArray++) {
         rxBuffer[iRxArray] = rxArrayIn[iRxArray];
     }
-    osMutexRelease(rxMutex);
+    osInterface->OS_osMutexRelease(rxMutex);
     return true;
 }
 
-bool PcInterface::getTxBuffer(uint8_t *txArrayOut) const {
-    osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iTxBuffer = 0; iTxBuffer < PC_INTERFACE_BUFFER_SIZE;
+bool PcInterface::getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const {
+    if (sizeof(txBuffer) >= numBytes) {
+        return false;
+    }
+    osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
+    for (int iTxBuffer = 0; iTxBuffer < numBytes;
             iTxBuffer++) {
         txArrayOut[iTxBuffer] = txBuffer[iTxBuffer];
     }
-    osMutexRelease(txMutex);
+    osInterface->OS_osMutexRelease(txMutex);
     return true;
 }
 

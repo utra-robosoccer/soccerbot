@@ -156,10 +156,7 @@ static volatile uint32_t error;
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
-pc_interface::PcInterface pcInterface;
-
-extern uint8_t buffRx[1024];
-
+pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART, nullptr, &uartDriver, &osInterface);
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -341,8 +338,6 @@ void StartCommandTask(void const * argument)
 {
 
     uartDriver.setIOType(uart::IO_Type::DMA);
-    pcInterface.setOsInterface(&osInterface);
-    pcInterface.setUartDriver(&uartDriver);
 
     Dynamixel_SetIOType(IO_POLL); // Configure IO
 
@@ -730,6 +725,7 @@ void StartIMUTask(void const * argument)
 void StartRxTask(void const * argument)
 {
     initializeVars();
+    uint8_t rxBuff[92] = {};
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
     pcInterface.setup();
@@ -738,13 +734,14 @@ void StartRxTask(void const * argument)
         /* Since UartDriver.receive() protects uart access
          * with uartResourceMutex, can call PcInterface.receive()
          * repeatedly and thread-safely. */
-        pcInterface.receive();
+        pcInterface.receive(sizeof(rxBuff));
 
         /* Let EventHandler know a message has been received. */
         //signalRxComplete();
 
         /* EventHandler to do the following. */
-        pcInterface.getRxBuffer(buffRx);
+        pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
+        copyIntoBuffRx(rxBuff);
         receiveDataBuffer();
     }
 }
@@ -768,9 +765,13 @@ void StartTxTask(void const * argument)
 
     for(;;)
     {
+        //waitTxRequestFromEventHandler();
+
+        /* EventHandler to do the following. */
         copySensorDataToSend();
-        pcInterface.setTxBuffer((uint8_t*) &robotState);
-        pcInterface.transmit();
+
+        pcInterface.setTxBuffer((uint8_t*) &robotState, sizeof(RobotState));
+        pcInterface.transmit(sizeof(RobotState));
     }
 }
 

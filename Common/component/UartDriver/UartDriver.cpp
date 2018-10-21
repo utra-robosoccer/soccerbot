@@ -87,7 +87,7 @@ IO_Type UartDriver::getIOType(void) const{
     return this->io_type;
 }
 
-bool UartDriver::setup(uint8_t* arrReceive, size_t numBytes) {
+bool UartDriver::setup(void) {
     bool retval = false;
 
 #if defined(THREADED)
@@ -99,7 +99,7 @@ bool UartDriver::setup(uint8_t* arrReceive, size_t numBytes) {
 #if defined(THREADED)
         case IO_Type::DMA:
             // Initial receive to initiate DMA transfer.
-            retval = receive(arrReceive, numBytes);
+            retval = true;
         break;
         case IO_Type::IT:
             retval = true;
@@ -130,7 +130,7 @@ bool UartDriver::transmit(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    osMutexWait(uartResourceMutex, osWaitForever);
+                    os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
                     if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
@@ -138,7 +138,7 @@ bool UartDriver::transmit(
                             retval = true;
                         }
                     }
-                    osMutexRelease(uartResourceMutex);
+                    os_if->OS_osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:
@@ -183,7 +183,7 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    osMutexWait(uartResourceMutex, osWaitForever);
+                	os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
                     if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
@@ -191,7 +191,7 @@ bool UartDriver::receive(
                             retval = true;
                         }
                     }
-                    osMutexRelease(uartResourceMutex);
+                    os_if->OS_osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:

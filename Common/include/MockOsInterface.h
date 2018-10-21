@@ -111,6 +111,36 @@ public:
             int32_t
         )
     );
+
+    MOCK_CONST_METHOD2(
+        OS_osMutexWait,
+        osStatus(
+            osMutexId,
+            uint32_t
+        )
+    );
+
+    MOCK_CONST_METHOD1(
+        OS_osMutexRelease,
+        osStatus(
+                osMutexId
+        )
+    );
+
+    MOCK_CONST_METHOD2(
+        OS_osSemaphoreWait,
+        int32_t(
+            osSemaphoreId,
+            uint32_t millisec
+        )
+    );
+
+    MOCK_CONST_METHOD1(
+            OS_osSemaphoreRelease,
+            osStatus(
+                osSemaphoreId semaphore_id
+            )
+    );
 };
 
 } // end namespace mocks

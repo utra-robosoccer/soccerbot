@@ -21,31 +21,29 @@
 namespace pc_interface {
 
 constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
-constexpr int PC_INTERFACE_BUFFER_SIZE = 1024;
+constexpr size_t PC_INTERFACE_BUFFER_SIZE = 1024;
 constexpr int PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC = 5656;
 
 enum class PcProtocol {
-    UDP = PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC, USB_UART
+    UDP = PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC,
+    UART
 };
 
 class PcInterface {
 public:
     PcInterface();
-    PcInterface(PcProtocol protocolIn);
+    PcInterface(PcProtocol protocolIn, udp_driver::UdpDriver *udpDriverIn, uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn);
     ~PcInterface();
 
     bool setup();
-    bool receive();
-    bool transmit();
+    bool receive(const size_t numBytes);
+    bool transmit(const size_t numBytes);
 
-    bool setRxBuffer(const uint8_t *rxArrayIn);
-    bool setTxBuffer(const uint8_t *txArrayIn);
-    bool setUdpDriver(udp_driver::UdpDriver *udpDriverIn);
-    bool setUartDriver(uart::UartDriver *uartDriverIn);
-    bool setOsInterface(os::OsInterface *osInterfaceIn);
+    bool setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes);
+    bool setTxBuffer(const uint8_t *txArrayIn, const size_t numBytes);
 
-    bool getRxBuffer(uint8_t *rxArrayOut) const;
-    bool getTxBuffer(uint8_t *txArrayOut) const;
+    bool getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const;
+    bool getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const;
     PcProtocol getProtocol() const;
     udp_driver::UdpDriver* getUdpDriver() const;
     uart::UartDriver* getUartDriver() const;
@@ -75,11 +73,6 @@ private:
 // TODO: consider one function setDriver(driverptr, drivertype), so interface stays constant as
 // drivers are added (no more functions need to be declared)
 // NOTE: possibly support multiple protocols at same time? would make this array in that case. right now only designed for one protocol though.
-// TODO: consider using DMA for copies to/from rx/txBuffer, for larger PC_INTERFACE_BUFFERS, to allow other threads to run
-// TODO: may be better to have counter for space used, so not copying entire buffer length each time
-// Consider removing setUdpDriver and have it set in constructor
-// TODO: should detect if input array is too small for what the buffer has to give, and pass the error up (return false)
-// add another parameter for array size ^
 // consider separate threads for comm "servers" which PcInterface binds to
 // TODO: maybe UdpInterface class can provide macros in its header like ARGS_THIS_FUNC so no need to retype in child class
 // should destructors be doing anything

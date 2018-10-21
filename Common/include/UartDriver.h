@@ -90,7 +90,12 @@ public:
      */
     IO_Type getIOType(void) const;
 
-    bool setup(uint8_t* arrReceive, size_t numBytes);
+    /**
+     * @brief  Set up the driver for the specified IO_Type, including initialization
+     *         of internal data members.
+     * @return true if setup succeeded, false if error
+     */
+    bool setup(void);
 
     /**
      * @brief  Instruct the driver to transmit data from the UART that was set
