@@ -28,7 +28,7 @@ extern osThreadId PCUARTHandle;
 /***************************** Private Variables *****************************/
 static uint8_t robotGoalData[sizeof(RobotGoal)];
 static uint8_t *robotGoalDataPtr;
-static uint8_t buffRx[92];
+uint8_t buffRx[1024];
 static uint8_t startSeqCount;
 static uint8_t totalBytesRead;
 

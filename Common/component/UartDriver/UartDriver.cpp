@@ -48,10 +48,9 @@ UartDriver::UartDriver(
     UartInterface* hw_if,
     UART_HandleTypeDef* uartHandlePtr
 ) :
+    os_if(os_if),
     hw_if(hw_if),
-    uartHandlePtr(uartHandlePtr),
-    os_if(os_if)
-
+    uartHandlePtr(uartHandlePtr)
 {
     if(hw_if != nullptr && uartHandlePtr != nullptr){
         hw_is_initialized = true;
@@ -88,6 +87,33 @@ IO_Type UartDriver::getIOType(void) const{
     return this->io_type;
 }
 
+bool UartDriver::setup(uint8_t* arrReceive, size_t numBytes) {
+    bool retval = false;
+
+#if defined(THREADED)
+    osMutexStaticDef(UartDriverUartResourceMutex, &uartResourceMutexControlBlock);
+    uartResourceMutex = os_if->OS_osMutexCreate(osMutex(UartDriverUartResourceMutex));
+#endif
+
+    switch(io_type) {
+#if defined(THREADED)
+        case IO_Type::DMA:
+            // Initial receive to initiate DMA transfer.
+            retval = receive(arrReceive, numBytes);
+        break;
+        case IO_Type::IT:
+            retval = true;
+        break;
+#endif
+        case IO_Type::POLL:
+            retval = true;
+        break;
+        default:
+            retval = false;
+    }
+    return retval;
+}
+
 bool UartDriver::transmit(
     uint8_t* arrTransmit,
     size_t numBytes
@@ -104,6 +130,7 @@ bool UartDriver::transmit(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
+                    osMutexWait(uartResourceMutex, osWaitForever);
                     if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
@@ -111,6 +138,7 @@ bool UartDriver::transmit(
                             retval = true;
                         }
                     }
+                    osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:

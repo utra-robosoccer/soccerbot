@@ -66,9 +66,6 @@ private:
     mutable osStaticMutexDef_t rxMutexControlBlock;
     mutable osMutexId txMutex;
     mutable osStaticMutexDef_t txMutexControlBlock;
-
-    // This will be initialized as the eventHandler thread in our system
-    osThreadId readerThread;
 };
 
 } // end namespace pc_interface

@@ -49,11 +49,11 @@ public:
      * @brief Initializes the handle to the low-level hardware routines,
      *        associates a particular UART module on the board with this
      *        driver, and initializes the handle to the OS for system calls
+     * @param os_if Pointer to the object handling the calls to the OS
      * @param hw_if Pointer to the hardware-facing object handling the
      *        low-level UART routines
      * @param uartHandlePtr Pointer to a structure that contains
      *        the configuration information for the desired UART module
-     * @param os_if Pointer to the object handling the calls to the OS
      */
     UartDriver(
         OsInterface* os_if,
@@ -89,6 +89,8 @@ public:
      * @return The IO type currently being used by the driver
      */
     IO_Type getIOType(void) const;
+
+    bool setup(uint8_t* arrReceive, size_t numBytes);
 
     /**
      * @brief  Instruct the driver to transmit data from the UART that was set
@@ -126,6 +128,9 @@ private:
      */
     IO_Type io_type = IO_Type::POLL;
 
+    /** @brief Pointer to the object handling system calls to the OS */
+    const OsInterface* os_if = nullptr;
+
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
@@ -152,8 +157,9 @@ private:
      */
     static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
 
-    /** @brief Pointer to the object handling system calls to the OS */
-    const OsInterface* os_if = nullptr;
+    mutable osMutexId uartResourceMutex;
+    mutable osStaticMutexDef_t uartResourceMutexControlBlock;
+
 #endif
 #if !defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */

@@ -78,6 +78,10 @@
 #include "Communication.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
+#include "PcInterface.h"
+#include "UartDriver.h"
+#include "HalUartInterface.h"
+#include "OsInterfaceImpl.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -148,6 +152,14 @@ IMUnamespace::MPU6050 IMUdata (1, &hi2c1);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
+
+uart::HalUartInterface uartInterface;
+os::OsInterfaceImpl osInterface;
+uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+pc_interface::PcInterface pcInterface;
+
+extern uint8_t buffRx[1024];
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -327,6 +339,11 @@ void StartDefaultTask(void const * argument)
   */
 void StartCommandTask(void const * argument)
 {
+
+    uartDriver.setIOType(uart::IO_Type::DMA);
+    pcInterface.setOsInterface(&osInterface);
+    pcInterface.setUartDriver(&uartDriver);
+
     Dynamixel_SetIOType(IO_POLL); // Configure IO
 
     Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
@@ -714,11 +731,20 @@ void StartRxTask(void const * argument)
 {
     initializeVars();
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-    initiateDMATransfer();
+
+    pcInterface.setup();
 
     for (;;) {
-        waitForNotificationRX();
-        updateStatusToPC();
+        /* Since UartDriver.receive() protects uart access
+         * with uartResourceMutex, can call PcInterface.receive()
+         * repeatedly and thread-safely. */
+        pcInterface.receive();
+
+        /* Let EventHandler know a message has been received. */
+        //signalRxComplete();
+
+        /* EventHandler to do the following. */
+        pcInterface.getRxBuffer(buffRx);
         receiveDataBuffer();
     }
 }

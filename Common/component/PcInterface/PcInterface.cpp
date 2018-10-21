@@ -38,9 +38,10 @@ bool PcInterface::setup() {
 
     switch (protocol) {
     case PcProtocol::UDP:
-
         success = udpDriver->setup();
-
+        break;
+    case PcProtocol::USB_UART:
+        success = uartDriver->setup(rxBuffer, PC_INTERFACE_BUFFER_SIZE);
         break;
     default:
         break;
@@ -53,6 +54,9 @@ bool PcInterface::receive() {
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->receive(rxBuffer);
+        break;
+    case PcProtocol::USB_UART:
+        success = uartDriver->receive(rxBuffer, pc_interface::PC_INTERFACE_BUFFER_SIZE);
         break;
     default:
         return false;
@@ -139,7 +143,7 @@ os::OsInterface* PcInterface::getOsInterface() const {
 
 bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn) {
     osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iRxArray = 0; iRxArray < pc_interface::PC_INTERFACE_BUFFER_SIZE;
+    for (int iRxArray = 0; iRxArray < PC_INTERFACE_BUFFER_SIZE;
             iRxArray++) {
         rxBuffer[iRxArray] = rxArrayIn[iRxArray];
     }
@@ -149,7 +153,7 @@ bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn) {
 
 bool PcInterface::getTxBuffer(uint8_t *txArrayOut) const {
     osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iTxBuffer = 0; iTxBuffer < pc_interface::PC_INTERFACE_BUFFER_SIZE;
+    for (int iTxBuffer = 0; iTxBuffer < PC_INTERFACE_BUFFER_SIZE;
             iTxBuffer++) {
         txArrayOut[iTxBuffer] = txBuffer[iTxBuffer];
     }

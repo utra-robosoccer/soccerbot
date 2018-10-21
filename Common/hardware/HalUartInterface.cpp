@@ -22,6 +22,10 @@
 // extern declaration needed here for F767 build
 // TODO: clean this up when refactoring Dynamixel
 #if defined(STM32F767xx)
+// rfairley: added declarations for the two externs below in DynamxelProtocolV1.h;
+// linker would not find them otherwise after a HalUartInterface
+// had been instantiated
+#include "DynamixelProtocolV1.h"
 extern HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart);
 extern HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
 #endif
