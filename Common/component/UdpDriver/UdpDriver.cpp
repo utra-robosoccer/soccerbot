@@ -80,7 +80,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut) {
         return false;
     }
 
-    osSemaphoreWait(recvSemaphore, osWaitForever); // Wait for callback to write data members (including packets) to UdpInterface
+    osInterface->OS_osSemaphoreWait(recvSemaphore, osWaitForever); // Wait for callback to write data members (including packets) to UdpInterface
 
     if (!packetToBytes(rxArrayOut)) { // Copy contents of the packets into rxBuffer
         return false;
@@ -128,30 +128,30 @@ const os::OsInterface* UdpDriver::getOsInterface() const {
 }
 
 bool UdpDriver::setRxPbuf(struct pbuf *rxPbufIn) {
-    osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    osInterface->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
     rxPbuf = rxPbufIn;
-    osMutexRelease(rxSemaphore);
+    osInterface->OS_osMutexRelease(rxSemaphore);
     return true;
 }
 
 bool UdpDriver::setTxPbuf(struct pbuf *txPbufIn) {
-    osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    osInterface->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
     txPbuf = txPbufIn;
-    osMutexRelease(txSemaphore);
+    osInterface->OS_osMutexRelease(txSemaphore);
     return true;
 }
 
 struct pbuf* UdpDriver::getRxPbufThreaded() const {
-    osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    osInterface->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
     struct pbuf *p = rxPbuf;
-    osMutexRelease(rxSemaphore);
+    osInterface->OS_osMutexRelease(rxSemaphore);
     return p;
 }
 
 struct pbuf* UdpDriver::getTxPbufThreaded() const {
-    osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    osInterface->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
     struct pbuf *p = txPbuf;
-    osMutexRelease(txSemaphore);
+    osInterface->OS_osMutexRelease(txSemaphore);
     return p;
 }
 
@@ -166,7 +166,7 @@ struct pbuf* UdpDriver::getTxPbuf() const {
 }
 
 bool UdpDriver::giveRecvSemaphore() {
-    osSemaphoreRelease(recvSemaphore);
+    osInterface->OS_osSemaphoreRelease(recvSemaphore);
     return true;
 }
 
@@ -207,7 +207,6 @@ struct udp_pcb* UdpDriver::getPcb() const {
 
 void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
         const ip_addr_t *addr, u16_t port) {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
     caller->setRxPbuf(p);
     caller->giveRecvSemaphore();

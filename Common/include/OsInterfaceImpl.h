@@ -74,11 +74,30 @@ public:
     ) const override final;
 
     osMutexId OS_osMutexCreate (
-      const osMutexDef_t *mutex_def
+        const osMutexDef_t *mutex_def
     ) const override final;
     
     osSemaphoreId OS_osSemaphoreCreate (
-      const osSemaphoreDef_t *semaphore_def, int32_t count
+        const osSemaphoreDef_t *semaphore_def,
+        int32_t count
+    ) const override final;
+
+    osStatus OS_osMutexWait (
+        osMutexId mutex_id,
+        uint32_t millisec
+    ) const override final;
+
+    osStatus OS_osMutexRelease (
+        osMutexId mutex_id
+    ) const override final;
+
+    int32_t OS_osSemaphoreWait (
+        osSemaphoreId semaphore_id,
+        uint32_t millisec
+    ) const override final;
+
+     osStatus OS_osSemaphoreRelease (
+            osSemaphoreId semaphore_id
     ) const override final;
 };
 

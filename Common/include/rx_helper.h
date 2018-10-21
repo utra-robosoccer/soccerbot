@@ -18,5 +18,6 @@ void initiateDMATransfer(void);
 void updateStatusToPC(void);
 void waitForNotificationRX(void);
 void initializeVars(void);
+void copyIntoBuffRx(uint8_t *copyFrom);
 
 #endif /* RX_HELPER_H */

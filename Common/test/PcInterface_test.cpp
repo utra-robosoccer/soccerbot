@@ -48,14 +48,13 @@ TEST(PcInterfaceTests, MemberUdpDriverDefaultInitializesToNull) {
 
 TEST(PcInterfaceTests, MemberUdpDriverParameterizedInitializesToNull) {
     pc_interface::PcInterface pcInterfaceTestObject(
-            pc_interface::PcProtocol::UDP);
+            pc_interface::PcProtocol::UDP, nullptr, nullptr, nullptr);
     ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpDriver());
 }
 
 TEST(PcInterfaceTests, MemberUdpDriverCanSetAndGet) {
-    pc_interface::PcInterface pcInterfaceTestObject;
-    udp_driver::UdpDriver udpDriverTestObject;
-    ASSERT_TRUE(pcInterfaceTestObject.setUdpDriver(&udpDriverTestObject));
+	udp_driver::UdpDriver udpDriverTestObject;
+    pc_interface::PcInterface pcInterfaceTestObject(pc_interface::PcProtocol::UDP, &udpDriverTestObject, nullptr, nullptr);
     ASSERT_EQ(&udpDriverTestObject, pcInterfaceTestObject.getUdpDriver());
 }
 
@@ -64,10 +63,10 @@ TEST(PcInterfaceTests, MemberUdpDriverCanSetAndGet) {
 // all of the values defined in type enum Protocol_e.
 TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
     for (int iProtocol = static_cast<int>(pc_interface::PcProtocol::UDP);
-            iProtocol <= static_cast<int>(pc_interface::PcProtocol::USB_UART);
+            iProtocol <= static_cast<int>(pc_interface::PcProtocol::UART);
             iProtocol++) {
         pc_interface::PcProtocol protocol = (pc_interface::PcProtocol) iProtocol;
-        pc_interface::PcInterface pcInterfaceTestObject(protocol);
+        pc_interface::PcInterface pcInterfaceTestObject(protocol, nullptr, nullptr, nullptr);
 
         ASSERT_EQ(protocol, pcInterfaceTestObject.getProtocol());
     }
@@ -140,6 +139,7 @@ TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
 // TODO: test coverage for LwipUdpInterface, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs
 // TODO: more test coverage after smoke test when the interface (.h) of PcInterface is more settled
+// TODO: handle osinterface errors returned
 
 }
 

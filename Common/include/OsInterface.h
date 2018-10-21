@@ -74,12 +74,30 @@ public:
     ) const = 0;
 
     virtual osMutexId OS_osMutexCreate (
-      const osMutexDef_t *mutex_def
+        const osMutexDef_t *mutex_def
     ) const = 0;
 
     virtual osSemaphoreId OS_osSemaphoreCreate (
-      const osSemaphoreDef_t *semaphore_def,
-      int32_t count
+        const osSemaphoreDef_t *semaphore_def,
+        int32_t count
+    ) const = 0;
+
+    virtual osStatus OS_osMutexWait (
+        osMutexId mutex_id,
+        uint32_t millisec
+    ) const = 0;
+
+    virtual osStatus OS_osMutexRelease (
+        osMutexId mutex_id
+    ) const = 0;
+
+    virtual int32_t OS_osSemaphoreWait (
+        osSemaphoreId semaphore_id,
+        uint32_t millisec
+    ) const = 0;
+
+    virtual osStatus OS_osSemaphoreRelease (
+            osSemaphoreId semaphore_id
     ) const = 0;
 };
 
