@@ -87,6 +87,10 @@ void Dynamixel_Reset(Dynamixel_HandleTypeDef* hdynamixel);
 void Dynamixel_EnterWheelMode(Dynamixel_HandleTypeDef* hdynamixel, float goalVelocity);
 void Dynamixel_EnterJointMode(Dynamixel_HandleTypeDef* hdynamixel);
 
+
+HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart);
+HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
+
 /**
  * @}
  */
