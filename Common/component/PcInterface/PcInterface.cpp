@@ -56,6 +56,7 @@ bool PcInterface::receive() {
         success = udpDriver->receive(rxBuffer);
         break;
     case PcProtocol::USB_UART:
+        // XXX: replace PC_INTERFACE_BUFFER_SIZE with some command size, allow this to be passed into receive()
         success = uartDriver->receive(rxBuffer, pc_interface::PC_INTERFACE_BUFFER_SIZE);
         break;
     default:
@@ -69,6 +70,9 @@ bool PcInterface::transmit() {
     switch (protocol) {
     case PcProtocol::UDP:
         success = udpDriver->transmit(txBuffer);
+        break;
+    case PcProtocol::USB_UART:
+        success = uartDriver->transmit(txBuffer, pc_interface::PC_INTERFACE_BUFFER_SIZE);
         break;
     default:
         return false;

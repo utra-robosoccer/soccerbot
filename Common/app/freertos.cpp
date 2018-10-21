@@ -769,8 +769,8 @@ void StartTxTask(void const * argument)
     for(;;)
     {
         copySensorDataToSend();
-        transmitStatusFromPC();
-        waitForNotificationTX();
+        pcInterface.setTxBuffer((uint8_t*) &robotState);
+        pcInterface.transmit();
     }
 }
 

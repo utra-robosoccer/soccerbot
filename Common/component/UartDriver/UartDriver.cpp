@@ -183,6 +183,7 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
+                    osMutexWait(uartResourceMutex, osWaitForever);
                     if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
@@ -190,6 +191,7 @@ bool UartDriver::receive(
                             retval = true;
                         }
                     }
+                    osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:
