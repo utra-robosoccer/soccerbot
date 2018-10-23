@@ -157,7 +157,7 @@ private:
 #endif
 #if !defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
-    constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
+    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
 #endif
 };
 
