@@ -22,7 +22,7 @@
 namespace buffer {
 
 
-/*********************************** Types ************************************/
+/*********************************** Buffer ***********************************/
 /**
  * @class Generic templated buffer class
  */
@@ -36,7 +36,7 @@ public:
         m_data_buf = std::unique_ptr<T>(new T);
     }
     ~BufferBase() {};
-    void write(T item)
+    void write(const T &item)
     {
         *m_data_buf = item;
         m_empty = false;
@@ -62,8 +62,8 @@ public:
     // Defining methods here in the declaration for ease of use as a templated class
 private:
     //TODO: Thread-safety
-	std::unique_ptr<T> m_data_buf;
-	bool m_empty = true;
+    std::unique_ptr<T> m_data_buf;
+    bool m_empty = true;
 };
 
 

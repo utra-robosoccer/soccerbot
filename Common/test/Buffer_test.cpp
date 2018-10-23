@@ -48,9 +48,9 @@ TEST(BufferTests, CanWriteToBuffer){
 TEST(BufferTests, EmptyBoolCheck){
     BufferBase<int> intBuffer;
 
-    ASSERT_EQ(true, intBuffer.is_empty());
+    ASSERT_TRUE(intBuffer.is_empty());
     intBuffer.write(10);
-    ASSERT_EQ(false, intBuffer.is_empty());
+    ASSERT_FALSE(intBuffer.is_empty());
 }
 
 TEST(BufferTests, CanReadFromBuffer){
@@ -59,16 +59,16 @@ TEST(BufferTests, CanReadFromBuffer){
     int result = intBuffer.read();
 
     ASSERT_EQ(result, 10);
-    ASSERT_EQ(true, intBuffer.is_empty());
+    ASSERT_TRUE(intBuffer.is_empty());
 }
 
 TEST(BufferTests, CanResetBuffer){
     BufferBase<int> intBuffer;
     intBuffer.write(10);
 
-    ASSERT_EQ(false, intBuffer.is_empty());
+    ASSERT_FALSE(intBuffer.is_empty());
     intBuffer.reset();
-    ASSERT_EQ(true, intBuffer.is_empty());
+    ASSERT_TRUE(intBuffer.is_empty());
 }
 
 TEST(BufferTests, CanInitializeBufferMaster){
@@ -103,7 +103,7 @@ TEST(BufferTests, CanReadFromIMUBuffer){
     ASSERT_EQ(readIMUdata._z_Gyro, IMUdata._z_Gyro);
 }
 
-TEST(BufferTests, CanWriteToMotoruffer){
+TEST(BufferTests, CanWriteToMotorBuffer){
     BufferMaster bufferMaster;
     Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
 
