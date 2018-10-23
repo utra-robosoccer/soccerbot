@@ -96,3 +96,5 @@ tmp/
 RemoteSystemsTempFiles/
 .metadata/
 */language.settings.xml
+RobotTest/.settings/language.settings.xml
+Robot_F4/.settings/language.settings.xml
