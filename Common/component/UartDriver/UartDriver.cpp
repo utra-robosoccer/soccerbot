@@ -130,11 +130,10 @@ bool UartDriver::transmit(
                 retval = (hw_if->transmitPoll(uartHandlePtr, arrTransmit, numBytes, POLLED_TRANSFER_TIMEOUT) == HAL_OK);
                 break;
         }
-#if defined(THREADED)
+
         if(retval != true){
             hw_if->abortTransmit(uartHandlePtr);
         }
-#endif
     }
 
     return retval;
@@ -182,11 +181,10 @@ bool UartDriver::receive(
                 retval = (hw_if->receivePoll(uartHandlePtr, arrReceive, numBytes, POLLED_TRANSFER_TIMEOUT) == HAL_OK);
                 break;
         }
-#if defined(THREADED)
+
         if(retval != true){
             hw_if->abortReceive(uartHandlePtr);
         }
-#endif
     }
 
     return retval;

@@ -217,6 +217,7 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
 
     return status;
 }
+#endif
 
 void HalUartInterface::abortTransmit(
     const UART_HandleTypeDef* uartHandlePtr
@@ -235,7 +236,6 @@ void HalUartInterface::abortReceive(
         const_cast<UART_HandleTypeDef*>(uartHandlePtr)
     );
 }
-#endif
 
 }
 
