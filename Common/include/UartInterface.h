@@ -152,6 +152,7 @@ public:
         uint8_t* arrReceive,
         size_t numBytes
     ) const = 0;
+#endif
 
     /**
      * @brief Aborts an asynchronous transmission
@@ -170,7 +171,6 @@ public:
     virtual void abortReceive(
         const UART_HandleTypeDef* uartHandlePtr
     ) const = 0;
-#endif
 };
 
 } // end namespace uart
