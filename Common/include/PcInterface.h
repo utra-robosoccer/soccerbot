@@ -16,6 +16,10 @@
 #ifndef PC_INTERFACE_H
 #define PC_INTERFACE_H
 
+#if defined(STM32F767xx)
+#define PC_INTERFACE_USE_LWIP
+#endif
+
 
 
 
@@ -23,7 +27,9 @@
 #include <cstdint>
 #include "OsInterface.h"
 #include "UartDriver.h"
+#if defined(PC_INTERFACE_USE_LWIP)
 #include "UdpDriver.h"
+#endif
 
 
 
@@ -40,8 +46,8 @@ constexpr int PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC = 5656;
 // Types & enums
 // ----------------------------------------------------------------------------
 enum class PcProtocol {
-    UDP = PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC,
-    UART
+    UART = PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC,
+    UDP
 };
 
 // Classes and structs
@@ -56,7 +62,11 @@ enum class PcProtocol {
 class PcInterface {
 public:
     PcInterface();
+#if defined(PC_INTERFACE_USE_LWIP)
     PcInterface(PcProtocol protocolIn, udp_driver::UdpDriver *udpDriverIn, uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn);
+#else
+    PcInterface(PcProtocol protocolIn, uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn);
+#endif
     ~PcInterface();
 
     bool setup();
@@ -69,14 +79,17 @@ public:
     bool getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const;
     bool getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const;
     const PcProtocol getProtocol() const;
+#if defined(PC_INTERFACE_USE_LWIP)
     const udp_driver::UdpDriver* getUdpDriver() const;
+#endif
     const uart::UartDriver* getUartDriver() const;
     const os::OsInterface* getOsInterface() const;
 
 private:
-    const PcProtocol protocol = PcProtocol::UDP;
-
+    const PcProtocol protocol = PcProtocol::UART;
+#if defined(PC_INTERFACE_USE_LWIP)
     const udp_driver::UdpDriver *udpDriver = nullptr;
+#endif
     const uart::UartDriver *uartDriver = nullptr;
     const os::OsInterface *osInterface = nullptr;
 

@@ -96,16 +96,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1536888710.199466637.433444362.1508788322" name="/" resourcePath="Common/component/PcInterface">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.835775579" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1980695492" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.571284048"/>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.652295564" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1389876713"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.2044132815" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1270051068"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1691029166" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.400916607"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.177220801" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1509217548"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1431057607" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.99127665"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry excluding="Common/app|Common/hardware|Common/hardware/HalUartInterface.cpp|src|Common/component|component|app|hardware/HalUartInterface.cpp|include|inc|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
@@ -202,19 +192,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1536888710.199466637.433444362.2145105316.1151660104" name="/" resourcePath="Common/component/PcInterface">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1009914626" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.678035876" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1781619301"/>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.663002259" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.757203753"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1682618830" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1297562013"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1766963282" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.929424994"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.190059657" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1852029335"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.925398416" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.610078147"/>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1536888710.199466637.433444362.2145105316.1161183410" name="/" resourcePath="Common/component/PcInterface">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.2073111851" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.691097797" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1781619301"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1511048332" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.757203753"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1723478170" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1297562013"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.388406385" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.929424994"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.416539946" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1852029335"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1935265344" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.610078147"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Common/test/PcInterface_test.cpp|Common/test/UdpDriver_test.cpp|Common/include|Common/app|Common/hardware|Common/component|src|app|hardware/HalUartInterface.cpp|include|inc|component|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Common/test/UdpDriver_test.cpp|Common/include|Common/app|Common/hardware|Common/component|src|app|hardware/HalUartInterface.cpp|include|inc|component|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/PcInterface"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
 					</sourceEntries>
 				</configuration>
