@@ -27,11 +27,19 @@ namespace pc_interface {
 PcInterface::PcInterface() {
 }
 
+#if defined(PC_INTERFACE_USE_LWIP)
 PcInterface::PcInterface(PcProtocol protocolIn, udp_driver::UdpDriver *udpDriverIn,
         uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn) :
         protocol(protocolIn), udpDriver(udpDriverIn), uartDriver(uartDriverIn),
         osInterface(osInterfaceIn) {
 }
+#else
+PcInterface::PcInterface(PcProtocol protocolIn,
+        uart::UartDriver *uartDriverIn, os::OsInterface *osInterfaceIn) :
+        protocol(protocolIn), uartDriver(uartDriverIn),
+        osInterface(osInterfaceIn) {
+}
+#endif
 
 PcInterface::~PcInterface() {
 
@@ -47,10 +55,12 @@ bool PcInterface::setup() {
     txMutex = osInterface->OS_osMutexCreate(osMutex(PcInterfaceTx));
 
     switch (protocol) {
+#if defined(PC_INTERFACE_USE_LWIP)
     case PcProtocol::UDP:
         // TODO: this may be good place for CONST_API_CALL define to wrap the const_cast
         success = const_cast<udp_driver::UdpDriver*>(udpDriver)->setup();
         break;
+#endif
     case PcProtocol::UART:
         success = const_cast<uart::UartDriver*>(uartDriver)->setup();
         break;
@@ -63,9 +73,11 @@ bool PcInterface::setup() {
 bool PcInterface::receive(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
+#if defined(PC_INTERFACE_USE_LWIP)
     case PcProtocol::UDP:
         success = const_cast<udp_driver::UdpDriver*>(udpDriver)->receive(rxBuffer);
         break;
+#endif
     case PcProtocol::UART:
         success = uartDriver->receive(rxBuffer, numBytes);
         break;
@@ -78,9 +90,11 @@ bool PcInterface::receive(const size_t numBytes) {
 bool PcInterface::transmit(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
+#if defined(PC_INTERFACE_USE_LWIP)
     case PcProtocol::UDP:
         success = const_cast<udp_driver::UdpDriver*>(udpDriver)->transmit(txBuffer);
         break;
+#endif
     case PcProtocol::UART:
         success = uartDriver->transmit(txBuffer, numBytes);
         break;
@@ -119,9 +133,11 @@ const PcProtocol PcInterface::getProtocol() const {
     return protocol;
 }
 
+#if defined(PC_INTERFACE_USE_LWIP)
 const udp_driver::UdpDriver* PcInterface::getUdpDriver() const {
     return udpDriver;
 }
+#endif
 
 const uart::UartDriver* PcInterface::getUartDriver() const {
     return uartDriver;

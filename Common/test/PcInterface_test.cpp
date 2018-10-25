@@ -18,7 +18,9 @@
 
 // TODO: for PcInterface to work on F4, need to have if defined(board) to include this or not
 
+#if defined(PC_INTERFACE_USE_LWIP)
 #include "MockUdpInterface.h"
+#endif
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -32,15 +34,16 @@ using ::testing::_;
 
 namespace {
 
-// MemberProtocolDefaultInitializesToUDP tests that the default
-// constructor of PcInterface initializes the member protocol to UDP.
+// MemberProtocolDefaultInitializesToUART tests that the default
+// constructor of PcInterface initializes the member protocol to UART.
 // This is to make sure protocol is initialized to *something*.
-TEST(PcInterfaceTests, MemberProtocolDefaultInitializesToUDP) {
+TEST(PcInterfaceTests, MemberProtocolDefaultInitializesToUART) {
     pc_interface::PcInterface pcInterfaceTestObject;
-    ASSERT_EQ(pc_interface::PcProtocol::UDP,
+    ASSERT_EQ(pc_interface::PcProtocol::UART,
             pcInterfaceTestObject.getProtocol());
 }
 
+#if defined(PC_INTERFACE_USE_LWIP)
 TEST(PcInterfaceTests, MemberUdpDriverDefaultInitializesToNull) {
     pc_interface::PcInterface pcInterfaceTestObject;
     ASSERT_EQ(nullptr, pcInterfaceTestObject.getUdpDriver());
@@ -57,16 +60,21 @@ TEST(PcInterfaceTests, MemberUdpDriverCanSetAndGet) {
     pc_interface::PcInterface pcInterfaceTestObject(pc_interface::PcProtocol::UDP, &udpDriverTestObject, nullptr, nullptr);
     ASSERT_EQ(&udpDriverTestObject, pcInterfaceTestObject.getUdpDriver());
 }
+#endif
 
 // MemberProtocolCanInitializeAndGet tests that a constructor can
 // initialize and get back the protocol member of PcInterface with
 // all of the values defined in type enum Protocol_e.
 TEST(PcInterfaceTests, MemberProtocolCanInitializeAndGet) {
-    for (int iProtocol = static_cast<int>(pc_interface::PcProtocol::UDP);
-            iProtocol <= static_cast<int>(pc_interface::PcProtocol::UART);
+    for (int iProtocol = static_cast<int>(pc_interface::PcProtocol::UART);
+            iProtocol <= static_cast<int>(pc_interface::PcProtocol::UDP);
             iProtocol++) {
         pc_interface::PcProtocol protocol = (pc_interface::PcProtocol) iProtocol;
+#if defined(PC_INTERFACE_USE_LWIP)
         pc_interface::PcInterface pcInterfaceTestObject(protocol, nullptr, nullptr, nullptr);
+#else
+        pc_interface::PcInterface pcInterfaceTestObject(protocol, nullptr, nullptr);
+#endif
 
         ASSERT_EQ(protocol, pcInterfaceTestObject.getProtocol());
     }

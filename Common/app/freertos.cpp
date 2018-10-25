@@ -171,8 +171,13 @@ static volatile uint32_t error;
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+#if defined(PC_INTERFACE_USE_LWIP)
 pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART, nullptr,
         &uartDriver, &osInterface);
+#else
+pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART,
+        &uartDriver, &osInterface);
+#endif
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
