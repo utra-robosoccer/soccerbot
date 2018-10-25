@@ -15,8 +15,7 @@
 namespace lwip_udp_interface {
 
 struct udp_pcb* LwipUdpInterface::udpNew() const {
-    struct udp_pcb *pcb = udp_new();
-    return pcb;
+    return udp_new();
 }
 
 err_t LwipUdpInterface::udpBind(struct udp_pcb *pcb, const ip_addr_t *ipaddr,

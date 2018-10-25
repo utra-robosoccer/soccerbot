@@ -2,6 +2,7 @@
   *****************************************************************************
   * @file    UartDriver.cpp
   * @author  Tyler Gamvrelis
+  * @author  Robert Fairley
   *
   * @defgroup UartDriver
   * @ingroup UART

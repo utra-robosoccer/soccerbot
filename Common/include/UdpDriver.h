@@ -16,6 +16,8 @@
 #include <UdpInterface.h>
 #include <OsInterface.h>
 
+// TODO: redo namespacing
+
 namespace udp_driver {
 
 constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
@@ -35,14 +37,12 @@ public:
     bool packetToBytes(uint8_t *byteArrayOut) const;
     bool bytesToPacket(const uint8_t *byteArrayIn);
 
-    // TODO: probably should encapsulate give/take for other semaphores
     bool giveRecvSemaphore();
 
     bool setPcb(struct udp_pcb *pcbIn);
     bool setRxPbuf(struct pbuf *rxPbufIn);
     bool setTxPbuf(struct pbuf *txPbufIn);
 
-    // Read-only unless set function provided
     const udp_interface::UdpInterface* getUdpInterface() const;
     const os::OsInterface* getOsInterface() const;
     struct pbuf* getRxPbuf() const;
@@ -51,9 +51,9 @@ public:
     struct pbuf* getTxPbufThreaded() const;
     const ip_addr_t getIpaddr() const;
     const ip_addr_t getIpaddrPc() const;
-    u16_t getPort() const;
-    u16_t getPortPc() const;
-    struct udp_pcb* getPcb() const;
+    const u16_t getPort() const;
+    const u16_t getPortPc() const;
+    const struct udp_pcb* getPcb() const;
 
 private:
     const ip_addr_t ipaddr = {0x0};
@@ -61,12 +61,10 @@ private:
     const u16_t port = 0;
     const u16_t portPc = 0;
 
-    // No set function provided
     const udp_interface::UdpInterface *udpInterface = nullptr;
     const os::OsInterface *osInterface = nullptr;
 
-    // References to non-const structures
-    struct udp_pcb *pcb = nullptr;
+    const struct udp_pcb *pcb = nullptr;
     struct pbuf *rxPbuf = nullptr;
     struct pbuf *txPbuf = nullptr;
 
