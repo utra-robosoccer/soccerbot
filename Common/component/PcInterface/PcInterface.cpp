@@ -2,18 +2,28 @@
   *****************************************************************************
   * @file    PcInterface.cpp
   * @author  Robert Fairley
-  * @brief   Implementations for classes and structures used within pc_interface.
+  * @brief   Implementation for PcInterface.
   *
   * @defgroup pc_interface
-  * @brief    Provides an abstract layer to communicate with the PC, and handles all communication-related data and actions appropriate for the selected interface.
+  * @brief    Abstract layer to communicate with a PC through a chosen communication protocol.
   * @{
   *****************************************************************************
   */
 
-#include <PcInterface.h>
+
+
+
+/********************************* Includes **********************************/
+#include "PcInterface.h"
+
+
+
 
 namespace pc_interface {
 
+/********************************* PcInterface *******************************/
+// Public
+// ----------------------------------------------------------------------------
 PcInterface::PcInterface() {
 }
 
@@ -38,10 +48,11 @@ bool PcInterface::setup() {
 
     switch (protocol) {
     case PcProtocol::UDP:
-        success = udpDriver->setup();
+        // TODO: this may be good place for CONST_API_CALL define to wrap the const_cast
+        success = const_cast<udp_driver::UdpDriver*>(udpDriver)->setup();
         break;
     case PcProtocol::UART:
-        success = uartDriver->setup();
+        success = const_cast<uart::UartDriver*>(uartDriver)->setup();
         break;
     default:
         break;
@@ -53,7 +64,7 @@ bool PcInterface::receive(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
     case PcProtocol::UDP:
-        success = udpDriver->receive(rxBuffer);
+        success = const_cast<udp_driver::UdpDriver*>(udpDriver)->receive(rxBuffer);
         break;
     case PcProtocol::UART:
         success = uartDriver->receive(rxBuffer, numBytes);
@@ -68,7 +79,7 @@ bool PcInterface::transmit(const size_t numBytes) {
     bool success = false;
     switch (protocol) {
     case PcProtocol::UDP:
-        success = udpDriver->transmit(txBuffer);
+        success = const_cast<udp_driver::UdpDriver*>(udpDriver)->transmit(txBuffer);
         break;
     case PcProtocol::UART:
         success = uartDriver->transmit(txBuffer, numBytes);
@@ -79,13 +90,14 @@ bool PcInterface::transmit(const size_t numBytes) {
     return success;
 }
 
-bool PcInterface::getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const {
+bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes) {
     if (sizeof(rxBuffer) >= numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iRxBuffer = 0; iRxBuffer < numBytes; iRxBuffer++) {
-        rxArrayOut[iRxBuffer] = rxBuffer[iRxBuffer];
+    for (size_t iRxArray = 0; iRxArray < numBytes;
+            iRxArray++) {
+        rxBuffer[iRxArray] = rxArrayIn[iRxArray];
     }
     osInterface->OS_osMutexRelease(rxMutex);
     return true;
@@ -96,37 +108,36 @@ bool PcInterface::setTxBuffer(const uint8_t *txArrayIn, const size_t numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iTxArray = 0; iTxArray < numBytes; iTxArray++) {
+    for (size_t iTxArray = 0; iTxArray < numBytes; iTxArray++) {
         txBuffer[iTxArray] = txArrayIn[iTxArray];
     }
     osInterface->OS_osMutexRelease(txMutex);
     return true;
 }
 
-PcProtocol PcInterface::getProtocol() const {
+const PcProtocol PcInterface::getProtocol() const {
     return protocol;
 }
 
-udp_driver::UdpDriver* PcInterface::getUdpDriver() const {
+const udp_driver::UdpDriver* PcInterface::getUdpDriver() const {
     return udpDriver;
 }
 
-uart::UartDriver* PcInterface::getUartDriver() const {
+const uart::UartDriver* PcInterface::getUartDriver() const {
     return uartDriver;
 }
 
-os::OsInterface* PcInterface::getOsInterface() const {
+const os::OsInterface* PcInterface::getOsInterface() const {
     return osInterface;
 }
 
-bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes) {
+bool PcInterface::getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const {
     if (sizeof(rxBuffer) >= numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iRxArray = 0; iRxArray < numBytes;
-            iRxArray++) {
-        rxBuffer[iRxArray] = rxArrayIn[iRxArray];
+    for (size_t iRxBuffer = 0; iRxBuffer < numBytes; iRxBuffer++) {
+        rxArrayOut[iRxBuffer] = rxBuffer[iRxBuffer];
     }
     osInterface->OS_osMutexRelease(rxMutex);
     return true;
@@ -137,7 +148,7 @@ bool PcInterface::getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const 
         return false;
     }
     osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
-    for (int iTxBuffer = 0; iTxBuffer < numBytes;
+    for (size_t iTxBuffer = 0; iTxBuffer < numBytes;
             iTxBuffer++) {
         txArrayOut[iTxBuffer] = txBuffer[iTxBuffer];
     }

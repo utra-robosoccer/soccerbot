@@ -2,7 +2,7 @@
   *****************************************************************************
   * @file    PcInterface.h
   * @author  Robert Fairley
-  * @brief   Defines and implements a interface through which the PC is accessed, independent of the underlying hardware communication protocol.
+  * @brief   Interface through which the PC is accessed, independent of the underlying hardware communication protocol.
   *
   * @defgroup Header
   * @ingroup  pc_interface
@@ -10,25 +10,49 @@
   *****************************************************************************
   */
 
+
+
+
 #ifndef PC_INTERFACE_H
 #define PC_INTERFACE_H
 
-#include <cstdint>
-#include <UdpDriver.h>
-#include <UartDriver.h>
-#include <OsInterface.h>
 
+
+
+/********************************* Includes **********************************/
+#include <cstdint>
+#include "OsInterface.h"
+#include "UartDriver.h"
+#include "UdpDriver.h"
+
+
+
+
+/******************************** PcInterface ********************************/
 namespace pc_interface {
 
+// Constants
+// ----------------------------------------------------------------------------
 constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
 constexpr size_t PC_INTERFACE_BUFFER_SIZE = 1024;
 constexpr int PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC = 5656;
 
+// Types & enums
+// ----------------------------------------------------------------------------
 enum class PcProtocol {
     UDP = PC_INTERFACE_PROTOCOL_ENUM_START_MAGIC,
     UART
 };
 
+// Classes and structs
+// ----------------------------------------------------------------------------
+/**
+ * @class PcInterface Manages communication drivers and interfaces determined at
+ *        compile time, by making the necessary driver calls to receive/transmit
+ *        data. Rx and Tx byte arrays are provided to access the data received/
+ *        to be sent, respectively. Conversions between the byte arrays and packets
+ *        for the selected communication protocol are handled by PcInterface.
+ */
 class PcInterface {
 public:
     PcInterface();
@@ -44,22 +68,21 @@ public:
 
     bool getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const;
     bool getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const;
-    PcProtocol getProtocol() const;
-    udp_driver::UdpDriver* getUdpDriver() const;
-    uart::UartDriver* getUartDriver() const;
-    os::OsInterface* getOsInterface() const;
+    const PcProtocol getProtocol() const;
+    const udp_driver::UdpDriver* getUdpDriver() const;
+    const uart::UartDriver* getUartDriver() const;
+    const os::OsInterface* getOsInterface() const;
 
 private:
     const PcProtocol protocol = PcProtocol::UDP;
 
-    udp_driver::UdpDriver *udpDriver = nullptr;
-    uart::UartDriver *uartDriver = nullptr;
-    os::OsInterface *osInterface = nullptr;
+    const udp_driver::UdpDriver *udpDriver = nullptr;
+    const uart::UartDriver *uartDriver = nullptr;
+    const os::OsInterface *osInterface = nullptr;
 
     uint8_t rxBuffer[PC_INTERFACE_BUFFER_SIZE] = { };
     uint8_t txBuffer[PC_INTERFACE_BUFFER_SIZE] = { };
 
-    // To initialize within constructor
     mutable osMutexId rxMutex;
     mutable osStaticMutexDef_t rxMutexControlBlock;
     mutable osMutexId txMutex;

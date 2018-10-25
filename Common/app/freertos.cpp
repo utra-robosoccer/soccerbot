@@ -58,6 +58,7 @@
  * @author  Gokul
  * @author  Tyler
  * @author  Izaak
+ * @author  Robert
  *
  * @defgroup FreeRTOS FreeRTOS
  * @brief    Everything related to FreeRTOS

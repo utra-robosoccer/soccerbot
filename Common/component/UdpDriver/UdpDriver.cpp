@@ -36,7 +36,7 @@ UdpDriver::UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
 }
 
 UdpDriver::~UdpDriver() {
-    // TODO: call semaphore destroy functions
+
 }
 
 bool UdpDriver::setup() {
@@ -51,9 +51,7 @@ bool UdpDriver::setup() {
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
     recvSemaphore = osInterface->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
 
-    // XXX: hacky way to initialize the mutex with a zero count.
-    // Should probably use semaphore instead, not mutex and find a way to
-    // properly initialize that with 0 count.
+    // XXX: hacky way to initialize the semaphore with a zero count.
     //osSemaphoreWait(recvSemaphore, osWaitForever);
     //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     if (!getUdpInterface()) {
@@ -64,11 +62,11 @@ bool UdpDriver::setup() {
     if (!pcb) {
         return false;
     }
-    success = (udpInterface->udpBind(pcb, &ipaddr, port) == ERR_OK);
+    success = (udpInterface->udpBind(const_cast<struct udp_pcb *>(pcb), &ipaddr, port) == ERR_OK);
     if (success) {
-        udpInterface->udpRecv(pcb, recvCallback, this);
+        udpInterface->udpRecv(const_cast<struct udp_pcb *>(pcb), recvCallback, this);
     } else {
-        udpInterface->udpRemove(pcb);
+        udpInterface->udpRemove(const_cast<struct udp_pcb *>(pcb));
     }
     return success;
 }
@@ -106,13 +104,13 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn) {
     if (!bytesToPacket(txArrayIn)) {
         return false;
     }
-    if (udpInterface->udpConnect(pcb, &ipaddrPc, portPc) != ERR_OK) {
+    if (udpInterface->udpConnect(const_cast<struct udp_pcb *>(pcb), &ipaddrPc, portPc) != ERR_OK) {
         return false;
     }
-    if (udpInterface->udpSend(pcb, getTxPbufThreaded()) != ERR_OK) {
+    if (udpInterface->udpSend(const_cast<struct udp_pcb *>(pcb), getTxPbufThreaded()) != ERR_OK) {
         return false;
     }
-    udpInterface->udpDisconnect(pcb);
+    udpInterface->udpDisconnect(const_cast<struct udp_pcb *>(pcb));
     if (udpInterface->pbufFree(getTxPbufThreaded()) == (u8_t) 0) {
         return false;
     }
@@ -175,12 +173,10 @@ bool UdpDriver::setPcb(struct udp_pcb *pcbIn) {
     return true;
 }
 
-// TODO: implement when doing smoke test
 bool UdpDriver::packetToBytes(uint8_t *byteArrayOut) const {
 	return (udpInterface->pbufCopyPartial(getRxPbufThreaded(), byteArrayOut, getRxPbufThreaded()->len, 0) > (u16_t) 0); // Not expecting nothing to be copied
 }
 
-// TODO: implement when doing smoke test
 bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn) {
 	return (udpInterface->pbufTake(getTxPbufThreaded(), byteArrayIn, 80) == ERR_OK); // TODO: should be array size
 }
@@ -193,15 +189,15 @@ const ip_addr_t UdpDriver::getIpaddrPc() const {
     return ipaddrPc;
 }
 
-u16_t UdpDriver::getPort() const {
+const u16_t UdpDriver::getPort() const {
     return port;
 }
 
-u16_t UdpDriver::getPortPc() const {
+const u16_t UdpDriver::getPortPc() const {
     return portPc;
 }
 
-struct udp_pcb* UdpDriver::getPcb() const {
+const struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
 }
 

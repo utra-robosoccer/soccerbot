@@ -2,6 +2,7 @@
   *****************************************************************************
   * @file    UartDriver.h
   * @author  Tyler Gamvrelis
+  * @author  Robert Fairley
   *
   * @defgroup Header
   * @ingroup UartDriver
