@@ -71,66 +71,30 @@
 /* Parameters set in STM32CubeMX LwIP Configuration GUI -*/
 /*----- WITH_RTOS enabled (Since FREERTOS is set) -----*/
 #define WITH_RTOS 1
-/*----- CHECKSUM_BY_HARDWARE enabled -----*/
-#define CHECKSUM_BY_HARDWARE 1
+/*----- CHECKSUM_BY_HARDWARE disabled -----*/
+#define CHECKSUM_BY_HARDWARE 0
 /*-----------------------------------------------------------------------------*/
 
 /* LwIP Stack Parameters (modified compared to initialization value in opt.h) -*/
 /* Parameters set in STM32CubeMX LwIP Configuration GUI -*/
-/*----- Default Value for LWIP_ICMP: 1 ---*/
-#define LWIP_ICMP 0
-/*----- Default Value for MEMP_NUM_UDP_PCB: 4 ---*/
-#define MEMP_NUM_UDP_PCB 1
-/*----- Value in opt.h for LWIP_TCP: 1 -----*/
-#define LWIP_TCP 0
-/*----- Default Value for MEMP_NUM_TCP_PCB: 5 ---*/
-#define MEMP_NUM_TCP_PCB 0
+/*----- Value in opt.h for LWIP_DHCP: 0 -----*/
+#define LWIP_DHCP 1
 /*----- Value in opt.h for MEM_ALIGNMENT: 1 -----*/
 #define MEM_ALIGNMENT 4
-/*----- Default Value for MEM_SIZE: 1600 ---*/
-#define MEM_SIZE 10240
-/*----- Default Value for MEMP_NUM_PBUF: 16 ---*/
-#define MEMP_NUM_PBUF 0
-/*----- Default Value for MEMP_NUM_RAW_PCB: 4 ---*/
-#define MEMP_NUM_RAW_PCB 1
-/*----- Default Value for MEMP_NUM_TCP_PCB_LISTEN: 8 ---*/
-#define MEMP_NUM_TCP_PCB_LISTEN 0
-/*----- Default Value for MEMP_NUM_TCP_SEG: 16 ---*/
-#define MEMP_NUM_TCP_SEG 0
-/*----- Default Value for MEMP_NUM_IGMP_GROUP: 8 ---*/
-#define MEMP_NUM_IGMP_GROUP 0
-/*----- Default Value for MEMP_NUM_SYS_TIMEOUT: 1 ---*/
-#define MEMP_NUM_SYS_TIMEOUT 10
-/*----- Default Value for MEMP_NUM_NETBUF: 2 ---*/
-#define MEMP_NUM_NETBUF 0
-/*----- Default Value for MEMP_NUM_NETCONN: 4 ---*/
-#define MEMP_NUM_NETCONN 0
-/*----- Default Value for PBUF_POOL_SIZE: 16 ---*/
-#define PBUF_POOL_SIZE 11
-/*----- Default Value for PBUF_POOL_BUFSIZE: 592 ---*/
-#define PBUF_POOL_BUFSIZE 1524
+/*----- Value in opt.h for MEMP_NUM_SYS_TIMEOUT: (LWIP_TCP + IP_REASSEMBLY + LWIP_ARP + (2*LWIP_DHCP) + LWIP_AUTOIP + LWIP_IGMP + LWIP_DNS + (PPP_SUPPORT*6*MEMP_NUM_PPP_PCB) + (LWIP_IPV6 ? (1 + LWIP_IPV6_REASS + LWIP_IPV6_MLD) : 0)) -*/
+#define MEMP_NUM_SYS_TIMEOUT 5
 /*----- Value in opt.h for LWIP_ETHERNET: LWIP_ARP || PPPOE_SUPPORT -*/
 #define LWIP_ETHERNET 1
-/*----- Default Value for IP_REASSEMBLY: 1 ---*/
-#define IP_REASSEMBLY 0
-/*----- Default Value for IP_FRAG: 1 ---*/
-#define IP_FRAG 0
-/*----- Default Value for LWIP_RAW: 0 ---*/
-#define LWIP_RAW 1
 /*----- Value in opt.h for LWIP_DNS_SECURE: (LWIP_DNS_SECURE_RAND_XID | LWIP_DNS_SECURE_NO_MULTIPLE_OUTSTANDING | LWIP_DNS_SECURE_RAND_SRC_PORT) -*/
 #define LWIP_DNS_SECURE 7
-/*----- Default Value for TCP_WND: 5840 ---*/
-#define TCP_WND 2920
-/*----- Default Value for TCP_MSS: 536 ---*/
-#define TCP_MSS 1460
-/*----- Default Value for TCP_SND_BUF: 2920 ---*/
-#define TCP_SND_BUF 5840
-/*----- Default Value for TCP_SND_QUEUELEN: 17 ---*/
-#define TCP_SND_QUEUELEN 8
+/*----- Value in opt.h for TCP_SND_QUEUELEN: (4*TCP_SND_BUF + (TCP_MSS - 1))/TCP_MSS -----*/
+#define TCP_SND_QUEUELEN 9
+/*----- Value in opt.h for TCP_SNDLOWAT: LWIP_MIN(LWIP_MAX(((TCP_SND_BUF)/2), (2 * TCP_MSS) + 1), (TCP_SND_BUF) - 1) -*/
+#define TCP_SNDLOWAT 1071
 /*----- Value in opt.h for TCP_SNDQUEUELOWAT: LWIP_MAX(TCP_SND_QUEUELEN)/2, 5) -*/
 #define TCP_SNDQUEUELOWAT 5
-/*----- Default Value for LWIP_NETIF_LINK_CALLBACK: 0 ---*/
-#define LWIP_NETIF_LINK_CALLBACK 1
+/*----- Value in opt.h for TCP_WND_UPDATE_THRESHOLD: LWIP_MIN(TCP_WND/4, TCP_MSS*4) -----*/
+#define TCP_WND_UPDATE_THRESHOLD 536
 /*----- Value in opt.h for TCPIP_THREAD_STACKSIZE: 0 -----*/
 #define TCPIP_THREAD_STACKSIZE 1024
 /*----- Value in opt.h for TCPIP_THREAD_PRIO: 1 -----*/
@@ -147,12 +111,10 @@
 #define DEFAULT_THREAD_PRIO 3
 /*----- Value in opt.h for DEFAULT_UDP_RECVMBOX_SIZE: 0 -----*/
 #define DEFAULT_UDP_RECVMBOX_SIZE 6
+/*----- Value in opt.h for DEFAULT_TCP_RECVMBOX_SIZE: 0 -----*/
+#define DEFAULT_TCP_RECVMBOX_SIZE 6
 /*----- Value in opt.h for DEFAULT_ACCEPTMBOX_SIZE: 0 -----*/
 #define DEFAULT_ACCEPTMBOX_SIZE 6
-/*----- Value in opt.h for LWIP_NETCONN: 1 -----*/
-#define LWIP_NETCONN 0
-/*----- Value in opt.h for LWIP_SOCKET: 1 -----*/
-#define LWIP_SOCKET 0
 /*----- Value in opt.h for RECV_BUFSIZE_DEFAULT: INT_MAX -----*/
 #define RECV_BUFSIZE_DEFAULT 2000000000
 /*----- Value in opt.h for LWIP_STATS: 1 -----*/

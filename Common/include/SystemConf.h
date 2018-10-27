@@ -20,9 +20,11 @@
 
 #if defined(STM32F446xx)
 #include <stm32f446xx.h>
+#define ARM_MATH_CM4 // Use ARM Cortex M4
 
 #elif defined(STM32F767xx)
 #include <stm32f767xx.h>
+#define ARM_MATH_CM7 // Use ARM Cortex M7
 
 #else
 #error "invalid build configuration! Must define STM32F446xx or STM32F767xx"

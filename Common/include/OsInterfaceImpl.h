@@ -97,7 +97,7 @@ public:
     ) const override final;
 
      osStatus OS_osSemaphoreRelease (
-            osSemaphoreId semaphore_id
+        osSemaphoreId semaphore_id
     ) const override final;
 };
 

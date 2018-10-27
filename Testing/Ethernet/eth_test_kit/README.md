@@ -2,7 +2,7 @@
 
 These are custom scripts to carry out ethernet tests, convert test data between formats, analyze and plot test data.
 
-Requires having anaconda3 installed, and a forked python module called scheddl (https://github.com/rfairley/scheddl).
+Requires having anaconda3 installed, and a forked python module called scheddl (https://github.com/rfairley/scheddl). Must be run on Linux (Ubuntu has worked), as scheddl makes Linux kernel syscalls. TODO: parameter in script to specify host OS.
 
 ## 1. Installation
 
