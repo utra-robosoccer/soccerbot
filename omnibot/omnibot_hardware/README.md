@@ -57,3 +57,50 @@ how do I push to github?
 Yes lemme explain, do you want command line method or clion method
 both lol
 ok command line first
+questions?
+what happened to CI???
+It gives an X, which means it failed.
+Your code must build properly
+
+To build
+catkin build
+
+To clean build
+catkin clean
+catkin build
+
+This is the error, needs to be fixed, gotta change the names in the CMakeList..txt
+
+More questions?
+
+Reminder on how to command line method
+
+git status # check status
+git branch -a # look at all branches
+git checkout -b sr_branchname #crete new breanch
+git add . # stage your files to be commited
+git commit -m # Commit your files
+git push origin --set-upstream origin sr_branchname # push your changes to github
+
+Then you need to manually create a pull request
+
+
+Also
+git pull (pulls latest commits)
+git fetch (pulls all remote branches to local branches)
+git clean -fd && git reset --hard # Clean everything from your branch
+git reset HEAD^1 # Go back one commit
+git checkout branchname # switch to another branch
+
+Thats all you need
+where is the dir that the local branch exists
+soccer_ws
+
+The the local branch and remote branches, its all hidden in the git tree
+
+
+
+
+
+
+
