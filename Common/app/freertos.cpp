@@ -776,7 +776,7 @@ void StartBuffWriterTask(void const * argument)
 {
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
     TXData_t dataToWrite;
-    IMUStruct* IMUDataPtr;
+    imu::IMUStruct_t* IMUDataPtr;
     Dynamixel_HandleTypeDef* motorDataPtr;
 
     for(;;)
@@ -800,7 +800,7 @@ void StartBuffWriterTask(void const * argument)
                 }
                 break;
             case eIMUData:
-                IMUDataPtr = (IMUStruct*)dataToWrite.pData;
+                IMUDataPtr = (imu::IMUStruct_t*)dataToWrite.pData;
 
                 if(IMUDataPtr == NULL){ break; }
 
