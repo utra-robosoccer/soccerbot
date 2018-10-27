@@ -136,10 +136,10 @@ public:
     );
 
     MOCK_CONST_METHOD1(
-            OS_osSemaphoreRelease,
-            osStatus(
-                osSemaphoreId semaphore_id
-            )
+        OS_osSemaphoreRelease,
+        osStatus(
+            osSemaphoreId semaphore_id
+        )
     );
 };
 
