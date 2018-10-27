@@ -63,9 +63,9 @@
  * @brief    Everything related to FreeRTOS
  */
 
+#include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <math.h>
 #include "Notification.h"
 #include "SystemConf.h"
 #include "usart.h"

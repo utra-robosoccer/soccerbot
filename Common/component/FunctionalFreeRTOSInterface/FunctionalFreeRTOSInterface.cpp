@@ -16,7 +16,7 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
+#include <stdint.h>
 #include "cmsis_os.h"
 
 #include "FunctionalFreeRTOSInterface.h"

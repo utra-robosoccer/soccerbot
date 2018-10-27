@@ -13,8 +13,7 @@
 #ifndef __PC_INTERFACE_H__
 #define __PC_INTERFACE_H__
 
-#include <cstdint>
-
+#include <stdint.h>
 #include <UdpInterface.h>
 
 namespace pc_interface {

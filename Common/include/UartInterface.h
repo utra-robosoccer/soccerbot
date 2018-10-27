@@ -18,13 +18,10 @@
 
 
 
-
 /********************************* Includes **********************************/
-#include <cstdint>
+#include <stdint.h>
 #include "SystemConf.h"
 #include "usart.h"
-
-
 
 
 /******************************* UartInterface *******************************/
