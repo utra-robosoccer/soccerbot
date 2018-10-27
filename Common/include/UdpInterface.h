@@ -14,7 +14,7 @@
 #ifndef __UDP_INTERFACE_H__
 #define __UDP_INTERFACE_H__
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace udp_interface {
 

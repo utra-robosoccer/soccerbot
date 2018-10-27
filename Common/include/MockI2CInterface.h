@@ -22,6 +22,9 @@
 using namespace i2c;
 namespace mocks{
 
+/**
+ * @class MockI2CInterface Emulates I2CInterface for unit testing purposes
+ */
 class MockI2CInterface: public I2CInterface{
 public:
 	MOCK_CONST_METHOD1(assignHandle, void(I2C_HandleTypeDef *hi2c));
@@ -38,6 +41,5 @@ public:
 }
 
 }// end namespace i2c
-
 
 #endif /* COMMON_INCLUDE_MOCKI2CINTERFACE_H_ */
