@@ -15,6 +15,11 @@
 
 
 
+
+/*********************************** Includes ********************************/
+#include <cstdint>
+
+
 /***************************** Function prototypes ***************************/
 void receiveDataBuffer(void);
 void initiateDMATransfer(void);

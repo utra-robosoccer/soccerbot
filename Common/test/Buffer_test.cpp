@@ -15,6 +15,7 @@
 
 /********************************* Includes **********************************/
 #include "BufferBase.h"
+#include "MPU6050.h"
 #include "UART_Handler.h"
 
 
@@ -77,30 +78,30 @@ TEST(BufferTests, CanInitializeBufferMaster){
 
 TEST(BufferTests, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
-    IMUStruct IMUdata;
+    imu::IMUStruct_t IMUdata;
 
     bufferMaster.IMUBuffer.write(IMUdata);
 }
 
 TEST(BufferTests, CanReadFromIMUBuffer){
     BufferMaster bufferMaster;
-    IMUStruct IMUdata;
-    IMUdata._x_Accel = 1.0;
-    IMUdata._x_Gyro = 2.0;
-    IMUdata._y_Accel = 3.0;
-    IMUdata._y_Gyro = 4.0;
-    IMUdata._z_Accel = 5.0;
-    IMUdata._z_Gyro = 6.0;
+    imu::IMUStruct_t IMUdata;
+    IMUdata.x_Accel = 1.0;
+    IMUdata.x_Gyro = 2.0;
+    IMUdata.y_Accel = 3.0;
+    IMUdata.y_Gyro = 4.0;
+    IMUdata.z_Accel = 5.0;
+    IMUdata.z_Gyro = 6.0;
 
     bufferMaster.IMUBuffer.write(IMUdata);
-    IMUStruct readIMUdata = bufferMaster.IMUBuffer.read();
+    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
 
-    ASSERT_EQ(readIMUdata._x_Accel, IMUdata._x_Accel);
-    ASSERT_EQ(readIMUdata._y_Accel, IMUdata._y_Accel);
-    ASSERT_EQ(readIMUdata._z_Accel, IMUdata._z_Accel);
-    ASSERT_EQ(readIMUdata._x_Gyro, IMUdata._x_Gyro);
-    ASSERT_EQ(readIMUdata._y_Gyro, IMUdata._y_Gyro);
-    ASSERT_EQ(readIMUdata._z_Gyro, IMUdata._z_Gyro);
+    ASSERT_EQ(readIMUdata.x_Accel, IMUdata.x_Accel);
+    ASSERT_EQ(readIMUdata.y_Accel, IMUdata.y_Accel);
+    ASSERT_EQ(readIMUdata.z_Accel, IMUdata.z_Accel);
+    ASSERT_EQ(readIMUdata.x_Gyro, IMUdata.x_Gyro);
+    ASSERT_EQ(readIMUdata.y_Gyro, IMUdata.y_Gyro);
+    ASSERT_EQ(readIMUdata.z_Gyro, IMUdata.z_Gyro);
 }
 
 TEST(BufferTests, CanWriteToMotorBuffer){
