@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/utra-robosoccer/soccer-embedded.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccer-embedded)
+
 # soccer-embedded
 Collection of embedded programs for an autonomous humanoid soccer robot.
 
