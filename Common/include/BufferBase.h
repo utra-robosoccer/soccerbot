@@ -18,6 +18,7 @@
 #include <cstdio>
 #include <memory>
 #include "UART_Handler.h"
+#include "MPU6050.h"
 
 namespace buffer {
 
@@ -76,7 +77,7 @@ public:
     BufferMaster(){};
     ~BufferMaster(){};
 
-    BufferBase<IMUStruct> IMUBuffer;
+    BufferBase<imu::IMUStruct_t> IMUBuffer;
     BufferBase<Dynamixel_HandleTypeDef> MotorBuffer[NUM_MOTORS];
     // Add buffer items here as necessary
 };
