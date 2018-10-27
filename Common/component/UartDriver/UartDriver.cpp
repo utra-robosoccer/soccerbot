@@ -99,12 +99,7 @@ bool UartDriver::setup(void) {
     switch(io_type) {
 #if defined(THREADED)
         case IO_Type::DMA:
-            // Initial receive to initiate DMA transfer.
-            retval = true;
-        break;
         case IO_Type::IT:
-            retval = true;
-        break;
 #endif
         case IO_Type::POLL:
             retval = true;
@@ -184,7 +179,7 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                	os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
+                    os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
                     if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
                         status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 

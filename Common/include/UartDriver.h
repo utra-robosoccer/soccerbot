@@ -134,8 +134,10 @@ private:
      */
     IO_Type io_type = IO_Type::POLL;
 
+#if defined(THREADED)
     /** @brief Pointer to the object handling system calls to the OS */
     const OsInterface* os_if = nullptr;
+#endif
 
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
