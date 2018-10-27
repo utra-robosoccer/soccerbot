@@ -159,6 +159,9 @@ static volatile uint32_t error;
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+
+}
+
 #if defined(PC_INTERFACE_USE_LWIP)
 pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART, nullptr,
         &uartDriver, &osInterface);
@@ -885,6 +888,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     error = HAL_UART_GetError(huart);
 }
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
