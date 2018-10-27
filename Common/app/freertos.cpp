@@ -72,7 +72,6 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "MPU6050.h"
-#include "MPUFilter.h"
 #include "BufferBase.h"
 #include "UART_Handler.h"
 #include "DynamixelProtocolV1.h"
