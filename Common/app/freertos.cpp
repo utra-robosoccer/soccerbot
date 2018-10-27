@@ -73,6 +73,7 @@
 #include "i2c.h"
 #include "MPU6050.h"
 #include "MPUFilter.h"
+#include "BufferBase.h"
 #include "UART_Handler.h"
 #include "DynamixelProtocolV1.h"
 #include "Communication.h"
@@ -111,6 +112,9 @@ osStaticThreadDef_t RxTaskControlBlock;
 osThreadId TxTaskHandle;
 uint32_t TxTaskBuffer[ 512 ];
 osStaticThreadDef_t TxTaskControlBlock;
+osThreadId BuffWriterTaskHandle;
+uint32_t BuffWriterTaskBuffer[ 128 ];
+osStaticThreadDef_t BuffWriterTaskControlBlock;
 osMessageQId UART1_reqHandle;
 uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART1_reqControlBlock;
@@ -129,8 +133,13 @@ osStaticMessageQDef_t UART6_reqControlBlock;
 osMessageQId TXQueueHandle;
 uint8_t TXQueueBuffer[ 32 * sizeof( TXData_t ) ];
 osStaticMessageQDef_t TXQueueControlBlock;
+osMessageQId BufferWriteQueueHandle;
+uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
+osStaticMessageQDef_t BufferWriteQueueControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
+osMutexId DATABUFFERHandle;
+osStaticMutexDef_t DATABUFFERControlBlock;
 
 /* USER CODE BEGIN Variables */
 enum motorNames {MOTOR1, MOTOR2, MOTOR3, MOTOR4, MOTOR5,
@@ -145,6 +154,8 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 						Motor16, Motor17, Motor18;
 
 IMUnamespace::MPU6050 IMUdata (1, &hi2c1);
+
+buffer::BufferMaster BufferMaster;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -161,6 +172,7 @@ extern void StartIMUTask(void const * argument);
 extern void StartCommandTask(void const * argument);
 extern void StartRxTask(void const * argument);
 extern void StartTxTask(void const * argument);
+extern void StartBuffWriterTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -205,6 +217,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of PCUART */
   osMutexStaticDef(PCUART, &PCUARTControlBlock);
   PCUARTHandle = osMutexCreate(osMutex(PCUART));
+
+  /* definition and creation of DATABUFFER */
+  osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
+  DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -259,6 +275,10 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(TxTask, StartTxTask, osPriorityHigh, 0, 512, TxTaskBuffer, &TxTaskControlBlock);
   TxTaskHandle = osThreadCreate(osThread(TxTask), NULL);
 
+  /* definition and creation of BuffWriterTask */
+  osThreadStaticDef(BuffWriterTask, StartBuffWriterTask, osPriorityNormal, 0, 128, BuffWriterTaskBuffer, &BuffWriterTaskControlBlock);
+  BuffWriterTaskHandle = osThreadCreate(osThread(BuffWriterTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -287,6 +307,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of TXQueue */
   osMessageQStaticDef(TXQueue, 32, TXData_t, TXQueueBuffer, &TXQueueControlBlock);
   TXQueueHandle = osMessageCreate(osMessageQ(TXQueue), NULL);
+
+  /* definition and creation of BufferWriteQueue */
+  osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
+  BufferWriteQueueHandle = osMessageCreate(osMessageQ(BufferWriteQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -748,6 +772,58 @@ void StartTxTask(void const * argument)
     }
 }
 
+
+/**
+  * @brief  This function is executed in the context of the BuffWriter
+  *         thread. This thread creates the sensor data buffer and writes
+  *         data from the BufferWrite queue into the appropriate buffer.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
+void StartBuffWriterTask(void const * argument)
+{
+    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    TXData_t dataToWrite;
+    IMUStruct* IMUDataPtr;
+    Dynamixel_HandleTypeDef* motorDataPtr;
+
+    for(;;)
+    {
+        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, portMAX_DELAY) != pdTRUE);
+        switch (dataToWrite.eDataType) {
+            case eMotorData:
+
+                motorDataPtr = (Dynamixel_HandleTypeDef*) dataToWrite.pData;
+
+                if (motorDataPtr == NULL) { break; }
+
+                // Validate data and store it in buffer (thread-safe)
+                // Each type of buffer could have its own mutex but this will probably
+                // only improve efficiency if there are multiple writer/reader threads
+                // and BufferWrite queues.
+                if (motorDataPtr->_ID <= NUM_MOTORS) {
+                    xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
+                    BufferMaster.MotorBuffer[motorDataPtr->_ID].write(*motorDataPtr);
+                    xSemaphoreGive(DATABUFFERHandle);
+                }
+                break;
+            case eIMUData:
+                IMUDataPtr = (IMUStruct*)dataToWrite.pData;
+
+                if(IMUDataPtr == NULL){ break; }
+
+                // Copy sensor data into the IMU Buffer (thread-safe)
+                xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
+                BufferMaster.IMUBuffer.write(*IMUDataPtr);
+                xSemaphoreGive(DATABUFFERHandle);
+                break;
+            default:
+                break;
+        }
+    }
+}
 /**
  * @defgroup Callbacks Callbacks
  * @brief    Callback functions for unblocking FreeRTOS threads which perform

@@ -61,7 +61,6 @@ public:
 
     // Defining methods here in the declaration for ease of use as a templated class
 private:
-    //TODO: Thread-safety
     std::unique_ptr<T> m_data_buf;
     bool m_empty = true;
 };
