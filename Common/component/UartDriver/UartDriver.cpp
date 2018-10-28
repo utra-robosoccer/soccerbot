@@ -126,15 +126,17 @@ bool UartDriver::transmit(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
-                    if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
-                        status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
+                    // If blocked for longer than MAX_BLOCK_TIME, progress no further
+                    if (os_if->OS_osMutexWait(uartResourceMutex, MAX_BLOCK_TIME) == osOK) {
+                        if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
+                            status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
-                            retval = true;
+                            if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
+                                retval = true;
+                            }
                         }
+                        os_if->OS_osMutexRelease(uartResourceMutex);
                     }
-                    os_if->OS_osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:
@@ -179,15 +181,17 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    os_if->OS_osMutexWait(uartResourceMutex, osWaitForever);
-                    if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
-                        status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
+                    // If blocked for longer than MAX_BLOCK_TIME, progress no further
+                    if (os_if->OS_osMutexWait(uartResourceMutex, MAX_BLOCK_TIME) == osOK) {
+                        if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
+                            status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_BLOCK_TIME);
 
-                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
-                            retval = true;
+                            if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
+                                retval = true;
+                            }
                         }
+                        os_if->OS_osMutexRelease(uartResourceMutex);
                     }
-                    os_if->OS_osMutexRelease(uartResourceMutex);
                 }
                 break;
             case IO_Type::IT:
