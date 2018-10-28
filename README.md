@@ -1,6 +1,7 @@
 ## Soccerbot Repository - For software running on the robot
 
 [![Travis build](https://travis-ci.org/utra-robosoccer/soccer_ws.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccer_ws)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccer_ws.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccer_ws/alerts/)
 
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
