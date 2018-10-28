@@ -14,10 +14,12 @@ Debian packages needed for robots (sudo apt-get install)
 - net-tools
 - indicator-ip
 
-IDE recommended
+IDE setup
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
-- CLion Setup https://github.com/ethz-asl/programming_guidelines/wiki/CLion
+- Follow the CLion Setup here, use method 2 to add bash to the launch file https://github.com/ethz-asl/programming_guidelines/wiki/CLion
 - Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
+- In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
+- Install the *.launch file plugins if you want to
 
 ```bash
 cd ~/catkin_ws/src
