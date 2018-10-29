@@ -23,13 +23,14 @@
 #include "GpioInterface.h"
 
 using uart::UartDriver;
+using uart::IO_Type;
 using gpio::GpioInterface;
 
 
 
 
 /************************** insert module name here **************************/
-// TODO: pick better namespace for this component
+// TODO: pick better namespace for this component (then update module name)
 namespace dynamixel{
 // Classes and structs
 // ----------------------------------------------------------------------------
@@ -44,8 +45,11 @@ struct DaisyChainParams{
 
 class DaisyChain{
 public:
-    DaisyChain(DaisyChainParams& params);
+    DaisyChain(const DaisyChainParams& params);
     ~DaisyChain();
+
+    void setIOType(IO_Type io_type);
+    IO_Type getIOType(void) const;
 
     /**
      * @brief Request a transmission on the daisy chain. This is guaranteed to
@@ -67,6 +71,7 @@ public:
      * @return true if successful, otherwise false
      */
     bool requestReception(uint8_t* buf, size_t bufSize) const;
+
 
     // TODO(tyler): add method for "receive until condition...", where the
     // condition is possibly passed in as a function of some kind...

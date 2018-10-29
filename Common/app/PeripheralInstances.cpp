@@ -1,11 +1,9 @@
 /**
   *****************************************************************************
-  * @file    MotorInstances.cpp
-  * @author  Tyler Gamvrelis
+  * @file
+  * @author Tyler Gamvrelis
   *
-  * @defgroup
-  * @ingroup
-  * @brief
+  * @ingroup Peripheral Instances
   * @{
   *****************************************************************************
   */
@@ -106,7 +104,7 @@ AX12A motor16(16, &uart3DaisyChain);
 AX12A motor17(17, &uart3DaisyChain);
 AX12A motor18(18, &uart3DaisyChain);
 
-Motor* motors[18] = {
+std::array<Motor*, 18> motors = {
     &motor1,
     &motor2,
     &motor3,
@@ -124,10 +122,23 @@ Motor* motors[18] = {
     &motor15,
     &motor16,
     &motor17,
-    &motor18,
+    &motor18
 };
 
 MPU6050 imuData(&hi2c1);
+
+
+
+
+// Functions
+// ----------------------------------------------------------------------------
+void initMotorIOType(IO_Type io_type){
+    uart1DaisyChain.setIOType(io_type);
+    uart2DaisyChain.setIOType(io_type);
+    uart3DaisyChain.setIOType(io_type);
+    uart4DaisyChain.setIOType(io_type);
+    uart6DaisyChain.setIOType(io_type);
+}
 
 } // end namespace periph
 
@@ -137,4 +148,4 @@ MPU6050 imuData(&hi2c1);
 /**
  * @}
  */
-/* end - module name */
+/* end - Peripheral Instances */

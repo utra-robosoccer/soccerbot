@@ -312,53 +312,30 @@ void StartDefaultTask(void const * argument)
   */
 void StartCommandTask(void const * argument)
 {
-//    setIOType(IO_POLL); // Configure IO
-
     UARTcmd_t Motorcmd[18];
-    for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i) {
-        // Configure motor to return status packets only for read commands
-        periph::motors[i]->setStatusReturnLevel(
-            dynamixel::StatusReturnLevel::READS_ONLY
-        );
+    Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
+    Motorcmd[periph::MOTOR2].qHandle = UART2_reqHandle;
+    Motorcmd[periph::MOTOR3].qHandle = UART2_reqHandle;
+    Motorcmd[periph::MOTOR4].qHandle = UART4_reqHandle;
+    Motorcmd[periph::MOTOR5].qHandle = UART4_reqHandle;
+    Motorcmd[periph::MOTOR6].qHandle = UART4_reqHandle;
+    Motorcmd[periph::MOTOR7].qHandle = UART1_reqHandle;
+    Motorcmd[periph::MOTOR8].qHandle = UART1_reqHandle;
+    Motorcmd[periph::MOTOR9].qHandle = UART1_reqHandle;
+    Motorcmd[periph::MOTOR10].qHandle = UART6_reqHandle;
+    Motorcmd[periph::MOTOR11].qHandle = UART6_reqHandle;
+    Motorcmd[periph::MOTOR12].qHandle = UART6_reqHandle;
+    Motorcmd[periph::MOTOR13].qHandle = UART3_reqHandle;
+    Motorcmd[periph::MOTOR14].qHandle = UART3_reqHandle;
+    Motorcmd[periph::MOTOR15].qHandle = UART3_reqHandle;
+    Motorcmd[periph::MOTOR16].qHandle = UART3_reqHandle;
+    Motorcmd[periph::MOTOR17].qHandle = UART3_reqHandle;
+    Motorcmd[periph::MOTOR18].qHandle = UART3_reqHandle;
+    periph::initMotorIOType(IO_Type::DMA);
 
-        // Configure motor to return status packets with minimal acceptable latency
-        periph::motors[i]->setReturnDelayTime(100);
-
-        // Enable motor torque
-        periph::motors[i]->enableTorque(true);
-
-        if(i >= periph::MOTOR13){
-            // AX12A-only config
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
-        }
-
-        (Motorcmd[i]).motorHandle = periph::motors[i];
-        (Motorcmd[i]).type = cmdWritePosition;
-    }
-
-    (Motorcmd[periph::MOTOR1]).qHandle = UART2_reqHandle;
-    (Motorcmd[periph::MOTOR2]).qHandle = UART2_reqHandle;
-    (Motorcmd[periph::MOTOR3]).qHandle = UART2_reqHandle;
-    (Motorcmd[periph::MOTOR4]).qHandle = UART4_reqHandle;
-    (Motorcmd[periph::MOTOR5]).qHandle = UART4_reqHandle;
-    (Motorcmd[periph::MOTOR6]).qHandle = UART4_reqHandle;
-    (Motorcmd[periph::MOTOR7]).qHandle = UART1_reqHandle;
-    (Motorcmd[periph::MOTOR8]).qHandle = UART1_reqHandle;
-    (Motorcmd[periph::MOTOR9]).qHandle = UART1_reqHandle;
-    (Motorcmd[periph::MOTOR10]).qHandle = UART6_reqHandle;
-    (Motorcmd[periph::MOTOR11]).qHandle = UART6_reqHandle;
-    (Motorcmd[periph::MOTOR12]).qHandle = UART6_reqHandle;
-    (Motorcmd[periph::MOTOR13]).qHandle = UART3_reqHandle;
-    (Motorcmd[periph::MOTOR14]).qHandle = UART3_reqHandle;
-    (Motorcmd[periph::MOTOR15]).qHandle = UART3_reqHandle;
-    (Motorcmd[periph::MOTOR16]).qHandle = UART3_reqHandle;
-    (Motorcmd[periph::MOTOR17]).qHandle = UART3_reqHandle;
-    (Motorcmd[periph::MOTOR18]).qHandle = UART3_reqHandle;
-
-//    Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
-
-    periph::imuData.init(6);// 5 Hz bandwidth
+    // Configure the IMU to use the tightest filter bandwidth
+    constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
+    periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
     // Set setupIsDone and unblock the higher-priority tasks
     setupIsDone = true;
@@ -372,7 +349,6 @@ void StartCommandTask(void const * argument)
     xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
 
     uint32_t numIterations = 0;
-    uint8_t i;
     float positions[18];
     while(1){
         xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
@@ -388,7 +364,7 @@ void StartCommandTask(void const * argument)
 
         if(numIterations % 100 == 0){
             // Every 100 iterations, assert torque enable
-            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; i++){
+            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
                 Motorcmd[i].type = cmdWriteTorque;
                 Motorcmd[i].value = 1; // Enable
                 xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
@@ -397,7 +373,7 @@ void StartCommandTask(void const * argument)
 
         // Send each goal position to the queue, where the UART handler
         // thread that's listening will receive it and send it to the motor
-        for(i = periph::MOTOR1; i <= periph::MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
             switch(i){
                 case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
                     break;
