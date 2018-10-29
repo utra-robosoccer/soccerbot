@@ -331,7 +331,33 @@ void StartCommandTask(void const * argument)
     Motorcmd[periph::MOTOR16].qHandle = UART3_reqHandle;
     Motorcmd[periph::MOTOR17].qHandle = UART3_reqHandle;
     Motorcmd[periph::MOTOR18].qHandle = UART3_reqHandle;
+
     periph::initMotorIOType(IO_Type::DMA);
+
+    // The return delay time is the time the motor waits before sending back
+    // data for a read request. We found that a value of 100 us worked reliably
+    // while values lower than this would cause packets to be dropped more
+    // frequently
+    constexpr uint16_t RETURN_DELAY_TIME = 100;
+    for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i) {
+        // Configure motor to return status packets only for read commands
+        periph::motors[i]->setStatusReturnLevel(
+            dynamixel::StatusReturnLevel::READS_ONLY
+        );
+
+        periph::motors[i]->setReturnDelayTime(RETURN_DELAY_TIME);
+        periph::motors[i]->enableTorque(true);
+
+        if(i >= periph::MOTOR13){
+            // AX12A-only config for controls
+            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
+            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
+        }
+
+        (Motorcmd[i]).motorHandle = periph::motors[i];
+        (Motorcmd[i]).type = cmdWritePosition;
+    }
+
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
