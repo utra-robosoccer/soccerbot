@@ -29,6 +29,7 @@ using ::testing::Return;
 using ::testing::_;
 
 using uart::UartDriver;
+using uart::IO_Type;
 using mocks::MockOsInterface;
 using mocks::MockUartInterface;
 using mocks::MockGpioInterface;
@@ -102,7 +103,33 @@ TEST_F(DaisyChainShould, CallSetGpioFunctionUponReceptionRequest){
     EXPECT_TRUE(status);
 }
 
+TEST_F(DaisyChainShould, SetIOTypeForDriver){
+    DaisyChain chain(p);
 
+    IO_Type typeToSet = IO_Type::DMA;
+    chain.setIOType(typeToSet);
+    IO_Type actualType = UARTxDriver.getIOType();
+    EXPECT_EQ(actualType, typeToSet);
+
+    typeToSet = IO_Type::POLL;
+    chain.setIOType(typeToSet);
+    actualType = UARTxDriver.getIOType();
+    EXPECT_EQ(actualType, typeToSet);
+}
+
+TEST_F(DaisyChainShould, GetIOTypeForDriver){
+    DaisyChain chain(p);
+
+    IO_Type typeToSet = IO_Type::DMA;
+    UARTxDriver.setIOType(typeToSet);
+    IO_Type typeGot =  chain.getIOType();
+    EXPECT_EQ(typeGot, typeToSet);
+
+    typeToSet = IO_Type::POLL;
+    UARTxDriver.setIOType(typeToSet);
+    typeGot =  chain.getIOType();
+    EXPECT_EQ(typeGot, typeToSet);
+}
 
 } // end anonymous namespace
 

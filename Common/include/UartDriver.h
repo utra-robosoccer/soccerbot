@@ -85,7 +85,7 @@ public:
     void setIOType(IO_Type io_type);
 
     /**
-     * @brief  Returns the IO type currently being used by the driver
+     * @brief Returns the IO type currently being used by the driver
      * @return The IO type currently being used by the driver
      */
     IO_Type getIOType(void) const;

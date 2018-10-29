@@ -1,9 +1,11 @@
 /**
   *****************************************************************************
-  * @file    MotorInstances.h
-  * @author  Tyler Gamvrelis
+  * @file
+  * @author Tyler Gamvrelis
   *
-  * @defgroup
+  * @defgroup Peripheral Instances
+  * @brief Instances of peripherals the system communicates with. Should be
+  *        broken up into the appropriate modules in the near future!
   * @{
   *****************************************************************************
   */
@@ -11,17 +13,19 @@
 
 
 
-#ifndef MOTOR_INSTANCES_H
-#define MOTOR_INSTANCES_H
+#ifndef PERIPHERAL_INSTANCES_H
+#define PERIPHERAL_INSTANCES_H
 
 
 
 
 /********************************* Includes **********************************/
+#include <array>
 #include "AX12A.h"
 #include "MX28.h"
 #include "MPU6050.h"
 
+using std::array;
 using dynamixel::Motor;
 using dynamixel::AX12A;
 using dynamixel::MX28;
@@ -41,7 +45,7 @@ using imu::MPU6050;
 namespace periph{
 // Types & enums
 // ----------------------------------------------------------------------------
-enum motorNames : uint8_t {
+enum motorNames_e : uint8_t {
     MOTOR1,
     MOTOR2,
     MOTOR3,
@@ -64,37 +68,25 @@ enum motorNames : uint8_t {
 };
 
 
+
+
 // Variables
 // ----------------------------------------------------------------------------
-extern MX28 motor1;
-extern MX28 motor2;
-extern MX28 motor3;
-extern MX28 motor4;
-extern MX28 motor5;
-extern MX28 motor6;
-extern MX28 motor7;
-extern MX28 motor8;
-extern MX28 motor9;
-extern MX28 motor10;
-extern MX28 motor11;
-extern MX28 motor12;
-extern AX12A motor13;
-extern AX12A motor14;
-extern AX12A motor15;
-extern AX12A motor16;
-extern AX12A motor17;
-extern AX12A motor18;
-
-extern Motor* motors[18];
-
+extern std::array<Motor*, 18> motors;
 extern MPU6050 imuData;
 
+
+
+
+// Functions
+// ----------------------------------------------------------------------------
+/**
+ * @brief Configures the IO type used for the motors
+ * @param io_type The IO type to be used
+ */
+void initMotorIOType(IO_Type io_type);
+
 } // end namespace periph
-
-
-
-
-/***************************** Inline functions ******************************/
 
 
 
@@ -102,6 +94,6 @@ extern MPU6050 imuData;
 /**
  * @}
  */
-/* end - Header */
+/* end - Peripheral Instances */
 
-#endif /* MOTOR_INSTANCES_H */
+#endif /* PERIPHERAL_INSTANCES_H */

@@ -5,7 +5,8 @@
   *
   * @defgroup Dynamixel
   * @defgroup Motor
-  * @brief Dynamixel motor base class
+  * @brief Dynamixel motor base class; common code for various Dynamixel
+  *        actuators
   * @ingroup Dynamixel
   * @{
   *****************************************************************************

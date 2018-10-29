@@ -22,7 +22,7 @@ namespace dynamixel{
 /******************************** DaisyChain *********************************/
 // Public
 // ----------------------------------------------------------------------------
-DaisyChain::DaisyChain(DaisyChainParams& params)
+DaisyChain::DaisyChain(const DaisyChainParams& params)
     :
         uartDriver(params.uartDriver),
         gpioif(params.gpioif),
@@ -34,6 +34,14 @@ DaisyChain::DaisyChain(DaisyChainParams& params)
 
 DaisyChain::~DaisyChain(){
 
+}
+
+void DaisyChain::setIOType(IO_Type io_type){
+    const_cast<UartDriver*>(uartDriver)->setIOType(io_type);
+}
+
+IO_Type DaisyChain::getIOType(void) const{
+    return uartDriver->getIOType();
 }
 
 bool DaisyChain::requestTransmission(uint8_t* arr, size_t arrSize) const{
