@@ -358,6 +358,8 @@ void StartCommandTask(void const * argument)
         (Motorcmd[i]).type = cmdWritePosition;
     }
 
+    int i = 0;
+
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
