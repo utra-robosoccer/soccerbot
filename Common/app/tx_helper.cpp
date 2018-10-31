@@ -92,7 +92,7 @@ void copySensorDataToSend(void) {
                 // robotState.msg
                 memcpy(
                     &robotState.msg[4 * (motorDataPtr->id - 1)],
-                    &(motorDataPtr->payload),
+                    motorDataPtr->payload,
                     sizeof(float)
                 );
 
