@@ -339,7 +339,7 @@ bool Motor::setAlarm(AlarmType type, AlarmCondition condition) const{
 
 bool Motor::enableTorque(bool isEnabled) const{
     // Write data to motor
-    uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
+    uint8_t args[2] = {REG_TORQUE_ENABLE, static_cast<uint8_t>(isEnabled)};
     return dataWriter(args, sizeof(args));
 }
 
