@@ -133,6 +133,14 @@ MPU6050 imuData(&hi2c1);
 // Functions
 // ----------------------------------------------------------------------------
 void initMotorIOType(IO_Type io_type){
+    constexpr TickType_t MOTOR_MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
+
+    uart1Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    uart2Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    uart3Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    uart4Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    uart6Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+
     uart1DaisyChain.setIOType(io_type);
     uart2DaisyChain.setIOType(io_type);
     uart3DaisyChain.setIOType(io_type);
