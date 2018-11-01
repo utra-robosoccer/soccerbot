@@ -18,6 +18,8 @@
   <depend>std_msgs</depend>
   <depend>soccer_description</depend>
   <depend>soccer_control</depend>
+  <depend>omnibot_description</depend>
+  <depend>omnibot_control</depend>
 
   <export>
     <gazebo_ros gazebo_plugin_path="${prefix}/lib" gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/.." />
