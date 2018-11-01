@@ -78,6 +78,12 @@ public:
     ~UartDriver() {}
 
     /**
+     * @brief Sets data transfer timeout for this driver instance
+     * @param timeout The maximum time the caller will block on a data transfer
+     */
+    void setMaxBlockTime(uint32_t timeout);
+
+    /**
      * @brief Configures the driver to use a particular IO type. This is used
      *        to change it between using blocking and asynchronous transfers
      * @param io_type The type of IO to be used by the driver
@@ -143,27 +149,11 @@ private:
      */
     bool hw_is_initialized = false;
 #if defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
-
-    // TODO(tyler): change this from a constexpr to a class member that can be
-    // changed via API. The reason is we want a 1 or 2 ms max block time for
-    // motors, but for PC comm we want it to be higher (around 5 ms). Since we
-    // have different timing requirements for different devices (due to the
-    // difference in packet size), this needs to be parameterized
-    /**
-     * @brief Maximum time allowed for a thread to block on an asynchronous
-     *        transfer
-     */
-    static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(10);
-
     /** @brief Pointer to the object handling system calls to the OS */
     const OsInterface* os_if = nullptr;
 #endif
-#if !defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
-#endif
+    /** @brief Maximum permitted time for blocking on a data transfer */
+    TickType_t m_max_block_time;
 };
 
 } // end namespace uart
