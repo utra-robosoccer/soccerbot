@@ -8,17 +8,17 @@ omnibot:
   left_front_wheel_hinge_controller:
     type: effort_controllers/JointPositionController
     joint: left_front_wheel_hinge
-    pid: {p: 30000.0, i: 0.01, d: 2.0}
+    pid: {p: 1000.0, i: 0.01, d: 2.0}
   right_front_wheel_hinge_controller:
     type: effort_controllers/JointPositionController
     joint: right_front_wheel_hinge
-    pid: {p: 30000.0, i: 0.01, d: 2.0}
+    pid: {p: 1000.0, i: 0.01, d: 2.0}
   left_back_wheel_hinge_controller:
     type: effort_controllers/JointPositionController
     joint: left_back_wheel_hinge
-    pid: {p: 30000.0, i: 0.01, d: 2.0}
+    pid: {p: 1000.0, i: 0.01, d: 2.0}
   right_back_wheel_hinge_controller:
     type: effort_controllers/JointPositionController
     joint: right_back_wheel_hinge
-    pid: {p: 30000.0, i: 0.01, d: 2.0}
+    pid: {p: 1000.0, i: 0.01, d: 2.0}
 
