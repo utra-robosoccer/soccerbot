@@ -6,13 +6,13 @@
     <xacro:include filename="$(find omnibot_description)/models/omnibot/model.gazebo" />
 
     <!-- Joint to keep the robot up in midair -->
-    <link name="world"/>
-    <joint name="world_base_link" type="fixed">
-        <parent link="world"/>
-        <child link="base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 1"/>
-        <axis xyz="1 0 0"/>
-    </joint>
+    <!--<link name="world"/>-->
+    <!--<joint name="world_base_link" type="fixed">-->
+        <!--<parent link="world"/>-->
+        <!--<child link="base_link"/>-->
+        <!--<origin rpy="0 0 0" xyz="0 0 1"/>-->
+        <!--<axis xyz="1 0 0"/>-->
+    <!--</joint>-->
 
     <!-- Links -->
     <link name="base_link"/>
@@ -125,28 +125,32 @@
         <parent link="body"/>
         <origin rpy="0 0 0.785398" xyz="-0.15 -0.15 0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="100"  lower="-1e10" upper="1e10" velocity="5"/>
+        <dynamics damping="0.0" friction="30.0" />
+        <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="right_front_wheel_hinge">
         <child link="right_front_wheel"/>
         <parent link="body"/>
         <origin rpy="0 0 3.92699" xyz="0.15 0.15 0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="100"  lower="-1e10" upper="1e10" velocity="5"/>
+        <dynamics damping="0.0" friction="30.0" />
+        <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="left_back_wheel_hinge">
         <child link="left_back_wheel"/>
         <parent link="body"/>
         <origin rpy="0 0 2.35619" xyz="0.15 -0.15 0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="100"  lower="-1e10" upper="1e10" velocity="5"/>
+        <dynamics damping="0.0" friction="30.0" />
+        <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="right_back_wheel_hinge">
         <child link="right_back_wheel"/>
         <parent link="body"/>
         <origin rpy="0 0 5.49779" xyz="-0.15 0.15 0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="100"  lower="-1e10" upper="1e10" velocity="5"/>
+        <dynamics damping="0.0" friction="30.0" />
+        <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint name="camera_joint" type="fixed">
         <parent link="base_link" />
