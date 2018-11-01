@@ -794,9 +794,7 @@ void StartBuffWriterTask(void const * argument)
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
                 if (motorDataPtr->_ID <= NUM_MOTORS) {
-                    xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
                     BufferMaster.MotorBuffer[motorDataPtr->_ID].write(*motorDataPtr);
-                    xSemaphoreGive(DATABUFFERHandle);
                 }
                 break;
             case eIMUData:
@@ -805,9 +803,7 @@ void StartBuffWriterTask(void const * argument)
                 if(IMUDataPtr == NULL){ break; }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
                 BufferMaster.IMUBuffer.write(*IMUDataPtr);
-                xSemaphoreGive(DATABUFFERHandle);
                 break;
             default:
                 break;
