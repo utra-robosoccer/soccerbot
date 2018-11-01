@@ -20,6 +20,10 @@
 #include "UART_Handler.h"
 #include "MPU6050.h"
 
+#if defined(THREADED)
+#include "cmsis_os.h"
+#endif
+
 namespace buffer {
 
 
@@ -39,21 +43,39 @@ public:
     ~BufferBase() {};
     void write(const T &item)
     {
+#if defined(THREADED)
+        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
+#endif
         *m_data_buf = item;
         m_empty = false;
+#if defined(THREADED)
+        xSemaphoreGive(DATABUFFERHandle);
+#endif
     }
     T read()
     {
+#if defined(THREADED)
+        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
+#endif
         if (m_empty)
         {
             return T();
         }
         m_empty = true;
         return *m_data_buf;
+#if defined(THREADED)
+        xSemaphoreGive(DATABUFFERHandle);
+#endif
     }
     void reset()
     {
+#if defined(THREADED)
+        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
+#endif
         m_empty = true;
+#if defined(THREADED)
+        xSemaphoreGive(DATABUFFERHandle);
+#endif
     }
     bool is_empty()
     {
