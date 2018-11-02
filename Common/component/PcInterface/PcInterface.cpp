@@ -80,6 +80,10 @@ bool PcInterface::receive(const size_t numBytes) {
 #endif
     case PcProtocol::UART:
         success = uartDriver->receive(rxBuffer, numBytes);
+//        if (!success) {
+//
+//            taskYIELD();
+//        }
         break;
     default:
         return false;
@@ -105,7 +109,7 @@ bool PcInterface::transmit(const size_t numBytes) {
 }
 
 bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes) {
-    if (sizeof(rxBuffer) >= numBytes) {
+    if (sizeof(rxBuffer) < numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
@@ -118,7 +122,7 @@ bool PcInterface::setRxBuffer(const uint8_t *rxArrayIn, const size_t numBytes) {
 }
 
 bool PcInterface::setTxBuffer(const uint8_t *txArrayIn, const size_t numBytes) {
-    if (sizeof(txBuffer) >= numBytes) {
+    if (sizeof(txBuffer) < numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
@@ -148,7 +152,7 @@ const os::OsInterface* PcInterface::getOsInterface() const {
 }
 
 bool PcInterface::getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const {
-    if (sizeof(rxBuffer) >= numBytes) {
+    if (sizeof(rxBuffer) < numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(rxMutex, SEMAPHORE_WAIT_NUM_TICKS);
@@ -160,7 +164,7 @@ bool PcInterface::getRxBuffer(uint8_t *rxArrayOut, const size_t numBytes) const 
 }
 
 bool PcInterface::getTxBuffer(uint8_t *txArrayOut, const size_t numBytes) const {
-    if (sizeof(txBuffer) >= numBytes) {
+    if (sizeof(txBuffer) < numBytes) {
         return false;
     }
     osInterface->OS_osMutexWait(txMutex, SEMAPHORE_WAIT_NUM_TICKS);
