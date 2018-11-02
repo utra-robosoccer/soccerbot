@@ -158,7 +158,9 @@ static volatile uint32_t error;
 
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
-uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart3);
+
+uint8_t rxBuff[92] = { };
 
 }
 
@@ -270,11 +272,11 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityHigh, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
-  osThreadStaticDef(RxTask, StartRxTask, osPriorityRealtime, 0, 512, RxTaskBuffer, &RxTaskControlBlock);
+  osThreadStaticDef(RxTask, StartRxTask, osPriorityHigh, 0, 512, RxTaskBuffer, &RxTaskControlBlock);
   RxTaskHandle = osThreadCreate(osThread(RxTask), NULL);
 
   /* definition and creation of TxTask */
@@ -348,170 +350,191 @@ void StartDefaultTask(void const * argument)
  * @ingroup Threads
  */
 void StartCommandTask(void const * argument) {
+    const char * hello = "hello";
+
+    HAL_UART_Transmit(
+               &huart3,
+               (uint8_t*) hello,
+               5,
+               5000
+           );
 
     uartDriver.setIOType(uart::IO_Type::DMA);
-  
-    Dynamixel_SetIOType(IO_POLL); // Configure IO
+    pcInterface.setup();
 
-    Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor10, 10, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor9, 9, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor8, 8, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor7, 7, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
-    Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-    Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-    Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
-    Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-    Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-    Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
-    Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-    Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
-
-    Dynamixel_HandleTypeDef* arrDynamixel[18] = { &Motor1, &Motor2, &Motor3,
-            &Motor4, &Motor5, &Motor6, &Motor7, &Motor8, &Motor9, &Motor10,
-            &Motor11, &Motor12, &Motor13, &Motor14, &Motor15, &Motor16,
-            &Motor17, &Motor18 };
-
-    UARTcmd_t Motorcmd[18];
-    for (uint8_t i = MOTOR1; i <= MOTOR18; i++) {
-        // Configure motor to return status packets only for read commands
-        Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
-
-        // Configure motor to return status packets with minimal latency
-        Dynamixel_SetReturnDelayTime(arrDynamixel[i], 100);
-
-        // Enable motor torque
-        Dynamixel_TorqueEnable(arrDynamixel[i], 1);
-
-        // Settings for torque near goal position, and acceptable error (AX12A only)
-        if (arrDynamixel[i]->_motorType == AX12ATYPE) {
-            AX12A_SetComplianceSlope(arrDynamixel[i], 5); // 4 vibrates; 7 is too loose
-            AX12A_SetComplianceMargin(arrDynamixel[i], 1);
-        }
-
-        (Motorcmd[i]).motorHandle = arrDynamixel[i];
-        (Motorcmd[i]).type = cmdWritePosition;
-    }
-  
-    (Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
-    (Motorcmd[MOTOR2]).qHandle = UART2_reqHandle;
-    (Motorcmd[MOTOR3]).qHandle = UART2_reqHandle;
-    (Motorcmd[MOTOR4]).qHandle = UART4_reqHandle;
-    (Motorcmd[MOTOR5]).qHandle = UART4_reqHandle;
-    (Motorcmd[MOTOR6]).qHandle = UART4_reqHandle;
-    (Motorcmd[MOTOR7]).qHandle = UART1_reqHandle;
-    (Motorcmd[MOTOR8]).qHandle = UART1_reqHandle;
-    (Motorcmd[MOTOR9]).qHandle = UART1_reqHandle;
-    (Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
-    (Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
-    (Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
-    (Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
-    (Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
-
-    Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
-
-    IMUdata.init(6);// 5 Hz bandwidth
-
-    // Set setupIsDone and unblock the higher-priority tasks
-    setupIsDone = true;
-    xTaskNotify(RxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(TxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART2TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART3TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART4TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
-    xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
-
-    uint32_t numIterations = 0;
-    uint8_t i;
-    float positions[18];
-    while(1){
+    for (;;) {
         xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
+        HAL_UART_Transmit(
+                       &huart3,
+                       (uint8_t*) hello,
+                       5,
+                       5000
+                   );
+        xTaskNotify(TxTaskHandle, 1UL, eNoAction);
 
-        // Convert raw bytes from robotGoal received from PC into floats
-        for(uint8_t i = 0; i < 18; i++){
-            uint8_t* ptr = (uint8_t*)&positions[i];
-            for(uint8_t j = 0; j < 4; j++){
-                *ptr = robotGoal.msg[i * 4 + j];
-                ptr++;
-            }
-        }
-
-        if(numIterations % 100 == 0){
-            // Every 100 iterations, assert torque enable
-            for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
-                Motorcmd[i].type = cmdWriteTorque;
-                Motorcmd[i].value = 1; // Enable
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
-        // Send each goal position to the queue, where the UART handler
-        // thread that's listening will receive it and send it to the motor
-        for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
-            switch(i){
-                case MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
-                    break;
-                case MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
-                    break;
-                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                    break;
-                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                    break;
-                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                    break;
-                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                    break;
-                default:
-                    break;
-            }
-
-            Motorcmd[i].type = cmdWritePosition;
-            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-
-            // Only read from legs
-            if(i <= MOTOR12){
-                Motorcmd[i].type = cmdReadPosition;
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
-        numIterations++;
     }
+  
+//    Dynamixel_SetIOType(IO_POLL); // Configure IO
+//
+//    Dynamixel_Init(&Motor12, 12, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor11, 11, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor10, 10, &huart6, GPIOC, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor9, 9, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor8, 8, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor7, 7, &huart1, GPIOA, GPIO_PIN_8, MX28TYPE);
+//    Dynamixel_Init(&Motor6, 6, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+//    Dynamixel_Init(&Motor5, 5, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+//    Dynamixel_Init(&Motor4, 4, &huart4, GPIOC, GPIO_PIN_3, MX28TYPE);
+//    Dynamixel_Init(&Motor3, 3, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+//    Dynamixel_Init(&Motor2, 2, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+//    Dynamixel_Init(&Motor1, 1, &huart2, GPIOA, GPIO_PIN_4, MX28TYPE);
+//    Dynamixel_Init(&Motor13, 13, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//    Dynamixel_Init(&Motor14, 14, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//    Dynamixel_Init(&Motor15, 15, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//    Dynamixel_Init(&Motor16, 16, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//    Dynamixel_Init(&Motor17, 17, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//    Dynamixel_Init(&Motor18, 18, &huart3, GPIOB, GPIO_PIN_2, AX12ATYPE);
+//
+//    Dynamixel_HandleTypeDef* arrDynamixel[18] = { &Motor1, &Motor2, &Motor3,
+//            &Motor4, &Motor5, &Motor6, &Motor7, &Motor8, &Motor9, &Motor10,
+//            &Motor11, &Motor12, &Motor13, &Motor14, &Motor15, &Motor16,
+//            &Motor17, &Motor18 };
+//
+//    UARTcmd_t Motorcmd[18];
+//    for (uint8_t i = MOTOR1; i <= MOTOR18; i++) {
+//        // Configure motor to return status packets only for read commands
+//        Dynamixel_SetStatusReturnLevel(arrDynamixel[i], 1);
+//
+//        // Configure motor to return status packets with minimal latency
+//        Dynamixel_SetReturnDelayTime(arrDynamixel[i], 100);
+//
+//        // Enable motor torque
+//        Dynamixel_TorqueEnable(arrDynamixel[i], 1);
+//
+//        // Settings for torque near goal position, and acceptable error (AX12A only)
+//        if (arrDynamixel[i]->_motorType == AX12ATYPE) {
+//            AX12A_SetComplianceSlope(arrDynamixel[i], 5); // 4 vibrates; 7 is too loose
+//            AX12A_SetComplianceMargin(arrDynamixel[i], 1);
+//        }
+//
+//        (Motorcmd[i]).motorHandle = arrDynamixel[i];
+//        (Motorcmd[i]).type = cmdWritePosition;
+//    }
+//
+//    (Motorcmd[MOTOR1]).qHandle = UART2_reqHandle;
+//    (Motorcmd[MOTOR2]).qHandle = UART2_reqHandle;
+//    (Motorcmd[MOTOR3]).qHandle = UART2_reqHandle;
+//    (Motorcmd[MOTOR4]).qHandle = UART4_reqHandle;
+//    (Motorcmd[MOTOR5]).qHandle = UART4_reqHandle;
+//    (Motorcmd[MOTOR6]).qHandle = UART4_reqHandle;
+//    (Motorcmd[MOTOR7]).qHandle = UART1_reqHandle;
+//    (Motorcmd[MOTOR8]).qHandle = UART1_reqHandle;
+//    (Motorcmd[MOTOR9]).qHandle = UART1_reqHandle;
+//    (Motorcmd[MOTOR10]).qHandle = UART6_reqHandle;
+//    (Motorcmd[MOTOR11]).qHandle = UART6_reqHandle;
+//    (Motorcmd[MOTOR12]).qHandle = UART6_reqHandle;
+//    (Motorcmd[MOTOR13]).qHandle = UART3_reqHandle;
+//    (Motorcmd[MOTOR14]).qHandle = UART3_reqHandle;
+//    (Motorcmd[MOTOR15]).qHandle = UART3_reqHandle;
+//    (Motorcmd[MOTOR16]).qHandle = UART3_reqHandle;
+//    (Motorcmd[MOTOR17]).qHandle = UART3_reqHandle;
+//    (Motorcmd[MOTOR18]).qHandle = UART3_reqHandle;
+//
+//    Dynamixel_SetIOType(IO_DMA); // Configure IO to use DMA
+//
+//    IMUdata.init(6);// 5 Hz bandwidth
+//
+//    // Set setupIsDone and unblock the higher-priority tasks
+//    setupIsDone = true;
+//    xTaskNotify(RxTaskHandle, 1UL, eNoAction);
+//    xTaskNotify(TxTaskHandle, 1UL, eNoAction);
+//    xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
+//    xTaskNotify(UART2TaskHandle, 1UL, eNoAction);
+//    xTaskNotify(UART3TaskHandle, 1UL, eNoAction);
+//    xTaskNotify(UART4TaskHandle, 1UL, eNoAction);
+//    xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
+//    xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
+//
+//    uint32_t numIterations = 0;
+//    uint8_t i;
+//    float positions[18];
+//    while(1){
+//        xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
+//
+//        // Convert raw bytes from robotGoal received from PC into floats
+//        for(uint8_t i = 0; i < 18; i++){
+//            uint8_t* ptr = (uint8_t*)&positions[i];
+//            for(uint8_t j = 0; j < 4; j++){
+//                *ptr = robotGoal.msg[i * 4 + j];
+//                ptr++;
+//            }
+//        }
+//
+//        if(numIterations % 100 == 0){
+//            // Every 100 iterations, assert torque enable
+//            for(uint8_t i = MOTOR1; i <= MOTOR18; i++){
+//                Motorcmd[i].type = cmdWriteTorque;
+//                Motorcmd[i].value = 1; // Enable
+//                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//            }
+//        }
+//
+//        // Send each goal position to the queue, where the UART handler
+//        // thread that's listening will receive it and send it to the motor
+//        for(i = MOTOR1; i <= MOTOR18; i++){ // NB: i begins at 0 (i.e. Motor1 corresponds to i = 0)
+//            switch(i){
+//                case MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+//                    break;
+//                case MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
+//                    break;
+//                case MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
+//                    break;
+//                case MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
+//                    break;
+//                case MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
+//                    break;
+//                case MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
+//                    break;
+//                case MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
+//                    break;
+//                default:
+//                    break;
+//            }
+//
+//            Motorcmd[i].type = cmdWritePosition;
+//            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//
+//            // Only read from legs
+//            if(i <= MOTOR12){
+//                Motorcmd[i].type = cmdReadPosition;
+//                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+//            }
+//        }
+//
+//        numIterations++;
+//    }
 }
 
 /**
@@ -721,24 +744,26 @@ void StartIMUTask(void const * argument)
  * @ingroup Threads
  */
 void StartRxTask(void const * argument) {
-    initializeVars();
-    uint8_t rxBuff[92] = { };
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-    pcInterface.setup();
+    //initializeVars();
+
+    //xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
     for (;;) {
         /* Since UartDriver.receive() protects uart access
          * with uartResourceMutex, can call PcInterface.receive()
          * repeatedly and thread-safely. */
-        pcInterface.receive(sizeof(rxBuff));
+        while(!pcInterface.receive(sizeof(rxBuff))) {}
+        //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
 
         /* Let EventHandler know a message has been received. */
         //signalRxComplete();
         /* EventHandler to do the following. */
         pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
         copyIntoBuffRx(rxBuff);
-        receiveDataBuffer();
+        //receiveDataBuffer();
+        xTaskNotify(CommandTaskHandle, 1UL, eNoAction);
     }
 }
 
@@ -755,17 +780,23 @@ void StartRxTask(void const * argument) {
  * @ingroup Threads
  */
 void StartTxTask(void const * argument) {
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-    shiftNotificationMask();
+
+    // TxTask waits for first time setup.
+    //xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+
+    //shiftNotificationMask();
 
     for (;;) {
+        xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
         //waitTxRequestFromEventHandler();
 
         /* EventHandler to do the following. */
-        copySensorDataToSend();
+        //copySensorDataToSend();
 
-        pcInterface.setTxBuffer((uint8_t*) &robotState, sizeof(RobotState));
-        pcInterface.transmit(sizeof(RobotState));
+        //pcInterface.setTxBuffer((uint8_t*) &robotState, sizeof(RobotState));
+        pcInterface.setTxBuffer((uint8_t*) &rxBuff, sizeof(rxBuff));
+        //pcInterface.transmit(sizeof(RobotState));
+        while (!pcInterface.transmit(sizeof(rxBuff))) {;}
     }
 }
 
@@ -812,6 +843,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
   * @ingroup Callbacks
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
+    setupIsDone = true;
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
         if(huart == &huart5){
@@ -824,7 +856,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
             xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == &huart3){
-            xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+            //xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+            xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == &huart4){
             xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
@@ -861,7 +894,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
         xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == &huart3){
-        xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        //xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == &huart4){
         xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
