@@ -29,9 +29,90 @@ namespace buffer {
 
 /*********************************** Buffer ***********************************/
 /**
- * @class Generic templated buffer class
+ * @class Generic templated thread-safe buffer class
  */
 
+#if defined(THREADED)
+template <class T>
+class BufferBase
+{
+public:
+    BufferBase(osMutexId lock)
+    {
+        m_data_buf = std::unique_ptr<T>(new T);
+        m_lock = lock;
+    }
+    ~BufferBase() {};
+    void write(const T &item)
+    {
+        xSemaphoreTake(m_lock, portMAX_DELAY);
+        *m_data_buf = item;
+        m_empty = false;
+        xSemaphoreGive(m_lock);
+    }
+    T read()
+    {
+        xSemaphoreTake(m_lock, portMAX_DELAY);
+        if (m_empty)
+        {
+            return T();
+        }
+        m_empty = true;
+        return *m_data_buf;
+        xSemaphoreGive(m_lock);
+    }
+    void reset()
+    {
+        xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_empty = true;
+        xSemaphoreGive(m_lock);
+    }
+    bool is_empty()
+    {
+        return m_empty;
+    }
+
+    // Defining methods here in the declaration for ease of use as a templated class
+private:
+    std::unique_ptr<T> m_data_buf;
+    bool m_empty = true;
+    osMutexId m_lock;
+};
+
+
+/**
+ * @class Easily extendable thread-safe master class that holds all relevant buffers
+ */
+
+class BufferMaster
+{
+public:
+    BufferMaster(osMutexId lock)
+    {
+        IMUBufferPtr = new BufferBase<imu::IMUStruct_t>(lock);
+        for(int i = 0; i < NUM_MOTORS; ++i)
+        {
+            MotorBufferPtrs[i] = new BufferBase<Dynamixel_HandleTypeDef>(lock);
+        }
+    }
+    ~BufferMaster()
+    {
+        delete IMUBufferPtr;
+        for(int i = 0; i < NUM_MOTORS; ++i)
+        {
+            delete MotorBufferPtrs[i];
+        }
+    }
+
+    BufferBase<imu::IMUStruct_t>* IMUBufferPtr;
+    BufferBase<Dynamixel_HandleTypeDef>* MotorBufferPtrs[NUM_MOTORS];
+    // Add buffer items here as necessary
+};
+
+#else
+/**
+ * @class Generic templated buffer class (not thread-safe)
+ */
 template <class T>
 class BufferBase
 {
@@ -43,39 +124,21 @@ public:
     ~BufferBase() {};
     void write(const T &item)
     {
-#if defined(THREADED)
-        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
-#endif
         *m_data_buf = item;
         m_empty = false;
-#if defined(THREADED)
-        xSemaphoreGive(DATABUFFERHandle);
-#endif
     }
     T read()
     {
-#if defined(THREADED)
-        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
-#endif
         if (m_empty)
         {
             return T();
         }
         m_empty = true;
         return *m_data_buf;
-#if defined(THREADED)
-        xSemaphoreGive(DATABUFFERHandle);
-#endif
     }
     void reset()
     {
-#if defined(THREADED)
-        xSemaphoreTake(DATABUFFERHandle, portMAX_DELAY);
-#endif
         m_empty = true;
-#if defined(THREADED)
-        xSemaphoreGive(DATABUFFERHandle);
-#endif
     }
     bool is_empty()
     {
@@ -90,7 +153,7 @@ private:
 
 
 /**
- * @class Easily extendable master class that holds all relevant buffers
+ * @class Easily extendable master class that holds all relevant buffers (not thread-safe)
  */
 
 class BufferMaster
@@ -103,7 +166,7 @@ public:
     BufferBase<Dynamixel_HandleTypeDef> MotorBuffer[NUM_MOTORS];
     // Add buffer items here as necessary
 };
-
+#endif
 } // end namespace buffer
 
 /**
