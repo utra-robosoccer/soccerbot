@@ -157,7 +157,7 @@ Dynamixel_HandleTypeDef Motor1, Motor2, Motor3 ,Motor4, Motor5,
 
 imu::MPU6050 IMUdata (&hi2c1);
 
-buffer::BufferMaster BufferMaster;
+buffer::BufferMaster* BufferMasterPtr = nullptr;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -225,7 +225,9 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of DATABUFFER */
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
-
+  /* USER CODE BEGIN Initialize Data Buffer */
+  BufferMasterPtr = new buffer::BufferMaster(DATABUFFERHandle);
+  /* USER CODE END Initialize Data Buffer */
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -794,7 +796,7 @@ void StartBuffWriterTask(void const * argument)
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
                 if (motorDataPtr->_ID <= NUM_MOTORS) {
-                    BufferMaster.MotorBuffer[motorDataPtr->_ID].write(*motorDataPtr);
+                    BufferMasterPtr->MotorBufferPtrs[motorDataPtr->_ID]->write(*motorDataPtr);
                 }
                 break;
             case eIMUData:
@@ -803,7 +805,7 @@ void StartBuffWriterTask(void const * argument)
                 if(IMUDataPtr == NULL){ break; }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                BufferMaster.IMUBuffer.write(*IMUDataPtr);
+                BufferMasterPtr->IMUBufferPtr->write(*IMUDataPtr);
                 break;
             default:
                 break;
