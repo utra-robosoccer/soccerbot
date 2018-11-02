@@ -45,30 +45,34 @@ TEST(BufferTests, CanWriteToBuffer){
     intBuffer.write(10);
 }
 
-TEST(BufferTests, EmptyBoolCheck){
+TEST(BufferTests, NumReadsCheck){
     BufferBase<int> intBuffer;
 
-    ASSERT_TRUE(intBuffer.is_empty());
+    ASSERT_EQ(intBuffer.num_reads() , -1);
     intBuffer.write(10);
-    ASSERT_FALSE(intBuffer.is_empty());
+    ASSERT_EQ(intBuffer.num_reads() , 0);
 }
 
 TEST(BufferTests, CanReadFromBuffer){
     BufferBase<int> intBuffer;
     intBuffer.write(10);
-    int result = intBuffer.read();
 
+    int result = intBuffer.read();
     ASSERT_EQ(result, 10);
-    ASSERT_TRUE(intBuffer.is_empty());
+    ASSERT_EQ(intBuffer.num_reads() , 1);
+
+    result = intBuffer.read();
+    ASSERT_EQ(result, 10);
+    ASSERT_EQ(intBuffer.num_reads() , 2);
 }
 
 TEST(BufferTests, CanResetBuffer){
     BufferBase<int> intBuffer;
     intBuffer.write(10);
 
-    ASSERT_FALSE(intBuffer.is_empty());
+    ASSERT_EQ(intBuffer.num_reads() , 0);
     intBuffer.reset();
-    ASSERT_TRUE(intBuffer.is_empty());
+    ASSERT_EQ(intBuffer.num_reads() , -1);
 }
 
 TEST(BufferTests, CanInitializeBufferMaster){
@@ -79,7 +83,7 @@ TEST(BufferTests, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
     imu::IMUStruct_t IMUdata;
 
-    bufferMaster.IMUBuffer.write(IMUdata);
+    bufferMaster.IMUBufferPtr->write(IMUdata);
 }
 
 TEST(BufferTests, CanReadFromIMUBuffer){
@@ -92,8 +96,8 @@ TEST(BufferTests, CanReadFromIMUBuffer){
     IMUdata.z_Accel = 5.0;
     IMUdata.z_Gyro = 6.0;
 
-    bufferMaster.IMUBuffer.write(IMUdata);
-    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
+    bufferMaster.IMUBufferPtr->write(IMUdata);
+    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBufferPtr->read();
 
     ASSERT_EQ(readIMUdata.x_Accel, IMUdata.x_Accel);
     ASSERT_EQ(readIMUdata.y_Accel, IMUdata.y_Accel);
@@ -109,22 +113,46 @@ TEST(BufferTests, CanWriteToMotorBuffer){
 
     for(int i = 0; i < NUM_MOTORS; ++i)
     {
-        bufferMaster.MotorBuffer[i].write(motorData[i]);
+        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
     }
 }
 
 TEST(BufferTests, CanReadMotorDataBuffer){
     BufferMaster bufferMaster;
-    Dynamixel_HandleTypeDef motorData[12];
-    Dynamixel_HandleTypeDef readMotorData[12];
+    Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
+    Dynamixel_HandleTypeDef readMotorData[NUM_MOTORS];
 
     for(int i = 0; i < NUM_MOTORS; ++i)
     {
         motorData[i]._ID = i;
-        bufferMaster.MotorBuffer[i].write(motorData[i]);
-        readMotorData[i] = bufferMaster.MotorBuffer[i].read();
+        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
+        readMotorData[i] = bufferMaster.MotorBufferPtrs[i]->read();
         ASSERT_EQ(readMotorData[i]._ID, i);
     }
+}
+
+TEST(BufferTests, CanConfirmAllDataReady){
+    BufferMaster bufferMaster;
+    Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
+    imu::IMUStruct_t IMUdata;
+
+    ASSERT_FALSE(bufferMaster.all_data_ready());
+    for(int i = 0; i < NUM_MOTORS; ++i)
+    {
+        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
+        ASSERT_FALSE(bufferMaster.all_data_ready());
+    }
+
+    bufferMaster.IMUBufferPtr->write(IMUdata);
+    ASSERT_TRUE(bufferMaster.all_data_ready());
+
+    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBufferPtr->read();
+    ASSERT_FALSE(bufferMaster.all_data_ready());
+
+    bufferMaster.IMUBufferPtr->write(IMUdata);
+    ASSERT_TRUE(bufferMaster.all_data_ready());
+    Dynamixel_HandleTypeDef readMotorData = bufferMaster.MotorBufferPtrs[0]->read();
+    ASSERT_FALSE(bufferMaster.all_data_ready());
 }
 
 } // end anonymous namespace
