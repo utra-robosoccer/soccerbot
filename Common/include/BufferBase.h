@@ -41,41 +41,39 @@ public:
     {
         m_data_buf = std::unique_ptr<T>(new T);
         m_lock = lock;
+        m_read = -1;
     }
     ~BufferBase() {};
     void write(const T &item)
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
         *m_data_buf = item;
-        m_empty = false;
+        m_read = 0;
         xSemaphoreGive(m_lock);
     }
     T read()
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
-        if (m_empty)
-        {
-            return T();
-        }
-        m_empty = true;
+        m_read++;
         return *m_data_buf;
         xSemaphoreGive(m_lock);
     }
     void reset()
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
-        m_empty = true;
+        m_read = -1;
         xSemaphoreGive(m_lock);
     }
-    bool is_empty()
+    int8_t num_reads()
     {
-        return m_empty;
+        return m_read;
     }
 
     // Defining methods here in the declaration for ease of use as a templated class
 private:
     std::unique_ptr<T> m_data_buf;
-    bool m_empty = true;
+    //bool indicates whether data has been read, -1 if data not written yet
+    int8_t m_read;
     osMutexId m_lock;
 };
 
@@ -94,6 +92,7 @@ public:
         {
             MotorBufferPtrs[i] = new BufferBase<Dynamixel_HandleTypeDef>(lock);
         }
+        m_lock = lock;
     }
     ~BufferMaster()
     {
@@ -103,10 +102,26 @@ public:
             delete MotorBufferPtrs[i];
         }
     }
+    bool all_data_ready()
+    {
+        xSemaphoreTake(m_lock, portMAX_DELAY);
+        bool ready =  (IMUBufferPtr->num_reads() == 0);
 
+        if(ready)
+        {
+            for(int i = 0; i < NUM_MOTORS; ++i)
+            {
+                ready = (ready && MotorBufferPtrs[i]->num_reads() == 0);
+            }
+        }
+        xSemaphoreGive(m_lock);
+        return ready;
+    }
     BufferBase<imu::IMUStruct_t>* IMUBufferPtr;
     BufferBase<Dynamixel_HandleTypeDef>* MotorBufferPtrs[NUM_MOTORS];
     // Add buffer items here as necessary
+private:
+    osMutexId m_lock;
 };
 
 #else
@@ -120,35 +135,32 @@ public:
     BufferBase()
     {
         m_data_buf = std::unique_ptr<T>(new T);
+        m_read = -1;
     }
     ~BufferBase() {};
     void write(const T &item)
     {
         *m_data_buf = item;
-        m_empty = false;
+        m_read = 0;
     }
     T read()
     {
-        if (m_empty)
-        {
-            return T();
-        }
-        m_empty = true;
+        m_read++;
         return *m_data_buf;
     }
     void reset()
     {
-        m_empty = true;
+        m_read = -1;
     }
-    bool is_empty()
+    int8_t num_reads()
     {
-        return m_empty;
+        return m_read;
     }
 
     // Defining methods here in the declaration for ease of use as a templated class
 private:
     std::unique_ptr<T> m_data_buf;
-    bool m_empty = true;
+    int8_t m_read;
 };
 
 
@@ -159,11 +171,37 @@ private:
 class BufferMaster
 {
 public:
-    BufferMaster(){};
-    ~BufferMaster(){};
+    BufferMaster()
+    {
+        IMUBufferPtr = new BufferBase<imu::IMUStruct_t>;
+        for(int i = 0; i < NUM_MOTORS; ++i)
+        {
+            MotorBufferPtrs[i] = new BufferBase<Dynamixel_HandleTypeDef>;
+        }
+    }
+    ~BufferMaster()
+    {
+        delete IMUBufferPtr;
+        for(int i = 0; i < NUM_MOTORS; ++i)
+        {
+            delete MotorBufferPtrs[i];
+        }
+    }
+    bool all_data_ready()
+    {
+        bool ready =  (IMUBufferPtr->num_reads() == 0);
 
-    BufferBase<imu::IMUStruct_t> IMUBuffer;
-    BufferBase<Dynamixel_HandleTypeDef> MotorBuffer[NUM_MOTORS];
+        if(ready)
+        {
+            for(int i = 0; i < NUM_MOTORS; ++i)
+            {
+                ready = (ready && MotorBufferPtrs[i]->num_reads() == 0);
+            }
+        }
+        return ready;
+    }
+    BufferBase<imu::IMUStruct_t>* IMUBufferPtr;
+    BufferBase<Dynamixel_HandleTypeDef>* MotorBufferPtrs[NUM_MOTORS];
     // Add buffer items here as necessary
 };
 #endif
