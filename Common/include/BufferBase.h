@@ -76,7 +76,7 @@ public:
     // Defining methods here in the declaration for ease of use as a templated class
 private:
     std::unique_ptr<T> m_data_buf;
-    //bool indicates whether data has been read, -1 if data not written yet
+    //int indicates whether data has been read, -1 if data not written yet
     int8_t m_read;
     osMutexId m_lock = nullptr;
 };
