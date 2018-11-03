@@ -5,7 +5,7 @@
  * @brief   Helper file for the function StartRXTask in freertos.cpp
  *
  * @defgroup Helpers
- * @ingroup  Threads
+ * @ingroup Threads
  * @brief Helper functions to help the read-ability of freertos.cpp
  * @{
  *****************************************************************************
@@ -47,7 +47,8 @@ static uint32_t notification;
 /*****************************************************************************/
 /**
  * @defgroup RxHelperFunctions StartRxTask Helper Functions
- * @brief    Helper functions for StartRxTask()
+ * @ingroup Helpers
+ * @brief Helper functions for StartRxTask()
  *
  * # StartRXTask Helper Functions #
  *
@@ -174,5 +175,5 @@ void receiveDataBuffer(void) {
 /**
  * @}
  */
-/* end Helpers */
+/* end - Helpers */
 
