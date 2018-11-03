@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    UART_Handler.c
+  * @file    uart_handler.c
   * @author  Tyler
   * @brief   This file implements a generic event processor for UART events,
   *          which occur when commands for the motors need to be distributed
   *
-  * @defgroup UART_Handler UART Handler
+  * @defgroup uart_handler UART Handler
   * @brief    Event processor for motor commands
   * @{
   ******************************************************************************
@@ -15,7 +15,7 @@
 
 
 /********************************* Includes **********************************/
-#include "UART_Handler.h"
+#include "uart_handler.h"
 
 
 
@@ -41,17 +41,26 @@ extern osMessageQId TXQueueHandle;
  * @return None
  */
 void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
+    MotorData_t data;
+    float pos = 0;
+    DataToSend->pData = &data;
+
+    bool status = false;
     switch(cmdPtr->type){
         case cmdReadPosition:
-            Dynamixel_GetPosition(cmdPtr->motorHandle);
-            DataToSend->pData = cmdPtr->motorHandle;
+            status = cmdPtr->motorHandle->getPosition(pos);
+
+            data.id = cmdPtr->motorHandle->id();
+            data.payload = &pos;
+            data.type = MotorData_t::T_FLOAT;
+
             xQueueSend(TXQueueHandle, DataToSend, 0);
             break;
         case cmdWritePosition:
-            Dynamixel_SetGoalPosition(cmdPtr->motorHandle, cmdPtr->value);
+            status = cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
             break;
         case cmdWriteTorque:
-            Dynamixel_TorqueEnable(cmdPtr->motorHandle, cmdPtr->value);
+            status = cmdPtr->motorHandle->enableTorque(cmdPtr->value);
             break;
         default:
             break;
