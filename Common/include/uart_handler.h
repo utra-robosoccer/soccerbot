@@ -18,18 +18,14 @@
 
 
 
-#ifndef __UART_HANDLER_H__
-#define __UART_HANDLER_H__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef UART_HANDLER_H
+#define UART_HANDLER_H
 
 
 
 
 /********************************** Includes **********************************/
-#include "DynamixelProtocolV1.h"
+#include "Dynamixel.h"
 #include "cmsis_os.h"
 
 
@@ -41,9 +37,9 @@ extern "C" {
  *        handlers
  */
 typedef enum{
-	cmdReadPosition,    /**< Command to read motor position */
-	cmdWritePosition,   /**< Command to set new motor goal position */
-	cmdWriteTorque      /**< Command to refresh the motor torque enable */
+    cmdReadPosition,  /**< Command to read motor position */
+    cmdWritePosition, /**< Command to set new motor goal position */
+    cmdWriteTorque    /**< Command to refresh the motor torque enable */
 }eUARTcmd_t;
 
 /**
@@ -53,28 +49,34 @@ typedef enum{
  *        action (reading from or writing to motor command registers)
  */
 typedef struct {
-	eUARTcmd_t 					type;          /**< Indicates the type of motor
-	                                                command */
-	Dynamixel_HandleTypeDef*	motorHandle;   /**< Pointer to the motor
-	                                                container */
-	float 						value;         /**< The value to be written in
-	                                                the case of a write
-	                                                instruction */
-	QueueHandle_t				qHandle;       /**< Pointer to the queue for
-	                                                this motor's commands */
+    eUARTcmd_t        type;          /**< Indicates the type of motor
+	                                      command                        */
+    dynamixel::Motor* motorHandle;   /**< Pointer to the motor container */
+    float             value;         /**< The value to be written in the
+                                          case of a write instruction    */
+    QueueHandle_t    qHandle;       /**< Pointer to the queue for this
+                                          motor's commands               */
 }UARTcmd_t;
 
 /**
  * @brief Enumerates the types of data that can be sent to the sensor queue.
  *        This is used so that the reader of the queue will know how to
- *        typecast the void pointer so that the data can be interpreted
+ *        cast the void pointer so that the data can be interpreted
  *        correctly. See TXData_t for more details
  */
 typedef enum{
-	eMotorData,     /**< Indicates that the pointer is a
-	                     Dynamixel_HandleTypeDef */
-	eIMUData        /**< Indicates that the pointer is a MPU6050_HandleTypeDef */
+    eMotorData, /**< Indicates that the pointer is a Motor   */
+    eIMUData    /**< Indicates that the pointer is a MPU6050 */
 }eTXData_t;
+
+/** @brief Motor data sent from the UART threads to the TX thread */
+typedef struct{
+    uint8_t id;
+    void* payload;
+    enum{
+        T_FLOAT
+    }type;
+}MotorData_t;
 
 /**
  * @brief   This is the data structure copied into the sensor queue, and read
@@ -88,8 +90,8 @@ typedef enum{
  *          allows any type of sensor data to be sent through the queue
  */
 typedef struct {
-	eTXData_t eDataType;    /**< Tells the receiving task what the data is */
-	void* pData;            /**< Points to the container for the data      */
+    eTXData_t eDataType; /**< Tells the receiving task what the data is */
+    void* pData;         /**< Points to the container for the data      */
 }TXData_t;
 
 
@@ -103,8 +105,5 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend);
  */
 /* end UART_HandlerHeader */
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* __UART_HANDLER_H__ */
+#endif /* UART_HANDLER_H*/

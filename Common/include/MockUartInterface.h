@@ -23,12 +23,12 @@
 #include <gmock/gmock.h>
 
 #include "UartInterface.h"
-using namespace uart;
+using uart::UartInterface;
 
 
 
 
-/***************************** Test_UartInterface ****************************/
+/***************************** MockUartInterface *****************************/
 namespace mocks{
 // Classes and structs
 // ----------------------------------------------------------------------------

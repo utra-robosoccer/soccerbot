@@ -20,8 +20,7 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
-
+#include <stdint.h>
 #include "SystemConf.h"
 #include "cmsis_os.h"
 
