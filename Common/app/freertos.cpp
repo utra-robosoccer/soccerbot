@@ -272,11 +272,11 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityHigh, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
-  osThreadStaticDef(RxTask, StartRxTask, osPriorityHigh, 0, 512, RxTaskBuffer, &RxTaskControlBlock);
+  osThreadStaticDef(RxTask, StartRxTask, osPriorityRealtime, 0, 512, RxTaskBuffer, &RxTaskControlBlock);
   RxTaskHandle = osThreadCreate(osThread(RxTask), NULL);
 
   /* definition and creation of TxTask */
