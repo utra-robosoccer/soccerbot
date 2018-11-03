@@ -139,7 +139,7 @@ osStaticMutexDef_t DATABUFFERControlBlock;
 namespace{
 
 
-buffer::BufferMaster* BufferMasterPtr = nullptr;
+buffer::BufferMaster BufferMaster;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -208,7 +208,7 @@ void MX_FREERTOS_Init(void) {
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
   /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMasterPtr = new buffer::BufferMaster(DATABUFFERHandle);
+  BufferMaster.set_lock(DATABUFFERHandle);
   /* USER CODE END Initialize Data Buffer */
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -741,7 +741,7 @@ void StartBuffWriterTask(void const * argument)
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
     TXData_t dataToWrite;
     imu::IMUStruct_t* IMUDataPtr;
-    Dynamixel_HandleTypeDef* motorDataPtr;
+    MotorData_t* motorDataPtr;
 
     for(;;)
     {
@@ -749,7 +749,7 @@ void StartBuffWriterTask(void const * argument)
         switch (dataToWrite.eDataType) {
             case eMotorData:
 
-                motorDataPtr = (Dynamixel_HandleTypeDef*) dataToWrite.pData;
+                motorDataPtr = (MotorData_t*) dataToWrite.pData;
 
                 if (motorDataPtr == NULL) { break; }
 
@@ -757,8 +757,8 @@ void StartBuffWriterTask(void const * argument)
                 // Each type of buffer could have its own mutex but this will probably
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
-                if (motorDataPtr->_ID <= NUM_MOTORS) {
-                    BufferMasterPtr->MotorBufferPtrs[motorDataPtr->_ID]->write(*motorDataPtr);
+                if (motorDataPtr->id <= periph::NUM_MOTORS) {
+                    BufferMaster.MotorBufferArray[motorDataPtr->id].write(*motorDataPtr);
                 }
                 break;
             case eIMUData:
@@ -767,7 +767,7 @@ void StartBuffWriterTask(void const * argument)
                 if(IMUDataPtr == NULL){ break; }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                BufferMasterPtr->IMUBufferPtr->write(*IMUDataPtr);
+                BufferMaster.IMUBuffer.write(*IMUDataPtr);
                 break;
             default:
                 break;

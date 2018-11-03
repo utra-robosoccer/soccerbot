@@ -19,6 +19,7 @@
 #include <memory>
 #include "UART_Handler.h"
 #include "MPU6050.h"
+#include "PeripheralInstances.h"
 
 #if defined(THREADED)
 #include "cmsis_os.h"
@@ -37,13 +38,16 @@ template <class T>
 class BufferBase
 {
 public:
-    BufferBase(osMutexId lock)
+    BufferBase()
     {
         m_data_buf = std::unique_ptr<T>(new T);
-        m_lock = lock;
         m_read = -1;
     }
     ~BufferBase() {};
+    void set_lock(osMutexId lock)
+    {
+        m_lock = lock;
+    }
     void write(const T &item)
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
@@ -74,7 +78,7 @@ private:
     std::unique_ptr<T> m_data_buf;
     //bool indicates whether data has been read, -1 if data not written yet
     int8_t m_read;
-    osMutexId m_lock;
+    osMutexId m_lock = nullptr;
 };
 
 
@@ -85,43 +89,37 @@ private:
 class BufferMaster
 {
 public:
-    BufferMaster(osMutexId lock)
+    BufferMaster()  {}
+    ~BufferMaster() {}
+    void set_lock(osMutexId lock)
     {
-        IMUBufferPtr = new BufferBase<imu::IMUStruct_t>(lock);
-        for(int i = 0; i < NUM_MOTORS; ++i)
+        IMUBuffer.set_lock(lock);
+        for(int i = 0; i < periph::NUM_MOTORS; ++i)
         {
-            MotorBufferPtrs[i] = new BufferBase<Dynamixel_HandleTypeDef>(lock);
+            MotorBufferArray[i].set_lock(lock);
         }
         m_lock = lock;
-    }
-    ~BufferMaster()
-    {
-        delete IMUBufferPtr;
-        for(int i = 0; i < NUM_MOTORS; ++i)
-        {
-            delete MotorBufferPtrs[i];
-        }
     }
     bool all_data_ready()
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
-        bool ready =  (IMUBufferPtr->num_reads() == 0);
+        bool ready =  (IMUBuffer.num_reads() == 0);
 
         if(ready)
         {
-            for(int i = 0; i < NUM_MOTORS; ++i)
+            for(int i = 0; i < periph::NUM_MOTORS; ++i)
             {
-                ready = (ready && MotorBufferPtrs[i]->num_reads() == 0);
+                ready = (ready && MotorBufferArray[i].num_reads() == 0);
             }
         }
         xSemaphoreGive(m_lock);
         return ready;
     }
-    BufferBase<imu::IMUStruct_t>* IMUBufferPtr;
-    BufferBase<Dynamixel_HandleTypeDef>* MotorBufferPtrs[NUM_MOTORS];
+    BufferBase<imu::IMUStruct_t> IMUBuffer;
+    BufferBase<MotorData_t> MotorBufferArray[periph::NUM_MOTORS];
     // Add buffer items here as necessary
 private:
-    osMutexId m_lock;
+    osMutexId m_lock = nullptr;
 };
 
 #else
@@ -171,37 +169,23 @@ private:
 class BufferMaster
 {
 public:
-    BufferMaster()
-    {
-        IMUBufferPtr = new BufferBase<imu::IMUStruct_t>;
-        for(int i = 0; i < NUM_MOTORS; ++i)
-        {
-            MotorBufferPtrs[i] = new BufferBase<Dynamixel_HandleTypeDef>;
-        }
-    }
-    ~BufferMaster()
-    {
-        delete IMUBufferPtr;
-        for(int i = 0; i < NUM_MOTORS; ++i)
-        {
-            delete MotorBufferPtrs[i];
-        }
-    }
+    BufferMaster() {}
+    ~BufferMaster() {}
     bool all_data_ready()
     {
-        bool ready =  (IMUBufferPtr->num_reads() == 0);
+        bool ready =  (IMUBuffer.num_reads() == 0);
 
         if(ready)
         {
-            for(int i = 0; i < NUM_MOTORS; ++i)
+            for(int i = 0; i < periph::NUM_MOTORS; ++i)
             {
-                ready = (ready && MotorBufferPtrs[i]->num_reads() == 0);
+                ready = (ready && MotorBufferArray[i].num_reads() == 0);
             }
         }
         return ready;
     }
-    BufferBase<imu::IMUStruct_t>* IMUBufferPtr;
-    BufferBase<Dynamixel_HandleTypeDef>* MotorBufferPtrs[NUM_MOTORS];
+    BufferBase<imu::IMUStruct_t> IMUBuffer;
+    BufferBase<MotorData_t> MotorBufferArray[18];
     // Add buffer items here as necessary
 };
 #endif
