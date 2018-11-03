@@ -32,7 +32,7 @@ namespace uart{
  * @class Concrete implementation of the abstract UartInterface class, to be
  *        used in production builds
  */
-class HalUartInterface : UartInterface{
+class HalUartInterface : public UartInterface{
 public:
     HalUartInterface();
     ~HalUartInterface();
@@ -75,6 +75,7 @@ public:
         uint8_t* arrReceive,
         size_t numBytes
     ) const override final;
+#endif
 
     void abortTransmit(
         const UART_HandleTypeDef* uartHandlePtr
@@ -83,7 +84,6 @@ public:
     void abortReceive(
         const UART_HandleTypeDef* uartHandlePtr
     ) const override final;
-#endif
 };
 
 } // end namespace uart

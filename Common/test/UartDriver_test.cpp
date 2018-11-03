@@ -3,9 +3,9 @@
   * @file    UartDriver_test.cpp
   * @author  Tyler Gamvrelis
   *
-  * @defgroup UartDriver_test
+  * @defgroup UartDriver_Test
   * @ingroup UART
-  * @brief UartDriver unit tests
+  * @brief UartDriver test driver
   * @{
   *****************************************************************************
   */
@@ -602,4 +602,4 @@ TEST(UartDriver, DMAReceiveCanSucceed){
 /**
  * @}
  */
-/* end - UartDriver_test */
+/* end - UartDriver_Test */
