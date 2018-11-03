@@ -13,7 +13,7 @@
 #define COMMON_INCLUDE_I2CINTERFACE_H_
 
 /********************************* Includes **********************************/
-#include <stdint.h>
+#include <cstdint>
 #include "SystemConf.h"
 #include "i2c.h"
 
