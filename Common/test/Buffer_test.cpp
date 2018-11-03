@@ -10,13 +10,15 @@
   *****************************************************************************
   */
 
-
+//TODO: Fix THREADED macro issues
 
 
 /********************************* Includes **********************************/
-#include "BufferBase.h"
 #include "UART_Handler.h"
+#include "PeripheralInstances.h"
 
+#undef THREADED
+#include "BufferBase.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -83,7 +85,7 @@ TEST(BufferTests, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
     imu::IMUStruct_t IMUdata;
 
-    bufferMaster.IMUBufferPtr->write(IMUdata);
+    bufferMaster.IMUBuffer.write(IMUdata);
 }
 
 TEST(BufferTests, CanReadFromIMUBuffer){
@@ -96,8 +98,8 @@ TEST(BufferTests, CanReadFromIMUBuffer){
     IMUdata.z_Accel = 5.0;
     IMUdata.z_Gyro = 6.0;
 
-    bufferMaster.IMUBufferPtr->write(IMUdata);
-    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBufferPtr->read();
+    bufferMaster.IMUBuffer.write(IMUdata);
+    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
 
     ASSERT_EQ(readIMUdata.x_Accel, IMUdata.x_Accel);
     ASSERT_EQ(readIMUdata.y_Accel, IMUdata.y_Accel);
@@ -108,50 +110,51 @@ TEST(BufferTests, CanReadFromIMUBuffer){
 }
 
 TEST(BufferTests, CanWriteToMotorBuffer){
+    //TODO: Use periph::NUM_MOTORS without defining THREADED
     BufferMaster bufferMaster;
-    Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
+    MotorData_t motorData[18];
 
-    for(int i = 0; i < NUM_MOTORS; ++i)
+    for(int i = 0; i < 18; ++i)
     {
-        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
+        bufferMaster.MotorBufferArray[i].write(motorData[i]);
     }
 }
 
 TEST(BufferTests, CanReadMotorDataBuffer){
     BufferMaster bufferMaster;
-    Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
-    Dynamixel_HandleTypeDef readMotorData[NUM_MOTORS];
+    MotorData_t motorData[18];
+    MotorData_t readMotorData[18];
 
-    for(int i = 0; i < NUM_MOTORS; ++i)
+    for(int i = 0; i < 18; ++i)
     {
-        motorData[i]._ID = i;
-        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
-        readMotorData[i] = bufferMaster.MotorBufferPtrs[i]->read();
-        ASSERT_EQ(readMotorData[i]._ID, i);
+        motorData[i].id = i;
+        bufferMaster.MotorBufferArray[i].write(motorData[i]);
+        readMotorData[i] = bufferMaster.MotorBufferArray[i].read();
+        ASSERT_EQ(readMotorData[i].id, i);
     }
 }
 
 TEST(BufferTests, CanConfirmAllDataReady){
     BufferMaster bufferMaster;
-    Dynamixel_HandleTypeDef motorData[NUM_MOTORS];
+    MotorData_t motorData[18];
     imu::IMUStruct_t IMUdata;
 
     ASSERT_FALSE(bufferMaster.all_data_ready());
-    for(int i = 0; i < NUM_MOTORS; ++i)
+    for(int i = 0; i < 18; ++i)
     {
-        bufferMaster.MotorBufferPtrs[i]->write(motorData[i]);
+        bufferMaster.MotorBufferArray[i].write(motorData[i]);
         ASSERT_FALSE(bufferMaster.all_data_ready());
     }
 
-    bufferMaster.IMUBufferPtr->write(IMUdata);
+    bufferMaster.IMUBuffer.write(IMUdata);
     ASSERT_TRUE(bufferMaster.all_data_ready());
 
-    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBufferPtr->read();
+    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
     ASSERT_FALSE(bufferMaster.all_data_ready());
 
-    bufferMaster.IMUBufferPtr->write(IMUdata);
+    bufferMaster.IMUBuffer.write(IMUdata);
     ASSERT_TRUE(bufferMaster.all_data_ready());
-    Dynamixel_HandleTypeDef readMotorData = bufferMaster.MotorBufferPtrs[0]->read();
+    MotorData_t readMotorData = bufferMaster.MotorBufferArray[0].read();
     ASSERT_FALSE(bufferMaster.all_data_ready());
 }
 
