@@ -720,7 +720,7 @@ void StartTxTask(void const * argument)
 
     for(;;)
     {
-        copySensorDataToSend();
+        copySensorDataToSend(&BufferMaster);
         transmitStatusFromPC();
         waitForNotificationTX();
     }
