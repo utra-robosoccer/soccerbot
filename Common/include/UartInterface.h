@@ -20,7 +20,7 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
+#include <stdint.h>
 #include "SystemConf.h"
 #include "usart.h"
 
@@ -153,6 +153,7 @@ public:
         size_t numBytes
     ) const = 0;
 #endif
+
     /**
      * @brief Aborts an asynchronous transmission
      * @param uartHandlePtr Pointer to a structure that contains

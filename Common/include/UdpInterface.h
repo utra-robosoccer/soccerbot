@@ -15,7 +15,7 @@
 #ifndef UDP_INTERFACE_H
 #define UDP_INTERFACE_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include <lwip/netif.h>
 #include <lwip/udp.h>

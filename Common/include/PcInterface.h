@@ -15,7 +15,6 @@
 
 #ifndef PC_INTERFACE_H
 #define PC_INTERFACE_H
-
 #if defined(STM32F767xx)
 #define PC_INTERFACE_USE_LWIP
 #endif
@@ -24,7 +23,7 @@
 
 
 /********************************* Includes **********************************/
-#include <cstdint>
+#include <stdint.h>
 #include "OsInterface.h"
 #include "UartDriver.h"
 #if defined(PC_INTERFACE_USE_LWIP)
