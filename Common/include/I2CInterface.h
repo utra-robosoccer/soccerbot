@@ -1,15 +1,7 @@
-/*
- * I2CInterface.h
- *
- *  Created on: Oct 6, 2018
- *      Author: Hannah
- */
-
 /**
  *****************************************************************************
  * @file    I2CInterface.h
  * @author  Hannah L
- * @brief   Defines the I2C Interface class that
  *
  * @defgroup I2CInterface
  * @ingroup  I2C
@@ -21,7 +13,7 @@
 #define COMMON_INCLUDE_I2CINTERFACE_H_
 
 /********************************* Includes **********************************/
-#include "stdint.h"
+#include <stdint.h>
 #include "SystemConf.h"
 #include "i2c.h"
 
