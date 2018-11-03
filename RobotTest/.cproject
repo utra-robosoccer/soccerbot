@@ -195,11 +195,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-<<<<<<< HEAD
-						<entry excluding="Common/app|Common/hardware|Common/component|src|app|hardware/HalUartInterface.cpp|include|inc|component|src/HalUartInterface.cpp|googletest|src/FunctionalFreeRTOSInterface.cpp|src/Hardware_UART/HalUartInterface.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
-=======
 						<entry excluding="Common/app|Common/test/PcInterface_test.cpp|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|Common/include|component|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|Common/test/UdpDriver_test.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
->>>>>>> master
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel"/>
