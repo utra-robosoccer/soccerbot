@@ -26,8 +26,9 @@
 
 /********************************** Includes **********************************/
 #include "Dynamixel.h"
+#if defined(THREADED)
 #include "cmsis_os.h"
-
+#endif
 
 
 
