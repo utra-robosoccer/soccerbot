@@ -12,10 +12,10 @@ Omnibot Keyboard Control
 Moving around:
    q    w    e
    a    s    d
-   z         c
+
+w/a/s/d : movement
+q/e : rotation
 r/t : increase/decrease max speeds by 10%
-f/g : increase/decrease only linear speed by 10%
-v/b : increase/decrease only angular speed by 10%
 space key, p : force stop
 anything else : stop smoothly
 
@@ -23,24 +23,13 @@ CTRL-C to quit
 """
 
 moveBindings = {
-        'w':(1,0),
-        'e':(1,-1),
-        'a':(0,1),
-        'd':(0,-1),
-        'q':(1,1),
-        's':(-1,0),
-        'c':(-1,1),
-        'z':(-1,-1),
+        'w':(1,0,0),
+        's':(-1,0,0),
+        'a':(0,-1,0),
+        'd':(0,1,0),
+        'q':(0,0,1),
+        'e':(0,0,-1),
            }
-
-speedBindings={
-        'r':(1.1,1.1),
-        't':(.9,.9),
-        'f':(1.1,1),
-        'g':(.9,1),
-        'v':(1,1.1),
-        'b':(1,.9),
-          }
 
 def getKey():
     tty.setraw(sys.stdin.fileno())
@@ -66,13 +55,16 @@ if __name__=="__main__":
     pub = rospy.Publisher('~cmd_vel', Twist, queue_size=5)
 
     x = 0
+    y = 0
     th = 0
     status = 0
     count = 0
     acc = 0.1
-    target_speed = 0
+    target_speed_x = 0
+    target_speed_y = 0
     target_turn = 0
-    control_speed = 0
+    control_speed_x = 0
+    control_speed_y = 0
     control_turn = 0
     try:
         print(msg)
@@ -81,39 +73,42 @@ if __name__=="__main__":
             key = getKey()
             if key in moveBindings.keys():
                 x = moveBindings[key][0]
-                th = moveBindings[key][1]
+                y = moveBindings[key][1]
+                th = moveBindings[key][2]
                 count = 0
-            elif key in speedBindings.keys():
-                speed = speed * speedBindings[key][0]
-                turn = turn * speedBindings[key][1]
-                count = 0
-
-                print(vels(speed,turn))
-                if (status == 14):
-                    print(msg)
-                status = (status + 1) % 15
-            elif key == ' ' or key == 'k' :
+            elif key == ' ' or key == 'p' :
                 x = 0
+                y = 0
                 th = 0
-                control_speed = 0
+                control_speed_x = 0
+                control_speed_y = 0
                 control_turn = 0
             else:
                 count = count + 1
                 if count > 4:
                     x = 0
+                    y = 0
                     th = 0
                 if (key == '\x03'):
                     break
 
-            target_speed = speed * x
+            target_speed_x = speed * x
+            target_speed_y = speed * y
             target_turn = turn * th
 
-            if target_speed > control_speed:
-                control_speed = min( target_speed, control_speed + 0.02 )
-            elif target_speed < control_speed:
-                control_speed = max( target_speed, control_speed - 0.02 )
+            if target_speed_x > control_speed_x:
+                control_speed_x = min( target_speed_x, control_speed_x + 0.02 )
+            elif target_speed_x < control_speed_x:
+                control_speed_x = max( target_speed_x, control_speed_x - 0.02 )
             else:
-                control_speed = target_speed
+                control_speed_x = target_speed_x
+
+            if target_speed_y > control_speed_y:
+                control_speed_y = min( target_speed_y, control_speed_y + 0.02 )
+            elif target_speed_y < control_speed_y:
+                control_speed_y = max( target_speed_y, control_speed_y - 0.02 )
+            else:
+                control_speed_y = target_speed_y
 
             if target_turn > control_turn:
                 control_turn = min( target_turn, control_turn + 0.1 )
@@ -123,13 +118,9 @@ if __name__=="__main__":
                 control_turn = target_turn
 
             twist = Twist()
-            twist.linear.x = control_speed; twist.linear.y = 0; twist.linear.z = 0
+            twist.linear.x = control_speed_x; twist.linear.y = control_speed_y; twist.linear.z = 0
             twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = control_turn
             pub.publish(twist)
-
-            #print("loop: {0}".format(count))
-            #print("target: vx: {0}, wz: {1}".format(target_speed, target_turn))
-            #print("publihsed: vx: {0}, wz: {1}".format(twist.linear.x, twist.angular.z))
 
     except Exception as e:
         print(e)
