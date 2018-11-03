@@ -7,6 +7,8 @@ Welcome to the software repository, to start working on the robot, follow the in
 
 http://wiki.ros.org/ROS/Installation
 
+#### Prerequisites
+
 Debian packages needed for robots (sudo apt-get install)
 - git
 - git-gui
@@ -15,7 +17,7 @@ Debian packages needed for robots (sudo apt-get install)
 - net-tools
 - indicator-ip
 
-#### IDE setup
+#### Setting up your IDE
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
 - Follow the CLion Setup here, use method 2 to add bash to the launch file https://github.com/ethz-asl/programming_guidelines/wiki/CLion
 - Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
