@@ -1,3 +1,8 @@
 <launch>
-    <!-- TODO -->
+    <!-- Model in Gazebo -->
+    <include file="$(find soccer_gazebo)/launch/omnibot_gazebo.launch" />
+
+    <!-- Keyboard control -->
+    <!--<include file="$(find omnibot_teleop)/launch/keyboard_teleop.launch" />-->
+
 </launch>
