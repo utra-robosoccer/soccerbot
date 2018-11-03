@@ -21,7 +21,7 @@ IDE setup
 - Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
 - In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
 - Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution/Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
+- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
 
 ```bash
 cd ~/catkin_ws/src
