@@ -115,13 +115,9 @@ namespace uart{
 /***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------
-HalUartInterface::HalUartInterface(){
+HalUartInterface::HalUartInterface(){;}
 
-}
-
-HalUartInterface::~HalUartInterface(){
-
-}
+HalUartInterface::~HalUartInterface(){;}
 
 HAL_StatusTypeDef HalUartInterface::transmitPoll(
     const UART_HandleTypeDef* uartHandlePtr,
