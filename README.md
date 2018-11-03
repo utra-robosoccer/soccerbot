@@ -20,7 +20,7 @@ IDE setup
 - Follow the CLion Setup here, use method 2 to add bash to the launch file https://github.com/ethz-asl/programming_guidelines/wiki/CLion
 - Rename jetbrains-clion.desktop to clion.desktop. This way Jetbrains toolbox doesn't override the file when you restart.
 - In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
-- Install the *.launch file plugins if you want to
+- Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories.
 
 ```bash
 cd ~/catkin_ws/src
@@ -30,7 +30,7 @@ cd soccer_ws
 git checkout initials_branchname
 cd ~/catkin_ws
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version)
+rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version.
 catkin build soccerbot
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
