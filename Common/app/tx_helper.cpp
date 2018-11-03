@@ -7,28 +7,33 @@
  */
 
 /********************************* Includes **********************************/
+#include "uart_handler.h"
 #include "tx_helper.h"
 #include "cmsis_os.h"
-#include "UART_Handler.h"
-#include "DynamixelProtocolV1.h"
+#include "PeripheralInstances.h"
 #include "robotState.h"
 #include "Communication.h"
 #include "MPU6050.h"
 #include "Notification.h"
 
-/********************************** Externs ***********************************/
+/********************************** Externs **********************************/
 extern osThreadId PCUARTHandle;
 extern osThreadId TXQueueHandle;
 
 /***************************** Private Variables *****************************/
 static TXData_t receivedData;
-static Dynamixel_HandleTypeDef* motorPtr = nullptr;
-static IMUStruct* imuPtr = nullptr;
-static char* const pIMUXGyroData = &robotState.msg[ROBOT_STATE_MPU_DATA_OFFSET];
+static MotorData_t* motorDataPtr = nullptr;
+static imu::IMUStruct_t* imuPtr = nullptr;
+
+static char* const pIMUXGyroData = &robotState.msg[
+    ROBOT_STATE_MPU_DATA_OFFSET
+];
 
 static HAL_StatusTypeDef status;
 static uint32_t notification;
-static uint32_t dataReadyFlags = 0; // Bits in this are set based on which sensor data is ready
+
+// Bits in this are set based on which sensor data is ready
+static uint32_t dataReadyFlags = 0;
 
 static uint32_t NOTIFICATION_MASK = 0x80000000;
 
@@ -64,8 +69,8 @@ void shiftNotificationMask(void) {
 
 /**
  * @brief   Validates and copies sensor data to transmit
- * @details This function receives two types of sensor data(motor and IMU) and updates to
- * 			the according section of robotState.msg.
+ * @details This function receives two types of sensor data(motor and IMU) and
+ *          updates to the according section of robotState.msg
  * @param 	None
  * @return  None
  */
@@ -75,29 +80,34 @@ void copySensorDataToSend(void) {
 
         switch (receivedData.eDataType) {
         case eMotorData:
-            motorPtr = (Dynamixel_HandleTypeDef*) receivedData.pData;
+            motorDataPtr = static_cast<MotorData_t*>(receivedData.pData);
 
-            if (motorPtr == NULL) {
+            if (motorDataPtr == NULL) {
                 break;
             }
 
             // Validate data and store it in robotState
-            if (motorPtr->_ID <= NUM_MOTORS) {
-                // Copy sensor data for this motor into its section of robotState.msg
-                memcpy(&robotState.msg[4 * (motorPtr->_ID - 1)],
-                        &(motorPtr->_lastPosition), sizeof(float));
+            if (motorDataPtr->id <= periph::NUM_MOTORS) {
+                // Copy sensor data for this motor into its section of
+                // robotState.msg
+                memcpy(
+                    &robotState.msg[4 * (motorDataPtr->id - 1)],
+                    motorDataPtr->payload,
+                    sizeof(float)
+                );
 
-                // Set flag indicating the motor with this id has reported in with position data
-                dataReadyFlags |= (1 << motorPtr->_ID);
+                // Set flag indicating the motor with this id has reported in
+                // with position data
+                dataReadyFlags |= (1 << motorDataPtr->id);
             }
             break;
         case eIMUData:
-            imuPtr = (IMUStruct*)receivedData.pData;
+            imuPtr = (imu::IMUStruct_t*)receivedData.pData;
 
             if(imuPtr == NULL){ break; }
 
             // Copy sensor data into the IMU data section of robotState.msg
-            memcpy(pIMUXGyroData, (&imuPtr->_x_Gyro), sizeof(IMUStruct));
+            memcpy(pIMUXGyroData, (&imuPtr->x_Gyro), sizeof(imu::IMUStruct_t));
 
             // Set flag indicating IMU data has reported in
             dataReadyFlags |= 0x80000000;

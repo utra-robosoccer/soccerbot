@@ -23,15 +23,15 @@
 
 #if defined(THREADED)
 #include "cmsis_os.h"
-#include "FreeRTOSInterface.h"
-using namespace FreeRTOS_Interface;
+#include "OsInterface.h"
+using os::OsInterface;
 #endif
 
 
 
 
 /******************************** UartDriver *********************************/
-namespace UART{
+namespace uart{
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -43,8 +43,24 @@ namespace UART{
 class UartDriver{
 public:
     UartDriver();
-    ~UartDriver() {}
 
+#if defined(THREADED)
+    /**
+     * @brief Initializes the handle to the low-level hardware routines,
+     *        associates a particular UART module on the board with this
+     *        driver, and initializes the handle to the OS for system calls
+     * @param hw_if Pointer to the hardware-facing object handling the
+     *        low-level UART routines
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
+     * @param os_if Pointer to the object handling the calls to the OS
+     */
+    UartDriver(
+        OsInterface* os_if,
+        UartInterface* hw_if,
+        UART_HandleTypeDef* uartHandlePtr
+    );
+#else
     /**
      * @brief Initializes the handle to the low-level hardware routines, and
      *        associates a particular UART module on the board with this driver
@@ -53,14 +69,20 @@ public:
      * @param uartHandlePtr Pointer to a structure that contains
      *        the configuration information for the desired UART module
      */
-    void setUartInterface(UartInterface* hw_if, UART_HandleTypeDef* uartHandlePtr);
-#if defined(THREADED)
-    /**
-     * @brief Initializes the handle to the system calls provided by the OS
-     * @param os_if Pointer to the object handling the calls to the OS
-     */
-    void setOSInterface(FreeRTOSInterface* os_if);
+    UartDriver(
+        UartInterface* hw_if,
+        UART_HandleTypeDef* uartHandlePtr
+    );
 #endif
+
+    ~UartDriver() {}
+
+    /**
+     * @brief Sets data transfer timeout for this driver instance
+     * @param timeout The maximum time the caller will block on a data transfer
+     */
+    void setMaxBlockTime(uint32_t timeout);
+
     /**
      * @brief Configures the driver to use a particular IO type. This is used
      *        to change it between using blocking and asynchronous transfers
@@ -69,7 +91,7 @@ public:
     void setIOType(IO_Type io_type);
 
     /**
-     * @brief  Returns the IO type currently being used by the driver
+     * @brief Returns the IO type currently being used by the driver
      * @return The IO type currently being used by the driver
      */
     IO_Type getIOType(void) const;
@@ -113,7 +135,13 @@ private:
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
-    UartInterface* hw_if = nullptr;
+    const UartInterface* hw_if = nullptr;
+
+    /**
+     * @brief Address of the container for the UART module associated with this
+     *        object
+     */
+    const UART_HandleTypeDef* uartHandlePtr = nullptr;
 
     /**
      * @brief true if the UartInterface has been set and its UART_HandleTypeDef
@@ -121,25 +149,14 @@ private:
      */
     bool hw_is_initialized = false;
 #if defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
-
-    /**
-     * @brief Maximum time allowed for a thread to block on an asynchronous
-     *        transfer
-     */
-    static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
-
     /** @brief Pointer to the object handling system calls to the OS */
-    FreeRTOSInterface* os_if = nullptr;
+    const OsInterface* os_if = nullptr;
 #endif
-#if !defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
-#endif
+    /** @brief Maximum permitted time for blocking on a data transfer */
+    TickType_t m_max_block_time;
 };
 
-} // end namespace UART
+} // end namespace uart
 
 
 

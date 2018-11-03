@@ -10,7 +10,7 @@ import numpy
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-server_address = ('192.168.0.55', 7)
+server_address = ('192.168.0.59', 7)
 sock.bind(('', 7))
 
 message = 'this is a message of length 80 chars. asdfghjklasdfghjklasdfghjklasdfghjkl ++++'.encode()
