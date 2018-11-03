@@ -1,98 +1,69 @@
-#!/usr/bin/env python
-"""
-   twist_to_motors - converts a twist message to motor commands.  Needed for navigation stack
-
-
-    Copyright (C) 2012 Jon Stephan.
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+#!/usr/bin/python2.7
 
 import rospy
 import roslib
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
+import math
 
-#############################################################
-#############################################################
 class TwistToMotors():
-#############################################################
-#############################################################
-
-    #############################################################
     def __init__(self):
-    #############################################################
         rospy.init_node("twist_to_motors")
         nodename = rospy.get_name()
         rospy.loginfo("%s started" % nodename)
 
-        self.w = rospy.get_param("~base_width", 0.2)
-
-        self.pub_lmotor = rospy.Publisher('lwheel_vtarget', Float32, queue_size=10)
-        self.pub_rmotor = rospy.Publisher('rwheel_vtarget', Float32, queue_size=10)
-        rospy.Subscriber('twist', Twist, self.twistCallback)
-
-
+        # Parameters
+        self.wheeldiagonal = rospy.get_param("~base_width", 0.432)
+        self.wheelstraight = math.sqrt(self.wheeldiagonal)
+        self.wheelradius = rospy.get_param("~wheel_radius", 0.09)
         self.rate = rospy.get_param("~rate", 50)
         self.timeout_ticks = rospy.get_param("~timeout_ticks", 2)
-        self.left = 0
-        self.right = 0
 
-    #############################################################
+        # Publishers and Subscribers
+        self.pub_nemotor = rospy.Publisher('/omnibot/right_front_wheel_hinge_controller/command', Float64, queue_size=10)
+        self.pub_nwmotor = rospy.Publisher('/omnibot/left_front_wheel_hinge_controller/command', Float64, queue_size=10)
+        self.pub_semotor = rospy.Publisher('/omnibot/right_back_wheel_hinge_controller/command', Float64, queue_size=10)
+        self.pub_swmotor = rospy.Publisher('/omnibot/left_back_wheel_hinge_controller/command', Float64, queue_size=10)
+        rospy.Subscriber('/omnibot/cmd_vel', Twist, self.twistCallback)
+
     def spin(self):
-    #############################################################
-
         r = rospy.Rate(self.rate)
         idle = rospy.Rate(10)
         then = rospy.Time.now()
         self.ticks_since_target = self.timeout_ticks
 
-        ###### main loop  ######
         while not rospy.is_shutdown():
-
             while not rospy.is_shutdown() and self.ticks_since_target < self.timeout_ticks:
                 self.spinOnce()
                 r.sleep()
             idle.sleep()
 
-    #############################################################
+    def negroot(self, num):
+        if num >= 0:
+            return math.sqrt(num)
+        else:
+            return -math.sqrt(math.fabs(num))
+
     def spinOnce(self):
-    #############################################################
 
-        # dx = (l + r) / 2
-        # dr = (r - l) / w
+        ne = self.negroot(self.dx - self.dy) + self.dr * self.wheeldiagonal / 2
+        nw = self.negroot(self.dx + self.dy) - self.dr * self.wheeldiagonal / 2
+        se = self.negroot(self.dx + self.dy) + self.dr * self.wheeldiagonal / 2
+        sw = self.negroot(self.dx - self.dy) - self.dr * self.wheeldiagonal / 2
 
-        self.right = 1.0 * self.dx + self.dr * self.w / 2
-        self.left = 1.0 * self.dx - self.dr * self.w / 2
-        # rospy.loginfo("publishing: (%d, %d)", left, right)
-
-        self.pub_lmotor.publish(self.left)
-        self.pub_rmotor.publish(self.right)
+        self.pub_nemotor.publish(ne)
+        self.pub_nwmotor.publish(nw)
+        self.pub_semotor.publish(se)
+        self.pub_swmotor.publish(sw)
 
         self.ticks_since_target += 1
 
-    #############################################################
     def twistCallback(self,msg):
-    #############################################################
-        # rospy.loginfo("-D- twistCallback: %s" % str(msg))
         self.ticks_since_target = 0
         self.dx = msg.linear.x
         self.dr = msg.angular.z
         self.dy = msg.linear.y
 
-#############################################################
-#############################################################
 if __name__ == '__main__':
     """ main """
     try:
