@@ -19,7 +19,8 @@
 #include <gmock/gmock.h>
 
 /***************************** Mock I2C Interface ****************************/
-using namespace i2c;
+using i2c::I2CInterface;
+
 namespace mocks{
 
 /**
