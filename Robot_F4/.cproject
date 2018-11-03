@@ -69,6 +69,9 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Common/include"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Hannah\Documents\University\UTRA\STM32_Projects\SystemWorkbench\plugins\fr.ac6.mcu.externaltools.arm-none.win32_1.15.0.201708311556\tools\compiler\arm-none-eabi\include\c++\6.3.1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Hannah\Documents\University\UTRA\STM32_Projects\SystemWorkbench\plugins\fr.ac6.mcu.externaltools.arm-none.win32_1.15.0.201708311556\tools\compiler\arm-none-eabi\include\c++\6.3.1\backward&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Hannah\Documents\University\UTRA\STM32_Projects\SystemWorkbench\plugins\fr.ac6.mcu.externaltools.arm-none.win32_1.15.0.201708311556\tools\compiler\arm-none-eabi\include\c++\6.3.1\arm-none-eabi&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.2132958652" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
