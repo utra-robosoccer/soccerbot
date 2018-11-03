@@ -185,7 +185,7 @@ public:
         return ready;
     }
     BufferBase<imu::IMUStruct_t> IMUBuffer;
-    BufferBase<MotorData_t> MotorBufferArray[18];
+    BufferBase<MotorData_t> MotorBufferArray[periph::NUM_MOTORS];
     // Add buffer items here as necessary
 };
 #endif

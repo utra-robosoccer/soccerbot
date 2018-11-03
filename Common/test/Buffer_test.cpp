@@ -112,9 +112,9 @@ TEST(BufferTests, CanReadFromIMUBuffer){
 TEST(BufferTests, CanWriteToMotorBuffer){
     //TODO: Use periph::NUM_MOTORS without defining THREADED
     BufferMaster bufferMaster;
-    MotorData_t motorData[18];
+    MotorData_t motorData[periph::NUM_MOTORS];
 
-    for(int i = 0; i < 18; ++i)
+    for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
         bufferMaster.MotorBufferArray[i].write(motorData[i]);
     }
@@ -122,10 +122,10 @@ TEST(BufferTests, CanWriteToMotorBuffer){
 
 TEST(BufferTests, CanReadMotorDataBuffer){
     BufferMaster bufferMaster;
-    MotorData_t motorData[18];
-    MotorData_t readMotorData[18];
+    MotorData_t motorData[periph::NUM_MOTORS];
+    MotorData_t readMotorData[periph::NUM_MOTORS];
 
-    for(int i = 0; i < 18; ++i)
+    for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
         motorData[i].id = i;
         bufferMaster.MotorBufferArray[i].write(motorData[i]);
@@ -136,11 +136,11 @@ TEST(BufferTests, CanReadMotorDataBuffer){
 
 TEST(BufferTests, CanConfirmAllDataReady){
     BufferMaster bufferMaster;
-    MotorData_t motorData[18];
+    MotorData_t motorData[periph::NUM_MOTORS];
     imu::IMUStruct_t IMUdata;
 
     ASSERT_FALSE(bufferMaster.all_data_ready());
-    for(int i = 0; i < 18; ++i)
+    for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
         bufferMaster.MotorBufferArray[i].write(motorData[i]);
         ASSERT_FALSE(bufferMaster.all_data_ready());
