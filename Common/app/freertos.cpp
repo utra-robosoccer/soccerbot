@@ -72,7 +72,6 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
-#define M_PI        3.14159265358979323846
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
