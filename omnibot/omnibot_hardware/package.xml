@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>soccer_hardware</name>
+  <name>omnibot_hardware</name>
   <version>0.0.0</version>
-  <description>The soccer_hardware package</description>
+  <description>The omnibot_hardware package</description>
 
-  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
+  <maintainer email="s.rajabzadeh@mail.utoronto.ca">Shahryar</maintainer>
 
   <license>BSD</license>
 
