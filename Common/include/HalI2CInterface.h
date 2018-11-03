@@ -16,9 +16,7 @@
 /********************************* Includes **********************************/
 
 #include "I2CInterface.h"
-#include "stm32f4xx_hal_i2c.h"
-#include "stm32f4xx_hal_def.h"
-#include "MPU6050.h"
+#include "SystemConf.h"
 
 /****************************** HAL I2C Interface ****************************/
 namespace i2c{
@@ -30,19 +28,16 @@ class HALI2CInterface: public I2CInterface {
 public:
     HALI2CInterface();
     ~HALI2CInterface();
-    void assignHandle(I2C_HandleTypeDef *i2cHandlePtr); //HAL_I2C_Init
-    HAL_StatusTypeDef memWrite(uint16_t DevAddress, uint16_t MemAddress,
+    HAL_StatusTypeDef memWrite(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
             uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
             uint32_t Timeout) const; //HAL_I2C_Mem_Write
-    HAL_StatusTypeDef memRead(uint16_t DevAddress, uint16_t MemAddress,
+    HAL_StatusTypeDef memRead(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
             uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
             uint32_t Timeout) const; //HAL_I2C_Mem_Read
-    HAL_StatusTypeDef memWriteIT(uint16_t DevAddress, uint16_t MemAddress,
+    HAL_StatusTypeDef memWriteIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
             uint16_t MemAddSize, uint8_t *pData, uint16_t Size) const; //HAL_I2C_Mem_Write_IT
-    HAL_StatusTypeDef memReadIT(uint16_t DevAddress, uint16_t MemAddress,
+    HAL_StatusTypeDef memReadIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
             uint16_t MemAddSize, uint8_t *pData, uint16_t Size) const; //HAL_I2C_Mem_Read_IT
-private:
-    I2C_HandleTypeDef *i2cHandlePtr = nullptr; //virtual
 };
 
 } //end namespace i2c
