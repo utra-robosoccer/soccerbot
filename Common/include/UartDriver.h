@@ -157,13 +157,13 @@ private:
     bool hw_is_initialized = false;
 #if defined(THREADED)
     /** @brief Maximum time allowed for a polled IO transfer */
-    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2);
+    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2); // XXX: probably this timeout is too short, needs increasing to ~20ms
 
     /**
      * @brief Maximum time allowed for a thread to block on an asynchronous
      *        transfer
      */
-    static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
+    static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(20);
 
     mutable osMutexId uartResourceMutex;
     mutable osStaticMutexDef_t uartResourceMutexControlBlock;
