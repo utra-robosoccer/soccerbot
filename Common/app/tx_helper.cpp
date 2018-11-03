@@ -24,7 +24,9 @@ extern osThreadId TXQueueHandle;
 /***************************** Private Variables *****************************/
 static TXData_t receivedData;
 static MotorData_t* motorDataPtr = nullptr;
+static MotorData_t readMotorData;
 static imu::IMUStruct_t* imuPtr = nullptr;
+static imu::IMUStruct_t readIMUData;
 
 static char* const pIMUXGyroData = &robotState.msg[
     ROBOT_STATE_MPU_DATA_OFFSET
@@ -114,14 +116,14 @@ void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
     }
 
     //At this point, all data is ready, so copy into robotState.msg
-    *imuPtr = BufferMasterPtr->IMUBuffer.read();
-    memcpy(pIMUXGyroData, (&imuPtr->x_Gyro), sizeof(imu::IMUStruct_t));
+    readIMUData = BufferMasterPtr->IMUBuffer.read();
+    memcpy(pIMUXGyroData, (&readIMUData.x_Gyro), sizeof(imu::IMUStruct_t));
 
     for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
-        *motorDataPtr = BufferMasterPtr->MotorBufferArray[i].read();
-        memcpy(&robotState.msg[4 * (motorDataPtr->id - 1)],
-               motorDataPtr->payload,
+        readMotorData = BufferMasterPtr->MotorBufferArray[i].read();
+        memcpy(&robotState.msg[4 * (readMotorData.id - 1)],
+                &readMotorData.payload,
                sizeof(float)
                );
     }
