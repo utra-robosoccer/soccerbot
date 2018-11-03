@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>omnibot_teleop</name>
+  <version>1.0.0</version>
+  <description>Provides teleoperation for omnibot</description>
+  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason Wang</maintainer>
+  <license>BSD</license>
+
+  <author email="jiashen.wang@mail.utoronto.ca">Jason Wang</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>joy</depend>
+  <depend>kobuki_safety_controller</depend>
+  <depend>yocs_velocity_smoother</depend>
+  <!--<depend>omnibot_bringup</depend>-->
+</package>

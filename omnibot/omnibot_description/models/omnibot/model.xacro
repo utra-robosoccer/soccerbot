@@ -18,7 +18,7 @@
     <link name="base_link"/>
     <link name="body">
         <inertial>
-            <mass value="10"/>
+            <mass value="8"/>
             <origin rpy="0 0 0" xyz="0 0 0.20"/>
             <inertia ixx="0.198" ixy="0" ixz="0" iyy="0.198" iyz="0" izz="0.13"/>
         </inertial>
@@ -31,13 +31,13 @@
         <visual name="visual">
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://omnibot_description/meshes/bodycentre2v6.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://omnibot_description/meshes/body.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
     </link>
     <link name="left_front_wheel">
         <inertial>
-            <mass value="1"/>
+            <mass value="0.5"/>
             <origin rpy="0 1.57 0" xyz="0 0 0"/>
             <inertia ixx="0.075" ixy="0" ixz="0" iyy="0.075" iyz="0" izz="0.3"/>
         </inertial>
@@ -48,15 +48,15 @@
             </geometry>
         </collision>
         <visual name="visual">
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.05 0 0"/>
             <geometry>
-                <mesh filename="package://omnibot_description/meshes/wheelCentrev1.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://omnibot_description/meshes/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
     </link>
     <link name="left_back_wheel">
         <inertial>
-            <mass value="1"/>
+            <mass value="0.5"/>
             <origin rpy="0 1.57 0" xyz="0 0 0"/>
             <inertia ixx="0.075" ixy="0" ixz="0" iyy="0.075" iyz="0" izz="0.3"/>
         </inertial>
@@ -67,15 +67,15 @@
             </geometry>
         </collision>
         <visual name="visual">
-            <origin rpy="0  0 0" xyz="0 0 0"/>
+            <origin rpy="0  0 0" xyz="0.05 0 0"/>
             <geometry>
-                <mesh filename="package://omnibot_description/meshes/wheelCentrev1.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://omnibot_description/meshes/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
     </link>
     <link name="right_front_wheel">
         <inertial>
-            <mass value="1"/>
+            <mass value="0.5"/>
             <origin rpy="0 1.57 0" xyz="0 0 0"/>
             <inertia ixx="0.075" ixy="0" ixz="0" iyy="0.075" iyz="0" izz="0.3"/>
         </inertial>
@@ -86,15 +86,15 @@
             </geometry>
         </collision>
         <visual name="visual">
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.05 0 0"/>
             <geometry>
-                <mesh filename="package://omnibot_description/meshes/wheelCentrev1.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://omnibot_description/meshes/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
     </link>
     <link name="right_back_wheel">
         <inertial>
-            <mass value="1"/>
+            <mass value="0.5"/>
             <origin rpy="0 1.57 0" xyz="0 0 0"/>
             <inertia ixx="0.075" ixy="0" ixz="0" iyy="0.075" iyz="0" izz="0.3"/>
         </inertial>
@@ -105,9 +105,9 @@
             </geometry>
         </collision>
         <visual name="visual">
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.05 0 0"/>
             <geometry>
-                <mesh filename="package://omnibot_description/meshes/wheelCentrev1.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://omnibot_description/meshes/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
     </link>
@@ -125,7 +125,7 @@
         <parent link="body"/>
         <origin rpy="0 0 0.785398" xyz="-0.15 -0.15 0"/>
         <axis xyz="1 0 0"/>
-        <dynamics damping="0.0" friction="30.0" />
+        <dynamics damping="0.0" friction="40.0" />
         <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="right_front_wheel_hinge">
@@ -133,7 +133,7 @@
         <parent link="body"/>
         <origin rpy="0 0 3.92699" xyz="0.15 0.15 0"/>
         <axis xyz="1 0 0"/>
-        <dynamics damping="0.0" friction="30.0" />
+        <dynamics damping="0.0" friction="40.0" />
         <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="left_back_wheel_hinge">
@@ -141,7 +141,7 @@
         <parent link="body"/>
         <origin rpy="0 0 2.35619" xyz="0.15 -0.15 0"/>
         <axis xyz="1 0 0"/>
-        <dynamics damping="0.0" friction="30.0" />
+        <dynamics damping="0.0" friction="40.0" />
         <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint type="revolute" name="right_back_wheel_hinge">
@@ -149,7 +149,7 @@
         <parent link="body"/>
         <origin rpy="0 0 5.49779" xyz="-0.15 0.15 0"/>
         <axis xyz="1 0 0"/>
-        <dynamics damping="0.0" friction="30.0" />
+        <dynamics damping="0.0" friction="40.0" />
         <limit effort="100"  lower="-1e10" upper="1e10" velocity="1"/>
     </joint>
     <joint name="camera_joint" type="fixed">
