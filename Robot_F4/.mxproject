@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot_F4/Inc
+HeaderPath=C:/Users/Gokul/Documents/GitHub/soccer-embedded/Robot_F4/Inc
 HeaderFiles=gpio.h;usart.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;dma.h;FreeRTOSConfig.h;i2c.h;
-SourcePath=D:/Users/Tyler/Documents/STM/embedded/soccer-embedded/Robot_F4/Src
+SourcePath=C:/Users/Gokul/Documents/GitHub/soccer-embedded/Robot_F4/Src
 SourceFiles=gpio.c;usart.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;dma.c;freertos.c;i2c.c;stm32f4xx_hal_timebase_TIM.c;
 
 [PreviousLibFiles]
