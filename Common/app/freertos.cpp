@@ -758,7 +758,7 @@ void StartBuffWriterTask(void const * argument)
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
                 if (motorDataPtr->id <= periph::NUM_MOTORS) {
-                    BufferMaster.MotorBufferArray[motorDataPtr->id].write(*motorDataPtr);
+                    BufferMaster.MotorBufferArray[motorDataPtr->id - 1].write(*motorDataPtr);
                 }
                 break;
             case eIMUData:
