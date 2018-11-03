@@ -59,8 +59,8 @@ public:
     {
         xSemaphoreTake(m_lock, portMAX_DELAY);
         m_read++;
-        return *m_data_buf;
         xSemaphoreGive(m_lock);
+        return *m_data_buf;
     }
     void reset()
     {
