@@ -79,6 +79,12 @@ public:
     ~UartDriver() {}
 
     /**
+     * @brief Sets data transfer timeout for this driver instance
+     * @param timeout The maximum time the caller will block on a data transfer
+     */
+    void setMaxBlockTime(uint32_t timeout);
+
+    /**
      * @brief Configures the driver to use a particular IO type. This is used
      *        to change it between using blocking and asynchronous transfers
      * @param io_type The type of IO to be used by the driver
@@ -86,7 +92,7 @@ public:
     void setIOType(IO_Type io_type);
 
     /**
-     * @brief  Returns the IO type currently being used by the driver
+     * @brief Returns the IO type currently being used by the driver
      * @return The IO type currently being used by the driver
      */
     IO_Type getIOType(void) const;
@@ -134,11 +140,6 @@ private:
      */
     IO_Type io_type = IO_Type::POLL;
 
-#if defined(THREADED)
-    /** @brief Pointer to the object handling system calls to the OS */
-    const OsInterface* os_if = nullptr;
-#endif
-
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
@@ -156,23 +157,13 @@ private:
      */
     bool hw_is_initialized = false;
 #if defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    static constexpr uint32_t POLLED_TRANSFER_TIMEOUT = pdMS_TO_TICKS(2); // XXX: probably this timeout is too short, needs increasing to ~20ms
-
-    /**
-     * @brief Maximum time allowed for a thread to block on an asynchronous
-     *        transfer
-     */
-    static constexpr TickType_t MAX_BLOCK_TIME = pdMS_TO_TICKS(20);
-
     mutable osMutexId uartResourceMutex;
     mutable osStaticMutexDef_t uartResourceMutexControlBlock;
-
+    /** @brief Pointer to the object handling system calls to the OS */
+    const OsInterface* os_if = nullptr;
 #endif
-#if !defined(THREADED)
-    /** @brief Maximum time allowed for a polled IO transfer */
-    constexpr uint32_t POLLED_TRANSFER_TIMEOUT = 2;
-#endif
+    /** @brief Maximum permitted time for blocking on a data transfer */
+    TickType_t m_max_block_time;
 };
 
 } // end namespace uart

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/utra-robosoccer/soccer-embedded.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccer-embedded)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccer-embedded.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccer-embedded/alerts/)
 
 # soccer-embedded
 Collection of embedded programs for an autonomous humanoid soccer robot.

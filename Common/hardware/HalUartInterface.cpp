@@ -19,15 +19,93 @@
 
 
 /********************************** Externs **********************************/
-// extern declaration needed here for F767 build
-// TODO: clean this up when refactoring Dynamixel
+// These functions are not defined in the F767xx's HAL drivers, so we drag them
+// over from the F446xx's HAL drivers
 #if defined(STM32F767xx)
-/* rfairley: added declarations for the two externs below in DynamxelProtocolV1.h;
-linker would not find them otherwise after a HalUartInterface
-had been instantiated */
-#include "DynamixelProtocolV1.h"
-extern HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart);
-extern HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart);
+/**
+  * @brief  Abort ongoing Transmit transfer (blocking mode).
+  * @param  huart UART handle.
+  * @note   This procedure could be used for aborting any ongoing transfer started in Interrupt or DMA mode.
+  *         This procedure performs following operations :
+  *           - Disable PPP Interrupts
+  *           - Disable the DMA transfer in the peripheral register (if enabled)
+  *           - Abort DMA transfer by calling HAL_DMA_Abort (in case of transfer in DMA mode)
+  *           - Set handle State to READY
+  * @note   This procedure is executed in blocking mode : when exiting function, Abort is considered as completed.
+  * @retval HAL status
+*/
+HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart)
+{
+  /* Disable TXEIE and TCIE interrupts */
+  CLEAR_BIT(huart->Instance->CR1, (USART_CR1_TXEIE | USART_CR1_TCIE));
+
+  /* Disable the UART DMA Tx request if enabled */
+  if(HAL_IS_BIT_SET(huart->Instance->CR3, USART_CR3_DMAT))
+  {
+    CLEAR_BIT(huart->Instance->CR3, USART_CR3_DMAT);
+
+    /* Abort the UART DMA Tx channel : use blocking DMA Abort API (no callback) */
+    if(huart->hdmatx != NULL)
+    {
+      /* Set the UART DMA Abort callback to Null.
+         No call back execution at end of DMA abort procedure */
+      huart->hdmatx->XferAbortCallback = NULL;
+
+      HAL_DMA_Abort(huart->hdmatx);
+    }
+  }
+
+  /* Reset Tx transfer counter */
+  huart->TxXferCount = 0x00U;
+
+  /* Restore huart->gState to Ready */
+  huart->gState = HAL_UART_STATE_READY;
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Abort ongoing Receive transfer (blocking mode).
+  * @param  huart UART handle.
+  * @note   This procedure could be used for aborting any ongoing transfer started in Interrupt or DMA mode.
+  *         This procedure performs following operations :
+  *           - Disable PPP Interrupts
+  *           - Disable the DMA transfer in the peripheral register (if enabled)
+  *           - Abort DMA transfer by calling HAL_DMA_Abort (in case of transfer in DMA mode)
+  *           - Set handle State to READY
+  * @note   This procedure is executed in blocking mode : when exiting function, Abort is considered as completed.
+  * @retval HAL status
+*/
+HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart)
+{
+  /* Disable RXNE, PE and ERR (Frame error, noise error, overrun error) interrupts */
+  CLEAR_BIT(huart->Instance->CR1, (USART_CR1_RXNEIE | USART_CR1_PEIE));
+  CLEAR_BIT(huart->Instance->CR3, USART_CR3_EIE);
+
+  /* Disable the UART DMA Rx request if enabled */
+  if(HAL_IS_BIT_SET(huart->Instance->CR3, USART_CR3_DMAR))
+  {
+    CLEAR_BIT(huart->Instance->CR3, USART_CR3_DMAR);
+
+    /* Abort the UART DMA Rx channel : use blocking DMA Abort API (no callback) */
+    if(huart->hdmarx != NULL)
+    {
+      /* Set the UART DMA Abort callback to Null.
+         No call back execution at end of DMA abort procedure */
+      huart->hdmarx->XferAbortCallback = NULL;
+
+      HAL_DMA_Abort(huart->hdmarx);
+    }
+  }
+
+  /* Reset Rx transfer counter */
+  huart->RxXferCount = 0x00U;
+
+  /* Restore huart->RxState to Ready */
+  huart->RxState = HAL_UART_STATE_READY;
+
+  return HAL_OK;
+}
 #endif
 
 
@@ -139,6 +217,7 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
 
     return status;
 }
+#endif
 
 void HalUartInterface::abortTransmit(
     const UART_HandleTypeDef* uartHandlePtr
@@ -157,7 +236,6 @@ void HalUartInterface::abortReceive(
         const_cast<UART_HandleTypeDef*>(uartHandlePtr)
     );
 }
-#endif
 
 }
 
