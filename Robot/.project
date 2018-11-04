@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Robot_F4</name>
+	<name>Robot</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -25,32 +25,4 @@
 		<nature>fr.ac6.mcu.ide.core.MCUProjectNature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>app</name>
-			<type>2</type>
-			<locationURI>$%257BPARENT-1-PROJECT_LOC%257D/Common/app</locationURI>
-		</link>
-		<link>
-			<name>component</name>
-			<type>2</type>
-			<locationURI>$%257BPARENT-1-PROJECT_LOC%257D/Common/component</locationURI>
-		</link>
-		<link>
-			<name>hardware</name>
-			<type>2</type>
-			<locationURI>$%257BPARENT-1-PROJECT_LOC%257D/Common/hardware</locationURI>
-		</link>
-		<link>
-			<name>include</name>
-			<type>2</type>
-			<locationURI>$%257BPARENT-1-PROJECT_LOC%257D/Common/include</locationURI>
-		</link>
-	</linkedResources>
-	<variableList>
-		<variable>
-			<name>copy_PARENT</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/soccer-embedded</value>
-		</variable>
-	</variableList>
 </projectDescription>
