@@ -31,6 +31,7 @@ namespace uart{
 // ----------------------------------------------------------------------------
 UartDriver::UartDriver(){
     m_max_block_time = 2;
+    m_mutex_max_block_time = 2;
 }
 
 #if defined(THREADED)
@@ -58,6 +59,7 @@ UartDriver::UartDriver(
     }
 
     m_max_block_time = pdMS_TO_TICKS(2);
+    m_mutex_max_block_time = pdMS_TO_TICKS(2);
 }
 #else
     /**
@@ -92,6 +94,14 @@ void UartDriver::setIOType(IO_Type io_type){
 
 IO_Type UartDriver::getIOType(void) const{
     return this->io_type;
+}
+
+void UartDriver::setNoMutex(bool m_no_mutex_in) {
+    m_no_mutex = m_no_mutex_in;
+}
+
+bool UartDriver::getNoMutex() const {
+    return m_no_mutex;
 }
 
 bool UartDriver::setup(void) {
@@ -133,9 +143,10 @@ bool UartDriver::transmit(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    if (os_if->OS_osMutexWait(uartResourceMutex, m_max_block_time) == osOK) {
+                    if (getNoMutex() || os_if->OS_osMutexWait(uartResourceMutex, m_mutex_max_block_time) == osOK) {
                         if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
-                            os_if->OS_osMutexRelease(uartResourceMutex);
+                            if (!getNoMutex())
+                                os_if->OS_osMutexRelease(uartResourceMutex);
                             status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, m_max_block_time);
 
                             if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
@@ -143,7 +154,8 @@ bool UartDriver::transmit(
                             }
                         }
                         else {
-                            os_if->OS_osMutexRelease(uartResourceMutex);
+                            if (!getNoMutex())
+                                os_if->OS_osMutexRelease(uartResourceMutex);
                         }
 
                     }
@@ -206,9 +218,10 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(os_if != nullptr){
-                    if (os_if->OS_osMutexWait(uartResourceMutex, m_max_block_time) == osOK) {
+                    if (getNoMutex() || os_if->OS_osMutexWait(uartResourceMutex, m_mutex_max_block_time) == osOK) {
                         if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
-                            os_if->OS_osMutexRelease(uartResourceMutex);
+                            if (!getNoMutex())
+                                os_if->OS_osMutexRelease(uartResourceMutex);
                             status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, m_max_block_time);
 
                             if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
@@ -216,7 +229,8 @@ bool UartDriver::receive(
                             }
                         }
                         else {
-                            os_if->OS_osMutexRelease(uartResourceMutex);
+                            if (!getNoMutex())
+                                os_if->OS_osMutexRelease(uartResourceMutex);
                         }
                     }
                 }
