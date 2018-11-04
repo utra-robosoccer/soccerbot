@@ -145,6 +145,11 @@ private:
      */
     IO_Type io_type = IO_Type::POLL;
 
+#if defined(THREADED)
+    /** @brief Pointer to the object handling system calls to the OS */
+    const OsInterface* os_if = nullptr;
+#endif
+
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
@@ -164,8 +169,6 @@ private:
 #if defined(THREADED)
     mutable osMutexId uartResourceMutex;
     mutable osStaticMutexDef_t uartResourceMutexControlBlock;
-    /** @brief Pointer to the object handling system calls to the OS */
-    const OsInterface* os_if = nullptr;
 #endif
     /** @brief Maximum permitted time for blocking on a data transfer */
     TickType_t m_max_block_time;
