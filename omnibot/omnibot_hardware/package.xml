@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>omnibot_hardware</name>
+  <version>0.0.0</version>
+  <description>The omnibot_hardware package</description>
+
+  <maintainer email="s.rajabzadeh@mail.utoronto.ca">Shahryar</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>soccer_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>rospy</depend>
+  <depend>python-numpy</depend>
+  <depend>soccer_transforms</depend>
+
+</package>
