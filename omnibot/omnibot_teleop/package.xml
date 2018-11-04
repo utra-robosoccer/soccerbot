@@ -12,7 +12,7 @@
 
   <depend>roscpp</depend>
   <depend>geometry_msgs</depend>
-  <depend>joy</depend>
+  <!--<depend>joy</depend>-->
   <depend>kobuki_safety_controller</depend>
   <depend>yocs_velocity_smoother</depend>
   <!--<depend>omnibot_bringup</depend>-->
