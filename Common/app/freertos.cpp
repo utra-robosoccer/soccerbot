@@ -333,7 +333,8 @@ void StartDefaultTask(void const * argument)
 void StartCommandTask(void const * argument)
 {
     uartDriver.setIOType(uart::IO_Type::DMA);
-    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(20));
+    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(2000));
+    uartDriver.setNoMutex(false);
     pcInterface.setup();
 
     UARTcmd_t Motorcmd[18];

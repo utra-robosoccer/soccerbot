@@ -33,6 +33,7 @@ using os::OsInterface;
 
 /******************************** UartDriver *********************************/
 namespace uart{
+
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -96,6 +97,10 @@ public:
      * @return The IO type currently being used by the driver
      */
     IO_Type getIOType(void) const;
+
+    void setNoMutex(bool m_no_mutex_in);
+
+    bool getNoMutex() const;
 
     /**
      * @brief  Set up the driver for the specified IO_Type, including initialization
@@ -164,6 +169,9 @@ private:
 #endif
     /** @brief Maximum permitted time for blocking on a data transfer */
     TickType_t m_max_block_time;
+    TickType_t m_mutex_max_block_time;
+
+    bool m_no_mutex = false;
 };
 
 } // end namespace uart

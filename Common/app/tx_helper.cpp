@@ -83,7 +83,7 @@ void copySensorDataToSend(void) {
             motorDataPtr = static_cast<MotorData_t*>(receivedData.pData);
 
             if (motorDataPtr == NULL) {
-                break;
+                continue;
             }
 
             // Validate data and store it in robotState
@@ -104,7 +104,7 @@ void copySensorDataToSend(void) {
         case eIMUData:
             imuPtr = (imu::IMUStruct_t*)receivedData.pData;
 
-            if(imuPtr == NULL){ break; }
+            if(imuPtr == NULL){ continue; }
 
             // Copy sensor data into the IMU data section of robotState.msg
             memcpy(pIMUXGyroData, (&imuPtr->x_Gyro), sizeof(imu::IMUStruct_t));
