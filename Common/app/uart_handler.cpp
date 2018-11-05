@@ -51,7 +51,7 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
             status = cmdPtr->motorHandle->getPosition(pos);
 
             data.id = cmdPtr->motorHandle->id();
-            data.payload = &pos;
+            data.payload = pos;
             data.type = MotorData_t::T_FLOAT;
 
             xQueueSend(TXQueueHandle, DataToSend, 0);

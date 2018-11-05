@@ -13,11 +13,13 @@
 #define TX_HELPER_H
 
 
+/********************************* Includes **********************************/
+#include "BufferBase.h"
 
 
 /***************************** Function prototypes ***************************/
 void shiftNotificationMask(void);
-void copySensorDataToSend(void);
+void copySensorDataToSend(buffer::BufferMaster*);
 void transmitStatusFromPC(void);
 void waitForNotificationTX(void);
 
