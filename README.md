@@ -25,7 +25,7 @@ Debian packages needed for robots (sudo apt-get install)
 - Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
 
-#### Building the code
+#### Initialization of the code
 ```bash
 cd ~/catkin_ws/src
 catkin_init_workspace
@@ -33,9 +33,17 @@ git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  T
 cd soccer_ws
 git checkout initials_branchname
 cd ~/catkin_ws
+```
+#### Installing submodules and dependencies
+```
+git submodule update --recursive --init
 rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version.
-catkin build soccerbot
+```
+
+#### Building the code
+```
+catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
 
