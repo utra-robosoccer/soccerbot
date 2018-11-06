@@ -73,6 +73,7 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
+#include "OsInterfaceImpl.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -140,6 +141,7 @@ namespace{
 
 
 buffer::BufferMaster BufferMaster;
+os::OsInterfaceImpl osInterfaceImpl;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -208,7 +210,7 @@ void MX_FREERTOS_Init(void) {
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
   /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMaster.set_lock(DATABUFFERHandle);
+  BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
   /* USER CODE END Initialize Data Buffer */
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */

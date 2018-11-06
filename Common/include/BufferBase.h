@@ -20,10 +20,9 @@
 #include "UART_Handler.h"
 #include "MPU6050.h"
 #include "PeripheralInstances.h"
+#include "OsInterface.h"
 
-#if defined(THREADED)
-#include "cmsis_os.h"
-#endif
+
 
 namespace buffer {
 
@@ -32,41 +31,39 @@ namespace buffer {
 /**
  * @class Generic templated thread-safe buffer class
  */
-
-#if defined(THREADED)
 template <class T>
 class BufferBase
 {
 public:
-    BufferBase()
+    BufferBase() {}
+    ~BufferBase() {}
+    void set_osInterface(os::OsInterface *osInterface)
     {
-        m_data_buf = std::unique_ptr<T>(new T);
-        m_read = -1;
+        m_osInterfacePtr = osInterface;
     }
-    ~BufferBase() {};
     void set_lock(osMutexId lock)
     {
         m_lock = lock;
     }
     void write(const T &item)
     {
-        xSemaphoreTake(m_lock, portMAX_DELAY);
-        *m_data_buf = item;
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_databuf = item;
         m_read = 0;
-        xSemaphoreGive(m_lock);
+        m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
     }
     T read()
     {
-        xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
         m_read++;
-        xSemaphoreGive(m_lock);
-        return *m_data_buf;
+        m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
+        return m_databuf;
     }
     void reset()
     {
-        xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
         m_read = -1;
-        xSemaphoreGive(m_lock);
+        m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
     }
     int8_t num_reads()
     {
@@ -75,10 +72,11 @@ public:
 
     // Defining methods here in the declaration for ease of use as a templated class
 private:
-    std::unique_ptr<T> m_data_buf;
+    T m_databuf;
     //int indicates whether data has been read, -1 if data not written yet
-    int8_t m_read;
+    int8_t m_read = -1;
     osMutexId m_lock = nullptr;
+    os::OsInterface* m_osInterfacePtr = nullptr;
 };
 
 
@@ -89,20 +87,23 @@ private:
 class BufferMaster
 {
 public:
-    BufferMaster()  {}
+    BufferMaster() {}
     ~BufferMaster() {}
-    void set_lock(osMutexId lock)
+    void setup_buffers(osMutexId lock, os::OsInterface *osInterface)
     {
         IMUBuffer.set_lock(lock);
+        IMUBuffer.set_osInterface(osInterface);
         for(int i = 0; i < periph::NUM_MOTORS; ++i)
         {
             MotorBufferArray[i].set_lock(lock);
+            MotorBufferArray[i].set_osInterface(osInterface);
         }
         m_lock = lock;
+        m_osInterfacePtr = osInterface;
     }
     bool all_data_ready()
     {
-        xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
         bool ready =  (IMUBuffer.num_reads() == 0);
 
         if(ready)
@@ -112,7 +113,7 @@ public:
                 ready = (ready && MotorBufferArray[i].num_reads() == 0);
             }
         }
-        xSemaphoreGive(m_lock);
+        m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
         return ready;
     }
     BufferBase<imu::IMUStruct_t> IMUBuffer;
@@ -120,75 +121,9 @@ public:
     // Add buffer items here as necessary
 private:
     osMutexId m_lock = nullptr;
+    os::OsInterface* m_osInterfacePtr = nullptr;
 };
 
-#else
-/**
- * @class Generic templated buffer class (not thread-safe)
- */
-template <class T>
-class BufferBase
-{
-public:
-    BufferBase()
-    {
-        m_data_buf = std::unique_ptr<T>(new T);
-        m_read = -1;
-    }
-    ~BufferBase() {};
-    void write(const T &item)
-    {
-        *m_data_buf = item;
-        m_read = 0;
-    }
-    T read()
-    {
-        m_read++;
-        return *m_data_buf;
-    }
-    void reset()
-    {
-        m_read = -1;
-    }
-    int8_t num_reads()
-    {
-        return m_read;
-    }
-
-    // Defining methods here in the declaration for ease of use as a templated class
-private:
-    std::unique_ptr<T> m_data_buf;
-    int8_t m_read;
-};
-
-
-/**
- * @class Easily extendable master class that holds all relevant buffers (not thread-safe)
- */
-
-class BufferMaster
-{
-public:
-    BufferMaster() {}
-    ~BufferMaster() {}
-    bool all_data_ready()
-    {
-        bool ready =  (IMUBuffer.num_reads() == 0);
-
-        if(ready)
-        {
-            for(int i = 0; i < periph::NUM_MOTORS; ++i)
-            {
-                ready = (ready && MotorBufferArray[i].num_reads() == 0);
-            }
-        }
-        return ready;
-    }
-    BufferBase<imu::IMUStruct_t> IMUBuffer;
-    BufferBase<MotorData_t> MotorBufferArray[periph::NUM_MOTORS];
-    // Add buffer items here as necessary
-};
-#endif
 } // end namespace buffer
 
 /**
