@@ -25,7 +25,7 @@ Debian packages needed for robots (sudo apt-get install)
 - In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
 - Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
-
+- For convenience, there is a Clion Settings Repository for Soccer. Go to File > Settings > Settings Respository and add this as a read-only source https://github.com/utra-robosoccer/soccer-ws-clion-settings
 #### Initialization of the code
 ```bash
 cd ~/catkin_ws/src
