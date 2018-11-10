@@ -9,18 +9,12 @@
   *****************************************************************************
   */
 
-// NOTE: defgroup used above since there is no .cpp file associated with this class.
 
-#ifndef __BUFFER_BASE_H__
-#define __BUFFER_BASE_H__
+#ifndef BUFFER_BASE_H
+#define BUFFER_BASE_H
 
 /********************************** Includes **********************************/
-#include <cstdio>
-#include <memory>
-#include "UART_Handler.h"
-#include "MPU6050.h"
 #include "PeripheralInstances.h"
-#include "OsInterface.h"
 
 
 
@@ -29,7 +23,7 @@ namespace buffer {
 
 /*********************************** Buffer ***********************************/
 /**
- * @class Generic templated thread-safe buffer class
+ * @class BufferBase Generic templated thread-safe buffer class
  */
 template <class T>
 class BufferBase
@@ -47,21 +41,21 @@ public:
     }
     void write(const T &item)
     {
-        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, osWaitForever);
         m_databuf = item;
         m_read = 0;
         m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
     }
     T read()
     {
-        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, osWaitForever);
         m_read++;
         m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
         return m_databuf;
     }
     void reset()
     {
-        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, osWaitForever);
         m_read = -1;
         m_osInterfacePtr->OS_xSemaphoreGive(m_lock);
     }
@@ -81,7 +75,8 @@ private:
 
 
 /**
- * @class Easily extendable thread-safe master class that holds all relevant buffers
+ * @class BufferMaster Easily extendible thread-safe master class that holds
+ *        all relevant buffers
  */
 
 class BufferMaster
@@ -103,7 +98,7 @@ public:
     }
     bool all_data_ready()
     {
-        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, portMAX_DELAY);
+        m_osInterfacePtr->OS_xSemaphoreTake(m_lock, osWaitForever);
         bool ready =  (IMUBuffer.num_reads() == 0);
 
         if(ready)
@@ -131,4 +126,4 @@ private:
  */
 /* end - BufferBase */
 
-#endif /* __BUFFER_BASE_H__ */
+#endif /* BUFFER_BASE_H */
