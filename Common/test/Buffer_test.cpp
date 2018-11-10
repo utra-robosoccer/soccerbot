@@ -16,8 +16,7 @@
 /********************************* Includes **********************************/
 #include "UART_Handler.h"
 #include "PeripheralInstances.h"
-
-#undef THREADED
+#include "MockOsInterface.h"
 #include "BufferBase.h"
 
 #include <gtest/gtest.h>
@@ -29,26 +28,37 @@ using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
+using mocks::MockOsInterface;
 using namespace buffer;
-
 
 
 
 /******************************** File-local *********************************/
 namespace{
+// Variables
+// ----------------------------------------------------------------------------
+MockOsInterface os;
+osMutexId mutex = nullptr;
+
 // Functions
 // ----------------------------------------------------------------------------
 TEST(BufferTests, CanInitializeBuffer){
     BufferBase<int> intBuffer;
+    intBuffer.set_lock(mutex);
+    intBuffer.set_osInterface(&os);
 }
 
 TEST(BufferTests, CanWriteToBuffer){
     BufferBase<int> intBuffer;
+    intBuffer.set_lock(mutex);
+    intBuffer.set_osInterface(&os);
     intBuffer.write(10);
 }
 
 TEST(BufferTests, NumReadsCheck){
     BufferBase<int> intBuffer;
+    intBuffer.set_lock(mutex);
+    intBuffer.set_osInterface(&os);
 
     ASSERT_EQ(intBuffer.num_reads() , -1);
     intBuffer.write(10);
@@ -57,6 +67,9 @@ TEST(BufferTests, NumReadsCheck){
 
 TEST(BufferTests, CanReadFromBuffer){
     BufferBase<int> intBuffer;
+    intBuffer.set_lock(mutex);
+    intBuffer.set_osInterface(&os);
+
     intBuffer.write(10);
 
     int result = intBuffer.read();
@@ -70,6 +83,9 @@ TEST(BufferTests, CanReadFromBuffer){
 
 TEST(BufferTests, CanResetBuffer){
     BufferBase<int> intBuffer;
+    intBuffer.set_lock(mutex);
+    intBuffer.set_osInterface(&os);
+
     intBuffer.write(10);
 
     ASSERT_EQ(intBuffer.num_reads() , 0);
@@ -79,10 +95,12 @@ TEST(BufferTests, CanResetBuffer){
 
 TEST(BufferTests, CanInitializeBufferMaster){
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
 }
 
 TEST(BufferTests, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
     imu::IMUStruct_t IMUdata;
 
     bufferMaster.IMUBuffer.write(IMUdata);
@@ -90,6 +108,7 @@ TEST(BufferTests, CanWriteToIMUBuffer){
 
 TEST(BufferTests, CanReadFromIMUBuffer){
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
     imu::IMUStruct_t IMUdata;
     IMUdata.x_Accel = 1.0;
     IMUdata.x_Gyro = 2.0;
@@ -112,6 +131,7 @@ TEST(BufferTests, CanReadFromIMUBuffer){
 TEST(BufferTests, CanWriteToMotorBuffer){
     //TODO: Use periph::NUM_MOTORS without defining THREADED
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
 
     for(int i = 0; i < periph::NUM_MOTORS; ++i)
@@ -122,6 +142,7 @@ TEST(BufferTests, CanWriteToMotorBuffer){
 
 TEST(BufferTests, CanReadMotorDataBuffer){
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
     MotorData_t readMotorData[periph::NUM_MOTORS];
 
@@ -136,6 +157,7 @@ TEST(BufferTests, CanReadMotorDataBuffer){
 
 TEST(BufferTests, CanConfirmAllDataReady){
     BufferMaster bufferMaster;
+    bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
     imu::IMUStruct_t IMUdata;
 
