@@ -73,7 +73,7 @@ typedef enum{
 /** @brief Motor data sent from the UART threads to the TX thread */
 typedef struct{
     uint8_t id;
-    void* payload;
+    float payload;
     enum{
         T_FLOAT
     }type;
