@@ -49,7 +49,7 @@ DaisyChainParams uart1Params = {
 };
 DaisyChain uart1DaisyChain(uart1Params);
 
-UartDriver uart2Driver(&osif, &uartif, &huart2);
+UartDriver uart2Driver(&osif, &uartif, &huart5);
 DaisyChainParams uart2Params = {
     &uart2Driver,
     &gpioif,
