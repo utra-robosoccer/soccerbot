@@ -157,6 +157,8 @@ uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart2);
 uint8_t rxBuff[92] = { };
 uint8_t txBuff[92] = { };
 
+UARTcmd_t Motorcmd[18];
+
 }
 
 /* USER CODE END Variables */
@@ -357,7 +359,6 @@ void StartCommandTask(void const * argument)
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(200));
     uartDriver.setup();
 
-    UARTcmd_t Motorcmd[18];
     Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
     Motorcmd[periph::MOTOR2].qHandle = UART2_reqHandle;
     Motorcmd[periph::MOTOR3].qHandle = UART2_reqHandle;
@@ -418,86 +419,9 @@ void StartCommandTask(void const * argument)
     xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
     xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
 
-    uint32_t numIterations = 0;
-    float positions[18];
     while(1){
-
-        // CommandTask waits for signal from RxTask indicating new input.
         xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
-
-        // Convert raw bytes from robotGoal received from PC into floats
-        for(uint8_t i = 0; i < 18; i++){
-            uint8_t* ptr = (uint8_t*)&positions[i];
-            for(uint8_t j = 0; j < 4; j++){
-                *ptr = robotGoal.msg[i * 4 + j];
-                ptr++;
-            }
-        }
-
-        if(numIterations % 100 == 0){
-            // Every 100 iterations, assert torque enable
-            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
-                Motorcmd[i].type = cmdWriteTorque;
-                Motorcmd[i].value = 1; // Enable
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
-        // Send each goal position to the queue, where the UART handler
-        // thread that's listening will receive it and send it to the motor
-        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
-            switch(i){
-                case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
-                    break;
-                case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
-                    break;
-                case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                    break;
-                case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                    break;
-                case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                    break;
-                case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                    break;
-                default:
-                    break;
-            }
-
-            Motorcmd[i].type = cmdWritePosition;
-            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-
-            // Only read from legs
-            if(i <= periph::MOTOR12){
-                Motorcmd[i].type = cmdReadPosition;
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
-        numIterations++;
+        osDelay(1);
     }
 }
 
@@ -714,6 +638,8 @@ void StartRxTask(void const * argument) {
     // RxTask waits for first time setup complete.
     xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
+    uint32_t numIterations = 0;
+    float positions[18];
     for (;;) {
 
         while(!uartDriver.receive(rxBuff, sizeof(rxBuff))) {;}
@@ -725,6 +651,80 @@ void StartRxTask(void const * argument) {
         // RxTask notifies CommandTask that a complete message has been received.
         /* XXX: This will be moved to EventHandlerTask. */
         receiveDataBuffer();
+
+        // Convert raw bytes from robotGoal received from PC into floats
+        for(uint8_t i = 0; i < 18; i++){
+            uint8_t* ptr = (uint8_t*)&positions[i];
+            for(uint8_t j = 0; j < 4; j++){
+                *ptr = robotGoal.msg[i * 4 + j];
+                ptr++;
+            }
+        }
+
+        if(numIterations % 100 == 0){
+            // Every 100 iterations, assert torque enable
+            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
+                Motorcmd[i].type = cmdWriteTorque;
+                Motorcmd[i].value = 1; // Enable
+                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+            }
+        }
+
+        // Send each goal position to the queue, where the UART handler
+        // thread that's listening will receive it and send it to the motor
+        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
+            switch(i){
+                case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
+                    break;
+                case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
+                    break;
+                case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
+                    break;
+                case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
+                    break;
+                case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
+                    break;
+                case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
+                    break;
+                default:
+                    break;
+            }
+
+            Motorcmd[i].type = cmdWritePosition;
+            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+
+            // Only read from legs
+            if(i <= periph::MOTOR12){
+                Motorcmd[i].type = cmdReadPosition;
+                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+            }
+        }
+
+        numIterations++;
     }
 }
 
