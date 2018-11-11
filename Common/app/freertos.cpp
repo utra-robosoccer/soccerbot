@@ -65,7 +65,8 @@
  */
 
 #include <math.h>
-#include <uart_handler.h>
+
+#include "uart_handler.h"
 #include "Notification.h"
 #include "SystemConf.h"
 #include "BufferBase.h"
