@@ -141,12 +141,6 @@ void initMotorIOType(IO_Type io_type){
     uart4Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
     uart6Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
 
-    uart1Driver.setNoMutex(true);
-    uart2Driver.setNoMutex(true);
-    uart3Driver.setNoMutex(true);
-    uart4Driver.setNoMutex(true);
-    uart6Driver.setNoMutex(true);
-
     uart1DaisyChain.setIOType(io_type);
     uart2DaisyChain.setIOType(io_type);
     uart3DaisyChain.setIOType(io_type);
