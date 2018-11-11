@@ -621,6 +621,73 @@ void StartIMUTask(void const * argument)
     /* USER CODE END StartIMUTask */
 }
 
+typedef struct{
+    const uint8_t size;
+    uint8_t iHead;
+    uint8_t iTail;
+    uint8_t* pBuff;
+}CircBuff_t;
+
+uint8_t copyCircBuffToFlatBuff(
+    CircBuff_t* src,
+    uint8_t* dest
+)
+{
+    const uint8_t BUFF_SIZE = src->size;
+    const uint8_t* BUFF_PTR = src->pBuff;
+    const uint8_t HEAD_IDX = src->iHead;
+    uint8_t tailIdx = src->iTail;
+    uint8_t* destPtr = dest;
+
+    uint8_t numReceived;
+    if(HEAD_IDX > tailIdx){
+        numReceived = HEAD_IDX - tailIdx;
+    }
+    else{
+        numReceived = BUFF_SIZE - tailIdx;
+        numReceived += HEAD_IDX;
+    }
+
+    while(tailIdx != HEAD_IDX){
+        *destPtr = BUFF_PTR[tailIdx];
+
+        ++destPtr;
+        ++tailIdx;
+
+        if(tailIdx == BUFF_SIZE){
+            tailIdx = 0;
+        }
+    }
+
+    src->iTail = tailIdx;
+    return numReceived;
+}
+
+void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
+    static uint state = 0;
+    for(uint8_t i = 0; i < numBytes; ++i){
+        switch(bytes[i]){
+            default:
+                if (state >= 92) {
+                    state = 0;
+                }
+                else {
+                    state++;
+                }
+                break;
+        }
+
+        switch(state){
+            case 92:
+                parse_out = 1;
+                break;
+            default:
+                parse_out = 0;
+                break;
+        }
+    }
+}
+
 /**
  * @brief  This function is executed in the context of the RxTask
  *         thread. It initiates DMA-based receptions of RobotGoals
@@ -632,6 +699,13 @@ void StartIMUTask(void const * argument)
  * @ingroup Threads
  */
 void StartRxTask(void const * argument) {
+    const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
+    uint32_t xLastWakeTime = osKernelSysTick();
+    uint8_t raw[92];
+    uint8_t processingBuff[92];
+    CircBuff_t circBuff = {92, 0, 0, raw};
+
+    int parse_out = 0;
 
     initializeVars();
 
@@ -640,91 +714,115 @@ void StartRxTask(void const * argument) {
 
     uint32_t numIterations = 0;
     float positions[18];
+
+    HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
+
     for (;;) {
+        // Need to block the Rx task since it is the highest priority. If we do
+        // not do this, the Rx task will execute forever and nothing else will
+        osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
+        //osDelay(5000);
 
-        while(!uartDriver.receive(rxBuff, sizeof(rxBuff))) {;}
+        circBuff.iHead = circBuff.size - huart2.hdmarx->Instance->NDTR;
+        if(circBuff.iHead != circBuff.iTail){
+            // Copy contents from raw circular buffer to non-circular
+            // processing buffer (whose contents start at index 0)
+            uint8_t numBytesReceived = copyCircBuffToFlatBuff(
+                &circBuff,
+                processingBuff
+            );
 
-        // XXX: glue code to get rxBuff into buffRx.
-        //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
-        copyIntoBuffRx(rxBuff);
-
-        // RxTask notifies CommandTask that a complete message has been received.
-        /* XXX: This will be moved to EventHandlerTask. */
-        receiveDataBuffer();
-
-        // Convert raw bytes from robotGoal received from PC into floats
-        for(uint8_t i = 0; i < 18; i++){
-            uint8_t* ptr = (uint8_t*)&positions[i];
-            for(uint8_t j = 0; j < 4; j++){
-                *ptr = robotGoal.msg[i * 4 + j];
-                ptr++;
-            }
+            parse(processingBuff, numBytesReceived, parse_out);
         }
 
-        if(numIterations % 100 == 0){
-            // Every 100 iterations, assert torque enable
-            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
-                Motorcmd[i].type = cmdWriteTorque;
-                Motorcmd[i].value = 1; // Enable
+        if(huart2.RxState == HAL_UART_STATE_ERROR){
+            HAL_UART_AbortReceive_IT(&huart2);
+            HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
+        }
+
+        if (parse_out == 1) {
+
+            // XXX: glue code to get rxBuff into buffRx.
+            //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
+            copyIntoBuffRx(rxBuff);
+
+            // RxTask notifies CommandTask that a complete message has been received.
+            receiveDataBuffer();
+
+            // Convert raw bytes from robotGoal received from PC into floats
+            for(uint8_t i = 0; i < 18; i++){
+                uint8_t* ptr = (uint8_t*)&positions[i];
+                for(uint8_t j = 0; j < 4; j++){
+                    *ptr = robotGoal.msg[i * 4 + j];
+                    ptr++;
+                }
+            }
+
+            if(numIterations % 100 == 0){
+                // Every 100 iterations, assert torque enable
+                for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
+                    Motorcmd[i].type = cmdWriteTorque;
+                    Motorcmd[i].value = 1; // Enable
+                    xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+                }
+            }
+
+            // Send each goal position to the queue, where the UART handler
+            // thread that's listening will receive it and send it to the motor
+            for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
+                switch(i){
+                    case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
+                        break;
+                    case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
+                        break;
+                    case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
+                        break;
+                    case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
+                        break;
+                    case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
+                        break;
+                    case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
+                        break;
+                    case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
+                        break;
+                    default:
+                        break;
+                }
+
+                Motorcmd[i].type = cmdWritePosition;
                 xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+
+                // Only read from legs
+                if(i <= periph::MOTOR12){
+                    Motorcmd[i].type = cmdReadPosition;
+                    xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
+                }
             }
+
+            numIterations++;
         }
-
-        // Send each goal position to the queue, where the UART handler
-        // thread that's listening will receive it and send it to the motor
-        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
-            switch(i){
-                case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
-                    break;
-                case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
-                    break;
-                case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                    break;
-                case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                    break;
-                case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                    break;
-                case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                    break;
-                default:
-                    break;
-            }
-
-            Motorcmd[i].type = cmdWritePosition;
-            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-
-            // Only read from legs
-            if(i <= periph::MOTOR12){
-                Motorcmd[i].type = cmdReadPosition;
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
-        numIterations++;
     }
 }
 
