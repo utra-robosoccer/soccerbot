@@ -656,6 +656,9 @@ uint8_t copyCircBuffToFlatBuff(
 
         if(tailIdx == BUFF_SIZE){
             tailIdx = 0;
+            if (BUFF_SIZE == HEAD_IDX) {
+                tailIdx = HEAD_IDX;
+            }
         }
     }
 
@@ -680,6 +683,7 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
         switch(state){
             case 92:
                 parse_out = 1;
+                state = 0;
                 break;
             default:
                 parse_out = 0;
@@ -687,6 +691,8 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
         }
     }
 }
+
+#define RX_BUFF_SIZE 100
 
 /**
  * @brief  This function is executed in the context of the RxTask
@@ -699,12 +705,6 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
  * @ingroup Threads
  */
 void StartRxTask(void const * argument) {
-    const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
-    uint32_t xLastWakeTime = osKernelSysTick();
-    uint8_t raw[92];
-    uint8_t processingBuff[92];
-    CircBuff_t circBuff = {92, 0, 0, raw};
-
     int parse_out = 0;
 
     initializeVars();
@@ -714,6 +714,11 @@ void StartRxTask(void const * argument) {
 
     uint32_t numIterations = 0;
     float positions[18];
+    const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
+    uint32_t xLastWakeTime = osKernelSysTick();
+    uint8_t raw[RX_BUFF_SIZE];
+    uint8_t processingBuff[RX_BUFF_SIZE];
+    CircBuff_t circBuff = {RX_BUFF_SIZE, 0, 0, raw};
 
     HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
 
@@ -740,7 +745,14 @@ void StartRxTask(void const * argument) {
             HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
         }
 
+        if (circBuff.iHead == circBuff.size) {
+            HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
+        }
+
         if (parse_out == 1) {
+            parse_out = 0;
+            circBuff.iHead = 0;
+            circBuff.iTail = 0;
 
             // XXX: glue code to get rxBuff into buffRx.
             //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
