@@ -74,7 +74,6 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
-#include "PcInterface.h"
 #include "UartDriver.h"
 #include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
@@ -154,16 +153,9 @@ os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart2);
 
 uint8_t rxBuff[92] = { };
+uint8_t txBuff[92] = { };
 
 }
-
-#if defined(PC_INTERFACE_USE_LWIP)
-pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART, nullptr,
-        &uartDriver, &osInterface);
-#else
-pc_interface::PcInterface pcInterface(pc_interface::PcProtocol::UART,
-        &uartDriver, &osInterface);
-#endif
 
 /* USER CODE END Variables */
 
@@ -362,7 +354,7 @@ void StartCommandTask(void const * argument)
     uartDriver.setIOType(uart::IO_Type::DMA);
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(2000));
     uartDriver.setNoMutex(false);
-    pcInterface.setup();
+    uartDriver.setup();
 
     UARTcmd_t Motorcmd[18];
     Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
@@ -758,11 +750,15 @@ void StartTxTask(void const * argument) {
 
     for (;;) {
         // TxTask waits for activation from CommandTask to transmit.
-        /* XXX: This will be moved to EventHandlerTask */
         copySensorDataToSend();
 
-        pcInterface.setTxBuffer((uint8_t*) &robotState, sizeof(RobotState));
-        while(!pcInterface.transmit(sizeof(RobotState))) {;}
+        // XXX: Glue code
+        const uint8_t *txArrayIn = (uint8_t*) &robotState;
+        for (size_t iTxArray = 0; iTxArray < sizeof(RobotState); iTxArray++) {
+            txBuff[iTxArray] = txArrayIn[iTxArray];
+        }
+
+        while(!uartDriver.transmit(txBuff, sizeof(RobotState))) {;}
     }
 }
 
