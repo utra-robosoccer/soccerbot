@@ -169,7 +169,7 @@ void receiveDataBuffer(void) {
 
 /* XXX: temp function while eventHandler gets integrated*/
 void copyIntoBuffRx(uint8_t *copyFrom) {
-    for (int i = 0; i < sizeof(buffRx); i++) {
+    for (size_t i = 0; i < sizeof(buffRx); i++) {
         buffRx[i] = copyFrom[i];
     }
 }

@@ -119,22 +119,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.322999259" name="/" resourcePath="component/PcInterface">
-						<toolChain id="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug.888425490" name="Ac6 STM32 MCU GCC" superClass="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
-							<option id="fr.ac6.managedbuild.option.gnu.cross.prefix.1801285094.108330197" name="Prefix" superClass="fr.ac6.managedbuild.option.gnu.cross.prefix.1801285094"/>
-							<option id="fr.ac6.managedbuild.option.gnu.cross.mcu.355245351.743369664" name="Mcu" superClass="fr.ac6.managedbuild.option.gnu.cross.mcu.355245351"/>
-							<option id="fr.ac6.managedbuild.option.gnu.cross.board.2099518885.832131022" name="Board" superClass="fr.ac6.managedbuild.option.gnu.cross.board.2099518885"/>
-							<option id="fr.ac6.managedbuild.option.gnu.cross.instructionSet.1675002016.1654973533" name="Instruction Set" superClass="fr.ac6.managedbuild.option.gnu.cross.instructionSet.1675002016"/>
-							<option id="fr.ac6.managedbuild.option.gnu.cross.fpu.1265713665.788765472" name="Floating point hardware" superClass="fr.ac6.managedbuild.option.gnu.cross.fpu.1265713665"/>
-							<option id="fr.ac6.managedbuild.option.gnu.cross.floatabi.724087040.1729563031" name="Floating-point ABI" superClass="fr.ac6.managedbuild.option.gnu.cross.floatabi.724087040"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.2088602056" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.553331500" name="MCU G++ Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.850120004" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker.550782226"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.1986221880" name="MCU G++ Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.811769967"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.archiver.145481600" name="MCU GCC Archiver" superClass="fr.ac6.managedbuild.tool.gnu.archiver.530211962"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.2032240042" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.1368265873"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry excluding="include|hardware|app|component|Drivers|Inc|Middlewares|Src|startup" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
@@ -142,7 +126,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="app"/>
-						<entry excluding="UdpDriver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
+						<entry excluding="PcInterface|UdpDriver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry excluding="LwipUdpInterface.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="hardware"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
@@ -264,11 +248,11 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
