@@ -98,10 +98,6 @@ public:
      */
     IO_Type getIOType(void) const;
 
-    void setNoMutex(bool m_no_mutex_in);
-
-    bool getNoMutex() const;
-
     /**
      * @brief  Set up the driver for the specified IO_Type, including initialization
      *         of internal data members.
@@ -166,15 +162,9 @@ private:
      *        pointer has been set, otherwise false
      */
     bool hw_is_initialized = false;
-#if defined(THREADED)
-    mutable osMutexId uartResourceMutex;
-    mutable osStaticMutexDef_t uartResourceMutexControlBlock;
-#endif
+
     /** @brief Maximum permitted time for blocking on a data transfer */
     TickType_t m_max_block_time;
-    TickType_t m_mutex_max_block_time;
-
-    bool m_no_mutex = false;
 };
 
 } // end namespace uart

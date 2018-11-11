@@ -352,8 +352,7 @@ void StartDefaultTask(void const * argument)
 void StartCommandTask(void const * argument)
 {
     uartDriver.setIOType(uart::IO_Type::DMA);
-    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(2000));
-    uartDriver.setNoMutex(false);
+    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(200));
     uartDriver.setup();
 
     UARTcmd_t Motorcmd[18];
@@ -401,7 +400,6 @@ void StartCommandTask(void const * argument)
         (Motorcmd[i]).motorHandle = periph::motors[i];
         (Motorcmd[i]).type = cmdWritePosition;
     }
-
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
