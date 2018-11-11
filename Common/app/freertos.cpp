@@ -151,7 +151,7 @@ static volatile uint32_t error;
 
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
-uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart2);
 
 uint8_t rxBuff[92] = { };
 
@@ -724,10 +724,10 @@ void StartRxTask(void const * argument) {
 
     for (;;) {
 
-        while(!pcInterface.receive(sizeof(rxBuff))) {;}
+        while(!uartDriver.receive(rxBuff, sizeof(rxBuff))) {;}
 
         // XXX: glue code to get rxBuff into buffRx.
-        pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
+        //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
         copyIntoBuffRx(rxBuff);
 
         // RxTask notifies CommandTask that a complete message has been received.
@@ -859,13 +859,13 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        if(huart == &huart5){
+        if(huart == &huart2){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         if(huart == &huart1){
             xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart2){
+        else if(huart == &huart5){
             xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == &huart3){
@@ -896,13 +896,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart5) {
+    if (huart == &huart2) {
         xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     if(huart == &huart1){
         xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart2){
+    else if(huart == &huart5){
         xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == &huart3){
