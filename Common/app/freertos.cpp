@@ -144,6 +144,7 @@ namespace{
 
 
 buffer::BufferMaster BufferMaster;
+os::OsInterfaceImpl osInterfaceImpl;
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -220,7 +221,7 @@ void MX_FREERTOS_Init(void) {
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
   /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMaster.set_lock(DATABUFFERHandle);
+  BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
   /* USER CODE END Initialize Data Buffer */
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -748,7 +749,7 @@ void StartTxTask(void const * argument) {
 
     for (;;) {
         // TxTask waits for activation from CommandTask to transmit.
-        copySensorDataToSend();
+        copySensorDataToSend(&BufferMaster);
 
         // XXX: Glue code
         const uint8_t *txArrayIn = (uint8_t*) &robotState;
