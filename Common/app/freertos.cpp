@@ -99,7 +99,7 @@ osThreadId IMUTaskHandle;
 uint32_t IMUTaskBuffer[ 128 ];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId CommandTaskHandle;
-uint32_t CommandTaskBuffer[ 512 ];
+uint32_t CommandTaskBuffer[ 128 ];
 osStaticThreadDef_t CommandTaskControlBlock;
 osThreadId RxTaskHandle;
 uint32_t RxTaskBuffer[ 512 ];
@@ -110,9 +110,9 @@ osStaticThreadDef_t TxTaskControlBlock;
 osThreadId BuffWriterTaskHandle;
 uint32_t BuffWriterTaskBuffer[ 128 ];
 osStaticThreadDef_t BuffWriterTaskControlBlock;
-osThreadId MotorCmdGenHandle;
-uint32_t MotorCmdGenBuffer[ 128 ];
-osStaticThreadDef_t MotorCmdGenControlBlock;
+osThreadId MotorCmdGenTaskHandle;
+uint32_t MotorCmdGenTaskBuffer[ 128 ];
+osStaticThreadDef_t MotorCmdGenTaskControlBlock;
 osMessageQId UART1_reqHandle;
 uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART1_reqControlBlock;
@@ -128,9 +128,6 @@ osStaticMessageQDef_t UART4_reqControlBlock;
 osMessageQId UART6_reqHandle;
 uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART6_reqControlBlock;
-osMessageQId TXQueueHandle;
-uint8_t TXQueueBuffer[ 32 * sizeof( TXData_t ) ];
-osStaticMessageQDef_t TXQueueControlBlock;
 osMessageQId BufferWriteQueueHandle;
 uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
@@ -213,9 +210,7 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of DATABUFFER */
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
-  /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
-  /* USER CODE END Initialize Data Buffer */
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -234,23 +229,23 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of UART1Task */
-  osThreadStaticDef(UART1Task, StartUART1Task, osPriorityNormal, 0, 128, UART1TaskBuffer, &UART1TaskControlBlock);
+  osThreadStaticDef(UART1Task, StartUART1Task, osPriorityBelowNormal, 0, 128, UART1TaskBuffer, &UART1TaskControlBlock);
   UART1TaskHandle = osThreadCreate(osThread(UART1Task), NULL);
 
   /* definition and creation of UART2Task */
-  osThreadStaticDef(UART2Task, StartUART2Task, osPriorityNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
+  osThreadStaticDef(UART2Task, StartUART2Task, osPriorityBelowNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
   UART2TaskHandle = osThreadCreate(osThread(UART2Task), NULL);
 
   /* definition and creation of UART3Task */
-  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
+  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityBelowNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
   UART3TaskHandle = osThreadCreate(osThread(UART3Task), NULL);
 
   /* definition and creation of UART4Task */
-  osThreadStaticDef(UART4Task, StartUART4Task, osPriorityNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
+  osThreadStaticDef(UART4Task, StartUART4Task, osPriorityBelowNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
   UART4TaskHandle = osThreadCreate(osThread(UART4Task), NULL);
 
   /* definition and creation of UART6Task */
-  osThreadStaticDef(UART6Task, StartUART6Task, osPriorityNormal, 0, 128, UART6TaskBuffer, &UART6TaskControlBlock);
+  osThreadStaticDef(UART6Task, StartUART6Task, osPriorityBelowNormal, 0, 128, UART6TaskBuffer, &UART6TaskControlBlock);
   UART6TaskHandle = osThreadCreate(osThread(UART6Task), NULL);
 
   /* definition and creation of IMUTask */
@@ -258,7 +253,7 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityAboveNormal, 0, 128, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
@@ -270,12 +265,12 @@ void MX_FREERTOS_Init(void) {
   TxTaskHandle = osThreadCreate(osThread(TxTask), NULL);
 
   /* definition and creation of BuffWriterTask */
-  osThreadStaticDef(BuffWriterTask, StartBuffWriterTask, osPriorityAboveNormal, 0, 128, BuffWriterTaskBuffer, &BuffWriterTaskControlBlock);
+  osThreadStaticDef(BuffWriterTask, StartBuffWriterTask, osPriorityNormal, 0, 128, BuffWriterTaskBuffer, &BuffWriterTaskControlBlock);
   BuffWriterTaskHandle = osThreadCreate(osThread(BuffWriterTask), NULL);
 
-  /* definition and creation of MotorCmdGen */
-  osThreadStaticDef(MotorCmdGen, StartMotorCmdGenTask, osPriorityAboveNormal, 0, 128, MotorCmdGenBuffer, &MotorCmdGenControlBlock);
-  MotorCmdGenHandle = osThreadCreate(osThread(MotorCmdGen), NULL);
+  /* definition and creation of MotorCmdGenTask */
+  osThreadStaticDef(MotorCmdGenTask, StartMotorCmdGenTask, osPriorityNormal, 0, 128, MotorCmdGenTaskBuffer, &MotorCmdGenTaskControlBlock);
+  MotorCmdGenTaskHandle = osThreadCreate(osThread(MotorCmdGenTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -301,10 +296,6 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of UART6_req */
   osMessageQStaticDef(UART6_req, 16, UARTcmd_t, UART6_reqBuffer, &UART6_reqControlBlock);
   UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
-
-  /* definition and creation of TXQueue */
-  osMessageQStaticDef(TXQueue, 32, TXData_t, TXQueueBuffer, &TXQueueControlBlock);
-  TXQueueHandle = osMessageCreate(osMessageQ(TXQueue), NULL);
 
   /* definition and creation of BufferWriteQueue */
   osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
@@ -371,7 +362,7 @@ void StartCommandTask(void const * argument)
         );
 
         periph::motors[i]->setReturnDelayTime(RETURN_DELAY_TIME);
-        periph::motors[i]->enableTorque(false);
+        periph::motors[i]->enableTorque(true);
 
         if(i >= periph::MOTOR13){
             // AX12A-only config for controls
@@ -388,11 +379,14 @@ void StartCommandTask(void const * argument)
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
     periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
+    // Set up the sensor data buffer
+    BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
+
     // Unblock the other tasks now that initialization is done
     setupIsDone = true;
     osSignalSet(RxTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(MotorCmdGenHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(BuffWriterTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART1TaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART2TaskHandle, NOTIFIED_FROM_TASK);
@@ -440,7 +434,7 @@ void StartCommandTask(void const * argument)
 
             cmd.value = positions[i];
 
-//            xQueueSend(cmd.qHandle, &cmd, 0);
+            xQueueSend(cmd.qHandle, &cmd, 0);
         }
     }
 }
@@ -710,7 +704,7 @@ void StartBuffWriterTask(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, osWaitForever) != pdTRUE);
         switch (dataToWrite.eDataType) {
             case eMotorData:
                 motorDataPtr = static_cast<MotorData_t*>(dataToWrite.pData);
@@ -749,7 +743,6 @@ void StartMotorCmdGenTask(void const * argument){
 
     for(;;)
     {
-        // Service this thread every 2 ms for a 500 Hz sample rate
         vTaskDelayUntil(&xLastWakeTime, CYCLE_TIME_MS);
 
         for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
