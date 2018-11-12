@@ -162,6 +162,8 @@ UARTcmd_t Motorcmd[18];
 
 }
 
+#define RX_BUFF_SIZE 92
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -622,41 +624,6 @@ void StartIMUTask(void const * argument)
     /* USER CODE END StartIMUTask */
 }
 
-typedef struct{
-    const uint8_t size;
-    uint8_t iHead;
-    uint8_t iTail;
-    uint8_t* pBuff;
-}CircBuff_t;
-
-uint8_t copyCircBuffToFlatBuff(
-    CircBuff_t* src,
-    uint8_t* dest
-)
-{
-    const uint8_t BUFF_SIZE = src->size;
-    const uint8_t* BUFF_PTR = src->pBuff;
-    const uint8_t HEAD_IDX = src->iHead;
-    uint8_t tailIdx = src->iTail;
-    uint8_t* destPtr = dest;
-    uint8_t numReceived = 0;
-
-    if (tailIdx > HEAD_IDX) {
-        while (tailIdx < BUFF_SIZE) {
-            destPtr[numReceived++] = BUFF_PTR[tailIdx++];
-        }
-    }
-
-    tailIdx %= BUFF_SIZE;
-
-    while (tailIdx < HEAD_IDX) {
-        destPtr[numReceived++] = BUFF_PTR[tailIdx++];
-    }
-
-    src->iTail = tailIdx;
-    return numReceived;
-}
-
 void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
     static uint state = 0;
     for(uint8_t i = 0; i < numBytes; ++i){
@@ -683,8 +650,6 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
     }
 }
 
-#define RX_BUFF_SIZE 92
-
 /**
  * @brief  This function is executed in the context of the RxTask
  *         thread. It initiates DMA-based receptions of RobotGoals
@@ -705,32 +670,27 @@ void StartRxTask(void const * argument) {
 
     uint32_t numIterations = 0;
     float positions[18];
+
     const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
     uint32_t xLastWakeTime = osKernelSysTick();
 
     uint8_t raw[RX_BUFF_SIZE];
     uint8_t processingBuff[RX_BUFF_SIZE];
-    uart::CircularDmaBuffer circB = uart::CircularDmaBuffer(&huart2,
+    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart2,
             &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
 
-    circB.initiate();
+    rxBuffer.initiate();
 
     for (;;) {
-        // Need to block the Rx task since it is the highest priority. If we do
-        // not do this, the Rx task will execute forever and nothing else will
         osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
 
-        circB.updateHead();
-        if(circB.dataAvail()){
-            // Copy contents from raw circular buffer to non-circular
-            // processing buffer (whose contents start at index 0)
-
-            uint8_t numBytesReceived = circB.readBuff(processingBuff);
+        rxBuffer.updateHead();
+        if(rxBuffer.dataAvail()){
+            uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
 
             parse(processingBuff, numBytesReceived, parse_out);
         }
-
-        circB.restartIfError();
+        rxBuffer.restartIfError();
 
         if (parse_out == 1) {
             parse_out = 0;
