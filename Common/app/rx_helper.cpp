@@ -23,7 +23,8 @@
 /****************************** Public Variables *****************************/
 extern osThreadId CommandTaskHandle;
 extern osThreadId IMUTaskHandle;
-extern osThreadId PCUARTHandle;
+extern osThreadId TxTaskHandle;
+extern osMutexId PCUARTHandle;
 
 /***************************** Private Variables *****************************/
 static uint8_t robotGoalData[sizeof(RobotGoal)];
@@ -151,8 +152,9 @@ void receiveDataBuffer(void) {
                 startSeqCount = 0;
                 totalBytesRead = 0;
 
-                xTaskNotify(CommandTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake control task
-                xTaskNotify(IMUTaskHandle, NOTIFIED_FROM_TASK, eSetBits);// Wake MPU task
+                osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK); // Wake TX task
+                osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);// Wake control task
+                osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);// Wake MPU task
                 continue;
             }
         } else {

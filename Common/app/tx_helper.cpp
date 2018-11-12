@@ -19,13 +19,9 @@
 
 /********************************** Externs **********************************/
 extern osThreadId PCUARTHandle;
-extern osThreadId TXQueueHandle;
 
 /***************************** Private Variables *****************************/
-static TXData_t receivedData;
-static MotorData_t* motorDataPtr = nullptr;
 static MotorData_t readMotorData;
-static imu::IMUStruct_t* imuPtr = nullptr;
 static imu::IMUStruct_t readIMUData;
 
 static char* const pIMUXGyroData = &robotState.msg[
@@ -34,11 +30,6 @@ static char* const pIMUXGyroData = &robotState.msg[
 
 static HAL_StatusTypeDef status;
 static uint32_t notification;
-
-// Bits in this are set based on which sensor data is ready
-static uint32_t dataReadyFlags = 0;
-
-static uint32_t NOTIFICATION_MASK = 0x80000000;
 
 /******************************** Functions **********************************/
 /*  StartTxTask Helper Functions                                             */
@@ -60,60 +51,12 @@ static uint32_t NOTIFICATION_MASK = 0x80000000;
  */
 
 /**
- * @brief   Shifts bits of NOTIFICATION_MASK
- * @param 	None
- * @return  None
- */
-void shiftNotificationMask(void) {
-    for (uint8_t i = 1; i <= 12; i++) {
-        NOTIFICATION_MASK |= (1 << i);
-    }
-}
-
-/**
  * @brief   Validates and copies sensor data to transmit
  * @details This function receives two types of sensor data(motor and IMU) and
  *          updates to the according section of robotState.msg
- * @param 	None
- * @return  None
+ * @param 	BufferMasterPtr Pointer to the sensor data buffer
  */
 void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
-    while ((dataReadyFlags & NOTIFICATION_MASK) != NOTIFICATION_MASK) {
-        while (xQueueReceive(TXQueueHandle, &receivedData, portMAX_DELAY) != pdTRUE);
-
-        switch (receivedData.eDataType) {
-        case eMotorData:
-            motorDataPtr = static_cast<MotorData_t*>(receivedData.pData);
-
-            if (motorDataPtr == NULL) {
-                break;
-            }
-
-            // Validate data and store it in robotState
-            if (motorDataPtr->id <= periph::NUM_MOTORS) {
-                // Copy sensor data for this motor into its buffer
-                BufferMasterPtr->MotorBufferArray[motorDataPtr->id - 1].write(*motorDataPtr);
-
-                // Set flag indicating the motor with this id has reported in
-                // with position data
-                dataReadyFlags |= (1 << motorDataPtr->id);
-            }
-            break;
-        case eIMUData:
-            imuPtr = (imu::IMUStruct_t*)receivedData.pData;
-
-            if(imuPtr == NULL){ break; }
-
-            // Copy sensor data into IMU buffer
-            BufferMasterPtr->IMUBuffer.write(*imuPtr);
-
-            // Set flag indicating IMU data has reported in
-            dataReadyFlags |= 0x80000000;
-            break;
-        default:
-            break;
-        }
-    }
 
     //At this point, all data is ready, so copy into robotState.msg
     readIMUData = BufferMasterPtr->IMUBuffer.read();
@@ -123,11 +66,10 @@ void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
     {
         readMotorData = BufferMasterPtr->MotorBufferArray[i].read();
         memcpy(&robotState.msg[4 * (readMotorData.id - 1)],
-                &readMotorData.payload,
+               &readMotorData.payload,
                sizeof(float)
-               );
+        );
     }
-    dataReadyFlags = 0; // Clear all flags
 }
 
 /**
