@@ -332,7 +332,8 @@ void StartDefaultTask(void const * argument)
   * @brief  This function is executed in the context of the commandTask
   *         thread. It initializes all data structures and peripheral
   *         devices associated with the application, and then assumes
-  *         responsibility for distributing commands to the actuators
+  *         responsibility for distributing write commands to the
+  *         actuators.
   *
   *         This function never returns.
   *
@@ -388,12 +389,12 @@ void StartCommandTask(void const * argument)
     osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(BuffWriterTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART1TaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART2TaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART3TaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART4TaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(UART6TaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);
 
     UARTcmd_t cmd;
     cmd.type = cmdWritePosition;
@@ -432,7 +433,46 @@ void StartCommandTask(void const * argument)
                 cmd.qHandle = UART3_reqHandle;
             }
 
-            cmd.value = positions[i];
+            switch(i){
+                case periph::MOTOR1: cmd.value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR2: cmd.value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR3: cmd.value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR4: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR5: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR6: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR7: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR8: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR9: cmd.value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR10: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR11: cmd.value = -1*positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR12: cmd.value = positions[i]*180/M_PI + 150;
+                    break;
+                case periph::MOTOR13: cmd.value = positions[i]*180/M_PI + 150; // Left shoulder
+                    break;
+                case periph::MOTOR14: cmd.value = positions[i]*180/M_PI + 60; // Left elbow
+                    break;
+                case periph::MOTOR15: cmd.value = -1*positions[i]*180/M_PI + 150; // Right shoulder
+                    break;
+                case periph::MOTOR16: cmd.value = -1*positions[i]*180/M_PI + 240; // Right elbow
+                    break;
+                case periph::MOTOR17: cmd.value = -1*positions[i]*180/M_PI + 150; // Neck pan
+                    break;
+                case periph::MOTOR18: cmd.value = -1*positions[i]*180/M_PI + 150; // Neck tilt
+                    break;
+                default:
+                    break;
+            }
 
             xQueueSend(cmd.qHandle, &cmd, 0);
         }
@@ -733,10 +773,20 @@ void StartBuffWriterTask(void const * argument)
     }
 }
 
+/**
+  * @brief  This function is executed in the context of the MotorCmdGen
+  *         thread. This thread generates read commands for the motors
+  *         so that position data will be read from them on a
+  *         time-triggered basis.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
 void StartMotorCmdGenTask(void const * argument){
     osSignalWait(0, osWaitForever);
 
-    constexpr uint32_t CYCLE_TIME_MS = osKernelSysTickMicroSec(3000);
+    constexpr uint32_t CYCLE_TIME_MS = osKernelSysTickMicroSec(2000);
     TickType_t xLastWakeTime = osKernelSysTick();
     UARTcmd_t cmd;
     cmd.type = cmdReadPosition;
