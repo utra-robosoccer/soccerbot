@@ -57,12 +57,10 @@ static uint32_t notification;
  * @param 	BufferMasterPtr Pointer to the sensor data buffer
  */
 void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
-
-    //At this point, all data is ready, so copy into robotState.msg
     readIMUData = BufferMasterPtr->IMUBuffer.read();
     memcpy(pIMUXGyroData, (&readIMUData.x_Gyro), sizeof(imu::IMUStruct_t));
 
-    for(int i = 0; i < periph::NUM_MOTORS; ++i)
+    for(int i = 0; i <= periph::MOTOR12; ++i)
     {
         readMotorData = BufferMasterPtr->MotorBufferArray[i].read();
         memcpy(&robotState.msg[4 * (readMotorData.id - 1)],
