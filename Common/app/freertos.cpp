@@ -78,6 +78,7 @@
 #include "UartDriver.h"
 #include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
+#include "CircularDmaBuffer.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -706,35 +707,30 @@ void StartRxTask(void const * argument) {
     float positions[18];
     const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
     uint32_t xLastWakeTime = osKernelSysTick();
+
     uint8_t raw[RX_BUFF_SIZE];
     uint8_t processingBuff[RX_BUFF_SIZE];
-    CircBuff_t circBuff = {RX_BUFF_SIZE, 0, 0, raw};
+    uart::CircularDmaBuffer circB = uart::CircularDmaBuffer(&huart2,
+            &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
 
-    HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
+    circB.initiate();
 
     for (;;) {
         // Need to block the Rx task since it is the highest priority. If we do
         // not do this, the Rx task will execute forever and nothing else will
         osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
-        //osDelay(5000);
 
-        circBuff.iHead = circBuff.size - huart2.hdmarx->Instance->NDTR;
-        if(circBuff.iHead != circBuff.iTail){
+        circB.updateHead();
+        if(circB.dataAvail()){
             // Copy contents from raw circular buffer to non-circular
             // processing buffer (whose contents start at index 0)
 
-            uint8_t numBytesReceived = copyCircBuffToFlatBuff(
-                &circBuff,
-                processingBuff
-            );
+            uint8_t numBytesReceived = circB.readBuff(processingBuff);
 
             parse(processingBuff, numBytesReceived, parse_out);
         }
 
-        if(huart2.ErrorCode != HAL_UART_ERROR_NONE){
-            HAL_UART_AbortReceive_IT(&huart2);
-            HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
-        }
+        circB.restartIfError();
 
         if (parse_out == 1) {
             parse_out = 0;
