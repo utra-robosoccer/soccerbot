@@ -638,28 +638,16 @@ uint8_t copyCircBuffToFlatBuff(
     const uint8_t HEAD_IDX = src->iHead;
     uint8_t tailIdx = src->iTail;
     uint8_t* destPtr = dest;
+    uint8_t numReceived = 0;
 
-    uint8_t numReceived;
-    if(HEAD_IDX > tailIdx){
-        numReceived = HEAD_IDX - tailIdx;
-    }
-    else{
-        numReceived = BUFF_SIZE - tailIdx;
-        numReceived += HEAD_IDX;
+    while (tailIdx < BUFF_SIZE && tailIdx < HEAD_IDX) {
+        destPtr[numReceived++] = BUFF_PTR[tailIdx++];
     }
 
-    while(tailIdx != HEAD_IDX){
-        *destPtr = BUFF_PTR[tailIdx];
+    tailIdx %= BUFF_SIZE;
 
-        ++destPtr;
-        ++tailIdx;
-
-        if(tailIdx == BUFF_SIZE){
-            tailIdx = 0;
-            if (BUFF_SIZE == HEAD_IDX) {
-                tailIdx = HEAD_IDX;
-            }
-        }
+    while (tailIdx < HEAD_IDX) {
+        destPtr[numReceived++] = BUFF_PTR[tailIdx++];
     }
 
     src->iTail = tailIdx;
@@ -692,7 +680,7 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
     }
 }
 
-#define RX_BUFF_SIZE 100
+#define RX_BUFF_SIZE 92
 
 /**
  * @brief  This function is executed in the context of the RxTask
@@ -745,14 +733,13 @@ void StartRxTask(void const * argument) {
             HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
         }
 
+        // Re-initiate every transmission
         if (circBuff.iHead == circBuff.size) {
             HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
         }
 
         if (parse_out == 1) {
             parse_out = 0;
-            circBuff.iHead = 0;
-            circBuff.iTail = 0;
 
             // XXX: glue code to get rxBuff into buffRx.
             //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
