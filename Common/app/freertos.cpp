@@ -640,8 +640,10 @@ uint8_t copyCircBuffToFlatBuff(
     uint8_t* destPtr = dest;
     uint8_t numReceived = 0;
 
-    while (tailIdx < BUFF_SIZE && tailIdx < HEAD_IDX) {
-        destPtr[numReceived++] = BUFF_PTR[tailIdx++];
+    if (tailIdx > HEAD_IDX) {
+        while (tailIdx < BUFF_SIZE) {
+            destPtr[numReceived++] = BUFF_PTR[tailIdx++];
+        }
     }
 
     tailIdx %= BUFF_SIZE;
@@ -720,6 +722,7 @@ void StartRxTask(void const * argument) {
         if(circBuff.iHead != circBuff.iTail){
             // Copy contents from raw circular buffer to non-circular
             // processing buffer (whose contents start at index 0)
+
             uint8_t numBytesReceived = copyCircBuffToFlatBuff(
                 &circBuff,
                 processingBuff
@@ -728,13 +731,8 @@ void StartRxTask(void const * argument) {
             parse(processingBuff, numBytesReceived, parse_out);
         }
 
-        if(huart2.RxState == HAL_UART_STATE_ERROR){
+        if(huart2.ErrorCode != HAL_UART_ERROR_NONE){
             HAL_UART_AbortReceive_IT(&huart2);
-            HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
-        }
-
-        // Re-initiate every transmission
-        if (circBuff.iHead == circBuff.size) {
             HAL_UART_Receive_DMA(&huart2, circBuff.pBuff, circBuff.size);
         }
 
