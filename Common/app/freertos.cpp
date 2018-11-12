@@ -341,6 +341,9 @@ void StartDefaultTask(void const * argument)
   */
 void StartCommandTask(void const * argument)
 {
+    // Wait for the motors to turn on
+    osDelay(osKernelSysTickMicroSec(100000));
+
     UARTcmd_t Motorcmd[18];
     Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
     Motorcmd[periph::MOTOR2].qHandle = UART2_reqHandle;
@@ -361,7 +364,12 @@ void StartCommandTask(void const * argument)
     Motorcmd[periph::MOTOR17].qHandle = UART3_reqHandle;
     Motorcmd[periph::MOTOR18].qHandle = UART3_reqHandle;
 
-    periph::initMotorIOType(IO_Type::DMA);
+    // Use polled IO here for 2 reasons:
+    //   1. Have to initialize the motors from this one thread, so using DMA
+    //      doesn't gain us anything
+    //   2. The UART callbacks are hardcoded to wake up their corresponding
+    //      UART threads used later in the flow
+    periph::initMotorIOType(IO_Type::POLL);
 
     // The return delay time is the time the motor waits before sending back
     // data for a read request. We found that a value of 100 us worked reliably
@@ -387,12 +395,15 @@ void StartCommandTask(void const * argument)
         (Motorcmd[i]).type = cmdWritePosition;
     }
 
+    // The only other communication with the motors will occur in the UART
+    // threads, so we can use DMA now.
+    periph::initMotorIOType(IO_Type::DMA);
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
     periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
-    // Set setupIsDone and unblock the higher-priority tasks
+    // Unblock the higher-priority tasks
     setupIsDone = true;
     xTaskNotify(RxTaskHandle, 1UL, eNoAction);
     xTaskNotify(TxTaskHandle, 1UL, eNoAction);
