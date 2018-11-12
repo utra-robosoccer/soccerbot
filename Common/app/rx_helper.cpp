@@ -22,7 +22,6 @@
 
 /****************************** Public Variables *****************************/
 extern osThreadId CommandTaskHandle;
-extern osThreadId IMUTaskHandle;
 extern osThreadId TxTaskHandle;
 extern osMutexId PCUARTHandle;
 
@@ -154,7 +153,6 @@ void receiveDataBuffer(void) {
 
                 osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK); // Wake TX task
                 osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);// Wake control task
-                osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);// Wake MPU task
                 continue;
             }
         } else {
