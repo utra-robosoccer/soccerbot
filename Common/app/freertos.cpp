@@ -416,6 +416,7 @@ void StartCommandTask(void const * argument)
         // thread that's listening will receive it and send it to the motor
         for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
             cmd.motorHandle = periph::motors[i];
+            cmd.value = positions[i];
 
             if(i <= periph::MOTOR3){
                 cmd.qHandle = UART2_reqHandle;
@@ -431,47 +432,6 @@ void StartCommandTask(void const * argument)
             }
             else{
                 cmd.qHandle = UART3_reqHandle;
-            }
-
-            switch(i){
-                case periph::MOTOR1: cmd.value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR2: cmd.value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR3: cmd.value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR4: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR5: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR6: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR7: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR8: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR9: cmd.value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR10: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR11: cmd.value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR12: cmd.value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR13: cmd.value = positions[i]*180/M_PI + 150; // Left shoulder
-                    break;
-                case periph::MOTOR14: cmd.value = positions[i]*180/M_PI + 60; // Left elbow
-                    break;
-                case periph::MOTOR15: cmd.value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                    break;
-                case periph::MOTOR16: cmd.value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                    break;
-                case periph::MOTOR17: cmd.value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                    break;
-                case periph::MOTOR18: cmd.value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                    break;
-                default:
-                    break;
             }
 
             xQueueSend(cmd.qHandle, &cmd, 0);
