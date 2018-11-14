@@ -758,6 +758,8 @@ void StartTxTask(void const * argument) {
         // Wait until woken up by Rx ("read command event")
         osSignalWait(0, osWaitForever);
 
+	copySensorDataToSend(&BufferMaster);
+
         // XXX: Glue code
         const uint8_t *txArrayIn = (uint8_t*) &robotState;
         for (size_t iTxArray = 0; iTxArray < sizeof(RobotState); iTxArray++) {
