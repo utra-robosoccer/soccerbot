@@ -104,7 +104,7 @@ osThreadId IMUTaskHandle;
 uint32_t IMUTaskBuffer[ 128 ];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId CommandTaskHandle;
-uint32_t CommandTaskBuffer[ 512 ];
+uint32_t CommandTaskBuffer[ 128 ];
 osStaticThreadDef_t CommandTaskControlBlock;
 osThreadId RxTaskHandle;
 uint32_t RxTaskBuffer[ 512 ];
@@ -115,6 +115,9 @@ osStaticThreadDef_t TxTaskControlBlock;
 osThreadId BuffWriterTaskHandle;
 uint32_t BuffWriterTaskBuffer[ 128 ];
 osStaticThreadDef_t BuffWriterTaskControlBlock;
+osThreadId MotorCmdGenTaskHandle;
+uint32_t MotorCmdGenTaskBuffer[ 128 ];
+osStaticThreadDef_t MotorCmdGenTaskControlBlock;
 osMessageQId UART1_reqHandle;
 uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART1_reqControlBlock;
@@ -130,9 +133,6 @@ osStaticMessageQDef_t UART4_reqControlBlock;
 osMessageQId UART6_reqHandle;
 uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
 osStaticMessageQDef_t UART6_reqControlBlock;
-osMessageQId TXQueueHandle;
-uint8_t TXQueueBuffer[ 32 * sizeof( TXData_t ) ];
-osStaticMessageQDef_t TXQueueControlBlock;
 osMessageQId BufferWriteQueueHandle;
 uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
@@ -178,6 +178,7 @@ extern void StartCommandTask(void const * argument);
 extern void StartRxTask(void const * argument);
 extern void StartTxTask(void const * argument);
 extern void StartBuffWriterTask(void const * argument);
+extern void StartMotorCmdGenTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -226,9 +227,7 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of DATABUFFER */
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
-  /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
-  /* USER CODE END Initialize Data Buffer */
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -247,23 +246,23 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of UART1Task */
-  osThreadStaticDef(UART1Task, StartUART1Task, osPriorityNormal, 0, 128, UART1TaskBuffer, &UART1TaskControlBlock);
+  osThreadStaticDef(UART1Task, StartUART1Task, osPriorityBelowNormal, 0, 128, UART1TaskBuffer, &UART1TaskControlBlock);
   UART1TaskHandle = osThreadCreate(osThread(UART1Task), NULL);
 
   /* definition and creation of UART2Task */
-  osThreadStaticDef(UART2Task, StartUART2Task, osPriorityNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
+  osThreadStaticDef(UART2Task, StartUART2Task, osPriorityBelowNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
   UART2TaskHandle = osThreadCreate(osThread(UART2Task), NULL);
 
   /* definition and creation of UART3Task */
-  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
+  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityBelowNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
   UART3TaskHandle = osThreadCreate(osThread(UART3Task), NULL);
 
   /* definition and creation of UART4Task */
-  osThreadStaticDef(UART4Task, StartUART4Task, osPriorityNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
+  osThreadStaticDef(UART4Task, StartUART4Task, osPriorityBelowNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
   UART4TaskHandle = osThreadCreate(osThread(UART4Task), NULL);
 
   /* definition and creation of UART6Task */
-  osThreadStaticDef(UART6Task, StartUART6Task, osPriorityNormal, 0, 128, UART6TaskBuffer, &UART6TaskControlBlock);
+  osThreadStaticDef(UART6Task, StartUART6Task, osPriorityBelowNormal, 0, 128, UART6TaskBuffer, &UART6TaskControlBlock);
   UART6TaskHandle = osThreadCreate(osThread(UART6Task), NULL);
 
   /* definition and creation of IMUTask */
@@ -271,7 +270,7 @@ void MX_FREERTOS_Init(void) {
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityAboveNormal, 0, 128, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
@@ -285,6 +284,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of BuffWriterTask */
   osThreadStaticDef(BuffWriterTask, StartBuffWriterTask, osPriorityNormal, 0, 128, BuffWriterTaskBuffer, &BuffWriterTaskControlBlock);
   BuffWriterTaskHandle = osThreadCreate(osThread(BuffWriterTask), NULL);
+
+  /* definition and creation of MotorCmdGenTask */
+  osThreadStaticDef(MotorCmdGenTask, StartMotorCmdGenTask, osPriorityNormal, 0, 128, MotorCmdGenTaskBuffer, &MotorCmdGenTaskControlBlock);
+  MotorCmdGenTaskHandle = osThreadCreate(osThread(MotorCmdGenTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -310,10 +313,6 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of UART6_req */
   osMessageQStaticDef(UART6_req, 16, UARTcmd_t, UART6_reqBuffer, &UART6_reqControlBlock);
   UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
-
-  /* definition and creation of TXQueue */
-  osMessageQStaticDef(TXQueue, 32, TXData_t, TXQueueBuffer, &TXQueueControlBlock);
-  TXQueueHandle = osMessageCreate(osMessageQ(TXQueue), NULL);
 
   /* definition and creation of BufferWriteQueue */
   osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
@@ -350,7 +349,8 @@ void StartDefaultTask(void const * argument)
   * @brief  This function is executed in the context of the commandTask
   *         thread. It initializes all data structures and peripheral
   *         devices associated with the application, and then assumes
-  *         responsibility for distributing commands to the actuators
+  *         responsibility for distributing write commands to the
+  *         actuators.
   *
   *         This function never returns.
   *
@@ -358,30 +358,15 @@ void StartDefaultTask(void const * argument)
   */
 void StartCommandTask(void const * argument)
 {
-    uartDriver.setIOType(uart::IO_Type::DMA);
-    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(200));
-    uartDriver.setup();
+    // Wait for the motors to turn on
+    osDelay(osKernelSysTickMicroSec(100000));
 
-    Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR2].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR3].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR4].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR5].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR6].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR7].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR8].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR9].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR10].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR11].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR12].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR13].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR14].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR15].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR16].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR17].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR18].qHandle = UART3_reqHandle;
-
-    periph::initMotorIOType(IO_Type::DMA);
+    // Use polled IO here for 2 reasons:
+    //   1. Have to initialize the motors from this one thread, so using DMA
+    //      doesn't gain us anything
+    //   2. The UART callbacks are hardcoded to wake up their corresponding
+    //      UART threads used later in the flow
+    periph::initMotorIOType(IO_Type::POLL);
 
     // The return delay time is the time the motor waits before sending back
     // data for a read request. We found that a value of 100 us worked reliably
@@ -402,29 +387,73 @@ void StartCommandTask(void const * argument)
             static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
             static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
         }
-
-        (Motorcmd[i]).motorHandle = periph::motors[i];
-        (Motorcmd[i]).type = cmdWritePosition;
     }
+ 
+    // The only other communication with the motors will occur in the UART
+    // threads, so we can use DMA now.
+    periph::initMotorIOType(IO_Type::DMA);
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
     periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
-    // Set setupIsDone and unblock the higher-priority tasks
-    setupIsDone = true;
-    xTaskNotify(RxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(TxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART2TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART3TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART4TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
-    xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
+    // Set up the sensor data buffer
+    BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
 
+    // Unblock the other tasks now that initialization is done
+    setupIsDone = true;
+
+    osSignalSet(RxTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(BuffWriterTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UART1TaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UART2TaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UART3TaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UART4TaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UART6TaskHandle, NOTIFIED_FROM_TASK);
+
+    UARTcmd_t cmd;
+    cmd.type = cmdWritePosition;
+    float positions[18];
     while(1){
-        xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
-        osDelay(1);
+        osSignalWait(NOTIFIED_FROM_TASK, osWaitForever);
+
+        // Convert raw bytes from robotGoal received from PC into floats
+        uint8_t* ptr = NULL;
+        for(uint8_t i = 0; i < 18; i++){
+            ptr = (uint8_t*)&positions[i];
+            for(uint8_t j = 0; j < 4; j++){
+                *ptr = robotGoal.msg[i * 4 + j];
+                ptr++;
+            }
+        }
+
+        // Send each goal position to the queue, where the UART handler
+        // thread that's listening will receive it and send it to the motor
+        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
+            cmd.motorHandle = periph::motors[i];
+            cmd.value = positions[i];
+
+            if(i <= periph::MOTOR3){
+                cmd.qHandle = UART2_reqHandle;
+            }
+            else if(i <= periph::MOTOR6){
+                cmd.qHandle = UART4_reqHandle;
+            }
+            else if(i <= periph::MOTOR9){
+                cmd.qHandle = UART1_reqHandle;
+            }
+            else if(i <= periph::MOTOR12){
+                cmd.qHandle = UART6_reqHandle;
+            }
+            else{
+                cmd.qHandle = UART3_reqHandle;
+            }
+
+            xQueueSend(cmd.qHandle, &cmd, 0);
+        }
     }
 }
 
@@ -445,7 +474,7 @@ void StartUART1Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
     TXData_t dataToSend;
@@ -475,7 +504,7 @@ void StartUART2Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
     TXData_t dataToSend;
@@ -505,7 +534,7 @@ void StartUART3Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
     TXData_t dataToSend;
@@ -535,7 +564,7 @@ void StartUART4Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
     TXData_t dataToSend;
@@ -565,7 +594,7 @@ void StartUART6Task(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     /* Infinite loop */
     UARTcmd_t cmdMessage;
@@ -595,7 +624,7 @@ void StartIMUTask(void const * argument)
     /* USER CODE BEGIN StartIMUTask */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
@@ -619,7 +648,7 @@ void StartIMUTask(void const * argument)
             app::processImuData(myIMUStruct);
         }
 
-        xQueueSend(TXQueueHandle, &dataToSend, 0);
+        xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
     }
     /* USER CODE END StartIMUTask */
 }
@@ -666,7 +695,7 @@ void StartRxTask(void const * argument) {
     initializeVars();
 
     // RxTask waits for first time setup complete.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     uint32_t numIterations = 0;
     float positions[18];
@@ -701,80 +730,6 @@ void StartRxTask(void const * argument) {
 
             // RxTask notifies CommandTask that a complete message has been received.
             receiveDataBuffer();
-
-            // Convert raw bytes from robotGoal received from PC into floats
-            for(uint8_t i = 0; i < 18; i++){
-                uint8_t* ptr = (uint8_t*)&positions[i];
-                for(uint8_t j = 0; j < 4; j++){
-                    *ptr = robotGoal.msg[i * 4 + j];
-                    ptr++;
-                }
-            }
-
-            if(numIterations % 100 == 0){
-                // Every 100 iterations, assert torque enable
-                for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
-                    Motorcmd[i].type = cmdWriteTorque;
-                    Motorcmd[i].value = 1; // Enable
-                    xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-                }
-            }
-
-            // Send each goal position to the queue, where the UART handler
-            // thread that's listening will receive it and send it to the motor
-            for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
-                switch(i){
-                    case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                        break;
-                    case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
-                        break;
-                    case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
-                        break;
-                    case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                        break;
-                    case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                        break;
-                    case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                        break;
-                    case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                        break;
-                    default:
-                        break;
-                }
-
-                Motorcmd[i].type = cmdWritePosition;
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-
-                // Only read from legs
-                if(i <= periph::MOTOR12){
-                    Motorcmd[i].type = cmdReadPosition;
-                    xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-                }
-            }
-
-            numIterations++;
         }
     }
 }
@@ -794,14 +749,14 @@ void StartRxTask(void const * argument) {
 void StartTxTask(void const * argument) {
 
     // TxTask waits for first time setup complete.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     /* XXX: This will be moved to EventHandlerTask */
     shiftNotificationMask();
 
     for (;;) {
-        // TxTask waits for activation from CommandTask to transmit.
-        copySensorDataToSend(&BufferMaster);
+        // Wait until woken up by Rx ("read command event")
+        osSignalWait(0, osWaitForever);
 
         // XXX: Glue code
         const uint8_t *txArrayIn = (uint8_t*) &robotState;
@@ -825,18 +780,18 @@ void StartTxTask(void const * argument) {
   */
 void StartBuffWriterTask(void const * argument)
 {
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
+
     TXData_t dataToWrite;
     imu::IMUStruct_t* IMUDataPtr;
     MotorData_t* motorDataPtr;
 
     for(;;)
     {
-        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, osWaitForever) != pdTRUE);
         switch (dataToWrite.eDataType) {
             case eMotorData:
-
-                motorDataPtr = (MotorData_t*) dataToWrite.pData;
+                motorDataPtr = static_cast<MotorData_t*>(dataToWrite.pData);
 
                 if (motorDataPtr == NULL) { break; }
 
@@ -861,6 +816,56 @@ void StartBuffWriterTask(void const * argument)
         }
     }
 }
+
+/**
+  * @brief  This function is executed in the context of the MotorCmdGen
+  *         thread. This thread generates read commands for the motors
+  *         so that position data will be read from them on a
+  *         time-triggered basis.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
+void StartMotorCmdGenTask(void const * argument){
+    osSignalWait(0, osWaitForever);
+
+    constexpr uint32_t CYCLE_TIME_MS = osKernelSysTickMicroSec(2000);
+    TickType_t xLastWakeTime = osKernelSysTick();
+    UARTcmd_t cmd;
+    cmd.type = cmdReadPosition;
+
+    for(;;)
+    {
+        vTaskDelayUntil(&xLastWakeTime, CYCLE_TIME_MS);
+
+        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
+            cmd.motorHandle = periph::motors[i];
+
+            if(i <= periph::MOTOR3){
+                cmd.qHandle = UART2_reqHandle;
+            }
+            else if(i <= periph::MOTOR6){
+                cmd.qHandle = UART4_reqHandle;
+            }
+            else if(i <= periph::MOTOR9){
+                cmd.qHandle = UART1_reqHandle;
+            }
+            else if(i <= periph::MOTOR12){
+                cmd.qHandle = UART6_reqHandle;
+            }
+            else{
+                cmd.qHandle = UART3_reqHandle;
+            }
+
+            // Only read from legs
+            if(i <= periph::MOTOR12){
+                xQueueSend(cmd.qHandle, &cmd, 0);
+            }
+        }
+    }
+}
+
 /**
  * @defgroup Callbacks Callbacks
  * @brief    Callback functions for unblocking FreeRTOS threads which perform
