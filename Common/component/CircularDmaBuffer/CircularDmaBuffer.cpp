@@ -88,15 +88,8 @@ CircularDmaBuffer::CircularDmaBuffer(
  *
  */
 bool CircularDmaBuffer::selfCheck() const {
-    bool ok = false;
-
-    if (m_transmission_size > m_buff_size) {
-        goto out;
-    }
-
-    ok = true;
-  out:
-    return ok;
+    bool fail_size = m_transmission_size > m_buff_size;
+    return !fail_size;
 }
 
 /**
@@ -104,7 +97,8 @@ bool CircularDmaBuffer::selfCheck() const {
  * @return true if at least 1 overrun has occurred, false if no overruns have occurred.
  */
 bool CircularDmaBuffer::overrunCheck() const {
-    // TODO: implement me once support for a buffer of variable length independent of the transmission size is added
+    // TODO: think about this and implement. try buffer with m_transmission_size != m_buff_size
+    // tygamvrelis: the buffer size is dependent only on the baud rate and how often the buffer is checked, not the transmission size
     return false;
 }
 
@@ -174,9 +168,8 @@ size_t CircularDmaBuffer::readBuff(uint8_t *out_buff) {
         while (tailIdx < BUFF_SIZE) {
             out_buff[numReceived++] = BUFF_PTR[tailIdx++];
         }
+        tailIdx = 0;
     }
-
-    tailIdx %= BUFF_SIZE;
 
     while (tailIdx < HEAD_IDX) {
         out_buff[numReceived++] = BUFF_PTR[tailIdx++];
@@ -196,6 +189,7 @@ void CircularDmaBuffer::restartIfError() {
         m_hw_if->receiveDMA(m_uart_handle, m_buff_p, m_buff_size);
     }
 }
+
 // Protected
 // ----------------------------------------------------------------------------
 
