@@ -153,7 +153,7 @@ static volatile uint32_t error;
 
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
-uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart2);
+uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
 
 uint8_t rxBuff[92] = { };
 uint8_t txBuff[92] = { };
@@ -705,7 +705,7 @@ void StartRxTask(void const * argument) {
 
     uint8_t raw[RX_BUFF_SIZE];
     uint8_t processingBuff[RX_BUFF_SIZE];
-    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart2,
+    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart5,
             &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
 
     rxBuffer.initiate();
@@ -751,14 +751,11 @@ void StartTxTask(void const * argument) {
     // TxTask waits for first time setup complete.
     osSignalWait(0, osWaitForever);
 
-    /* XXX: This will be moved to EventHandlerTask */
-    shiftNotificationMask();
-
     for (;;) {
         // Wait until woken up by Rx ("read command event")
         osSignalWait(0, osWaitForever);
 
-	copySensorDataToSend(&BufferMaster);
+        copySensorDataToSend(&BufferMaster);
 
         // XXX: Glue code
         const uint8_t *txArrayIn = (uint8_t*) &robotState;
