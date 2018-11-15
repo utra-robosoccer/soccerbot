@@ -98,7 +98,7 @@ bool CircularDmaBuffer::selfCheck() const {
  */
 bool CircularDmaBuffer::overrunCheck() const {
     // TODO: think about this and implement. try buffer with m_transmission_size != m_buff_size
-    // tygamvrelis: the buffer size is dependent only on the baud rate and how often the buffer is checked, not the transmission size
+    // tygamvrelis: Technically the buffer size is dependent only on the baud rate and how often the buffer is checked, not the transmission size
     return false;
 }
 

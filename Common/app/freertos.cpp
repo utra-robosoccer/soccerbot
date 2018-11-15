@@ -361,6 +361,7 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
+    uartDriver.setIOType(uart::IO_Type::DMA);
     // Use polled IO here for 2 reasons:
     //   1. Have to initialize the motors from this one thread, so using DMA
     //      doesn't gain us anything
@@ -653,7 +654,7 @@ void StartIMUTask(void const * argument)
     /* USER CODE END StartIMUTask */
 }
 
-void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
+void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out, uint8_t* out_buff){
     static uint state = 0;
     for(uint8_t i = 0; i < numBytes; ++i){
         switch(bytes[i]){
@@ -661,9 +662,7 @@ void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out){
                 if (state >= 92) {
                     state = 0;
                 }
-                else {
-                    state++;
-                }
+                out_buff[state++] = bytes[i];
                 break;
         }
 
@@ -717,7 +716,7 @@ void StartRxTask(void const * argument) {
         if(rxBuffer.dataAvail()){
             uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
 
-            parse(processingBuff, numBytesReceived, parse_out);
+            parse(processingBuff, numBytesReceived, parse_out, rxBuff);
         }
         rxBuffer.restartIfError();
 
@@ -910,13 +909,13 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        if(huart == &huart2){
+        if(huart == &huart5){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         if(huart == &huart1){
             xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart5){
+        else if(huart == &huart2){
             xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == &huart3){
@@ -947,13 +946,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart2) {
+    if (huart == &huart5) {
         xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     if(huart == &huart1){
         xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart5){
+    else if(huart == &huart2){
         xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == &huart3){
