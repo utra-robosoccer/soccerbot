@@ -87,10 +87,10 @@ namespace uart{
 // ----------------------------------------------------------------------------
 
 CircularDmaBuffer::CircularDmaBuffer(
-    UART_HandleTypeDef *uart_handle_in,
+    const UART_HandleTypeDef *uart_handle_in,
     const UartInterface* hw_if_in,
-    uint16_t transmission_size_in,
-    size_t buff_size_in,
+    const uint16_t transmission_size_in,
+    const size_t buff_size_in,
     uint8_t *buff_p_in
 ) :
     m_uart_handle(uart_handle_in),
@@ -107,18 +107,8 @@ CircularDmaBuffer::CircularDmaBuffer(
  *
  */
 bool CircularDmaBuffer::selfCheck() const {
-    bool fail_size = m_transmission_size > m_buff_size;
-    return !fail_size;
-}
-
-/**
- * @brief Checks if m_buff_tail has been overrun m_buff_head. Overruns cause loss of data that has not been read.
- * @return true if at least 1 overrun has occurred, false if no overruns have occurred.
- */
-bool CircularDmaBuffer::overrunCheck() const {
-    // TODO: think about this and implement. try buffer with m_transmission_size != m_buff_size
-    // tygamvrelis: Technically the buffer size is dependent only on the baud rate and how often the buffer is checked, not the transmission size
-    return false;
+    bool ok = m_transmission_size == m_buff_size; // TODO: should support m_buff_size > m_transmission_size as well.
+    return ok;
 }
 
 /**
@@ -164,13 +154,14 @@ size_t CircularDmaBuffer::readBuff(uint8_t *out_buff) {
 }
 
 void CircularDmaBuffer::initiate() {
-    m_hw_if->receiveDMA(m_uart_handle, m_buff_p, m_buff_size);
+    m_hw_if->receiveDMA(const_cast<UART_HandleTypeDef*>(m_uart_handle),
+            const_cast<uint8_t*>(m_buff_p), m_transmission_size);
 }
 
-void CircularDmaBuffer::restartIfError() {
+void CircularDmaBuffer::reinitiateIfError() {
     if(m_uart_handle->ErrorCode != HAL_UART_ERROR_NONE){
-        m_hw_if->abortReceive(m_uart_handle);
-        m_hw_if->receiveDMA(m_uart_handle, m_buff_p, m_buff_size);
+        m_hw_if->abortReceive(const_cast<UART_HandleTypeDef*>(m_uart_handle));
+        this->initiate();
     }
 }
 
