@@ -85,6 +85,9 @@ namespace uart{
 /************************** insert class name here ***************************/
 // Public
 // ----------------------------------------------------------------------------
+CircularDmaBuffer::CircularDmaBuffer() {
+
+}
 
 CircularDmaBuffer::CircularDmaBuffer(
     const UART_HandleTypeDef *uart_handle_in,
@@ -116,7 +119,7 @@ bool CircularDmaBuffer::selfCheck() const {
  * @return The index that m_buff_head is at after updating.
  */
 size_t CircularDmaBuffer::updateHead() {
-    return (m_buff_head = m_buff_size - m_uart_handle->hdmarx->Instance->NDTR);
+    return (m_buff_head = m_buff_size - m_uart_handle->hdmarx->Instance->NDTR); // TODO: NDTR should come through the UartInterface so can test this
 }
 
 /**
@@ -163,6 +166,35 @@ void CircularDmaBuffer::reinitiateIfError() {
         m_hw_if->abortReceive(const_cast<UART_HandleTypeDef*>(m_uart_handle));
         this->initiate();
     }
+}
+
+const UART_HandleTypeDef* CircularDmaBuffer::getUartHandle() const {
+    return m_uart_handle;
+}
+
+const UartInterface* CircularDmaBuffer::getHwIf() const {
+    return m_hw_if;
+}
+
+const uint16_t CircularDmaBuffer::getTransmissionSize() const {
+    return m_transmission_size;
+}
+
+const size_t CircularDmaBuffer::getBuffSize() const {
+    return m_buff_size;
+
+}
+
+const uint8_t* CircularDmaBuffer::getBuffP() const {
+    return m_buff_p;
+}
+
+size_t CircularDmaBuffer::getBuffHead() const {
+    return m_buff_head;
+}
+
+size_t CircularDmaBuffer::getBuffTail() const {
+    return m_buff_tail;
 }
 
 // Protected
