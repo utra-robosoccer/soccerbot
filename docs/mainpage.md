@@ -7,7 +7,7 @@ This page contains some high-level descriptions of
 how this software works. More details for each module can be found by browsing the Modules and Data Structures sections.
 To return to UTRA's website, <a href="http://utrahumanoid.ca/">click here</a>.
 
-Our robot consists of 2 main computing solutions: a NVidia Jetson TX2 which runs the high-level software for controls and AI, and a STMicroelectronics 32-bit microcontroller. At a glance, the microcontroller software is responsible for:
+Our robot consists of 2 main computing solutions: a Nvidia Jetson TX2 which runs the high-level software for controls and AI, and a STMicroelectronics 32-bit microcontroller. At a glance, the microcontroller software is responsible for:
 -# Controlling the 18 actuators which form the robot's joints
 -# Gathering sensor data
 -# PC communication for receiving actuator commands and transmitting sensor data
@@ -24,10 +24,10 @@ A STM32F446RE microcontroller on a custom PCB designed by the electrical team wa
 
 ## Threads
 The software consists of 10 threads (note: priority = 6 is the highest priority while priority = 0 is the lowest priority):
--# **RX, priority 6**: event-based, receives command packets from PC 
--# **TX, priority 5**: sends packets to the PC consisting of sensor data
+-# **RX, priority 6**: event-based, receives command packets from PC through UART5
+-# **TX, priority 5**: sends packets consisting of sensor data to the PC through UART5
 -# **Command, priority 2**: event-based, parses the RobotGoal structure received by the RX thread and distributes read and write commands to the various UART threads
--# **UARTx (x=1,2,3,4,6), priority 3**: event-based, sends read and write commands sent from the Command thread to the motors
+-# **UARTx (x=1,2,3,4,6), priority 3**: event-based, sends read and write commands sent from the Command thread to the motors. One thread is used for each daisy chain of motors
 -# **MPU6050, priority 3**: time-triggered, reads acceleration and angular velocity and digitally filters angular velocity
 -# **default, priority 0**: CubeMX-generated function that immediately sleeps
 
@@ -56,7 +56,7 @@ After all sensors (we can generalize the smart servos as a sensor for this discu
 
 
 # Plans for the Future
-Our plans for the future are focussed on modularizing the system to reduce coupling between system components and generally improve flexibility. One major point of discussion has been a more flexible PC interface, and a _faster_ PC interface too since latency measurements proved 230,400 symbol/s UART was accounting for nearly 80% of the PC-MCU control cycle latency. <a href="https://github.com/utra-robosoccer/soccer-embedded/issues/47">Recent rests with Ethernet</a> have proven the potential to reduce this number to about 5% (wow!). We are currently re-writing our code base in C++ and are using Google Test/Mock to ensure code quality _and_ make it easier for us to develop our software with limited hardware resources (we only have 1 robot, after all!). It is our belief that if we can test all the parts of our code which do not depend on hardware or the OS from the comfort of our PCs, it will speed up our development process.
+Our plans for the future are focussed on modularizing the system to reduce coupling between system components and generally improve flexibility. One major point of discussion has been a more flexible PC interface, and a _faster_ PC interface too since latency measurements proved 230,400 symbol/s UART was accounting for nearly 80% of the PC-MCU control cycle latency. <a href="https://github.com/utra-robosoccer/soccer-embedded/issues/47">Recent tests with Ethernet</a> have proven the potential to reduce this number to about 5% (wow!). We are currently re-writing our code base in C++ and are using Google Test/Mock to ensure code quality _and_ make it easier for us to develop our software with limited hardware resources (we only have 1 robot, after all!). It is our belief that if we can test all the parts of our code which do not depend on hardware or the OS from the comfort of our PCs, it will speed up our development process.
 
 Part of the reason for these changes is self-evident while another part is more internal to our organization. Each team has to work together to make sure each others' needs are met, and these needs often evolve after development begins. Examples of this are that the controls team has indicated a desired to add pressure sensors, the electrical team is working on creating custom servo motors to reduce costs, and the reinforcement learning team has indicated a need to control the actuators via velocity control. Although these are all features we will be working on developing in the future, they also have cemented our convictions that a modular program structure will be essential to our future success.
 
