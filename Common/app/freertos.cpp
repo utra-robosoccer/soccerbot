@@ -721,7 +721,7 @@ void StartRxTask(void const * argument) {
 
             parse(processingBuff, numBytesReceived, parse_out, rxBuff);
         }
-        rxBuffer.restartIfError();
+        rxBuffer.reinitiateIfError();
 
         if (parse_out == 1) {
             parse_out = 0;
