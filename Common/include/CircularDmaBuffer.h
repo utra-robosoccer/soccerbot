@@ -41,6 +41,7 @@ namespace uart{
 // ----------------------------------------------------------------------------
 class CircularDmaBuffer{
 public:
+    CircularDmaBuffer();
     CircularDmaBuffer(
         const UART_HandleTypeDef *uart_handle_in,
         const UartInterface* hw_if_in,
@@ -56,6 +57,14 @@ public:
     size_t readBuff(uint8_t *out_buff);
     void initiate();
     void reinitiateIfError();
+
+    const UART_HandleTypeDef* getUartHandle() const;
+    const UartInterface* getHwIf() const;
+    const uint16_t getTransmissionSize() const;
+    const size_t getBuffSize() const;
+    const uint8_t* getBuffP() const;
+    size_t getBuffHead() const;
+    size_t getBuffTail() const;
 private:
     const UART_HandleTypeDef *m_uart_handle = nullptr;
     const UartInterface *m_hw_if = nullptr;
