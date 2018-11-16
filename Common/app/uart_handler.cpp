@@ -45,15 +45,18 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
     float pos = 0;
     DataToSend->pData = &data;
 
+    bool success = false;
     switch(cmdPtr->type){
         case cmdReadPosition:
-            cmdPtr->motorHandle->getPosition(pos);
+            success = cmdPtr->motorHandle->getPosition(pos);
 
-            data.id = cmdPtr->motorHandle->id();
-            data.payload = pos;
-            data.type = MotorData_t::T_FLOAT;
+            if(success){
+                data.id = cmdPtr->motorHandle->id();
+                data.payload = pos;
+                data.type = MotorData_t::T_FLOAT;
 
-            xQueueSend(BufferWriteQueueHandle, DataToSend, 0);
+                xQueueSend(BufferWriteQueueHandle, DataToSend, 0);
+            }
             break;
         case cmdWritePosition:
             cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
