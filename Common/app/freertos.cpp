@@ -154,6 +154,7 @@ static volatile uint32_t error;
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
+constexpr TickType_t TX_CYCLE_TIME_MS = 200;
 
 uint8_t rxBuff[92] = { };
 uint8_t txBuff[92] = { };
@@ -362,6 +363,8 @@ void StartCommandTask(void const * argument)
     osDelay(osKernelSysTickMicroSec(100000));
 
     uartDriver.setIOType(uart::IO_Type::DMA);
+    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
+
     // Use polled IO here for 2 reasons:
     //   1. Have to initialize the motors from this one thread, so using DMA
     //      doesn't gain us anything
@@ -756,13 +759,13 @@ void StartTxTask(void const * argument) {
 
         copySensorDataToSend(&BufferMaster);
 
-        // XXX: Glue code
-        const uint8_t *txArrayIn = (uint8_t*) &robotState;
-        for (size_t iTxArray = 0; iTxArray < sizeof(RobotState); iTxArray++) {
-            txBuff[iTxArray] = txArrayIn[iTxArray];
-        }
+//        // XXX: Glue code
+//        const uint8_t *txArrayIn = (uint8_t*) &robotState;
+//        for (size_t iTxArray = 0; iTxArray < sizeof(RobotState); iTxArray++) {
+//            txBuff[iTxArray] = txArrayIn[iTxArray];
+//        }
 
-        while(!uartDriver.transmit(txBuff, sizeof(RobotState))) {;}
+        while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
 }
 
