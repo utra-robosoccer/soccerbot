@@ -48,8 +48,27 @@ namespace{
 // Functions
 // ----------------------------------------------------------------------------
 
+size_t readBuffImpl(const uint8_t*   buff_p,
+                    const size_t&    size,
+                    const size_t&    head,
+                    size_t&          tail,
+                    uint8_t*         out_buff)
+{
+    size_t numReceived = 0;
 
+    if (tail > head) {
+        while (tail < size) {
+            out_buff[numReceived++] = buff_p[tail++];
+        }
+        tail = 0;
+    }
 
+    while (tail < head) {
+        out_buff[numReceived++] = buff_p[tail++];
+    }
+
+    return numReceived;
+}
 
 } // end anonymous namespace
 
@@ -132,25 +151,8 @@ bool CircularDmaBuffer::dataAvail() const {
  * @return number of bytes read from m_buff_p into out_buff.
  */
 size_t CircularDmaBuffer::peekBuff(uint8_t *out_buff) const {
-    const uint8_t BUFF_SIZE = m_buff_size;
-    const uint8_t* BUFF_PTR = m_buff_p;
-    const uint8_t HEAD_IDX = m_buff_head;
-    uint8_t tailIdx = m_buff_tail;
-    size_t numReceived = 0;
-
-    if (tailIdx > HEAD_IDX) {
-        while (tailIdx < BUFF_SIZE) {
-            out_buff[numReceived++] = BUFF_PTR[tailIdx++];
-        }
-    }
-
-    tailIdx %= BUFF_SIZE;
-
-    while (tailIdx < HEAD_IDX) {
-        out_buff[numReceived++] = BUFF_PTR[tailIdx++];
-    }
-
-    return numReceived;
+    size_t tailIdx = m_buff_tail;
+    return readBuffImpl(m_buff_p, m_buff_size, m_buff_head, tailIdx, out_buff);
 }
 
 /**
@@ -158,25 +160,7 @@ size_t CircularDmaBuffer::peekBuff(uint8_t *out_buff) const {
  * @return number of bytes read from m_buff_p into out_buff.
  */
 size_t CircularDmaBuffer::readBuff(uint8_t *out_buff) {
-    const uint8_t BUFF_SIZE = m_buff_size;
-    const uint8_t* BUFF_PTR = m_buff_p;
-    const uint8_t HEAD_IDX = m_buff_head;
-    uint8_t tailIdx = m_buff_tail;
-    size_t numReceived = 0;
-
-    if (tailIdx > HEAD_IDX) {
-        while (tailIdx < BUFF_SIZE) {
-            out_buff[numReceived++] = BUFF_PTR[tailIdx++];
-        }
-        tailIdx = 0;
-    }
-
-    while (tailIdx < HEAD_IDX) {
-        out_buff[numReceived++] = BUFF_PTR[tailIdx++];
-    }
-
-    m_buff_tail = tailIdx;
-    return numReceived;
+    return readBuffImpl(m_buff_p, m_buff_size, m_buff_head, m_buff_tail, out_buff);
 }
 
 void CircularDmaBuffer::initiate() {
