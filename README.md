@@ -73,6 +73,12 @@ For simulation you can just run this
 roslaunch soccerbot soccerbot_simulation.launch
 ```
 
+To keep the robot midair
+
+```bash
+roslaunch soccerbot soccerbot_simulation.launch frozen:=true
+```
+
 For omnibot, just run the omnibot launch file, replace robot.launch with simulation.launch for simulation
 
 ```bash

@@ -5,6 +5,7 @@
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
+    <arg name="frozen" default="false"/>
 
     <arg name="field" default="robocup" />
 
@@ -21,7 +22,8 @@
     </include>
 
      <!--Load the URDF into the ROS Parameter Server-->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find soccer_description)/models/soccerbot/model.xacro'" />
+    <param if="$(arg frozen)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find soccer_description)/models/soccerbot/model_frozen.xacro'" />
+    <param unless="$(arg frozen)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find soccer_description)/models/soccerbot/model.xacro'" />
 
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model soccerbot -param robot_description -z 0.05"/>
