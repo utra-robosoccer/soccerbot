@@ -659,33 +659,6 @@ void StartIMUTask(void const * argument)
     /* USER CODE END StartIMUTask */
 }
 
-/* XXX: TODO: proof of concept parser for the CircularDmaBuffer process buffer. The logic
- * in copyIntoBuffRx should be integrated in here. This function definition should also
- * be moved into the appropriate file. */
-static void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out, uint8_t* out_buff){
-    static uint state = 0;
-    for(uint8_t i = 0; i < numBytes; ++i){
-        switch(bytes[i]){
-            default:
-                if (state >= 92) {
-                    state = 0;
-                }
-                out_buff[state++] = bytes[i];
-                break;
-        }
-
-        switch(state){
-            case 92:
-                parse_out = 1;
-                state = 0;
-                break;
-            default:
-                parse_out = 0;
-                break;
-        }
-    }
-}
-
 /**
  * @brief  This function is executed in the context of the RxTask
  *         thread. It initiates DMA-based receptions of RobotGoals
@@ -697,16 +670,15 @@ static void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out, uint8_t* out
  * @ingroup Threads
  */
 void StartRxTask(void const * argument) {
-    int parse_out = 0;
-
-    initializeVars();
-
     // RxTask waits for first time setup complete.
     osSignalWait(0, osWaitForever);
+
+    initializeVars();
 
     const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
     uint32_t xLastWakeTime = osKernelSysTick();
 
+    bool parse_out = 0;
     uint8_t raw[RX_BUFF_SIZE];
     uint8_t processingBuff[RX_BUFF_SIZE];
     uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart5,
@@ -721,19 +693,18 @@ void StartRxTask(void const * argument) {
         if(rxBuffer.dataAvail()){
             uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
 
-            parse(processingBuff, numBytesReceived, parse_out, rxBuff);
+            parseByteSequence(processingBuff, numBytesReceived, parse_out);
         }
+
         rxBuffer.reinitiateIfError();
 
-        if (parse_out == 1) {
-            parse_out = 0;
+        if (parse_out) {
+            parse_out = false;
 
-            // XXX: glue code to get rxBuff into buffRx.
-            //pcInterface.getRxBuffer(rxBuff, sizeof(rxBuff));
-            copyIntoBuffRx(rxBuff);
+            copyParsedData();
 
-            // RxTask notifies CommandTask that a complete message has been received.
-            receiveDataBuffer();
+            osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
+            osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);
         }
     }
 }
