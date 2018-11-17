@@ -51,6 +51,23 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+#define		WHEEL_DIAMETER   0.1
+enum direction {
+	FORWARD = 0,
+	BACKWARD = 1,
+	LEFT = 2,
+	RIGHT = 3,
+	STOP = 4
+	};
+
+enum motor_direction {
+	MOTOR_STOP = 0,
+	MOTOR_FORWARD =1,
+	MOTOR_BACKWARD = 2
+
+};
+
+
 
 /* USER CODE END PV */
 
@@ -59,11 +76,19 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+void user_pwm_setvalue(uint16_t value, uint16_t channel);
 
+void Motor1(uint16_t pwm_value, uint16_t dir);
+void Motor2(uint16_t pwm_value, uint16_t dir);
+
+//int* get_motor_dir(uint8_t dir);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-void user_pwm_setvalue(uint16_t value);
+
+char display_value = 0x3;
+uint16_t pwm_value=20;
+uint16_t step = 10;
 /* USER CODE END 0 */
 
 /**
@@ -98,8 +123,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  uint16_t pwm_value = 0;
-  uint16_t step = 100;
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,15 +134,35 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-      HAL_Delay(10);
-      if(pwm_value == 0){
-          step = 100;
-      }else if(pwm_value == 2000){
-          step = -100;
-      }
-      pwm_value = pwm_value + step;
-      user_pwm_setvalue(pwm_value);
+
+
+	  pwm_value = 20;
+
+	  HAL_Delay(100);
+	  uint16_t direction = FORWARD;
+	  Motor1(pwm_value, direction);
+	  //Motor2(pwm_value, direction);
+
+	  //direction = BACKWARD;
+	  //HAL_Delay(2000);
+	  //Motor1(pwm_value, direction);
+	  //Motor2(pwm_value, direction);
+	  //if(pwm_value == 0) step = 10;
+	  //if(pwm_value == 200) step = -10;
+	  //pwm_value += step;
+	  //user_pwm_setvalue(pwm_value);
+
+	  //HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_8));
+	  //display_value = pwm_value + 'a';
+	  ////display_value = pwm_value + 'a';
+	  //HAL_UART_Transmit(&huart2, &pwm_value, sizeof(char), 1000);
+	  //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+	  //HAL_Delay(1000);
+
+
   }
+
+
   /* USER CODE END 3 */
 
 }
@@ -204,19 +248,122 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void user_pwm_setvalue(uint16_t value)
-{
+
+void user_pwm_setvalue(uint16_t value, uint16_t channel){
     TIM_OC_InitTypeDef sConfigOC;
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
     sConfigOC.Pulse = value;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-    uint8_t check_val = value/100;
-    HAL_UART_Transmit(&huart2, &check_val, sizeof(uint8_t), 1000);
+    switch (channel){
+    case 1:
+    	HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
+    	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    	break;
+    case 2:
+    	HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2);
+    	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+    	break;
+    case 3:
+    	HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3);
+    	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+    	break;
+    case 4:
+    	HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4);
+    	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+    	break;
+    default:
+    	break;
+    }
+    //HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
+    //HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
+
+void Motor1(uint16_t pwm_value, uint16_t dir){
+	switch (dir){
+	case FORWARD:
+		user_pwm_setvalue(pwm_value, 1);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_9, GPIO_PIN_RESET);
+		break;
+
+	case BACKWARD:
+		user_pwm_setvalue(pwm_value, 2);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8, GPIO_PIN_RESET);
+		break;
+	case STOP:
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_9, GPIO_PIN_RESET);
+		break;
+	default:
+		break;
+	}
+}
+
+void Motor2(uint16_t pwm_value, uint16_t dir){
+	switch (dir){
+	case FORWARD:
+		user_pwm_setvalue(pwm_value, 3);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_11, GPIO_PIN_RESET);
+		break;
+
+	case BACKWARD:
+		user_pwm_setvalue(pwm_value, 4);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10, GPIO_PIN_RESET);
+		break;
+	case STOP:
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_11, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10, GPIO_PIN_RESET);
+		break;
+	default:
+		break;
+	}
+}
+
+/*int* get_motor_dir(uint8_t dir){
+	//motor_dir[4] = [0:motor0, 1:motor2, 2:motor3, 3:motor3]
+	int motor_dir[4] = {-1};
+	switch (dir) {
+	case FORWARD:
+		motor_dir[0] = MOTOR_FORWARD;
+		motor_dir[1] = MOTOR_FORWARD;
+		motor_dir[2] = MOTOR_FORWARD;
+		motor_dir[3] = MOTOR_FORWARD;
+		break;
+	case BACKWARD:
+		motor_dir[0] = MOTOR_BACKWARD;
+		motor_dir[1] = MOTOR_BACKWARD;
+		motor_dir[2] = MOTOR_BACKWARD;
+		motor_dir[3] = MOTOR_BACKWARD;
+		break;
+	case LEFT:
+		motor_dir[0] = MOTOR_BACKWARD;
+		motor_dir[1] = MOTOR_FORWARD;
+		motor_dir[2] = MOTOR_FORWARD;
+		motor_dir[3] = MOTOR_BACKWARD;
+		break;
+	case RIGHT:
+		motor_dir[0] = MOTOR_FORWARD;
+		motor_dir[1] = MOTOR_BACKWARD;
+		motor_dir[2] = MOTOR_BACKWARD;
+		motor_dir[3] = MOTOR_FORWARD;
+		break;
+	case STOP:
+		motor_dir[0] = MOTOR_STOP;
+		motor_dir[1] = MOTOR_STOP;
+		motor_dir[2] = MOTOR_STOP;
+		motor_dir[3] = MOTOR_STOP;
+		break;
+	default:
+		break;
+	}
+	return motor_dir;
+}
+*/
+
+//int get_pwm_speed(uint8_t speed){
+//	uint8_t rpm = speed/(WHEEL_DIAMETER *)
+//}
 /* USER CODE END 4 */
 
 /**
