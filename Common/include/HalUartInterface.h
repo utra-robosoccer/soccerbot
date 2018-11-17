@@ -84,6 +84,10 @@ public:
     void abortReceive(
         const UART_HandleTypeDef* uartHandlePtr
     ) const override final;
+
+    __IO uint32_t getDmaRxInstanceNDTR(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const override final;
 };
 
 } // end namespace uart
