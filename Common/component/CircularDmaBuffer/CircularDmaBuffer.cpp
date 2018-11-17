@@ -119,7 +119,7 @@ bool CircularDmaBuffer::selfCheck() const {
  * @return The index that m_buff_head is at after updating.
  */
 size_t CircularDmaBuffer::updateHead() {
-    return (m_buff_head = m_buff_size - m_uart_handle->hdmarx->Instance->NDTR); // TODO: NDTR should come through the UartInterface so can test this
+    return (m_buff_head = m_buff_size - static_cast<size_t>(m_hw_if->getDmaRxInstanceNDTR(m_uart_handle))); // TODO: NDTR should come through the UartInterface so can test this
 }
 
 /**
