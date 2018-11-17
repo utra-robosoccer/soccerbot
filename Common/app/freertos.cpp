@@ -142,6 +142,9 @@ osMutexId DATABUFFERHandle;
 osStaticMutexDef_t DATABUFFERControlBlock;
 
 /* USER CODE BEGIN Variables */
+
+#define RX_BUFF_SIZE 92
+
 namespace{
 
 
@@ -154,16 +157,16 @@ static volatile uint32_t error;
 uart::HalUartInterface uartInterface;
 os::OsInterfaceImpl osInterface;
 uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
-constexpr TickType_t TX_CYCLE_TIME_MS = 200;
 
-uint8_t rxBuff[92] = { };
-uint8_t txBuff[92] = { };
+/* Set the period the TxThread waits before being timed out when waiting for DMA
+ * transfer to complete. The theoretical minimum given a baud rate of 230400 and
+ * message size of 92 bytes is 4ms. Give an extra millisecond to allow for any
+ * scheduling delays, so this is set to 5ms. */
+constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 
-UARTcmd_t Motorcmd[18];
+uint8_t rxBuff[RX_BUFF_SIZE] = { };
 
 }
-
-#define RX_BUFF_SIZE 92
 
 /* USER CODE END Variables */
 
