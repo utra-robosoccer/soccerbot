@@ -759,12 +759,6 @@ void StartTxTask(void const * argument) {
 
         copySensorDataToSend(&BufferMaster);
 
-//        // XXX: Glue code
-//        const uint8_t *txArrayIn = (uint8_t*) &robotState;
-//        for (size_t iTxArray = 0; iTxArray < sizeof(RobotState); iTxArray++) {
-//            txBuff[iTxArray] = txArrayIn[iTxArray];
-//        }
-
         while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
 }
