@@ -23,12 +23,37 @@ using mocks::MockUartInterface;
 
 using ::testing::Return;
 using ::testing::_;
+using ::testing::Test;
+using ::testing::Le;
+using ::testing::Lt;
+using ::testing::Eq;
+using ::testing::AllOf;
 
 /******************************** File-local *********************************/
 namespace {
 // Variables
 // ----------------------------------------------------------------------------
+constexpr size_t BUFFER_SIZE_TEST = 100;
 MockUartInterface uart_if;
+
+// Classes & structs
+// ----------------------------------------------------------------------------
+class CircularDmaBufferTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        buff_ = new CircularDmaBuffer(&huart_, &uart_if, transmission_size_, buffer_size_, raw_buff_);
+    }
+
+    void TearDown() override {
+        delete buff_;
+    }
+
+    UART_HandleTypeDef huart_;
+    uint8_t raw_buff_[BUFFER_SIZE_TEST] = { };
+    const uint16_t transmission_size_ = BUFFER_SIZE_TEST;
+    const size_t buffer_size_ = BUFFER_SIZE_TEST;
+    CircularDmaBuffer * buff_ = nullptr;
+};
 
 // Functions
 // ----------------------------------------------------------------------------
@@ -89,38 +114,57 @@ TEST(CircularDmaBufferShould, FailSelfCheck) {
     EXPECT_FALSE(buff.selfCheck());
 }
 
-TEST(CircularDmaBufferShould, UpdateHeadWhenNDTRChanged) {
-    constexpr size_t BUFFER_SIZE = 100;
-    UART_HandleTypeDef huart;
-    uint8_t raw_buff[BUFFER_SIZE];
-    const uint16_t transmission_size = BUFFER_SIZE;
-    const size_t buffer_size = BUFFER_SIZE;
+TEST_F(CircularDmaBufferTest, UpdateHeadAfterNDTRChanged) {
+    constexpr size_t num_bytes_received = 68;
+    ASSERT_THAT(num_bytes_received, Le(transmission_size_));
 
-    EXPECT_CALL(uart_if, getDmaRxInstanceNDTR(_)).Times(2).WillOnce(Return(transmission_size)).WillOnce(Return(32));
-    EXPECT_CALL(uart_if, receiveDMA(_, _, _)).Times(1);
+    EXPECT_CALL(uart_if, getDmaRxInstanceNDTR(_)).Times(2).WillOnce(Return(transmission_size_)).WillOnce(Return(transmission_size_ - num_bytes_received));
 
-    CircularDmaBuffer buff(&huart, &uart_if, transmission_size, buffer_size, raw_buff);
+    /* NDTR did not change, so head does not change. */
+    EXPECT_EQ(buff_->updateHead(), 0);
+    ASSERT_EQ(buff_->getBuffHead(), 0);
 
-    ASSERT_EQ(buff.getBuffSize(), BUFFER_SIZE);
-    ASSERT_EQ(buff.getTransmissionSize(), BUFFER_SIZE);
-    ASSERT_EQ(buff.getBuffHead(), 0);
-    EXPECT_EQ(buff.getBuffTail(), 0);
+    /* NDTR changed, head should reflect the number of bytes received. */
+    EXPECT_EQ(buff_->updateHead(), num_bytes_received);
+    EXPECT_EQ(buff_->getBuffHead(), num_bytes_received);
 
-    /* Initiate a transfer. Assume the initiation completed successfully. */
-    buff.initiate();
+    /* Tail should not have changed. */
+    EXPECT_EQ(buff_->getBuffTail(), 0);
+}
 
-    /* NDTR did not change and stays at transmission_size (100). */
-    EXPECT_EQ(buff.updateHead(), 0);
+TEST_F(CircularDmaBufferTest, CatchUpTailAfterNDTRChanged) {
+    constexpr size_t num_bytes_received = 68;
+    ASSERT_THAT(num_bytes_received, Le(transmission_size_));
+    EXPECT_THAT(buff_->getBuffTail(), AllOf(Eq(buff_->getBuffTail()), Eq(0)));
 
-    ASSERT_EQ(buff.getBuffHead(), 0);
-    EXPECT_EQ(buff.getBuffTail(), 0);
+    EXPECT_CALL(uart_if, getDmaRxInstanceNDTR(_)).Times(1)
+                                                 .WillOnce(Return(transmission_size_ - num_bytes_received));
 
-    EXPECT_EQ(buff.updateHead(), 68);
+    /* NDTR changed, head should be ahead of tail. */
+    EXPECT_EQ(buff_->updateHead(), num_bytes_received);
+    EXPECT_THAT(buff_->getBuffTail(), Lt(buff_->getBuffHead()));
 
-    /* NDTR has changed to 32, so 68 bytes were received. */
-    EXPECT_EQ(buff.getBuffHead(), 68);
+    /* After catching up tail, tail should equal head. */
+    EXPECT_EQ(buff_->catchupTail(), num_bytes_received);
+    EXPECT_EQ(buff_->getBuffTail(), buff_->getBuffHead());
+}
 
-    EXPECT_EQ(buff.getBuffTail(), 0);
+TEST_F(CircularDmaBufferTest, DataAvailAfterNDTRChanged) {
+    constexpr size_t num_bytes_received = 68;
+    ASSERT_THAT(num_bytes_received, Le(transmission_size_));
+
+    EXPECT_CALL(uart_if, getDmaRxInstanceNDTR(_)).Times(2).WillOnce(Return(transmission_size_)).WillOnce(Return(transmission_size_ - num_bytes_received));
+
+    /* NDTR did not change, data should not show as available. */
+    EXPECT_EQ(buff_->updateHead(), 0);
+    ASSERT_FALSE(buff_->dataAvail());
+
+    /* NDTR changed, data should show as available. */
+    EXPECT_EQ(buff_->updateHead(), num_bytes_received);
+    EXPECT_TRUE(buff_->dataAvail());
+
+    /* Tail should not have changed. */
+    EXPECT_EQ(buff_->getBuffTail(), 0);
 }
 
 } // end anonymous namespace

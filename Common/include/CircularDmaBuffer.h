@@ -55,8 +55,8 @@ public:
     bool dataAvail() const;
     size_t peekBuff(uint8_t *out_buff) const;
     size_t readBuff(uint8_t *out_buff);
-    void initiate();
-    void reinitiateIfError();
+    void initiate() const;
+    void reinitiateIfError() const;
 
     const UART_HandleTypeDef* getUartHandle() const;
     const UartInterface* getHwIf() const;
