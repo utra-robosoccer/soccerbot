@@ -23,5 +23,6 @@
   <depend>map_server</depend>
 
   <depend>omnibot_teleop</depend>
+  <depend>omnibot_drive</depend>
 
 </package>
