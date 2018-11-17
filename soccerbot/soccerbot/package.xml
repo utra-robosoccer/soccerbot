@@ -22,4 +22,6 @@
   <depend>ros_control</depend>
   <depend>map_server</depend>
 
+  <depend>omnibot_teleop</depend>
+
 </package>
