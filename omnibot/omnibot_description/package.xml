@@ -10,4 +10,8 @@
   <depend>joint_state_publisher</depend>
   <depend>robot_state_publisher</depend>
   <depend>rviz</depend>
+
+  <export>
+    <gazebo_ros gazebo_plugin_path="${prefix}/lib" gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}" />
+  </export>
 </package>
