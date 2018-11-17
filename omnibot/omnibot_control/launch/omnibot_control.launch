@@ -5,11 +5,11 @@
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" ns="/rrbot" args="joint_state_controller left_front_wheel_hinge_position_controller right_front_wheel_hinge_position_controller left_back_wheel_hinge_position_controller right_back_wheel_hinge_position_controller"/>
+    output="screen" ns="/omnibot" args="left_front_wheel_hinge_controller right_front_wheel_hinge_controller left_back_wheel_hinge_controller right_back_wheel_hinge_controller joint_state_controller"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-	respawn="false" output="screen">
+    respawn="false" output="screen">
     <remap from="/joint_states" to="/omnibot/joint_states" />
   </node>
 
