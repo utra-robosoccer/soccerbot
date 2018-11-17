@@ -147,16 +147,15 @@ osStaticMutexDef_t DATABUFFERControlBlock;
 
 namespace{
 
+// TODO: these variables are to be moved out of freertos.cpp
 
 buffer::BufferMaster BufferMaster;
 os::OsInterfaceImpl osInterfaceImpl;
+uart::HalUartInterface uartInterface;
+uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, &huart5);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
-
-uart::HalUartInterface uartInterface;
-os::OsInterfaceImpl osInterface;
-uart::UartDriver uartDriver(&osInterface, &uartInterface, &huart5);
 
 /* Set the period the TxThread waits before being timed out when waiting for DMA
  * transfer to complete. The theoretical minimum given a baud rate of 230400 and
@@ -660,7 +659,10 @@ void StartIMUTask(void const * argument)
     /* USER CODE END StartIMUTask */
 }
 
-void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out, uint8_t* out_buff){
+/* XXX: TODO: proof of concept parser for the CircularDmaBuffer process buffer. The logic
+ * in copyIntoBuffRx should be integrated in here. This function definition should also
+ * be moved into the appropriate file. */
+static void parse(uint8_t* bytes, uint8_t numBytes, int &parse_out, uint8_t* out_buff){
     static uint state = 0;
     for(uint8_t i = 0; i < numBytes; ++i){
         switch(bytes[i]){
@@ -701,9 +703,6 @@ void StartRxTask(void const * argument) {
 
     // RxTask waits for first time setup complete.
     osSignalWait(0, osWaitForever);
-
-    uint32_t numIterations = 0;
-    float positions[18];
 
     const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
     uint32_t xLastWakeTime = osKernelSysTick();
@@ -762,6 +761,8 @@ void StartTxTask(void const * argument) {
 
         copySensorDataToSend(&BufferMaster);
 
+        // XXX: should have a way to back out of a failed transmit and reinitiate
+        // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
         while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
 }
