@@ -21,38 +21,13 @@
 
 /******************************** File-local *********************************/
 namespace{
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
-// Types & enums
-// ----------------------------------------------------------------------------
-
-
-
-
-// Classes and structs
-// ----------------------------------------------------------------------------
-
-
-
-
-// Variables
-// ----------------------------------------------------------------------------
-
-
-
-
 // Functions
 // ----------------------------------------------------------------------------
-
-size_t readBuffImpl(const uint8_t*   buff_p,
-                    const size_t&    size,
-                    const size_t&    head,
-                    size_t&          tail,
-                    uint8_t*         out_buff)
+static size_t readBuffImpl(const uint8_t*   buff_p,
+                           const size_t&    size,
+                           const size_t&    head,
+                           size_t&          tail,
+                           uint8_t*         out_buff)
 {
     size_t numReceived = 0;
 
@@ -76,12 +51,6 @@ size_t readBuffImpl(const uint8_t*   buff_p,
 
 
 namespace uart{
-// Constants
-// ----------------------------------------------------------------------------
-
-
-
-
 /************************** insert class name here ***************************/
 // Public
 // ----------------------------------------------------------------------------
@@ -107,7 +76,6 @@ CircularDmaBuffer::CircularDmaBuffer(
 /**
  * @brief Checks for failing conditions that make the buffer inoperable.
  * @return true if no failing conditions detected, false if one or more failing conditions are detected.
- *
  */
 bool CircularDmaBuffer::selfCheck() const {
     bool ok = m_transmission_size == m_buff_size; // TODO: should support m_buff_size > m_transmission_size as well.
@@ -125,7 +93,6 @@ size_t CircularDmaBuffer::updateHead() {
 /**
  * @brief Sets m_buff_tail equal to m_buff_head, discarding any unread received bytes in m_buff_p.
  * @return the number of unread received bytes discarded.
- *
  */
 size_t CircularDmaBuffer::catchupTail() {
     return (m_buff_tail = m_buff_head);
@@ -162,7 +129,7 @@ void CircularDmaBuffer::initiate() const {
 }
 
 void CircularDmaBuffer::reinitiateIfError() const {
-    if(m_uart_handle->ErrorCode != HAL_UART_ERROR_NONE){ // TODO: access this through API
+    if(m_uart_handle->ErrorCode != HAL_UART_ERROR_NONE){ // TODO: access this through UartInterface API
         m_hw_if->abortReceive(const_cast<UART_HandleTypeDef*>(m_uart_handle));
         this->initiate();
     }
@@ -197,19 +164,7 @@ size_t CircularDmaBuffer::getBuffTail() const {
     return m_buff_tail;
 }
 
-// Protected
-// ----------------------------------------------------------------------------
-
-
-
-
-// Private
-// ----------------------------------------------------------------------------
-
-
 } // end namespace uart
-
-// TODO: run atop of UartInterface, add unit tests
 
 
 /**
