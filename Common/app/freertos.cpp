@@ -162,9 +162,6 @@ static volatile uint32_t error;
  * message size of 92 bytes is 4ms. Give an extra millisecond to allow for any
  * scheduling delays, so this is set to 5ms. */
 constexpr TickType_t TX_CYCLE_TIME_MS = 5;
-
-uint8_t rxBuff[RX_BUFF_SIZE] = { };
-
 }
 
 /* USER CODE END Variables */
