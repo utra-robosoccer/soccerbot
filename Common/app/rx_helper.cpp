@@ -62,6 +62,7 @@ void initializeVars(void) {
     robotState.end_seq = 0;
 }
 
+// TODO: refactor this after researching more standard parsing techniques.
 static RxParseState readByte(const uint8_t& byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
     constexpr size_t SIZE_DATA = sizeof(RobotState);
