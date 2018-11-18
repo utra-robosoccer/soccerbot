@@ -81,6 +81,7 @@ public:
     MOCK_CONST_METHOD1(abortReceive, void(const UART_HandleTypeDef*));
 
     MOCK_CONST_METHOD1(getDmaRxInstanceNDTR, __IO uint32_t(const UART_HandleTypeDef*));
+    MOCK_CONST_METHOD1(getErrorCode, __IO uint32_t(const UART_HandleTypeDef*));
 };
 
 } // end namespace mocks
