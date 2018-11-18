@@ -213,6 +213,14 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
 
     return status;
 }
+
+__IO uint32_t HalUartInterface::getDmaRxInstanceNDTR(
+    const UART_HandleTypeDef* uartHandlePtr
+) const
+{
+    return const_cast<UART_HandleTypeDef*>(uartHandlePtr)->hdmarx->Instance->NDTR;
+}
+
 #endif
 
 void HalUartInterface::abortTransmit(
@@ -233,11 +241,11 @@ void HalUartInterface::abortReceive(
     );
 }
 
-__IO uint32_t HalUartInterface::getDmaRxInstanceNDTR(
+__IO uint32_t HalUartInterface::getErrorCode(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
-    return const_cast<UART_HandleTypeDef*>(uartHandlePtr)->hdmarx->Instance->NDTR;
+    return const_cast<UART_HandleTypeDef*>(uartHandlePtr)->ErrorCode;
 }
 
 } // end namespace uart

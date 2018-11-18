@@ -75,6 +75,11 @@ public:
         uint8_t* arrReceive,
         size_t numBytes
     ) const override final;
+
+    __IO uint32_t getDmaRxInstanceNDTR(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const override final;
+
 #endif
 
     void abortTransmit(
@@ -85,7 +90,7 @@ public:
         const UART_HandleTypeDef* uartHandlePtr
     ) const override final;
 
-    __IO uint32_t getDmaRxInstanceNDTR(
+    __IO uint32_t getErrorCode(
         const UART_HandleTypeDef* uartHandlePtr
     ) const override final;
 };

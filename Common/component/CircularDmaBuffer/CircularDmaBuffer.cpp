@@ -129,7 +129,7 @@ void CircularDmaBuffer::initiate() const {
 }
 
 void CircularDmaBuffer::reinitiateIfError() const {
-    if(m_uart_handle->ErrorCode != HAL_UART_ERROR_NONE){ // TODO: access this through UartInterface API
+    if(m_hw_if->getErrorCode(m_uart_handle) != HAL_UART_ERROR_NONE){
         m_hw_if->abortReceive(const_cast<UART_HandleTypeDef*>(m_uart_handle));
         this->initiate();
     }
