@@ -65,10 +65,11 @@ void initializeVars(void) {
 // TODO: refactor this after researching more standard parsing techniques.
 static RxParseState readByte(const uint8_t& byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
-    constexpr size_t SIZE_DATA = sizeof(RobotState);
+    constexpr size_t SIZE_DATA = sizeof(RobotGoal);
     static RxParseState state = RxParseState::CHECKING_HEADER;
     static size_t startSeqCount = 0;
     static size_t dataBytesRead = 0;
+    RxParseState prevState = state;
 
     switch(byte_in) {
     case 0xFF:
@@ -96,7 +97,7 @@ static RxParseState readByte(const uint8_t& byte_in, bool& complete_out) {
         dataBytesRead = 0;
     }
 
-    return state;
+    return prevState;
 }
 
 void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete) {
