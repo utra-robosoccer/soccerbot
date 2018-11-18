@@ -55,6 +55,10 @@ enum motor_direction {
     MOTOR_STOP = 0, MOTOR_FORWARD = 1, MOTOR_BACKWARD = 2
 };
 
+enum direction{
+	FORWARD,BACKWARD,LEFT,RIGHT,CLOCKWISE,COUNTERCLOCKWISE,STOP
+};
+
 char rx_xvel_buf[4] = "...."; //xx.xx format
 char rx_yvel_buf[4] = "....";
 char rx_wvel_buf[4] = "....";
@@ -83,6 +87,8 @@ void user_pwm_setvalue(uint16_t value, uint16_t channel);
 
 void driveMotor1(uint16_t pwm_value, uint16_t dir);
 void driveMotor2(uint16_t pwm_value, uint16_t dir);
+void driveMotor3(uint16_t pwm_value, uint16_t dir);
+void driveMotor4(uint16_t pwm_value, uint16_t dir);
 
 /* USER CODE END PFP */
 
@@ -139,6 +145,9 @@ int main(void) {
         /*2. Convert the character in buffers to floats/integers */
         pwm_value = convertToInt(rx_pwm_buf);
 
+
+
+        pwm_value = 200;
         /*3. Given the input information, determine the globals(motor_dir, speed, etc.)*/
         motor1_dir = MOTOR_FORWARD;
 
@@ -313,46 +322,52 @@ void driveMotor2(uint16_t pwm_value, uint16_t dir) {
     }
 }
 
-/*int* get_motor_dir(uint8_t dir){
- //motor_dir[4] = [0:motor0, 1:motor2, 2:motor3, 3:motor3]
- int motor_dir[4] = {-1};
- switch (dir) {
- case FORWARD:
- motor_dir[0] = MOTOR_FORWARD;
- motor_dir[1] = MOTOR_FORWARD;
- motor_dir[2] = MOTOR_FORWARD;
- motor_dir[3] = MOTOR_FORWARD;
- break;
- case BACKWARD:
- motor_dir[0] = MOTOR_BACKWARD;
- motor_dir[1] = MOTOR_BACKWARD;
- motor_dir[2] = MOTOR_BACKWARD;
- motor_dir[3] = MOTOR_BACKWARD;
- break;
- case LEFT:
- motor_dir[0] = MOTOR_BACKWARD;
- motor_dir[1] = MOTOR_FORWARD;
- motor_dir[2] = MOTOR_FORWARD;
- motor_dir[3] = MOTOR_BACKWARD;
- break;
- case RIGHT:
- motor_dir[0] = MOTOR_FORWARD;
- motor_dir[1] = MOTOR_BACKWARD;
- motor_dir[2] = MOTOR_BACKWARD;
- motor_dir[3] = MOTOR_FORWARD;
- break;
- case STOP:
- motor_dir[0] = MOTOR_STOP;
- motor_dir[1] = MOTOR_STOP;
- motor_dir[2] = MOTOR_STOP;
- motor_dir[3] = MOTOR_STOP;
- break;
- default:
- break;
- }
- return motor_dir;
- }
- */
+void driveMotor3(uint16_t pwm_value, uint16_t dir) {
+    switch (dir) {
+    case MOTOR_FORWARD:
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+        break;
+
+    case MOTOR_BACKWARD:
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+        break;
+
+    case MOTOR_STOP:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+        break;
+    default:
+        break;
+    }
+}
+
+void driveMotor4(uint16_t pwm_value, uint16_t dir) {
+    switch (dir) {
+    case MOTOR_FORWARD:
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+        break;
+
+    case MOTOR_BACKWARD:
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+        break;
+
+    case MOTOR_STOP:
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+        break;
+    default:
+        break;
+    }
+}
+
 
 //int get_pwm_speed(uint8_t speed){
 //	uint8_t rpm = speed/(WHEEL_DIAMETER *)
