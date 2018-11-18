@@ -39,11 +39,12 @@ cd ~/catkin_ws
 ```
 git submodule update --recursive --init
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version.
+rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
 #### Building the code
 ```
+sudo apt-get install python-catkin-tools # Installs catkin tools
 catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
