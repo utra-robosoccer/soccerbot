@@ -65,10 +65,11 @@ float x_vel = 0;
 float y_vel = 0;
 float w_vel = 0;
 
-uint16_t pwm_value = 20;
+uint32_t pwm_value = 20;
 uint8_t motor1_dir = 0;
 uint8_t isStop = 0;
 
+HAL_StatusTypeDef status;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE END PV */
 
@@ -127,7 +128,7 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        HAL_StatusTypeDef status;
+
 
         /*1. Receive all pwm inputs from PC */
         do {
@@ -256,7 +257,10 @@ float convertToFloat(char *rx) {
 }
 
 void user_pwm_setvalue(uint16_t value, uint16_t channel) {
-    TIM_OC_InitTypeDef sConfigOC;
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, value);
+    //HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+
+    /*TIM_OC_InitTypeDef sConfigOC;
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
     sConfigOC.Pulse = value;
@@ -264,7 +268,7 @@ void user_pwm_setvalue(uint16_t value, uint16_t channel) {
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
     HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);*/
 }
 
 void driveMotor1(uint16_t pwm_value, uint16_t dir) {
