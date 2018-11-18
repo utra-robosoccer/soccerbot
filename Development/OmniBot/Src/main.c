@@ -128,6 +128,7 @@ int main(void) {
     /* USER CODE BEGIN WHILE */
     while (1) {
         HAL_StatusTypeDef status;
+
         /*1. Receive all pwm inputs from PC */
         do {
             status = HAL_UART_Receive(&huart2, (unsigned char *) rx_pwm_buf, 4,
@@ -233,9 +234,6 @@ void SystemClock_Config(void) {
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) { //pointer to the UART_Handle_TypeDef structure that contains the configuration information about for the specified UART Module)
-
-}
 
 int convertToInt(char *rx) {
     uint8_t thous = rx[0] - '0';
@@ -264,44 +262,28 @@ void user_pwm_setvalue(uint16_t value, uint16_t channel) {
     sConfigOC.Pulse = value;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    switch (channel) {
-    case 1:
-        HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
-        HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-        break;
-    case 2:
-        HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2);
-        HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-        break;
-    case 3:
-        HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3);
-        HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-        break;
-    case 4:
-        HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4);
-        HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-        break;
-    default:
-        break;
-    }
-    //HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
-    //HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+
+    HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 
 void driveMotor1(uint16_t pwm_value, uint16_t dir) {
     switch (dir) {
     case MOTOR_FORWARD:
         user_pwm_setvalue(pwm_value, 1);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
         break;
 
     case MOTOR_BACKWARD:
-        user_pwm_setvalue(pwm_value, 2);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
         break;
+
     case MOTOR_STOP:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
         break;
     default:
         break;
@@ -311,16 +293,20 @@ void driveMotor1(uint16_t pwm_value, uint16_t dir) {
 void driveMotor2(uint16_t pwm_value, uint16_t dir) {
     switch (dir) {
     case MOTOR_FORWARD:
-        user_pwm_setvalue(pwm_value, 3);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
         break;
+
     case MOTOR_BACKWARD:
-        user_pwm_setvalue(pwm_value, 4);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
+        user_pwm_setvalue(pwm_value, 1);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
         break;
+
     case MOTOR_STOP:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
         break;
     default:
         break;
