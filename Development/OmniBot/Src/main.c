@@ -134,6 +134,24 @@ int main(void) {
         do {
             status = HAL_UART_Receive(&huart2, (unsigned char *) rx_pwm_buf, 4,
                     1000);
+
+            switch(motor1_dir) {
+            case MOTOR_FORWARD:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+                break;
+            case MOTOR_BACKWARD:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+                break;
+            case MOTOR_STOP:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+                break;
+            default:
+                break;
+            }
+
         } while (status != HAL_OK);
         status = HAL_ERROR;
 
@@ -275,8 +293,7 @@ void driveMotor1(uint16_t pwm_value, uint16_t dir) {
     switch (dir) {
     case MOTOR_FORWARD:
         user_pwm_setvalue(pwm_value, 1);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+        motor1_dir = MOTOR_FORWARD;
         break;
 
     case MOTOR_BACKWARD:
