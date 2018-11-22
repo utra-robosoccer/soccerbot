@@ -158,6 +158,9 @@ int main(void)
         strncpy(substr, rx_buf + 3, 3);
         y_vel = convertToInt(substr);
 
+
+
+        pwm_value = 200;
         /*3. Given the input information, determine the globals(motor_dir, speed, etc.)*/
         //THERE SHOULD BE A FUNCTION HERE THAT ASSIGNS PWM FOR MOTORS AND SPEEDS
         motor1_dir = MOTOR_CLOCKWISE;
@@ -333,11 +336,6 @@ void setMotor3Dir() {
     case MOTOR_STOP:
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-        break;
-    default:
-        break;
-    }
-}
 
 void setMotor4Dir() {
     switch (motor4_dir) {
