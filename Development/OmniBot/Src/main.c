@@ -69,10 +69,11 @@ float x_vel = 0;
 float y_vel = 0;
 float w_vel = 0;
 
-uint16_t pwm_value = 20;
+uint32_t pwm_value = 20;
 uint8_t motor1_dir = 0;
 uint8_t isStop = 0;
 
+HAL_StatusTypeDef status;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE END PV */
 
@@ -133,12 +134,30 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        HAL_StatusTypeDef status;
+
 
         /*1. Receive all pwm inputs from PC */
         do {
             status = HAL_UART_Receive(&huart2, (unsigned char *) rx_pwm_buf, 4,
                     1000);
+
+            switch(motor1_dir) {
+            case MOTOR_FORWARD:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+                break;
+            case MOTOR_BACKWARD:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+                break;
+            case MOTOR_STOP:
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+                break;
+            default:
+                break;
+            }
+
         } while (status != HAL_OK);
         status = HAL_ERROR;
 
@@ -265,7 +284,10 @@ float convertToFloat(char *rx) {
 }
 
 void user_pwm_setvalue(uint16_t value, uint16_t channel) {
-    TIM_OC_InitTypeDef sConfigOC;
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, value);
+    //HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+
+    /*TIM_OC_InitTypeDef sConfigOC;
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
     sConfigOC.Pulse = value;
@@ -273,15 +295,14 @@ void user_pwm_setvalue(uint16_t value, uint16_t channel) {
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
     HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);*/
 }
 
 void driveMotor1(uint16_t pwm_value, uint16_t dir) {
     switch (dir) {
     case MOTOR_FORWARD:
         user_pwm_setvalue(pwm_value, 1);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+        motor1_dir = MOTOR_FORWARD;
         break;
 
     case MOTOR_BACKWARD:
