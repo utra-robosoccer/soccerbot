@@ -99,13 +99,6 @@ public:
     IO_Type getIOType(void) const;
 
     /**
-     * @brief  Set up the driver for the specified IO_Type, including initialization
-     *         of internal data members.
-     * @return true if setup succeeded, false if error
-     */
-    bool setup(void);
-
-    /**
      * @brief  Instruct the driver to transmit data from the UART that was set
      *         by setUartInterface, and using the IO transfer mode set by
      *         setIOType.

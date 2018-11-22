@@ -94,23 +94,6 @@ IO_Type UartDriver::getIOType(void) const{
     return this->io_type;
 }
 
-bool UartDriver::setup(void) {
-    bool retval = false;
-
-    switch(io_type) {
-#if defined(THREADED)
-        case IO_Type::DMA:
-        case IO_Type::IT:
-#endif
-        case IO_Type::POLL:
-            retval = true;
-        break;
-        default:
-            retval = false;
-    }
-    return retval;
-}
-
 bool UartDriver::transmit(
     uint8_t* arrTransmit,
     size_t numBytes
