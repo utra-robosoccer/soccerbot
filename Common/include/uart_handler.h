@@ -99,7 +99,7 @@ typedef struct {
 
 
 /***************************** Function prototypes ****************************/
-void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend);
+void UART_ProcessEvent(UARTcmd_t* cmdPtr);
 
 /**
  * @}
