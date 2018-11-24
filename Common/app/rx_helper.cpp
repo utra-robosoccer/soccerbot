@@ -63,7 +63,7 @@ void initializeVars(void) {
 }
 
 // TODO: refactor this after researching more standard parsing techniques.
-static RxParseState readByte(const uint8_t& byte_in, bool& complete_out) {
+static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
     constexpr size_t SIZE_DATA = sizeof(RobotGoal);
     static RxParseState state = RxParseState::CHECKING_HEADER;
