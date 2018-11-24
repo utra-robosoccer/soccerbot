@@ -143,7 +143,7 @@ osStaticMutexDef_t DATABUFFERControlBlock;
 
 /* USER CODE BEGIN Variables */
 
-#define RX_BUFF_SIZE 92
+constexpr size_t RX_BUFF_SIZE = 92;
 
 namespace{
 
@@ -729,7 +729,7 @@ void StartTxTask(void const * argument) {
 
         copySensorDataToSend(&BufferMaster);
 
-        // XXX: should have a way to back out of a failed transmit and reinitiate
+        // TODO: should have a way to back out of a failed transmit and reinitiate
         // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
         while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
@@ -915,9 +915,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart5) {
-        xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-    }
     if(huart == &huart1){
         xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
