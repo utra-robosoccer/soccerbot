@@ -64,6 +64,8 @@ TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
 }
 
+/* TODO: investigate threaded tests. */
+
 //
 //TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
 //    mocks::MockUdpInterface mockUdpInterface;
