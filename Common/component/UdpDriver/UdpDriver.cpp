@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    udp_driver.cpp
+  * @file    UdpDriver.cpp
   * @author  Robert Fairley
   * @brief   Implementation of UdpDriver using UDP functions of the lwIP Raw API.
   *
@@ -9,34 +9,16 @@
   *****************************************************************************
   */
 
-// May rename to LwipUdpDriver as it is specific to lwIP.
+/* TODO: namespacing to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
+/* TODO: licensing terms for projects we are making use of e.g. googletest? */
 
 // TODO: cleanup lwip data in destructor
-// TODO: try investigate a allocating a single rx/tx bufs at setup.
-// TODO: redo namespacing
 // TODO: check for where more error checks can be done around function calls
-// TODO: use const_cast
-// TODO: this may be good place for CONST_API_CALL define to wrap the const_cast
-// TODO: add license terms from external projects e.g. googletest to our files too?
-// NOTE: consider just doing using namespace pc_interface; ?
-// Some way of threaded tests?
-// TODO: for PcInterface to work on F4, need to have if defined(board) to include this or not
-// TODO: doxygen documentation for functions once complete
-// TODO: doxygen documentation for functions once complete
-// TODO: consider one function setDriver(driverptr, drivertype), so interface stays constant as
-// drivers are added (no more functions need to be declared)
-// NOTE: possibly support multiple protocols at same time? would make this array in that case. right now only designed for one protocol though.
-// consider separate threads for comm "servers" which PcInterface binds to
-// TODO: maybe UdpInterface class can provide macros in its header like ARGS_THIS_FUNC so no need to retype in child class
-// should destructors be doing anything
-// TODO: tests for failing on every mock function call - all possible combinations?
-// TODO: add a test for setting TxBuffer and getting from RxBuffer. (use a test socket to set up the data)
-// TODO: test coverage for LwipUdpInterface, set up fixtures to test passing
-//       data between rx/txBuffers and pbufs
-// TODO: more test coverage after smoke test when the interface (.h) of PcInterface is more settled
-// TODO: handle osinterface errors returned
-
+// TODO: test coverage for UdpDriver, set up fixtures to test passing
+//       data between rx/txBuffers and pbufs. investigate threaded tests
+// TODO: check against template and add doxygen comments
 // TOOD: check defgroups are correct in cpp and h
+
 #include <UdpDriver.h>
 
 namespace {
@@ -57,7 +39,6 @@ void recvCallback(void *arg,
 namespace udp_driver {
 
 UdpDriver::UdpDriver() {
-
 }
 
 UdpDriver::UdpDriver(const ip_addr_t ipaddrIn,
@@ -150,6 +131,7 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
         return false;
     }
 
+    /* TODO: see if this can be allocated once at setup, if numBytes is known and unchanging. */
     struct pbuf *allocPbuf = getUdpInterface()->pbufAlloc(PBUF_TRANSPORT, numBytes, PBUF_RAM);
     if (!allocPbuf) {
         goto out;
