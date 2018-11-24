@@ -2,10 +2,9 @@
   *****************************************************************************
   * @file    LwipUdpInterface.cpp
   * @author  Robert Fairley
-  * @brief   Implements Lwip/UDP interface-facing functions, and means to access network stack data.
+  * @brief   Implements LwipUdpInterface, making direct calls to UDP functions of the lwIP Raw API.
   *
   * @defgroup lwip_udp_interface
-  * @brief    Provides an abstraction layer to the LwIP network stack, so that network parameters and actions are hidden from other components, and means to access only necessary data is provided.
   * @{
   *****************************************************************************
   */

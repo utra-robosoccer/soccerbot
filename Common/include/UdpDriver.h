@@ -41,15 +41,15 @@ public:
     void setRxPbuf(struct pbuf *rxPbufIn);
     void setTxPbuf(struct pbuf *txPbufIn);
 
-    const ip_addr_t                     getIpaddr() const;
-    const ip_addr_t                     getIpaddrPc() const;
-    const u16_t                         getPort() const;
-	const u16_t                         getPortPc() const;
-    const udp_interface::UdpInterface*  getUdpInterface() const;
-    const os::OsInterface*              getOsInterface() const;
-    const struct udp_pcb*               getPcb() const;
-    struct pbuf*                        getRxPbuf() const;
-    struct pbuf*                        getTxPbuf() const;
+    const ip_addr_t&                     getIpaddr() const;
+    const ip_addr_t&                     getIpaddrPc() const;
+    const u16_t                          getPort() const;
+    const u16_t                          getPortPc() const;
+    const udp_interface::UdpInterface*   getUdpInterface() const;
+    const os::OsInterface*               getOsInterface() const;
+    const struct udp_pcb*                getPcb() const;
+    struct pbuf*                         getRxPbuf() const;
+    struct pbuf*                         getTxPbuf() const;
 
 private:
     /* UdpDriver configuration. */
