@@ -2,7 +2,7 @@
   *****************************************************************************
   * @file    UdpInterface.h
   * @author  Robert Fairley
-  * @brief   Defines an abstract interface of UDP networking functions, to be implemented and extended as needed, e.g. by hardware-facing classes, test frameworks.
+  * @brief   Wrapper interface for UDP function calls from the lwIP Raw API.
   *
   * @defgroup Header
   * @defgroup udp_interface
@@ -11,7 +11,6 @@
   */
 
 // NOTE: defgroup used above since there is no .cpp file associated with this class.
-// TODO: should change to pass up lwip error codes not true/false
 #ifndef UDP_INTERFACE_H
 #define UDP_INTERFACE_H
 
