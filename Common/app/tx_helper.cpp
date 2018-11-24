@@ -17,9 +17,6 @@
 #include "Notification.h"
 #include "BufferBase.h"
 
-/********************************** Externs **********************************/
-extern osThreadId PCUARTHandle;
-
 /***************************** Private Variables *****************************/
 static MotorData_t readMotorData;
 static imu::IMUStruct_t readIMUData;
@@ -27,9 +24,6 @@ static imu::IMUStruct_t readIMUData;
 static char* const pIMUXGyroData = &robotState.msg[
     ROBOT_STATE_MPU_DATA_OFFSET
 ];
-
-static HAL_StatusTypeDef status;
-static uint32_t notification;
 
 /******************************** Functions **********************************/
 /*  StartTxTask Helper Functions                                             */
@@ -68,39 +62,6 @@ void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
                sizeof(float)
         );
     }
-}
-
-/**
- * @brief   Makes calls to the UART module responsible for PC communication atomic.
- * @details This do-while loop with the mutex inside of it makes c This attempts to solve the following
- *			scenario: the TX thread is in the middle of executing the call to HAL_UART_Transmit
- * 			when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
- *			returns immediately when it detects that the uart module is already locked. Then
- *			the RX thread blocks itself and never wakes up since a RX transfer was never
- *			initialized.
- * @param 	None
- * @return  None
- */
-void transmitStatusFromPC(void) {
-    do {
-        xSemaphoreTake(PCUARTHandle, 1);
-        status = HAL_UART_Transmit_DMA(&huart5, (uint8_t*) &robotState,
-                sizeof(RobotState));
-        xSemaphoreGive(PCUARTHandle);
-    } while (status != HAL_OK);
-}
-
-/**
- * @brief   Waits until notified from ISR
- * @details Clear no bits on entry in case the notification came while a higher priority task
- * 			was executing.
- * @param 	None
- * @return  None
- */
-void waitForNotificationTX(void) {
-    do {
-        xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, portMAX_DELAY);
-    } while ((notification & NOTIFIED_FROM_TX_ISR) != NOTIFIED_FROM_TX_ISR);
 }
 
 /*****************************************************************************/

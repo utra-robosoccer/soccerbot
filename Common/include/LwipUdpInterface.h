@@ -2,7 +2,7 @@
   *****************************************************************************
   * @file    LwipUdpInterface.h
   * @author  Robert Fairley
-  * @brief   Defines the interface through which UDP and required Lwip network stack data/functions will be accessed.
+  * @brief   Extend UdpInterface to make the direct calls to the lwIP Raw API.
   *
   * @defgroup Header
   * @ingroup  lwip_udp_interface
@@ -30,7 +30,12 @@ public:
             u16_t port) const override final;
     err_t udpSend(struct udp_pcb *pcb, struct pbuf *p) const override final;
     void udpDisconnect(struct udp_pcb *pcb) const override final;
+
+    /* TODO: split off pbuf-related functions to their own mockable interface. */
     u8_t pbufFree(struct pbuf *p) const override final;
+    struct pbuf* pbufAlloc(pbuf_layer layer, u16_t length, pbuf_type type) const override final;
+    u16_t pbufCopyPartial(const struct pbuf *buf, void *dataptr, u16_t len, u16_t offset) const override final;
+    err_t pbufTake(struct pbuf *buf, const void *dataptr, u16_t len) const override final;
 };
 
 } // end namespace lwip_udp_interface

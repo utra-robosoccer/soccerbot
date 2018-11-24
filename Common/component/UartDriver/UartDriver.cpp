@@ -48,10 +48,9 @@ UartDriver::UartDriver(
     UartInterface* hw_if,
     UART_HandleTypeDef* uartHandlePtr
 ) :
+    os_if(os_if),
     hw_if(hw_if),
-    uartHandlePtr(uartHandlePtr),
-    os_if(os_if)
-
+    uartHandlePtr(uartHandlePtr)
 {
     if(hw_if != nullptr && uartHandlePtr != nullptr){
         hw_is_initialized = true;
@@ -112,16 +111,9 @@ bool UartDriver::transmit(
             case IO_Type::DMA:
                 if(os_if != nullptr){
                     if(hw_if->transmitDMA(uartHandlePtr, arrTransmit, numBytes) == HAL_OK){
-                        status = os_if->OS_xTaskNotifyWait(
-                            0,
-                            NOTIFIED_FROM_TX_ISR,
-                            &notification,
-                            m_max_block_time
-                        );
+                        status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, m_max_block_time);
 
-                        if((status == pdTRUE) &&
-                           CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR))
-                        {
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
                             retval = true;
                         }
                     }
@@ -185,16 +177,9 @@ bool UartDriver::receive(
             case IO_Type::DMA:
                 if(os_if != nullptr){
                     if(hw_if->receiveDMA(uartHandlePtr, arrReceive, numBytes) == HAL_OK){
-                        status = os_if->OS_xTaskNotifyWait(
-                            0,
-                            NOTIFIED_FROM_RX_ISR,
-                            &notification,
-                            m_max_block_time
-                        );
+                        status = os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, m_max_block_time);
 
-                        if((status == pdTRUE) &&
-                           CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR))
-                        {
+                        if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
                             retval = true;
                         }
                     }
