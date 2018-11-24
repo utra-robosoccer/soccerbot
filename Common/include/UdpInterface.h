@@ -10,7 +10,8 @@
   *****************************************************************************
   */
 
-// NOTE: defgroup used above since there is no .cpp file associated with this class.
+/* NB: defgroup used above since there is no .cpp file associated with this class. */
+
 #ifndef UDP_INTERFACE_H
 #define UDP_INTERFACE_H
 
