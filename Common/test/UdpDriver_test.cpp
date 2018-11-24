@@ -17,125 +17,53 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-// TODO: should move the consts to defines. Only works as const because they are literal type.
-constexpr u16_t ZERO_U16_T = 0;
-const ip_addr_t ZERO_IP_ADDR_T = {0x0};
-const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
-const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
-constexpr u16_t TEST_PORT = 7;
-constexpr u16_t TEST_PORT_PC = 6340;
-const udp_interface::UdpInterface *NON_NULL_PTR_UDP_INTERFACE =
-        (udp_interface::UdpInterface *) 0x71;
-const os::OsInterface *NON_NULL_PTR_FREERTOS_INTERFACE =
-        (os::OsInterface *) 0x72;
-struct udp_pcb *NON_NULL_PTR_PCB = (struct udp_pcb *) 0x51;
-struct pbuf_t *NON_NULL_PTR_PBUF = (struct pbuf_t *) 0x61;
+using udp_driver::UdpDriver;
+using mocks::MockUdpInterface;
+using mocks::MockOsInterface;
 
 using ::testing::Return;
 using ::testing::_;
 
-using namespace udp_driver;
+
+
+namespace {
+
+MockUdpInterface udp_if;
+MockOsInterface os_if;
+const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 
 bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
-	return lhs.addr == rhs.addr;
+    return lhs.addr == rhs.addr;
 }
 
-TEST(UdpDriverTests, IpAddrDefaultInitializesToZeroIpAddrT) {
-    udp_driver::UdpDriver udpDriverUnderTest; // TODO: should modify constructor to pass in "MOCK" or "REAL" rather than pass in a the interface
-    ASSERT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
 }
 
-TEST(UdpDriverTests, IpAddrPcDefaultInitializesToZeroIpAddrT) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getIpaddrPc(), ZERO_IP_ADDR_T);
+TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
+    UdpDriver udpDriverUnderTest;
+    EXPECT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
+    EXPECT_EQ(udpDriverUnderTest.getIpaddrPc(), ZERO_IP_ADDR_T);
+    EXPECT_EQ(udpDriverUnderTest.getPort(), (u16_t) 0);
+    EXPECT_EQ(udpDriverUnderTest.getPortPc(), (u16_t) 0);
+    EXPECT_EQ(udpDriverUnderTest.getUdpInterface(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getOsInterface(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getRxPbuf(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getTxPbuf(), nullptr);
 }
 
-TEST(UdpDriverTests, PortDefaultInitializesToZero) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getPort(), ZERO_U16_T);
+TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+    EXPECT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpaddr());
+    EXPECT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpaddrPc());
+    EXPECT_EQ((u16_t) 7, udpDriverUnderTest.getPort());
+    EXPECT_EQ((u16_t) 6340, udpDriverUnderTest.getPortPc());
+    EXPECT_EQ(&udp_if, udpDriverUnderTest.getUdpInterface());
+    EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
 }
 
-TEST(UdpDriverTests, PortPcDefaultInitializesToZero) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getPortPc(), ZERO_U16_T);
-}
-
-TEST(UdpDriverTests, UdpInterfaceDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getUdpInterface(), nullptr);
-}
-
-TEST(UdpDriverTests, OsInterfaceDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getOsInterface(), nullptr);
-}
-
-TEST(UdpDriverTests, PcbDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getPcb(), nullptr);
-}
-
-TEST(UdpDriverTests, RxPbufDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getRxPbuf(), nullptr);
-}
-
-TEST(UdpDriverTests, TxPbufDefaultInitializesToNull) {
-    udp_driver::UdpDriver udpDriverUnderTest;
-    ASSERT_EQ(udpDriverUnderTest.getTxPbuf(), nullptr);
-}
-
-TEST(UdpDriverTests, RxPbufDefaultInitializesToNullThreaded) {
-    mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
-            ZERO_U16_T, nullptr, &mockOsInterface);
-    ASSERT_EQ(udpDriverUnderTest.getRxPbufThreaded(), nullptr);
-}
-
-TEST(UdpDriverTests, TxPbufDefaultInitializesToNullThreaded) {
-    mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
-            ZERO_U16_T, nullptr, &mockOsInterface);
-    ASSERT_EQ(udpDriverUnderTest.getTxPbufThreaded(), nullptr);
-}
-
-TEST(UdpDriverTests, CanInitializeIpaddrWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(TEST_IP_ADDR, ZERO_IP_ADDR_T, ZERO_U16_T,
-            ZERO_U16_T, nullptr, nullptr);
-    ASSERT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpaddr());
-}
-
-TEST(UdpDriverTests, CanInitializeIpaddrPcWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, TEST_IP_ADDR_PC,
-            ZERO_U16_T, ZERO_U16_T, nullptr, nullptr);
-    ASSERT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpaddrPc());
-}
-
-TEST(UdpDriverTests, CanInitializePortWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, TEST_PORT,
-            ZERO_U16_T, nullptr, nullptr);
-    ASSERT_EQ(TEST_PORT, udpDriverUnderTest.getPort());
-}
-
-TEST(UdpDriverTests, CanInitializePortPcWithParameterizedConstructor) {
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
-            TEST_PORT_PC, nullptr, nullptr);
-    ASSERT_EQ(TEST_PORT_PC, udpDriverUnderTest.getPortPc());
-}
-
-TEST(UdpDriverTests, CanInitializeUdpInterfaceWithParameterizedConstructor) {
-    mocks::MockUdpInterface mockUdpInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
-            ZERO_U16_T, &mockUdpInterface, nullptr);
-    ASSERT_EQ(udpDriverUnderTest.getUdpInterface(), &mockUdpInterface);
-}
-
-TEST(UdpDriverTests, CanInitializeOsInterfaceWithParameterizedConstructor) {
-    mocks::MockOsInterface mockOsInterface;
-    udp_driver::UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T,
-            ZERO_U16_T, nullptr, &mockOsInterface);
-    ASSERT_EQ(udpDriverUnderTest.getOsInterface(), &mockOsInterface);
-}
 //
 //TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
 //    mocks::MockUdpInterface mockUdpInterface;
@@ -274,6 +202,3 @@ TEST(UdpDriverTests, CanInitializeOsInterfaceWithParameterizedConstructor) {
 //    ASSERT_FALSE(success);
 //}
 
-// TODO: hold off on tests until things have settled ie smoketest done
-
-// TODO: tests that vary the arguments passed in. test for non null arguments?
