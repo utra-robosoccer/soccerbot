@@ -18,7 +18,8 @@
 
 namespace udp_driver {
 
-constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(10);
+constexpr TickType_t SEMAPHORE_WAIT_NUM_MS = 10;
+constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(SEMAPHORE_WAIT_NUM_MS);
 
 class UdpDriver {
 public:
@@ -41,15 +42,15 @@ public:
     void setRxPbuf(struct pbuf *rxPbufIn);
     void setTxPbuf(struct pbuf *txPbufIn);
 
-    const ip_addr_t&                     getIpaddr() const;
-    const ip_addr_t&                     getIpaddrPc() const;
-    const u16_t                          getPort() const;
-    const u16_t                          getPortPc() const;
-    const udp_interface::UdpInterface*   getUdpInterface() const;
-    const os::OsInterface*               getOsInterface() const;
-    const struct udp_pcb*                getPcb() const;
-    struct pbuf*                         getRxPbuf() const;
-    struct pbuf*                         getTxPbuf() const;
+    const ip_addr_t                     getIpaddr() const;
+    const ip_addr_t                     getIpaddrPc() const;
+    const u16_t                         getPort() const;
+    const u16_t                         getPortPc() const;
+    const udp_interface::UdpInterface*  getUdpInterface() const;
+    const os::OsInterface*              getOsInterface() const;
+    const struct udp_pcb*               getPcb() const;
+    struct pbuf*                        getRxPbuf() const;
+    struct pbuf*                        getTxPbuf() const;
 
 private:
     /* UdpDriver configuration. */
@@ -68,15 +69,10 @@ private:
     struct pbuf *rxPbuf         = nullptr;
     struct pbuf *txPbuf         = nullptr;
 
-#if defined(THREADED)
     /* Synchronization. */
-    mutable osMutexId rxSemaphore;
-    mutable osStaticMutexDef_t rxSemaphoreControlBlock;
-    mutable osMutexId txSemaphore;
-    mutable osStaticMutexDef_t txSemaphoreControlBlock;
+    /* TODO: may need to protect rxPbuf since it is modified by the callback. */
     mutable osSemaphoreId recvSemaphore; // TODO: replace with binary semaphore-style task notification.
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
-#endif
 };
 
 } // end namespace udp_driver
