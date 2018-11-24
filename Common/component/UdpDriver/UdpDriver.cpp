@@ -12,9 +12,9 @@
 /* TODO: namespacing+doxygen groups to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
 /* TODO: licensing terms for projects we are making use of e.g. googletest? */
 
-// TODO: check for where more error checks can be done around function calls
 // TODO: test coverage for UdpDriver, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs. investigate threaded tests
+// TODO: make os calls timeout
 // TODO: check against template and add doxygen comments
 
 #include <UdpDriver.h>
@@ -23,12 +23,12 @@ namespace {
 
 void recvCallback(void *arg,
                   struct udp_pcb *pcb,
-                  struct pbuf *p,
+                  struct pbuf *packet,
                   const ip_addr_t *addr,
                   u16_t port)
 {
     udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
-    caller->setRxPbuf(p);
+    caller->setRxPbuf(packet);
     caller->signalReceiveCplt();
 }
 
@@ -60,15 +60,15 @@ UdpDriver::~UdpDriver() {
     /* TODO: think about a macro for all the common "interface" calls. */
     if (getPcb()) {
         getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
-        pcb = NULL;
+        pcb = nullptr;
     }
     if (getRxPbuf()) {
         getUdpInterface()->pbufFree(getRxPbuf());
-        rxPbuf = NULL;
+        rxPbuf = nullptr;
     }
     if (getTxPbuf()) {
         getUdpInterface()->pbufFree(getTxPbuf());
-        txPbuf = NULL;
+        txPbuf = nullptr;
     }
 }
 
@@ -115,7 +115,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
     }
 
     /* Wait for callback to write data members (including packets) to UdpInterface. */
-    getOsInterface()->OS_osSemaphoreWait(recvSemaphore, osWaitForever);
+    getOsInterface()->OS_osSemaphoreWait(recvSemaphore, osWaitForever); // XXX
 
     if (!packetToBytes(rxArrayOut, numBytes)) {
         goto out;
@@ -124,10 +124,10 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
     success = true;
 
   out:
-    /* If zero pbufs were freed here, where did the allocated one for Rx go? Consider this an error. */
     if (getRxPbuf()) {
+        /* If zero pbufs were freed here, where did the allocated one for Rx go? Consider this an error. */
         if ((success = getUdpInterface()->pbufFree(getRxPbuf()) == (u8_t) 0)) {
-            rxPbuf = NULL;
+            rxPbuf = nullptr;
         }
     }
 
@@ -166,10 +166,10 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
     success = true;
 
   out:
-    /* Error if zero pbufs freed for the one just allocated for Tx. */
     if (getTxPbuf()) {
+        /* Error if zero pbufs freed for the one just allocated for Tx. */
         if ((success = getUdpInterface()->pbufFree(getTxPbuf()) == (u8_t) 0)) {
-            txPbuf = NULL;
+            txPbuf = nullptr;
         }
     }
 
@@ -186,48 +186,48 @@ const os::OsInterface* UdpDriver::getOsInterface() const {
 
 void UdpDriver::setRxPbuf(struct pbuf *rxPbufIn) {
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    getOsInterface()->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS); // XXX
 #endif
     rxPbuf = rxPbufIn;
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexRelease(rxSemaphore);
+    getOsInterface()->OS_osMutexRelease(rxSemaphore); // XXX
 #endif
 }
 
 void UdpDriver::setTxPbuf(struct pbuf *txPbufIn) {
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    getOsInterface()->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS); // XXX
 #endif
     txPbuf = txPbufIn;
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexRelease(txSemaphore);
+    getOsInterface()->OS_osMutexRelease(txSemaphore); // XXX
 #endif
 }
 
 struct pbuf* UdpDriver::getRxPbuf() const {
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    getOsInterface()->OS_osMutexWait(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS); // XXX
 #endif
     struct pbuf *packet = rxPbuf;
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexRelease(rxSemaphore);
+    getOsInterface()->OS_osMutexRelease(rxSemaphore); // XXX
 #endif
     return packet;
 }
 
 struct pbuf* UdpDriver::getTxPbuf() const {
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
+    getOsInterface()->OS_osMutexWait(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS); // XXX
 #endif
     struct pbuf *packet = txPbuf;
 #if defined(THREADED)
-    getOsInterface()->OS_osMutexRelease(txSemaphore);
+    getOsInterface()->OS_osMutexRelease(txSemaphore); // XXX
 #endif
     return packet;
 }
 
 void UdpDriver::signalReceiveCplt() {
-    getOsInterface()->OS_osSemaphoreRelease(recvSemaphore);
+    getOsInterface()->OS_osSemaphoreRelease(recvSemaphore); // XXX
 }
 
 /* Copy the received packet to byteArrayOut, to a maximum of numBytes. */

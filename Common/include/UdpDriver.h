@@ -63,6 +63,7 @@ private:
     const os::OsInterface *osInterface                  = nullptr;
 
     /* Data modified internally by the Raw API. */
+    /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
     const struct udp_pcb *pcb   = nullptr;
     struct pbuf *rxPbuf         = nullptr;
     struct pbuf *txPbuf         = nullptr;
