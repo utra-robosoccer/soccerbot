@@ -459,13 +459,11 @@ void StartUART1Task(void const * argument)
     osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
         while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -489,13 +487,11 @@ void StartUART2Task(void const * argument)
     osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
         while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -519,13 +515,11 @@ void StartUART3Task(void const * argument)
     osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
         while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -549,13 +543,11 @@ void StartUART4Task(void const * argument)
     osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
         while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -578,15 +570,12 @@ void StartUART6Task(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    /* Infinite loop */
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
         while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
