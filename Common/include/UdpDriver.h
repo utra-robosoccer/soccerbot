@@ -2,7 +2,7 @@
   *****************************************************************************
   * @file    UdpDriver.h
   * @author  Robert Fairley
-  * @brief   Interface of UDP driver.
+  * @brief   Management of simple UDP rx/tx operations.
   *
   * @defgroup Header
   * @ingroup  udp_driver
@@ -16,66 +16,66 @@
 #include <UdpInterface.h>
 #include <OsInterface.h>
 
-// TODO: redo namespacing
-
 namespace udp_driver {
 
-constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = 10;
+constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(10);
 
 class UdpDriver {
 public:
     UdpDriver();
-    UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
-            const u16_t portIn, const u16_t portPcIn,
-            const udp_interface::UdpInterface *udpInterfaceIn,
-            const os::OsInterface *osInterfaceIn);
+    UdpDriver(const ip_addr_t ipaddrIn,
+              const ip_addr_t ipaddrPcIn,
+              const u16_t portIn,
+              const u16_t portPcIn,
+              const udp_interface::UdpInterface *udpInterfaceIn,
+              const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
     bool setup();
-    bool receive(uint8_t *rxArrayOut);
-    bool transmit(const uint8_t *txArrayIn);
-    bool packetToBytes(uint8_t *byteArrayOut) const;
-    bool bytesToPacket(const uint8_t *byteArrayIn);
+    bool receive(uint8_t *rxArrayOut, const size_t numBytes);
+    bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
+    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes);
+    bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const;
+    void signalReceiveCplt();
 
-    bool giveRecvSemaphore();
+    void setRxPbuf(struct pbuf *rxPbufIn);
+    void setTxPbuf(struct pbuf *txPbufIn);
 
-    bool setPcb(struct udp_pcb *pcbIn);
-    bool setRxPbuf(struct pbuf *rxPbufIn);
-    bool setTxPbuf(struct pbuf *txPbufIn);
-
-    const udp_interface::UdpInterface* getUdpInterface() const;
-    const os::OsInterface* getOsInterface() const;
-    struct pbuf* getRxPbuf() const;
-    struct pbuf* getTxPbuf() const;
-    struct pbuf* getRxPbufThreaded() const;
-    struct pbuf* getTxPbufThreaded() const;
-    const ip_addr_t getIpaddr() const;
-    const ip_addr_t getIpaddrPc() const;
-    const u16_t getPort() const;
-    const u16_t getPortPc() const;
-    const struct udp_pcb* getPcb() const;
+    const ip_addr_t                     getIpaddr() const;
+    const ip_addr_t                     getIpaddrPc() const;
+    const u16_t                         getPort() const;
+	const u16_t                         getPortPc() const;
+    const udp_interface::UdpInterface*  getUdpInterface() const;
+    const os::OsInterface*              getOsInterface() const;
+    const struct udp_pcb*               getPcb() const;
+    struct pbuf*                        getRxPbuf() const;
+    struct pbuf*                        getTxPbuf() const;
 
 private:
-    const ip_addr_t ipaddr = {0x0};
-    const ip_addr_t ipaddrPc = {0x0};
-    const u16_t port = 0;
-    const u16_t portPc = 0;
+    /* UdpDriver configuration. */
+    const ip_addr_t ipaddr      = {0x0};
+    const ip_addr_t ipaddrPc    = {0x0};
+    const u16_t port            = 0;
+    const u16_t portPc          = 0;
 
-    const udp_interface::UdpInterface *udpInterface = nullptr;
-    const os::OsInterface *osInterface = nullptr;
+    /* External interfaces. */
+    const udp_interface::UdpInterface *udpInterface     = nullptr;
+    const os::OsInterface *osInterface                  = nullptr;
 
-    const struct udp_pcb *pcb = nullptr;
-    struct pbuf *rxPbuf = nullptr;
-    struct pbuf *txPbuf = nullptr;
+    /* Data modified internally by the Raw API. */
+    const struct udp_pcb *pcb   = nullptr;
+    struct pbuf *rxPbuf         = nullptr;
+    struct pbuf *txPbuf         = nullptr;
 
-    // mutable as they do not represent external state of class - can be modified in const functions
-    // Initialized within constructor
+#if defined(THREADED)
+    /* Synchronization. */
     mutable osMutexId rxSemaphore;
     mutable osStaticMutexDef_t rxSemaphoreControlBlock;
     mutable osMutexId txSemaphore;
     mutable osStaticMutexDef_t txSemaphoreControlBlock;
-    mutable osSemaphoreId recvSemaphore;
+    mutable osSemaphoreId recvSemaphore; // TODO: replace with binary semaphore-style task notification.
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
+#endif
 };
 
 } // end namespace udp_driver
