@@ -20,20 +20,9 @@
 #include "Communication.h"
 #include "usart.h"
 
-/****************************** Public Variables *****************************/
-extern osThreadId CommandTaskHandle;
-extern osThreadId TxTaskHandle;
-extern osMutexId PCUARTHandle;
-
 /***************************** Private Variables *****************************/
 static uint8_t robotGoalData[sizeof(RobotGoal)];
 static uint8_t *robotGoalDataPtr;
-static uint8_t buffRx[92];
-static uint8_t startSeqCount;
-static uint8_t totalBytesRead;
-
-static HAL_StatusTypeDef status;
-static uint32_t notification;
 
 /********************************  Functions  ********************************/
 /*****************************************************************************/
@@ -67,104 +56,66 @@ void initializeVars(void) {
     //sending
     robotGoal.id = 0;
     robotGoalDataPtr = robotGoalData;
-    startSeqCount = 0;
-    totalBytesRead = 0;
     //receiving
     robotState.id = 0;
     robotState.start_seq = UINT32_MAX;
     robotState.end_seq = 0;
 }
 
-/**
- * @brief   Initiates DMA receive transfer using DMA
- * @param 	None
- * @return  None
- */
-void initiateDMATransfer(void) {
-    HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx, sizeof(buffRx));
-}
+// TODO: refactor this after researching more standard parsing techniques.
+static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
+    constexpr size_t SIZE_START_SEQ = 4;
+    constexpr size_t SIZE_DATA = sizeof(RobotGoal);
+    static RxParseState state = RxParseState::CHECKING_HEADER;
+    static size_t startSeqCount = 0;
+    static size_t dataBytesRead = 0;
+    RxParseState prevState = state;
 
-/**
- * @brief   Waits until notified from ISR.
- * @details This function clears no bits on entry in case the notification
- * 			comes before this statement is executed (which is rather unlikely as long as
- * 			this task has the highest priority), but overall this is a better decision in
- * 			case priorities are changed in the future.
- * @param 	None
- * @return  None
- */
-void waitForNotificationRX(void) {
-    do {
-        xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, portMAX_DELAY);
-    } while ((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-}
-
-/**
- * @brief   Makes calls to the UART module responsible for PC communication atomic
- * @details This attempts to solve the following scenario:
- * 			the TX thread is in the middle of executing the call to HAL_UART_Transmit
- * 			when suddenly the RX thread is unblocked. The RX thread calls HAL_UART_Receive, and
- * 			returns immediately when it detects that the UART module is already locked. Then
- * 			the RX thread blocks itself and never wakes up since a RX transfer was never
- * 			initialized.
- * @param 	None
- * @return  None
- */
-void updateStatusToPC(void) {
-    do {
-        xSemaphoreTake(PCUARTHandle, 1);
-        status = HAL_UART_Receive_DMA(&huart5, (uint8_t*) buffRx,
-                sizeof(buffRx));
-        xSemaphoreGive(PCUARTHandle);
-    } while (status != HAL_OK);
-}
-
-/**
- * @brief   Reads the received data buffer
- * @details Once verified that the header sequence is valid and the correct number of bytes
- * 			are read, the function copies robotGoalData to robotGoal and updates robotGoal id
- * 			to robotState id. Then, the function wakes up control task and MPU task by notifying.
- * @param 	None
- * @return  None
- */
-void receiveDataBuffer(void) {
-    for (uint8_t i = 0; i < sizeof(buffRx); i++) {
-        if (startSeqCount == 4) {
-            // This control block is entered when the header sequence of
-            // 0xFFFFFFFF has been received; thus we know the data we
-            // receive will be in tact
-
-            *robotGoalDataPtr = buffRx[i];
-            robotGoalDataPtr++;
-            totalBytesRead++;
-
-            if (totalBytesRead == sizeof(RobotGoal)) {
-                // If, after the last couple of receive interrupts, we have
-                // received sizeof(RobotGoal) bytes, then we copy the data
-                // buffer into the robotGoal structure and wake the control
-                // thread to distribute states to each actuator
-                memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
-                robotState.id = robotGoal.id;
-
-                // Reset the variables to help with reception of a RobotGoal
-                robotGoalDataPtr = robotGoalData;
-                startSeqCount = 0;
-                totalBytesRead = 0;
-
-                osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK); // Wake TX task
-                osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);// Wake control task
-                continue;
-            }
-        } else {
-            // This control block is used to verify that the data header is in tact
-            if (buffRx[i] == 0xFF) {
-                startSeqCount++;
-            } else {
-                startSeqCount = 0;
-            }
+    switch(byte_in) {
+    case 0xFF:
+        if (state == RxParseState::CHECKING_HEADER) {
+            startSeqCount++;
         }
+        if (state == RxParseState::READING_DATA) {
+            dataBytesRead++;
+        }
+        break;
+    default:
+        if (state == RxParseState::READING_DATA) {
+            dataBytesRead++;
+        }
+        break;
     }
 
+    if (state == RxParseState::CHECKING_HEADER && startSeqCount == SIZE_START_SEQ) {
+        state = RxParseState::READING_DATA;
+    }
+    else if (state == RxParseState::READING_DATA && dataBytesRead == SIZE_DATA) {
+        complete_out = true;
+        state = RxParseState::CHECKING_HEADER;
+        startSeqCount = 0;
+        dataBytesRead = 0;
+    }
+
+    return prevState;
+}
+
+void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete) {
+    for (size_t i = 0; i < in_buff_size; i++) {
+        if (readByte(in_buff[i], complete) == RxParseState::READING_DATA) {
+            *(robotGoalDataPtr++) = in_buff[i];
+        }
+        if (complete) {
+            // Reset the variables to help with reception of a RobotGoal
+            robotGoalDataPtr = robotGoalData;
+            break;
+        }
+    }
+}
+
+void copyParsedData(void) {
+    robotState.id = robotGoal.id;
+    memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
 }
 
 /**

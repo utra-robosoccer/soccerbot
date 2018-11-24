@@ -149,6 +149,16 @@ public:
         uint8_t* arrReceive,
         size_t numBytes
     ) const = 0;
+
+    /**
+     * @brief Gets the Number of Data Transfer Register for a UART using RX DMA.
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
+     * @return the value of the NDTR register of the Instance member of the DMA Rx handle hdmarx.
+     */
+    virtual __IO uint32_t getDmaRxInstanceNDTR(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const = 0;
 #endif
 
     /**
@@ -166,6 +176,16 @@ public:
      *        the configuration information for the desired UART module
      */
     virtual void abortReceive(
+        const UART_HandleTypeDef* uartHandlePtr
+    ) const = 0;
+
+    /**
+     * @brief Gets the error code for the given UART handle.
+     * @param uartHandlePtr Pointer to a structure that contains
+     *        the configuration information for the desired UART module
+     * @return the ErrorCode member of *huart.
+     */
+    virtual __IO uint32_t getErrorCode(
         const UART_HandleTypeDef* uartHandlePtr
     ) const = 0;
 };

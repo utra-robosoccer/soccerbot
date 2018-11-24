@@ -63,6 +63,16 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
+uint32_t defaultTaskBuffer[ 640 ];
+osStaticThreadDef_t defaultTaskControlBlock;
+osThreadId ethernetInputTaHandle;
+uint32_t ethernetInputTaBuffer[ 640 ];
+osStaticThreadDef_t ethernetInputTaControlBlock;
+osThreadId txTaskHandle;
+uint32_t txTaskBuffer[ 512 ];
+osStaticThreadDef_t txTaskControlBlock;
+osSemaphoreId recvSemHandle;
+osStaticSemaphoreDef_t recvSemControlBlock;
 
 /* USER CODE BEGIN Variables */
 
@@ -72,12 +82,22 @@ struct udp_pcb * echo_server_pcb;
 #define BUFFER_SIZE 1000
 uint8_t buf[BUFFER_SIZE];
 
+void *ARG = NULL;
+struct udp_pcb *PCB = NULL;
+struct pbuf *P = NULL;
+ip_addr_t ADDR = {0};
+u16_t PORT = 0;
+
+int cmd_len = 20;
+
 //ip_addr_t gateway;
 
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
+void StartEthernetInputTask(void const * argument);
+void StartTxTask(void const * argument);
 
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -118,6 +138,11 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* definition and creation of recvSem */
+  osSemaphoreStaticDef(recvSem, &recvSemControlBlock);
+  recvSemHandle = osSemaphoreCreate(osSemaphore(recvSem), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -128,8 +153,16 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640);
+  osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 640, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of ethernetInputTa */
+  osThreadStaticDef(ethernetInputTa, StartEthernetInputTask, osPriorityNormal, 0, 640, ethernetInputTaBuffer, &ethernetInputTaControlBlock);
+  ethernetInputTaHandle = osThreadCreate(osThread(ethernetInputTa), NULL);
+
+  /* definition and creation of txTask */
+  osThreadStaticDef(txTask, StartTxTask, osPriorityNormal, 0, 512, txTaskBuffer, &txTaskControlBlock);
+  txTaskHandle = osThreadCreate(osThread(txTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -169,30 +202,48 @@ void StartDefaultTask(void const * argument)
       udp_remove(echo_server_pcb);
     }
   }
+  osSemaphoreWait(recvSemHandle, osWaitForever);
+  xTaskNotify(ethernetInputTaHandle, 1UL, eNoAction);
+
 
   /* Infinite loop */
   for(;;)
   {
+	osSemaphoreWait(recvSemHandle, osWaitForever);
+	/* Connect to the remote client */
 
-    ethernetif_input(&gnetif);
+	pbuf_copy_partial(P, buf + 7, P->len, 0);
+
+	xTaskNotify(txTaskHandle, 1UL, eNoAction);
+	xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osDelay(1);
     //sys_check_timeouts();
     //osThreadTerminate(NULL);
   }
   /* USER CODE END StartDefaultTask */
 }
 
-/* USER CODE BEGIN Application */
+/* StartEthernetInputTask function */
+void StartEthernetInputTask(void const * argument)
+{
+  /* USER CODE BEGIN StartEthernetInputTask */
+  /* Infinite loop */
+  for(;;)
+  {
+	  ethernetif_input(&gnetif);
+  }
+  /* USER CODE END StartEthernetInputTask */
+}
 
-void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
-	    const ip_addr_t *addr, u16_t port) {
+/* StartTxTask function */
+void StartTxTask(void const * argument)
+{
+  /* USER CODE BEGIN StartTxTask */
+  /* Infinite loop */
+  for(;;)
+  {
+	  xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
 
-
-	/* Connect to the remote client */
-	  udp_connect(echo_server_pcb, addr, port);
-
-	  pbuf_copy_partial(p, buf + 7, p->len, 0);
-
-	  int cmd_len = 20;
 	  struct pbuf *pret = pbuf_alloc(PBUF_TRANSPORT, cmd_len, PBUF_RAM);
 
 	  buf[0] = '*';
@@ -203,19 +254,39 @@ void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
 	  buf[5] = '_';
 	  buf[6] = '*';
 
-	  //pbuf_copy(pret, p);
 	  pbuf_take(pret, buf, cmd_len);
 
+	udp_connect(echo_server_pcb, &ADDR, PORT);
 	  /* Tell the client that we have accepted it */
 	  udp_send(echo_server_pcb, pret);
-	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
 
 	  /* free the UDP connection, so we can accept new clients */
 	  udp_disconnect(echo_server_pcb);
 
 	  /* Free the p buffer */
 	  pbuf_free(pret);
-	  pbuf_free(p);
+	  pbuf_free(P);
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+	xTaskNotify(defaultTaskHandle, 1UL, eNoAction);
+
+    osDelay(1);
+  }
+  /* USER CODE END StartTxTask */
+}
+
+/* USER CODE BEGIN Application */
+
+void handleReceive (void *arg, struct udp_pcb *pcb, struct pbuf *p,
+	    const ip_addr_t *addr, u16_t port) {
+
+	ARG=arg;
+	PCB=pcb;
+	P=p;
+	ADDR= *addr;
+	PORT=port;
+
+	osSemaphoreRelease(recvSemHandle);
 }
      
 /* USER CODE END Application */

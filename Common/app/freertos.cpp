@@ -5,41 +5,41 @@
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
+  * USER CODE END. Other portions of this file, whether
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2018 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V.
   * All rights reserved.
   *
-  * Redistribution and use in source and binary forms, with or without 
+  * Redistribution and use in source and binary forms, with or without
   * modification, are permitted, provided that the following conditions are met:
   *
-  * 1. Redistribution of source code must retain the above copyright notice, 
+  * 1. Redistribution of source code must retain the above copyright notice,
   *    this list of conditions and the following disclaimer.
   * 2. Redistributions in binary form must reproduce the above copyright notice,
   *    this list of conditions and the following disclaimer in the documentation
   *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
+  * 3. Neither the name of STMicroelectronics nor the names of other
+  *    contributors to this software may be used to endorse or promote products
   *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
+  * 4. This software, including modifications and/or derivative works of this
   *    software, must execute solely and exclusively on microcontroller or
   *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
+  * 5. Redistribution and use of this software other than as permitted under
+  *    this license is void and will automatically terminate your rights under
+  *    this license.
   *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT
+  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT
   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
@@ -51,20 +51,22 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-/* USER CODE BEGIN Includes */     
+/* USER CODE BEGIN Includes */
 /**
  * @file    freertos.c
  * @brief   Code for freertos application
  * @author  Gokul
  * @author  Tyler
  * @author  Izaak
+ * @author  Robert
  *
  * @defgroup FreeRTOS FreeRTOS
  * @brief    Everything related to FreeRTOS
  */
 
 #include <math.h>
-#include <uart_handler.h>
+
+#include "uart_handler.h"
 #include "Notification.h"
 #include "SystemConf.h"
 #include "BufferBase.h"
@@ -73,7 +75,10 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
+#include "UartDriver.h"
+#include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
+#include "CircularDmaBuffer.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -137,16 +142,28 @@ osMutexId DATABUFFERHandle;
 osStaticMutexDef_t DATABUFFERControlBlock;
 
 /* USER CODE BEGIN Variables */
+
+constexpr size_t RX_BUFF_SIZE = 92;
+
 namespace{
 
+// TODO: these variables are to be moved out of freertos.cpp
 
 buffer::BufferMaster BufferMaster;
 os::OsInterfaceImpl osInterfaceImpl;
+uart::HalUartInterface uartInterface;
+uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, &huart5);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
 
+/* Set the period the TxThread waits before being timed out when waiting for DMA
+ * transfer to complete. The theoretical minimum given a baud rate of 230400 and
+ * message size of 92 bytes is 4ms. Give an extra millisecond to allow for any
+ * scheduling delays, so this is set to 5ms. */
+constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 }
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -344,6 +361,9 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
+    uartDriver.setIOType(uart::IO_Type::DMA);
+    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
+
     // Use polled IO here for 2 reasons:
     //   1. Have to initialize the motors from this one thread, so using DMA
     //      doesn't gain us anything
@@ -371,7 +391,7 @@ void StartCommandTask(void const * argument)
             static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
         }
     }
-
+ 
     // The only other communication with the motors will occur in the UART
     // threads, so we can use DMA now.
     periph::initMotorIOType(IO_Type::DMA);
@@ -385,6 +405,7 @@ void StartCommandTask(void const * argument)
 
     // Unblock the other tasks now that initialization is done
     setupIsDone = true;
+
     osSignalSet(RxTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
@@ -636,51 +657,81 @@ void StartIMUTask(void const * argument)
 }
 
 /**
-  * @brief  This function is executed in the context of the RxTask
-  *         thread. It initiates DMA-based receptions of RobotGoals
-  *         from the PC via UART5. Upon successful reception of a
-  *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
-void StartRxTask(void const * argument)
-{
-    initializeVars();
+ * @brief  This function is executed in the context of the RxTask
+ *         thread. It initiates DMA-based receptions of RobotGoals
+ *         from the PC via UART5. Upon successful reception of a
+ *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
+ *
+ *         This function never returns.
+ *
+ * @ingroup Threads
+ */
+void StartRxTask(void const * argument) {
+    // RxTask waits for first time setup complete.
     osSignalWait(0, osWaitForever);
-    initiateDMATransfer();
+
+    initializeVars();
+
+    const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
+    uint32_t xLastWakeTime = osKernelSysTick();
+
+    bool parse_out = 0;
+    uint8_t raw[RX_BUFF_SIZE];
+    uint8_t processingBuff[RX_BUFF_SIZE];
+    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart5,
+            &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
+
+    rxBuffer.initiate();
 
     for (;;) {
-        waitForNotificationRX();
-        updateStatusToPC();
-        receiveDataBuffer();
+        osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
+
+        rxBuffer.updateHead();
+        if(rxBuffer.dataAvail()){
+            uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
+
+            parseByteSequence(processingBuff, numBytesReceived, parse_out);
+        }
+
+        rxBuffer.reinitiateIfError();
+
+        if (parse_out) {
+            parse_out = false;
+
+            copyParsedData();
+
+            osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
+            osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);
+        }
     }
 }
 
 /**
-  * @brief  This function is executed in the context of the TxTask
-  *         thread. This thread is blocked until all sensor data
-  *         has been received through the sensor queue. After this
-  *         time, the UARTx_ and IMUTask will be blocked. Then, a
-  *         DMA-based transmission of a RobotState is sent to the
-  *         PC via UART5.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
-void StartTxTask(void const * argument)
-{
+ * @brief  This function is executed in the context of the TxTask
+ *         thread. This thread is blocked until all sensor data
+ *         has been received through the sensor queue. After this
+ *         time, the UARTx_ and IMUTask will be blocked. Then, a
+ *         DMA-based transmission of a RobotState is sent to the
+ *         PC via UART5.
+ *
+ *         This function never returns.
+ *
+ * @ingroup Threads
+ */
+void StartTxTask(void const * argument) {
+
+    // TxTask waits for first time setup complete.
     osSignalWait(0, osWaitForever);
 
-    for(;;)
-    {
+    for (;;) {
         // Wait until woken up by Rx ("read command event")
         osSignalWait(0, osWaitForever);
+
         copySensorDataToSend(&BufferMaster);
-        transmitStatusFromPC();
-        waitForNotificationTX();
+
+        // TODO: should have a way to back out of a failed transmit and reinitiate
+        // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
+        while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
 }
 
@@ -864,9 +915,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart5) {
-        xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-    }
     if(huart == &huart1){
         xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
@@ -901,6 +949,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     error = HAL_UART_GetError(huart);
 }
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

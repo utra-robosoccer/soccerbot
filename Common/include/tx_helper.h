@@ -18,9 +18,6 @@
 
 
 /***************************** Function prototypes ***************************/
-void shiftNotificationMask(void);
 void copySensorDataToSend(buffer::BufferMaster*);
-void transmitStatusFromPC(void);
-void waitForNotificationTX(void);
 
 #endif /* TX_HELPER_H */

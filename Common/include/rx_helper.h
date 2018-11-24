@@ -15,11 +15,20 @@
 
 
 
+
+/*********************************** Includes ********************************/
+#include <stdint.h>
+#include <stddef.h>
+
+
 /***************************** Function prototypes ***************************/
-void receiveDataBuffer(void);
-void initiateDMATransfer(void);
-void updateStatusToPC(void);
-void waitForNotificationRX(void);
 void initializeVars(void);
+void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete);
+void copyParsedData(void);
+
+enum class RxParseState {
+    CHECKING_HEADER,
+    READING_DATA
+};
 
 #endif /* RX_HELPER_H */
