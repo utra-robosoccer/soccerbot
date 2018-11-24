@@ -16,6 +16,7 @@
 
 /********************************* Includes **********************************/
 #include "uart_handler.h"
+#include <math.h>
 
 
 
@@ -40,20 +41,24 @@ extern osMessageQId BufferWriteQueueHandle;
  *         queue if a read is executed
  * @return None
  */
-void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
+void UART_ProcessEvent(UARTcmd_t* cmdPtr){
+    float pos;
+    bool success;
     MotorData_t data;
-    float pos = 0;
-    DataToSend->pData = &data;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
+    dataToSend.pData = &data;
 
     switch(cmdPtr->type){
         case cmdReadPosition:
-            cmdPtr->motorHandle->getPosition(pos);
+            success = cmdPtr->motorHandle->getPosition(pos);
 
+            // issue #130: send NAN upon read failure
+            data.payload = success ? pos : NAN;
             data.id = cmdPtr->motorHandle->id();
-            data.payload = pos;
             data.type = MotorData_t::T_FLOAT;
 
-            xQueueSend(BufferWriteQueueHandle, DataToSend, 0);
+            xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
             break;
         case cmdWritePosition:
             cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
