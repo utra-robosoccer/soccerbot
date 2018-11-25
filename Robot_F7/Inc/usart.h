@@ -59,6 +59,11 @@
 
 /* USER CODE BEGIN Includes */
 
+#include "SystemConf.h"
+#if !defined(STM32F767xx)
+#error "Must define the STM32F767xx board."
+#endif
+
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart4;
