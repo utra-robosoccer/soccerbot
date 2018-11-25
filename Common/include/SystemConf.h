@@ -19,6 +19,10 @@
 #ifndef SYSTEM_CONF_H
 #define SYSTEM_CONF_H
 
+/* In general, the build variables such as STM32F* should not be used
+outside of the SystemConf.h and SystemConf.cpp files. A new flag should
+be defined here and used throughout the project. */
+
 #include "usart.h"
 
 extern UART_HandleTypeDef huart4;
@@ -28,6 +32,11 @@ extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 
+/* Deal with making sure one and only one board is defined here. */
+#if defined(STM32F446xx) == defined(STM32F767xx)
+#error "SystemConf error: invalid build configuration! Must only one of STM32F446xx or STM32F767xx."
+#endif
+
 #if defined(STM32F446xx)
 #include <stm32f446xx.h>
 #define ARM_MATH_CM4 // Use ARM Cortex M4
@@ -36,8 +45,6 @@ extern UART_HandleTypeDef huart6;
 #include <stm32f767xx.h>
 #define ARM_MATH_CM7 // Use ARM Cortex M7
 
-#else
-#error "SystemConf error: invalid build configuration! Must define STM32F446xx or STM32F767xx."
 #endif
 
 /**
@@ -50,6 +57,10 @@ extern UART_HandleTypeDef huart6;
  * @brief USE_DEBUG_UART is a flag to use the debug UART handle at the default
  * pins for the board specified for communication with the PC, instead of the
  * handle used on the custom PCB.
+ *
+ * Double check usart.c that the correct DMA settings are being applied for the
+ * swapped UARTs. Also double check in freertos.c that the correct baud rate
+ * for the swapped UARTS is being set in StartCmdTask.
  */
 #define USE_DEBUG_UART 0
 
@@ -59,6 +70,14 @@ extern UART_HandleTypeDef* UART_HANDLE_StartUART2Task;
 extern UART_HandleTypeDef* UART_HANDLE_StartUART3Task;
 extern UART_HandleTypeDef* UART_HANDLE_StartUART4Task;
 extern UART_HandleTypeDef* UART_HANDLE_StartUART6Task;
+
+#if defined(STM32F767xx)
+#define USE_MANUAL_UART_ABORT_DEFINITIONS
+#endif
+
+#if defined(STM32F446xx)
+#define USE_I2C_SILICON_BUG_FIX
+#endif
 
 /**
  * @}

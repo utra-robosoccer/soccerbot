@@ -21,7 +21,7 @@
 /********************************** Externs **********************************/
 // These functions are not defined in the F767xx's HAL drivers, so we drag them
 // over from the F446xx's HAL drivers
-#if defined(STM32F767xx)
+#if defined(USE_MANUAL_UART_ABORT_DEFINITIONS)
 /**
   * @brief  Abort ongoing Transmit transfer (blocking mode).
   * @param  huart UART handle.
