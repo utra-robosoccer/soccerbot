@@ -152,7 +152,7 @@ namespace{
 buffer::BufferMaster BufferMaster;
 os::OsInterfaceImpl osInterfaceImpl;
 uart::HalUartInterface uartInterface;
-uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, &huart5);
+uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, UART_HANDLE_PC);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
@@ -360,6 +360,23 @@ void StartCommandTask(void const * argument)
 {
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
+
+#if USE_DEBUG_UART == 1
+
+/* rfairley: original intention was to put this logic in usart.c,
+left the globals from SystemConf.h out. */
+#if defined(STM32F446xx)
+    /* Override the configuration in usart.c made by CubeMX. */
+    huart2.Init.BaudRate = 230400;
+    huart5.Init.BaudRate = 2500000;
+
+#elif defined(STM32F767xx)
+    huart3.Init.BaudRate = 230400;
+    huart5.Init.BaudRate = 1000000;
+
+#endif
+
+#endif
 
     uartDriver.setIOType(uart::IO_Type::DMA);
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
@@ -667,7 +684,7 @@ void StartRxTask(void const * argument) {
     bool parse_out = 0;
     uint8_t raw[RX_BUFF_SIZE];
     uint8_t processingBuff[RX_BUFF_SIZE];
-    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(&huart5,
+    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(UART_HANDLE_PC,
             &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
 
     rxBuffer.initiate();
@@ -867,22 +884,22 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        if(huart == &huart5){
+        if(huart == UART_HANDLE_PC){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        if(huart == &huart1){
+        if(huart == UART_HANDLE_StartUART1Task){
             xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart2){
+        else if(huart == UART_HANDLE_StartUART2Task){
             xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart3){
+        else if(huart == UART_HANDLE_StartUART3Task){
             xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart4){
+        else if(huart == UART_HANDLE_StartUART4Task){
             xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart6){
+        else if(huart == UART_HANDLE_StartUART6Task){
             xTaskNotifyFromISR(UART6TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
@@ -904,19 +921,19 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if(huart == &huart1){
+    if(huart == UART_HANDLE_StartUART1Task){
         xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart2){
+    else if(huart == UART_HANDLE_StartUART2Task){
         xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart3){
+    else if(huart == UART_HANDLE_StartUART3Task){
         xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart4){
+    else if(huart == UART_HANDLE_StartUART4Task){
         xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart6){
+    else if(huart == UART_HANDLE_StartUART6Task){
         xTaskNotifyFromISR(UART6TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
