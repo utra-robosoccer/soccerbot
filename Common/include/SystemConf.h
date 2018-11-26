@@ -65,11 +65,11 @@ extern UART_HandleTypeDef huart6;
 #define USE_DEBUG_UART 0
 
 extern UART_HandleTypeDef* UART_HANDLE_PC;
-extern UART_HandleTypeDef* UART_HANDLE_StartUART1Task;
-extern UART_HandleTypeDef* UART_HANDLE_StartUART2Task;
-extern UART_HandleTypeDef* UART_HANDLE_StartUART3Task;
-extern UART_HandleTypeDef* UART_HANDLE_StartUART4Task;
-extern UART_HandleTypeDef* UART_HANDLE_StartUART6Task;
+extern UART_HandleTypeDef* UART_HANDLE_UprLeftLeg;
+extern UART_HandleTypeDef* UART_HANDLE_LwrRightLeg;
+extern UART_HandleTypeDef* UART_HANDLE_HeadAndArms;
+extern UART_HandleTypeDef* UART_HANDLE_UprRightLeg;
+extern UART_HandleTypeDef* UART_HANDLE_LwrLeftLeg;
 
 #if defined(STM32F767xx)
 #define USE_MANUAL_UART_ABORT_DEFINITIONS

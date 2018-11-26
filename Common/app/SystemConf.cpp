@@ -16,30 +16,27 @@
 /********************************* Includes **********************************/
 #include "SystemConf.h"
 
-/* TODO: change the names of these constexprs to match the new thread names, once thread names are changed
-   rfairley: the convention I'm using currently names the uart handle by the name of the thread using it
-   (aside from PC), but this is not set in stone. */
-UART_HandleTypeDef* UART_HANDLE_StartUART1Task = &huart1;
-UART_HandleTypeDef* UART_HANDLE_StartUART4Task = &huart4;
-UART_HandleTypeDef* UART_HANDLE_StartUART6Task = &huart6;
+UART_HandleTypeDef* UART_HANDLE_UprLeftLeg = &huart1;
+UART_HandleTypeDef* UART_HANDLE_UprRightLeg = &huart4;
+UART_HandleTypeDef* UART_HANDLE_LwrLeftLeg = &huart6;
 
 #if USE_DEBUG_UART == 0
 UART_HandleTypeDef* UART_HANDLE_PC = &huart5;
-UART_HandleTypeDef* UART_HANDLE_StartUART2Task = &huart2;
-UART_HandleTypeDef* UART_HANDLE_StartUART3Task = &huart3;
+UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart2;
+UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
 
 #elif USE_DEBUG_UART == 1
 #pragma "SystemConf warning: make sure UART configurations have been updated in the usart.c file."
 
 #if defined(STM32F446xx)
 UART_HandleTypeDef* UART_HANDLE_PC = &huart2;
-UART_HandleTypeDef* UART_HANDLE_StartUART2Task = &huart5;
-UART_HandleTypeDef* UART_HANDLE_StartUART3Task = &huart3;
+UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart5;
+UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
 
 #elif defined(STM32F767xx)
 UART_HandleTypeDef* UART_HANDLE_PC = &huart3;
-UART_HandleTypeDef* UART_HANDLE_StartUART2Task = &huart2;
-UART_HandleTypeDef* UART_HANDLE_StartUART3Task = &huart5;
+UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart2;
+UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart5;
 
 #endif
 
