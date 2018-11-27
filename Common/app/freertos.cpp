@@ -85,21 +85,21 @@
 osThreadId defaultTaskHandle;
 uint32_t defaultTaskBuffer[ 128 ];
 osStaticThreadDef_t defaultTaskControlBlock;
-osThreadId UprLeftLegTaskHandle;
-uint32_t UprLeftLegTaskBuffer[ 128 ];
-osStaticThreadDef_t UprLeftLegTaskControlBlock;
-osThreadId LwrRightLegTaskHandle;
-uint32_t LwrRightLegTaskBuffer[ 128 ];
-osStaticThreadDef_t LwrRightLegTaskControlBlock;
-osThreadId HeadAndArmsTaskHandle;
-uint32_t HeadAndArmsTaskBuffer[ 128 ];
-osStaticThreadDef_t HeadAndArmsTaskControlBlock;
-osThreadId UprRightLegTaskHandle;
-uint32_t UprRightLegTaskBuffer[ 128 ];
-osStaticThreadDef_t UprRightLegTaskControlBlock;
-osThreadId LwrLeftLegTaskHandle;
-uint32_t LwrLeftLegTaskBuffer[ 128 ];
-osStaticThreadDef_t LwrLeftLegTaskControlBlock;
+osThreadId UpperLeftLegHandle;
+uint32_t UpperLeftLegBuffer[ 128 ];
+osStaticThreadDef_t UpperLeftLegControlBlock;
+osThreadId LowerRightLegHandle;
+uint32_t LowerRightLegBuffer[ 128 ];
+osStaticThreadDef_t LowerRightLegControlBlock;
+osThreadId HeadAndArmsHandle;
+uint32_t HeadAndArmsBuffer[ 128 ];
+osStaticThreadDef_t HeadAndArmsControlBlock;
+osThreadId UpperRightLegHandle;
+uint32_t UpperRightLegBuffer[ 128 ];
+osStaticThreadDef_t UpperRightLegControlBlock;
+osThreadId LowerLeftLegHandle;
+uint32_t LowerLeftLegBuffer[ 128 ];
+osStaticThreadDef_t LowerLeftLegControlBlock;
 osThreadId IMUTaskHandle;
 uint32_t IMUTaskBuffer[ 128 ];
 osStaticThreadDef_t IMUTaskControlBlock;
@@ -168,11 +168,11 @@ constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
-extern void StartUprLeftLegTask(void const * argument);
-extern void StartLwrRightLegTask(void const * argument);
-extern void StartHeadAndArmsTask(void const * argument);
-extern void StartUprRightLegTask(void const * argument);
-extern void StartLwrLeftLegTask(void const * argument);
+extern void StartUpperLeftLeg(void const * argument);
+extern void StartLowerRightLeg(void const * argument);
+extern void StartHeadAndArms(void const * argument);
+extern void StartUpperRightLeg(void const * argument);
+extern void StartLowerLeftLeg(void const * argument);
 extern void StartIMUTask(void const * argument);
 extern void StartCommandTask(void const * argument);
 extern void StartRxTask(void const * argument);
@@ -250,25 +250,25 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of UprLeftLegTask */
-  osThreadStaticDef(UprLeftLegTask, StartUprLeftLegTask, osPriorityBelowNormal, 0, 128, UprLeftLegTaskBuffer, &UprLeftLegTaskControlBlock);
-  UprLeftLegTaskHandle = osThreadCreate(osThread(UprLeftLegTask), NULL);
+  /* definition and creation of UpperLeftLeg */
+  osThreadStaticDef(UpperLeftLeg, StartUpperLeftLeg, osPriorityBelowNormal, 0, 128, UpperLeftLegBuffer, &UpperLeftLegControlBlock);
+  UpperLeftLegHandle = osThreadCreate(osThread(UpperLeftLeg), NULL);
 
-  /* definition and creation of LwrRightLegTask */
-  osThreadStaticDef(LwrRightLegTask, StartLwrRightLegTask, osPriorityBelowNormal, 0, 128, LwrRightLegTaskBuffer, &LwrRightLegTaskControlBlock);
-  LwrRightLegTaskHandle = osThreadCreate(osThread(LwrRightLegTask), NULL);
+  /* definition and creation of LowerRightLeg */
+  osThreadStaticDef(LowerRightLeg, StartLowerRightLeg, osPriorityBelowNormal, 0, 128, LowerRightLegBuffer, &LowerRightLegControlBlock);
+  LowerRightLegHandle = osThreadCreate(osThread(LowerRightLeg), NULL);
 
-  /* definition and creation of HeadAndArmsTask */
-  osThreadStaticDef(HeadAndArmsTask, StartHeadAndArmsTask, osPriorityBelowNormal, 0, 128, HeadAndArmsTaskBuffer, &HeadAndArmsTaskControlBlock);
-  HeadAndArmsTaskHandle = osThreadCreate(osThread(HeadAndArmsTask), NULL);
+  /* definition and creation of HeadAndArms */
+  osThreadStaticDef(HeadAndArms, StartHeadAndArms, osPriorityBelowNormal, 0, 128, HeadAndArmsBuffer, &HeadAndArmsControlBlock);
+  HeadAndArmsHandle = osThreadCreate(osThread(HeadAndArms), NULL);
 
-  /* definition and creation of UprRightLegTask */
-  osThreadStaticDef(UprRightLegTask, StartUprRightLegTask, osPriorityBelowNormal, 0, 128, UprRightLegTaskBuffer, &UprRightLegTaskControlBlock);
-  UprRightLegTaskHandle = osThreadCreate(osThread(UprRightLegTask), NULL);
+  /* definition and creation of UpperRightLeg */
+  osThreadStaticDef(UpperRightLeg, StartUpperRightLeg, osPriorityBelowNormal, 0, 128, UpperRightLegBuffer, &UpperRightLegControlBlock);
+  UpperRightLegHandle = osThreadCreate(osThread(UpperRightLeg), NULL);
 
-  /* definition and creation of LwrLeftLegTask */
-  osThreadStaticDef(LwrLeftLegTask, StartLwrLeftLegTask, osPriorityBelowNormal, 0, 128, LwrLeftLegTaskBuffer, &LwrLeftLegTaskControlBlock);
-  LwrLeftLegTaskHandle = osThreadCreate(osThread(LwrLeftLegTask), NULL);
+  /* definition and creation of LowerLeftLeg */
+  osThreadStaticDef(LowerLeftLeg, StartLowerLeftLeg, osPriorityBelowNormal, 0, 128, LowerLeftLegBuffer, &LowerLeftLegControlBlock);
+  LowerLeftLegHandle = osThreadCreate(osThread(LowerLeftLeg), NULL);
 
   /* definition and creation of IMUTask */
   osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128, IMUTaskBuffer, &IMUTaskControlBlock);
@@ -434,11 +434,11 @@ TODO: have some way of patching this logic to the generated usart.c */
     osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(BuffWriterTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(UprLeftLegTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(LwrRightLegTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(HeadAndArmsTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(UprRightLegTaskHandle, NOTIFIED_FROM_TASK);
-    osSignalSet(LwrLeftLegTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UpperLeftLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(LowerRightLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(HeadAndArmsHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UpperRightLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(LowerLeftLegHandle, NOTIFIED_FROM_TASK);
 
     UARTcmd_t cmd;
     cmd.type = cmdWritePosition;
@@ -496,7 +496,7 @@ TODO: have some way of patching this logic to the generated usart.c */
   *
   * @ingroup Threads
   */
-void StartUprLeftLegTask(void const * argument)
+void StartUpperLeftLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -524,7 +524,7 @@ void StartUprLeftLegTask(void const * argument)
   *
   * @ingroup Threads
   */
-void StartLwrRightLegTask(void const * argument)
+void StartLowerRightLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -552,7 +552,7 @@ void StartLwrRightLegTask(void const * argument)
   *
   * @ingroup Threads
   */
-void StartHeadAndArmsTask(void const * argument)
+void StartHeadAndArms(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -580,7 +580,7 @@ void StartHeadAndArmsTask(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUprRightLegTask(void const * argument)
+void StartUpperRightLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -608,7 +608,7 @@ void StartUprRightLegTask(void const * argument)
   *
   * @ingroup Threads
   */
-void StartLwrLeftLegTask(void const * argument)
+void StartLowerLeftLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
@@ -893,20 +893,20 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
         if(huart == UART_HANDLE_PC){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        if(huart == UART_HANDLE_UprLeftLeg){
-            xTaskNotifyFromISR(UprLeftLegTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        if(huart == UART_HANDLE_UpperLeftLeg){
+            xTaskNotifyFromISR(UpperLeftLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == UART_HANDLE_LwrRightLeg){
-            xTaskNotifyFromISR(LwrRightLegTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_LowerRightLeg){
+            xTaskNotifyFromISR(LowerRightLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         else if(huart == UART_HANDLE_HeadAndArms){
-            xTaskNotifyFromISR(HeadAndArmsTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+            xTaskNotifyFromISR(HeadAndArmsHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == UART_HANDLE_UprRightLeg){
-            xTaskNotifyFromISR(UprRightLegTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_UpperRightLeg){
+            xTaskNotifyFromISR(UpperRightLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == UART_HANDLE_LwrLeftLeg){
-            xTaskNotifyFromISR(LwrLeftLegTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_LowerLeftLeg){
+            xTaskNotifyFromISR(LowerLeftLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
@@ -927,20 +927,20 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if(huart == UART_HANDLE_UprLeftLeg){
-        xTaskNotifyFromISR(UprLeftLegTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    if(huart == UART_HANDLE_UpperLeftLeg){
+        xTaskNotifyFromISR(UpperLeftLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == UART_HANDLE_LwrRightLeg){
-        xTaskNotifyFromISR(LwrRightLegTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_LowerRightLeg){
+        xTaskNotifyFromISR(LowerRightLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     else if(huart == UART_HANDLE_HeadAndArms){
-        xTaskNotifyFromISR(HeadAndArmsTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        xTaskNotifyFromISR(HeadAndArmsHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == UART_HANDLE_UprRightLeg){
-        xTaskNotifyFromISR(UprRightLegTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_UpperRightLeg){
+        xTaskNotifyFromISR(UpperRightLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == UART_HANDLE_LwrLeftLeg){
-        xTaskNotifyFromISR(LwrLeftLegTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_LowerLeftLeg){
+        xTaskNotifyFromISR(LowerLeftLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
