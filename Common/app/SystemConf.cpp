@@ -16,13 +16,13 @@
 /********************************* Includes **********************************/
 #include "SystemConf.h"
 
-UART_HandleTypeDef* UART_HANDLE_UprLeftLeg = &huart1;
-UART_HandleTypeDef* UART_HANDLE_UprRightLeg = &huart4;
-UART_HandleTypeDef* UART_HANDLE_LwrLeftLeg = &huart6;
+UART_HandleTypeDef* UART_HANDLE_UpperLeftLeg = &huart1;
+UART_HandleTypeDef* UART_HANDLE_UpperRightLeg = &huart4;
+UART_HandleTypeDef* UART_HANDLE_LowerLeftLeg = &huart6;
 
 #if USE_DEBUG_UART == 0
 UART_HandleTypeDef* UART_HANDLE_PC = &huart5;
-UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart2;
+UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart2;
 UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
 
 #elif USE_DEBUG_UART == 1
@@ -30,12 +30,12 @@ UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
 
 #if defined(STM32F446xx)
 UART_HandleTypeDef* UART_HANDLE_PC = &huart2;
-UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart5;
+UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart5;
 UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
 
 #elif defined(STM32F767xx)
 UART_HandleTypeDef* UART_HANDLE_PC = &huart3;
-UART_HandleTypeDef* UART_HANDLE_LwrRightLeg = &huart2;
+UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart2;
 UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart5;
 
 #endif

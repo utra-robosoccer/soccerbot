@@ -40,7 +40,7 @@ HalUartInterface uartif;
 OsInterfaceImpl osif;
 GpioInterfaceImpl gpioif;
 
-UartDriver uart1Driver(&osif, &uartif, UART_HANDLE_UprLeftLeg);
+UartDriver uart1Driver(&osif, &uartif, UART_HANDLE_UpperLeftLeg);
 DaisyChainParams uart1Params = {
     &uart1Driver,
     &gpioif,
@@ -49,7 +49,7 @@ DaisyChainParams uart1Params = {
 };
 DaisyChain uart1DaisyChain(uart1Params);
 
-UartDriver uart2Driver(&osif, &uartif, UART_HANDLE_LwrRightLeg);
+UartDriver uart2Driver(&osif, &uartif, UART_HANDLE_LowerRightLeg);
 DaisyChainParams uart2Params = {
     &uart2Driver,
     &gpioif,
@@ -67,7 +67,7 @@ DaisyChainParams uart3Params = {
 };
 DaisyChain uart3DaisyChain(uart3Params);
 
-UartDriver uart4Driver(&osif, &uartif, UART_HANDLE_UprRightLeg);
+UartDriver uart4Driver(&osif, &uartif, UART_HANDLE_UpperRightLeg);
 DaisyChainParams uart4Params = {
     &uart4Driver,
     &gpioif,
@@ -76,7 +76,7 @@ DaisyChainParams uart4Params = {
 };
 DaisyChain uart4DaisyChain(uart4Params);
 
-UartDriver uart6Driver(&osif, &uartif, UART_HANDLE_LwrLeftLeg);
+UartDriver uart6Driver(&osif, &uartif, UART_HANDLE_LowerLeftLeg);
 DaisyChainParams uart6Params = {
     &uart6Driver,
     &gpioif,
