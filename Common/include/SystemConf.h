@@ -62,7 +62,15 @@ extern UART_HandleTypeDef huart6;
  * swapped UARTs. Also double check in freertos.c that the correct baud rate
  * for the swapped UARTS is being set in StartCmdTask.
  */
-#define USE_DEBUG_UART 0
+#if defined(STM32F446xx)
+// #define USE_DEBUG_UART
+
+#elif defined(STM32F767xx)
+/* TODO: have USE_DEBUG_UART undefined by default (i.e. commented out here)
+once F7 board is ready. */
+#define USE_DEBUG_UART
+
+#endif
 
 extern UART_HandleTypeDef* UART_HANDLE_PC;
 extern UART_HandleTypeDef* UART_HANDLE_UpperLeftLeg;
