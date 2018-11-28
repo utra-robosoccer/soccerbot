@@ -118,21 +118,21 @@ osStaticThreadDef_t BuffWriterTaskControlBlock;
 osThreadId MotorCmdGenTaskHandle;
 uint32_t MotorCmdGenTaskBuffer[ 128 ];
 osStaticThreadDef_t MotorCmdGenTaskControlBlock;
-osMessageQId UART1_reqHandle;
-uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART1_reqControlBlock;
-osMessageQId UART2_reqHandle;
-uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART2_reqControlBlock;
-osMessageQId UART3_reqHandle;
-uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART3_reqControlBlock;
-osMessageQId UART4_reqHandle;
-uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART4_reqControlBlock;
-osMessageQId UART6_reqHandle;
-uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART6_reqControlBlock;
+osMessageQId UpperLeftLeg_reqHandle;
+uint8_t UpperLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t UpperLeftLeg_reqControlBlock;
+osMessageQId LowerRightLeg_reqHandle;
+uint8_t LowerRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t LowerRightLeg_reqControlBlock;
+osMessageQId HeadAndArms_reqHandle;
+uint8_t HeadAndArms_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t HeadAndArms_reqControlBlock;
+osMessageQId UpperRightLeg_reqHandle;
+uint8_t UpperRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t UpperRightLeg_reqControlBlock;
+osMessageQId LowerLeftLeg_reqHandle;
+uint8_t LowerLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t LowerLeftLeg_reqControlBlock;
 osMessageQId BufferWriteQueueHandle;
 uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
@@ -300,24 +300,24 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of UART1_req */
-  osMessageQStaticDef(UART1_req, 16, UARTcmd_t, UART1_reqBuffer, &UART1_reqControlBlock);
-  UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
+  osMessageQStaticDef(UpperLeftLeg_req, 16, UARTcmd_t, UpperLeftLeg_reqBuffer, &UpperLeftLeg_reqControlBlock);
+  UpperLeftLeg_reqHandle = osMessageCreate(osMessageQ(UpperLeftLeg_req), NULL);
 
-  /* definition and creation of UART2_req */
-  osMessageQStaticDef(UART2_req, 16, UARTcmd_t, UART2_reqBuffer, &UART2_reqControlBlock);
-  UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
+  /* definition and creation of LowerRightLeg_req */
+  osMessageQStaticDef(LowerRightLeg_req, 16, UARTcmd_t, LowerRightLeg_reqBuffer, &LowerRightLeg_reqControlBlock);
+  LowerRightLeg_reqHandle = osMessageCreate(osMessageQ(LowerRightLeg_req), NULL);
 
-  /* definition and creation of UART3_req */
-  osMessageQStaticDef(UART3_req, 16, UARTcmd_t, UART3_reqBuffer, &UART3_reqControlBlock);
-  UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
+  /* definition and creation of HeadAndArms_req */
+  osMessageQStaticDef(HeadAndArms_req, 16, UARTcmd_t, HeadAndArms_reqBuffer, &HeadAndArms_reqControlBlock);
+  HeadAndArms_reqHandle = osMessageCreate(osMessageQ(HeadAndArms_req), NULL);
 
-  /* definition and creation of UART4_req */
-  osMessageQStaticDef(UART4_req, 16, UARTcmd_t, UART4_reqBuffer, &UART4_reqControlBlock);
-  UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
+  /* definition and creation of UpperRightLeg_req */
+  osMessageQStaticDef(UpperRightLeg_req, 16, UARTcmd_t, UpperRightLeg_reqBuffer, &UpperRightLeg_reqControlBlock);
+  UpperRightLeg_reqHandle = osMessageCreate(osMessageQ(UpperRightLeg_req), NULL);
 
-  /* definition and creation of UART6_req */
-  osMessageQStaticDef(UART6_req, 16, UARTcmd_t, UART6_reqBuffer, &UART6_reqControlBlock);
-  UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
+  /* definition and creation of LowerLeftLeg_req */
+  osMessageQStaticDef(LowerLeftLeg_req, 16, UARTcmd_t, LowerLeftLeg_reqBuffer, &LowerLeftLeg_reqControlBlock);
+  LowerLeftLeg_reqHandle = osMessageCreate(osMessageQ(LowerLeftLeg_req), NULL);
 
   /* definition and creation of BufferWriteQueue */
   osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
@@ -366,11 +366,20 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
-#if USE_DEBUG_UART == 1
+#if defined(USE_DEBUG_UART)
 
-/* rfairley: original intention was to put this logic in usart.c,
-left the globals from SystemConf.h out.
-TODO: have some way of patching this logic to the generated usart.c */
+/* rfairley: This logic should really go in usart.c, the same way as how
+ * the hdma_ handles deal with this swapping of parameters when USE_DEBUG_UART
+ * is defined. However it doesn't look like there is a good spot in the
+ * "USER CODE" sections. To do this properly, we should patch
+ * this change onto usart.c. For now this is done in StartCommandTask before
+ * other threads wake up.
+ *
+ * (Alternatively we take ownership of the usart.c file and name/initialize
+ * the UARTs completely ourselves).
+ *
+ * TODO: have some way of patching uart config parameter modifications to the generated usart.c
+ */
 #if defined(STM32F446xx)
     /* Override the configuration in usart.c made by CubeMX. */
     huart2.Init.BaudRate = 230400;
@@ -463,19 +472,19 @@ TODO: have some way of patching this logic to the generated usart.c */
             cmd.value = positions[i];
 
             if(i <= periph::MOTOR3){
-                cmd.qHandle = UART2_reqHandle;
+                cmd.qHandle = LowerRightLeg_reqHandle;
             }
             else if(i <= periph::MOTOR6){
-                cmd.qHandle = UART4_reqHandle;
+                cmd.qHandle = UpperRightLeg_reqHandle;
             }
             else if(i <= periph::MOTOR9){
-                cmd.qHandle = UART1_reqHandle;
+                cmd.qHandle = UpperLeftLeg_reqHandle;
             }
             else if(i <= periph::MOTOR12){
-                cmd.qHandle = UART6_reqHandle;
+                cmd.qHandle = LowerLeftLeg_reqHandle;
             }
             else{
-                cmd.qHandle = UART3_reqHandle;
+                cmd.qHandle = HeadAndArms_reqHandle;
             }
 
             xQueueSend(cmd.qHandle, &cmd, 0);
@@ -506,7 +515,7 @@ void StartUpperLeftLeg(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(UpperLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage);
     }
 }
@@ -534,7 +543,7 @@ void StartLowerRightLeg(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(LowerRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage);
     }
 }
@@ -562,7 +571,7 @@ void StartHeadAndArms(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(HeadAndArms_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage);
     }
 }
@@ -590,7 +599,7 @@ void StartUpperRightLeg(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(UpperRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage);
     }
 }
@@ -618,7 +627,7 @@ void StartLowerLeftLeg(void const * argument)
 
     for(;;)
     {
-        while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(LowerLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
         UART_ProcessEvent(&cmdMessage);
     }
 }
@@ -822,19 +831,19 @@ void StartMotorCmdGenTask(void const * argument){
             cmd.motorHandle = periph::motors[i];
 
             if(i <= periph::MOTOR3){
-                cmd.qHandle = UART2_reqHandle;
+                cmd.qHandle = LowerRightLeg_reqHandle;
             }
             else if(i <= periph::MOTOR6){
-                cmd.qHandle = UART4_reqHandle;
+                cmd.qHandle = UpperRightLeg_reqHandle;
             }
             else if(i <= periph::MOTOR9){
-                cmd.qHandle = UART1_reqHandle;
+                cmd.qHandle = UpperLeftLeg_reqHandle;
             }
             else if(i <= periph::MOTOR12){
-                cmd.qHandle = UART6_reqHandle;
+                cmd.qHandle = LowerLeftLeg_reqHandle;
             }
             else{
-                cmd.qHandle = UART3_reqHandle;
+                cmd.qHandle = HeadAndArms_reqHandle;
             }
 
             // Only read from legs
