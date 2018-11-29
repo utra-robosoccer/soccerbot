@@ -1,3 +1,7 @@
 <launch>
-    <!-- TODO -->
+
+    <!-- Hardware Connection -->
+    <include file="$(find omnibot_hardware)/launch/omnibot_hardware.launch">
+        <arg name="dryrun" value="$(arg dryrun)"/>
+    </include>
 </launch>
