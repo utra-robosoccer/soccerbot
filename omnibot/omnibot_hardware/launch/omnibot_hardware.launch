@@ -1,0 +1,4 @@
+<launch>
+    <arg name="dryrun" default="false"/>
+	<node name="omnibot_hardware" pkg="omnibot_hardware" type="omnibot_hardware.py" output="screen" cwd="node" args="--dryrun=$(arg dryrun)"/>
+</launch>
