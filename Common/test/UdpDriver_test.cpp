@@ -10,6 +10,8 @@
   *****************************************************************************
   */
 
+/* TODO: investigate threaded tests. */
+
 #include <MockOsInterface.h>
 #include <MockUdpInterface.h>
 #include <UdpDriver.h>
@@ -26,20 +28,31 @@ using ::testing::_;
 
 
 
+
+bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
+    return lhs.addr == rhs.addr;
+}
+
 namespace {
 
 MockUdpInterface udp_if;
 MockOsInterface os_if;
 const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 
-bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
-    return lhs.addr == rhs.addr;
-}
+// Classes & structs
+// ----------------------------------------------------------------------------
+class UdpDriverTest : public ::testing::Test {
+protected:
+    void SetUp() {
+
+    }
+};
 
 }
 
 TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
     UdpDriver udpDriverUnderTest;
+
     EXPECT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
     EXPECT_EQ(udpDriverUnderTest.getIpaddrPc(), ZERO_IP_ADDR_T);
     EXPECT_EQ(udpDriverUnderTest.getPort(), (u16_t) 0);
@@ -54,8 +67,10 @@ TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
 TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
     UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
             (u16_t) 6340, &udp_if, &os_if);
+
     EXPECT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpaddr());
     EXPECT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpaddrPc());
     EXPECT_EQ((u16_t) 7, udpDriverUnderTest.getPort());
@@ -64,49 +79,60 @@ TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
 }
 
-/* TODO: investigate threaded tests. */
 
-//
-//TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupSuccess) {
-//    mocks::MockUdpInterface mockUdpInterface;
-//    mocks::MockOsInterface mockOsInterface;
-//    EXPECT_CALL(mockUdpInterface, udpRecv(_, _, _)).Times(1);
-//    EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
-//            Return(ERR_OK));
-//    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(
-//            Return(NON_NULL_PTR_PCB));
-//
-//    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-//            &mockUdpInterface, &mockOsInterface);
-//    bool success = udpDriverUnderTest.setup();
-//    ASSERT_TRUE(success);
-//}
-//
-//TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnNew) {
-//    mocks::MockUdpInterface mockUdpInterface;
-//    mocks::MockOsInterface mockOsInterface;
-//    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(nullptr));
-//
-//    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-//            &mockUdpInterface, &mockOsInterface);
-//    bool success = udpDriverUnderTest.setup();
-//    ASSERT_FALSE(success);
-//}
-//
-//TEST(UdpDriverTests, FunctionCallsCorrectOrderSetupFailsOnBind) {
-//    mocks::MockUdpInterface mockUdpInterface;
-//    mocks::MockOsInterface mockOsInterface;
-//    EXPECT_CALL(mockUdpInterface, udpRemove(_)).Times(1); // Assume removal happens without error
-//    EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(
-//            Return(ERR_USE));
-//    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(
-//            Return(NON_NULL_PTR_PCB));
-//
-//    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, ZERO_U16_T, ZERO_U16_T,
-//            &mockUdpInterface, &mockOsInterface);
-//    bool success = udpDriverUnderTest.setup();
-//    ASSERT_FALSE(success);
-//}
+TEST(UdpDriverShould, SucceedSetup) {
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
+    struct udp_pcb udpPcb;
+
+    EXPECT_CALL(mockUdpInterface, udpRecv(_, _, _)).Times(1);
+    EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(&udpPcb));
+    EXPECT_CALL(mockOsInterface, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) 1));
+
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
+            &mockUdpInterface, &mockOsInterface);
+    ASSERT_TRUE(udpDriverUnderTest.setup());
+}
+
+TEST(UdpDriverTests, FailSetupOnOsSemaphoreCreate) {
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
+
+    EXPECT_CALL(mockOsInterface, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) 0));
+
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
+            &mockUdpInterface, &mockOsInterface);
+    ASSERT_FALSE(udpDriverUnderTest.setup());
+}
+
+TEST(UdpDriverTests, FailSetupOnUdpNew) {
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
+
+    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(nullptr));
+    EXPECT_CALL(mockOsInterface, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) 1));
+
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
+            &mockUdpInterface, &mockOsInterface);
+    ASSERT_FALSE(udpDriverUnderTest.setup());
+}
+
+TEST(UdpDriverTests, FailSetupOnUdpBind) {
+    mocks::MockUdpInterface mockUdpInterface;
+    mocks::MockOsInterface mockOsInterface;
+    struct udp_pcb udpPcb;
+
+    EXPECT_CALL(mockUdpInterface, udpRemove(_)).Times(1);
+    EXPECT_CALL(mockUdpInterface, udpBind(_, _, _)).Times(1).WillOnce(Return(ERR_USE));
+    EXPECT_CALL(mockUdpInterface, udpNew()).Times(1).WillOnce(Return(&udpPcb));
+    EXPECT_CALL(mockOsInterface, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) 1));
+
+    UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
+            &mockUdpInterface, &mockOsInterface);
+    ASSERT_FALSE(udpDriverUnderTest.setup());
+}
+
 //
 //TEST(UdpDriverTests, FunctionCallsCorrectOrderReceiveSuccess) {
 //    mocks::MockUdpInterface mockUdpInterface;

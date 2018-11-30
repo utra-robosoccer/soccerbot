@@ -15,8 +15,9 @@
 // TODO: test coverage for UdpDriver, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs.
 // TODO: check against template and add doxygen comments
+// TODO: add in correct semaphores
 
-#include <UdpDriver.h>
+#include "UdpDriver.h"
 
 namespace {
 
@@ -75,7 +76,9 @@ bool UdpDriver::setup() {
     bool success = false;
 
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
-    recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
+    if ((recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1)) == NULL) {
+        return false;
+    }
 
     if (!getUdpInterface() || !getOsInterface()) {
         return false;
@@ -93,6 +96,7 @@ bool UdpDriver::setup() {
         getUdpInterface()->udpRecv(const_cast<struct udp_pcb *>(getPcb()), recvCallback, this);
     } else {
         getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
+        pcb = nullptr;
     }
 
     return success;
