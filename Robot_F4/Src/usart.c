@@ -99,7 +99,11 @@ void MX_UART5_Init(void)
 {
 
   huart5.Instance = UART5;
+#if defined(USE_DEBUG_UART)
+  huart5.Init.BaudRate = 2500000;
+#else
   huart5.Init.BaudRate = 230400;
+#endif
   huart5.Init.WordLength = UART_WORDLENGTH_8B;
   huart5.Init.StopBits = UART_STOPBITS_1;
   huart5.Init.Parity = UART_PARITY_NONE;
@@ -137,7 +141,11 @@ void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
+#if defined(USE_DEBUG_UART)
+  huart2.Init.BaudRate = 230400;
+#else
   huart2.Init.BaudRate = 2500000;
+#endif
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -309,7 +317,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     hdma_uart5_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_uart5_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_uart5_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+#if defined(USE_DEBUG_UART)
+    hdma_uart5_rx.Init.Mode = DMA_NORMAL;
+#else
     hdma_uart5_rx.Init.Mode = DMA_CIRCULAR;
+#endif
     hdma_uart5_rx.Init.Priority = DMA_PRIORITY_LOW;
     hdma_uart5_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_uart5_rx) != HAL_OK)
@@ -323,9 +335,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_NVIC_SetPriority(UART5_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(UART5_IRQn);
   /* USER CODE BEGIN UART5_MspInit 1 */
-#if defined(USE_DEBUG_UART)
-    hdma_uart5_rx.Init.Mode = DMA_NORMAL;
-#endif
+
   /* USER CODE END UART5_MspInit 1 */
   }
   else if(uartHandle->Instance==USART1)
@@ -437,7 +447,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+#if defined(USE_DEBUG_UART)
+    hdma_usart2_rx.Init.Mode = DMA_CIRCULAR;
+#else
     hdma_usart2_rx.Init.Mode = DMA_NORMAL;
+#endif
     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
     hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
@@ -451,9 +465,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
-#if defined(USE_DEBUG_UART)
-    hdma_usart2_rx.Init.Mode = DMA_CIRCULAR;
-#endif
+
   /* USER CODE END USART2_MspInit 1 */
   }
   else if(uartHandle->Instance==USART3)
