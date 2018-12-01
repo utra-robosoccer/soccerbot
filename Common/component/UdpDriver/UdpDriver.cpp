@@ -12,8 +12,10 @@
 /* TODO: namespacing+doxygen groups to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
 /* TODO: licensing terms for projects we are making use of e.g. googletest? */
 
-// TODO: test coverage for UdpDriver, set up fixtures to test passing
+
+// TODO: test coverage for UdpDriver receive and transmit failure/success paths, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs.
+// TODO: further refactor setup, receive, transmit
 // TODO: check against template and add doxygen comments
 // TODO: add in correct semaphores
 
@@ -109,10 +111,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
         goto out;
     }
 
-    /* Wait for callback to write data members (including packets) to UdpInterface. */
-    while (getOsInterface()->OS_osSemaphoreWait(recvSemaphore, SEMAPHORE_WAIT_NUM_MS) != osOK) {
-        ;
-    }
+    waitReceiveCplt();
 
     if (!packetToBytes(rxArrayOut, numBytes)) {
         goto out;
@@ -201,14 +200,28 @@ void UdpDriver::signalReceiveCplt() {
     getOsInterface()->OS_osSemaphoreRelease(recvSemaphore); // XXX
 }
 
+void UdpDriver::waitReceiveCplt() {
+    while (getOsInterface()->OS_osSemaphoreWait(recvSemaphore, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
+}
+
 /* Copy the received packet to byteArrayOut, to a maximum of numBytes. */
 bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const {
+    if (!byteArrayOut) {
+        return false;
+    }
+
     /* Success only if a nonzero number of bytes was copied. */
 	return (getUdpInterface()->pbufCopyPartial(getRxPbuf(), byteArrayOut, numBytes, 0) > (u16_t) 0);
 }
 
 /* Copy byteArrayIn of size numBytes to the transmit packet. */
 bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes) {
+    if (!byteArrayIn) {
+        return false;
+    }
+
 	return (getUdpInterface()->pbufTake(getTxPbuf(), byteArrayIn, numBytes) == ERR_OK);
 }
 

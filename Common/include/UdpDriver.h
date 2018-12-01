@@ -38,6 +38,7 @@ public:
     bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes);
     bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const;
     void signalReceiveCplt();
+    void waitReceiveCplt();
 
     void setRxPbuf(struct pbuf *rxPbufIn);
     void setTxPbuf(struct pbuf *txPbufIn);
