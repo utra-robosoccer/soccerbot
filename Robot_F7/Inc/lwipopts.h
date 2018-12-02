@@ -147,6 +147,6 @@
 #ifdef __cplusplus
 }
 #endif
-#endif /*__LWIPOPTS__H_H */
+#endif /*__LWIPOPTS__H__ */
 
 /************************* (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
