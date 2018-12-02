@@ -15,6 +15,6 @@ catkin_python_setup()
 
 catkin_package()
 
-catkin_install_python(PROGRAMS bin/soccer_hardware
+catkin_install_python(PROGRAMS src/soccer_communication/soccer_hardware.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 

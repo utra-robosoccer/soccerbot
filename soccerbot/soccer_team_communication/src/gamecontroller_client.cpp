@@ -7,8 +7,8 @@
 #include <iostream>
 #include <string>
 #include <std_msgs/Int32.h>
-#include <soccer_communication/game_state.h>
-#include <soccer_communication/game_stateRes.h>
+#include <soccer_team_communication/game_state.h>
+#include <soccer_team_communication/game_stateRes.h>
 
 //port
 #define GAMECONTROLLER_DATA_PORT 3838
@@ -32,8 +32,8 @@ using namespace std;
 
 ros::Publisher pub;
 uint8_t protocol_ver = 0;
-int robotInfoSize = sizeof(soccer_communication::robotInfo);
-int teamInfoSize = sizeof(soccer_communication::teamInfo);
+int robotInfoSize = sizeof(soccer_team_communication::robotInfo);
+int teamInfoSize = sizeof(soccer_team_communication::teamInfo);
 
 /* temporary parametes*/
 uint8_t team_ = 1;
@@ -103,7 +103,7 @@ static void sanity_check(char buff, char &rtn_val, sanity_check_type type) {
     }
 }
 
-static void parser_rcv(const char *buff, soccer_communication::game_state &msg) {
+static void parser_rcv(const char *buff, soccer_team_communication::game_state &msg) {
     char val = UNDEFINED;
 
     memcpy(&msg.header, buff, sizeof(msg.header));
@@ -132,40 +132,40 @@ static void parser_rcv(const char *buff, soccer_communication::game_state &msg) 
     //team info
     for (int i = 0; i < 2; i++) {
         int team_offset = i * teamInfoSize;
-        memcpy(&msg.Teams[i].teamNum, &buff[24 + team_offset], sizeof(soccer_communication::teamInfo::teamNum));
+        memcpy(&msg.Teams[i].teamNum, &buff[24 + team_offset], sizeof(soccer_team_communication::teamInfo::teamNum));
 
         sanity_check(buff[25], val, SANITY_CHECK_TEAM_COLOR);
-        memcpy(&msg.Teams[i].teamColour, &val, sizeof(soccer_communication::teamInfo::teamColour));
+        memcpy(&msg.Teams[i].teamColour, &val, sizeof(soccer_team_communication::teamInfo::teamColour));
 
-        memcpy(&msg.Teams[i].score, &buff[26 + team_offset], sizeof(soccer_communication::teamInfo::score));
-        memcpy(&msg.Teams[i].penaltyShot, &buff[27 + team_offset], sizeof(soccer_communication::teamInfo::penaltyShot));
-        memcpy(&msg.Teams[i].singleShots, &buff[28 + team_offset], sizeof(soccer_communication::teamInfo::singleShots));
+        memcpy(&msg.Teams[i].score, &buff[26 + team_offset], sizeof(soccer_team_communication::teamInfo::score));
+        memcpy(&msg.Teams[i].penaltyShot, &buff[27 + team_offset], sizeof(soccer_team_communication::teamInfo::penaltyShot));
+        memcpy(&msg.Teams[i].singleShots, &buff[28 + team_offset], sizeof(soccer_team_communication::teamInfo::singleShots));
         memcpy(&msg.Teams[i].coachSequence, &buff[30 + team_offset],
-               sizeof(soccer_communication::teamInfo::coachSequence));
-        memcpy(&msg.Teams[i].coachMessage, &buff[31 + team_offset], sizeof(soccer_communication::teamInfo::coachMessage));
+               sizeof(soccer_team_communication::teamInfo::coachSequence));
+        memcpy(&msg.Teams[i].coachMessage, &buff[31 + team_offset], sizeof(soccer_team_communication::teamInfo::coachMessage));
 
         //robot info
         sanity_check(buff[284 + team_offset], val, SANITY_CHECK_PENALTY);
-        memcpy(&msg.Teams[i].coach.penalty, &val, sizeof(soccer_communication::robotInfo::penalty));
+        memcpy(&msg.Teams[i].coach.penalty, &val, sizeof(soccer_team_communication::robotInfo::penalty));
 
         memcpy(&msg.Teams[i].coach.secsTillUnpenalised, &buff[285 + team_offset],
-               sizeof(soccer_communication::robotInfo::secsTillUnpenalised));
+               sizeof(soccer_team_communication::robotInfo::secsTillUnpenalised));
         memcpy(&msg.Teams[i].coach.yellowCardCount, &buff[286 + team_offset],
-               sizeof(soccer_communication::robotInfo::yellowCardCount));
+               sizeof(soccer_team_communication::robotInfo::yellowCardCount));
         memcpy(&msg.Teams[i].coach.redCardCount, &buff[287 + team_offset],
-               sizeof(soccer_communication::robotInfo::redCardCount));
+               sizeof(soccer_team_communication::robotInfo::redCardCount));
 
         for (int j = 0; j < 11; j++) {
             int robot_offset = j * robotInfoSize + team_offset;
 
             sanity_check(buff[288 + robot_offset], val, SANITY_CHECK_PENALTY);
-            memcpy(&msg.Teams[i].players[j].penalty, &val, sizeof(soccer_communication::robotInfo::penalty));
+            memcpy(&msg.Teams[i].players[j].penalty, &val, sizeof(soccer_team_communication::robotInfo::penalty));
             memcpy(&msg.Teams[i].players[j].secsTillUnpenalised, &buff[289 + robot_offset],
-                   sizeof(soccer_communication::robotInfo::secsTillUnpenalised));
+                   sizeof(soccer_team_communication::robotInfo::secsTillUnpenalised));
             memcpy(&msg.Teams[i].players[j].yellowCardCount, &buff[290 + robot_offset],
-                   sizeof(soccer_communication::robotInfo::yellowCardCount));
+                   sizeof(soccer_team_communication::robotInfo::yellowCardCount));
             memcpy(&msg.Teams[i].players[j].redCardCount, &buff[291 + robot_offset],
-                   sizeof(soccer_communication::robotInfo::redCardCount));
+                   sizeof(soccer_team_communication::robotInfo::redCardCount));
         }
     }
 
@@ -177,20 +177,20 @@ static void parser_res(char *tmp_buff) {
     int32_t offset = 0;
     char header_[5] = "RGrt";
 
-    memcpy(tmp_buff, header_, sizeof(soccer_communication::game_stateRes::header));
-    offset = sizeof(soccer_communication::game_stateRes::header);
+    memcpy(tmp_buff, header_, sizeof(soccer_team_communication::game_stateRes::header));
+    offset = sizeof(soccer_team_communication::game_stateRes::header);
 
-    memcpy(tmp_buff + offset, &protocol_ver, sizeof(soccer_communication::game_stateRes::protocol_version));
-    offset += sizeof(soccer_communication::game_stateRes::protocol_version);
+    memcpy(tmp_buff + offset, &protocol_ver, sizeof(soccer_team_communication::game_stateRes::protocol_version));
+    offset += sizeof(soccer_team_communication::game_stateRes::protocol_version);
 
-    memcpy(tmp_buff + offset, &team_, sizeof(soccer_communication::game_stateRes::team));
-    offset += sizeof(soccer_communication::game_stateRes::team);
+    memcpy(tmp_buff + offset, &team_, sizeof(soccer_team_communication::game_stateRes::team));
+    offset += sizeof(soccer_team_communication::game_stateRes::team);
 
-    memcpy(tmp_buff + offset, &player_, sizeof(soccer_communication::game_stateRes::player));
-    offset += sizeof(soccer_communication::game_stateRes::player);
+    memcpy(tmp_buff + offset, &player_, sizeof(soccer_team_communication::game_stateRes::player));
+    offset += sizeof(soccer_team_communication::game_stateRes::player);
 
     sanity_check(message_, val, SANITY_CHECK_PLAYER_MSG);
-    memcpy(tmp_buff + offset, &val, sizeof(soccer_communication::game_stateRes::message));
+    memcpy(tmp_buff + offset, &val, sizeof(soccer_team_communication::game_stateRes::message));
 
 }
 
@@ -228,7 +228,7 @@ int main(int argc, char **argv) {
     //setup ros
     ros::init(argc, argv, "gamecontroller_client");
     ros::NodeHandle n;
-    pub = n.advertise<soccer_communication::game_state>("game_state", 10);  //adjust capacity if needed
+    pub = n.advertise<soccer_team_communication::game_state>("game_state", 10);  //adjust capacity if needed
     ros::Subscriber sub = n.subscribe("pausedbool", 10, callbackFunction);
 
     //setup socket etc
@@ -262,7 +262,7 @@ int main(int argc, char **argv) {
 
     while (ros::ok()) {
         char buff[1024] = "\0";
-        soccer_communication::game_state msg;
+        soccer_team_communication::game_state msg;
         unsigned int len = sizeof(my_addr);
 
         recvfrom(s, buff, sizeof(buff) - 1, 0, (sockaddr * ) & my_addr, &len);

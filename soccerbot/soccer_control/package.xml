@@ -11,6 +11,7 @@
   <depend>ros_control</depend>
   <depend>joint_state_controller</depend>
   <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
   <depend>soccer_description</depend>
 
 </package>

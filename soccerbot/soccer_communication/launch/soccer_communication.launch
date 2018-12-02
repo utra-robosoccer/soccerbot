@@ -1,5 +1,0 @@
-<launch>
-     <node name="team_communication_client" pkg="soccer_communication" type="team_communication_client" />
-     <node name="team_communication_server" pkg="soccer_communication" type="team_communication_server" />
-     <node name="gamecontroller_client" pkg="soccer_communication" type="gamecontroller_client" />
-</launch>
