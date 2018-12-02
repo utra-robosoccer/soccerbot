@@ -65,8 +65,6 @@ TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
     EXPECT_EQ(udpDriverUnderTest.getUdpInterface(), nullptr);
     EXPECT_EQ(udpDriverUnderTest.getOsInterface(), nullptr);
     EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
-    EXPECT_EQ(udpDriverUnderTest.getRxPbuf(), nullptr);
-    EXPECT_EQ(udpDriverUnderTest.getTxPbuf(), nullptr);
 }
 
 TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
@@ -82,6 +80,7 @@ TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     EXPECT_EQ((u16_t) 6340, udpDriverUnderTest.getPortPc());
     EXPECT_EQ(&udp_if, udpDriverUnderTest.getUdpInterface());
     EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
+    EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
 }
 
 
@@ -130,11 +129,9 @@ TEST(UdpDriverShould, FailSetupOnUdpBind) {
     ASSERT_FALSE(udpDriverUnderTest.setup(nullptr));
 }
 
-TEST(UdpDriverRxPbufFilledShould, SucceedReceive) {
+TEST(UdpDriverShould, SucceedReceive) {
     uint8_t rxBuff[10] = {};
 
-    //EXPECT_CALL(udp_if, pbufFree(_)).Times(1).WillOnce(Return((u8_t) 1));
-    EXPECT_CALL(udp_if, pbufCopyPartial(_, _, _, _)).Times(1).WillOnce(Return((u16_t) 1));
     EXPECT_CALL(os_if, OS_osSemaphoreWait(_, _)).Times(1).WillOnce(Return(osOK));
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
