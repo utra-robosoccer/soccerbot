@@ -32,7 +32,7 @@ public:
               const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
-    bool setup();
+    bool setup(udp_recv_fn recvCallback);
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
     bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes);

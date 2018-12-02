@@ -11,19 +11,19 @@
 
 /* TODO: namespacing+doxygen groups to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
 /* TODO: licensing terms for projects we are making use of e.g. googletest? */
-
+/* TODO: consider refactoring setup, receive, transmit if making the class support >1 UDP connection. */
 
 // TODO: test coverage for UdpDriver receive and transmit failure/success paths, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs.
-// TODO: further refactor setup, receive, transmit
 // TODO: check against template and add doxygen comments
 // TODO: add in correct semaphores
+// TODO: re-architect so pbufs are dealt with outside (not allocated and freed here)
 
 #include "UdpDriver.h"
 
 namespace {
 
-void recvCallback(void *arg,
+void defaultRecvCallback(void *arg,
                   struct udp_pcb *pcb,
                   struct pbuf *packet,
                   const ip_addr_t *addr,
@@ -74,7 +74,7 @@ UdpDriver::~UdpDriver() {
     }
 }
 
-bool UdpDriver::setup() {
+bool UdpDriver::setup(udp_recv_fn recvCallback) {
     bool success = false;
 
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
@@ -95,7 +95,8 @@ bool UdpDriver::setup() {
     success = (getUdpInterface()->udpBind(const_cast<struct udp_pcb *>(getPcb()), &ipaddr, port) == ERR_OK);
 
     if (success) {
-        getUdpInterface()->udpRecv(const_cast<struct udp_pcb *>(getPcb()), recvCallback, this);
+        udp_recv_fn callback = (recvCallback == nullptr) ? defaultRecvCallback : recvCallback;
+        getUdpInterface()->udpRecv(const_cast<struct udp_pcb *>(getPcb()), callback, this);
     } else {
         getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
         pcb = nullptr;
@@ -122,7 +123,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
   out:
     if (getRxPbuf()) {
         /* If zero pbufs were freed here, where did the allocated one for Rx go? Consider this an error. */
-        if ((success = getUdpInterface()->pbufFree(getRxPbuf()) == (u8_t) 0)) {
+        if ((success = getUdpInterface()->pbufFree(getRxPbuf()) > (u8_t) 0)) {
             rxPbuf = nullptr;
         }
     }
@@ -164,7 +165,7 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
   out:
     if (getTxPbuf()) {
         /* Error if zero pbufs freed for the one just allocated for Tx. */
-        if ((success = getUdpInterface()->pbufFree(getTxPbuf()) == (u8_t) 0)) {
+        if ((success = getUdpInterface()->pbufFree(getTxPbuf()) > (u8_t) 0)) {
             txPbuf = nullptr;
         }
     }
