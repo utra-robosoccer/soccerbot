@@ -12,6 +12,6 @@
   <depend>rviz</depend>
 
   <export>
-    <gazebo_ros gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}" />
+    <gazebo_ros gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/models" />
   </export>
 </package>
