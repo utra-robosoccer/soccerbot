@@ -34,7 +34,7 @@ extern UART_HandleTypeDef huart6;
 
 /* Deal with making sure one and only one board is defined here. */
 #if defined(STM32F446xx) == defined(STM32F767xx)
-#error "SystemConf error: invalid build configuration! Must only one of STM32F446xx or STM32F767xx."
+#error "SystemConf error: invalid build configuration! Must define only one of STM32F446xx or STM32F767xx."
 #endif
 
 #if defined(STM32F446xx)
