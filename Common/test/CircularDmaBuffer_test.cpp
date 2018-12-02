@@ -56,7 +56,7 @@ protected:
     uint8_t raw_buff_[BUFFER_SIZE_TEST] = { };
     const uint16_t transmission_size_ = BUFFER_SIZE_TEST;
     const size_t buffer_size_ = BUFFER_SIZE_TEST;
-    CircularDmaBuffer * buff_ = nullptr;
+    CircularDmaBuffer* buff_ = nullptr;
 };
 
 // Functions
