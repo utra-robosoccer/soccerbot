@@ -32,7 +32,9 @@ public:
               const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
-    bool setup(udp_recv_fn recvCallback);
+    bool initialize();
+    bool setupReceive(udp_recv_fn recvCallback);
+    void unSetupReceive();
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
     bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf);
@@ -41,6 +43,7 @@ public:
     void waitReceiveCplt();
 
     void setRecvPbuf(struct pbuf *pPbuf);
+    void forgetRecvPbuf();
 
     const ip_addr_t                     getIpaddr() const;
     const ip_addr_t                     getIpaddrPc() const;

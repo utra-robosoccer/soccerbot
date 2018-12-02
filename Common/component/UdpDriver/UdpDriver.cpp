@@ -72,20 +72,10 @@ UdpDriver::UdpDriver(const ip_addr_t ipaddrIn,
 }
 
 UdpDriver::~UdpDriver() {
-    /* TODO: think about a macro for all the common "interface" calls. */
-    if (getPcb()) {
-        getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
-        pcb = nullptr;
-    }
-    if (getRecvPbuf()) {
-        getUdpInterface()->pbufFree(getRecvPbuf());
-        setRecvPbuf(nullptr);
-    }
+
 }
 
-bool UdpDriver::setup(udp_recv_fn recvCallback) {
-    bool success = false;
-
+bool UdpDriver::initialize() {
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
     if ((recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1)) == NULL) {
         return false;
@@ -95,6 +85,11 @@ bool UdpDriver::setup(udp_recv_fn recvCallback) {
     if ((recvPbufMutex = getOsInterface()->OS_osMutexCreate(osMutex(UdpDriverRecvPbuf))) == NULL) {
         return false;
     }
+    return true;
+}
+
+bool UdpDriver::setupReceive(udp_recv_fn recvCallback) {
+    bool success = false;
 
     if (!getUdpInterface() || !getOsInterface()) {
         return false;
@@ -119,17 +114,30 @@ bool UdpDriver::setup(udp_recv_fn recvCallback) {
     return success;
 }
 
+void UdpDriver::unSetupReceive() {
+    if (getPcb()) {
+        getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
+        pcb = nullptr;
+    }
+    if (getRecvPbuf()) {
+        forgetRecvPbuf();
+    }
+}
+
 bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
     // TODO: also set recvPbuf to rxArrayOut, and free recvPbuf
     bool success = false;
+    struct pbuf *recvPbuf = nullptr;
 
-    if (!getOsInterface()) {
+    if (!getUdpInterface() || !getOsInterface()) {
         goto out;
     }
 
     waitReceiveCplt();
 
-    if (!packetToBytes(rxArrayOut, numBytes, getRecvPbuf())) {
+    recvPbuf = getRecvPbuf();
+
+    if (!packetToBytes(rxArrayOut, numBytes, recvPbuf)) {
         goto out;
     }
 
@@ -137,10 +145,8 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
 
   out:
 
-    if (getRecvPbuf()) {
-        if ((success = getUdpInterface()->pbufFree(getRecvPbuf()) > (u8_t) 0)) {
-            setRecvPbuf(nullptr);
-        }
+    if (recvPbuf) {
+        forgetRecvPbuf();
     }
 
     return success;
@@ -253,6 +259,15 @@ void UdpDriver::setRecvPbuf(struct pbuf *pPbuf) {
         ;
     }
     recvPbuf = pPbuf;
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
+}
+
+void UdpDriver::forgetRecvPbuf() {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
+    getUdpInterface()->pbufFree(recvPbuf);
+    setRecvPbuf(nullptr);
     getOsInterface()->OS_osMutexRelease(recvPbufMutex);
 }
 
