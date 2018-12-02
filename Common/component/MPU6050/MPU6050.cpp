@@ -52,7 +52,7 @@ constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
 // ----------------------------------------------------------------------------
 // We only need these functions for a silicon issue that affects the F446RE and
 // not the F767ZI
-#ifdef STM32F446xx
+#if defined(USE_I2C_SILICON_BUG_FIX)
 // Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
 // I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
 // not been thoroughly tested, but we know it works
