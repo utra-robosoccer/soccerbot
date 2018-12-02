@@ -9,7 +9,7 @@
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-    respawn="false" output="screen">
+    respawn="true" output="screen">
     <remap from="/joint_states" to="/soccerbot/joint_states" />
   </node>
 
