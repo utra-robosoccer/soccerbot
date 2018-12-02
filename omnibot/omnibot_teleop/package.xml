@@ -15,5 +15,4 @@
   <depend>joy</depend>
   <depend>kobuki_safety_controller</depend>
   <depend>yocs_velocity_smoother</depend>
-  <!--<depend>omnibot_bringup</depend>-->
 </package>
