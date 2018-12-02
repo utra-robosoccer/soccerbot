@@ -48,8 +48,8 @@ public:
     const u16_t                         getPortPc() const;
     const udp_interface::UdpInterface*  getUdpInterface() const;
     const os::OsInterface*              getOsInterface() const;
-    const struct udp_pcb*               getPcb() const;
-    const struct pbuf*                  getPbuf() const;
+    struct udp_pcb*                     getPcb() const;
+    struct pbuf*                        getRecvPbuf() const;
 
 private:
     /* UdpDriver configuration. */
@@ -64,12 +64,13 @@ private:
 
     /* Data modified internally by the Raw API. */
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
-    const struct udp_pcb *pcb   = nullptr;
-    const struct pbuf *recvPbuf = nullptr;
-
+    struct udp_pcb *pcb     = nullptr;
+    struct pbuf *recvPbuf   = nullptr;
     /* Synchronization. */
-    mutable osSemaphoreId recvSemaphore; // TODO: replace with binary semaphore-style task notification.
+    mutable osSemaphoreId recvSemaphore; /* TODO: replace with binary semaphore-style task notification. */
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
+    mutable osMutexId recvPbufMutex;
+    mutable osStaticMutexDef_t recvPbufMutexControlBlock;
 };
 
 } // end namespace udp_driver

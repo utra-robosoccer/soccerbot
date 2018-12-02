@@ -16,7 +16,6 @@
 // TODO: test coverage for UdpDriver receive and transmit failure/success paths, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs.
 // TODO: check against template and add doxygen comments
-// TODO: mutex around recvPbuf, add destructor
 
 #include "UdpDriver.h"
 
@@ -78,6 +77,10 @@ UdpDriver::~UdpDriver() {
         getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
         pcb = nullptr;
     }
+    if (getRecvPbuf()) {
+        getUdpInterface()->pbufFree(getRecvPbuf());
+        setRecvPbuf(nullptr);
+    }
 }
 
 bool UdpDriver::setup(udp_recv_fn recvCallback) {
@@ -85,6 +88,11 @@ bool UdpDriver::setup(udp_recv_fn recvCallback) {
 
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
     if ((recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1)) == NULL) {
+        return false;
+    }
+
+    osMutexStaticDef(UdpDriverRecvPbuf, &recvPbufMutexControlBlock);
+    if ((recvPbufMutex = getOsInterface()->OS_osMutexCreate(osMutex(UdpDriverRecvPbuf))) == NULL) {
         return false;
     }
 
@@ -121,9 +129,19 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
 
     waitReceiveCplt();
 
+    if (!packetToBytes(rxArrayOut, numBytes, getRecvPbuf())) {
+        goto out;
+    }
+
     success = true;
 
   out:
+
+    if (getRecvPbuf()) {
+        if ((success = getUdpInterface()->pbufFree(getRecvPbuf()) > (u8_t) 0)) {
+            setRecvPbuf(nullptr);
+        }
+    }
 
     return success;
 }
@@ -156,7 +174,9 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
   out:
     if (allocPbuf) {
         /* Error if zero pbufs freed for the one just allocated for Tx. */
-        success = getUdpInterface()->pbufFree(allocPbuf) > (u8_t) 0;
+        if ((success = getUdpInterface()->pbufFree(allocPbuf) > (u8_t) 0)) {
+            allocPbuf = nullptr;
+        }
     }
 
     return success;
@@ -182,7 +202,7 @@ void UdpDriver::waitReceiveCplt() {
 
 /* Copy the received packet to byteArrayOut, to a maximum of numBytes. */
 bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const {
-    if (!byteArrayOut) {
+    if (!byteArrayOut || !pPbuf) {
         return false;
     }
 
@@ -192,7 +212,7 @@ bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, stru
 
 /* Copy byteArrayIn of size numBytes to the transmit packet. */
 bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) {
-    if (!byteArrayIn) {
+    if (!byteArrayIn || !pPbuf) {
         return false;
     }
 
@@ -215,12 +235,25 @@ const u16_t UdpDriver::getPortPc() const {
     return portPc;
 }
 
-const struct udp_pcb* UdpDriver::getPcb() const {
+struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
 }
 
+struct pbuf* UdpDriver::getRecvPbuf() const {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
+    struct pbuf *pPbuf = recvPbuf;
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
+    return pPbuf;
+}
+
 void UdpDriver::setRecvPbuf(struct pbuf *pPbuf) {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
     recvPbuf = pPbuf;
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
 }
 
 } // end namespace udp_driver
