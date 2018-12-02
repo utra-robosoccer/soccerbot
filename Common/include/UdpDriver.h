@@ -35,13 +35,12 @@ public:
     bool setup(udp_recv_fn recvCallback);
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
-    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes);
-    bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const;
+    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf);
+    bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
     void signalReceiveCplt();
     void waitReceiveCplt();
 
-    void setRxPbuf(struct pbuf *rxPbufIn);
-    void setTxPbuf(struct pbuf *txPbufIn);
+    void setRecvPbuf(struct pbuf *pPbuf);
 
     const ip_addr_t                     getIpaddr() const;
     const ip_addr_t                     getIpaddrPc() const;
@@ -50,8 +49,7 @@ public:
     const udp_interface::UdpInterface*  getUdpInterface() const;
     const os::OsInterface*              getOsInterface() const;
     const struct udp_pcb*               getPcb() const;
-    struct pbuf*                        getRxPbuf() const;
-    struct pbuf*                        getTxPbuf() const;
+    const struct pbuf*                  getPbuf() const;
 
 private:
     /* UdpDriver configuration. */
@@ -67,11 +65,9 @@ private:
     /* Data modified internally by the Raw API. */
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
     const struct udp_pcb *pcb   = nullptr;
-    struct pbuf *rxPbuf         = nullptr;
-    struct pbuf *txPbuf         = nullptr;
+    const struct pbuf *recvPbuf = nullptr;
 
     /* Synchronization. */
-    /* TODO: may need to protect rxPbuf since it is modified by the callback. */
     mutable osSemaphoreId recvSemaphore; // TODO: replace with binary semaphore-style task notification.
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
 };

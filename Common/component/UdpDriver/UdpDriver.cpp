@@ -16,22 +16,36 @@
 // TODO: test coverage for UdpDriver receive and transmit failure/success paths, set up fixtures to test passing
 //       data between rx/txBuffers and pbufs.
 // TODO: check against template and add doxygen comments
-// TODO: add in correct semaphores
-// TODO: re-architect so pbufs are dealt with outside (not allocated and freed here)
+// TODO: mutex around recvPbuf, add destructor
 
 #include "UdpDriver.h"
 
 namespace {
 
-void defaultRecvCallback(void *arg,
-                  struct udp_pcb *pcb,
-                  struct pbuf *packet,
-                  const ip_addr_t *addr,
-                  u16_t port)
+static void defaultRecvCallback(void *arg,
+                                struct udp_pcb *pcb,
+                                struct pbuf *pPbuf,
+                                const ip_addr_t *addr,
+                                u16_t port)
 {
     udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
-    caller->setRxPbuf(packet);
+    caller->setRecvPbuf(pPbuf);
     caller->signalReceiveCplt();
+}
+
+static bool transmitImpl(udp_driver::UdpDriver* caller, struct pbuf * pPbuf) {
+    ip_addr_t addr = caller->getIpaddrPc();
+
+    if (caller->getUdpInterface()->udpConnect(const_cast<struct udp_pcb *>(caller->getPcb()),
+            &addr, caller->getPortPc()) != ERR_OK) {
+        return false;
+    }
+    if (caller->getUdpInterface()->udpSend(const_cast<struct udp_pcb *>(caller->getPcb()), pPbuf) != ERR_OK) {
+        return false;
+    }
+    caller->getUdpInterface()->udpDisconnect(const_cast<struct udp_pcb *>(caller->getPcb()));
+
+    return true;
 }
 
 } // end anonymous namespace
@@ -63,14 +77,6 @@ UdpDriver::~UdpDriver() {
     if (getPcb()) {
         getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
         pcb = nullptr;
-    }
-    if (getRxPbuf()) {
-        getUdpInterface()->pbufFree(getRxPbuf());
-        rxPbuf = nullptr;
-    }
-    if (getTxPbuf()) {
-        getUdpInterface()->pbufFree(getTxPbuf());
-        txPbuf = nullptr;
     }
 }
 
@@ -106,27 +112,18 @@ bool UdpDriver::setup(udp_recv_fn recvCallback) {
 }
 
 bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
+    // TODO: also set recvPbuf to rxArrayOut, and free recvPbuf
     bool success = false;
 
-    if (!getUdpInterface()) {
+    if (!getOsInterface()) {
         goto out;
     }
 
     waitReceiveCplt();
 
-    if (!packetToBytes(rxArrayOut, numBytes)) {
-        goto out;
-    }
-
     success = true;
 
   out:
-    if (getRxPbuf()) {
-        /* If zero pbufs were freed here, where did the allocated one for Rx go? Consider this an error. */
-        if ((success = getUdpInterface()->pbufFree(getRxPbuf()) > (u8_t) 0)) {
-            rxPbuf = nullptr;
-        }
-    }
 
     return success;
 }
@@ -136,7 +133,7 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
 bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
     bool success = false;
 
-    if (!getUdpInterface()) {
+    if (!getUdpInterface() || !getOsInterface()) {
         return false;
     }
 
@@ -146,28 +143,20 @@ bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
         goto out;
     }
 
-    setTxPbuf(allocPbuf);
-
-    if (!bytesToPacket(txArrayIn, numBytes)) {
-        goto out;
-    }
-    if (getUdpInterface()->udpConnect(const_cast<struct udp_pcb *>(getPcb()), &ipaddrPc, getPortPc()) != ERR_OK) {
-        goto out;
-    }
-    if (getUdpInterface()->udpSend(const_cast<struct udp_pcb *>(getPcb()), getTxPbuf()) != ERR_OK) {
+    if (!bytesToPacket(txArrayIn, numBytes, allocPbuf)) {
         goto out;
     }
 
-    getUdpInterface()->udpDisconnect(const_cast<struct udp_pcb *>(getPcb()));
+    if (!transmitImpl(this, allocPbuf)) {
+        goto out;
+    }
 
     success = true;
 
   out:
-    if (getTxPbuf()) {
+    if (allocPbuf) {
         /* Error if zero pbufs freed for the one just allocated for Tx. */
-        if ((success = getUdpInterface()->pbufFree(getTxPbuf()) > (u8_t) 0)) {
-            txPbuf = nullptr;
-        }
+        success = getUdpInterface()->pbufFree(allocPbuf) > (u8_t) 0;
     }
 
     return success;
@@ -181,22 +170,6 @@ const os::OsInterface* UdpDriver::getOsInterface() const {
     return osInterface;
 }
 
-void UdpDriver::setRxPbuf(struct pbuf *rxPbufIn) {
-    rxPbuf = rxPbufIn;
-}
-
-void UdpDriver::setTxPbuf(struct pbuf *txPbufIn) {
-    txPbuf = txPbufIn;
-}
-
-struct pbuf* UdpDriver::getRxPbuf() const {
-    return rxPbuf;
-}
-
-struct pbuf* UdpDriver::getTxPbuf() const {
-    return txPbuf;
-}
-
 void UdpDriver::signalReceiveCplt() {
     getOsInterface()->OS_osSemaphoreRelease(recvSemaphore); // XXX
 }
@@ -208,22 +181,22 @@ void UdpDriver::waitReceiveCplt() {
 }
 
 /* Copy the received packet to byteArrayOut, to a maximum of numBytes. */
-bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const {
+bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const {
     if (!byteArrayOut) {
         return false;
     }
 
     /* Success only if a nonzero number of bytes was copied. */
-	return (getUdpInterface()->pbufCopyPartial(getRxPbuf(), byteArrayOut, numBytes, 0) > (u16_t) 0);
+	return (getUdpInterface()->pbufCopyPartial(pPbuf, byteArrayOut, numBytes, 0) > (u16_t) 0);
 }
 
 /* Copy byteArrayIn of size numBytes to the transmit packet. */
-bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes) {
+bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) {
     if (!byteArrayIn) {
         return false;
     }
 
-	return (getUdpInterface()->pbufTake(getTxPbuf(), byteArrayIn, numBytes) == ERR_OK);
+	return (getUdpInterface()->pbufTake(pPbuf, byteArrayIn, numBytes) == ERR_OK);
 }
 
 const ip_addr_t UdpDriver::getIpaddr() const {
@@ -244,6 +217,10 @@ const u16_t UdpDriver::getPortPc() const {
 
 const struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
+}
+
+void UdpDriver::setRecvPbuf(struct pbuf *pPbuf) {
+    recvPbuf = pPbuf;
 }
 
 } // end namespace udp_driver
