@@ -76,6 +76,10 @@ UdpDriver::~UdpDriver() {
 }
 
 bool UdpDriver::initialize() {
+    if (!getUdpInterface() || !getOsInterface()) {
+        return false;
+    }
+
     osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
     if ((recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1)) == NULL) {
         return false;
@@ -90,10 +94,6 @@ bool UdpDriver::initialize() {
 
 bool UdpDriver::setupReceive(udp_recv_fn recvCallback) {
     bool success = false;
-
-    if (!getUdpInterface() || !getOsInterface()) {
-        return false;
-    }
 
     pcb = getUdpInterface()->udpNew();
 
@@ -124,20 +124,16 @@ void UdpDriver::unSetupReceive() {
     }
 }
 
+/* rxArrayOut must be at least numBytes large. */
 bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
-    // TODO: also set recvPbuf to rxArrayOut, and free recvPbuf
     bool success = false;
     struct pbuf *recvPbuf = nullptr;
-
-    if (!getUdpInterface() || !getOsInterface()) {
-        goto out;
-    }
 
     waitReceiveCplt();
 
     recvPbuf = getRecvPbuf();
 
-    if (!packetToBytes(rxArrayOut, numBytes, recvPbuf)) {
+    if (packetToBytes(rxArrayOut, numBytes, recvPbuf) <= (u16_t) 0) {
         goto out;
     }
 
@@ -156,10 +152,6 @@ bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
  *  the pbuf to the PC. Cleans up the pbuf internally. */
 bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
     bool success = false;
-
-    if (!getUdpInterface() || !getOsInterface()) {
-        return false;
-    }
 
     /* TODO: see if this can be allocated once at setup, if numBytes is known and unchanging. */
     struct pbuf *allocPbuf = getUdpInterface()->pbufAlloc(PBUF_TRANSPORT, numBytes, PBUF_RAM);
@@ -207,17 +199,16 @@ void UdpDriver::waitReceiveCplt() {
 }
 
 /* Copy the received packet to byteArrayOut, to a maximum of numBytes. */
-bool UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const {
+u16_t UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const {
     if (!byteArrayOut || !pPbuf) {
-        return false;
+        return 0;
     }
 
-    /* Success only if a nonzero number of bytes was copied. */
-	return (getUdpInterface()->pbufCopyPartial(pPbuf, byteArrayOut, numBytes, 0) > (u16_t) 0);
+	return getUdpInterface()->pbufCopyPartial(pPbuf, byteArrayOut, numBytes, 0);
 }
 
 /* Copy byteArrayIn of size numBytes to the transmit packet. */
-bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) {
+bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const {
     if (!byteArrayIn || !pPbuf) {
         return false;
     }

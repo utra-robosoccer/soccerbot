@@ -37,13 +37,14 @@ public:
     void unSetupReceive();
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
-    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf);
-    bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
+    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const;
+    u16_t packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
     void signalReceiveCplt();
     void waitReceiveCplt();
 
-    void setRecvPbuf(struct pbuf *pPbuf);
-    void forgetRecvPbuf();
+    struct pbuf*    getRecvPbuf() const;
+    void            setRecvPbuf(struct pbuf *pPbuf);
+    void            forgetRecvPbuf();
 
     const ip_addr_t                     getIpaddr() const;
     const ip_addr_t                     getIpaddrPc() const;
@@ -52,7 +53,6 @@ public:
     const udp_interface::UdpInterface*  getUdpInterface() const;
     const os::OsInterface*              getOsInterface() const;
     struct udp_pcb*                     getPcb() const;
-    struct pbuf*                        getRecvPbuf() const;
 
 private:
     /* UdpDriver configuration. */
@@ -69,6 +69,7 @@ private:
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
     struct udp_pcb *pcb     = nullptr;
     struct pbuf *recvPbuf   = nullptr;
+
     /* Synchronization. */
     mutable osSemaphoreId recvSemaphore; /* TODO: replace with binary semaphore-style task notification. */
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
