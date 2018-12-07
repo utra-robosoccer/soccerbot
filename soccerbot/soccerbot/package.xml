@@ -13,7 +13,7 @@
   <depend>soccer_gazebo</depend>
   <depend>soccer_msgs</depend>
   <depend>soccer_transforms</depend>
-  <depend>soccer_communication</depend>
+  <depend>soccer_team_communication</depend>
   <depend>soccer_common</depend>
   <depend>soccer_hardware</depend>
   <depend>usb_cam</depend>
