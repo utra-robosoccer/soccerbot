@@ -38,7 +38,6 @@ namespace {
 // Variables
 // ----------------------------------------------------------------------------
 constexpr size_t BUFFER_SIZE_TEST = 100;
-MockUartInterface uart_if;
 
 // Classes & structs
 // ----------------------------------------------------------------------------
@@ -56,12 +55,13 @@ protected:
     uint8_t raw_buff_[BUFFER_SIZE_TEST] = { };
     const uint16_t transmission_size_ = BUFFER_SIZE_TEST;
     const size_t buffer_size_ = BUFFER_SIZE_TEST;
-    CircularDmaBuffer * buff_ = nullptr;
+    CircularDmaBuffer* buff_ = nullptr;
+    MockUartInterface uart_if;
 };
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST(CircularDmaBufferShould, InitializeMembersZeroWithDefaultConstructor) {
+TEST_F(CircularDmaBufferTest, InitializeMembersZeroWithDefaultConstructor) {
     CircularDmaBuffer buff;
 
     EXPECT_EQ(buff.getUartHandle(), nullptr);
@@ -73,7 +73,7 @@ TEST(CircularDmaBufferShould, InitializeMembersZeroWithDefaultConstructor) {
     EXPECT_EQ(buff.getBuffTail(), 0);
 }
 
-TEST(CircularDmaBufferShould, ConstInitializeMembersWithParameterizedConstructor) {
+TEST_F(CircularDmaBufferTest, ConstInitializeMembersWithParameterizedConstructor) {
     constexpr size_t BUFFER_SIZE = 20;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
@@ -92,7 +92,7 @@ TEST(CircularDmaBufferShould, ConstInitializeMembersWithParameterizedConstructor
     EXPECT_EQ(buff.getBuffTail(), 0);
 }
 
-TEST(CircularDmaBufferShould, SucceedSelfCheck) {
+TEST_F(CircularDmaBufferTest, SucceedSelfCheck) {
     constexpr size_t BUFFER_SIZE = 20;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
@@ -107,7 +107,7 @@ TEST(CircularDmaBufferShould, SucceedSelfCheck) {
 
 // TODO: define different test fixtures with variants of m_transmission_size vs. m_buffer_size comparison?
 
-TEST(CircularDmaBufferShould, FailSelfCheck) {
+TEST_F(CircularDmaBufferTest, FailSelfCheck) {
     constexpr size_t BUFFER_SIZE = 8;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
@@ -120,7 +120,7 @@ TEST(CircularDmaBufferShould, FailSelfCheck) {
     EXPECT_FALSE(buff.selfCheck());
 }
 
-TEST(CircularDmaBufferShould, Initiate) {
+TEST_F(CircularDmaBufferTest, Initiate) {
     constexpr size_t BUFFER_SIZE = 20;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
@@ -137,7 +137,7 @@ TEST(CircularDmaBufferShould, Initiate) {
     EXPECT_TRUE(buff.selfCheck());
 }
 
-TEST(CircularDmaBufferShould, AbortReinitiateIfError) {
+TEST_F(CircularDmaBufferTest, AbortReinitiateIfError) {
     constexpr size_t BUFFER_SIZE = 20;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
@@ -154,7 +154,7 @@ TEST(CircularDmaBufferShould, AbortReinitiateIfError) {
     buff.reinitiateIfError();
 }
 
-TEST(CircularDmaBufferShould, NotAbortReinitiateIfNoError) {
+TEST_F(CircularDmaBufferTest, NotAbortReinitiateIfNoError) {
     constexpr size_t BUFFER_SIZE = 20;
     UART_HandleTypeDef huart;
     uint8_t raw_buff[BUFFER_SIZE] = { };
