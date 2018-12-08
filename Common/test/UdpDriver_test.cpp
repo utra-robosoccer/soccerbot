@@ -127,7 +127,7 @@ TEST(UdpDriverShould, FailInitializeWhenMutexCreateUnsuccessful) {
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
     EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(AnyNumber()).WillOnce(Return((osSemaphoreId) 1));
-    EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(1).WillOnce(Return(NULL));
+    EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(1).WillOnce(Return((osMutexId) NULL));
 
     UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
             (u16_t) 6340, &udp_if, &os_if);
@@ -141,7 +141,7 @@ TEST(UdpDriverShould, FailInitializeWhenSemaphoreCreateUnsuccessful) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
-    EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return(NULL));
+    EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) NULL));
     EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(AnyNumber()).WillOnce(Return((osMutexId) 1));
 
     UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
@@ -154,8 +154,6 @@ TEST(UdpDriverShould, SucceedSetupReceive) {
     MockUdpInterface udp_if;
     MockOsInterface os_if;
     struct udp_pcb udpPcb;
-
-    EXPECT_CALL(udp_if, udpRemove).Times(1);
 
     EXPECT_CALL(udp_if, udpRecv(_, _, _)).Times(1);
     EXPECT_CALL(udp_if, udpBind(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
@@ -267,4 +265,112 @@ TEST(UdpDriverShould, FailReceiveZeroBytesCopied) {
     udpDriverUnderTest.setRecvPbuf(&rxPbuf);
 
     ASSERT_FALSE(udpDriverUnderTest.receive(rxBuff, sizeof(rxBuff)));
+}
+
+TEST(UdpDriverShould, SucceedTransmit) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    uint8_t txBuff[10] = {};
+    struct pbuf txPbuf;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, pbufFree(&txPbuf)).Times(1).WillOnce(Return((u8_t) 1));
+    EXPECT_CALL(udp_if, udpDisconnect(_)).Times(1);
+    EXPECT_CALL(udp_if, udpSend(_, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, udpConnect(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, pbufTake(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return(&txPbuf));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_TRUE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
+}
+
+TEST(UdpDriverShould, FailTransmitWhenTxBuffNull) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    struct pbuf txPbuf;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, pbufTake(_, _, _)).Times(0);
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return(&txPbuf));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.transmit(nullptr, 10));
+}
+
+TEST(UdpDriverShould, FailTransmitWhenPbufAllocUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    uint8_t txBuff[10] = {};
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, pbufFree(_)).Times(0);
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return((struct pbuf *) NULL));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
+}
+
+TEST(UdpDriverShould, FailTransmitWhenPbufTakeUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    uint8_t txBuff[10] = {};
+    struct pbuf txPbuf;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, pbufTake(_, _, _)).Times(1).WillOnce(Return(ERR_MEM));
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return(&txPbuf));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
+}
+
+TEST(UdpDriverShould, FailTransmitWhenUdpConnectUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    uint8_t txBuff[10] = {};
+    struct pbuf txPbuf;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, udpConnect(_, _, _)).Times(1).WillOnce(Return(ERR_VAL));
+    EXPECT_CALL(udp_if, pbufTake(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return(&txPbuf));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
+}
+
+TEST(UdpDriverShould, FailTransmitWhenUdpSendUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    uint8_t txBuff[10] = {};
+    struct pbuf txPbuf;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(udp_if, udpDisconnect(_)).Times(1);
+    EXPECT_CALL(udp_if, udpSend(_, _)).Times(1).WillOnce(Return(ERR_VAL));
+    EXPECT_CALL(udp_if, udpConnect(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, pbufTake(_, _, _)).Times(1).WillOnce(Return(ERR_OK));
+    EXPECT_CALL(udp_if, pbufAlloc(PBUF_TRANSPORT, _, PBUF_RAM)).Times(1).WillOnce(Return(&txPbuf));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
