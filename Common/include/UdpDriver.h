@@ -32,19 +32,20 @@ public:
               const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
+    /* User-facing - typically call directly. */
     bool initialize();
     bool setupReceive(udp_recv_fn recvCallback);
-    void unSetupReceive();
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
+
+    /* Utility - public but typically no need to call directly. */
     bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const;
     u16_t packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
     void signalReceiveCplt();
     void waitReceiveCplt();
 
-    struct pbuf*    getRecvPbuf() const;
-    void            setRecvPbuf(struct pbuf *pPbuf);
-    void            forgetRecvPbuf();
+    /* Accessors - public but typically no need to call directly. */
+    void setRecvPbuf(struct pbuf *pPbuf);
 
     const ip_addr_t                     getIpaddr() const;
     const ip_addr_t                     getIpaddrPc() const;
@@ -53,6 +54,10 @@ public:
     const udp_interface::UdpInterface*  getUdpInterface() const;
     const os::OsInterface*              getOsInterface() const;
     struct udp_pcb*                     getPcb() const;
+    struct pbuf*                        getRecvPbuf() const;
+
+    void forgetPcb();
+    void forgetRecvPbuf();
 
 private:
     /* UdpDriver configuration. */

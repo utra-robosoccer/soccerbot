@@ -75,6 +75,8 @@ UdpDriver::~UdpDriver() {
 
 }
 
+/* Initialize UdpDriver, and return false if
+ * critical checks fail. */
 bool UdpDriver::initialize() {
     if (!getUdpInterface() || !getOsInterface()) {
         return false;
@@ -89,6 +91,7 @@ bool UdpDriver::initialize() {
     if ((recvPbufMutex = getOsInterface()->OS_osMutexCreate(osMutex(UdpDriverRecvPbuf))) == NULL) {
         return false;
     }
+
     return true;
 }
 
@@ -107,21 +110,10 @@ bool UdpDriver::setupReceive(udp_recv_fn recvCallback) {
         udp_recv_fn callback = (recvCallback == nullptr) ? defaultRecvCallback : recvCallback;
         getUdpInterface()->udpRecv(const_cast<struct udp_pcb *>(getPcb()), callback, this);
     } else {
-        getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
-        pcb = nullptr;
+        forgetPcb();
     }
 
     return success;
-}
-
-void UdpDriver::unSetupReceive() {
-    if (getPcb()) {
-        getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
-        pcb = nullptr;
-    }
-    if (getRecvPbuf()) {
-        forgetRecvPbuf();
-    }
 }
 
 /* rxArrayOut must be at least numBytes large. */
@@ -260,6 +252,11 @@ void UdpDriver::forgetRecvPbuf() {
     getUdpInterface()->pbufFree(recvPbuf);
     setRecvPbuf(nullptr);
     getOsInterface()->OS_osMutexRelease(recvPbufMutex);
+}
+
+void UdpDriver::forgetPcb() {
+    getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
+    pcb = nullptr;
 }
 
 } // end namespace udp_driver

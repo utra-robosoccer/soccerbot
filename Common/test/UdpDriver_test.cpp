@@ -25,6 +25,7 @@ using mocks::MockOsInterface;
 
 using ::testing::Return;
 using ::testing::_;
+using ::testing::AnyNumber;
 
 
 
@@ -82,7 +83,74 @@ TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
 }
 
-TEST(UdpDriverShould, SucceedSetupReceiveAndUnSetupReceive) {
+TEST(UdpDriverShould, SucceedInitialize) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return((osSemaphoreId) 1));
+    EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(1).WillOnce(Return((osMutexId) 1));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_TRUE(udpDriverUnderTest.initialize());
+}
+
+TEST(UdpDriverShould, FailInitializeWhenUdpInterfaceNull) {
+    MockOsInterface os_if;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, nullptr, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.initialize());
+}
+
+TEST(UdpDriverShould, FailInitializeWhenOsInterfaceNull) {
+    MockUdpInterface udp_if;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, nullptr);
+
+    ASSERT_FALSE(udpDriverUnderTest.initialize());
+}
+
+TEST(UdpDriverShould, FailInitializeWhenMutexCreateUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(AnyNumber()).WillOnce(Return((osSemaphoreId) 1));
+    EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(1).WillOnce(Return(NULL));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.initialize());
+}
+
+TEST(UdpDriverShould, FailInitializeWhenSemaphoreCreateUnsuccessful) {
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+    const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
+    const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
+
+    EXPECT_CALL(os_if, OS_osSemaphoreCreate(_, _)).Times(1).WillOnce(Return(NULL));
+    EXPECT_CALL(os_if, OS_osMutexCreate(_)).Times(AnyNumber()).WillOnce(Return((osMutexId) 1));
+
+    UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
+            (u16_t) 6340, &udp_if, &os_if);
+
+    ASSERT_FALSE(udpDriverUnderTest.initialize());
+}
+
+TEST(UdpDriverShould, SucceedSetupReceive) {
     MockUdpInterface udp_if;
     MockOsInterface os_if;
     struct udp_pcb udpPcb;
@@ -97,10 +165,6 @@ TEST(UdpDriverShould, SucceedSetupReceiveAndUnSetupReceive) {
             &udp_if, &os_if);
     ASSERT_TRUE(udpDriverUnderTest.setupReceive(nullptr));
     EXPECT_EQ(udpDriverUnderTest.getPcb(), &udpPcb);
-
-    udpDriverUnderTest.unSetupReceive();
-    EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
-    EXPECT_EQ(udpDriverUnderTest.getRecvPbuf(), nullptr);
 }
 
 TEST(UdpDriverShould, FailSetupReceiveOnUdpNew) {
