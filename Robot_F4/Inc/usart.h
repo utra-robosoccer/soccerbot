@@ -83,8 +83,6 @@ void MX_USART6_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
-void SystemConfDebug_Restart_UARTs();
-
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
