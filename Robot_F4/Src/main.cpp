@@ -57,8 +57,6 @@
 
 /* USER CODE BEGIN Includes */
 
-#include "SystemConf.h"
-
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -119,11 +117,6 @@ int main(void)
   MX_USART3_UART_Init();
   MX_UART5_Init();
   /* USER CODE BEGIN 2 */
-
-#if defined(USE_DEBUG_UART)
-#pragma "warning: check that the UART configuration in main.cpp is correct!"
-  SystemConfDebug_Restart_UARTs();
-#endif
 
   /* USER CODE END 2 */
 

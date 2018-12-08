@@ -63,11 +63,11 @@ extern UART_HandleTypeDef huart6;
  * for the swapped UARTS is being set in StartCmdTask.
  */
 #if defined(STM32F446xx)
-// #define USE_DEBUG_UART
+//#define USE_DEBUG_UART
 
 #elif defined(STM32F767xx)
 /* TODO: have USE_DEBUG_UART undefined by default (i.e. commented out here)
-once F7 board is ready. */
+once F7 custom board is ready (not the development board). */
 #define USE_DEBUG_UART
 
 #endif
