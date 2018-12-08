@@ -108,6 +108,7 @@ bool CircularDmaBuffer::dataAvail() const {
 
 /**
  * @brief Reads new data in m_buff_p into out_buff, without updating m_buff_tail.
+ * @param out_buff An array where the read data is written to, which must be of sufficient size.
  * @return number of bytes read from m_buff_p into out_buff.
  */
 size_t CircularDmaBuffer::peekBuff(uint8_t *out_buff) const {
@@ -117,6 +118,7 @@ size_t CircularDmaBuffer::peekBuff(uint8_t *out_buff) const {
 
 /**
  * @brief Reads new data in m_buff_p into out_buff, updating the m_buff_tail.
+ * @param out_buff An array where the read data is written to, which must be of sufficient size.
  * @return number of bytes read from m_buff_p into out_buff.
  */
 size_t CircularDmaBuffer::readBuff(uint8_t *out_buff) {
