@@ -13,8 +13,6 @@
 /* TODO: licensing terms for projects we are making use of e.g. googletest? */
 /* TODO: consider refactoring setup, receive, transmit if making the class support >1 UDP connection. */
 
-// TODO: test coverage for UdpDriver receive and transmit failure/success paths, set up fixtures to test passing
-//       data between rx/txBuffers and pbufs.
 // TODO: check against template and add doxygen comments
 
 #include "UdpDriver.h"
@@ -33,18 +31,24 @@ static void defaultRecvCallback(void *arg,
 }
 
 static bool transmitImpl(udp_driver::UdpDriver* caller, struct pbuf * pPbuf) {
-    ip_addr_t addr = caller->getIpaddrPc();
+    const ip_addr_t addr = caller->getIpaddrPc();
+    bool success = false;
 
     if (caller->getUdpInterface()->udpConnect(const_cast<struct udp_pcb *>(caller->getPcb()),
             &addr, caller->getPortPc()) != ERR_OK) {
-        return false;
+        goto out;
     }
     if (caller->getUdpInterface()->udpSend(const_cast<struct udp_pcb *>(caller->getPcb()), pPbuf) != ERR_OK) {
-        return false;
+        goto disconnect;
     }
+
+    success = true;
+
+  disconnect:
     caller->getUdpInterface()->udpDisconnect(const_cast<struct udp_pcb *>(caller->getPcb()));
 
-    return true;
+  out:
+    return success;
 }
 
 } // end anonymous namespace
