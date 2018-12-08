@@ -2,7 +2,6 @@
   *****************************************************************************
   * @file    UdpDriver.h
   * @author  Robert Fairley
-  * @brief   Management of simple UDP rx/tx operations.
   *
   * @defgroup Header
   * @ingroup  udp_driver
@@ -10,17 +9,31 @@
   *****************************************************************************
   */
 
+
+
+
 #ifndef UDP_DRIVER_H
 #define UDP_DRIVER_H
 
-#include <UdpInterface.h>
-#include <OsInterface.h>
 
+
+
+/********************************* Includes **********************************/
+#include "UdpInterface.h"
+#include "OsInterface.h"
+
+
+
+/************************** udp_driver **************************/
 namespace udp_driver {
 
+// Constants
+// ----------------------------------------------------------------------------
 constexpr TickType_t SEMAPHORE_WAIT_NUM_MS = 10;
 constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(SEMAPHORE_WAIT_NUM_MS);
 
+// Classes and structs
+// ----------------------------------------------------------------------------
 class UdpDriver {
 public:
     UdpDriver();
@@ -32,15 +45,20 @@ public:
               const os::OsInterface *osInterfaceIn);
     ~UdpDriver();
 
-    bool setup();
+    /* User-facing - typically call directly. */
+    bool initialize();
+    bool setupReceive(udp_recv_fn recvCallback);
     bool receive(uint8_t *rxArrayOut, const size_t numBytes);
     bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
-    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes);
-    bool packetToBytes(uint8_t *byteArrayOut, const size_t numBytes) const;
-    void signalReceiveCplt();
 
-    void setRxPbuf(struct pbuf *rxPbufIn);
-    void setTxPbuf(struct pbuf *txPbufIn);
+    /* Utility - public but typically no need to call directly. */
+    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const;
+    u16_t packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
+    void signalReceiveCplt();
+    void waitReceiveCplt();
+
+    /* Accessors - public but typically no need to call directly. */
+    void setRecvPbuf(struct pbuf *pPbuf);
 
     const ip_addr_t                     getIpaddr() const;
     const ip_addr_t                     getIpaddrPc() const;
@@ -48,9 +66,11 @@ public:
     const u16_t                         getPortPc() const;
     const udp_interface::UdpInterface*  getUdpInterface() const;
     const os::OsInterface*              getOsInterface() const;
-    const struct udp_pcb*               getPcb() const;
-    struct pbuf*                        getRxPbuf() const;
-    struct pbuf*                        getTxPbuf() const;
+    struct udp_pcb*                     getPcb() const;
+    struct pbuf*                        getRecvPbuf() const;
+
+    void forgetPcb();
+    void forgetRecvPbuf();
 
 private:
     /* UdpDriver configuration. */
@@ -65,14 +85,14 @@ private:
 
     /* Data modified internally by the Raw API. */
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
-    const struct udp_pcb *pcb   = nullptr;
-    struct pbuf *rxPbuf         = nullptr;
-    struct pbuf *txPbuf         = nullptr;
+    struct udp_pcb *pcb     = nullptr;
+    struct pbuf *recvPbuf   = nullptr;
 
     /* Synchronization. */
-    /* TODO: may need to protect rxPbuf since it is modified by the callback. */
-    mutable osSemaphoreId recvSemaphore; // TODO: replace with binary semaphore-style task notification.
+    mutable osSemaphoreId recvSemaphore; /* TODO: replace with binary semaphore-style task notification. */
     mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
+    mutable osMutexId recvPbufMutex;
+    mutable osStaticMutexDef_t recvPbufMutexControlBlock;
 };
 
 } // end namespace udp_driver
