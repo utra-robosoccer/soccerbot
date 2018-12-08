@@ -2,9 +2,9 @@
   *****************************************************************************
   * @file    UdpDriver_test.cpp
   * @author  Robert Fairley
-  * @brief   Unit tests for UDP driver.
   *
   * @defgroup udp_driver_test
+  * @ingroup  udp_driver
   * @brief    Unit tests for the UdpDriver class.
   * @{
   *****************************************************************************
@@ -12,12 +12,18 @@
 
 /* TODO: investigate threaded tests. */
 
+
+
+/********************************* Includes **********************************/
 #include <MockOsInterface.h>
 #include <MockUdpInterface.h>
 #include <UdpDriver.h>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+
+
 
 using udp_driver::UdpDriver;
 using mocks::MockUdpInterface;
@@ -30,30 +36,25 @@ using ::testing::AnyNumber;
 
 
 
+/* NOTE: needs to be defined outside of anonymous
+namespace so gtest can use it. */
 bool operator==(const ip_addr_t& lhs, const ip_addr_t& rhs) {
     return lhs.addr == rhs.addr;
 }
 
-namespace {
 
+
+
+/******************************** File-local *********************************/
+namespace {
+// Constants
+// ----------------------------------------------------------------------------
 const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 
-// Classes & structs
-// ----------------------------------------------------------------------------
-class UdpDriverTest : public ::testing::Test {
-protected:
-    void SetUp() {
-        udpDriver_ = new UdpDriver(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
-                &udp_if, &os_if);
-
-    }
-
-    UdpDriver* udpDriver_;
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
-};
-
 }
+
+
+
 
 TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
     UdpDriver udpDriverUnderTest;

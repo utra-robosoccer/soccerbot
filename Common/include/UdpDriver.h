@@ -2,7 +2,6 @@
   *****************************************************************************
   * @file    UdpDriver.h
   * @author  Robert Fairley
-  * @brief   Management of simple UDP rx/tx operations.
   *
   * @defgroup Header
   * @ingroup  udp_driver
@@ -10,17 +9,31 @@
   *****************************************************************************
   */
 
+
+
+
 #ifndef UDP_DRIVER_H
 #define UDP_DRIVER_H
 
+
+
+
+/********************************* Includes **********************************/
 #include "UdpInterface.h"
 #include "OsInterface.h"
 
+
+
+/************************** udp_driver **************************/
 namespace udp_driver {
 
+// Constants
+// ----------------------------------------------------------------------------
 constexpr TickType_t SEMAPHORE_WAIT_NUM_MS = 10;
 constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(SEMAPHORE_WAIT_NUM_MS);
 
+// Classes and structs
+// ----------------------------------------------------------------------------
 class UdpDriver {
 public:
     UdpDriver();
