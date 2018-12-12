@@ -29,6 +29,7 @@ Debian packages needed for robots (sudo apt-get install)
 #### Initialization of the code
 ```bash
 cd ~/catkin_ws/src
+sudo apt-get install python-catkin-tools # If you don't have the package installed yet.
 catkin_init_workspace
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
 cd soccer_ws
