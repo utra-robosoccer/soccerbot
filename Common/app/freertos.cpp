@@ -366,33 +366,6 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
-#if defined(USE_DEBUG_UART)
-
-/* rfairley: This logic should really go in usart.c, the same way as how
- * the hdma_ handles deal with this swapping of parameters when USE_DEBUG_UART
- * is defined. However it doesn't look like there is a good spot in the
- * "USER CODE" sections. To do this properly, we should patch
- * this change onto usart.c. For now this is done in StartCommandTask before
- * other threads wake up.
- *
- * (Alternatively we take ownership of the usart.c file and name/initialize
- * the UARTs completely ourselves).
- *
- * TODO: have some way of patching uart config parameter modifications to the generated usart.c
- */
-#if defined(STM32F446xx)
-    /* Override the configuration in usart.c made by CubeMX. */
-    huart2.Init.BaudRate = 230400;
-    huart5.Init.BaudRate = 2500000;
-
-#elif defined(STM32F767xx)
-    huart3.Init.BaudRate = 230400;
-    huart5.Init.BaudRate = 1000000;
-
-#endif
-
-#endif
-
     uartDriver.setIOType(uart::IO_Type::DMA);
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
 
