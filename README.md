@@ -28,6 +28,7 @@ Debian packages needed for robots (sudo apt-get install)
 - For convenience, there is a Clion Settings Repository for Soccer. Go to File > Settings > Settings Respository and add this as a read-only source https://github.com/utra-robosoccer/soccer-ws-clion-settings
 #### Initialization of the code
 ```bash
+mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 sudo apt-get install python-catkin-tools # If you don't have the package installed yet.
 catkin_init_workspace
