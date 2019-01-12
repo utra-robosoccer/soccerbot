@@ -93,6 +93,7 @@ tmp/
 
 # STM Microelectronics stuff
 **/Debug/
+**/Build/
 RemoteSystemsTempFiles/
 .metadata/
 */language.settings.xml
