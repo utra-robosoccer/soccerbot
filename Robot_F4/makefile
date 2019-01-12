@@ -1,10 +1,8 @@
-
 RM := rm -rf
 BUILD_DIR = Build
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 PROJECT_DIR := $(CURDIR)
 COMMON_DIR := $(abspath ../Common)
-
 
 
 # Every subdirectory with source files must be described here
@@ -24,17 +22,29 @@ $(COMMON_DIR)/component/Dynamixel \
 $(COMMON_DIR)/component/MPU6050 \
 $(COMMON_DIR)/component/UartDriver \
 $(COMMON_DIR)/hardware \
-$(COMMON_DIR)/startup \
+startup \
 
+
+# Sources to be excluded from the build
 EXCL_SRCS := $(COMMON_DIR)/hardware/LwipUdpInterface.cpp
 
+# Find all sources in given subdirectories, filter out exclusions, and create objects list
 C_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.c,$(SUBDIRS))))
 CPP_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.cpp,$(SUBDIRS))))
+S_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.s,$(SUBDIRS))))
 C_OBJECTS := $(addprefix $(BUILD_DIR)/,$(patsubst $(COMMON_DIR)/%,%,$(C_SRCS:.c=.o)))
 CPP_OBJECTS := $(addprefix $(BUILD_DIR)/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_SRCS:.cpp=.o)))
+S_OBJECTS := $(addprefix $(BUILD_DIR)/,$(patsubst $(COMMON_DIR)/%,%,$(S_SRCS:.s=.o)))
 
+
+
+
+
+
+# Define compiler flags
 CFLAGS := -fprofile-arcs -ftest-coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
 
+# Define all include directories
 INC := \
 -I"$(PROJECT_DIR)/Inc" \
 -I"$(COMMON_DIR)/include" \
@@ -47,12 +57,10 @@ INC := \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
 
 
+# Define target recipes for all objects in object list, create object in BUILD_DIR
 $(BUILD_DIR)/%.o: %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
-	$(info [$(C_SRCS)])
-	$(info [$(ROOT_DIR)])
-	$(info $(PROJECT_DIR))
 	@mkdir -p $(BUILD_DIR)/$(patsubst /%.c,,$*)
 	arm-none-eabi-gcc $(CFLAGS) $(INC)  -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
@@ -61,9 +69,6 @@ $(BUILD_DIR)/%.o: %.c
 $(BUILD_DIR)/%.o: %.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU G++ Compiler'
-	$(info [$(CPP_SRCS)])
-	$(info $(ROOT_DIR))
-	$(info $(PROJECT_DIR))
 	@mkdir -p $(BUILD_DIR)/$(patsubst /%.cpp,,$*)
 	arm-none-eabi-g++ $(CFLAGS) $(INC) -c -fno-exceptions -fno-rtti -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
@@ -80,26 +85,31 @@ $(BUILD_DIR)/%.o: $(COMMON_DIR)/%.c
 $(BUILD_DIR)/%.o: $(COMMON_DIR)/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU G++ Compiler'
-	$(info [$(CPP_SRCS)])
 	@mkdir -p $(BUILD_DIR)/$(patsubst /%.cpp,,$*)
 	arm-none-eabi-g++ $(CFLAGS) $(INC) -c -fno-exceptions -fno-rtti -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '	
 
-LIBS := -larm_cortexM4lf_math
+# Note: The .s recipe only includes Common/include	
+$(BUILD_DIR)/%.o: %.s
+	@echo 'Building file: $<'
+	@echo 'Invoking: MCU GCC Assembler'
+	@mkdir -p $(BUILD_DIR)/$(patsubst /%.s,,$*)
+	arm-none-eabi-as -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -I$(COMMON_DIR)/include -g -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
 
-# Add inputs and outputs from these tool invocations to the build variables 
+
+LIBS := -larm_cortexM4lf_math
 
 # All Target
 all: $(BUILD_DIR)/Robot_F4.elf
 
 # Tool invocations
-$(BUILD_DIR)/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS)
+$(BUILD_DIR)/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU G++ Linker'
-	$(info [$(CPP_OBJECTS)])
-	$(info $ROOT_DIR)
-	arm-none-eabi-g++ -lgcov --coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -L"Lib"  -specs=nosys.specs -specs=nano.specs -T"STM32F446RETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -fno-exceptions -fno-rtti -o "$(BUILD_DIR)/Robot_F4.elf" $(C_OBJECTS) $(CPP_OPJECTS) $(LIBS) -lm
+	arm-none-eabi-g++ -lgcov --coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -L"Lib"  -specs=nosys.specs -specs=nano.specs -T"STM32F446RETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -fno-exceptions -fno-rtti -o "$(BUILD_DIR)/Robot_F4.elf" $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
