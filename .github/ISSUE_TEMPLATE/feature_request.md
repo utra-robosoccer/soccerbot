@@ -14,4 +14,4 @@ Describe the need for the feature **and** explain who needs it and why
 Describe any time constraints that should be taken into account (i.e. when do you need the feature to be ready?)
 
 **Additional information**
-Add any other information goes here.
+Add any other information here.
