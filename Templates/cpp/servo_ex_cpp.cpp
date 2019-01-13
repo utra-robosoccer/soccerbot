@@ -3,6 +3,7 @@
  * @author John Doe
  *
  * @ingroup Servo
+ * @{
  */
 
 /********************************* Includes **********************************/
@@ -56,3 +57,7 @@ void servo::read_position(){
 }
 
 } // end namespace peripherals
+
+/**
+ * @}
+ */
