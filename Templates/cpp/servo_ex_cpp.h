@@ -28,30 +28,30 @@ extern const float MIN_POS;
  */
 class servo{
 public:
-	/**
-	 * @brief Servo constructor
-	 * @param id Unique identifier for motor, used to address it in commands
-	 */
-	servo(uint8_t id) : m_id(id) {}
-	~servo(){}
+    /**
+     * @brief Servo constructor
+     * @param id Unique identifier for motor, used to address it in commands
+     */
+    servo(uint8_t id) : m_id(id) {}
+    ~servo(){}
 
     /**
      * @brief Moves the servo to the specified position
      * @param angle The desired angle in degrees (min: MIN_POS, max: MAX_POS)
      * @return true if successful, otherwise false
      */
-	bool set_position(float angle);
+    bool set_position(float angle);
 
-	/**
-	 * @brief Reads the current position from the servo
-	 * @note The position read is stored in the `last_position` member
-	 */
-	void read_position();
+    /**
+     * @brief Reads the current position from the servo
+     * @note The position read is stored in the `last_position` member
+     */
+    void read_position();
 
-	float last_position; /**< Last-read position; updated by `read_position` */
+    float last_position; /**< Last-read position; updated by `read_position` */
 
 private:
-	const uint8_t m_id; /**< Unique identifier for motor, used to address it */
+    const uint8_t m_id; /**< Unique identifier for motor, used to address it */
 }
 
 } // end namespace peripherals

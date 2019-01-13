@@ -29,16 +29,16 @@ namespace peripherals{
 const float MAX_POS = 300.0;
 const float MIN_POS = 0.0;
 
-// Classes and structs
+// Public functions
 // ----------------------------------------------------------------------------
 bool servo::set_position(float angle){
     if(angle < MIN_POS || angle > MAX_POS){
-    	return false;
+        return false;
     }
 
     uint16_t raw = static_cast<uint16_t>(
-    	(angle / MAX_POS) * (POS_RESOLUTION - 1)
-	);
+        (angle / MAX_POS) * (POS_RESOLUTION - 1)
+    );
 
     uart::send_byte(m_id);
     uart::send_byte(REG_GOAL_POS);
@@ -46,15 +46,13 @@ bool servo::set_position(float angle){
     uart::send_byte((raw >> 8) & 0xFF);
 }
 
-// ----------------------------------------------------------------------------
-
 void servo::read_position(){
     uart::send_byte(m_id);
-	uart::send_byte(REG_CURRENT_POS);
-	uint16_t raw = uart::recv_byte();
-	uint16_t raw |= uart::recv_byte() << 8;
+    uart::send_byte(REG_CURRENT_POS);
+    uint16_t raw = uart::recv_byte();
+    uint16_t raw |= uart::recv_byte() << 8;
 
-	last_position = (raw / (POS_RESOLUTION - 1)) * MAX_POS;
+    last_position = (raw / (POS_RESOLUTION - 1)) * MAX_POS;
 }
 
 } // end namespace peripherals

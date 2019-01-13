@@ -24,8 +24,8 @@ extern const float MIN_POS;
  * @brief Interface for communication with a smart servo
  */
 typedef struct{
-	const uint8_t m_id; /**< Unique identifier for motor, used to address it */
-	float last_position; /**< Last-read position */
+    const uint8_t m_id; /**< Unique identifier for motor, used to address it */
+    float last_position; /**< Last-read position */
 }servo_t;
 
 /************************ Public Function Prototypes *************************/
