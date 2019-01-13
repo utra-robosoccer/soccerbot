@@ -3,6 +3,7 @@
  * @author John Doe
  *
  * @ingroup Servo
+ * @{
  */
 
 /********************************* Includes **********************************/
@@ -44,3 +45,7 @@ void servo_read_position(servo_t* h_servo){
 
     last_position = (raw / (POS_RESOLUTION - 1)) * MAX_POS;
 }
+
+/**
+ * @}
+ */
