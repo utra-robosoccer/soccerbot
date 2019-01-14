@@ -43,7 +43,11 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "Dynamixel_Data.h"
+#include "AX12A.h"
+#include "MX28.h"
+#include "Dynamixel_Types.h"
+#include "DynamixelProtocolV1_IO.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -69,8 +73,6 @@ float y_vel;
 uint32_t pwm_value_w = 0;
 uint32_t pwm_value_1 = 0;
 uint32_t pwm_value_2 = 0;
-//uint32_t pwm_value_3 = 200;
-//uint32_t pwm_value_4 = 200;
 
 uint8_t motor1_dir = 0;
 uint8_t motor2_dir = 0;
@@ -78,7 +80,7 @@ uint8_t motor3_dir = 0;
 uint8_t motor4_dir = 0;
 uint8_t isStop = 0;
 
-HAL_StatusTypeDef status;
+HAL_StatusTypeDef status_b1, status_b2, status_b3;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE END PV */
 
@@ -145,43 +147,46 @@ int main(void) {
     /* USER CODE BEGIN WHILE */
     while (1) {
         int prev = 0;
-        /*1. Receive all pwm inputs from PC */
+
         do {
-            status = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 10);
+            /* while huart2 does not receive commands, in other words
+             * while status_b1 is NOT HAL_OK, stay in this DO loop to
+             * set motor directions and actuate them(PWM)
+             */
+            status_b1 = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 10);
             setMotor1Dir();
             setMotor2Dir();
             setMotor3Dir();
             setMotor4Dir();
-            if (prev == 0) {
+            if (prev == 0) { //only start pwm when it has been stopped
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
                 prev = 1;
             }
-        } while (status != HAL_OK);
+        } while (status_b1 != HAL_OK);
 
-        status = HAL_ERROR;
+        status_b1 = HAL_ERROR; //reset
+
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
-        /*2. Convert the character in buffers to floats/integers */
+
+        /* 1. Received all pwm inputs from PC. Once outside the do-while loop,
+         * the global variable rx_buf has been updated from the PC command  */
+
+        /* 2. Convert the character in the buffer to floats/integers */
         /* Assumed: at max speed, the wheel is turning 1 rev/sec => 6.28*0.05*/
-        // Update W[2], X[3] and Y[3]
+        // Global variables including x_dir, w_dir, y_dir, and pwm's are updated
         extractW(rx_buf);
         extractX(rx_buf);
         extractY(rx_buf);
 
-        //pwm_value = convertToInt(rx_pwm_buf);
-
-        /*3. Given the input information, determine the globals(motor_dir, speed, etc.)*/
-        /*pwm_value_1 = get_pwm(x_vel);
-         pwm_value_2 = get_pwm(y_vel);*/
-
-        /*4. With the updated globals, actuate the motors*/
+        /* 3. With the updated globals, set the appropriate speeds(PWM) for
+         * all motors using SET_COMPARE function*/
         move_to_pos();
-
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
@@ -423,6 +428,9 @@ void move_to_pos() {
     return;
 }
 
+/* setMotor1Dir() takes in the global variable motor1_dir
+ * to set or reset two specific output pins to control
+ * the direction of motor 1*/
 void setMotor1Dir() {
     switch (motor1_dir) {
     case MOTOR_CLOCKWISE:
