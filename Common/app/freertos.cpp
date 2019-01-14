@@ -5,41 +5,41 @@
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
+  * USER CODE END. Other portions of this file, whether
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2018 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V.
   * All rights reserved.
   *
-  * Redistribution and use in source and binary forms, with or without 
+  * Redistribution and use in source and binary forms, with or without
   * modification, are permitted, provided that the following conditions are met:
   *
-  * 1. Redistribution of source code must retain the above copyright notice, 
+  * 1. Redistribution of source code must retain the above copyright notice,
   *    this list of conditions and the following disclaimer.
   * 2. Redistributions in binary form must reproduce the above copyright notice,
   *    this list of conditions and the following disclaimer in the documentation
   *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
+  * 3. Neither the name of STMicroelectronics nor the names of other
+  *    contributors to this software may be used to endorse or promote products
   *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
+  * 4. This software, including modifications and/or derivative works of this
   *    software, must execute solely and exclusively on microcontroller or
   *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
+  * 5. Redistribution and use of this software other than as permitted under
+  *    this license is void and will automatically terminate your rights under
+  *    this license.
   *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT
+  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT
   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
@@ -51,20 +51,22 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-/* USER CODE BEGIN Includes */     
+/* USER CODE BEGIN Includes */
 /**
  * @file    freertos.c
  * @brief   Code for freertos application
  * @author  Gokul
  * @author  Tyler
  * @author  Izaak
+ * @author  Robert
  *
  * @defgroup FreeRTOS FreeRTOS
  * @brief    Everything related to FreeRTOS
  */
 
 #include <math.h>
-#include <uart_handler.h>
+
+#include "uart_handler.h"
 #include "Notification.h"
 #include "SystemConf.h"
 #include "BufferBase.h"
@@ -73,32 +75,36 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
+#include "UartDriver.h"
+#include "HalUartInterface.h"
+#include "OsInterfaceImpl.h"
+#include "CircularDmaBuffer.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
 uint32_t defaultTaskBuffer[ 128 ];
 osStaticThreadDef_t defaultTaskControlBlock;
-osThreadId UART1TaskHandle;
-uint32_t UART1TaskBuffer[ 128 ];
-osStaticThreadDef_t UART1TaskControlBlock;
-osThreadId UART2TaskHandle;
-uint32_t UART2TaskBuffer[ 128 ];
-osStaticThreadDef_t UART2TaskControlBlock;
-osThreadId UART3TaskHandle;
-uint32_t UART3TaskBuffer[ 128 ];
-osStaticThreadDef_t UART3TaskControlBlock;
-osThreadId UART4TaskHandle;
-uint32_t UART4TaskBuffer[ 128 ];
-osStaticThreadDef_t UART4TaskControlBlock;
-osThreadId UART6TaskHandle;
-uint32_t UART6TaskBuffer[ 128 ];
-osStaticThreadDef_t UART6TaskControlBlock;
+osThreadId UpperLeftLegHandle;
+uint32_t UpperLeftLegBuffer[ 128 ];
+osStaticThreadDef_t UpperLeftLegControlBlock;
+osThreadId LowerRightLegHandle;
+uint32_t LowerRightLegBuffer[ 128 ];
+osStaticThreadDef_t LowerRightLegControlBlock;
+osThreadId HeadAndArmsHandle;
+uint32_t HeadAndArmsBuffer[ 128 ];
+osStaticThreadDef_t HeadAndArmsControlBlock;
+osThreadId UpperRightLegHandle;
+uint32_t UpperRightLegBuffer[ 128 ];
+osStaticThreadDef_t UpperRightLegControlBlock;
+osThreadId LowerLeftLegHandle;
+uint32_t LowerLeftLegBuffer[ 128 ];
+osStaticThreadDef_t LowerLeftLegControlBlock;
 osThreadId IMUTaskHandle;
 uint32_t IMUTaskBuffer[ 128 ];
 osStaticThreadDef_t IMUTaskControlBlock;
 osThreadId CommandTaskHandle;
-uint32_t CommandTaskBuffer[ 512 ];
+uint32_t CommandTaskBuffer[ 128 ];
 osStaticThreadDef_t CommandTaskControlBlock;
 osThreadId RxTaskHandle;
 uint32_t RxTaskBuffer[ 512 ];
@@ -109,24 +115,24 @@ osStaticThreadDef_t TxTaskControlBlock;
 osThreadId BuffWriterTaskHandle;
 uint32_t BuffWriterTaskBuffer[ 128 ];
 osStaticThreadDef_t BuffWriterTaskControlBlock;
-osMessageQId UART1_reqHandle;
-uint8_t UART1_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART1_reqControlBlock;
-osMessageQId UART2_reqHandle;
-uint8_t UART2_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART2_reqControlBlock;
-osMessageQId UART3_reqHandle;
-uint8_t UART3_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART3_reqControlBlock;
-osMessageQId UART4_reqHandle;
-uint8_t UART4_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART4_reqControlBlock;
-osMessageQId UART6_reqHandle;
-uint8_t UART6_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
-osStaticMessageQDef_t UART6_reqControlBlock;
-osMessageQId TXQueueHandle;
-uint8_t TXQueueBuffer[ 32 * sizeof( TXData_t ) ];
-osStaticMessageQDef_t TXQueueControlBlock;
+osThreadId MotorCmdGenTaskHandle;
+uint32_t MotorCmdGenTaskBuffer[ 128 ];
+osStaticThreadDef_t MotorCmdGenTaskControlBlock;
+osMessageQId UpperLeftLeg_reqHandle;
+uint8_t UpperLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t UpperLeftLeg_reqControlBlock;
+osMessageQId LowerRightLeg_reqHandle;
+uint8_t LowerRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t LowerRightLeg_reqControlBlock;
+osMessageQId HeadAndArms_reqHandle;
+uint8_t HeadAndArms_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t HeadAndArms_reqControlBlock;
+osMessageQId UpperRightLeg_reqHandle;
+uint8_t UpperRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t UpperRightLeg_reqControlBlock;
+osMessageQId LowerLeftLeg_reqHandle;
+uint8_t LowerLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+osStaticMessageQDef_t LowerLeftLeg_reqControlBlock;
 osMessageQId BufferWriteQueueHandle;
 uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
@@ -136,29 +142,43 @@ osMutexId DATABUFFERHandle;
 osStaticMutexDef_t DATABUFFERControlBlock;
 
 /* USER CODE BEGIN Variables */
+
+constexpr size_t RX_BUFF_SIZE = 92;
+
 namespace{
 
+// TODO: these variables are to be moved out of freertos.cpp
 
 buffer::BufferMaster BufferMaster;
+os::OsInterfaceImpl osInterfaceImpl;
+uart::HalUartInterface uartInterface;
+uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, UART_HANDLE_PC);
 
 bool setupIsDone = false;
 static volatile uint32_t error;
 
+/* Set the period the TxThread waits before being timed out when waiting for DMA
+ * transfer to complete. The theoretical minimum given a baud rate of 230400 and
+ * message size of 92 bytes is 4ms. Give an extra millisecond to allow for any
+ * scheduling delays, so this is set to 5ms. */
+constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 }
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
-extern void StartUART1Task(void const * argument);
-extern void StartUART2Task(void const * argument);
-extern void StartUART3Task(void const * argument);
-extern void StartUART4Task(void const * argument);
-extern void StartUART6Task(void const * argument);
+extern void StartUpperLeftLeg(void const * argument);
+extern void StartLowerRightLeg(void const * argument);
+extern void StartHeadAndArms(void const * argument);
+extern void StartUpperRightLeg(void const * argument);
+extern void StartLowerLeftLeg(void const * argument);
 extern void StartIMUTask(void const * argument);
 extern void StartCommandTask(void const * argument);
 extern void StartRxTask(void const * argument);
 extern void StartTxTask(void const * argument);
 extern void StartBuffWriterTask(void const * argument);
+extern void StartMotorCmdGenTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -194,6 +214,11 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 
 /* Init FreeRTOS */
 
+/**
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
@@ -207,9 +232,7 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of DATABUFFER */
   osMutexStaticDef(DATABUFFER, &DATABUFFERControlBlock);
   DATABUFFERHandle = osMutexCreate(osMutex(DATABUFFER));
-  /* USER CODE BEGIN Initialize Data Buffer */
-  BufferMaster.set_lock(DATABUFFERHandle);
-  /* USER CODE END Initialize Data Buffer */
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -227,32 +250,32 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of UART1Task */
-  osThreadStaticDef(UART1Task, StartUART1Task, osPriorityNormal, 0, 128, UART1TaskBuffer, &UART1TaskControlBlock);
-  UART1TaskHandle = osThreadCreate(osThread(UART1Task), NULL);
+  /* definition and creation of UpperLeftLeg */
+  osThreadStaticDef(UpperLeftLeg, StartUpperLeftLeg, osPriorityBelowNormal, 0, 128, UpperLeftLegBuffer, &UpperLeftLegControlBlock);
+  UpperLeftLegHandle = osThreadCreate(osThread(UpperLeftLeg), NULL);
 
-  /* definition and creation of UART2Task */
-  osThreadStaticDef(UART2Task, StartUART2Task, osPriorityNormal, 0, 128, UART2TaskBuffer, &UART2TaskControlBlock);
-  UART2TaskHandle = osThreadCreate(osThread(UART2Task), NULL);
+  /* definition and creation of LowerRightLeg */
+  osThreadStaticDef(LowerRightLeg, StartLowerRightLeg, osPriorityBelowNormal, 0, 128, LowerRightLegBuffer, &LowerRightLegControlBlock);
+  LowerRightLegHandle = osThreadCreate(osThread(LowerRightLeg), NULL);
 
-  /* definition and creation of UART3Task */
-  osThreadStaticDef(UART3Task, StartUART3Task, osPriorityNormal, 0, 128, UART3TaskBuffer, &UART3TaskControlBlock);
-  UART3TaskHandle = osThreadCreate(osThread(UART3Task), NULL);
+  /* definition and creation of HeadAndArms */
+  osThreadStaticDef(HeadAndArms, StartHeadAndArms, osPriorityBelowNormal, 0, 128, HeadAndArmsBuffer, &HeadAndArmsControlBlock);
+  HeadAndArmsHandle = osThreadCreate(osThread(HeadAndArms), NULL);
 
-  /* definition and creation of UART4Task */
-  osThreadStaticDef(UART4Task, StartUART4Task, osPriorityNormal, 0, 128, UART4TaskBuffer, &UART4TaskControlBlock);
-  UART4TaskHandle = osThreadCreate(osThread(UART4Task), NULL);
+  /* definition and creation of UpperRightLeg */
+  osThreadStaticDef(UpperRightLeg, StartUpperRightLeg, osPriorityBelowNormal, 0, 128, UpperRightLegBuffer, &UpperRightLegControlBlock);
+  UpperRightLegHandle = osThreadCreate(osThread(UpperRightLeg), NULL);
 
-  /* definition and creation of UART6Task */
-  osThreadStaticDef(UART6Task, StartUART6Task, osPriorityNormal, 0, 128, UART6TaskBuffer, &UART6TaskControlBlock);
-  UART6TaskHandle = osThreadCreate(osThread(UART6Task), NULL);
+  /* definition and creation of LowerLeftLeg */
+  osThreadStaticDef(LowerLeftLeg, StartLowerLeftLeg, osPriorityBelowNormal, 0, 128, LowerLeftLegBuffer, &LowerLeftLegControlBlock);
+  LowerLeftLegHandle = osThreadCreate(osThread(LowerLeftLeg), NULL);
 
   /* definition and creation of IMUTask */
   osThreadStaticDef(IMUTask, StartIMUTask, osPriorityNormal, 0, 128, IMUTaskBuffer, &IMUTaskControlBlock);
   IMUTaskHandle = osThreadCreate(osThread(IMUTask), NULL);
 
   /* definition and creation of CommandTask */
-  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityBelowNormal, 0, 512, CommandTaskBuffer, &CommandTaskControlBlock);
+  osThreadStaticDef(CommandTask, StartCommandTask, osPriorityAboveNormal, 0, 128, CommandTaskBuffer, &CommandTaskControlBlock);
   CommandTaskHandle = osThreadCreate(osThread(CommandTask), NULL);
 
   /* definition and creation of RxTask */
@@ -267,34 +290,34 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(BuffWriterTask, StartBuffWriterTask, osPriorityNormal, 0, 128, BuffWriterTaskBuffer, &BuffWriterTaskControlBlock);
   BuffWriterTaskHandle = osThreadCreate(osThread(BuffWriterTask), NULL);
 
+  /* definition and creation of MotorCmdGenTask */
+  osThreadStaticDef(MotorCmdGenTask, StartMotorCmdGenTask, osPriorityNormal, 0, 128, MotorCmdGenTaskBuffer, &MotorCmdGenTaskControlBlock);
+  MotorCmdGenTaskHandle = osThreadCreate(osThread(MotorCmdGenTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* Create the queue(s) */
   /* definition and creation of UART1_req */
-  osMessageQStaticDef(UART1_req, 16, UARTcmd_t, UART1_reqBuffer, &UART1_reqControlBlock);
-  UART1_reqHandle = osMessageCreate(osMessageQ(UART1_req), NULL);
+  osMessageQStaticDef(UpperLeftLeg_req, 16, UARTcmd_t, UpperLeftLeg_reqBuffer, &UpperLeftLeg_reqControlBlock);
+  UpperLeftLeg_reqHandle = osMessageCreate(osMessageQ(UpperLeftLeg_req), NULL);
 
-  /* definition and creation of UART2_req */
-  osMessageQStaticDef(UART2_req, 16, UARTcmd_t, UART2_reqBuffer, &UART2_reqControlBlock);
-  UART2_reqHandle = osMessageCreate(osMessageQ(UART2_req), NULL);
+  /* definition and creation of LowerRightLeg_req */
+  osMessageQStaticDef(LowerRightLeg_req, 16, UARTcmd_t, LowerRightLeg_reqBuffer, &LowerRightLeg_reqControlBlock);
+  LowerRightLeg_reqHandle = osMessageCreate(osMessageQ(LowerRightLeg_req), NULL);
 
-  /* definition and creation of UART3_req */
-  osMessageQStaticDef(UART3_req, 16, UARTcmd_t, UART3_reqBuffer, &UART3_reqControlBlock);
-  UART3_reqHandle = osMessageCreate(osMessageQ(UART3_req), NULL);
+  /* definition and creation of HeadAndArms_req */
+  osMessageQStaticDef(HeadAndArms_req, 16, UARTcmd_t, HeadAndArms_reqBuffer, &HeadAndArms_reqControlBlock);
+  HeadAndArms_reqHandle = osMessageCreate(osMessageQ(HeadAndArms_req), NULL);
 
-  /* definition and creation of UART4_req */
-  osMessageQStaticDef(UART4_req, 16, UARTcmd_t, UART4_reqBuffer, &UART4_reqControlBlock);
-  UART4_reqHandle = osMessageCreate(osMessageQ(UART4_req), NULL);
+  /* definition and creation of UpperRightLeg_req */
+  osMessageQStaticDef(UpperRightLeg_req, 16, UARTcmd_t, UpperRightLeg_reqBuffer, &UpperRightLeg_reqControlBlock);
+  UpperRightLeg_reqHandle = osMessageCreate(osMessageQ(UpperRightLeg_req), NULL);
 
-  /* definition and creation of UART6_req */
-  osMessageQStaticDef(UART6_req, 16, UARTcmd_t, UART6_reqBuffer, &UART6_reqControlBlock);
-  UART6_reqHandle = osMessageCreate(osMessageQ(UART6_req), NULL);
-
-  /* definition and creation of TXQueue */
-  osMessageQStaticDef(TXQueue, 32, TXData_t, TXQueueBuffer, &TXQueueControlBlock);
-  TXQueueHandle = osMessageCreate(osMessageQ(TXQueue), NULL);
+  /* definition and creation of LowerLeftLeg_req */
+  osMessageQStaticDef(LowerLeftLeg_req, 16, UARTcmd_t, LowerLeftLeg_reqBuffer, &LowerLeftLeg_reqControlBlock);
+  LowerLeftLeg_reqHandle = osMessageCreate(osMessageQ(LowerLeftLeg_req), NULL);
 
   /* definition and creation of BufferWriteQueue */
   osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
@@ -331,7 +354,8 @@ void StartDefaultTask(void const * argument)
   * @brief  This function is executed in the context of the commandTask
   *         thread. It initializes all data structures and peripheral
   *         devices associated with the application, and then assumes
-  *         responsibility for distributing commands to the actuators
+  *         responsibility for distributing write commands to the
+  *         actuators.
   *
   *         This function never returns.
   *
@@ -339,27 +363,18 @@ void StartDefaultTask(void const * argument)
   */
 void StartCommandTask(void const * argument)
 {
-    UARTcmd_t Motorcmd[18];
-    Motorcmd[periph::MOTOR1].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR2].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR3].qHandle = UART2_reqHandle;
-    Motorcmd[periph::MOTOR4].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR5].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR6].qHandle = UART4_reqHandle;
-    Motorcmd[periph::MOTOR7].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR8].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR9].qHandle = UART1_reqHandle;
-    Motorcmd[periph::MOTOR10].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR11].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR12].qHandle = UART6_reqHandle;
-    Motorcmd[periph::MOTOR13].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR14].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR15].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR16].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR17].qHandle = UART3_reqHandle;
-    Motorcmd[periph::MOTOR18].qHandle = UART3_reqHandle;
+    // Wait for the motors to turn on
+    osDelay(osKernelSysTickMicroSec(100000));
 
-    periph::initMotorIOType(IO_Type::DMA);
+    uartDriver.setIOType(uart::IO_Type::DMA);
+    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
+
+    // Use polled IO here for 2 reasons:
+    //   1. Have to initialize the motors from this one thread, so using DMA
+    //      doesn't gain us anything
+    //   2. The UART callbacks are hardcoded to wake up their corresponding
+    //      UART threads used later in the flow
+    periph::initMotorIOType(IO_Type::POLL);
 
     // The return delay time is the time the motor waits before sending back
     // data for a read request. We found that a value of 100 us worked reliably
@@ -380,105 +395,73 @@ void StartCommandTask(void const * argument)
             static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
             static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
         }
-
-        (Motorcmd[i]).motorHandle = periph::motors[i];
-        (Motorcmd[i]).type = cmdWritePosition;
     }
-
+ 
+    // The only other communication with the motors will occur in the UART
+    // threads, so we can use DMA now.
+    periph::initMotorIOType(IO_Type::DMA);
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
     periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
-    // Set setupIsDone and unblock the higher-priority tasks
-    setupIsDone = true;
-    xTaskNotify(RxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(TxTaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART1TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART2TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART3TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART4TaskHandle, 1UL, eNoAction);
-    xTaskNotify(UART6TaskHandle, 1UL, eNoAction);
-    xTaskNotify(IMUTaskHandle, 1UL, eNoAction);
+    // Set up the sensor data buffer
+    BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
 
-    uint32_t numIterations = 0;
+    // Unblock the other tasks now that initialization is done
+    setupIsDone = true;
+
+    osSignalSet(RxTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(MotorCmdGenTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(BuffWriterTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(IMUTaskHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UpperLeftLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(LowerRightLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(HeadAndArmsHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(UpperRightLegHandle, NOTIFIED_FROM_TASK);
+    osSignalSet(LowerLeftLegHandle, NOTIFIED_FROM_TASK);
+
+    UARTcmd_t cmd;
+    cmd.type = cmdWritePosition;
     float positions[18];
     while(1){
-        xTaskNotifyWait(0, NOTIFIED_FROM_TASK, NULL, portMAX_DELAY);
+        osSignalWait(NOTIFIED_FROM_TASK, osWaitForever);
 
         // Convert raw bytes from robotGoal received from PC into floats
+        uint8_t* ptr = NULL;
         for(uint8_t i = 0; i < 18; i++){
-            uint8_t* ptr = (uint8_t*)&positions[i];
+            ptr = (uint8_t*)&positions[i];
             for(uint8_t j = 0; j < 4; j++){
                 *ptr = robotGoal.msg[i * 4 + j];
                 ptr++;
             }
         }
 
-        if(numIterations % 100 == 0){
-            // Every 100 iterations, assert torque enable
-            for(uint8_t i = periph::MOTOR1; i <= periph::MOTOR18; ++i){
-                Motorcmd[i].type = cmdWriteTorque;
-                Motorcmd[i].value = 1; // Enable
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
-        }
-
         // Send each goal position to the queue, where the UART handler
         // thread that's listening will receive it and send it to the motor
         for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
-            switch(i){
-                case periph::MOTOR1: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR2: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR3: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR4: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR5: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR6: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR7: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR8: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR9: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR10: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR11: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR12: Motorcmd[i].value = positions[i]*180/M_PI + 150;
-                    break;
-                case periph::MOTOR13: Motorcmd[i].value = positions[i]*180/M_PI + 150; // Left shoulder
-                    break;
-                case periph::MOTOR14: Motorcmd[i].value = positions[i]*180/M_PI + 60; // Left elbow
-                    break;
-                case periph::MOTOR15: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Right shoulder
-                    break;
-                case periph::MOTOR16: Motorcmd[i].value = -1*positions[i]*180/M_PI + 240; // Right elbow
-                    break;
-                case periph::MOTOR17: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck pan
-                    break;
-                case periph::MOTOR18: Motorcmd[i].value = -1*positions[i]*180/M_PI + 150; // Neck tilt
-                    break;
-                default:
-                    break;
+            cmd.motorHandle = periph::motors[i];
+            cmd.value = positions[i];
+
+            if(i <= periph::MOTOR3){
+                cmd.qHandle = LowerRightLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR6){
+                cmd.qHandle = UpperRightLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR9){
+                cmd.qHandle = UpperLeftLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR12){
+                cmd.qHandle = LowerLeftLeg_reqHandle;
+            }
+            else{
+                cmd.qHandle = HeadAndArms_reqHandle;
             }
 
-            Motorcmd[i].type = cmdWritePosition;
-            xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-
-            // Only read from legs
-            if(i <= periph::MOTOR12){
-                Motorcmd[i].type = cmdReadPosition;
-                xQueueSend(Motorcmd[i].qHandle, &Motorcmd[i], 0);
-            }
+            xQueueSend(cmd.qHandle, &cmd, 0);
         }
-
-        numIterations++;
     }
 }
 
@@ -495,20 +478,18 @@ void StartCommandTask(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART1Task(void const * argument)
+void StartUpperLeftLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
-        while(xQueueReceive(UART1_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        while(xQueueReceive(UpperLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -525,20 +506,18 @@ void StartUART1Task(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART2Task(void const * argument)
+void StartLowerRightLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
-        while(xQueueReceive(UART2_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        while(xQueueReceive(LowerRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -555,20 +534,18 @@ void StartUART2Task(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART3Task(void const * argument)
+void StartHeadAndArms(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
-        while(xQueueReceive(UART3_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        while(xQueueReceive(HeadAndArms_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -585,20 +562,18 @@ void StartUART3Task(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART4Task(void const * argument)
+void StartUpperRightLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
-        while(xQueueReceive(UART4_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        while(xQueueReceive(UpperRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -615,21 +590,18 @@ void StartUART4Task(void const * argument)
   *
   * @ingroup Threads
   */
-void StartUART6Task(void const * argument)
+void StartLowerLeftLeg(void const * argument)
 {
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
-    /* Infinite loop */
     UARTcmd_t cmdMessage;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
 
     for(;;)
     {
-        while(xQueueReceive(UART6_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage, &dataToSend);
+        while(xQueueReceive(LowerLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmdMessage);
     }
 }
 
@@ -649,7 +621,7 @@ void StartIMUTask(void const * argument)
     /* USER CODE BEGIN StartIMUTask */
     // Here, we use task notifications to block this task from running until a notification
     // is received. This allows one-time setup to complete in a low-priority task.
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
 
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
@@ -673,56 +645,87 @@ void StartIMUTask(void const * argument)
             app::processImuData(myIMUStruct);
         }
 
-        xQueueSend(TXQueueHandle, &dataToSend, 0);
+        xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
     }
     /* USER CODE END StartIMUTask */
 }
 
 /**
-  * @brief  This function is executed in the context of the RxTask
-  *         thread. It initiates DMA-based receptions of RobotGoals
-  *         from the PC via UART5. Upon successful reception of a
-  *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
-void StartRxTask(void const * argument)
-{
+ * @brief  This function is executed in the context of the RxTask
+ *         thread. It initiates DMA-based receptions of RobotGoals
+ *         from the PC via UART5. Upon successful reception of a
+ *         RobotGoal, the UARTx_ and IMUTask threads are unblocked.
+ *
+ *         This function never returns.
+ *
+ * @ingroup Threads
+ */
+void StartRxTask(void const * argument) {
+    // RxTask waits for first time setup complete.
+    osSignalWait(0, osWaitForever);
+
     initializeVars();
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-    initiateDMATransfer();
+
+    const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
+    uint32_t xLastWakeTime = osKernelSysTick();
+
+    bool parse_out = 0;
+    uint8_t raw[RX_BUFF_SIZE];
+    uint8_t processingBuff[RX_BUFF_SIZE];
+    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(UART_HANDLE_PC,
+            &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
+
+    rxBuffer.initiate();
 
     for (;;) {
-        waitForNotificationRX();
-        updateStatusToPC();
-        receiveDataBuffer();
+        osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
+
+        rxBuffer.updateHead();
+        if(rxBuffer.dataAvail()){
+            uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
+
+            parseByteSequence(processingBuff, numBytesReceived, parse_out);
+        }
+
+        rxBuffer.reinitiateIfError();
+
+        if (parse_out) {
+            parse_out = false;
+
+            copyParsedData();
+
+            osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
+            osSignalSet(CommandTaskHandle, NOTIFIED_FROM_TASK);
+        }
     }
 }
 
 /**
-  * @brief  This function is executed in the context of the TxTask
-  *         thread. This thread is blocked until all sensor data
-  *         has been received through the sensor queue. After this
-  *         time, the UARTx_ and IMUTask will be blocked. Then, a
-  *         DMA-based transmission of a RobotState is sent to the
-  *         PC via UART5.
-  *
-  *         This function never returns.
-  *
-  * @ingroup Threads
-  */
-void StartTxTask(void const * argument)
-{
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
-    shiftNotificationMask();
+ * @brief  This function is executed in the context of the TxTask
+ *         thread. This thread is blocked until all sensor data
+ *         has been received through the sensor queue. After this
+ *         time, the UARTx_ and IMUTask will be blocked. Then, a
+ *         DMA-based transmission of a RobotState is sent to the
+ *         PC via UART5.
+ *
+ *         This function never returns.
+ *
+ * @ingroup Threads
+ */
+void StartTxTask(void const * argument) {
 
-    for(;;)
-    {
-        copySensorDataToSend();
-        transmitStatusFromPC();
-        waitForNotificationTX();
+    // TxTask waits for first time setup complete.
+    osSignalWait(0, osWaitForever);
+
+    for (;;) {
+        // Wait until woken up by Rx ("read command event")
+        osSignalWait(0, osWaitForever);
+
+        copySensorDataToSend(&BufferMaster);
+
+        // TODO: should have a way to back out of a failed transmit and reinitiate
+        // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
+        while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
     }
 }
 
@@ -738,18 +741,18 @@ void StartTxTask(void const * argument)
   */
 void StartBuffWriterTask(void const * argument)
 {
-    xTaskNotifyWait(UINT32_MAX, UINT32_MAX, NULL, portMAX_DELAY);
+    osSignalWait(0, osWaitForever);
+
     TXData_t dataToWrite;
     imu::IMUStruct_t* IMUDataPtr;
     MotorData_t* motorDataPtr;
 
     for(;;)
     {
-        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, portMAX_DELAY) != pdTRUE);
+        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, osWaitForever) != pdTRUE);
         switch (dataToWrite.eDataType) {
             case eMotorData:
-
-                motorDataPtr = (MotorData_t*) dataToWrite.pData;
+                motorDataPtr = static_cast<MotorData_t*>(dataToWrite.pData);
 
                 if (motorDataPtr == NULL) { break; }
 
@@ -774,6 +777,56 @@ void StartBuffWriterTask(void const * argument)
         }
     }
 }
+
+/**
+  * @brief  This function is executed in the context of the MotorCmdGen
+  *         thread. This thread generates read commands for the motors
+  *         so that position data will be read from them on a
+  *         time-triggered basis.
+  *
+  *         This function never returns.
+  *
+  * @ingroup Threads
+  */
+void StartMotorCmdGenTask(void const * argument){
+    osSignalWait(0, osWaitForever);
+
+    constexpr uint32_t CYCLE_TIME_MS = osKernelSysTickMicroSec(2000);
+    TickType_t xLastWakeTime = osKernelSysTick();
+    UARTcmd_t cmd;
+    cmd.type = cmdReadPosition;
+
+    for(;;)
+    {
+        vTaskDelayUntil(&xLastWakeTime, CYCLE_TIME_MS);
+
+        for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
+            cmd.motorHandle = periph::motors[i];
+
+            if(i <= periph::MOTOR3){
+                cmd.qHandle = LowerRightLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR6){
+                cmd.qHandle = UpperRightLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR9){
+                cmd.qHandle = UpperLeftLeg_reqHandle;
+            }
+            else if(i <= periph::MOTOR12){
+                cmd.qHandle = LowerLeftLeg_reqHandle;
+            }
+            else{
+                cmd.qHandle = HeadAndArms_reqHandle;
+            }
+
+            // Only read from legs
+            if(i <= periph::MOTOR12){
+                xQueueSend(cmd.qHandle, &cmd, 0);
+            }
+        }
+    }
+}
+
 /**
  * @defgroup Callbacks Callbacks
  * @brief    Callback functions for unblocking FreeRTOS threads which perform
@@ -819,23 +872,23 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
     if(setupIsDone){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        if(huart == &huart5){
+        if(huart == UART_HANDLE_PC){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        if(huart == &huart1){
-            xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        if(huart == UART_HANDLE_UpperLeftLeg){
+            xTaskNotifyFromISR(UpperLeftLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart2){
-            xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_LowerRightLeg){
+            xTaskNotifyFromISR(LowerRightLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart3){
-            xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_HeadAndArms){
+            xTaskNotifyFromISR(HeadAndArmsHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart4){
-            xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_UpperRightLeg){
+            xTaskNotifyFromISR(UpperRightLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
-        else if(huart == &huart6){
-            xTaskNotifyFromISR(UART6TaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+        else if(huart == UART_HANDLE_LowerLeftLeg){
+            xTaskNotifyFromISR(LowerLeftLegHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
         }
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
@@ -856,23 +909,20 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if (huart == &huart5) {
-        xTaskNotifyFromISR(RxTaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    if(huart == UART_HANDLE_UpperLeftLeg){
+        xTaskNotifyFromISR(UpperLeftLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    if(huart == &huart1){
-        xTaskNotifyFromISR(UART1TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_LowerRightLeg){
+        xTaskNotifyFromISR(LowerRightLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart2){
-        xTaskNotifyFromISR(UART2TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_HeadAndArms){
+        xTaskNotifyFromISR(HeadAndArmsHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart3){
-        xTaskNotifyFromISR(UART3TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_UpperRightLeg){
+        xTaskNotifyFromISR(UpperRightLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
-    else if(huart == &huart4){
-        xTaskNotifyFromISR(UART4TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
-    }
-    else if(huart == &huart6){
-        xTaskNotifyFromISR(UART6TaskHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
+    else if(huart == UART_HANDLE_LowerLeftLeg){
+        xTaskNotifyFromISR(LowerLeftLegHandle, NOTIFIED_FROM_RX_ISR, eSetBits, &xHigherPriorityTaskWoken);
     }
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
@@ -893,6 +943,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     error = HAL_UART_GetError(huart);
 }
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

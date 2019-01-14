@@ -40,69 +40,69 @@ HalUartInterface uartif;
 OsInterfaceImpl osif;
 GpioInterfaceImpl gpioif;
 
-UartDriver uart1Driver(&osif, &uartif, &huart1);
-DaisyChainParams uart1Params = {
-    &uart1Driver,
+UartDriver upperLeftLegDriver(&osif, &uartif, UART_HANDLE_UpperLeftLeg);
+DaisyChainParams upperLeftLegParams = {
+    &upperLeftLegDriver,
     &gpioif,
     GPIOA,
     GPIO_PIN_8
 };
-DaisyChain uart1DaisyChain(uart1Params);
+DaisyChain upperLeftLegDaisyChain(upperLeftLegParams);
 
-UartDriver uart2Driver(&osif, &uartif, &huart2);
-DaisyChainParams uart2Params = {
-    &uart2Driver,
+UartDriver lowerRightLegDriver(&osif, &uartif, UART_HANDLE_LowerRightLeg);
+DaisyChainParams lowerRightLegParams = {
+    &lowerRightLegDriver,
     &gpioif,
     GPIOA,
     GPIO_PIN_4
 };
-DaisyChain uart2DaisyChain(uart2Params);
+DaisyChain lowerRightLegDaisyChain(lowerRightLegParams);
 
-UartDriver uart3Driver(&osif, &uartif, &huart3);
-DaisyChainParams uart3Params = {
-    &uart3Driver,
+UartDriver headAndArmsDriver(&osif, &uartif, UART_HANDLE_HeadAndArms);
+DaisyChainParams headAndArmsParams = {
+    &headAndArmsDriver,
     &gpioif,
     GPIOB,
     GPIO_PIN_2
 };
-DaisyChain uart3DaisyChain(uart3Params);
+DaisyChain headAndArmsDaisyChain(headAndArmsParams);
 
-UartDriver uart4Driver(&osif, &uartif, &huart4);
-DaisyChainParams uart4Params = {
-    &uart4Driver,
+UartDriver upperRightLegDriver(&osif, &uartif, UART_HANDLE_UpperRightLeg);
+DaisyChainParams upperRightLegParams = {
+    &upperRightLegDriver,
     &gpioif,
     GPIOC,
     GPIO_PIN_3
 };
-DaisyChain uart4DaisyChain(uart4Params);
+DaisyChain upperRightLegDaisyChain(upperRightLegParams);
 
-UartDriver uart6Driver(&osif, &uartif, &huart6);
-DaisyChainParams uart6Params = {
-    &uart6Driver,
+UartDriver lowerLeftLegDriver(&osif, &uartif, UART_HANDLE_LowerLeftLeg);
+DaisyChainParams lowerLeftLegParams = {
+    &lowerLeftLegDriver,
     &gpioif,
     GPIOC,
     GPIO_PIN_8
 };
-DaisyChain uart6DaisyChain(uart6Params);
+DaisyChain lowerLeftLegDaisyChain(lowerLeftLegParams);
 
-MX28 motor1(1, &uart2DaisyChain);
-MX28 motor2(2, &uart2DaisyChain);
-MX28 motor3(3, &uart2DaisyChain);
-MX28 motor4(4, &uart4DaisyChain);
-MX28 motor5(5, &uart4DaisyChain);
-MX28 motor6(6, &uart4DaisyChain);
-MX28 motor7(7, &uart1DaisyChain);
-MX28 motor8(8, &uart1DaisyChain);
-MX28 motor9(9, &uart1DaisyChain);
-MX28 motor10(10, &uart6DaisyChain);
-MX28 motor11(11, &uart6DaisyChain);
-MX28 motor12(12, &uart6DaisyChain);
-AX12A motor13(13, &uart3DaisyChain);
-AX12A motor14(14, &uart3DaisyChain);
-AX12A motor15(15, &uart3DaisyChain);
-AX12A motor16(16, &uart3DaisyChain);
-AX12A motor17(17, &uart3DaisyChain);
-AX12A motor18(18, &uart3DaisyChain);
+MX28 motor1(1, &lowerRightLegDaisyChain);
+MX28 motor2(2, &lowerRightLegDaisyChain);
+MX28 motor3(3, &lowerRightLegDaisyChain);
+MX28 motor4(4, &upperRightLegDaisyChain);
+MX28 motor5(5, &upperRightLegDaisyChain);
+MX28 motor6(6, &upperRightLegDaisyChain);
+MX28 motor7(7, &upperLeftLegDaisyChain);
+MX28 motor8(8, &upperLeftLegDaisyChain);
+MX28 motor9(9, &upperLeftLegDaisyChain);
+MX28 motor10(10, &lowerLeftLegDaisyChain);
+MX28 motor11(11, &lowerLeftLegDaisyChain);
+MX28 motor12(12, &lowerLeftLegDaisyChain);
+AX12A motor13(13, &headAndArmsDaisyChain);
+AX12A motor14(14, &headAndArmsDaisyChain);
+AX12A motor15(15, &headAndArmsDaisyChain);
+AX12A motor16(16, &headAndArmsDaisyChain);
+AX12A motor17(17, &headAndArmsDaisyChain);
+AX12A motor18(18, &headAndArmsDaisyChain);
 
 std::array<Motor*, 18> motors = {
     &motor1,
@@ -135,17 +135,17 @@ MPU6050 imuData(&hi2c1);
 void initMotorIOType(IO_Type io_type){
     constexpr TickType_t MOTOR_MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
 
-    uart1Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    uart2Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    uart3Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    uart4Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    uart6Driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    upperLeftLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    lowerRightLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    headAndArmsDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    upperRightLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    lowerLeftLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
 
-    uart1DaisyChain.setIOType(io_type);
-    uart2DaisyChain.setIOType(io_type);
-    uart3DaisyChain.setIOType(io_type);
-    uart4DaisyChain.setIOType(io_type);
-    uart6DaisyChain.setIOType(io_type);
+    upperLeftLegDaisyChain.setIOType(io_type);
+    lowerRightLegDaisyChain.setIOType(io_type);
+    headAndArmsDaisyChain.setIOType(io_type);
+    upperRightLegDaisyChain.setIOType(io_type);
+    lowerLeftLegDaisyChain.setIOType(io_type);
 }
 
 } // end namespace periph
