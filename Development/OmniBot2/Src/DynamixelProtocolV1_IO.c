@@ -27,7 +27,7 @@
 #include "DynamixelProtocolV1_IO.h"
 #include "Dynamixel_Data.h"
 
-#include "SystemConf.h"
+//#include "SystemConf.h"
 
 #if defined(THREADED)
 #include "Notification.h"
