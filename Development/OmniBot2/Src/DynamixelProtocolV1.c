@@ -26,8 +26,11 @@
 
 #include "gpio.h"
 #include "usart.h"
-#include "DynamixelProtocolV1.h"
-#include "../h/DynamixelProtocolV1_IO.h"
+#include "Dynamixel_Types.h"
+#include "AX12A.h"
+#include "MX28.h"
+#include "Dynamixel_Data.h"
+#include "DynamixelProtocolV1_IO.h"
 
 
 

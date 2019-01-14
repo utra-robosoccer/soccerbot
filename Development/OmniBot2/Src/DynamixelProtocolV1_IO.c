@@ -24,8 +24,8 @@
  */
 
 /********************************* Includes **********************************/
-#include "../../h/DynamixelProtocolV1_IO.h"
-#include "../../h/Dynamixel_Data.h"
+#include "DynamixelProtocolV1_IO.h"
+#include "Dynamixel_Data.h"
 
 #include "SystemConf.h"
 
