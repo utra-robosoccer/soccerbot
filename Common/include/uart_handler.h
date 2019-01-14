@@ -73,7 +73,7 @@ typedef enum{
 /** @brief Motor data sent from the UART threads to the TX thread */
 typedef struct{
     uint8_t id;
-    void* payload;
+    float payload;
     enum{
         T_FLOAT
     }type;
@@ -99,7 +99,7 @@ typedef struct {
 
 
 /***************************** Function prototypes ****************************/
-void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend);
+void UART_ProcessEvent(UARTcmd_t* cmdPtr);
 
 /**
  * @}

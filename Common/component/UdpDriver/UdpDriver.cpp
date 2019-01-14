@@ -1,182 +1,255 @@
 /**
   *****************************************************************************
-  * @file    udp_driver.cpp
+  * @file    UdpDriver.cpp
   * @author  Robert Fairley
-  * @brief   Interface for UDP connection driver.
   *
   * @defgroup udp_driver
-  * @brief    Manages the usage of a UDP connection, attaching to a lwIP UDP PCB and ethernet interface.
+  * @brief    Implementation of UdpDriver using UDP functions of the lwIP Raw API.
   * @{
   *****************************************************************************
   */
 
-// May rename to LwipUdpDriver as it is specific to lwIP.
+/* TODO: namespacing+doxygen groups to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
+/* TODO: licensing terms for projects we are making use of e.g. googletest? */
 
-// TODO: use const_cast
 
-// TOOD: check defgroups are correct in cpp and h
-#include <UdpDriver.h>
+
+
+/********************************* Includes **********************************/
+#include "UdpDriver.h"
+
+
+
+
+/******************************** File-local *********************************/
+namespace {
+
+// Functions
+// ----------------------------------------------------------------------------
+
+static void defaultRecvCallback(void *arg,
+                                struct udp_pcb *pcb,
+                                struct pbuf *pPbuf,
+                                const ip_addr_t *addr,
+                                u16_t port)
+{
+    udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
+    caller->setRecvPbuf(pPbuf);
+    caller->signalReceiveCplt();
+}
+
+static bool transmitImpl(udp_driver::UdpDriver* caller, struct pbuf * pPbuf) {
+    const ip_addr_t addr = caller->getIpaddrPc();
+    bool success = false;
+
+    if (caller->getUdpInterface()->udpConnect(const_cast<struct udp_pcb *>(caller->getPcb()),
+            &addr, caller->getPortPc()) != ERR_OK) {
+        goto out;
+    }
+    if (caller->getUdpInterface()->udpSend(const_cast<struct udp_pcb *>(caller->getPcb()), pPbuf) != ERR_OK) {
+        goto disconnect;
+    }
+
+    success = true;
+
+  disconnect:
+    caller->getUdpInterface()->udpDisconnect(const_cast<struct udp_pcb *>(caller->getPcb()));
+
+  out:
+    return success;
+}
+
+} // end anonymous namespace
 
 namespace udp_driver {
 
-void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
-        const ip_addr_t *addr, u16_t port);
+/************************** UdpDriver ***************************/
+// Public
+// ----------------------------------------------------------------------------
 
 UdpDriver::UdpDriver() {
-
 }
 
-UdpDriver::UdpDriver(const ip_addr_t ipaddrIn, const ip_addr_t ipaddrPcIn,
-        const u16_t portIn, const u16_t portPcIn,
-        const udp_interface::UdpInterface *udpInterfaceIn,
-        const os::OsInterface *osInterfaceIn) :
-        ipaddr(ipaddrIn), ipaddrPc(ipaddrPcIn), port(portIn), portPc(portPcIn), udpInterface(
-                udpInterfaceIn), osInterface(osInterfaceIn) {
+UdpDriver::UdpDriver(const ip_addr_t ipaddrIn,
+                     const ip_addr_t ipaddrPcIn,
+                     const u16_t portIn,
+                     const u16_t portPcIn,
+                     const udp_interface::UdpInterface *udpInterfaceIn,
+                     const os::OsInterface *osInterfaceIn
+                     ) :
+                         ipaddr(ipaddrIn),
+                         ipaddrPc(ipaddrPcIn),
+                         port(portIn),
+                         portPc(portPcIn),
+                         udpInterface(udpInterfaceIn),
+                         osInterface(osInterfaceIn)
+{
 
 }
 
 UdpDriver::~UdpDriver() {
-    // TODO: call semaphore destroy functions
+
 }
 
-bool UdpDriver::setup() {
+/**
+ * @brief initialize UdpDriver and do critical checks.
+ * @return false if a check fails, true if initialization completes successfully.
+ */
+bool UdpDriver::initialize() {
+    if (!getUdpInterface() || !getOsInterface()) {
+        return false;
+    }
+
+    osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
+    if ((recvSemaphore = getOsInterface()->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1)) == NULL) {
+        return false;
+    }
+
+    osMutexStaticDef(UdpDriverRecvPbuf, &recvPbufMutexControlBlock);
+    if ((recvPbufMutex = getOsInterface()->OS_osMutexCreate(osMutex(UdpDriverRecvPbuf))) == NULL) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief set up UdpDriver to receive UdpPackets, calling recvCallback when a packet is received.
+ * @param recvCallback callback function to call when lwIP detects a packet has been received.
+ * @return true if setup completed successfully, false otherwise.
+ */
+bool UdpDriver::setupReceive(udp_recv_fn recvCallback) {
     bool success = false;
 
-    /* definition and creation of UdpDriverRxPbuf */
-    osMutexStaticDef(UdpDriverRxPbuf, &rxSemaphoreControlBlock);
-    rxSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverRxPbuf));
+    pcb = getUdpInterface()->udpNew();
 
-    /* definition and creation of UdpDriverTxPbuf */
-    osMutexStaticDef(UdpDriverTxPbuf, &txSemaphoreControlBlock);
-    txSemaphore = osInterface->OS_osMutexCreate(osMutex(UdpDriverTxPbuf));
-
-    /* Create the semaphores(s) */
-    /* definition and creation of UdpDriverRecv */
-    osSemaphoreStaticDef(UdpDriverRecv, &recvSemaphoreControlBlock);
-    recvSemaphore = osInterface->OS_osSemaphoreCreate(osSemaphore(UdpDriverRecv), 1);
-
-    if (!getUdpInterface()) {
+    if (!getPcb()) {
         return false;
     }
-    pcb = udpInterface->udpNew();
-    if (!pcb) {
-        return false;
-    }
-    success = (udpInterface->udpBind(pcb, &ipaddr, port) == ERR_OK);
+
+    success = (getUdpInterface()->udpBind(const_cast<struct udp_pcb *>(getPcb()), &ipaddr, port) == ERR_OK);
+
     if (success) {
-        udpInterface->udpRecv(pcb, recvCallback, this);
+        udp_recv_fn callback = (recvCallback == nullptr) ? defaultRecvCallback : recvCallback;
+        getUdpInterface()->udpRecv(const_cast<struct udp_pcb *>(getPcb()), callback, this);
     } else {
-        udpInterface->udpRemove(pcb);
+        forgetPcb();
     }
+
     return success;
 }
 
-// ethernetif_input needs to be called before this
-// Should have more error checking where void is returned where possible
-bool UdpDriver::receive(uint8_t *rxArrayOut) {
-    if (!getUdpInterface()) {
+/**
+ * @brief Wait for a packet to be available to read, and read the packet into rxArrayOut. Cleans up the packet read from lwIP.
+ * @param rxArrayOut array to read packet data payload into.
+ * @param numBytes the maximum number of bytes to read from the packet (should not be greater than the length of rxArrayout).
+ * @return true if read packet successfully, false if failed to read the packet into rxArrayOut.
+ */
+bool UdpDriver::receive(uint8_t *rxArrayOut, const size_t numBytes) {
+    bool success = false;
+    struct pbuf *recvPbuf = nullptr;
+
+    waitReceiveCplt();
+
+    recvPbuf = getRecvPbuf();
+
+    if (packetToBytes(rxArrayOut, numBytes, recvPbuf) <= (u16_t) 0) {
+        goto out;
+    }
+
+    success = true;
+
+  out:
+
+    if (recvPbuf) {
+        forgetRecvPbuf();
+    }
+
+    return success;
+}
+
+/**
+ * @brief transmit data from txArrayIn through UDP. Allocates and cleans up a new packet internally.
+ * @param txArrayIn array holding data to transmit.
+ * @param number of bytes to transmit.
+ * @return true if the data was transmitted successfully, false otherwise.
+ */
+bool UdpDriver::transmit(const uint8_t *txArrayIn, const size_t numBytes) {
+    bool success = false;
+
+    /* TODO: see if this can be allocated once at setup, if numBytes is known and unchanging. */
+    struct pbuf *allocPbuf = getUdpInterface()->pbufAlloc(PBUF_TRANSPORT, numBytes, PBUF_RAM);
+    if (!allocPbuf) {
+        goto out;
+    }
+
+    if (!bytesToPacket(txArrayIn, numBytes, allocPbuf)) {
+        goto out;
+    }
+
+    if (!transmitImpl(this, allocPbuf)) {
+        goto out;
+    }
+
+    success = true;
+
+  out:
+    if (allocPbuf) {
+        /* Error if zero pbufs freed for the one just allocated for Tx. */
+        if ((success = getUdpInterface()->pbufFree(allocPbuf) > (u8_t) 0)) {
+            allocPbuf = nullptr;
+        }
+    }
+
+    return success;
+}
+
+/**
+ * @brief Copy the received packet to byteArrayOut, to a maximum of numBytes.
+ * @param byteArrayOut the array to copy the bytes from the packet to.
+ * @param numBytes the maximum number of bytes to copy (should not be greater than the size of byteArrayOut).
+ * @param pPbuf pointer to the packet (pbuf) to copy the bytes from.
+ * @return the number of bytes copied to byteArrayOut.
+ */
+u16_t UdpDriver::packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const {
+    if (!byteArrayOut || !pPbuf) {
+        return (u16_t) 0;
+    }
+
+	return getUdpInterface()->pbufCopyPartial(pPbuf, byteArrayOut, numBytes, 0);
+}
+
+/**
+ * @brief Copy numBytes from byteArrayIn to a packet.
+ * @param byteArrayOut the array to copy the bytes to the packet from.
+ * @param numBytes the number of bytes to copy from byteArrayIn.
+ * @param pPbuf pointer to the packet (pbuf) to copy the bytes to.
+ * @return true if copied numBytes succesfully, false otherwise.
+ */
+bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const {
+    if (!byteArrayIn || !pPbuf) {
         return false;
     }
 
-    BaseType_t osError = osInterface->OS_xSemaphoreTake(recvSemaphore,
-            SEMAPHORE_WAIT_NUM_TICKS); // Wait for callback to write data members (including packets) to UdpInterface
-    if (osError != pdTRUE) {
-        return false;
+	return (getUdpInterface()->pbufTake(pPbuf, byteArrayIn, numBytes) == ERR_OK);
+}
+
+void UdpDriver::signalReceiveCplt() {
+    getOsInterface()->OS_osSemaphoreRelease(recvSemaphore);
+}
+
+void UdpDriver::waitReceiveCplt() {
+    while (getOsInterface()->OS_osSemaphoreWait(recvSemaphore, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
     }
-    if (!packetToBytes(rxArrayOut)) { // Copy contents of the packets into rxBuffer
-        return false;
+}
+
+void UdpDriver::setRecvPbuf(struct pbuf *pPbuf) {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
     }
-    if (udpInterface->pbufFree(getRxPbuf()) == (u8_t) 0) { // Bad if no pbufs were freed here - where did it go?
-        return false;
-    }
-    return true;
-}
-
-// Should have more error checking where void is returned where possible
-bool UdpDriver::transmit(const uint8_t *txArrayIn) {
-    if (!getUdpInterface()) {
-        return false;
-    }
-    if (!bytesToPacket(txArrayIn)) {
-        return false;
-    }
-    if (udpInterface->udpConnect(pcb, &ipaddrPc, portPc) != ERR_OK) {
-        return false;
-    }
-    if (udpInterface->udpSend(pcb, getTxPbuf()) != ERR_OK) {
-        return false;
-    }
-    udpInterface->udpDisconnect(pcb);
-    if (udpInterface->pbufFree(getTxPbuf()) == (u8_t) 0) {
-        return false;
-    }
-    return true;
-}
-
-const udp_interface::UdpInterface* UdpDriver::getUdpInterface() const {
-    return udpInterface;
-}
-
-const os::OsInterface* UdpDriver::getOsInterface() const {
-    return osInterface;
-}
-
-bool UdpDriver::setRxPbuf(struct pbuf *rxPbufIn) {
-    osInterface->OS_xSemaphoreTake(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
-    rxPbuf = rxPbufIn;
-    osInterface->OS_xSemaphoreGive(rxSemaphore);
-    return true;
-}
-
-bool UdpDriver::setTxPbuf(struct pbuf *txPbufIn) {
-    osInterface->OS_xSemaphoreTake(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
-    rxPbuf = txPbufIn;
-    osInterface->OS_xSemaphoreGive(txSemaphore);
-    return true;
-}
-
-struct pbuf* UdpDriver::getRxPbufThreaded() const {
-    osInterface->OS_xSemaphoreTake(rxSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
-    struct pbuf *p = rxPbuf;
-    osInterface->OS_xSemaphoreGive(rxSemaphore);
-    return p;
-}
-
-struct pbuf* UdpDriver::getTxPbufThreaded() const {
-    osInterface->OS_xSemaphoreTake(txSemaphore, SEMAPHORE_WAIT_NUM_TICKS);
-    struct pbuf *p = txPbuf;
-    osInterface->OS_xSemaphoreGive(txSemaphore);
-    return p;
-}
-
-struct pbuf* UdpDriver::getRxPbuf() const {
-    struct pbuf *p = rxPbuf;
-    return p;
-}
-
-struct pbuf* UdpDriver::getTxPbuf() const {
-    struct pbuf *p = txPbuf;
-    return p;
-}
-
-bool UdpDriver::giveRecvSemaphore() {
-    osInterface->OS_xSemaphoreGive(recvSemaphore);
-    return true;
-}
-
-bool UdpDriver::setPcb(struct udp_pcb *pcbIn) {
-    pcb = pcbIn;
-    return true;
-}
-
-// TODO: implement when doing smoke test
-bool UdpDriver::packetToBytes(uint8_t *byteArrayOut) const {
-    return true;
-}
-
-// TODO: implement when doing smoke test
-bool UdpDriver::bytesToPacket(const uint8_t *byteArrayIn) {
-    return true;
+    recvPbuf = pPbuf;
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
 }
 
 const ip_addr_t UdpDriver::getIpaddr() const {
@@ -187,23 +260,47 @@ const ip_addr_t UdpDriver::getIpaddrPc() const {
     return ipaddrPc;
 }
 
-u16_t UdpDriver::getPort() const {
+const u16_t UdpDriver::getPort() const {
     return port;
 }
 
-u16_t UdpDriver::getPortPc() const {
+const u16_t UdpDriver::getPortPc() const {
     return portPc;
+}
+
+const udp_interface::UdpInterface* UdpDriver::getUdpInterface() const {
+    return udpInterface;
+}
+
+const os::OsInterface* UdpDriver::getOsInterface() const {
+    return osInterface;
 }
 
 struct udp_pcb* UdpDriver::getPcb() const {
     return pcb;
 }
 
-void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
-        const ip_addr_t *addr, u16_t port) {
-    udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
-    caller->setRxPbuf(p);
-    caller->giveRecvSemaphore();
+struct pbuf* UdpDriver::getRecvPbuf() const {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
+    struct pbuf *pPbuf = recvPbuf;
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
+    return pPbuf;
+}
+
+void UdpDriver::forgetRecvPbuf() {
+    while (getOsInterface()->OS_osMutexWait(recvPbufMutex, SEMAPHORE_WAIT_NUM_MS) != osOK) {
+        ;
+    }
+    getUdpInterface()->pbufFree(recvPbuf);
+    setRecvPbuf(nullptr);
+    getOsInterface()->OS_osMutexRelease(recvPbufMutex);
+}
+
+void UdpDriver::forgetPcb() {
+    getUdpInterface()->udpRemove(const_cast<struct udp_pcb *>(getPcb()));
+    pcb = nullptr;
 }
 
 } // end namespace udp_driver
@@ -211,4 +308,4 @@ void recvCallback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
 /**
  * @}
  */
-/* end - module name */
+/* end - udp_driver */

@@ -21,7 +21,7 @@
 /********************************** Externs **********************************/
 // These functions are not defined in the F767xx's HAL drivers, so we drag them
 // over from the F446xx's HAL drivers
-#if defined(STM32F767xx)
+#if defined(USE_MANUAL_UART_ABORT_DEFINITIONS)
 /**
   * @brief  Abort ongoing Transmit transfer (blocking mode).
   * @param  huart UART handle.
@@ -115,13 +115,9 @@ namespace uart{
 /***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------
-HalUartInterface::HalUartInterface(){
+HalUartInterface::HalUartInterface(){;}
 
-}
-
-HalUartInterface::~HalUartInterface(){
-
-}
+HalUartInterface::~HalUartInterface(){;}
 
 HAL_StatusTypeDef HalUartInterface::transmitPoll(
     const UART_HandleTypeDef* uartHandlePtr,
@@ -217,6 +213,14 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
 
     return status;
 }
+
+__IO uint32_t HalUartInterface::getDmaRxInstanceNDTR(
+    const UART_HandleTypeDef* uartHandlePtr
+) const
+{
+    return const_cast<UART_HandleTypeDef*>(uartHandlePtr)->hdmarx->Instance->NDTR;
+}
+
 #endif
 
 void HalUartInterface::abortTransmit(
@@ -237,7 +241,14 @@ void HalUartInterface::abortReceive(
     );
 }
 
+__IO uint32_t HalUartInterface::getErrorCode(
+    const UART_HandleTypeDef* uartHandlePtr
+) const
+{
+    return const_cast<UART_HandleTypeDef*>(uartHandlePtr)->ErrorCode;
 }
+
+} // end namespace uart
 
 /**
  * @}

@@ -98,10 +98,10 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="Common/app|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|component|Common/hardware/HalUartInterface.cpp|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/CircularDmaBuffer"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/PcInterface"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UdpDriver"/>
 					</sourceEntries>
@@ -195,7 +195,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Common/app|Common/test/PcInterface_test.cpp|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|Common/include|component|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|Common/test/UdpDriver_test.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Common/app|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|Common/include|component|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|Common/test/UdpDriver_test.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/CircularDmaBuffer"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel"/>

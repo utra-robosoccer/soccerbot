@@ -2,6 +2,7 @@
   *****************************************************************************
   * @file    UartDriver.h
   * @author  Tyler Gamvrelis
+  * @author  Robert Fairley
   *
   * @defgroup Header
   * @ingroup UartDriver
@@ -32,6 +33,7 @@ using os::OsInterface;
 
 /******************************** UartDriver *********************************/
 namespace uart{
+
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -49,11 +51,11 @@ public:
      * @brief Initializes the handle to the low-level hardware routines,
      *        associates a particular UART module on the board with this
      *        driver, and initializes the handle to the OS for system calls
+     * @param os_if Pointer to the object handling the calls to the OS
      * @param hw_if Pointer to the hardware-facing object handling the
      *        low-level UART routines
      * @param uartHandlePtr Pointer to a structure that contains
      *        the configuration information for the desired UART module
-     * @param os_if Pointer to the object handling the calls to the OS
      */
     UartDriver(
         OsInterface* os_if,
@@ -132,6 +134,11 @@ private:
      */
     IO_Type io_type = IO_Type::POLL;
 
+#if defined(THREADED)
+    /** @brief Pointer to the object handling system calls to the OS */
+    const OsInterface* os_if = nullptr;
+#endif
+
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
@@ -148,10 +155,7 @@ private:
      *        pointer has been set, otherwise false
      */
     bool hw_is_initialized = false;
-#if defined(THREADED)
-    /** @brief Pointer to the object handling system calls to the OS */
-    const OsInterface* os_if = nullptr;
-#endif
+
     /** @brief Maximum permitted time for blocking on a data transfer */
     TickType_t m_max_block_time;
 };

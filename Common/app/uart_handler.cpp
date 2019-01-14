@@ -16,6 +16,7 @@
 
 /********************************* Includes **********************************/
 #include "uart_handler.h"
+#include <math.h>
 
 
 
@@ -25,7 +26,7 @@
  * Sensor data queue. This module writes current positions of motors into this
  * queue
  */
-extern osMessageQId TXQueueHandle;
+extern osMessageQId BufferWriteQueueHandle;
 
 
 
@@ -40,27 +41,30 @@ extern osMessageQId TXQueueHandle;
  *         queue if a read is executed
  * @return None
  */
-void UART_ProcessEvent(UARTcmd_t* cmdPtr, TXData_t* DataToSend){
+void UART_ProcessEvent(UARTcmd_t* cmdPtr){
+    float pos;
+    bool success;
     MotorData_t data;
-    float pos = 0;
-    DataToSend->pData = &data;
+    TXData_t dataToSend;
+    dataToSend.eDataType = eMotorData;
+    dataToSend.pData = &data;
 
-    bool status = false;
     switch(cmdPtr->type){
         case cmdReadPosition:
-            status = cmdPtr->motorHandle->getPosition(pos);
+            success = cmdPtr->motorHandle->getPosition(pos);
 
+            // issue #130: send NAN upon read failure
+            data.payload = success ? pos : NAN;
             data.id = cmdPtr->motorHandle->id();
-            data.payload = &pos;
             data.type = MotorData_t::T_FLOAT;
 
-            xQueueSend(TXQueueHandle, DataToSend, 0);
+            xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
             break;
         case cmdWritePosition:
-            status = cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
+            cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
             break;
         case cmdWriteTorque:
-            status = cmdPtr->motorHandle->enableTorque(cmdPtr->value);
+            cmdPtr->motorHandle->enableTorque(cmdPtr->value);
             break;
         default:
             break;

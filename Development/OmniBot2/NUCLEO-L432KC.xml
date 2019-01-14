@@ -12,8 +12,8 @@
 <targetDefinitions>
   <board id="nucleo-l432kc">
     <name>NUCLEO-L432KC</name>
-    <dbgIF>JTAG</dbgIF>
     <dbgIF>SWD</dbgIF>
+    <dbgIF>JTAG</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
     <mcuId>stm32l432kcux</mcuId>
   </board>

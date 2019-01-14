@@ -147,7 +147,7 @@ int main(void) {
         int prev = 0;
         /*1. Receive all pwm inputs from PC */
         do {
-            status = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 1000);
+            status = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 10);
             setMotor1Dir();
             setMotor2Dir();
             setMotor3Dir();
@@ -185,8 +185,9 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        HAL_UART_Transmit(&huart2, (unsigned char *) "next", 4, 1000);
-        HAL_Delay(100);
+        HAL_UART_Transmit(&huart2, &rx_buf, 1, 10);
+        // HAL_UART_Transmit(&huart2, (unsigned char *) "next", 4, 1000);
+        // HAL_Delay(100);
     }
 
     /* USER CODE END 3 */

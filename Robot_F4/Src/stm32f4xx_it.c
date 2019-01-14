@@ -86,21 +86,23 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-//	__asm volatile
-//	(
-//	" tst lr, #4\n"
-//	" ite eq\n"
-//	" mrseq r0, msp\n"
-//	" mrsne r0, psp\n"
-//	" ldr r1, [r0, #24]\n"
-//	" ldr r2, handler2_address_const\n"
-//	" bx r2\n"
-//	" handler2_address_const: .word pop_registers_from_fault_stack\n"
-//	);
+//    NVIC_SystemReset(); // Comment this out if debugging
+	__asm volatile
+	(
+	" tst lr, #4\n"
+	" ite eq\n"
+	" mrseq r0, msp\n"
+	" mrsne r0, psp\n"
+	" ldr r1, [r0, #24]\n"
+	" ldr r2, handler2_address_const\n"
+	" bx r2\n"
+	" handler2_address_const: .word pop_registers_from_fault_stack\n"
+	);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
   /* USER CODE BEGIN HardFault_IRQn 1 */
@@ -477,31 +479,31 @@ void USART6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-//void pop_registers_from_fault_stack(unsigned int * hardfault_args)
-//{
-//    // These may cause a compiler warning, but it is good to keep them here
-//    // since they help with debugging hard faults
-//    volatile unsigned int stacked_r0;
-//    volatile unsigned int stacked_r1;
-//    volatile unsigned int stacked_r2;
-//    volatile unsigned int stacked_r3;
-//    volatile unsigned int stacked_r12;
-//    volatile unsigned int stacked_lr;
-//    volatile unsigned int stacked_pc;
-//    volatile unsigned int stacked_psr;
-//
-//    stacked_r0 = ((unsigned long) hardfault_args[0]);
-//    stacked_r1 = ((unsigned long) hardfault_args[1]);
-//    stacked_r2 = ((unsigned long) hardfault_args[2]);
-//    stacked_r3 = ((unsigned long) hardfault_args[3]);
-//
-//    stacked_r12 = ((unsigned long) hardfault_args[4]);
-//    stacked_lr = ((unsigned long) hardfault_args[5]);
-//    stacked_pc = ((unsigned long) hardfault_args[6]);
-//    stacked_psr = ((unsigned long) hardfault_args[7]);
-//
-//    /* Inspect stacked_pc to locate the offending instruction. */
-//    for( ;; );
-//}
+void pop_registers_from_fault_stack(unsigned int * hardfault_args)
+{
+    // These may cause a compiler warning, but it is good to keep them here
+    // since they help with debugging hard faults
+    volatile unsigned int stacked_r0;
+    volatile unsigned int stacked_r1;
+    volatile unsigned int stacked_r2;
+    volatile unsigned int stacked_r3;
+    volatile unsigned int stacked_r12;
+    volatile unsigned int stacked_lr;
+    volatile unsigned int stacked_pc;
+    volatile unsigned int stacked_psr;
+
+    stacked_r0 = ((unsigned long) hardfault_args[0]);
+    stacked_r1 = ((unsigned long) hardfault_args[1]);
+    stacked_r2 = ((unsigned long) hardfault_args[2]);
+    stacked_r3 = ((unsigned long) hardfault_args[3]);
+
+    stacked_r12 = ((unsigned long) hardfault_args[4]);
+    stacked_lr = ((unsigned long) hardfault_args[5]);
+    stacked_pc = ((unsigned long) hardfault_args[6]);
+    stacked_psr = ((unsigned long) hardfault_args[7]);
+
+    /* Inspect stacked_pc to locate the offending instruction. */
+    for( ;; );
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

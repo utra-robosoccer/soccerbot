@@ -17,6 +17,7 @@
 
 
 /********************************* Includes **********************************/
+
 #include "OsInterfaceImpl.h"
 #include <stdint.h>
 #include "cmsis_os.h"
@@ -113,6 +114,36 @@ osSemaphoreId OsInterfaceImpl::OS_osSemaphoreCreate (
 ) const
 {
     return osSemaphoreCreate(semaphore_def, count);
+}
+
+osStatus OsInterfaceImpl::OS_osMutexWait (
+    osMutexId mutex_id,
+    uint32_t millisec
+) const
+{
+    return osMutexWait(mutex_id, millisec);
+}
+
+osStatus OsInterfaceImpl::OS_osMutexRelease (
+    osMutexId mutex_id
+) const
+{
+    return osMutexRelease(mutex_id);
+}
+
+int32_t OsInterfaceImpl::OS_osSemaphoreWait (
+    osSemaphoreId semaphore_id,
+    uint32_t millisec
+) const
+{
+    return osSemaphoreWait(semaphore_id, millisec);
+}
+
+osStatus OsInterfaceImpl::OS_osSemaphoreRelease (
+    osSemaphoreId semaphore_id
+) const
+{
+     return osSemaphoreRelease(semaphore_id);
 }
 
 } // end namespace os
