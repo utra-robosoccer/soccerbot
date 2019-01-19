@@ -215,19 +215,21 @@ int main(void) {
 
 
         /*extract second byte*/
+        MX_USART2_UART_Init_X(1000000);
         joint1_angle = extractAngle(rx_buf[1]);
-        joint_control(joint1_angle, joint1_id);
+        joint_horizontal_control(joint1_angle, joint1_id);
 
         /*extract third byte*/
         joint2_angle = extractAngle(rx_buf[2]);
-        joint_control(joint2_angle, joint2_id);
+        joint_vertical_control(joint2_angle, joint2_id);
 
+        MX_USART2_UART_Init_X(115200);
 
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        HAL_UART_Transmit(&huart2, rx_buf, 3, 10);
-        // HAL_UART_Transmit(&huart2, (unsigned char *) "next", 4, 1000);
+        //HAL_UART_Transmit(&huart2, rx_buf, 3, 10);
+        //HAL_UART_Transmit(&huart2, (unsigned char *) "done", 4, 1000);
         // HAL_Delay(100);
     }
 

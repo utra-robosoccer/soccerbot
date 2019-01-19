@@ -62,7 +62,7 @@ extern void _Error_Handler(char *, int);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void MX_USART2_UART_Init_X(uint32_t baudRate);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
