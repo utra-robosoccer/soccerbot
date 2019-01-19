@@ -49,9 +49,6 @@ tmp/
 # External tool builders
 .externalToolBuilders/
 
-# Locally stored "Eclipse launch configurations"
-*.launch
-
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 
@@ -102,3 +99,4 @@ Robot_F4/.settings/language.settings.xml
 Robot_F7/NUCLEO-F767ZI.xml
 Robot_F7/NUCLEO-F767ZI.xml
 Robot_F7/NUCLEO-F767ZI.xml
+Robot_F7/.settings/language.settings.xml
