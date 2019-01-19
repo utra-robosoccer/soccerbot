@@ -5,10 +5,9 @@
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
+    <arg name="frozen" default="false" />
 
     <arg name="field" default="robocup"/>
-
-    <env name="GAZEBO_MODEL_PATH" value="$(find omnibot_description)"/>
 
     <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
