@@ -390,10 +390,17 @@ void StartCommandTask(void const * argument)
         periph::motors[i]->setReturnDelayTime(RETURN_DELAY_TIME);
         periph::motors[i]->enableTorque(true);
 
-        if(i >= periph::MOTOR13){
-            // AX12A-only config for controls
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
+        if(i <= periph::MOTOR12){
+            // MX-28-only config for controls
+            auto pMotor = static_cast<dynamixel::MX28*>(periph::motors[i]);
+            pMotor->setPGain(45);
+            pMotor->setDGain(4);
+        }
+        else{
+            // AX-12A-only config for controls
+            auto pMotor = static_cast<dynamixel::AX12A*>(periph::motors[i]);
+            pMotor->setComplianceSlope(5);
+            pMotor->setComplianceMargin(1);
         }
     }
  
