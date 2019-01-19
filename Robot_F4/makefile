@@ -46,7 +46,7 @@ CFLAGS := -fprofile-arcs -ftest-coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=har
 
 # Define all include directories
 INC := \
--I"$(PROJECT_DIR)/Inc" \
+-I"$(PROJECT_DIR)/Inc/F4" \
 -I"$(COMMON_DIR)/include" \
 -I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc" \
 -I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" \
