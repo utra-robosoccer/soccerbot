@@ -572,7 +572,7 @@ void driveMotor(uint16_t pwm_value, uint8_t motor_num, uint16_t dir) {
 }
 
 double extractAngle(uint8_t rx_buf){
-	double angle = ((double)rx_buf/(double)255.00)*(double)300.00;
+	double angle = ((double)rx_buf/(double)255.00)*(double)240.00;
 	return angle;
 
 }
