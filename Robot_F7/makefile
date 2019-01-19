@@ -1,4 +1,4 @@
-#@file    Robot_F4 makefile
+#@file    Robot_F7 makefile
 #@author  Gokul Dharan
 #TODO: make this parseable by Doxygen
   
@@ -11,11 +11,13 @@ COMMON_DIR := $(abspath ../Common)
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Drivers/STM32F4xx_HAL_Driver/Src \
+Drivers/STM32F7xx_HAL_Driver/Src \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 Middlewares/Third_Party/FreeRTOS/Source \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
+Middlewares/Third_Party/LwIP/src/* \
+Middlewares/Third_Party/LwIP/system/* \
 Src \
 $(COMMON_DIR)/app \
 $(COMMON_DIR)/component/CircularDmaBuffer \
@@ -30,7 +32,7 @@ startup \
 
 
 # Sources to be excluded from the build
-EXCL_SRCS := $(COMMON_DIR)/hardware/LwipUdpInterface.cpp
+EXCL_SRCS := 
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
 C_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.c,$(SUBDIRS))))
@@ -42,19 +44,21 @@ S_OBJECTS := $(addprefix $(BUILD_DIR)/,$(patsubst $(COMMON_DIR)/%,%,$(S_SRCS:.s=
 
 
 # Define compiler flags
-CFLAGS := -fprofile-arcs -ftest-coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F446xx -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
+CFLAGS := -fprofile-arcs -ftest-coverage -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F767xx -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
 
 # Define all include directories
 INC := \
 -I"$(PROJECT_DIR)/Inc" \
 -I"$(COMMON_DIR)/include" \
--I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc" \
--I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" \
--I"$(PROJECT_DIR)/Drivers/CMSIS/Device/ST/STM32F4xx/Include" \
+-I"$(PROJECT_DIR)/Drivers/STM32F7xx_HAL_Driver/Inc" \
+-I"$(PROJECT_DIR)/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" \
+-I"$(PROJECT_DIR)/Drivers/CMSIS/Device/ST/STM32F7xx/Include" \
 -I"$(PROJECT_DIR)/Drivers/CMSIS/Include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F" \
+-I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1" \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/include" \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
+-I"$(PROJECT_DIR)/Middlewares/Third_Party/LwIP/src/include" \
+-I"$(PROJECT_DIR)/Middlewares/Third_Party/LwIP/system" \
 
 
 # Define target recipes for all objects in object list, create object in BUILD_DIR
@@ -100,16 +104,16 @@ $(BUILD_DIR)/%.o: %.s
 	@echo ' '
 
 
-LIBS := -larm_cortexM4lf_math
+LIBS := -l:libarm_cortexM7lfdp_math.a
 
 # All Target
-all: $(BUILD_DIR)/Robot_F4.elf
+all: $(BUILD_DIR)/Robot_F7.elf
 
 # Tool invocations
-$(BUILD_DIR)/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
+$(BUILD_DIR)/Robot_F7.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU G++ Linker'
-	arm-none-eabi-g++ -lgcov --coverage -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -L"Lib"  -specs=nosys.specs -specs=nano.specs -T"STM32F446RETx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -fno-exceptions -fno-rtti -o "$(BUILD_DIR)/Robot_F4.elf" $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS) $(LIBS) -lm
+	arm-none-eabi-g++ -lgcov --coverage -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -L"Lib"  -specs=nosys.specs -specs=nano.specs -T"STM32F767ZITx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -fno-exceptions -fno-rtti -o "$(BUILD_DIR)/Robot_F7.elf" $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
@@ -121,8 +125,8 @@ clean:
 
 post-build:
 	-@echo 'Generating hex and Printing size information:'
-	arm-none-eabi-objcopy -O ihex "$(BUILD_DIR)/Robot_F4.elf" "$(BUILD_DIR)/Robot_F4.hex"
-	arm-none-eabi-size "$(BUILD_DIR)/Robot_F4.elf"
+	arm-none-eabi-objcopy -O ihex "$(BUILD_DIR)/Robot_F7.elf" "$(BUILD_DIR)/Robot_F7.hex"
+	arm-none-eabi-size "$(BUILD_DIR)/Robot_F7.elf"
 	-@echo ' '
 
 .PHONY: all clean dependents
