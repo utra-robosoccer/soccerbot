@@ -68,7 +68,7 @@ void SystemClock_Config(void);
 char rx_buf[4] = "...."; //receives chars from uart, 1)AXid, 2)M1id, 3)M2id
 uint8_t rx_valid = -1; //stores valid id in non-string format
 
-Dynamixel_HandleTypeDef motorAX, motorAX3;
+Dynamixel_HandleTypeDef motorAX;
 Dynamixel_HandleTypeDef motorMX;
 
 int valid_rx(char *rx);
@@ -111,7 +111,6 @@ int main(void) {
 		VALID_MX1, // e.g. M101
 		VALID_MX2, // e.g. M201
 		QUERY, // e.g. ?...
-		MOVE, // "MOVE" for testing functionality
 		NA
 	} currCase, pastCase;
 
@@ -195,18 +194,6 @@ int main(void) {
 				HAL_UART_Transmit(&huart2, mes_id, strlen(mes_id), 1000);
 			}
 			break;
-
-		case MOVE:
-		    //MX_USART1_UART_Init_X(1000000);
-		    Dynamixel_Init(&motorAX3, 10, &huart1, Motor1_GPIO_Port,
-		                            Motor1_Pin, AX12ATYPE);
-		    //Dynamixel_SetBaudRate(&motorAX2, 1000000);
-
-		    HAL_UART_Transmit(&huart2, (unsigned char*) "Move 100", 8, 1000);
-		    Dynamixel_SetGoalPosition(&motorAX3,
-		            (double)70.00);
-		    HAL_Delay(1000);
-		    break;
 		default:
 			break;
 		}
@@ -305,11 +292,6 @@ int valid_rx(char *rx) {
 	 *
 	 */
 	int idCheck = 0;
-
-	if(rx[0]== 'M' && rx[1] == 'O' && rx[2] == 'V' && rx[3] == 'E'){
-	    return 5;
-	}
-
 	/*1. return if query case*/
 	if (rx[0] == '?') {
 		return 4;
@@ -337,7 +319,6 @@ int valid_rx(char *rx) {
 			return 3; //case 3: MX motor, 1M
 		}
 	}
-
 	return 0; //all other cases, return 0, invalid
 }
 
