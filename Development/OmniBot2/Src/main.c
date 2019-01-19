@@ -63,7 +63,8 @@ enum motor_direction {
     MOTOR_STOP = 0, MOTOR_CLOCKWISE = 1, MOTOR_COUNTERCLOCKWISE = 2
 };
 
-uint8_t rx_buf = 0, rx_buf2 = 0, rx_buf3 = 0;
+uint8_t rx_buf[3];
+//rx_buf2 = 0, rx_buf3 = 0;
 
 uint8_t x_case = 0; //0-stop, 1-0.1m/s, 2-0.2m/s, 3-0.3m/s
 uint8_t y_case = 0;
@@ -98,9 +99,9 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-void extractW(uint8_t rx_buf);
-void extractX(uint8_t rx_buf);
-void extractY(uint8_t rx_buf);
+void extractW(uint8_t rx_buf_1);
+void extractX(uint8_t rx_buf_1);
+void extractY(uint8_t rx_buf_1);
 
 double extractAngle(uint8_t rx_buf);
 void joint_control(double angle, int joint_id);
@@ -169,9 +170,9 @@ int main(void) {
              * while status_b1 is NOT HAL_OK, stay in this DO loop to
              * set motor directions and actuate them(PWM)
              */
-            status_b1 = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 10);
-            status_b2 = HAL_UART_Receive(&huart2, &rx_buf2, sizeof(uint8_t), 10);
-            status_b3 = HAL_UART_Receive(&huart2, &rx_buf3, sizeof(uint8_t), 10);
+            status_b1 = HAL_UART_Receive(&huart2, rx_buf, 3*sizeof(uint8_t), 10);
+            //status_b2 = HAL_UART_Receive(&huart2, &rx_buf2, sizeof(uint8_t), 10);
+            //status_b3 = HAL_UART_Receive(&huart2, &rx_buf3, sizeof(uint8_t), 10);
             setMotor1Dir();
             setMotor2Dir();
             setMotor3Dir();
@@ -183,7 +184,7 @@ int main(void) {
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
                 prev = 1;
             }
-        } while (status_b1 != HAL_OK || status_b2 != HAL_OK || status_b3 != HAL_OK);
+        } while (status_b1 != HAL_OK);
 
         status_b1 = HAL_ERROR; //reset
         status_b2 = HAL_ERROR; //reset
@@ -200,9 +201,9 @@ int main(void) {
         /* 2. Convert the character in the buffer to floats/integers */
         /* Assumed: at max speed, the wheel is turning 1 rev/sec => 6.28*0.05*/
         // Global variables including x_dir, w_dir, y_dir, and pwm's are updated
-        extractW(rx_buf);
-        extractX(rx_buf);
-        extractY(rx_buf);
+        extractW(rx_buf[0]);
+        extractX(rx_buf[0]);
+        extractY(rx_buf[0]);
 
         /* 3. With the updated globals, set the appropriate speeds(PWM) for
          * all motors using SET_COMPARE function*/
@@ -210,18 +211,18 @@ int main(void) {
 
 
         /*extract second byte*/
-        joint1_angle = extractAngle(rx_buf2);
+        joint1_angle = extractAngle(rx_buf[1]);
         joint_control(joint1_angle, joint1_id);
 
         /*extract third byte*/
-        joint2_angle = extractAngle(rx_buf3);
+        joint2_angle = extractAngle(rx_buf[2]);
         joint_control(joint2_angle, joint2_id);
 
 
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        HAL_UART_Transmit(&huart2, &rx_buf, 1, 10);
+        HAL_UART_Transmit(&huart2, rx_buf, 3, 10);
         // HAL_UART_Transmit(&huart2, (unsigned char *) "next", 4, 1000);
         // HAL_Delay(100);
     }
