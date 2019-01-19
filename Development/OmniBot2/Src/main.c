@@ -87,8 +87,8 @@ uint8_t isStop = 0;
 double joint1_angle;
 double joint2_angle;
 
-int joint1_id = 16;
-int joint2_id = 22;
+uint8_t joint1_id = 10;
+uint8_t joint2_id = 16;
 
 HAL_StatusTypeDef status_b1, status_b2, status_b3;
 /* Private variables ---------------------------------------------------------*/
@@ -104,7 +104,8 @@ void extractX(uint8_t rx_buf_1);
 void extractY(uint8_t rx_buf_1);
 
 double extractAngle(uint8_t rx_buf);
-void joint_control(double angle, int joint_id);
+void joint_horizontal_control(double angle, uint8_t joint_id);
+void joint_vertical_control(double angle, uint8_t joint_id);
 
 int convertToInt(char *rx);
 //uint32_t get_pwm(float vel);
@@ -118,8 +119,8 @@ void setMotor4Dir();
 void move_to_pos();
 
 
-Dynamixel_HandleTypeDef motorAX;
-Dynamixel_HandleTypeDef motorMX;
+Dynamixel_HandleTypeDef motorAX_hor;
+Dynamixel_HandleTypeDef motorAX_vert;
 
 /* USER CODE END PFP */
 
@@ -173,10 +174,12 @@ int main(void) {
             status_b1 = HAL_UART_Receive(&huart2, rx_buf, 3*sizeof(uint8_t), 10);
             //status_b2 = HAL_UART_Receive(&huart2, &rx_buf2, sizeof(uint8_t), 10);
             //status_b3 = HAL_UART_Receive(&huart2, &rx_buf3, sizeof(uint8_t), 10);
+
             setMotor1Dir();
             setMotor2Dir();
             setMotor3Dir();
             setMotor4Dir();
+
             if (prev == 0) { //only start pwm when it has been stopped
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -185,6 +188,7 @@ int main(void) {
                 prev = 1;
             }
         } while (status_b1 != HAL_OK);
+
 
         status_b1 = HAL_ERROR; //reset
         status_b2 = HAL_ERROR; //reset
@@ -561,17 +565,22 @@ void driveMotor(uint16_t pwm_value, uint8_t motor_num, uint16_t dir) {
 }
 
 double extractAngle(uint8_t rx_buf){
-	double angle = (rx_buf/255)*360;
+	double angle = ((double)rx_buf/(double)255.00)*(double)300.00;
 	return angle;
 
 }
-void joint_control(double angle, int joint_id){
-	MX_USART2_UART_Init();
-	Dynamixel_Init(&motorAX, joint_id, &huart2, Motor_GPIO_Port,
+
+void joint_horizontal_control(double angle, uint8_t joint_id){ //joint_id = 10
+	//MX_USART2_UART_Init();
+	Dynamixel_Init(&motorAX_hor, joint_id, &huart2, Motor_GPIO_Port,
 				Motor1_Pin, AX12ATYPE);
+	Dynamixel_SetGoalPosition(&motorAX_hor, angle);
+}
 
-	Dynamixel_SetGoalPosition(&motorAX, angle);
-
+void joint_vertical_control(double angle, uint8_t joint_id){ //joint_id = 16
+    Dynamixel_Init(&motorAX_vert, joint_id, &huart2, Motor_GPIO_Port,
+                    Motor2_Pin, AX12ATYPE);
+    Dynamixel_SetGoalPosition(&motorAX_vert, angle);
 }
 
 //int get_pwm_speed(uint8_t speed){
