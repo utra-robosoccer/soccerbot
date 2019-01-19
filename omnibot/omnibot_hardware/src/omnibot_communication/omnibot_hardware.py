@@ -17,7 +17,6 @@ import struct
 from datetime import datetime
 from prettytable import PrettyTable
 
-
 # SR: needs cmd_vel msg?
 try:
     import rospy
@@ -34,14 +33,8 @@ def logString(userMsg):
     ''' Prints the desired string to the shell, precedded by the date and time.
     '''
     print(datetime.now().strftime('%H.%M.%S.%f') + " " + userMsg)
-
-
-
-
     
 
-    
-    
 class omnibot_hardware:
     def __init__(self):
         logString("Starting PC-side application")
@@ -56,13 +49,13 @@ class omnibot_hardware:
         parser.add_argument(
             '--port',
             help='Specifies the port argument to the serial.Serial constructor. Default: /dev/ttyUSB0',
-            default='/dev/ttyUSB0'
+            default='/dev/ttyACM0'
         )
         
         parser.add_argument(
             '--baud',
-            help='Specifies the serial port baud rate. Default: 230400',
-            default=230400
+            help='Specifies the serial port baud rate. Default: 115200',
+            default=115200
         )
 
         parser.add_argument(
@@ -88,7 +81,8 @@ class omnibot_hardware:
         self.isROSmode = args['ros']
         self.port = args['port']
         self.baud = args['baud']
-        self.dryrun = args['dryrun']
+        #self.dryrun = args['dryrun']
+        self.dryrun = False
         
         
         logString("Started with ROS = {0}".format(args['ros'] == True))
@@ -137,7 +131,7 @@ class omnibot_hardware:
         x_sign = '0' if x > 0 else '1'
         y_sign = '0' if y > 0 else '1'
 
-        w_string = '10' if w > 0 else '01'
+        w_string = '01' if w > 0 else '11'
         w_string = '00' if w == 0 else w_string
         t = PrettyTable(['Type', 'Value', 'Corresponding Bits'])
         t.add_row(['Linear  X', str(x), x_sign + x_str])
@@ -146,7 +140,10 @@ class omnibot_hardware:
         t.add_row(['Msg Sent:', '----', w_string + y_sign + y_str + x_sign + x_str])
         print(t)
         if not self.dryrun:
-            return bytes('', int(w_string + y_sign + y_str + x_sign + x_str,2))
+            #return bytes('', int(w_string + y_sign + y_str + x_sign + x_str,2))
+            val = int(w_string + y_sign + y_str + x_sign + x_str, 2)
+            b = struct.pack('<B', val)
+            return b
 
 
     def cmd_callback(self, msg):
@@ -157,7 +154,7 @@ class omnibot_hardware:
                 logString("Disconnected!!!!!")
                 sys.exit(1)
         
-            self.ser.write(fsm(msg))
+            self.ser.write(self.fsm(msg))
     
 if __name__ == "__main__":
     sh = omnibot_hardware()
