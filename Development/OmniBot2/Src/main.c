@@ -48,6 +48,7 @@
 #include "MX28.h"
 #include "Dynamixel_Types.h"
 #include "DynamixelProtocolV1_IO.h"
+#include "DynamixelProtocolV1.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -56,11 +57,13 @@
 #define		WHEEL_DIAMETER   0.1
 #define		SPEED 			 1 //rps
 
+
+
 enum motor_direction {
     MOTOR_STOP = 0, MOTOR_CLOCKWISE = 1, MOTOR_COUNTERCLOCKWISE = 2
 };
 
-uint8_t rx_buf = 0;
+uint8_t rx_buf = 0, rx_buf2 = 0, rx_buf3 = 0;
 
 uint8_t x_case = 0; //0-stop, 1-0.1m/s, 2-0.2m/s, 3-0.3m/s
 uint8_t y_case = 0;
@@ -80,6 +83,12 @@ uint8_t motor3_dir = 0;
 uint8_t motor4_dir = 0;
 uint8_t isStop = 0;
 
+double joint1_angle;
+double joint2_angle;
+
+int joint1_id = 16;
+int joint2_id = 22;
+
 HAL_StatusTypeDef status_b1, status_b2, status_b3;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE END PV */
@@ -93,6 +102,9 @@ void extractW(uint8_t rx_buf);
 void extractX(uint8_t rx_buf);
 void extractY(uint8_t rx_buf);
 
+double extractAngle(uint8_t rx_buf);
+void joint_control(double angle, int joint_id);
+
 int convertToInt(char *rx);
 //uint32_t get_pwm(float vel);
 
@@ -103,6 +115,10 @@ void setMotor3Dir();
 void setMotor4Dir();
 
 void move_to_pos();
+
+
+Dynamixel_HandleTypeDef motorAX;
+Dynamixel_HandleTypeDef motorMX;
 
 /* USER CODE END PFP */
 
@@ -154,6 +170,8 @@ int main(void) {
              * set motor directions and actuate them(PWM)
              */
             status_b1 = HAL_UART_Receive(&huart2, &rx_buf, sizeof(uint8_t), 10);
+            status_b2 = HAL_UART_Receive(&huart2, &rx_buf2, sizeof(uint8_t), 10);
+            status_b3 = HAL_UART_Receive(&huart2, &rx_buf3, sizeof(uint8_t), 10);
             setMotor1Dir();
             setMotor2Dir();
             setMotor3Dir();
@@ -165,9 +183,11 @@ int main(void) {
                 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
                 prev = 1;
             }
-        } while (status_b1 != HAL_OK);
+        } while (status_b1 != HAL_OK || status_b2 != HAL_OK || status_b3 != HAL_OK);
 
         status_b1 = HAL_ERROR; //reset
+        status_b2 = HAL_ERROR; //reset
+        status_b3 = HAL_ERROR; //reset
 
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
@@ -187,6 +207,17 @@ int main(void) {
         /* 3. With the updated globals, set the appropriate speeds(PWM) for
          * all motors using SET_COMPARE function*/
         move_to_pos();
+
+
+        /*extract second byte*/
+        joint1_angle = extractAngle(rx_buf2);
+        joint_control(joint1_angle, joint1_id);
+
+        /*extract third byte*/
+        joint2_angle = extractAngle(rx_buf3);
+        joint_control(joint2_angle, joint2_id);
+
+
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
@@ -526,6 +557,20 @@ void driveMotor(uint16_t pwm_value, uint8_t motor_num, uint16_t dir) {
     default:
         break;
     }
+}
+
+double extractAngle(uint8_t rx_buf){
+	double angle = (rx_buf/255)*360;
+	return angle;
+
+}
+void joint_control(double angle, int joint_id){
+	MX_USART2_UART_Init();
+	Dynamixel_Init(&motorAX, joint_id, &huart2, Motor_GPIO_Port,
+				Motor1_Pin, AX12ATYPE);
+
+	Dynamixel_SetGoalPosition(&motorAX, angle);
+
 }
 
 //int get_pwm_speed(uint8_t speed){

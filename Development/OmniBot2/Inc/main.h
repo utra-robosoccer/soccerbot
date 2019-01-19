@@ -59,6 +59,9 @@
 #define SWCLK_GPIO_Port GPIOA
 #define VCP_RX_Pin GPIO_PIN_15
 #define VCP_RX_GPIO_Port GPIOA
+#define Motor1_Pin GPIO_PIN_6
+#define Motor2_Pin GPIO_PIN_7
+#define Motor_GPIO_Port GPIOB
 
 /* ########################## Assert Selection ############################## */
 /**
