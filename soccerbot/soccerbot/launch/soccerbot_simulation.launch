@@ -1,13 +1,13 @@
 <launch>
-    <arg name="vision" value="true" />
-    <arg name="darknet" value="false" />
-    <arg name="field_name" default="robocup" />
-    <arg name="frozen" default="false" />
+    <arg name="vision"      default="true" />
+    <arg name="darknet"     default="false" />
+    <arg name="field_name"  default="robocup" />
+    <arg name="frozen"      default="false" />
 
     <!-- Environment -->
     <include file="$(find soccer_gazebo)/launch/soccerbot_gazebo.launch">
-        <arg name="field" default="$(arg field_name)" />
-        <arg name="frozen" value="$(arg frozen)"/>
+        <arg name="field"   value="$(arg field_name)" />
+        <arg name="frozen"  value="$(arg frozen)"/>
     </include>
 
     <!-- Command for trajectories -->
@@ -34,6 +34,6 @@
     <!-- TODO -->
 
     <!-- RViz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true" />
 
 </launch>
