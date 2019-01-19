@@ -15,5 +15,7 @@
   <depend>tf2_ros</depend>
   <depend>std_msgs</depend>
   <depend>soccer_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
 
 </package>

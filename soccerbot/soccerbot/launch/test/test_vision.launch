@@ -1,0 +1,16 @@
+<launch>
+    <arg name="use_rosbag"  value="false" />
+    <arg name="rosbag_path" value="~/home/bags/vision1.bag" />
+    <arg name="robot_name"  value="omnibot" />
+
+    <include file="$(find soccerbot)/launch/$(arg robot_name)_simulation.launch">
+        <arg name="vision"      value="true" />
+        <arg name="darknet"     value="false" />
+        <arg name="field_name"  value="robocup" />
+        <arg name="frozen"      value="false" />
+    </include>
+
+    <!-- Play the vision bag file -->
+    <node if="$(arg use_rosbag)" pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg rosbag_path)"/>
+
+</launch>
