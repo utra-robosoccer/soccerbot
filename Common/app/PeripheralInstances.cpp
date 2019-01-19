@@ -17,6 +17,7 @@
 #include "HalUartInterface.h"
 #include "GpioInterfaceImpl.h"
 #include "OsInterfaceImpl.h"
+#include "SystemConf.h"
 
 #include "usart.h"
 #include "gpio.h"
