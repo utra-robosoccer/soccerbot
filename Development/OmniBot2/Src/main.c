@@ -148,7 +148,6 @@ int main(void) {
     while (1) {
         int prev = 0;
 
-        //CASE 1: counter = 0
         do {
             /* while huart2 does not receive commands, in other words
              * while status_b1 is NOT HAL_OK, stay in this DO loop to
@@ -168,11 +167,6 @@ int main(void) {
             }
         } while (status_b1 != HAL_OK);
 
-        //CASE 2: counter = 1
-        //do-while for status_b2 :cam motor 1
-
-        //CASE 3: counter = 3
-        //do-while..
         status_b1 = HAL_ERROR; //reset
 
         HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
