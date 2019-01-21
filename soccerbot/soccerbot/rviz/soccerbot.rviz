@@ -8,7 +8,8 @@ Panels:
         - /Status1
         - /Grid1/Offset1
         - /TF1/Frames1
-        - /Map1
+        - /Computer Vision1
+        - /Localization1
       Splitter Ratio: 0.5
     Tree Height: 530
   - Class: rviz/Selection
@@ -51,37 +52,11 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /soccerbot/camera/image_raw
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        body:
-          Value: true
-        camera:
-          Value: true
-        left_back_wheel:
-          Value: true
-        left_front_wheel:
-          Value: true
-        right_back_wheel:
-          Value: true
-        right_front_wheel:
-          Value: true
       Marker Scale: 0.200000003
       Name: TF
       Show Arrows: true
@@ -91,15 +66,51 @@ Visualization Manager:
         {}
       Update Interval: 0
       Value: true
-    - Alpha: 0.699999988
-      Class: rviz/Map
-      Color Scheme: map
-      Draw Behind: false
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Image
+          Enabled: true
+          Image Topic: /soccerbot/camera/image_raw
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: Image
+          Normalize Range: true
+          Queue Size: 2
+          Transport Hint: raw
+          Unreliable: false
+          Value: true
       Enabled: true
-      Name: Map
-      Topic: /map
+      Name: Computer Vision
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 0.699999988
+          Class: rviz/Map
+          Color Scheme: map
+          Draw Behind: false
+          Enabled: true
+          Name: Map
+          Topic: /map
+          Unreliable: false
+          Use Timestamp: false
+          Value: true
+      Enabled: true
+      Name: Localization
+    - Alpha: 1
+      Arrow Length: 0.300000012
+      Axes Length: 0.300000012
+      Axes Radius: 0.00999999978
+      Class: rviz/PoseArray
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.0700000003
+      Head Radius: 0.0299999993
+      Name: PoseArray
+      Shaft Length: 0.230000004
+      Shaft Radius: 0.00999999978
+      Shape: Arrow (Flat)
+      Topic: /soccerbot/vision_poses
       Unreliable: false
-      Use Timestamp: false
       Value: true
   Enabled: true
   Global Options:
