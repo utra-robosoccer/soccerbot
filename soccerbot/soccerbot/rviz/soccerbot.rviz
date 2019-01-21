@@ -116,7 +116,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: base_footprint
     Frame Rate: 10
   Name: root
   Tools:
@@ -136,7 +136,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -0.00999998488
+      Angle: -0.359999895
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -149,8 +149,8 @@ Visualization Manager:
       Scale: 69.9510956
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 0.127009854
-      Y: 1.46003342
+      X: 0.0269444827
+      Y: 0.0313926116
     Saved: ~
 Window Geometry:
   Displays:
