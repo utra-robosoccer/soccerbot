@@ -1,0 +1,3 @@
+<launch>
+    <node name="test_computer_vision" pkg="soccer_matlab" type="test_computer_vision.sh" output="screen" cwd="node" />
+</launch>
