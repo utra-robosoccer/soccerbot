@@ -10,6 +10,7 @@ Panels:
         - /TF1/Frames1
         - /Computer Vision1
         - /Localization1
+        - /Localization1/Map1/Status1
       Splitter Ratio: 0.5
     Tree Height: 530
   - Class: rviz/Selection
@@ -94,24 +95,38 @@ Visualization Manager:
           Unreliable: false
           Use Timestamp: false
           Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/LaserScan
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 0; 4
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: LaserScan
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.0299999993
+          Style: Flat Squares
+          Topic: /soccerbot/vision_poses
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
       Enabled: true
       Name: Localization
-    - Alpha: 1
-      Arrow Length: 0.300000012
-      Axes Length: 0.300000012
-      Axes Radius: 0.00999999978
-      Class: rviz/PoseArray
-      Color: 255; 25; 0
-      Enabled: true
-      Head Length: 0.0700000003
-      Head Radius: 0.0299999993
-      Name: PoseArray
-      Shaft Length: 0.230000004
-      Shaft Radius: 0.00999999978
-      Shape: Arrow (Flat)
-      Topic: /soccerbot/vision_poses
-      Unreliable: false
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -146,7 +161,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 69.9510956
+      Scale: 100.174812
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
       X: 0.0269444827
