@@ -5,4 +5,7 @@ find_package(catkin REQUIRED)
 
 catkin_package()
 
-include_directories()
+install(PROGRAMS
+    scripts/test_computer_vision.sh
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
+)
