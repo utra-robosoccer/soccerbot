@@ -4,9 +4,9 @@
   <version>0.0.0</version>
   <description>The soccer_matlab package</description>
 
-  <maintainer email="jiashen.wang@robotics.utias.utoronto.ca">Jason</maintainer>
-
+  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+
 </package>
