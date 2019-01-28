@@ -24,6 +24,10 @@ Common
   `-- test      // Source files that contain unit tests.
 ```
 
+### Namespaces
+
+TODO
+
 ### File layout
 
 All new source/header files should be based on the templates in the [Templates](Templates) folder. This keeps the code structure consistent, and ensures the Doxygen fields are filled out.
