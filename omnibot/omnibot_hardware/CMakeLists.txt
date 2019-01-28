@@ -7,7 +7,7 @@ project(omnibot_hardware)
 find_package(catkin REQUIRED COMPONENTS 
   rospy
   std_msgs
-  soccer_msgs
+  omnibot_msgs
 )
 
 ## Uncomment this if the package has a setup.py. This macro ensures

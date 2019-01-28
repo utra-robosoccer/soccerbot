@@ -23,6 +23,7 @@ try:
     #from geometry_msgs.msg import Vector3
     #from geometry_msgs.msg import Quaternion
     from geometry_msgs.msg import Twist
+    from omnibot_msgs.msg import OmnibotGoal
     #from tf.msg import tfMessage
     #from tf.transformations import quaternion_from_euler
 except:
@@ -49,7 +50,7 @@ class omnibot_hardware:
         parser.add_argument(
             '--port',
             help='Specifies the port argument to the serial.Serial constructor. Default: /dev/ttyUSB0',
-            default='/dev/ttyACM0'
+            default='/dev/ttyUSB0'
         )
         
         parser.add_argument(
@@ -60,7 +61,6 @@ class omnibot_hardware:
 
         parser.add_argument(
             '--dryrun',
-            nargs='?',
             help='Dryrun, does not need hardware connected'
         )
         
@@ -81,14 +81,14 @@ class omnibot_hardware:
         self.isROSmode = args['ros']
         self.port = args['port']
         self.baud = args['baud']
-        #self.dryrun = args['dryrun']
-        self.dryrun = False
+        self.dryrun = args['dryrun']
         
         
         logString("Started with ROS = {0}".format(args['ros'] == True))
         
     def connectToEmbedded(self):
-        if self.dryrun:
+        print(self.dryrun.lower())
+        if self.dryrun.lower() == 'true': # Needs improvement, but now works with roslaunch file.
             logString("Dryrun invoked, will not connect to real hardware")
         else:
             logString(
@@ -155,6 +155,10 @@ class omnibot_hardware:
                 sys.exit(1)
         
             self.ser.write(self.fsm(msg))
+    def camera_callback(self, msg):
+	if self.dryrun:
+            print("camera_angle 1: " + str(msg.camera_yaw))
+            print("camera_angle 2: " + str(msg.camera_pitch))
     
 if __name__ == "__main__":
     sh = omnibot_hardware()
@@ -162,7 +166,8 @@ if __name__ == "__main__":
     
     if(sh.isROSmode == True):
         rospy.init_node('omnibot_hardware', anonymous=True)
-        rospy.Subscriber("/omnibot/cmd_vel", Twist, sh.cmd_callback, queue_size=1)        
+        rospy.Subscriber("/omnibot/cmd_vel", Twist, sh.cmd_callback, queue_size=1)
+        rospy.Subscriber("/omnibot/camera_angles", OmnibotGoal, sh.camera_callback, queue_size=1)       
         #rospy.Subscriber("robotGoal", RobotGoal, sh.cmd_callback, queue_size=1)
         rospy.spin() 
     else:
