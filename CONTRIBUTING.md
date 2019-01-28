@@ -32,7 +32,7 @@ All new source/header files should be based on the templates in the [Templates](
 
 PROPOSED
 
-Header files must have `#define` guards, of the format `<PROJECT>_<PATH>_<FILE>_H`. This is based on Google's [style guide](https://google.github.io/styleguide/cppguide.html#The__define_Guard). Including the `PROJECT` string in the guard reduces collision with different projects which may include code from each other and have files of the same name. An example guard is as follows:
+Header files must have `#define` guards, of the format `<PROJECT>_<PATH>_<FILE>_H`. This is based on Google's [style guide](https://google.github.io/styleguide/cppguide.html#The__define_Guard). Including the `PROJECT` string in the guard reduces collision with different projects which may include code from each other. An example guard is as follows:
 
 ```C
 #ifndef SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H
@@ -75,18 +75,18 @@ An example:
 
 ### Comments
 
-1. Each file must contain a Doxygen-style comment at the top, following the format in the [Templates](Templates) folder. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
+1. Each file must contain a Doxygen-style comment at the top, following the format in the examples in the[Templates](Templates) folder. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
 2. Functions must contain a Doxygen-style comment above them. In header (`.h`) files, function comments should include the Doxygen tags `@brief`, `@param`, `@return`. `@brief` tags should be at most 2 lines long. Function comments in source (`.c`/`.cpp`) files should include an `@details` tag describing any details that would be helpful to a developer reading the code.
-3. Code examples embedded within Doxygen comments must either use ticks "`", or @code @endcode to denote code.
-4. Before complicated lines or blocks of code, write comments inline with the code to help explain what the code is doing (using either `//` or `/*` syntax).
-5. Doxygen-style comments must be started as a C-style comment block with two as such: `/**`. Example:
+3. Code examples embedded within Doxygen comments must either use ticks "`", or @code and @endcode to denote code.
+4. Before complicated lines or blocks of code, write comments inline to explain what is going on (using either `//` or `/*` syntax).
+5. Doxygen-style comments must be started as a C-style comment block with two `*` as such:
 
     ```C++
     /**
     * @brief  Gets the day of the week
     * @return The day of the week
     */
-    days_t Date::getDay(){
+    day_t Calendar::getDay() {
         return theDay;
     }
     ```
@@ -118,26 +118,31 @@ Whenever you think of something that needs to be done sometime in the future, wr
 Example:
 
 ```C++
-uint8_t foo = -1; // TODO(tyler): Foo should not be assigned a negative value if it is unsigned
+uint8_t foo = -1; // TODO(tyler): foo should not be assigned a negative value if it is unsigned
 
 ```
 
 ## Naming
 
 ### Naming rules
-0. Function and variable names must be descriptive. Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviateions (in the context of this project) may also be used, e.g. "IT" for interrupt, and "DMA" for Direct Memory Access.
-1. Never begin the name of anything with an underscore. Such identifiers are generally reserved, and we don't want to risk collision.
-2. A name should only be all caps when it is for a constant or macro. The exception is for when the name is very short and rule 0 is satisfied better by having all caps.
-3. If you read the name of a bool out loud, it should essentially sound like a claim. For example:
+
+0. Function and variable names must be descriptive.
+1. PROPOSED: Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviateions (in the context of this project) may also be used, e.g. "IT" for interrupt, "DMA" for Direct Memory Access, UDP for User Datagram Protocol.
+2. Never begin the name of anything with an underscore. Such identifiers are generally reserved, and we don't want to risk collision.
+3. A name should only be all caps when it is for a constant or macro. The exception is for when the name is very short and rule 0 is satisfied better by having all caps.
+    
+    robert: what would an example of an exception to 3 look like?
+
+4. If you read the name of a bool out loud, it should essentially sound like a claim. For example:
 
     ```C++
     bool isInitialized = mySpecialFunction();
-    if(!isInitialized){
+    if(!isInitialized) {
         return;
     }
     ```
 
-4. (**C only**) Function names should be preceded by the name of the module they are associated with followed by an underscore. Example: `Dynamixel_getVoltage` is a function from the Dynamixel module that gets the voltage of an actuator.
+5. (**C only**) Function names should be preceded by the name of the module they are associated with followed by an underscore. Example: `Dynamixel_getVoltage` is a function from the Dynamixel module that gets the voltage of an actuator.
 
 ### Naming scheme summary
 
@@ -163,6 +168,7 @@ This summarizes the formatting applied to names. In the following table, apply t
 | namespace                             | `some_namespace` |
 | file - header                         | `CircularDmaBuffer.h` |
 | file - source                         | `CircularDmaBuffer.cpp` (always use .cpp) |
+| file - unit test                      | `CircularDmaBuffer_test.cpp` (append "_test") |
 | macro - include guard                 | `SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H` (see [include guards](#Include-guards)) |
 | macro - compiler flag                 | `USE_DEBUG_UART` |
 
@@ -201,14 +207,6 @@ bool unnecessarilyLongFunctionNameForNoGoodReason(
         int& outNum) {
     ... // 4 space indent
 }
-
-// Good - alternative
-bool unnecessarilyLongFunctionNameForNoGoodReason(const char* what, int num,
-                                                  uint32_t flags,
-                                                  coolEnum target,
-                                                  int& outNum) {
-    ...
-}
 ```
 
 - ([Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html#Function_Declarations_and_Definitions))
@@ -232,6 +230,7 @@ bool isNegative(int num) {
 ## C/C++ features
 
 ### Memory
+
 1. Heap usage is disallowed. Objects may either have static storage duration (i.e. allocated at compile time), or be allocated on the stack
 
 ### nullptr and NULL
@@ -248,19 +247,19 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
     using i2c::MPU6050; // Good (using declaration)
     ```
 
-2. Header files must not have anonymous namespaces
-3. All functions and data structures besides main should not reside in the global namespace. Instead, they should be in named or anonymous namespaces
+2. Header files must not have anonymous namespaces.
+3. All functions and data structures besides main should not reside in the global namespace. Instead, they should be in named or anonymous namespaces.
 
 
 ### Object-oriented (C++ only)
 
-1. Constructors must initialize their objects to a valid internal state
-2. Constructors must not perform any I/O
-3. If initialization of the class is error-prone, consider using an `Init()` [method](https://google.github.io/styleguide/cppguide.html#Doing_Work_in_Constructors)
+1. Constructors must initialize their objects to a valid internal state.
+2. Constructors must not perform any I/O.
+3. If initialization of a class can possibly return an error, consider initializing inside an `Init()` [method](https://google.github.io/styleguide/cppguide.html#Doing_Work_in_Constructors) rather than the constructor.
 4. The layout of class and struct members/methods based on visibility must be like so:
 
     ```C++
-    class Example{
+    class Example {
     public:
     ...
     protected:
@@ -273,29 +272,29 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
 ### Const-qualified function arguments and class methods (C++ only)
 
-1. Any class method which does not modify members of that class should be const-qualified
-2. Any function arguments which are not modified by the function should be const-qualified
+1. Any class method which does not modify members of that class should be const-qualified.
+2. Any function arguments which are not modified by the function should be const-qualified.
 
 ### Binary data
 
-1. Binary data should be represented using the stdint types (e.g. uint8_t, etc.)
+1. Binary data should be represented using the stdint types (e.g. uint8_t, etc.).
 
 ### Constants, macros, and inline functions
 
-1. Macros must only be used to conditionally compile code or conditionally include files (i.e. include guard). On that note, each header file must begin with a unique include guard. Exception: see rule 2
-2. (**C only**) The rare exception for which a macro is permitted for data is when you need to initialize something at compile-time that does not allow initialization with a constant
-3. (**C++ only**) constexpr must be used in place of macros, and is preferred to const
-4. Inline functions must be used in place of macro functions as they are type-safe
+1. Macros must only be used to conditionally compile code or conditionally include files (i.e. include guard). On that note, each header file must begin with a unique include guard. Exception: see rule 2.
+2. (**C only**) The rare exception for which a macro is permitted for data is when you need to initialize something at compile-time that does not allow initialization with a constant.
+3. (**C++ only**) constexpr must be used in place of macros, and is preferred to const.
+4. Inline functions must be used in place of macro functions as they are type-safe.
 
 
 ### Enums
 
-1. Prefer to use enums wherever it makes sense in terms of enhancing readability
-2. (**C++ only**) Prefer to use enum classes over regular enums
+1. Prefer to use enums wherever it makes sense in terms of enhancing readability.
+2. (**C++ only**) Prefer to use enum classes over regular enums.
 
     ```C++
     /** @brief Colors of the rainbow */
-    enum class Colors{
+    enum class Colors {
         RED,
         ORANGE,
         YELLOW,
@@ -338,8 +337,7 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
     ...
     ```
 
-2. **C only:** If a variable or function can be made static, it should be static. When static variables and functions are defined in the scope of a file, it makes them "private" in the sense that they can only be seen from within the file (or any file which includes it). Having private data and functions is often useful. Example: by making sensitive data static, you protect it from being tampered with from outside the library which is using it, thus reducing the probability that the code will be misused. **C++ only:** same thing as above, but for private class members. **The spirit of these scope rules is to minimize the interfaces you expose across the program**
-
+2. **C only:** If a variable or function can be made static, it should be static. When static variables and functions are defined in the scope of a file, it makes them "private" in the sense that they can only be seen from within the file (or any file which includes it). Having private data and functions is often useful. Example: by making sensitive data static, you protect it from being tampered with from outside the library which is using it, thus reducing the probability that the code will be misused. **C++ only:** same thing as above; make class members private where possible. **The spirit of these scope rules is to minimize the interfaces you expose across the program**.
 
 ### Typecasting
 
@@ -357,31 +355,31 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
 ## Errors
 
-1. Where it is possible for anything to go wrong in a function, that function should return status codes
+1. Where it is possible for anything to go wrong in a function, that function should return status codes. Status codes can be integer types or boolean, and their meaning should be documented by the function declaration.
 
 ## Unit testing
 
 TODO: link to wiki on mockable interfaces
 
-1. All hardware and OS-related functions must be in wrapper classes which inherit from an interface class (i.e. abstract class) to facilitate mocking. These hardware-facing classes should not have data members, only functions.
-2. The test driver for a component must follow a name of the form \<component\>_test.cpp (TODO: move to naming section)
+1. All hardware and OS-related functions must be in wrapper classes which inherit from an interface class (i.e. abstract class) to facilitate mocking. These hardware-facing classes should not have data members, only functions. See our [wiki page on mocking](https://github.com/utra-robosoccer/soccer-embedded/wiki/Tutorial:-Mocking-hardware-with-GMock) for how to do this.
+2. The test driver for a component must follow a name of the form \<component\>_test.cpp.
 
 ## General Development
 
 ### Compiler warnings
 
-1. Any code written by us should be free of compiler warnings. Any exception should be documented
+1. Any code written by us should be free of compiler warnings. Any exception should be documented.
 
 ### Dead code
 
-1. Delete unused variables (i.e. if the compiler issues a warning that a variable is unused, you better have a good reason for keeping it around). This does not hold for 3rd party code we are using, it only holds for code we write 
-2. If there is code that is now outdated and will never be used, it should be deleted
-3. Any conditionally-executed code whose conditions will never be satisfied must be removed
+1. Delete unused variables (i.e. if the compiler issues a warning that a variable is unused, you better have a good reason for keeping it around). This does not hold for 3rd party code we are using, it only holds for code we write.
+2. If there is code that is now outdated and will never be used, it should be deleted.
+3. Any conditionally-executed code whose conditions will never be satisfied must be removed.
 
 ### Code generation
 
 TODO: remove this section once fully migrated away from Cube
 
-1. The configuration of all peripherals must be done from within Cube
-2. Pin names should be labelled in Cube once their functionality has been decided
-3. All FreeRTOS things that _can_ be configured in Cube _should_ be configured in Cube. Examples of things that cannot be configured in Cube are event groups and queue sets. This rule _can_ be bypassed for other things (e.g. mutexes), as long as there is a sufficiently good reason that the team supports, and the scenario is documented
+1. The configuration of all peripherals must be done from within Cube.
+2. Pin names should be labelled in Cube once their functionality has been decided.
+3. All FreeRTOS things that _can_ be configured in Cube _should_ be configured in Cube. Examples of things that cannot be configured in Cube are event groups and queue sets. This rule _can_ be bypassed for other things (e.g. mutexes), as long as there is a sufficiently good reason that the team supports, and the scenario is documented.
