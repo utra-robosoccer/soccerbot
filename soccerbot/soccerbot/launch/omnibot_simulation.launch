@@ -1,8 +1,0 @@
-<launch>
-    <!-- Model in Gazebo -->
-    <include file="$(find soccer_gazebo)/launch/omnibot_gazebo.launch" />
-
-    <!-- Motor Drive -->
-    <include file="$(find omnibot_drive)/launch/omnibot_drive.launch" />
-
-</launch>
