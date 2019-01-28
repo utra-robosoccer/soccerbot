@@ -1,0 +1,9 @@
+<launch>
+
+    <include file="$(find soccerbot)/launch/modules/localization.launch" />
+
+    <!-- Play the vision video file -->
+    <include file="$(find soccer_matlab)/launch/test_computer_vision.launch" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true" />t
+</launch>

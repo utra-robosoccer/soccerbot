@@ -15,6 +15,7 @@
   <depend>soccer_transforms</depend>
   <depend>soccer_team_communication</depend>
   <depend>soccer_common</depend>
+  <depend>soccer_matlab</depend>
   <depend>soccer_hardware</depend>
   <depend>usb_cam</depend>
   <depend>amcl</depend>

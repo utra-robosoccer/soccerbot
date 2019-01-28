@@ -10,3 +10,6 @@
 [submodule "soccerbot/soccer_hardware/src/soccer_communication"]
 	path = soccerbot/soccer_hardware/src/soccer_communication
 	url = https://github.com/utra-robosoccer/soccer-communication
+[submodule "soccerbot/soccer_matlab/matlab"]
+	path = soccerbot/soccer_matlab/matlab
+	url = https://github.com/utra-robosoccer/soccer-matlab
