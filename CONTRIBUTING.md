@@ -79,7 +79,7 @@ An example:
 
 ### Comments
 
-1. Each file must contain a Doxygen-style comment at the top, following the format in the examples in the[Templates](Templates) folder. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
+1. Each file must contain a Doxygen-style comment at the top, following the format in the examples in the [Templates](Templates) folder. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
 2. Functions must contain a Doxygen-style comment above them. In header (`.h`) files, function comments should include the Doxygen tags `@brief`, `@param`, `@return`. `@brief` tags should be at most 2 lines long. Function comments in source (`.c`/`.cpp`) files should include an `@details` tag describing any details that would be helpful to a developer reading the code.
 3. Code examples embedded within Doxygen comments must either use ticks "`", or @code and @endcode to denote code.
 4. Before complicated lines or blocks of code, write comments inline to explain what is going on (using either `//` or `/*` syntax).
@@ -131,7 +131,7 @@ uint8_t foo = -1; // TODO(tyler): foo should not be assigned a negative value if
 ### Naming rules
 
 0. Function and variable names must be descriptive.
-1. PROPOSED: Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviateions (in the context of this project) may also be used, e.g. "IT" for interrupt, "DMA" for Direct Memory Access, UDP for User Datagram Protocol.
+1. PROPOSED: Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviations (in the context of this project) may also be used, e.g. "IT" for interrupt, "DMA" for Direct Memory Access, UDP for User Datagram Protocol.
 2. Never begin the name of anything with an underscore. Such identifiers are generally reserved, and we don't want to risk collision.
 3. A name should only be all caps when it is for a constant or macro. The exception is for when the name is very short and rule 0 is satisfied better by having all caps.
     
@@ -161,12 +161,12 @@ This summarizes the formatting applied to names. In the following table, apply t
 | variable - parameter to a constructor | `num_reads_` (append "_") |
 | variable - common                     | `uart_handle_ptr` |
 | function                              | `readBuff` |
-| function  - implementation of a class function | `readBuffImpl` (append "Impl") |
+| function  - implementation body of a class method | `readBuffImpl` (append "Impl") |
 | constant                              | `POS_RESOLUTION` |
 | class                                 | `CircularDmaBuffer` |
 | class - mockable interface            | `UartInterface` ("Interface" is appended) |
-| class - hardware implementation of mockable interface | `HalUartInterface` (prepend the name of the main hardware API used, in this case "Hal" for the HAL API) |
-| class - mock implementation of mockable interface | `MockUartInterface` (prepend "Mock") |
+| class - hardware implementation of mockable interface | `UartInterfaceImpl` (append "Impl") |
+| class - mock implementation of mockable interface | `UartInterfaceMock` (append "Mock") |
 | enums                                 | `RxParseState` |
 | type definition (alias)               | `UARTcmd_t` (the appended "_t" is optional - only to make it obvious it's a type) |
 | namespace                             | `some_namespace` |
