@@ -197,3 +197,6 @@ post-build:
 
 .PHONY: all clean dependents
 .SECONDARY: post-build
+
+-include $(C_OBJECTS:.o=.d)
+-include $(CPP_OBJECTS:.o=.d)
