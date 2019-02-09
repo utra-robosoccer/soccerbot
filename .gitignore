@@ -96,7 +96,9 @@ RemoteSystemsTempFiles/
 .metadata/
 */language.settings.xml
 RobotTest/.settings/language.settings.xml
-Robot_F4/.settings/language.settings.xml
-Robot_F7/.settings/language.settings.xml
-Robot_F7/NUCLEO-F767ZI.xml
-
+Robot/.settings/language.settings.xml
+Robot/NUCLEO-F767ZI.xml
+CubeMX/F4/*
+!CubeMX/F4/*.ioc
+CubeMX/F7/*
+!CubeMX/F7/*.ioc
