@@ -5,7 +5,10 @@
 Collection of embedded programs for an autonomous humanoid soccer robot.
 
 # Common
-All the software components we've developed which go into the robot's embedded systems, which are shared between Robot_F4 and Robot_F7.
+All the software components we've developed which go into the robot's embedded systems.
+
+# CubeMX
+Contains the files required to auto-generate code for each of our target MCUs.
 
 # Development
 Contains development folders for ongoing projects. Examples include developing specific features that will one day be integrated into the main robot code (such as Ethernet-based communication), and developing helper programs dedicated to expediting development and testing.
@@ -16,11 +19,8 @@ UML diagrams for our software (not kept up-to-date).
 # docs
 Documentation for the code in the Common directory. Extracted using Doxygen.
 
-# Robot_F4
-The program controlling the embedded systems of the robot; STM32F446RE version.
-
-# Robot_F7
-The program controlling the embedded systems of the robot; STM32F767ZI version.
+# Robot
+The program controlling the embedded systems of the robot. The target MCU is specified by setting TARGET=F4 (default) or TARGET=F7.
 
 # RobotTest
 Unit test runner (GTest/GMock).
