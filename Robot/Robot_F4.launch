@@ -5,8 +5,8 @@
 <stringAttribute key="DEBBUGER_MCU_NAME" value="STM32F446RETx"/>
 <stringAttribute key="fr.ac6.mcu.ide.DBG_DEVICE" value="ST-Link"/>
 <stringAttribute key="fr.ac6.mcu.ide.DBG_DEVICE_SHAREABLE_ALLOWED" value="false"/>
-<stringAttribute key="fr.ac6.mcu.ide.DBG_INTERFACE" value="JTAG"/>
-<stringAttribute key="fr.ac6.mcu.ide.DBG_INTERFACE_FREQUENCY" value="9000000.0"/>
+<stringAttribute key="fr.ac6.mcu.ide.DBG_INTERFACE" value="SWD"/>
+<stringAttribute key="fr.ac6.mcu.ide.DBG_INTERFACE_FREQUENCY" value="4000000.0"/>
 <stringAttribute key="fr.ac6.mcu.ide.DBG_LOW_POWER_MODE_ALLOWED" value="true"/>
 <stringAttribute key="fr.ac6.mcu.ide.DBG_RESET_MODE" value="connect_under_reset"/>
 <stringAttribute key="fr.ac6.mcu.ide.DBG_STOP_WATCHDOG_THEN_HALTED_ALLOWED" value="true"/>
