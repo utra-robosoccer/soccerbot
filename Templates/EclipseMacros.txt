@@ -2,17 +2,15 @@ Macro name: dfile
 Macro description: Doxygen comment for the top of a file
 Macro expansion:
 /**
-  *****************************************************************************
-  * @file    TODO.c/.h
-  * @author  TODO -- your name here
-  * @brief   TODO -- briefly describe this file
-  *
-  * @defgroup TODO -- name of this module
-  * @brief    TODO -- brief description of this module
-  * @ingroup  TODO -- parent module of this module (if it exists)
-  * @{
-  *****************************************************************************
-  */
+ * @file
+ * @author TODO -- your name here
+ * @brief TODO -- briefly describe this file if necessary
+ *
+ * @defgroup TODO -- name of this module
+ * @brief TODO -- brief description of this module
+ * @ingroup TODO -- parent module (if it exists)
+ * @{
+ */
 
 
 
