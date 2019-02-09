@@ -366,33 +366,6 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
-#if defined(USE_DEBUG_UART)
-
-/* rfairley: This logic should really go in usart.c, the same way as how
- * the hdma_ handles deal with this swapping of parameters when USE_DEBUG_UART
- * is defined. However it doesn't look like there is a good spot in the
- * "USER CODE" sections. To do this properly, we should patch
- * this change onto usart.c. For now this is done in StartCommandTask before
- * other threads wake up.
- *
- * (Alternatively we take ownership of the usart.c file and name/initialize
- * the UARTs completely ourselves).
- *
- * TODO: have some way of patching uart config parameter modifications to the generated usart.c
- */
-#if defined(STM32F446xx)
-    /* Override the configuration in usart.c made by CubeMX. */
-    huart2.Init.BaudRate = 230400;
-    huart5.Init.BaudRate = 2500000;
-
-#elif defined(STM32F767xx)
-    huart3.Init.BaudRate = 230400;
-    huart5.Init.BaudRate = 1000000;
-
-#endif
-
-#endif
-
     uartDriver.setIOType(uart::IO_Type::DMA);
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
 
@@ -417,10 +390,17 @@ void StartCommandTask(void const * argument)
         periph::motors[i]->setReturnDelayTime(RETURN_DELAY_TIME);
         periph::motors[i]->enableTorque(true);
 
-        if(i >= periph::MOTOR13){
-            // AX12A-only config for controls
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceSlope(5);
-            static_cast<dynamixel::AX12A*>(periph::motors[i])->setComplianceMargin(1);
+        if(i <= periph::MOTOR12){
+            // MX-28-only config for controls
+            auto pMotor = static_cast<dynamixel::MX28*>(periph::motors[i]);
+            pMotor->setPGain(45);
+            pMotor->setDGain(4);
+        }
+        else{
+            // AX-12A-only config for controls
+            auto pMotor = static_cast<dynamixel::AX12A*>(periph::motors[i]);
+            pMotor->setComplianceSlope(5);
+            pMotor->setComplianceMargin(1);
         }
     }
  
