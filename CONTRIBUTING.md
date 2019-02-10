@@ -13,7 +13,7 @@ A few existing well-known C++ guidelines we looked at as a base for this style g
 
 ### Directory layout
 
-In general, files that are not project-specific or part of a library should exist in `Common`, under one of the subdirectories:
+Files that are not project-specific or part of a library should exist in `Common`, under one of the subdirectories:
 
 ```
 Common
@@ -26,7 +26,27 @@ Common
 
 ### Namespaces
 
-TODO
+Our namespacing scheme is as follows:
+
+| Kind of code | Namespace by | Examples |
+| ------------ | ------------ | -------- |
+| exists in `Common/app`                      | `::soccerbot::<subsystem>` | `::soccerbot::app::someHelper()`, `::soccerbot::periph::upperLeftLegDriver`, `::soccerbot::comm::RobotGoal`  |
+| exists in `Common/component`                | `::<related module>`       | `::uart::UartDriver`, `::imu::MPU6050`, `::dynamixel::AX12A` |
+| mockable `Interface` class for hardware API | `::<name of API>`          | `::hal::UartInterface`, `::lwip::UdpInterface`, `::cmsis::OsInterface` |
+| mock implementation of an `Interface` class | `::<name of API>::<name of mocking framework>` | `::hal::gmock::MockUartInterface`             |
+| hardware implementation of an `Interface` class | `::<name of API>`                          | `::hal::UartInterfaceImpl` |
+
+Unit test code, existing in a file ending with `Test.cpp`, must exist in an anonymous namespace. Example:
+
+```
+namespace
+{
+    TEST(MyTests,MyTest
+    {
+        ...
+    }
+}
+```
 
 ### File layout
 
@@ -34,11 +54,9 @@ All new source/header files should be based on the templates in the [Templates](
 
 ### Include guards
 
-PROPOSED
-
 Header files must have `#define` guards, of the format `<PROJECT>_<PATH>_<FILE>_H`. This is based on Google's [style guide](https://google.github.io/styleguide/cppguide.html#The__define_Guard). Including the `PROJECT` string in the guard reduces collision with different projects which may include code from each other. An example guard is as follows:
 
-```C
+```C++
 #ifndef SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H
 #define SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H
 
@@ -47,11 +65,13 @@ Header files must have `#define` guards, of the format `<PROJECT>_<PATH>_<FILE>_
 #endif  /* SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H */
 ```
 
-TODO: update template and example
+TODO(rfairley): update template and example
 
 ### Include ordering
 
-We generally follow Google's [style guide](https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes) on order of includes. The corresponding header file for the source file should be included first; then standard C/C++ libraries; then external libraries; then other files specific to the Robot project. Including the files in this order helps avoid dependencies being brought in indirectly, which can cause the linker to behave inconsistently when re-building the project.
+We generally follow Google's [style guide](https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes) on order of includes. The corresponding header file for the source file should be included first; then standard C/C++ libraries; then external libraries; then other files specific to the Robot project.
+
+Including the files in this order helps avoid dependencies being brought in indirectly, which can cause the linker to behave inconsistently when re-building the project. **The bottom line: following this order, the compiler/linker will give the correct error message for the correct file, as long as this order of includes is followed.**
 
 An example:
 
@@ -79,8 +99,10 @@ An example:
 
 ### Comments
 
-1. Each file must contain a Doxygen-style comment at the top, following the format in the examples in the [Templates](Templates) folder. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
-2. Functions must contain a Doxygen-style comment above them. In header (`.h`) files, function comments should include the Doxygen tags `@brief`, `@param`, `@return`. `@brief` tags should be at most 2 lines long. Function comments in source (`.c`/`.cpp`) files should include an `@details` tag describing any details that would be helpful to a developer reading the code.
+Comments should be added at the developer's discretion. As a guideline, user-facing API functions (.g. in a `.h` file for some library or component); source code with a complicated implementation; or anything that should show up in Doxygen should have an accompanying Doxygen-style comment.
+
+1. Each file must contain a Doxygen-style comment at the top, following the format in the examples in the [Templates](Templates) folder, briefly explaining the purpose of the file. Header files should define a  Doxygen group, using `@defgroup`, indicating some module of code. Source files belonging to a module should include an `@ingroup` tag.
+2. In header (`.h`) files, function comments should include the Doxygen tags `@brief`, `@param`, `@return`. `@brief` tags should be at most 2 lines long. Function comments in source (`.c`/`.cpp`) files should include an `@details` tag describing any details that would be helpful to a developer reading the code.
 3. Code examples embedded within Doxygen comments must either use ticks "`", or @code and @endcode to denote code.
 4. Before complicated lines or blocks of code, write comments inline to explain what is going on (using either `//` or `/*` syntax).
 5. Doxygen-style comments must be started as a C-style comment block with two `*` as such:
@@ -90,8 +112,9 @@ An example:
     * @brief  Gets the day of the week
     * @return The day of the week
     */
-    day_t Calendar::getDay() {
-        return theDay;
+    day_t Calendar::getDay()
+    {
+        return m_the_day;
     }
     ```
 
@@ -99,7 +122,8 @@ An example:
 
     ```C++
     /** @brief Enumerates the names of the week */
-    typedef enum{
+    typedef enum
+    {
         MONDAY,    /**< The first day of the week     */
         TUESDAY,   /**< The second day of the week    */
         WEDNESDAY, /**< The third day of the week     */
@@ -107,7 +131,7 @@ An example:
         FRIDAY,    /**< The fifth day of the week     */
         SATURDAY,  /**< The first day of the weekend  */
         SUNDAY     /**< The second day of the weekend */
-    }days_e;
+    } Day_e;
     ```
 
     In this case it would have been okay to omit the member documentation since it does not add anything. However, if the enum was used to enumerate something less obvious, such as states of a controller, this omission would not have been acceptable.
@@ -123,7 +147,6 @@ Example:
 
 ```C++
 uint8_t foo = -1; // TODO(tyler): foo should not be assigned a negative value if it is unsigned
-
 ```
 
 ## Naming
@@ -131,17 +154,15 @@ uint8_t foo = -1; // TODO(tyler): foo should not be assigned a negative value if
 ### Naming rules
 
 0. Function and variable names must be descriptive.
-1. PROPOSED: Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviations (in the context of this project) may also be used, e.g. "IT" for interrupt, "DMA" for Direct Memory Access, UDP for User Datagram Protocol.
+1. Common shortenings of words are permitted, as long as they are used consistently (e.g. "pos" for "position", "num" for "number"). Well-known abbreviations (in the context of this project) may also be used, e.g. "IT" for interrupt, "DMA" for Direct Memory Access, UDP for User Datagram Protocol.
 2. Never begin the name of anything with an underscore. Such identifiers are generally reserved, and we don't want to risk collision.
-3. A name should only be all caps when it is for a constant or macro. The exception is for when the name is very short and rule 0 is satisfied better by having all caps.
-    
-    robert: what would an example of an exception to 3 look like?
-
+3. Only constants or macros may be all caps. An exception is when the name of a variable or function satisfies rule 0 better when all caps (e.g. a well-understood acronym).
 4. If you read the name of a bool out loud, it should essentially sound like a claim. For example:
 
     ```C++
-    bool isInitialized = mySpecialFunction();
-    if(!isInitialized) {
+    bool is_initialized = mySpecialFunction();
+    if (!is_initialized)
+    {
         return;
     }
     ```
@@ -150,15 +171,13 @@ uint8_t foo = -1; // TODO(tyler): foo should not be assigned a negative value if
 
 ### Naming scheme summary
 
-PROPOSED: variables use snake case, functions use lower camel case
-PROPOSED: append _ for constructor parameters
-
 This summarizes the formatting applied to names. In the following table, apply the most specific type of name listed.
 
 | Type                                  | Example |
 | ------------------------------------- | ------- |
 | variable - private member             | `m_num_reads` (prepend "m_" for private members only) |
-| variable - parameter to a constructor | `num_reads_` (append "_") |
+| variable - parameter to a constructor - initializer list | `m_num_reads` (use the same name as the member variable name) |
+| variable - parameter to a constructor - not initializer list | `m_num_reads_` (append "_") |
 | variable - common                     | `uart_handle_ptr` |
 | function                              | `readBuff` |
 | function  - implementation body of a class method | `readBuffImpl` (append "Impl") |
@@ -167,12 +186,12 @@ This summarizes the formatting applied to names. In the following table, apply t
 | class - mockable interface            | `UartInterface` ("Interface" is appended) |
 | class - hardware implementation of mockable interface | `UartInterfaceImpl` (append "Impl") |
 | class - mock implementation of mockable interface | `UartInterfaceMock` (append "Mock") |
-| enums                                 | `RxParseState` |
-| type definition (alias)               | `UARTcmd_t` (the appended "_t" is optional - only to make it obvious it's a type) |
+| enums                                 | `RxParseState`, `RxParseState_e` (the appended "_e" is optional - only to make it obvious it's an enum) |
+| type definition (alias)               | `UartCmd`, `UartCmd_t` (the appended "_t" is optional - only to make it obvious it's a type) |
 | namespace                             | `some_namespace` |
 | file - header                         | `CircularDmaBuffer.h` |
 | file - source                         | `CircularDmaBuffer.cpp` (always use .cpp) |
-| file - unit test                      | `CircularDmaBuffer_test.cpp` (append "_test") |
+| file - unit test                      | `CircularDmaBufferTest.cpp` (append class name with "Test") |
 | macro - include guard                 | `SOCCER_EMBEDDED_COMMON_INCLUDE_OS_INTERFACE_H` (see [include guards](#Include-guards)) |
 | macro - compiler flag                 | `USE_DEBUG_UART` |
 
@@ -186,11 +205,11 @@ Function invocations can be split across several lines, and temporary variables 
 
 ```C++
 // Bad
-bool success = unnecessarilyLongFunctionNameForNoGoodReason(whatAmIEvenThinking, 42, BIT_MASK, A_FOURTH_ARG, WHOA);
+bool success = unnecessarilyLongFunctionNameForNoGoodReason(what_am_i_even_thinking, 42, BIT_MASK, A_FOURTH_ARG, WHOA);
 
 // Good - doesn't exceed 80 characters on any line, and is easier to read
 bool success = unnecessarilyLongFunctionNameForNoGoodReason(
-    whatAmIEvenThinking,
+    what_am_i_even_thinking,
     42,
     BIT_MASK,
     A_FOURTH_ARG,
@@ -198,34 +217,39 @@ bool success = unnecessarilyLongFunctionNameForNoGoodReason(
 );
 
 // Bad
-bool unnecessarilyLongFunctionNameForNoGoodReason(const char* what, int num, uint32_t flags, coolEnum target, int& outNum) {
+bool unnecessarilyLongFunctionNameForNoGoodReason(const char* what, int num, uint32_t flags, CoolEnum target, int& out_num)
+{
     ...
 }
 
 // Good
 bool unnecessarilyLongFunctionNameForNoGoodReason(
-        const char* what, // 8 space indent
-        int num,
-        uint32_t flags,
-        coolEnum target,
-        int& outNum) {
+    const char* what, // 4 space indent
+    int num,
+    uint32_t flags,
+    CoolEnum target,
+    int& out_num
+)
+{
     ... // 4 space indent
 }
 ```
-
-- ([Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html#Function_Declarations_and_Definitions))
 
 ### Indentation
 
 Indentations must consist of 4 spaces (no tabs!). We suggest configuring Eclipse to automatically insert 4 spaces when you press the tab key; most other text editors can do this as well.
 
-Regarding curly braces, we follow the `K&R (OTBS)` [style](https://en.wikipedia.org/wiki/Indentation_style#Variant:_1TBS_(OTBS)).
+Regarding curly braces and indentation, we follow the [Allman style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style).
 
 ```C++
-bool isNegative(int num) {
-    if (num < 0) {
+bool isNegative(int num)
+{
+    if (num < 0)
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -239,8 +263,7 @@ bool isNegative(int num) {
 
 ### nullptr and NULL
 
-Use nullptr for pointers in C++, NULL in C:
-https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
+Use nullptr for pointers in C++, NULL in C.
 
 ### Namespaces (C++ only)
 
@@ -263,13 +286,14 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 4. The layout of class and struct members/methods based on visibility must be like so:
 
     ```C++
-    class Example {
+    class Example
+    {
     public:
-    ...
+        ...
     protected:
-    ...
+        ...
     private:
-    ...
+        ...
     };
 
     ```
@@ -298,7 +322,8 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
     ```C++
     /** @brief Colors of the rainbow */
-    enum class Colors {
+    enum class Colors
+    {
         RED,
         ORANGE,
         YELLOW,
@@ -310,7 +335,8 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
     ...
     // Usage
-    switch(myColor){
+    switch(myColor)
+    {
         case Colors::RED:
             doSomething();
             break;
@@ -329,14 +355,14 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
     module.c/.cpp
     ```C++
     ...
-    uint8_t importantNumber;
+    uint8_t important_number;
     const SOME_CONST = 42;
     ...
     ```
     module.h
     ```C++
     ...
-    extern uint8_t importantNumber;
+    extern uint8_t important_number;
     extern const SOME_CONST;
     ...
     ```
@@ -345,7 +371,7 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
 ### Typecasting
 
-1. (**C++ only**) Prefer to use static_cast\<\>() over C-style typecasting. Example:
+1. (**C++ only**) Prefer to use static_cast\<\>() over C-style typecasting. This ensures a certain type of cast, and it is easier to search through the code for cases (by finding "cast"). Example:
 
     ```C++
     char initial = 'T';
@@ -353,7 +379,7 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
     // Good
     uint8_t byte = static_cast<uint8_t>(initial);
 
-    // Not as good
+    // Bad
     uint8_t byte = (uint8_t)initial;
     ```
 
@@ -363,10 +389,8 @@ https://google.github.io/styleguide/cppguide.html#0_and_nullptr/NULL
 
 ## Unit testing
 
-TODO: link to wiki on mockable interfaces
-
 1. All hardware and OS-related functions must be in wrapper classes which inherit from an interface class (i.e. abstract class) to facilitate mocking. These hardware-facing classes should not have data members, only functions. See our [wiki page on mocking](https://github.com/utra-robosoccer/soccer-embedded/wiki/Tutorial:-Mocking-hardware-with-GMock) for how to do this.
-2. The test driver for a component must follow a name of the form \<component\>_test.cpp.
+2. The test driver for a component must follow a name of the form \<component\>Test.cpp.
 
 ## General Development
 
@@ -382,7 +406,7 @@ TODO: link to wiki on mockable interfaces
 
 ### Code generation
 
-TODO: remove this section once fully migrated away from Cube
+TODO(rfairley): remove this section once fully migrated away from Cube
 
 1. The configuration of all peripherals must be done from within Cube.
 2. Pin names should be labelled in Cube once their functionality has been decided.
