@@ -21,6 +21,7 @@
 #include "i2c.h"
 #ifdef STM32F446xx
 #include "gpio.h"
+#include "SystemConf.h"
 #endif
 
 
