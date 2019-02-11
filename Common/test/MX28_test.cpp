@@ -43,15 +43,10 @@ using dynamixel::MX28;
 namespace{
 // Variables
 // ----------------------------------------------------------------------------
-MockUartInterface uart;
-MockOsInterface os;
-MockGpioInterface gpio;
 UART_HandleTypeDef UARTx = {0};
-UartDriver UARTxDriver(&os, &uart, &UARTx);
-
 GPIO_TypeDef dataDirPort;
 
-DaisyChainParams p;
+
 
 
 
@@ -60,11 +55,22 @@ DaisyChainParams p;
 class MX28Test : public ::testing::Test {
 protected:
     void SetUp() override {
-        p.uartDriver = &UARTxDriver;
+        UARTxDriver = new UartDriver(&os, &uart, &UARTx);
+        p.uartDriver = UARTxDriver;
         p.gpioif = &gpio;
         p.dataDirPort = &dataDirPort;
         p.dataDirPinNum = 1;
     }
+
+    void TearDown() override {
+        delete UARTxDriver;
+    }
+
+    UartDriver *UARTxDriver = nullptr;
+    MockUartInterface uart;
+    MockOsInterface os;
+    MockGpioInterface gpio;
+    DaisyChainParams p;
 };
 
 

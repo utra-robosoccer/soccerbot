@@ -51,12 +51,20 @@ namespace {
 // ----------------------------------------------------------------------------
 const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 
+// Classes & structs
+// ----------------------------------------------------------------------------
+class UdpDriverTest : public ::testing::Test {
+protected:
+    MockUdpInterface udp_if;
+    MockOsInterface os_if;
+};
+
 }
 
 
 
 
-TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
+TEST_F(UdpDriverTest, DefaultInitializeMembersToZero) {
     UdpDriver udpDriverUnderTest;
 
     EXPECT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
@@ -67,9 +75,7 @@ TEST(UdpDriverShould, DefaultInitializeMembersToZero) {
     EXPECT_EQ(udpDriverUnderTest.getOsInterface(), nullptr);
 }
 
-TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, InitializeMembersWithParameterizedConstructor) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -84,9 +90,7 @@ TEST(UdpDriverShould, InitializeMembersWithParameterizedConstructor) {
     EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
 }
 
-TEST(UdpDriverShould, SucceedInitialize) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, SucceedInitialize) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -99,8 +103,7 @@ TEST(UdpDriverShould, SucceedInitialize) {
     ASSERT_TRUE(udpDriverUnderTest.initialize());
 }
 
-TEST(UdpDriverShould, FailInitializeWhenUdpInterfaceNull) {
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailInitializeWhenUdpInterfaceNull) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -110,8 +113,7 @@ TEST(UdpDriverShould, FailInitializeWhenUdpInterfaceNull) {
     ASSERT_FALSE(udpDriverUnderTest.initialize());
 }
 
-TEST(UdpDriverShould, FailInitializeWhenOsInterfaceNull) {
-    MockUdpInterface udp_if;
+TEST_F(UdpDriverTest, FailInitializeWhenOsInterfaceNull) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -121,9 +123,7 @@ TEST(UdpDriverShould, FailInitializeWhenOsInterfaceNull) {
     ASSERT_FALSE(udpDriverUnderTest.initialize());
 }
 
-TEST(UdpDriverShould, FailInitializeWhenMutexCreateUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailInitializeWhenMutexCreateUnsuccessful) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -136,9 +136,7 @@ TEST(UdpDriverShould, FailInitializeWhenMutexCreateUnsuccessful) {
     ASSERT_FALSE(udpDriverUnderTest.initialize());
 }
 
-TEST(UdpDriverShould, FailInitializeWhenSemaphoreCreateUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailInitializeWhenSemaphoreCreateUnsuccessful) {
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
 
@@ -151,9 +149,7 @@ TEST(UdpDriverShould, FailInitializeWhenSemaphoreCreateUnsuccessful) {
     ASSERT_FALSE(udpDriverUnderTest.initialize());
 }
 
-TEST(UdpDriverShould, SucceedSetupReceive) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, SucceedSetupReceive) {
     struct udp_pcb udpPcb;
 
     EXPECT_CALL(udp_if, udpRecv(_, _, _)).Times(1);
@@ -166,9 +162,7 @@ TEST(UdpDriverShould, SucceedSetupReceive) {
     EXPECT_EQ(udpDriverUnderTest.getPcb(), &udpPcb);
 }
 
-TEST(UdpDriverShould, FailSetupReceiveOnUdpNew) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailSetupReceiveOnUdpNew) {
     EXPECT_CALL(udp_if, udpNew()).Times(1).WillOnce(Return(nullptr));
 
     UdpDriver udpDriverUnderTest(ZERO_IP_ADDR_T, ZERO_IP_ADDR_T, (u16_t) 0, (u16_t) 0,
@@ -177,9 +171,7 @@ TEST(UdpDriverShould, FailSetupReceiveOnUdpNew) {
     EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
 }
 
-TEST(UdpDriverShould, FailSetupReceiveOnUdpBind) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailSetupReceiveOnUdpBind) {
     struct udp_pcb udpPcb;
 
     EXPECT_CALL(udp_if, udpRemove(_)).Times(1);
@@ -194,9 +186,7 @@ TEST(UdpDriverShould, FailSetupReceiveOnUdpBind) {
     EXPECT_EQ(udpDriverUnderTest.getPcb(), nullptr);
 }
 
-TEST(UdpDriverShould, SucceedReceive) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, SucceedReceive) {
     struct pbuf rxPbuf;
 
     uint8_t rxBuff[10] = {};
@@ -215,9 +205,7 @@ TEST(UdpDriverShould, SucceedReceive) {
     ASSERT_TRUE(udpDriverUnderTest.receive(rxBuff, sizeof(rxBuff)));
 }
 
-TEST(UdpDriverShould, FailReceiveRxArrayNull) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailReceiveRxArrayNull) {
     struct pbuf rxPbuf;
 
     EXPECT_CALL(os_if, OS_osMutexWait(_, _)).WillRepeatedly(Return(osOK));
@@ -232,9 +220,7 @@ TEST(UdpDriverShould, FailReceiveRxArrayNull) {
     ASSERT_FALSE(udpDriverUnderTest.receive(NULL, 10));
 }
 
-TEST(UdpDriverShould, FailReceiveRxPbufNull) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailReceiveRxPbufNull) {
     uint8_t rxBuff[10] = {};
 
     EXPECT_CALL(os_if, OS_osMutexWait(_, _)).WillRepeatedly(Return(osOK));
@@ -249,9 +235,7 @@ TEST(UdpDriverShould, FailReceiveRxPbufNull) {
     ASSERT_FALSE(udpDriverUnderTest.receive(rxBuff, sizeof(rxBuff)));
 }
 
-TEST(UdpDriverShould, FailReceiveZeroBytesCopied) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailReceiveZeroBytesCopied) {
     uint8_t rxBuff[10] = {};
     struct pbuf rxPbuf;
 
@@ -268,9 +252,7 @@ TEST(UdpDriverShould, FailReceiveZeroBytesCopied) {
     ASSERT_FALSE(udpDriverUnderTest.receive(rxBuff, sizeof(rxBuff)));
 }
 
-TEST(UdpDriverShould, SucceedTransmit) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, SucceedTransmit) {
     uint8_t txBuff[10] = {};
     struct pbuf txPbuf;
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
@@ -289,9 +271,7 @@ TEST(UdpDriverShould, SucceedTransmit) {
     ASSERT_TRUE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
 
-TEST(UdpDriverShould, FailTransmitWhenTxBuffNull) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailTransmitWhenTxBuffNull) {
     struct pbuf txPbuf;
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
@@ -305,9 +285,7 @@ TEST(UdpDriverShould, FailTransmitWhenTxBuffNull) {
     ASSERT_FALSE(udpDriverUnderTest.transmit(nullptr, 10));
 }
 
-TEST(UdpDriverShould, FailTransmitWhenPbufAllocUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailTransmitWhenPbufAllocUnsuccessful) {
     uint8_t txBuff[10] = {};
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
     const ip_addr_t TEST_IP_ADDR_PC = {0xC0A80002};
@@ -321,9 +299,7 @@ TEST(UdpDriverShould, FailTransmitWhenPbufAllocUnsuccessful) {
     ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
 
-TEST(UdpDriverShould, FailTransmitWhenPbufTakeUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailTransmitWhenPbufTakeUnsuccessful) {
     uint8_t txBuff[10] = {};
     struct pbuf txPbuf;
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
@@ -338,9 +314,7 @@ TEST(UdpDriverShould, FailTransmitWhenPbufTakeUnsuccessful) {
     ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
 
-TEST(UdpDriverShould, FailTransmitWhenUdpConnectUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailTransmitWhenUdpConnectUnsuccessful) {
     uint8_t txBuff[10] = {};
     struct pbuf txPbuf;
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
@@ -356,9 +330,7 @@ TEST(UdpDriverShould, FailTransmitWhenUdpConnectUnsuccessful) {
     ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
 
-TEST(UdpDriverShould, FailTransmitWhenUdpSendUnsuccessful) {
-    MockUdpInterface udp_if;
-    MockOsInterface os_if;
+TEST_F(UdpDriverTest, FailTransmitWhenUdpSendUnsuccessful) {
     uint8_t txBuff[10] = {};
     struct pbuf txPbuf;
     const ip_addr_t TEST_IP_ADDR = {0xC0A80008};
