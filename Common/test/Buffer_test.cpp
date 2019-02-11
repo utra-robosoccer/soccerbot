@@ -37,25 +37,31 @@ using namespace buffer;
 namespace{
 // Variables
 // ----------------------------------------------------------------------------
-MockOsInterface os;
 osMutexId mutex = nullptr;
+
+// Classes & structs
+// ----------------------------------------------------------------------------
+class BufferTest : public ::testing::Test {
+protected:
+    MockOsInterface os;
+};
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST(BufferTests, CanInitializeBuffer){
+TEST_F(BufferTest, CanInitializeBuffer){
     BufferBase<int> intBuffer;
     intBuffer.set_lock(mutex);
     intBuffer.set_osInterface(&os);
 }
 
-TEST(BufferTests, CanWriteToBuffer){
+TEST_F(BufferTest, CanWriteToBuffer){
     BufferBase<int> intBuffer;
     intBuffer.set_lock(mutex);
     intBuffer.set_osInterface(&os);
     intBuffer.write(10);
 }
 
-TEST(BufferTests, NumReadsCheck){
+TEST_F(BufferTest, NumReadsCheck){
     BufferBase<int> intBuffer;
     intBuffer.set_lock(mutex);
     intBuffer.set_osInterface(&os);
@@ -65,7 +71,7 @@ TEST(BufferTests, NumReadsCheck){
     ASSERT_EQ(intBuffer.num_reads() , 0);
 }
 
-TEST(BufferTests, CanReadFromBuffer){
+TEST_F(BufferTest, CanReadFromBuffer){
     BufferBase<int> intBuffer;
     intBuffer.set_lock(mutex);
     intBuffer.set_osInterface(&os);
@@ -81,7 +87,7 @@ TEST(BufferTests, CanReadFromBuffer){
     ASSERT_EQ(intBuffer.num_reads() , 2);
 }
 
-TEST(BufferTests, CanResetBuffer){
+TEST_F(BufferTest, CanResetBuffer){
     BufferBase<int> intBuffer;
     intBuffer.set_lock(mutex);
     intBuffer.set_osInterface(&os);
@@ -93,12 +99,12 @@ TEST(BufferTests, CanResetBuffer){
     ASSERT_EQ(intBuffer.num_reads() , -1);
 }
 
-TEST(BufferTests, CanInitializeBufferMaster){
+TEST_F(BufferTest, CanInitializeBufferMaster){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
 }
 
-TEST(BufferTests, CanWriteToIMUBuffer){
+TEST_F(BufferTest, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
     imu::IMUStruct_t IMUdata;
@@ -106,7 +112,7 @@ TEST(BufferTests, CanWriteToIMUBuffer){
     bufferMaster.IMUBuffer.write(IMUdata);
 }
 
-TEST(BufferTests, CanReadFromIMUBuffer){
+TEST_F(BufferTest, CanReadFromIMUBuffer){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
     imu::IMUStruct_t IMUdata;
@@ -128,7 +134,7 @@ TEST(BufferTests, CanReadFromIMUBuffer){
     ASSERT_EQ(readIMUdata.z_Gyro, IMUdata.z_Gyro);
 }
 
-TEST(BufferTests, CanWriteToMotorBuffer){
+TEST_F(BufferTest, CanWriteToMotorBuffer){
     //TODO: Use periph::NUM_MOTORS without defining THREADED
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
@@ -140,7 +146,7 @@ TEST(BufferTests, CanWriteToMotorBuffer){
     }
 }
 
-TEST(BufferTests, CanReadMotorDataBuffer){
+TEST_F(BufferTest, CanReadMotorDataBuffer){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
@@ -155,7 +161,7 @@ TEST(BufferTests, CanReadMotorDataBuffer){
     }
 }
 
-TEST(BufferTests, CanConfirmAllDataReady){
+TEST_F(BufferTest, CanConfirmAllDataReady){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
