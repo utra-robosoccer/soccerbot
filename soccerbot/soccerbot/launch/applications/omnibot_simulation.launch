@@ -1,0 +1,33 @@
+<launch>
+    <arg name="vision"      default="true" />
+    <arg name="darknet"     default="false" />
+    <arg name="field_name"  default="robocup" />
+    <arg name="frozen"      default="false" />
+
+    <!-- Model in Gazebo -->
+    <include file="$(find soccer_gazebo)/launch/omnibot_gazebo.launch">
+        <arg name="field"   value="$(arg field_name)" />
+        <arg name="frozen"  value="$(arg frozen)"/>
+        <arg name="paused"  value="false"/>
+    </include>
+
+    <!-- Motor Drive -->
+    <include file="$(find omnibot_drive)/launch/omnibot_drive.launch" />
+
+    <!-- Computer Vision and Camera -->
+    <group if="$(arg vision)">
+        <include file="$(find soccerbot)/launch/modules/vision.launch">
+            <arg name="simulation" value="true" />
+            <arg name="darknet" default="$(arg darknet)" />
+        </include>
+        <include file="$(find soccerbot)/launch/modules/localization.launch">
+            <arg name="field_name" default="$(arg field_name)" />
+            <arg name="global_frame_id" default="map"/>
+            <arg name="scan_topic" default="scan"/>
+        </include>
+    </group>
+
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true" />
+
+</launch>
