@@ -41,6 +41,7 @@ cd ~/catkin_ws
 ```
 cd ~/catkin_ws/src/soccer_ws
 git submodule update --recursive --init
+sudo rosdep init # If first time using ROS in your environment.
 rosdep update
 cd ~/catkin_ws/
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
