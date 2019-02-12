@@ -1,0 +1,12 @@
+language: cpp
+jdk:
+  - oraclejdk8
+os: osx  
+install:  
+  - brew cask install gcc-arm-embedded
+script:  
+  - pwd
+  - cd $TRAVIS_BUILD_DIR/Robot/
+  - ls
+  - make TARGET=F4 all
+  - make TARGET=F7 all
