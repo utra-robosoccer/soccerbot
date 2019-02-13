@@ -12,5 +12,6 @@
   <depend>joint_state_controller</depend>
   <depend>robot_state_publisher</depend>
   <depend>soccer_description</depend>
+  <depend>effort_controllers</depend>
 
 </package>
