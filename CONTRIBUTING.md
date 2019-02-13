@@ -335,7 +335,7 @@ Use nullptr for pointers in C++, NULL in C.
 
     ...
     // Usage
-    switch(myColor)
+    switch(my_color)
     {
         case Colors::RED:
             doSomething();
