@@ -49,9 +49,6 @@ tmp/
 # External tool builders
 .externalToolBuilders/
 
-# Locally stored "Eclipse launch configurations"
-*.launch
-
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 
@@ -93,11 +90,15 @@ tmp/
 
 # STM Microelectronics stuff
 **/Debug/
+**/Build/
+**/output.map
 RemoteSystemsTempFiles/
 .metadata/
 */language.settings.xml
 RobotTest/.settings/language.settings.xml
-Robot_F4/.settings/language.settings.xml
-Robot_F7/NUCLEO-F767ZI.xml
-Robot_F7/NUCLEO-F767ZI.xml
-Robot_F7/NUCLEO-F767ZI.xml
+Robot/.settings/language.settings.xml
+Robot/NUCLEO-F767ZI.xml
+CubeMX/F4/*
+!CubeMX/F4/*.ioc
+CubeMX/F7/*
+!CubeMX/F7/*.ioc
