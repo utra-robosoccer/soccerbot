@@ -19,6 +19,9 @@
 
 
 
+// TODO(rfairley): move this file into Common/app
+// (after removing dependencies on this file in component)
+
 /********************************* Includes **********************************/
 #include <array>
 #include "Dynamixel/AX12A.h"
