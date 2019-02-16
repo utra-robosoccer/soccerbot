@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "DaisyChain.h"
+#include "DaisyChain/DaisyChain.h"
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"

@@ -21,7 +21,7 @@
 
 
 /********************************* Includes **********************************/
-#include "Dynamixel.h"
+#include "Dynamixel/Dynamixel.h"
 
 
 
