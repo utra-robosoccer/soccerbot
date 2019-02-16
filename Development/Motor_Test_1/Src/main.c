@@ -170,7 +170,7 @@ int main(void) {
 			Dynamixel_SetID(&motorMX, rx_valid);
 
 			Dynamixel_SetBaudRate(&motorMX, 1000000);
-			HAL_UART_Transmit(&huart2, (unsigned char *) "valid, MX1\n", 11, 1000);
+			HAL_UART_Transmit(&huart2, (unsigned char *) "valid, MX2\n", 11, 1000);
 			pastCase = VALID_MX2;
 			break;
 
