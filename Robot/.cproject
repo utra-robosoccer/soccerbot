@@ -46,6 +46,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Common/mock"/>
 									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1620563188" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -73,6 +74,7 @@
 									<listOptionValue builtIn="false" value="../../Common/include"/>
 									<listOptionValue builtIn="false" value="../../Common/mock"/>
 									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.878794306" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -184,6 +186,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Common/mock"/>
 									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.674884498" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -211,6 +214,7 @@
 									<listOptionValue builtIn="false" value="../../Common/include"/>
 									<listOptionValue builtIn="false" value="../../Common/mock"/>
 									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1119572749" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
