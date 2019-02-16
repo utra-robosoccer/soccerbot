@@ -63,42 +63,46 @@ extern UART_HandleTypeDef huart6;
  * for the swapped UARTS is being set in StartCmdTask.
  */
 #if defined(STM32F446xx)
-//#define USE_DEBUG_UART
+//#define USE_DEBUG_UART // Uncomment if debug cable connected to F4 dev board
 
 #elif defined(STM32F767xx)
-/* TODO: have USE_DEBUG_UART undefined by default (i.e. commented out here)
-once F7 custom board is ready (not the development board). */
-#define USE_DEBUG_UART
+/* TODO(rfairley): have USE_DEBUG_UART undefined by default (i.e. commented
+ * out here) once F7 PCB by Electrical team is ready. */
+#define USE_DEBUG_UART // Uncomment if debug cable connected to F7 dev board
 
 #endif
 
 /* Default UART assignments. */
-constexpr UART_HandleTypeDef* UART_HANDLE_UpperLeftLeg = &huart1;
-constexpr UART_HandleTypeDef* UART_HANDLE_UpperRightLeg = &huart4;
-constexpr UART_HandleTypeDef* UART_HANDLE_LowerLeftLeg = &huart6;
+#define UART_HANDLE_UpperLeftLeg &huart1
+#define UART_HANDLE_UpperRightLeg &huart4
+#define UART_HANDLE_LowerLeftLeg &huart6
 
 #if defined(USE_DEBUG_UART)
 
 #if defined(STM32F446xx)
-/* Swap UARTs 2 and 5. */
-constexpr UART_HandleTypeDef* UART_HANDLE_PC = &huart2;
-constexpr UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart5;
-constexpr UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
+/* Swap UARTs 2 and 5.
+ * UART 2 is the debug UART on the F4; UART 5 is the PC
+ * communications UART on our PCB */
+#define UART_HANDLE_PC &huart2
+#define UART_HANDLE_LowerRightLeg &huart5
+#define UART_HANDLE_HeadAndArms &huart3
 
 #elif defined(STM32F767xx)
-/* Swap UARTs 3 and 5. */
-constexpr UART_HandleTypeDef* UART_HANDLE_PC = &huart3;
-constexpr UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart2;
-constexpr UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart5;
+/* Swap UARTs 3 and 5.
+ * UART 3 is the debug UART on the F7; UART 5 is the PC
+ * communications UART on our PCB */
+#define UART_HANDLE_PC &huart3
+#define UART_HANDLE_LowerRightLeg &huart2
+#define UART_HANDLE_HeadAndArms &huart5
 
 #endif
 
 #else
 
 /* These UART assignments are defaults across both the F4 and F7 boards for now. */
-constexpr UART_HandleTypeDef* UART_HANDLE_PC = &huart5;
-constexpr UART_HandleTypeDef* UART_HANDLE_LowerRightLeg = &huart2;
-constexpr UART_HandleTypeDef* UART_HANDLE_HeadAndArms = &huart3;
+#define UART_HANDLE_PC &huart5
+#define UART_HANDLE_LowerRightLeg &huart2
+#define UART_HANDLE_HeadAndArms &huart3
 
 #endif
 
