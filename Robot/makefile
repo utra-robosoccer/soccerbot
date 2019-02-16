@@ -81,6 +81,7 @@ endif
 
 INC := \
 -I"$(PROJECT_DIR)/Inc/$(TARGET)" \
+-I"$(COMMON_DIR)/hardware" \
 -I"$(COMMON_DIR)/include" \
 -I"$(COMMON_DIR)/interface" \
 -I"$(COMMON_DIR)/mock" \
