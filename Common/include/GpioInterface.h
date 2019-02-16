@@ -21,7 +21,6 @@
 
 /********************************* Includes **********************************/
 #include <stdint.h>
-#include "SystemConf.h"
 #include "gpio.h"
 
 
