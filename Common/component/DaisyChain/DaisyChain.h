@@ -19,7 +19,7 @@
 
 /********************************* Includes **********************************/
 #include <stdint.h>
-#include "UartDriver.h"
+#include "UartDriver/UartDriver.h"
 #include "GpioInterface.h"
 
 using uart::UartDriver;

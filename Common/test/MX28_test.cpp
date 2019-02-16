@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "MX28.h"
+#include "Dynamixel/MX28.h"
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"

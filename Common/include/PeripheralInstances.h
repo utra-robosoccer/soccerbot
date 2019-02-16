@@ -21,9 +21,9 @@
 
 /********************************* Includes **********************************/
 #include <array>
-#include "AX12A.h"
-#include "MX28.h"
-#include "MPU6050.h"
+#include "Dynamixel/AX12A.h"
+#include "Dynamixel/MX28.h"
+#include "MPU6050/MPU6050.h"
 
 using std::array;
 using dynamixel::Motor;

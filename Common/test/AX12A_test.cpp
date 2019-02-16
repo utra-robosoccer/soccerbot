@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "AX12A.h"
+#include "Dynamixel/AX12A.h"
 
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"

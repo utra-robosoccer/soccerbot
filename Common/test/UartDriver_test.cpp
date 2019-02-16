@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "UartDriver.h"
+#include "UartDriver/UartDriver.h"
 #include "Notification.h"
 
 #include "MockUartInterface.h"

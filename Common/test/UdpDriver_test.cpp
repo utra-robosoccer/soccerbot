@@ -17,7 +17,7 @@
 /********************************* Includes **********************************/
 #include <MockOsInterface.h>
 #include <MockUdpInterface.h>
-#include <UdpDriver.h>
+#include <UdpDriver/UdpDriver.h>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
