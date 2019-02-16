@@ -33,6 +33,9 @@
 
 
 
+// TODO(rfairley): move this file into Common/app
+// (after removing dependencies on this file in component)
+
 /*********************************** Types ************************************/
 /**
  * @brief Enumerates the types of motor commands that can be sent to the UART
