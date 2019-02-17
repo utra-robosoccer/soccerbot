@@ -41,7 +41,7 @@ Unit test code, existing in a file ending with `Test.cpp`, must exist in an anon
 ```
 namespace
 {
-    TEST(MyTests,MyTest
+    TEST(MyTests,MyTest)
     {
         ...
     }
