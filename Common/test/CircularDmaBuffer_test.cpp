@@ -55,6 +55,8 @@ protected:
     uint8_t raw_buff_[BUFFER_SIZE_TEST] = { };
     const uint16_t transmission_size_ = BUFFER_SIZE_TEST;
     const size_t buffer_size_ = BUFFER_SIZE_TEST;
+    /* buff_ is an automatically initialized CircularDmaBuffer object, to avoid
+     * repeating code where only some default initialization is needed. */
     CircularDmaBuffer* buff_ = nullptr;
     MockUartInterface uart_if;
 };

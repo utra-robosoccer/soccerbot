@@ -44,15 +44,8 @@ using dynamixel::DaisyChain;
 namespace{
 // Variables
 // ----------------------------------------------------------------------------
-MockUartInterface uart;
-MockOsInterface os;
-MockGpioInterface gpio;
-
 UART_HandleTypeDef UARTx = {0};
-UartDriver UARTxDriver(&os, &uart, &UARTx);
 GPIO_TypeDef dataDirPort;
-
-DaisyChainParams p;
 
 
 
@@ -62,11 +55,23 @@ DaisyChainParams p;
 class DaisyChainShould : public ::testing::Test {
 protected:
     void SetUp() override {
-        p.uartDriver = &UARTxDriver;
+        UARTxDriver = new UartDriver(&os, &uart, &UARTx);
+
+        p.uartDriver = UARTxDriver;
         p.gpioif = &gpio;
         p.dataDirPort = &dataDirPort;
         p.dataDirPinNum = 1;
     }
+
+    void TearDown() override {
+    	delete UARTxDriver;
+    }
+
+    UartDriver *UARTxDriver = nullptr;
+    MockUartInterface uart;
+    MockOsInterface os;
+    MockGpioInterface gpio;
+    DaisyChainParams p;
 };
 
 
@@ -108,12 +113,12 @@ TEST_F(DaisyChainShould, SetIOTypeForDriver){
 
     IO_Type typeToSet = IO_Type::DMA;
     chain.setIOType(typeToSet);
-    IO_Type actualType = UARTxDriver.getIOType();
+    IO_Type actualType = UARTxDriver->getIOType();
     EXPECT_EQ(actualType, typeToSet);
 
     typeToSet = IO_Type::POLL;
     chain.setIOType(typeToSet);
-    actualType = UARTxDriver.getIOType();
+    actualType = UARTxDriver->getIOType();
     EXPECT_EQ(actualType, typeToSet);
 }
 
@@ -121,12 +126,12 @@ TEST_F(DaisyChainShould, GetIOTypeForDriver){
     DaisyChain chain(p);
 
     IO_Type typeToSet = IO_Type::DMA;
-    UARTxDriver.setIOType(typeToSet);
+    UARTxDriver->setIOType(typeToSet);
     IO_Type typeGot =  chain.getIOType();
     EXPECT_EQ(typeGot, typeToSet);
 
     typeToSet = IO_Type::POLL;
-    UARTxDriver.setIOType(typeToSet);
+    UARTxDriver->setIOType(typeToSet);
     typeGot =  chain.getIOType();
     EXPECT_EQ(typeGot, typeToSet);
 }
