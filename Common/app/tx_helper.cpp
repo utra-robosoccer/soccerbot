@@ -13,7 +13,7 @@
 #include "PeripheralInstances.h"
 #include "robotState.h"
 #include "Communication.h"
-#include "MPU6050.h"
+#include "MPU6050/MPU6050.h"
 #include "Notification.h"
 #include "BufferBase.h"
 

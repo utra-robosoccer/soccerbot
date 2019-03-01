@@ -75,10 +75,10 @@
 #include "imu_helper.h"
 #include "rx_helper.h"
 #include "tx_helper.h"
-#include "UartDriver.h"
+#include "UartDriver/UartDriver.h"
 #include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
-#include "CircularDmaBuffer.h"
+#include "CircularDmaBuffer/CircularDmaBuffer.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
