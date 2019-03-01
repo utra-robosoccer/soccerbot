@@ -11,7 +11,7 @@
  */
 
 /********************************* Includes **********************************/
-#include "CircularDmaBuffer.h"
+#include "CircularDmaBuffer/CircularDmaBuffer.h"
 
 #include "MockUartInterface.h"
 

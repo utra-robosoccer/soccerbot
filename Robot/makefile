@@ -81,7 +81,11 @@ endif
 
 INC := \
 -I"$(PROJECT_DIR)/Inc/$(TARGET)" \
+-I"$(COMMON_DIR)/component/" \
+-I"$(COMMON_DIR)/hardware" \
 -I"$(COMMON_DIR)/include" \
+-I"$(COMMON_DIR)/interface" \
+-I"$(COMMON_DIR)/mock" \
 -I"$(PROJECT_DIR)/Drivers/CMSIS/Include" \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/include" \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \

@@ -25,12 +25,16 @@
 
 
 /********************************** Includes **********************************/
-#include "Dynamixel.h"
+#include "Dynamixel/Dynamixel.h"
+#include "SystemConf.h"
 #if defined(THREADED)
 #include "cmsis_os.h"
 #endif
 
 
+
+// TODO(rfairley): move this file into Common/app
+// (after removing dependencies on this file in component)
 
 /*********************************** Types ************************************/
 /**

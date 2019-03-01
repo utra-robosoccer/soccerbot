@@ -50,6 +50,10 @@
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/src/include/posix"/>
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/src/include/posix/sys"/>
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/system/arch"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1235015124" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F767xx"/>
@@ -83,6 +87,10 @@
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/src/include/posix"/>
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/src/include/posix/sys"/>
 									<listOptionValue builtIn="false" value="../../Robot/Middlewares/Third_Party/LwIP/system/arch"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1393467156" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F767xx"/>
@@ -110,7 +118,6 @@
 					<sourceEntries>
 						<entry excluding="Common/app|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|component|Common/hardware/HalUartInterface.cpp|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/CircularDmaBuffer"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>
@@ -158,6 +165,10 @@
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Inc/F4"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.245366192" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F446xx"/>
@@ -181,6 +192,10 @@
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../../Robot/Inc/F4"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.302701397" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F446xx"/>
@@ -208,7 +223,6 @@
 					<sourceEntries>
 						<entry excluding="Common/app|include|src/FunctionalFreeRTOSInterface.cpp|inc|src|Common/include|component|Common/hardware|app|hardware/HalUartInterface.cpp|Common/component|src/Hardware_UART/HalUartInterface.cpp|src/HalUartInterface.cpp|Common/test/UdpDriver_test.cpp|googletest" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/CircularDmaBuffer"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Communication"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/DaisyChain"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/Dynamixel"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common/component/UartDriver"/>

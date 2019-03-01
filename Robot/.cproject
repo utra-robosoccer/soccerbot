@@ -44,6 +44,10 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1620563188" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -69,6 +73,10 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Common/include"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.878794306" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -178,6 +186,10 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.674884498" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -203,6 +215,10 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../Common/include"/>
+									<listOptionValue builtIn="false" value="../../Common/mock"/>
+									<listOptionValue builtIn="false" value="../../Common/interface"/>
+									<listOptionValue builtIn="false" value="../../Common/hardware"/>
+									<listOptionValue builtIn="false" value="../../Common/component"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1119572749" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -283,32 +299,44 @@
 		<configuration configurationName="F4"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.94282395;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.557606498">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957;fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1085673112">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957;fr.ac6.managedbuild.config.gnu.cross.exe.release.511190957.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1085673112">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.2144293311;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.2144293311.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.217106513;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.1953883981">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.583718450;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.735752699">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.503473371.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.94282395;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.557606498">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.152389886;cdt.managedbuild.tool.gnu.cpp.compiler.input.2074198707">
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1562961808;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.129604463">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791.;cdt.managedbuild.tool.gnu.c.compiler.mingw.base.2092657724;cdt.managedbuild.tool.gnu.c.compiler.input.1831537162">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.357387791.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.152389886;cdt.managedbuild.tool.gnu.cpp.compiler.input.2074198707">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.2144293311;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.2144293311.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.421499216;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1891633708">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1011905824;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1085673112">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.583658891;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.583658891.;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1261905839;fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.268009199">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.583658891;fr.ac6.managedbuild.config.gnu.cross.exe.debug.711381537.583658891.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1012634163;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1218008308">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

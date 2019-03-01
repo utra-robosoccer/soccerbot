@@ -14,7 +14,7 @@
 
 
 /********************************* Includes **********************************/
-#include "UART_Handler.h"
+#include "uart_handler.h"
 #include "PeripheralInstances.h"
 #include "MockOsInterface.h"
 #include "BufferBase.h"
