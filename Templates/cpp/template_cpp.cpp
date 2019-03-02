@@ -39,7 +39,7 @@ namespace TODO{
 // Global Variables
 // ----------------------------------------------------------------------------
 
-// Public Function Prototypes
+// Public Functions
 // ----------------------------------------------------------------------------
 
 } // end namespace TODO
