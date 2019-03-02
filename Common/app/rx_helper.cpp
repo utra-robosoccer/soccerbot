@@ -21,8 +21,8 @@
 using namespace soccerbot; // TODO(tgamvrel) using namespace
 
 /***************************** Private Variables *****************************/
-static uint8_t robotGoalData[sizeof(comm::RobotGoal_t)];
-static uint8_t *robotGoalDataPtr;
+static uint8_t robot_goal_data[sizeof(comm::RobotGoal_t)];
+static uint8_t *robot_goal_data_ptr;
 
 /********************************  Functions  ********************************/
 /*****************************************************************************/
@@ -56,7 +56,7 @@ void initializeVars(void) {
     //sending
     comm::RobotGoal_t& robot_goal = comm::get_robot_goal();
     robot_goal.id = 0;
-    robotGoalDataPtr = robotGoalData;
+    robot_goal_data_ptr = robot_goal_data;
 
     //receiving
     comm::RobotState_t& robot_state = comm::get_robot_state();
@@ -70,47 +70,47 @@ static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
     constexpr size_t SIZE_DATA = sizeof(comm::RobotGoal_t);
     static RxParseState state = RxParseState::CHECKING_HEADER;
-    static size_t startSeqCount = 0;
-    static size_t dataBytesRead = 0;
-    RxParseState prevState = state;
+    static size_t state_seq_count = 0;
+    static size_t data_bytes_read = 0;
+    RxParseState prev_state = state;
 
     switch(byte_in) {
     case 0xFF:
         if (state == RxParseState::CHECKING_HEADER) {
-            startSeqCount++;
+            state_seq_count++;
         }
         if (state == RxParseState::READING_DATA) {
-            dataBytesRead++;
+            data_bytes_read++;
         }
         break;
     default:
         if (state == RxParseState::READING_DATA) {
-            dataBytesRead++;
+            data_bytes_read++;
         }
         break;
     }
 
-    if (state == RxParseState::CHECKING_HEADER && startSeqCount == SIZE_START_SEQ) {
+    if (state == RxParseState::CHECKING_HEADER && state_seq_count == SIZE_START_SEQ) {
         state = RxParseState::READING_DATA;
     }
-    else if (state == RxParseState::READING_DATA && dataBytesRead == SIZE_DATA) {
+    else if (state == RxParseState::READING_DATA && data_bytes_read == SIZE_DATA) {
         complete_out = true;
         state = RxParseState::CHECKING_HEADER;
-        startSeqCount = 0;
-        dataBytesRead = 0;
+        state_seq_count = 0;
+        data_bytes_read = 0;
     }
 
-    return prevState;
+    return prev_state;
 }
 
 void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete) {
     for (size_t i = 0; i < in_buff_size; i++) {
         if (readByte(in_buff[i], complete) == RxParseState::READING_DATA) {
-            *(robotGoalDataPtr++) = in_buff[i];
+            *(robot_goal_data_ptr++) = in_buff[i];
         }
         if (complete) {
             // Reset the variables to help with reception of a RobotGoal
-            robotGoalDataPtr = robotGoalData;
+            robot_goal_data_ptr = robot_goal_data;
             break;
         }
     }
@@ -121,7 +121,7 @@ void copyParsedData(void) {
     comm::RobotState_t& robot_state = comm::get_robot_state();
 
     robot_state.id = robot_goal.id;
-    memcpy(&robot_goal, robotGoalData, sizeof(comm::RobotGoal_t));
+    memcpy(&robot_goal, robot_goal_data, sizeof(comm::RobotGoal_t));
 }
 
 /**

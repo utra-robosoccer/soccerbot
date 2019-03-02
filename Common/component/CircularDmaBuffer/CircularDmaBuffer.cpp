@@ -61,7 +61,7 @@ CircularDmaBuffer::CircularDmaBuffer() {
 CircularDmaBuffer::CircularDmaBuffer(
     const UART_HandleTypeDef *m_uart_handle,
     const UartInterface* m_hw_if,
-    const uint16_t transmission_size_in,
+    const uint16_t m_transmission_size,
     const size_t m_buff_size,
     uint8_t *m_buff_p
 ) :

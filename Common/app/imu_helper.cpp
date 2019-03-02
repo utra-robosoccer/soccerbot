@@ -76,7 +76,7 @@ void processImuData(imu::IMUStruct_t& imu){
 }
 
 bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
-    bool retval = false;
+    bool success = false;
 
     IMUdata.Read_Accelerometer_IT();
 
@@ -92,10 +92,10 @@ bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
     ++*numSamples;
     if(*numSamples % 16 == 0){
         IMUdata.Read_Gyroscope_IT();
-        retval = true;
+        success = true;
     }
 
-    return retval;
+    return success;
 }
 
 } // end namespace app

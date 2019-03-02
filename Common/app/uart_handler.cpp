@@ -41,13 +41,13 @@ extern osMessageQId BufferWriteQueueHandle;
  *         queue if a read is executed
  * @return None
  */
-void UART_ProcessEvent(UARTcmd_t* cmdPtr){
+void UART_ProcessEvent(UartCmd_t* cmdPtr){
     float pos;
     bool success;
     MotorData_t data;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
-    dataToSend.pData = &data;
+    TXData_t data_to_send;
+    data_to_send.eDataType = eMotorData;
+    data_to_send.pData = &data;
 
     switch(cmdPtr->type){
         case cmdReadPosition:
@@ -58,7 +58,7 @@ void UART_ProcessEvent(UARTcmd_t* cmdPtr){
             data.id = cmdPtr->motorHandle->id();
             data.type = MotorData_t::T_FLOAT;
 
-            xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
+            xQueueSend(BufferWriteQueueHandle, &data_to_send, 0);
             break;
         case cmdWritePosition:
             cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);

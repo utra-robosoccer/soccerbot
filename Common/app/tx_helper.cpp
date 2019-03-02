@@ -19,8 +19,8 @@
 using namespace soccerbot; // TODO(tgamvrel) using namespace
 
 /***************************** Private Variables *****************************/
-static MotorData_t readMotorData;
-static imu::IMUStruct_t readIMUData;
+static MotorData_t read_motor_data;
+static imu::IMUStruct_t read_imu_data;
 
 
 /******************************** Functions **********************************/
@@ -49,23 +49,23 @@ static imu::IMUStruct_t readIMUData;
  * @param 	BufferMasterPtr Pointer to the sensor data buffer
  */
 void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
-    readIMUData = BufferMasterPtr->IMUBuffer.read();
+    read_imu_data = BufferMasterPtr->IMUBuffer.read();
     comm::RobotState_t& robot_state = comm::get_robot_state();
 
     memcpy(
         &reinterpret_cast<uint8_t*>(
             &robot_state
         )[comm::ROBOT_STATE_MPU_DATA_OFFSET],
-        (&readIMUData.x_Gyro),
+        (&read_imu_data.x_Gyro),
         sizeof(imu::IMUStruct_t)
     );
 
     for(int i = 0; i <= periph::MOTOR12; ++i)
     {
-        readMotorData = BufferMasterPtr->MotorBufferArray[i].read();
+        read_motor_data = BufferMasterPtr->MotorBufferArray[i].read();
         memcpy(
-            &robot_state.msg[4 * (readMotorData.id - 1)],
-            &readMotorData.payload,
+            &robot_state.msg[4 * (read_motor_data.id - 1)],
+            &read_motor_data.payload,
             sizeof(float)
         );
     }

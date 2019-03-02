@@ -61,7 +61,7 @@ typedef struct {
                                           case of a write instruction    */
     QueueHandle_t    qHandle;       /**< Pointer to the queue for this
                                           motor's commands               */
-}UARTcmd_t;
+}UartCmd_t;
 
 /**
  * @brief Enumerates the types of data that can be sent to the sensor queue.
@@ -103,7 +103,7 @@ typedef struct {
 
 
 /***************************** Function prototypes ****************************/
-void UART_ProcessEvent(UARTcmd_t* cmdPtr);
+void UART_ProcessEvent(UartCmd_t* cmdPtr);
 
 /**
  * @}

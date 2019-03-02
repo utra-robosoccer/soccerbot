@@ -484,8 +484,8 @@ private:
     /** @brief Motor identification (0-252, 0xFE) */
     uint8_t m_id;
 
-    const uint16_t m_res_divider;    /**< @see ResolutionDivider */
     const DaisyChain* m_daisy_chain; /**< @see DaisyChain */
+    const uint16_t m_res_divider;    /**< @see ResolutionDivider */
 };
 
 } // end namespace dynamixel
