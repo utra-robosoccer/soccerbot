@@ -150,8 +150,8 @@ namespace{
 // TODO: these variables are to be moved out of freertos.cpp
 
 buffer::BufferMaster BufferMaster;
-os::OsInterfaceImpl osInterfaceImpl;
-uart::HalUartInterface uartInterface;
+cmsis::OsInterfaceImpl osInterfaceImpl;
+hal::HalUartInterface uartInterface;
 uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, UART_HANDLE_PC);
 
 bool setupIsDone = false;
@@ -187,6 +187,9 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+using hal::IO_Type;
+
 /* USER CODE END FunctionPrototypes */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
@@ -366,7 +369,7 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
-    uartDriver.setIOType(uart::IO_Type::DMA);
+    uartDriver.setIOType(IO_Type::DMA);
     uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
 
     // Use polled IO here for 2 reasons:

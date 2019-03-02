@@ -14,11 +14,11 @@
 #define LWIP_UDP_INTERFACE_H
 
 #include <stdint.h>
-#include <UdpInterface.h>
+#include "UdpInterface.h"
 
-namespace lwip_udp_interface {
+namespace lwip {
 
-class LwipUdpInterface: public udp_interface::UdpInterface {
+class LwipUdpInterface: public lwip::UdpInterface {
 public:
     struct udp_pcb *udpNew() const override final;
     err_t udpBind(struct udp_pcb *pcb, const ip_addr_t *ipaddr,

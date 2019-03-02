@@ -11,7 +11,7 @@
 
 #include <LwipUdpInterface.h>
 
-namespace lwip_udp_interface {
+namespace lwip {
 
 struct udp_pcb* LwipUdpInterface::udpNew() const {
     return udp_new();
