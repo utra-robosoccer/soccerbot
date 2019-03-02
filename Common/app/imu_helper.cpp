@@ -46,7 +46,8 @@ static dsp::imuVelocityFilter velocityFilters[
 
 
 
-/********************************* Helpers ***********************************/
+/*********************************** app *************************************/
+namespace soccerbot{
 namespace app{
 // Functions
 // ----------------------------------------------------------------------------
@@ -97,7 +98,8 @@ bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
     return retval;
 }
 
-} // end namespace Helpers
+} // end namespace app
+} // end namespace soccerbot
 
 /**
  * @}

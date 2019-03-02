@@ -25,7 +25,8 @@
 
 
 
-/********************************* Helpers ***********************************/
+/*********************************** app *************************************/
+namespace soccerbot{
 namespace app{
 // Functions
 // ----------------------------------------------------------------------------
@@ -55,7 +56,8 @@ void processImuData(imu::IMUStruct_t& imu);
  */
 bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples);
 
-} // end namespace Helpers
+} // end namespace app
+} // end namespace soccerbot
 
 
 
