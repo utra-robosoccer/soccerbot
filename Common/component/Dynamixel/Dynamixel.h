@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    Dynamixel.h
+  * @file
   * @author  Tyler
   *
   * @defgroup Dynamixel
@@ -184,15 +184,15 @@ public:
      *        ResolutionDivider for the actuator being used.
      * @note The motor is initialized to use joint mode by default. Using
      *       wheel mode must always be specified afterward via function call
-     * @param id The ID used in command packets sent for this motor
-     * @param daisyChain I/O manager class for the port this motor is attached
+     * @param m_id The ID used in command packets sent for this motor
+     * @param m_daisy_chain I/O manager class for the port this motor is attached
      *        to
-     * @param divider Resolution divider for this motor
+     * @param m_res_divider Resolution divider for this motor
      */
     Motor(
-        uint8_t id,
-        DaisyChain* daisyChain,
-        ResolutionDivider divider
+        uint8_t m_id,
+        DaisyChain* m_daisy_chain,
+        ResolutionDivider m_res_divider
     );
 
     virtual ~Motor();
@@ -478,14 +478,14 @@ protected:
     ) const;
 
     /** @brief true if motor is in joint mode, false if in wheel mode */
-    bool m_isJointMode;
+    bool m_is_joint_mode;
 
 private:
     /** @brief Motor identification (0-252, 0xFE) */
     uint8_t m_id;
 
-    const uint16_t resolutionDivider; /**< @see ResolutionDivider */
-    const DaisyChain* daisyChain;     /**< @see DaisyChain */
+    const uint16_t m_res_divider;    /**< @see ResolutionDivider */
+    const DaisyChain* m_daisy_chain; /**< @see DaisyChain */
 };
 
 } // end namespace dynamixel

@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    dsp.h
+  * @file
   * @author  Tyler
   *
   * @defgroup Header
@@ -57,7 +57,7 @@ public:
     void update(float* dataSrc, float* dataDest, uint32_t blockSize);
 
 protected:
-    arm_fir_instance_f32 instance; /**< Filter instance */
+    arm_fir_instance_f32 m_inst; /**< Filter instance */
 };
 
 
@@ -83,9 +83,9 @@ private:
      * @brief Filter coefficients for angular velocity filter. Coefficients
      *        generated using MicroModeler DSP, a free online tool
      */
-    static const float32_t velCoeff[11];
+    static const float32_t m_velocity_coeff[11];
 
-    float32_t state[12]; /**< Filter state */
+    float32_t m_state[12]; /**< Filter state */
 };
 
 } // end namespace dsp

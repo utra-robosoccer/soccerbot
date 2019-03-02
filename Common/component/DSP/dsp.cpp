@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    dsp.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup DSP
@@ -28,7 +28,7 @@ fir_f32::~fir_f32(){
 }
 
 void fir_f32::update(float* dataSrc, float* dataDest, uint32_t blockSize){
-    arm_fir_f32(&instance, dataSrc, dataDest, blockSize);
+    arm_fir_f32(&m_inst, dataSrc, dataDest, blockSize);
 }
 
 
@@ -55,7 +55,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * @brief Filter coefficients for angular velocity filter. Coefficients
  *        generated using MicroModeler DSP, a free online tool
  */
-const float32_t imuVelocityFilter::velCoeff[11] =
+const float32_t imuVelocityFilter::m_velocity_coeff[11] =
 {
     0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315,
     0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841
@@ -77,19 +77,19 @@ void imuVelocityFilter::init(
 )
 {
     arm_fir_init_f32(
-        &instance,
+        &m_inst,
         11,
-        const_cast<float32_t*>(velCoeff),
-        state,
+        const_cast<float32_t*>(m_velocity_coeff),
+        m_state,
         1
     );
 
     if(startVal == 0){
-        memset(state, startVal, sizeof(state));
+        memset(m_state, startVal, sizeof(m_state));
     }
     else{
-        for(size_t i = 0; i < sizeof(state); ++i){
-            state[i] = startVal;
+        for(size_t i = 0; i < sizeof(m_state); ++i){
+            m_state[i] = startVal;
         }
     }
 }

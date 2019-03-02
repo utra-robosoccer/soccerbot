@@ -91,7 +91,7 @@ bool MX28::setBaudRate(uint32_t baud) const{
 }
 
 bool MX28::setGoalVelocity(float goalVelocity) const{
-    if(m_isJointMode){
+    if(m_is_joint_mode){
         if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MX28_MAX_VELOCITY)){
             return false;
         }
@@ -127,7 +127,7 @@ bool MX28::getVelocity(float& retVal) const{
         return false;
     }
 
-    uint16_t modifier = m_isJointMode ? 1023 : 2047;
+    uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
     retVal = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
 
     return success;

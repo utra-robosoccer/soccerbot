@@ -70,7 +70,7 @@ bool AX12A::setBaudRate(uint32_t baud) const{
 }
 
 bool AX12A::setGoalVelocity(float goalVelocity) const{
-    if(m_isJointMode){
+    if(m_is_joint_mode){
         if((goalVelocity < MIN_VELOCITY) || (goalVelocity > AX12A_MAX_VELOCITY)){
             return false;
         }
@@ -106,7 +106,7 @@ bool AX12A::getVelocity(float& retVal) const{
         return false;
     }
 
-    uint16_t modifier = m_isJointMode ? 1023 : 2047;
+    uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
     retVal = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
 
     return success;

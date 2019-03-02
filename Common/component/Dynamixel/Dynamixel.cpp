@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file   Dynamixel.cpp
+  * @file
   * @author Tyler Gamvrelis
   * @author Gokul Dharan
   * @author Hannah Lee
@@ -162,16 +162,16 @@ namespace dynamixel{
 // Public
 // ----------------------------------------------------------------------------
 Motor::Motor(
-    uint8_t id,
-    DaisyChain* daisyChain,
-    ResolutionDivider divider
+    uint8_t m_id,
+    DaisyChain* m_daisy_chain,
+    ResolutionDivider m_res_divider
 )
     :
-        m_id(id),
-        resolutionDivider(static_cast<uint16_t>(divider)),
-        daisyChain(daisyChain)
+        m_id(m_id),
+        m_daisy_chain(m_daisy_chain),
+        m_res_divider(static_cast<uint16_t>(m_res_divider))
 {
-    m_isJointMode = true;
+    m_is_joint_mode = true;
 }
 
 Motor::~Motor(){
@@ -188,7 +188,7 @@ bool Motor::reset(){
     arrTransmit[4] = INST_RESET;
     arrTransmit[5] = computeChecksum(arrTransmit, 6);
 
-    bool success = daisyChain->requestTransmission(
+    bool success = m_daisy_chain->requestTransmission(
         arrTransmit,
         sizeof(arrTransmit)
     );
@@ -234,7 +234,7 @@ bool Motor::setCwAngleLimit(float minAngle) const{
     }
 
     uint16_t normalized_value = static_cast<uint16_t>(
-        minAngle / MAX_ANGLE * resolutionDivider
+        minAngle / MAX_ANGLE * m_res_divider
     );
 
     uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
@@ -251,7 +251,7 @@ bool Motor::setCcwAngleLimit(float maxAngle) const{
     }
 
     uint16_t normalized_value = static_cast<uint16_t>(
-            maxAngle / MAX_ANGLE * resolutionDivider
+            maxAngle / MAX_ANGLE * m_res_divider
     );
 
     uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
@@ -357,7 +357,7 @@ bool Motor::setGoalPosition(float goalAngle) const{
     // Translate the angle from degrees into a binary code with the resolution
     // selected at construction
     uint16_t normalized_value = static_cast<uint16_t>(
-        (goalAngle / MAX_ANGLE) * resolutionDivider
+        (goalAngle / MAX_ANGLE) * m_res_divider
     );
 
     uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
@@ -415,7 +415,7 @@ bool Motor::getPosition(float& retVal) const{
 
     // Parse data and write it into R-val
     if(success){
-        retVal = (raw * MAX_ANGLE / resolutionDivider);
+        retVal = (raw * MAX_ANGLE / m_res_divider);
     }
 
     return success;
@@ -483,7 +483,7 @@ bool Motor::isJointMode(bool& retVal){
     }
 
     retVal = (retValCW == retValCCW);
-    m_isJointMode = retVal;
+    m_is_joint_mode = retVal;
 
     return success;
 }
@@ -499,7 +499,7 @@ bool Motor::ping(uint8_t& retVal) const{
     arrTransmit[5] = computeChecksum(arrTransmit, 6);
 
     // Transmit read request
-    bool success = daisyChain->requestTransmission(
+    bool success = m_daisy_chain->requestTransmission(
         arrTransmit,
         sizeof(arrTransmit)
     );
@@ -509,7 +509,7 @@ bool Motor::ping(uint8_t& retVal) const{
     }
 
     // Receive requested data
-    success = daisyChain->requestReception(
+    success = m_daisy_chain->requestReception(
         arrTransmit,
         sizeof(arrTransmit)
     );
@@ -543,7 +543,7 @@ bool Motor::enterWheelMode(){
         return false;
     }
 
-    m_isJointMode = 0;
+    m_is_joint_mode = 0;
 
     return success;
 }
@@ -559,7 +559,7 @@ bool Motor::enterJointMode(){
         return false;
     }
 
-    m_isJointMode = true;
+    m_is_joint_mode = true;
 
     return success;
 }
@@ -602,7 +602,7 @@ bool Motor::dataWriter(
     );
 
     // Transmit
-    return daisyChain->requestTransmission(arrTransmit, 4 + numArgs + 2);
+    return m_daisy_chain->requestTransmission(arrTransmit, 4 + numArgs + 2);
 }
 
 bool Motor::dataReader(
@@ -632,13 +632,13 @@ bool Motor::dataReader(
     arr[7] = computeChecksum(arr, 8);
 
     // Transmit read request
-    if(!daisyChain->requestTransmission(arr, 8)){
+    if(!m_daisy_chain->requestTransmission(arr, 8)){
         return false;
     }
 
     // Receive requested data
     uint8_t rxPacketSize = (readLength == 1) ? 7 : 8;
-    if(!daisyChain->requestReception(arr, rxPacketSize)){
+    if(!m_daisy_chain->requestReception(arr, rxPacketSize)){
         return false;
     }
 
