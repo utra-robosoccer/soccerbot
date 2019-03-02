@@ -49,12 +49,12 @@
 		<link>
 			<name>interface</name>
 			<type>2</type>
-			<location>C:/Users/rob/soccer-embedded/Common/interface</location>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/interface</locationURI>
 		</link>
 		<link>
 			<name>mock</name>
 			<type>2</type>
-			<location>C:/Users/rob/soccer-embedded/Common/mock</location>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/mock</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
