@@ -5,8 +5,8 @@
 # Compiled Object files
 *.slo
 *.lo
-*.o
-*.obj
+#*.o
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -24,7 +24,7 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+#*.a
 *.lib
 
 # Executables
@@ -48,9 +48,6 @@ tmp/
 
 # External tool builders
 .externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
 
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
@@ -85,14 +82,23 @@ tmp/
 .worksheet
 
 ### Eclipse Patch ###
-# Eclipse Core		
+# Eclipse Core
 #.project
 .metadata/
-# JDT-specific (Eclipse Java Development Tools)		
+# JDT-specific (Eclipse Java Development Tools)
 #.classpath
 
 # STM Microelectronics stuff
 **/Debug/
+**/Build/
+**/output.map
 RemoteSystemsTempFiles/
 .metadata/
+*/language.settings.xml
+RobotTest/.settings/language.settings.xml
 Robot/.settings/language.settings.xml
+Robot/NUCLEO-F767ZI.xml
+CubeMX/F4/*
+!CubeMX/F4/*.ioc
+CubeMX/F7/*
+!CubeMX/F7/*.ioc
