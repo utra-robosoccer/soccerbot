@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    DaisyChain.h
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup DaisyChain
@@ -30,7 +30,6 @@ using hal::GpioInterface;
 
 
 /********************************* DaisyChain ********************************/
-// TODO: pick better namespace for this component (then update module name)
 namespace dynamixel{
 // Classes and structs
 // ----------------------------------------------------------------------------
@@ -84,10 +83,10 @@ private:
 
     void changeBusDir(Direction dir) const;
 
-    const UartDriver* uartDriver;    /**< @see UartDriver               */
-    const GpioInterface* gpioif;     /**< @see GpioInterface            */
-    const GPIO_TypeDef* dataDirPort; /**< Port data direction pin is on */
-    const uint16_t dataDirPinNum;    /**< Data direction pin number     */
+    const UartDriver* m_uart_driver;     /**< @see UartDriver               */
+    const GpioInterface* m_gpio_if;      /**< @see GpioInterface            */
+    const GPIO_TypeDef* m_data_dir_port; /**< Port data direction pin is on */
+    const uint16_t m_data_dir_pin_num;   /**< Data direction pin number     */
 };
 
 } // end namespace dynamixel

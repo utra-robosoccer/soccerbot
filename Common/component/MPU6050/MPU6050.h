@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    MPU6050.h
+  * @file
   * @author  Izaak
   * @author  Jenny
   * @author  Tyler
@@ -60,9 +60,9 @@ class MPU6050 {
 public:
     /**
      * @brief The constructor for the MPU6050 class, which initializes non-I/O members
-     * @param  I2CHandle A pointer to the I2C_HandleTypeDef being used
+     * @param m_i2c_handle A pointer to the I2C_HandleTypeDef being used
      */
-    MPU6050(I2C_HandleTypeDef* I2CHandle);
+    MPU6050(I2C_HandleTypeDef* m_i2c_handle);
 
     /**
       * @brief   This function is used to initialize all aspects of the IMU
@@ -99,7 +99,7 @@ public:
     void Fill_Struct(IMUStruct_t* myStruct);
 
     /**
-      * @brief   The MPU6050 desctructor
+      * @brief   The MPU6050 destructor
       */
     ~MPU6050() {}
 
@@ -148,14 +148,14 @@ private:
       */
     bool Set_LPF(uint8_t lpf);
 
-    I2C_HandleTypeDef*      I2C_Handle; /**< I2C handle associated with sensor instance */
-    float                   x_Gyro;     /**< x-axis angular velocity read from sensor */
-    float                   y_Gyro;     /**< y-axis angular velocity read from sensor */
-    float                   z_Gyro;     /**< z-axis angular velocity read from sensor */
-    float                   x_Accel;    /**< x-axis acceleration read from sensor */
-    float                   y_Accel;    /**< y-axis acceleration read from sensor */
-    float                   z_Accel;    /**< z-axis acceleration read from sensor */
-    uint8_t                 received_byte;
+    const I2C_HandleTypeDef* m_i2c_handle; /**< I2C handle associated with sensor instance */
+    float                    m_vx;         /**< x-axis angular velocity read from sensor */
+    float                    m_vy;         /**< y-axis angular velocity read from sensor */
+    float                    m_vz;         /**< z-axis angular velocity read from sensor */
+    float                    m_ax;         /**< x-axis acceleration read from sensor */
+    float                    m_ay;         /**< y-axis acceleration read from sensor */
+    float                    m_az;         /**< z-axis acceleration read from sensor */
+    uint8_t                  m_recv_byte;
 };
 
 } // end namespace imu

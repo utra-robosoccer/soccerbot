@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file   CircularDmaBuffer.cpp
+  * @file
   * @author Robert
   *
   * @defgroup circular_dma_buffer
@@ -59,17 +59,17 @@ CircularDmaBuffer::CircularDmaBuffer() {
 }
 
 CircularDmaBuffer::CircularDmaBuffer(
-    const UART_HandleTypeDef *uart_handle_in,
-    const UartInterface* hw_if_in,
+    const UART_HandleTypeDef *m_uart_handle,
+    const UartInterface* m_hw_if,
     const uint16_t transmission_size_in,
-    const size_t buff_size_in,
-    uint8_t *buff_p_in
+    const size_t m_buff_size,
+    uint8_t *m_buff_p
 ) :
-    m_uart_handle(uart_handle_in),
-    m_hw_if(hw_if_in),
-    m_transmission_size(transmission_size_in),
-    m_buff_size(buff_size_in),
-    m_buff_p(buff_p_in) {
+    m_uart_handle(m_uart_handle),
+    m_hw_if(m_hw_if),
+    m_transmission_size(m_transmission_size),
+    m_buff_size(m_buff_size),
+    m_buff_p(m_buff_p) {
 
 }
 
