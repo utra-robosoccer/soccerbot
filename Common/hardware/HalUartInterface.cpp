@@ -111,7 +111,7 @@ HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart)
 
 
 
-namespace uart{
+namespace hal{
 /***************************** HalUartInterface ******************************/
 // Public
 // ----------------------------------------------------------------------------

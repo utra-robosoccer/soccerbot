@@ -24,13 +24,14 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-using os::OsInterface;
+using cmsis::OsInterface;
 
 
 
 
 /****************************** MockOsInterface ******************************/
-namespace mocks{
+namespace cmsis {
+namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -143,7 +144,8 @@ public:
     );
 };
 
-} // end namespace mocks
+} // end namespace gmock
+} // end namespace cmsis
 
 
 

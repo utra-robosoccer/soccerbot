@@ -24,8 +24,10 @@
 #include "UartInterface.h"
 
 
+using hal::UartInterface;
 
-/************************** insert module name here **************************/
+
+/***************************** CircularDmaBuffer ******************************/
 namespace uart{
 // Constants
 // ----------------------------------------------------------------------------

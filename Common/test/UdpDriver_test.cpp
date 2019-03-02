@@ -26,8 +26,8 @@
 
 
 using udp_driver::UdpDriver;
-using mocks::MockUdpInterface;
-using mocks::MockOsInterface;
+using lwip::gmock::MockUdpInterface;
+using cmsis::gmock::MockOsInterface;
 
 using ::testing::Return;
 using ::testing::_;

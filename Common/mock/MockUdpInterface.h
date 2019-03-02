@@ -18,9 +18,10 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace mocks {
+namespace lwip {
+namespace gmock {
 
-class MockUdpInterface: public udp_interface::UdpInterface {
+class MockUdpInterface: public UdpInterface {
 public:
     MOCK_CONST_METHOD0(udpNew, struct udp_pcb*());
     MOCK_CONST_METHOD3(udpBind, err_t(struct udp_pcb*, const ip_addr_t*, u16_t));
@@ -35,6 +36,7 @@ public:
     MOCK_CONST_METHOD3(pbufTake, err_t(struct pbuf *, const void *, u16_t));
 };
 
-}
+} // end namespace gmock
+} // end namespace lwip
 
 #endif

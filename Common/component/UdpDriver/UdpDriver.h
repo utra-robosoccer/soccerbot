@@ -22,6 +22,8 @@
 #include "UdpInterface.h"
 #include "OsInterface.h"
 
+using cmsis::OsInterface;
+using lwip::UdpInterface;
 
 
 /************************** udp_driver **************************/
@@ -41,8 +43,8 @@ public:
               const ip_addr_t ipaddrPcIn,
               const u16_t portIn,
               const u16_t portPcIn,
-              const udp_interface::UdpInterface *udpInterfaceIn,
-              const os::OsInterface *osInterfaceIn);
+              const UdpInterface *udpInterfaceIn,
+              const OsInterface *osInterfaceIn);
     ~UdpDriver();
 
     /* User-facing - typically call directly. */
@@ -64,8 +66,8 @@ public:
     const ip_addr_t                     getIpaddrPc() const;
     const u16_t                         getPort() const;
     const u16_t                         getPortPc() const;
-    const udp_interface::UdpInterface*  getUdpInterface() const;
-    const os::OsInterface*              getOsInterface() const;
+    const UdpInterface*  getUdpInterface() const;
+    const OsInterface*              getOsInterface() const;
     struct udp_pcb*                     getPcb() const;
     struct pbuf*                        getRecvPbuf() const;
 
@@ -80,8 +82,8 @@ private:
     const u16_t portPc          = 0;
 
     /* External interfaces. */
-    const udp_interface::UdpInterface *udpInterface     = nullptr;
-    const os::OsInterface *osInterface                  = nullptr;
+    const UdpInterface *udpInterface     = nullptr;
+    const OsInterface *osInterface                  = nullptr;
 
     /* Data modified internally by the Raw API. */
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */

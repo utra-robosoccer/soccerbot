@@ -17,7 +17,7 @@
 #include "i2c.h"
 
 /******************************* I2C Interface *******************************/
-namespace i2c {
+namespace hal {
 
 // Classes and Structs
 /**
@@ -99,6 +99,6 @@ public:
             uint8_t *pData, uint16_t Size) const = 0;
 };
 // ----------------------------------------------------------------------------
-}// end namespace i2c
+}// end namespace hal
 
 #endif /* COMMON_INCLUDE_I2CINTERFACE_H_ */

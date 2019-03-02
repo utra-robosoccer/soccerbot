@@ -19,7 +19,7 @@
 #include <gmock/gmock.h>
 
 using uart::CircularDmaBuffer;
-using mocks::MockUartInterface;
+using hal::gmock::MockUartInterface;
 
 using ::testing::Return;
 using ::testing::_;

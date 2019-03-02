@@ -20,7 +20,7 @@
 
 
 /***************************** GpioInterfaceImpl *****************************/
-namespace gpio{
+namespace hal{
 // Classes and structs
 // ----------------------------------------------------------------------------
 GpioInterfaceImpl::GpioInterfaceImpl() {

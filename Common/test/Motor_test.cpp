@@ -31,10 +31,10 @@ using ::testing::Return;
 
 using uart::UartDriver;
 
-using mocks::MockMotor;
-using mocks::MockOsInterface;
-using mocks::MockUartInterface;
-using mocks::MockGpioInterface;
+using dynamixel::gmock::MockMotor;
+using cmsis::gmock::MockOsInterface;
+using hal::gmock::MockUartInterface;
+using hal::gmock::MockGpioInterface;
 
 using dynamixel::Motor;
 using dynamixel::DaisyChainParams;

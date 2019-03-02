@@ -19,6 +19,8 @@
 #include "UdpDriver.h"
 
 
+using lwip::UdpInterface;
+using cmsis::OsInterface;
 
 
 /******************************** File-local *********************************/
@@ -74,8 +76,8 @@ UdpDriver::UdpDriver(const ip_addr_t ipaddrIn,
                      const ip_addr_t ipaddrPcIn,
                      const u16_t portIn,
                      const u16_t portPcIn,
-                     const udp_interface::UdpInterface *udpInterfaceIn,
-                     const os::OsInterface *osInterfaceIn
+                     const UdpInterface *udpInterfaceIn,
+                     const OsInterface *osInterfaceIn
                      ) :
                          ipaddr(ipaddrIn),
                          ipaddrPc(ipaddrPcIn),
@@ -268,11 +270,11 @@ const u16_t UdpDriver::getPortPc() const {
     return portPc;
 }
 
-const udp_interface::UdpInterface* UdpDriver::getUdpInterface() const {
+const UdpInterface* UdpDriver::getUdpInterface() const {
     return udpInterface;
 }
 
-const os::OsInterface* UdpDriver::getOsInterface() const {
+const OsInterface* UdpDriver::getOsInterface() const {
     return osInterface;
 }
 

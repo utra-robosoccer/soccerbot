@@ -21,7 +21,7 @@
 #include <lwip/udp.h>
 #include <lwip/arch.h>
 
-namespace udp_interface {
+namespace lwip {
 
 class UdpInterface {
 public:
@@ -43,7 +43,7 @@ public:
     virtual err_t pbufTake(struct pbuf *buf, const void *dataptr, u16_t len) const = 0;
 };
 
-} // end namespace udp_interface
+} // end namespace lwip
 
 /**
  * @}
