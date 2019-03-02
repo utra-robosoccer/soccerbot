@@ -25,7 +25,9 @@
 #if defined(THREADED)
 #include "cmsis_os.h"
 #include "OsInterface.h"
-using os::OsInterface;
+using cmsis::OsInterface;
+using hal::IO_Type;
+using hal::UartInterface;
 #endif
 
 

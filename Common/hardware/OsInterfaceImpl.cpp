@@ -27,7 +27,7 @@
 
 
 /****************************** OsInterfaceImpl ******************************/
-namespace os{
+namespace cmsis {
 // Classes and structs
 // ----------------------------------------------------------------------------
 OsInterfaceImpl::OsInterfaceImpl() {

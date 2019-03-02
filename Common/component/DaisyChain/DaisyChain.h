@@ -23,13 +23,13 @@
 #include "GpioInterface.h"
 
 using uart::UartDriver;
-using uart::IO_Type;
-using gpio::GpioInterface;
+using hal::IO_Type;
+using hal::GpioInterface;
 
 
 
 
-/************************** insert module name here **************************/
+/********************************* DaisyChain ********************************/
 // TODO: pick better namespace for this component (then update module name)
 namespace dynamixel{
 // Classes and structs

@@ -16,18 +16,18 @@
 
 /********************************* Includes **********************************/
 #include <MockOsInterface.h>
-#include <MockUdpInterface.h>
 #include <UdpDriver/UdpDriver.h>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "UdpRawInterfaceMock.h"
 
 
 
 
-using udp_driver::UdpDriver;
-using mocks::MockUdpInterface;
-using mocks::MockOsInterface;
+using udp::UdpDriver;
+using lwip::gmock::UdpRawInterfaceMock;
+using cmsis::gmock::MockOsInterface;
 
 using ::testing::Return;
 using ::testing::_;
@@ -55,7 +55,7 @@ const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 // ----------------------------------------------------------------------------
 class UdpDriverTest : public ::testing::Test {
 protected:
-    MockUdpInterface udp_if;
+    UdpRawInterfaceMock udp_if;
     MockOsInterface os_if;
 };
 

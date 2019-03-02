@@ -23,13 +23,14 @@
 #include <gmock/gmock.h>
 
 #include "UartInterface.h"
-using uart::UartInterface;
+using hal::UartInterface;
 
 
 
 
 /***************************** MockUartInterface *****************************/
-namespace mocks{
+namespace hal {
+namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -84,7 +85,8 @@ public:
     MOCK_CONST_METHOD1(getErrorCode, __IO uint32_t(const UART_HandleTypeDef*));
 };
 
-} // end namespace mocks
+} // end namespace gmock
+} // end namespace hal
 
 
 

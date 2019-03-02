@@ -17,6 +17,8 @@
 #include "PeripheralInstances.h"
 
 
+using cmsis::OsInterface;
+
 
 namespace buffer {
 
@@ -31,7 +33,7 @@ class BufferBase
 public:
     BufferBase() {}
     ~BufferBase() {}
-    void set_osInterface(os::OsInterface *osInterface)
+    void set_osInterface(OsInterface *osInterface)
     {
         m_osInterfacePtr = osInterface;
     }
@@ -70,7 +72,7 @@ private:
     //int indicates whether data has been read, -1 if data not written yet
     int8_t m_read = -1;
     osMutexId m_lock = nullptr;
-    os::OsInterface* m_osInterfacePtr = nullptr;
+    OsInterface* m_osInterfacePtr = nullptr;
 };
 
 
@@ -84,7 +86,7 @@ class BufferMaster
 public:
     BufferMaster() {}
     ~BufferMaster() {}
-    void setup_buffers(osMutexId lock, os::OsInterface *osInterface)
+    void setup_buffers(osMutexId lock, OsInterface *osInterface)
     {
         IMUBuffer.set_lock(lock);
         IMUBuffer.set_osInterface(osInterface);
@@ -116,7 +118,7 @@ public:
     // Add buffer items here as necessary
 private:
     osMutexId m_lock = nullptr;
-    os::OsInterface* m_osInterfacePtr = nullptr;
+    OsInterface* m_osInterfacePtr = nullptr;
 };
 
 } // end namespace buffer

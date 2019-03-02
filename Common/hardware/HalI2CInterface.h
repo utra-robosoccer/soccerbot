@@ -19,7 +19,7 @@
 #include "SystemConf.h"
 
 /****************************** HAL I2C Interface ****************************/
-namespace i2c{
+namespace hal{
 /**
  * @class Concrete HAL implementation of the abstract I2CInterface class, to be
  *        used in production builds

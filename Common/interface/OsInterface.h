@@ -27,7 +27,7 @@
 
 
 /******************************* OsInterface *********************************/
-namespace os{
+namespace cmsis {
 // Classes and structs
 // ----------------------------------------------------------------------------
 class OsInterface {
@@ -99,7 +99,7 @@ public:
     ) const = 0;
 };
 
-} // end namespace os
+} // end namespace cmsis
 
 /**
  * @}

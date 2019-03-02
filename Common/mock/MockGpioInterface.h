@@ -24,13 +24,14 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-using gpio::GpioInterface;
+using hal::GpioInterface;
 
 
 
 
 /****************************** MockGpioInterface ****************************/
-namespace mocks{
+namespace hal {
+namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 class MockGpioInterface : public GpioInterface{
@@ -61,7 +62,8 @@ public:
     );
 };
 
-} // end namespace mocks
+} // end namespace gmock
+} // end namespace hal
 
 
 

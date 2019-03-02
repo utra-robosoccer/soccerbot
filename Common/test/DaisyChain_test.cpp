@@ -16,6 +16,7 @@
 /********************************* Includes **********************************/
 #include "DaisyChain/DaisyChain.h"
 
+#include "DaisyChain/DaisyChain.h"
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"
 #include "MockGpioInterface.h"
@@ -29,10 +30,10 @@ using ::testing::Return;
 using ::testing::_;
 
 using uart::UartDriver;
-using uart::IO_Type;
-using mocks::MockOsInterface;
-using mocks::MockUartInterface;
-using mocks::MockGpioInterface;
+using hal::IO_Type;
+using cmsis::gmock::MockOsInterface;
+using hal::gmock::MockUartInterface;
+using hal::gmock::MockGpioInterface;
 
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;

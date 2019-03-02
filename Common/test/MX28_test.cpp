@@ -19,6 +19,8 @@
 #include "MockUartInterface.h"
 #include "MockOsInterface.h"
 #include "MockGpioInterface.h"
+#include "UartDriver/UartDriver.h"
+
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -27,9 +29,9 @@ using ::testing::_;
 
 using uart::UartDriver;
 
-using mocks::MockOsInterface;
-using mocks::MockUartInterface;
-using mocks::MockGpioInterface;
+using cmsis::gmock::MockOsInterface;
+using hal::gmock::MockUartInterface;
+using hal::gmock::MockGpioInterface;
 
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;

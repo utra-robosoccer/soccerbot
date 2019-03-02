@@ -25,7 +25,7 @@
 
 
 /******************************* UartInterface *******************************/
-namespace uart{
+namespace hal {
 // Types & enums
 // ----------------------------------------------------------------------------
 /**
@@ -190,7 +190,7 @@ public:
     ) const = 0;
 };
 
-} // end namespace uart
+} // end namespace hal
 
 
 

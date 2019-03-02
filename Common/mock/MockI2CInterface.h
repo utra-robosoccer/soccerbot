@@ -19,9 +19,10 @@
 #include <gmock/gmock.h>
 
 /***************************** Mock I2C Interface ****************************/
-using i2c::I2CInterface;
+using hal::I2CInterface;
 
-namespace mocks{
+namespace hal {
+namespace gmock {
 
 /**
  * @class MockI2CInterface Emulates I2CInterface for unit testing purposes
@@ -41,6 +42,7 @@ public:
 						uint16_t MemAddSize, uint8_t *pData, uint16_t Size));
 }
 
-}// end namespace i2c
+} // end namespace gmock
+} // end namespace hal
 
 #endif /* COMMON_INCLUDE_MOCKI2CINTERFACE_H_ */
