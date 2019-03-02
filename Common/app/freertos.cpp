@@ -163,7 +163,6 @@ static volatile uint32_t error;
  * scheduling delays, so this is set to 5ms. */
 constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 }
-
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -189,6 +188,7 @@ extern "C" {
 #endif
 
 using hal::IO_Type;
+using namespace soccerbot; // TODO(tgamvrel) using namespace
 
 /* USER CODE END FunctionPrototypes */
 
@@ -440,10 +440,11 @@ void StartCommandTask(void const * argument)
 
         // Convert raw bytes from robotGoal received from PC into floats
         uint8_t* ptr = NULL;
+        comm::RobotGoal_t& robot_goal = comm::get_robot_goal();
         for(uint8_t i = 0; i < 18; i++){
             ptr = (uint8_t*)&positions[i];
             for(uint8_t j = 0; j < 4; j++){
-                *ptr = robotGoal.msg[i * 4 + j];
+                *ptr = robot_goal.msg[i * 4 + j];
                 ptr++;
             }
         }
@@ -735,7 +736,15 @@ void StartTxTask(void const * argument) {
 
         // TODO: should have a way to back out of a failed transmit and reinitiate
         // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
-        while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
+        comm::RobotState_t& robot_state = comm::get_robot_state();
+        while(!uartDriver.transmit(
+                reinterpret_cast<uint8_t*>(&robot_state),
+                sizeof(comm::RobotState_t)
+            )
+        )
+        {
+            continue;
+        }
     }
 }
 
@@ -953,7 +962,6 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     error = HAL_UART_GetError(huart);
 }
-
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

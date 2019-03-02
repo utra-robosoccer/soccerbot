@@ -11,19 +11,17 @@
 #include "tx_helper.h"
 #include "cmsis_os.h"
 #include "PeripheralInstances.h"
-#include "robotState.h"
 #include "Communication.h"
 #include "MPU6050/MPU6050.h"
 #include "Notification.h"
 #include "BufferBase.h"
 
+using namespace soccerbot; // TODO(tgamvrel) using namespace
+
 /***************************** Private Variables *****************************/
 static MotorData_t readMotorData;
 static imu::IMUStruct_t readIMUData;
 
-static char* const pIMUXGyroData = &robotState.msg[
-    ROBOT_STATE_MPU_DATA_OFFSET
-];
 
 /******************************** Functions **********************************/
 /*  StartTxTask Helper Functions                                             */
@@ -52,14 +50,23 @@ static char* const pIMUXGyroData = &robotState.msg[
  */
 void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
     readIMUData = BufferMasterPtr->IMUBuffer.read();
-    memcpy(pIMUXGyroData, (&readIMUData.x_Gyro), sizeof(imu::IMUStruct_t));
+    comm::RobotState_t& robot_state = comm::get_robot_state();
+
+    memcpy(
+        &reinterpret_cast<uint8_t*>(
+            &robot_state
+        )[comm::ROBOT_STATE_MPU_DATA_OFFSET],
+        (&readIMUData.x_Gyro),
+        sizeof(imu::IMUStruct_t)
+    );
 
     for(int i = 0; i <= periph::MOTOR12; ++i)
     {
         readMotorData = BufferMasterPtr->MotorBufferArray[i].read();
-        memcpy(&robotState.msg[4 * (readMotorData.id - 1)],
-               &readMotorData.payload,
-               sizeof(float)
+        memcpy(
+            &robot_state.msg[4 * (readMotorData.id - 1)],
+            &readMotorData.payload,
+            sizeof(float)
         );
     }
 }
