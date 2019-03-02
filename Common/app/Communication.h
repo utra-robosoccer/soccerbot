@@ -33,7 +33,7 @@ namespace comm{
 // Constant Declarations
 // ----------------------------------------------------------------------------
 /** Buffer offset at which MPU6050 data is inserted */
-constexpr uint8_t ROBOT_STATE_MPU_DATA_OFFSET = 48;
+constexpr size_t ROBOT_STATE_MPU_DATA_OFFSET = 48;
 
 
 // Types & enums
