@@ -32,8 +32,9 @@ using dynamixel::ResolutionDivider;
 
 
 
-/****************************** MockOsInterface ******************************/
-namespace mocks{
+/****************************** MockMotorInterface ******************************/
+namespace dynamixel {
+namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
@@ -74,7 +75,8 @@ public:
     );
 };
 
-} // end namespace mocks
+} // end namespace gmock
+} // end namespace dynamixel
 
 
 

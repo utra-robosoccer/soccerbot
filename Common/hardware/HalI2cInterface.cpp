@@ -15,7 +15,7 @@
 #include "HalI2CInterface.h"
 
 
-namespace i2c{
+namespace hal{
 /**************************** HAL I2C Interface ******************************/
 // Public
 HALI2CInterface::HALI2CInterface() {}

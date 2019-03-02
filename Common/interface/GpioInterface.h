@@ -27,7 +27,7 @@
 
 
 /******************************* GpioInterface *******************************/
-namespace gpio{
+namespace hal {
 // Classes and structs
 // ----------------------------------------------------------------------------
 class GpioInterface{
@@ -51,7 +51,7 @@ public:
     ) const = 0;
 };
 
-} // end namespace gpio
+} // end namespace hal
 
 
 

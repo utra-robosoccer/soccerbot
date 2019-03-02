@@ -25,7 +25,7 @@
 
 
 /***************************** GpioInterfaceImpl *****************************/
-namespace gpio{
+namespace hal{
 // Classes and structs
 // ----------------------------------------------------------------------------
 class GpioInterfaceImpl : public GpioInterface{

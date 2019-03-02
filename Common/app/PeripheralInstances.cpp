@@ -26,9 +26,9 @@
 using dynamixel::Motor;
 using dynamixel::DaisyChain;
 using dynamixel::DaisyChainParams;
-using uart::HalUartInterface;
-using os::OsInterfaceImpl;
-using gpio::GpioInterfaceImpl;
+using hal::HalUartInterface;
+using cmsis::OsInterfaceImpl;
+using hal::GpioInterfaceImpl;
 
 
 

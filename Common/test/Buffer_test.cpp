@@ -28,7 +28,7 @@ using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
-using mocks::MockOsInterface;
+using cmsis::gmock::MockOsInterface;
 using namespace buffer;
 
 
