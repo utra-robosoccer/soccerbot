@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    UdpDriver.h
   * @author  Robert Fairley
+  * @brief   Abstraction over UDP library providing common driver functions.
   *
   * @defgroup Header
-  * @ingroup  udp_driver
+  * @ingroup  lwip
   * @{
   *****************************************************************************
   */
@@ -19,15 +19,15 @@
 
 
 /********************************* Includes **********************************/
-#include "UdpInterface.h"
+#include "UdpRawInterface.h"
 #include "OsInterface.h"
 
 using cmsis::OsInterface;
-using lwip::UdpInterface;
+using lwip::UdpRawInterface;
 
 
 /************************** udp_driver **************************/
-namespace udp_driver {
+namespace udp {
 
 // Constants
 // ----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ public:
               const ip_addr_t ipaddrPcIn,
               const u16_t portIn,
               const u16_t portPcIn,
-              const UdpInterface *udpInterfaceIn,
+              const UdpRawInterface *udpInterfaceIn,
               const OsInterface *osInterfaceIn);
     ~UdpDriver();
 
@@ -66,8 +66,8 @@ public:
     const ip_addr_t                     getIpaddrPc() const;
     const u16_t                         getPort() const;
     const u16_t                         getPortPc() const;
-    const UdpInterface*  getUdpInterface() const;
-    const OsInterface*              getOsInterface() const;
+    const UdpRawInterface*  			getUdpInterface() const;
+    const OsInterface*             		getOsInterface() const;
     struct udp_pcb*                     getPcb() const;
     struct pbuf*                        getRecvPbuf() const;
 
@@ -82,7 +82,7 @@ private:
     const u16_t portPc          = 0;
 
     /* External interfaces. */
-    const UdpInterface *udpInterface     = nullptr;
+    const UdpRawInterface *udpInterface     = nullptr;
     const OsInterface *osInterface                  = nullptr;
 
     /* Data modified internally by the Raw API. */

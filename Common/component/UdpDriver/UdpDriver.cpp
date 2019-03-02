@@ -1,15 +1,13 @@
 /**
   *****************************************************************************
-  * @file    UdpDriver.cpp
   * @author  Robert Fairley
   *
   * @defgroup udp_driver
-  * @brief    Implementation of UdpDriver using UDP functions of the lwIP Raw API.
+  * @brief    Implementation of UdpDriver.
   * @{
   *****************************************************************************
   */
 
-/* TODO: namespacing+doxygen groups to be redone, and UdpInterface to be renamed to LwipRawUdpInterface. */
 /* TODO: licensing terms for projects we are making use of e.g. googletest? */
 
 
@@ -19,8 +17,9 @@
 #include "UdpDriver.h"
 
 
-using lwip::UdpInterface;
+using lwip::UdpRawInterface;
 using cmsis::OsInterface;
+using udp::UdpDriver;
 
 
 /******************************** File-local *********************************/
@@ -35,12 +34,12 @@ static void defaultRecvCallback(void *arg,
                                 const ip_addr_t *addr,
                                 u16_t port)
 {
-    udp_driver::UdpDriver *caller = (udp_driver::UdpDriver*) arg;
+    UdpDriver *caller = (UdpDriver*) arg;
     caller->setRecvPbuf(pPbuf);
     caller->signalReceiveCplt();
 }
 
-static bool transmitImpl(udp_driver::UdpDriver* caller, struct pbuf * pPbuf) {
+static bool transmitImpl(UdpDriver* caller, struct pbuf * pPbuf) {
     const ip_addr_t addr = caller->getIpaddrPc();
     bool success = false;
 
@@ -63,7 +62,7 @@ static bool transmitImpl(udp_driver::UdpDriver* caller, struct pbuf * pPbuf) {
 
 } // end anonymous namespace
 
-namespace udp_driver {
+namespace udp {
 
 /************************** UdpDriver ***************************/
 // Public
@@ -76,7 +75,7 @@ UdpDriver::UdpDriver(const ip_addr_t ipaddrIn,
                      const ip_addr_t ipaddrPcIn,
                      const u16_t portIn,
                      const u16_t portPcIn,
-                     const UdpInterface *udpInterfaceIn,
+                     const UdpRawInterface *udpInterfaceIn,
                      const OsInterface *osInterfaceIn
                      ) :
                          ipaddr(ipaddrIn),
@@ -270,7 +269,7 @@ const u16_t UdpDriver::getPortPc() const {
     return portPc;
 }
 
-const UdpInterface* UdpDriver::getUdpInterface() const {
+const UdpRawInterface* UdpDriver::getUdpInterface() const {
     return udpInterface;
 }
 

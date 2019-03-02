@@ -1,24 +1,23 @@
 /**
   *****************************************************************************
-  * @file    LwipUdpInterface.h
   * @author  Robert Fairley
   * @brief   Extend UdpInterface to make the direct calls to the lwIP Raw API.
   *
   * @defgroup Header
-  * @ingroup  lwip_udp_interface
+  * @ingroup  lwip
   * @{
   *****************************************************************************
   */
 
-#ifndef LWIP_UDP_INTERFACE_H
-#define LWIP_UDP_INTERFACE_H
+#ifndef UDP_RAW_INTERFACE_IMPL_H
+#define UDP_RAW_INTERFACE_IMPL_H
 
 #include <stdint.h>
-#include "UdpInterface.h"
+#include <UdpRawInterface.h>
 
 namespace lwip {
 
-class LwipUdpInterface: public lwip::UdpInterface {
+class UdpRawInterfaceImpl: public lwip::UdpRawInterface {
 public:
     struct udp_pcb *udpNew() const override final;
     err_t udpBind(struct udp_pcb *pcb, const ip_addr_t *ipaddr,
@@ -38,11 +37,11 @@ public:
     err_t pbufTake(struct pbuf *buf, const void *dataptr, u16_t len) const override final;
 };
 
-} // end namespace lwip_udp_interface
+} // end namespace lwip
 
 /**
  * @}
  */
 /* end - Header */
 
-#endif /* LWIP_UDP_INTERFACE_H */
+#endif /* UDP_RAW_INTERFACE_IMPL_H */
