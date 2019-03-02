@@ -53,7 +53,7 @@ $(COMMON_DIR)/hardware \
 
 # Sources to be excluded from the build
 ifeq ($(TARGET),$(F4))
-EXCL_SRCS := $(COMMON_DIR)/hardware/LwipUdpInterface.cpp
+EXCL_SRCS := $(COMMON_DIR)/hardware/UdpRawInterfaceImpl.cpp
 else ifeq ($(TARGET),$(F7))
 EXCL_SRCS :=
 else
