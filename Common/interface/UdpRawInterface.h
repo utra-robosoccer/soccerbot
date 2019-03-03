@@ -4,29 +4,26 @@
   * @author  Robert Fairley
   * @brief   Wrapper interface for UDP function calls from the lwIP Raw API.
   *
-  * @defgroup Header
+  * @defgroup HeaderUdpRawInterface
   * @defgroup lwip
   * @{
   *****************************************************************************
   */
-
-/* NB: defgroup used above since there is no .cpp file associated with this class. */
 
 #ifndef UDP_RAW_INTERFACE_H
 #define UDP_RAW_INTERFACE_H
 
 #include <stdint.h>
 
-#include <lwip/netif.h>
-#include <lwip/udp.h>
-#include <lwip/arch.h>
+#include "lwip/netif.h"
+#include "lwip/udp.h"
+#include "lwip/arch.h"
 
 namespace lwip {
 
 class UdpRawInterface {
 public:
-    virtual ~UdpRawInterface() {
-    }
+    virtual ~UdpRawInterface() {}
     virtual struct udp_pcb *udpNew() const = 0;
     virtual err_t udpBind(struct udp_pcb *pcb, const ip_addr_t *ipaddr,
             u16_t port) const = 0;
@@ -48,6 +45,6 @@ public:
 /**
  * @}
  */
-/* end - Header */
+/* end - HeaderUdpRawInterface */
 
 #endif /* UDP_INTERFACE_H */

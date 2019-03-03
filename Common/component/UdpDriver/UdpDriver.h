@@ -4,7 +4,7 @@
   * @author  Robert Fairley
   * @brief   Abstraction over UDP library providing common driver functions.
   *
-  * @defgroup Header
+  * @defgroup HeaderUdpDriver
   * @ingroup  lwip
   * @{
   *****************************************************************************
@@ -26,8 +26,6 @@
 using cmsis::OsInterface;
 using lwip::UdpRawInterface;
 
-
-/************************** udp_driver **************************/
 namespace udp {
 
 // Constants
@@ -40,69 +38,75 @@ constexpr TickType_t SEMAPHORE_WAIT_NUM_TICKS = pdMS_TO_TICKS(SEMAPHORE_WAIT_NUM
 class UdpDriver {
 public:
     UdpDriver();
-    UdpDriver(const ip_addr_t ipaddrIn,
-              const ip_addr_t ipaddrPcIn,
-              const u16_t portIn,
-              const u16_t portPcIn,
-              const UdpRawInterface *udpInterfaceIn,
-              const OsInterface *osInterfaceIn);
+    UdpDriver(const ip_addr_t m_ip_addr_src,
+              const ip_addr_t m_ip_addr_dest,
+              const u16_t m_port_src,
+              const u16_t m_port_dest,
+              const UdpRawInterface *m_udp_if,
+              const OsInterface *m_os_if);
     ~UdpDriver();
 
     /* User-facing - typically call directly. */
     bool initialize();
-    bool setupReceive(udp_recv_fn recvCallback);
-    bool receive(uint8_t *rxArrayOut, const size_t numBytes);
-    bool transmit(const uint8_t *txArrayIn, const size_t numBytes);
+    bool setupReceive(udp_recv_fn recv_callback);
+    bool receive(uint8_t *rx_array_out, const size_t num_bytes);
+    bool transmit(const uint8_t *tx_array_in, const size_t num_bytes);
 
     /* Utility - public but typically no need to call directly. */
-    bool bytesToPacket(const uint8_t *byteArrayIn, const size_t numBytes, struct pbuf *pPbuf) const;
-    u16_t packetToBytes(uint8_t *byteArrayOut, const size_t numBytes, struct pbuf *pPbuf) const;
+    bool bytesToPacket(
+            const uint8_t *byte_array_in,
+            const size_t num_bytes,
+            struct pbuf *p_pbuf
+    ) const;
+    u16_t packetToBytes(
+            uint8_t *byte_array_out,
+            const size_t num_bytes,
+            struct pbuf *p_pbuf
+    ) const;
     void signalReceiveCplt();
     void waitReceiveCplt();
-
-    /* Accessors - public but typically no need to call directly. */
-    void setRecvPbuf(struct pbuf *pPbuf);
-
-    const ip_addr_t                     getIpaddr() const;
-    const ip_addr_t                     getIpaddrPc() const;
-    const u16_t                         getPort() const;
-    const u16_t                         getPortPc() const;
-    const UdpRawInterface*  			getUdpInterface() const;
-    const OsInterface*             		getOsInterface() const;
-    struct udp_pcb*                     getPcb() const;
-    struct pbuf*                        getRecvPbuf() const;
-
     void forgetPcb();
     void forgetRecvPbuf();
 
+    /* Accessors - public but typically no need to call directly. */
+    void setRecvPbuf(struct pbuf *p_pbuf);
+    const ip_addr_t getIpAddrSrc() const;
+    const ip_addr_t getIpAddrDest() const;
+    const u16_t getPortSrc() const;
+    const u16_t getPortDest() const;
+    const UdpRawInterface* getUdpIf() const;
+    const OsInterface* getOsIf() const;
+    struct udp_pcb* getPcb() const;
+    struct pbuf* getRecvPbuf() const;
+
 private:
     /* UdpDriver configuration. */
-    const ip_addr_t ipaddr      = {0x0};
-    const ip_addr_t ipaddrPc    = {0x0};
-    const u16_t port            = 0;
-    const u16_t portPc          = 0;
+    const ip_addr_t m_ip_addr_src = {0x0};
+    const ip_addr_t m_ip_addr_dest = {0x0};
+    const u16_t m_port_src = 0;
+    const u16_t m_port_dest = 0;
 
     /* External interfaces. */
-    const UdpRawInterface *udpInterface     = nullptr;
-    const OsInterface *osInterface                  = nullptr;
+    const UdpRawInterface *m_udp_if = nullptr;
+    const OsInterface *m_os_if = nullptr;
 
     /* Data modified internally by the Raw API. */
     /* TODO: decide whether NULL or nullptr, since lwIP API will use NULL when setting these. */
-    struct udp_pcb *pcb     = nullptr;
-    struct pbuf *recvPbuf   = nullptr;
+    struct udp_pcb *m_pcb = nullptr;
+    struct pbuf *m_recv_pbuf = nullptr;
 
     /* Synchronization. */
-    mutable osSemaphoreId recvSemaphore; /* TODO: replace with binary semaphore-style task notification. */
-    mutable osStaticSemaphoreDef_t recvSemaphoreControlBlock;
-    mutable osMutexId recvPbufMutex;
-    mutable osStaticMutexDef_t recvPbufMutexControlBlock;
+    mutable osSemaphoreId m_recv_semaphore; /* TODO: replace with binary semaphore-style task notification. */
+    mutable osStaticSemaphoreDef_t m_recv_semaphore_control_block;
+    mutable osMutexId m_recv_pbuf_mutex;
+    mutable osStaticMutexDef_t m_recv_pbuf_mutex_control_block;
 };
 
-} // end namespace udp_driver
+} // end namespace lwip
 
 /**
  * @}
  */
-/* end - Header */
+/* end - HeaderUdpDriver */
 
 #endif /* UDP_DRIVER_H */
