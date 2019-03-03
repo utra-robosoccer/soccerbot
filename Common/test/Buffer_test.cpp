@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    Buffer_test.cpp
+  * @file
   * @author  Gokul Dharan
   *
   * @defgroup Buffer_test

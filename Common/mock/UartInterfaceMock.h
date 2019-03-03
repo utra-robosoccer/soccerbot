@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    UartInterfaceMock.h
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup UartInterfaceMock

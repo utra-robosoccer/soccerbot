@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    UartDriver_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup UartDriver_Test

@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    MotorMock.h
+  * @file
   * @author  Tyler Gamvrelis
   * @brief   Since this is an abstract class, it needs to be mocked to test the
   *          concrete methods

@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    UdpDriver_test.cpp
+  * @file
   * @author  Robert Fairley
   *
   * @defgroup UdpDriver_Test

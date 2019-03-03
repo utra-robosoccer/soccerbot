@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    GpioInterfaceImpl.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup Implementation

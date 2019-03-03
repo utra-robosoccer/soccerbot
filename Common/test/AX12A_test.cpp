@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    AX12A_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup AX12A_Test

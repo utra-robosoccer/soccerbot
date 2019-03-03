@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    Motor_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup Motor_Test

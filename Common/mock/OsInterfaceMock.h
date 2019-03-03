@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    OsInterfaceMock.h
+  * @file
   * @author  Izaak Niksan
   * @author  Tyler Gamvrelis
   *

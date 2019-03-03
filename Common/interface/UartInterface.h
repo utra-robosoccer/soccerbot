@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    UartInterface.h
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup UartInterface
