@@ -40,21 +40,21 @@ public:
 
     /**
      * @brief Initialize the filter
-     * @param startVal The starting value
+     * @param start_value The starting value
      */
     virtual void init(
-        float startVal = 0
+        float start_value = 0
     ) = 0;
 
     /**
      * @brief  Write an input (or block of inputs) into the filter
-     * @param  dataSrc Array of new data to be written into the filter
-     * @param  dataDest Array of output data, where the i-th element is the
+     * @param  data_src Array of new data to be written into the filter
+     * @param  data_dest Array of output data, where the i-th element is the
      *         filter output after writing the i-th input from dataSrc
-     * @param  blockSize Number of samples to be processed in this batch
-     * @note   (count(dataSrc) == count(dataDest) == blockSize) must be true
+     * @param  block_size Number of samples to be processed in this batch
+     * @note   `count(data_src) == count(data_dest) == block_size` must be true
      */
-    void update(float* dataSrc, float* dataDest, uint32_t blockSize);
+    void update(float* data_src, float* data_dest, uint32_t block_size);
 
 protected:
     arm_fir_instance_f32 m_inst; /**< Filter instance */

@@ -29,20 +29,20 @@ static size_t readBuffImpl(const uint8_t*   buff_p,
                            size_t&          tail,
                            uint8_t*         out_buff)
 {
-    size_t numReceived = 0;
+    size_t num_received = 0;
 
     if (tail > head) {
         while (tail < size) {
-            out_buff[numReceived++] = buff_p[tail++];
+            out_buff[num_received++] = buff_p[tail++];
         }
         tail = 0;
     }
 
     while (tail < head) {
-        out_buff[numReceived++] = buff_p[tail++];
+        out_buff[num_received++] = buff_p[tail++];
     }
 
-    return numReceived;
+    return num_received;
 }
 
 } // end anonymous namespace
@@ -112,8 +112,8 @@ bool CircularDmaBuffer::dataAvail() const {
  * @return number of bytes read from m_buff_p into out_buff.
  */
 size_t CircularDmaBuffer::peekBuff(uint8_t *out_buff) const {
-    size_t tailIdx = m_buff_tail;
-    return readBuffImpl(m_buff_p, m_buff_size, m_buff_head, tailIdx, out_buff);
+    size_t tail_idx = m_buff_tail;
+    return readBuffImpl(m_buff_p, m_buff_size, m_buff_head, tail_idx, out_buff);
 }
 
 /**

@@ -20,7 +20,7 @@ using namespace soccerbot; // TODO(tgamvrel) using namespace
 
 /***************************** Private Variables *****************************/
 static MotorData_t read_motor_data;
-static imu::IMUStruct_t read_imu_data;
+static imu::ImuStruct_t read_imu_data;
 
 
 /******************************** Functions **********************************/
@@ -57,7 +57,7 @@ void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
             &robot_state
         )[comm::ROBOT_STATE_MPU_DATA_OFFSET],
         (&read_imu_data.x_Gyro),
-        sizeof(imu::IMUStruct_t)
+        sizeof(imu::ImuStruct_t)
     );
 
     for(int i = 0; i <= periph::MOTOR12; ++i)

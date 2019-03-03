@@ -56,20 +56,20 @@ public:
      *        the exact implementation details may vary (processors classes may
      *        be used to pack the data from several requests into 1 packet)
      * @param arr The array of bytes to be transmitted
-     * @param arrSize The number of bytes to be transmitted
+     * @param arr_size The number of bytes to be transmitted
      * @return true if successful, otherwise false
      */
-    bool requestTransmission(uint8_t* arr, size_t arrSize) const;
+    bool requestTransmission(uint8_t* arr, size_t arr_size) const;
 
     /**
      * @brief Request a reception on the daisy chain. This is guaranteed to
      *        start the reception within a timely manner. However,
      *        the exact implementation details may vary
-     * @param arr The array of bytes to buffer the received data
-     * @param arrSize The number of bytes to be received
+     * @param buf The array of bytes to buffer the received data
+     * @param buf_size The number of bytes to be received
      * @return true if successful, otherwise false
      */
-    bool requestReception(uint8_t* buf, size_t bufSize) const;
+    bool requestReception(uint8_t* buf, size_t buf_size) const;
 
 
     // TODO(tyler): add method for "receive until condition...", where the

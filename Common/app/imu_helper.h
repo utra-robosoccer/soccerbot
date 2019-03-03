@@ -42,7 +42,7 @@ void initImuProcessor();
  *        location these were read from
  * @param[in, out] IMUStruct Reference to IMU data container
  */
-void processImuData(imu::IMUStruct_t& imu);
+void processImuData(imu::ImuStruct_t& imu);
 
 /**
  * @brief   Reads Ax, Ay, Az, Vx, Vy, Vz from IMU sensor (not all of these are
