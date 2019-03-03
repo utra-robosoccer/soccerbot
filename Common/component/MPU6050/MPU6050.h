@@ -15,8 +15,8 @@
 
 
 
-#ifndef MPU6050_H_
-#define MPU6050_H_
+#ifndef MPU6050_H
+#define MPU6050_H
 
 
 
@@ -53,7 +53,7 @@ typedef struct{
     float x_Accel; /**< x-axis acceleration read from sensor     */
     float y_Accel; /**< y-axis acceleration read from sensor     */
     float z_Accel; /**< z-axis acceleration read from sensor     */
-}IMUStruct_t;
+}ImuStruct_t;
 
 
 class MPU6050 {
@@ -93,10 +93,10 @@ public:
     void Read_Accelerometer_IT();
 
     /**
-      * @brief   Fills an IMUStruct
-      * @param   myStruct The pointer to the struct being filled
+      * @brief Fills an `ImuStruct_t` with the current sensor data
+      * @param p_data Pointer to the struct being filled
       */
-    void Fill_Struct(IMUStruct_t* myStruct);
+    void Fill_Struct(ImuStruct_t* p_data);
 
     /**
       * @brief   The MPU6050 destructor
@@ -127,7 +127,7 @@ private:
       * @param   sensor_buffer uint8_t pointer to output buffer
       * @return  Status
       */
-    HAL_StatusTypeDef Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    HAL_StatusTypeDef Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer);
 
     /**
       * @brief   Reads 6 bytes from the sensor, and stores them in
@@ -136,7 +136,7 @@ private:
       * @param   sensor_buffer uint8_t pointer to output buffer
       * @return  Status
       */
-    HAL_StatusTypeDef Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer);
+    HAL_StatusTypeDef Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer);
 
     /**
       * @brief   Sets the offsets of the sensor. Note that a lower setting

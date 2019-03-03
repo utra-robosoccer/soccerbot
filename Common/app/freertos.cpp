@@ -636,7 +636,7 @@ void StartIMUTask(void const * argument)
 
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
-    imu::IMUStruct_t imu_data;
+    imu::ImuStruct_t imu_data;
     TXData_t data_to_send = {eIMUData, &imu_data};
     TickType_t last_wake_time = xTaskGetTickCount();
     uint8_t num_samples = 0;
@@ -767,7 +767,7 @@ void StartBuffWriterTask(void const * argument)
     osSignalWait(0, osWaitForever);
 
     TXData_t data_to_write;
-    imu::IMUStruct_t* imu_data_ptr;
+    imu::ImuStruct_t* imu_data_ptr;
     MotorData_t* motor_data_ptr;
 
     for(;;)
@@ -790,7 +790,7 @@ void StartBuffWriterTask(void const * argument)
                 }
                 break;
             case eIMUData:
-                imu_data_ptr = (imu::IMUStruct_t*)data_to_write.pData;
+                imu_data_ptr = (imu::ImuStruct_t*)data_to_write.pData;
 
                 if(imu_data_ptr == nullptr){
                     break;

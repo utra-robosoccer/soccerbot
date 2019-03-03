@@ -104,30 +104,30 @@ public:
      * @brief  Instruct the driver to transmit data from the UART that was set
      *         by setUartInterface, and using the IO transfer mode set by
      *         setIOType.
-     * @param  arrTransmit The byte array to be sent
-     * @param  numBytes The number of bytes to be sent from the array
+     * @param  arr_transmit The byte array to be sent
+     * @param  num_bytes The number of bytes to be sent from the array
      * @return True if the transfer succeeded, otherwise false
      * @note   Some reasons why false may be returned include:
      *           -# Incomplete initialization of the driver
      *           -# UartInterface returns an error upon requesting a transfer
      *           -# OS block time is exceeded
      */
-    bool transmit(uint8_t* arrTransmit, size_t numBytes) const;
+    bool transmit(uint8_t* arr_transmit, size_t num_bytes) const;
 
     /**
      * @brief  Instruct the driver to receive data from the UART that was set
      *         by setUartInterface, and using the IO transfer mode set by
      *         setIOType.
-     * @param  arrReceive The byte array which the received data is to be
+     * @param  arr_receive The byte array which the received data is to be
      *         written into
-     * @param  numBytes The number of bytes to be received
+     * @param  num_bytes The number of bytes to be received
      * @return True if the transfer succeeded, otherwise false
      * @note   Some reasons why false may be returned include:
      *           -# Incomplete initialization of the driver
      *           -# UartInterface returns an error upon requesting a transfer
      *           -# OS block time is exceeded
      */
-    bool receive(uint8_t* arrReceive, size_t numBytes) const;
+    bool receive(uint8_t* arr_receive, size_t num_bytes) const;
 
 private:
     /**

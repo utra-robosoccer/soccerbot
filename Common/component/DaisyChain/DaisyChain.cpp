@@ -44,14 +44,14 @@ IO_Type DaisyChain::getIOType(void) const{
     return m_uart_driver->getIOType();
 }
 
-bool DaisyChain::requestTransmission(uint8_t* arr, size_t arrSize) const{
+bool DaisyChain::requestTransmission(uint8_t* arr, size_t arr_size) const{
     changeBusDir(Direction::TX);
-    return m_uart_driver->transmit(arr, arrSize);
+    return m_uart_driver->transmit(arr, arr_size);
 }
 
-bool DaisyChain::requestReception(uint8_t* buf, size_t bufSize) const{
+bool DaisyChain::requestReception(uint8_t* buf, size_t buf_size) const{
     changeBusDir(Direction::RX);
-    return m_uart_driver->receive(buf, bufSize);
+    return m_uart_driver->receive(buf, buf_size);
 }
 
 

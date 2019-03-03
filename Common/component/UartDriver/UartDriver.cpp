@@ -76,8 +76,8 @@ IO_Type UartDriver::getIOType(void) const{
 }
 
 bool UartDriver::transmit(
-    uint8_t* arrTransmit,
-    size_t numBytes
+    uint8_t* arr_transmit,
+    size_t num_bytes
 ) const
 {
 #if defined(THREADED)
@@ -92,7 +92,7 @@ bool UartDriver::transmit(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(m_os_if != nullptr){
-                    if(m_hw_if->transmitDMA(m_uart_handle_ptr, arrTransmit, numBytes) == HAL_OK){
+                    if(m_hw_if->transmitDMA(m_uart_handle_ptr, arr_transmit, num_bytes) == HAL_OK){
                         status = m_os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_TX_ISR, &notification, m_max_block_time);
 
                         if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_TX_ISR)){
@@ -103,7 +103,7 @@ bool UartDriver::transmit(
                 break;
             case IO_Type::IT:
                 if(m_os_if != nullptr){
-                    if(m_hw_if->transmitIT(m_uart_handle_ptr, arrTransmit, numBytes) == HAL_OK){
+                    if(m_hw_if->transmitIT(m_uart_handle_ptr, arr_transmit, num_bytes) == HAL_OK){
                         status = m_os_if->OS_xTaskNotifyWait(
                             0,
                             NOTIFIED_FROM_TX_ISR,
@@ -123,9 +123,9 @@ bool UartDriver::transmit(
             case IO_Type::POLL:
             default:
                 hal_status = m_hw_if->transmitPoll(
-                        m_uart_handle_ptr,
-                    arrTransmit,
-                    numBytes,
+                    m_uart_handle_ptr,
+                    arr_transmit,
+                    num_bytes,
                     m_max_block_time
                 );
 
@@ -142,8 +142,8 @@ bool UartDriver::transmit(
 }
 
 bool UartDriver::receive(
-    uint8_t* arrReceive,
-    size_t numBytes
+    uint8_t* arr_receive,
+    size_t num_bytes
 ) const
 {
 #if defined(THREADED)
@@ -158,7 +158,7 @@ bool UartDriver::receive(
 #if defined(THREADED)
             case IO_Type::DMA:
                 if(m_os_if != nullptr){
-                    if(m_hw_if->receiveDMA(m_uart_handle_ptr, arrReceive, numBytes) == HAL_OK){
+                    if(m_hw_if->receiveDMA(m_uart_handle_ptr, arr_receive, num_bytes) == HAL_OK){
                         status = m_os_if->OS_xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, m_max_block_time);
 
                         if((status == pdTRUE) && CHECK_NOTIFICATION(notification, NOTIFIED_FROM_RX_ISR)){
@@ -169,7 +169,7 @@ bool UartDriver::receive(
                 break;
             case IO_Type::IT:
                 if(m_os_if != nullptr){
-                    if(m_hw_if->receiveIT(m_uart_handle_ptr, arrReceive, numBytes) == HAL_OK){
+                    if(m_hw_if->receiveIT(m_uart_handle_ptr, arr_receive, num_bytes) == HAL_OK){
                         status = m_os_if->OS_xTaskNotifyWait(
                             0,
                             NOTIFIED_FROM_RX_ISR,
@@ -189,9 +189,9 @@ bool UartDriver::receive(
             case IO_Type::POLL:
             default:
                 hal_status = m_hw_if->receivePoll(
-                        m_uart_handle_ptr,
-                    arrReceive,
-                    numBytes,
+                    m_uart_handle_ptr,
+                    arr_receive,
+                    num_bytes,
                     m_max_block_time
                 );
 

@@ -64,17 +64,20 @@ constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
   * @param   None
   * @return  None
   */
-uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port,
-        uint16_t pin,
-        GPIO_PinState state,
-        uint8_t timeout){
+uint8_t wait_for_gpio_state_timeout(
+    GPIO_TypeDef* port,
+    uint16_t pin,
+    GPIO_PinState state,
+    uint8_t timeout
+)
+{
 
-    uint32_t Tickstart = HAL_GetTick();
+    uint32_t tick_start = HAL_GetTick();
     uint8_t ret = 0;
     /* Wait until flag is set */
     while((state != HAL_GPIO_ReadPin(port, pin)) && (1 == ret)){
         /* Check for the timeout */
-        if ((timeout == 0U) || (HAL_GetTick() - Tickstart >= timeout)){
+        if ((timeout == 0U) || (HAL_GetTick() - tick_start >= timeout)){
             ret = 0;
         }
         asm("nop");
@@ -94,16 +97,16 @@ uint8_t wait_for_gpio_state_timeout(GPIO_TypeDef *port,
   */
 void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     static struct I2C_Module{
-        I2C_HandleTypeDef*   instance;
-        uint16_t            sdaPin;
-        GPIO_TypeDef*       sdaPort;
-        uint16_t            sclPin;
-        GPIO_TypeDef*       sclPort;
+        I2C_HandleTypeDef* instance;
+        uint16_t           sdaPin;
+        GPIO_TypeDef*      sdaPort;
+        uint16_t           sclPin;
+        GPIO_TypeDef*      sclPort;
     }i2cmodule = {&hi2c1, GPIO_PIN_7, GPIOB, GPIO_PIN_6, GPIOB};
     static struct I2C_Module* i2c = &i2cmodule;
     static uint8_t timeout = 1;
 
-    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitTypeDef gpio_init_struct;
 
     I2C_HandleTypeDef* handler = NULL;
 
@@ -112,23 +115,27 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     // 1. Clear PE bit.
     CLEAR_BIT(handler->Instance->CR1, I2C_CR1_PE);
 
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
-    GPIO_InitStructure.Pull = GPIO_NOPULL;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_OD;
+    gpio_init_struct.Pull = GPIO_NOPULL;
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 
-    GPIO_InitStructure.Pin = i2c->sclPin;
-    HAL_GPIO_Init(i2c->sclPort, &GPIO_InitStructure);
+    gpio_init_struct.Pin = i2c->sclPin;
+    HAL_GPIO_Init(i2c->sclPort, &gpio_init_struct);
 
-    GPIO_InitStructure.Pin = i2c->sdaPin;
-    HAL_GPIO_Init(i2c->sdaPort, &GPIO_InitStructure);
+    gpio_init_struct.Pin = i2c->sdaPin;
+    HAL_GPIO_Init(i2c->sdaPort, &gpio_init_struct);
 
     for(uint8_t i = 0; i < numClocks; i++){
         // 3. Check SCL and SDA High level in GPIOx_IDR.
-        if(sendStopBits){HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);}
+        if(sendStopBits){
+            HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);
+        }
         HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET);
 
         wait_for_gpio_state_timeout(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET, timeout);
-        if(sendStopBits){wait_for_gpio_state_timeout(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET, timeout);}
+        if(sendStopBits){
+            wait_for_gpio_state_timeout(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET, timeout);
+        }
 
         // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
         if(sendStopBits){
@@ -152,14 +159,14 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     }
 
     // 12. Configure the SCL and SDA I/Os as Alternate function Open-Drain.
-    GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
+    gpio_init_struct.Mode = GPIO_MODE_AF_OD;
+    gpio_init_struct.Alternate = GPIO_AF4_I2C1;
 
-    GPIO_InitStructure.Pin = i2c->sclPin;
-    HAL_GPIO_Init(i2c->sclPort, &GPIO_InitStructure);
+    gpio_init_struct.Pin = i2c->sclPin;
+    HAL_GPIO_Init(i2c->sclPort, &gpio_init_struct);
 
-    GPIO_InitStructure.Pin = i2c->sdaPin;
-    HAL_GPIO_Init(i2c->sdaPort, &GPIO_InitStructure);
+    gpio_init_struct.Pin = i2c->sdaPin;
+    HAL_GPIO_Init(i2c->sdaPort, &gpio_init_struct);
 
     // 13. Set SWRST bit in I2Cx_CR1 register.
     SET_BIT(handler->Instance->CR1, I2C_CR1_SWRST);
@@ -213,13 +220,13 @@ void MPU6050::init(uint8_t lpf){
 void MPU6050::Read_Gyroscope(){
     uint8_t output_buffer[6];
     MPU6050::Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
-    int16_t X = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t Y = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t Z = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->m_vx = (float)(X) / IMU_GY_RANGE;
-    this ->m_vy = (float)(Y) / IMU_GY_RANGE;
-    this ->m_vz = (float)(Z) / IMU_GY_RANGE;
+    this ->m_vx = (float)(vx) / IMU_GY_RANGE;
+    this ->m_vy = (float)(vy) / IMU_GY_RANGE;
+    this ->m_vz = (float)(vz) / IMU_GY_RANGE;
 }
 
 void MPU6050::Read_Gyroscope_IT(){
@@ -242,26 +249,26 @@ void MPU6050::Read_Gyroscope_IT(){
         }
     }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
-    int16_t X = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t Y = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t Z = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
 
-    this ->m_vx = (float)(X) / IMU_GY_RANGE;
-    this ->m_vy = (float)(Y) / IMU_GY_RANGE;
-    this ->m_vz = (float)(Z) / IMU_GY_RANGE;
+    this ->m_vx = (float)(vx) / IMU_GY_RANGE;
+    this ->m_vy = (float)(vy) / IMU_GY_RANGE;
+    this ->m_vz = (float)(vz) / IMU_GY_RANGE;
 }
 
 void MPU6050::Read_Accelerometer(){
     uint8_t output_buffer[6];
     MPU6050::Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-    int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->m_ax = -( X_A * g / ACC_RANGE);
-    this ->m_ay = -(Y_A * g / ACC_RANGE);
-    this ->m_az = -(Z_A * g / ACC_RANGE);
+    this ->m_ax = -(ax * g / ACC_RANGE);
+    this ->m_ay = -(ay * g / ACC_RANGE);
+    this ->m_az = -(az * g / ACC_RANGE);
 }
 
 void MPU6050::Read_Accelerometer_IT(){
@@ -283,23 +290,23 @@ void MPU6050::Read_Accelerometer_IT(){
         }
     }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
 
-    int16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    this ->m_ax = -(X_A * g / ACC_RANGE);
-    this ->m_ay = -(Y_A * g / ACC_RANGE);
-    this ->m_az = -(Z_A * g / ACC_RANGE);
+    this ->m_ax = -(ax * g / ACC_RANGE);
+    this ->m_ay = -(ay * g / ACC_RANGE);
+    this ->m_az = -(az * g / ACC_RANGE);
 }
 
-void MPU6050::Fill_Struct(IMUStruct_t* myStruct){
-    myStruct->x_Accel = this->m_ax;
-    myStruct->y_Accel = this->m_ay;
-    myStruct->z_Accel = this->m_az;
+void MPU6050::Fill_Struct(ImuStruct_t* p_data){
+    p_data->x_Accel = this->m_ax;
+    p_data->y_Accel = this->m_ay;
+    p_data->z_Accel = this->m_az;
 
-    myStruct->x_Gyro = this->m_vx;
-    myStruct->y_Gyro = this->m_vy;
-    myStruct->z_Gyro = this->m_vz;
+    p_data->x_Gyro = this->m_vx;
+    p_data->y_Gyro = this->m_vy;
+    p_data->z_Gyro = this->m_vz;
 }
 
 // Private
@@ -328,22 +335,22 @@ HAL_StatusTypeDef MPU6050::Read_Reg(uint8_t reg_addr){
     );
 }
 
-HAL_StatusTypeDef MPU6050::Read_Data_IT(uint8_t Reg_addr, uint8_t* sensor_buffer){
+HAL_StatusTypeDef MPU6050::Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer){
     return HAL_I2C_Mem_Read_IT(
         const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
         (uint16_t) MPU6050_ADDR,
-        (uint16_t) Reg_addr,
+        (uint16_t) reg_addr,
         1,
         sensor_buffer,
         6
     );
 }
 
-HAL_StatusTypeDef MPU6050::Read_Data(uint8_t Reg_addr, uint8_t* sensor_buffer){
+HAL_StatusTypeDef MPU6050::Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer){
     return HAL_I2C_Mem_Read(
         const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
         (uint16_t) MPU6050_ADDR,
-        (uint16_t) Reg_addr,
+        (uint16_t) reg_addr,
         1,
         sensor_buffer,
         6,
