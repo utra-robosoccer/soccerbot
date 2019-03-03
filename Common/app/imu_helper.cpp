@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    imu_helper.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @addtogroup IMU_Helper IMU Helper

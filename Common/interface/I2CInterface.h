@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @file    I2CInterface.h
+ * @file
  * @author  Hannah L
  *
  * @defgroup I2CInterface

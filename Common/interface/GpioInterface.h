@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    GpioInterface.h
+  * @file
   * @author  Tyler Gamvrelis
   * @brief   Abstract interface for GPIO functions
   *

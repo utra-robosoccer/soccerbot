@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @file   CircularDmaBuffer_test.cpp
+ * @file
  * @author Robert
  *
  * @defgroup circular_dma_buffer_test

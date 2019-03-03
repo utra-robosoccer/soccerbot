@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN Includes */
 /**
- * @file    freertos.c
+ * @file
  * @brief   Code for freertos application
  * @author  Gokul
  * @author  Tyler
@@ -406,7 +406,7 @@ void StartCommandTask(void const * argument)
             pMotor->setComplianceMargin(1);
         }
     }
- 
+
     // The only other communication with the motors will occur in the UART
     // threads, so we can use DMA now.
     periph::initMotorIOType(IO_Type::DMA);

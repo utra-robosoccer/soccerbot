@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    MX28_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup MX28_Test
