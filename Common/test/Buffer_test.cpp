@@ -107,15 +107,15 @@ TEST_F(BufferTest, CanInitializeBufferMaster){
 TEST_F(BufferTest, CanWriteToIMUBuffer){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
-    imu::IMUStruct_t IMUdata;
+    imu::ImuStruct_t IMUdata;
 
-    bufferMaster.IMUBuffer.write(IMUdata);
+    bufferMaster.imu_buffer.write(IMUdata);
 }
 
 TEST_F(BufferTest, CanReadFromIMUBuffer){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
-    imu::IMUStruct_t IMUdata;
+    imu::ImuStruct_t IMUdata;
     IMUdata.x_Accel = 1.0;
     IMUdata.x_Gyro = 2.0;
     IMUdata.y_Accel = 3.0;
@@ -123,8 +123,8 @@ TEST_F(BufferTest, CanReadFromIMUBuffer){
     IMUdata.z_Accel = 5.0;
     IMUdata.z_Gyro = 6.0;
 
-    bufferMaster.IMUBuffer.write(IMUdata);
-    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
+    bufferMaster.imu_buffer.write(IMUdata);
+    imu::ImuStruct_t readIMUdata = bufferMaster.imu_buffer.read();
 
     ASSERT_EQ(readIMUdata.x_Accel, IMUdata.x_Accel);
     ASSERT_EQ(readIMUdata.y_Accel, IMUdata.y_Accel);
@@ -142,7 +142,7 @@ TEST_F(BufferTest, CanWriteToMotorBuffer){
 
     for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
-        bufferMaster.MotorBufferArray[i].write(motorData[i]);
+        bufferMaster.motor_buffer_array[i].write(motorData[i]);
     }
 }
 
@@ -155,8 +155,8 @@ TEST_F(BufferTest, CanReadMotorDataBuffer){
     for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
         motorData[i].id = i;
-        bufferMaster.MotorBufferArray[i].write(motorData[i]);
-        readMotorData[i] = bufferMaster.MotorBufferArray[i].read();
+        bufferMaster.motor_buffer_array[i].write(motorData[i]);
+        readMotorData[i] = bufferMaster.motor_buffer_array[i].read();
         ASSERT_EQ(readMotorData[i].id, i);
     }
 }
@@ -165,24 +165,24 @@ TEST_F(BufferTest, CanConfirmAllDataReady){
     BufferMaster bufferMaster;
     bufferMaster.setup_buffers(mutex,&os);
     MotorData_t motorData[periph::NUM_MOTORS];
-    imu::IMUStruct_t IMUdata;
+    imu::ImuStruct_t IMUdata;
 
     ASSERT_FALSE(bufferMaster.all_data_ready());
     for(int i = 0; i < periph::NUM_MOTORS; ++i)
     {
-        bufferMaster.MotorBufferArray[i].write(motorData[i]);
+        bufferMaster.motor_buffer_array[i].write(motorData[i]);
         ASSERT_FALSE(bufferMaster.all_data_ready());
     }
 
-    bufferMaster.IMUBuffer.write(IMUdata);
+    bufferMaster.imu_buffer.write(IMUdata);
     ASSERT_TRUE(bufferMaster.all_data_ready());
 
-    imu::IMUStruct_t readIMUdata = bufferMaster.IMUBuffer.read();
+    imu::ImuStruct_t readIMUdata = bufferMaster.imu_buffer.read();
     ASSERT_FALSE(bufferMaster.all_data_ready());
 
-    bufferMaster.IMUBuffer.write(IMUdata);
+    bufferMaster.imu_buffer.write(IMUdata);
     ASSERT_TRUE(bufferMaster.all_data_ready());
-    MotorData_t readMotorData = bufferMaster.MotorBufferArray[0].read();
+    MotorData_t readMotorData = bufferMaster.motor_buffer_array[0].read();
     ASSERT_FALSE(bufferMaster.all_data_ready());
 }
 
