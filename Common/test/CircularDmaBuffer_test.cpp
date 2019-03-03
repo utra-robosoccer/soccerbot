@@ -13,13 +13,12 @@
 /********************************* Includes **********************************/
 #include "CircularDmaBuffer/CircularDmaBuffer.h"
 
-#include "MockUartInterface.h"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <UartInterfaceMock.h>
 
 using uart::CircularDmaBuffer;
-using hal::gmock::MockUartInterface;
+using hal::gmock::UartInterfaceMock;
 
 using ::testing::Return;
 using ::testing::_;
@@ -58,7 +57,7 @@ protected:
     /* buff_ is an automatically initialized CircularDmaBuffer object, to avoid
      * repeating code where only some default initialization is needed. */
     CircularDmaBuffer* buff_ = nullptr;
-    MockUartInterface uart_if;
+    UartInterfaceMock uart_if;
 };
 
 // Functions

@@ -16,11 +16,11 @@
 /********************************* Includes **********************************/
 #include "uart_handler.h"
 #include "PeripheralInstances.h"
-#include "MockOsInterface.h"
 #include "BufferBase.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <OsInterfaceMock.h>
 
 
 using ::testing::DoAll;
@@ -28,7 +28,7 @@ using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
 
-using cmsis::gmock::MockOsInterface;
+using cmsis::gmock::OsInterfaceMock;
 using namespace buffer;
 
 
@@ -43,7 +43,7 @@ osMutexId mutex = nullptr;
 // ----------------------------------------------------------------------------
 class BufferTest : public ::testing::Test {
 protected:
-    MockOsInterface os;
+    OsInterfaceMock os;
 };
 
 // Functions
