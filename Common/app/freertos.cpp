@@ -65,6 +65,7 @@
  */
 
 #include <math.h>
+#include <UartInterfaceImpl.h>
 
 #include "uart_handler.h"
 #include "Notification.h"
@@ -76,7 +77,6 @@
 #include "rx_helper.h"
 #include "tx_helper.h"
 #include "UartDriver/UartDriver.h"
-#include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
 #include "CircularDmaBuffer/CircularDmaBuffer.h"
 /* USER CODE END Includes */
@@ -151,7 +151,7 @@ namespace{
 
 buffer::BufferMaster buffer_master;
 cmsis::OsInterfaceImpl os_if_impl;
-hal::HalUartInterface uart_if;
+hal::UartInterfaceImpl uart_if;
 uart::UartDriver pc_uart_driver(&os_if_impl, &uart_if, UART_HANDLE_PC);
 
 bool setup_is_done = false;

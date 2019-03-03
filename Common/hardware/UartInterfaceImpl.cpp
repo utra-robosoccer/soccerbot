@@ -1,9 +1,9 @@
 /**
   *****************************************************************************
-  * @file    HalUartInterface.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
-  * @defgroup HalUartInterface
+  * @defgroup UartInterfaceImpl
   * @brief    Implements UartInterface using HAL functions
   * @{
   *****************************************************************************
@@ -13,7 +13,7 @@
 
 
 /********************************* Includes **********************************/
-#include "HalUartInterface.h"
+#include "UartInterfaceImpl.h"
 
 
 
@@ -112,14 +112,14 @@ HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart)
 
 
 namespace hal{
-/***************************** HalUartInterface ******************************/
+/***************************** UartInterfaceImpl ******************************/
 // Public
 // ----------------------------------------------------------------------------
-HalUartInterface::HalUartInterface(){;}
+UartInterfaceImpl::UartInterfaceImpl(){;}
 
-HalUartInterface::~HalUartInterface(){;}
+UartInterfaceImpl::~UartInterfaceImpl(){;}
 
-HAL_StatusTypeDef HalUartInterface::transmitPoll(
+HAL_StatusTypeDef UartInterfaceImpl::transmitPoll(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrTransmit,
     size_t numBytes,
@@ -136,7 +136,7 @@ HAL_StatusTypeDef HalUartInterface::transmitPoll(
     return status;
 }
 
-HAL_StatusTypeDef HalUartInterface::receivePoll(
+HAL_StatusTypeDef UartInterfaceImpl::receivePoll(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrReceive,
     size_t numBytes,
@@ -154,7 +154,7 @@ HAL_StatusTypeDef HalUartInterface::receivePoll(
 }
 
 #if defined(THREADED)
-HAL_StatusTypeDef HalUartInterface::transmitIT(
+HAL_StatusTypeDef UartInterfaceImpl::transmitIT(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrTransmit,
     size_t numBytes
@@ -169,7 +169,7 @@ HAL_StatusTypeDef HalUartInterface::transmitIT(
     return status;
 }
 
-HAL_StatusTypeDef HalUartInterface::receiveIT(
+HAL_StatusTypeDef UartInterfaceImpl::receiveIT(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrReceive,
     size_t numBytes
@@ -184,7 +184,7 @@ HAL_StatusTypeDef HalUartInterface::receiveIT(
     return status;
 }
 
-HAL_StatusTypeDef HalUartInterface::transmitDMA(
+HAL_StatusTypeDef UartInterfaceImpl::transmitDMA(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrTransmit,
     size_t numBytes
@@ -199,7 +199,7 @@ HAL_StatusTypeDef HalUartInterface::transmitDMA(
     return status;
 }
 
-HAL_StatusTypeDef HalUartInterface::receiveDMA(
+HAL_StatusTypeDef UartInterfaceImpl::receiveDMA(
     const UART_HandleTypeDef* uartHandlePtr,
     uint8_t* arrReceive,
     size_t numBytes
@@ -214,7 +214,7 @@ HAL_StatusTypeDef HalUartInterface::receiveDMA(
     return status;
 }
 
-__IO uint32_t HalUartInterface::getDmaRxInstanceNDTR(
+__IO uint32_t UartInterfaceImpl::getDmaRxInstanceNDTR(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
@@ -223,7 +223,7 @@ __IO uint32_t HalUartInterface::getDmaRxInstanceNDTR(
 
 #endif
 
-void HalUartInterface::abortTransmit(
+void UartInterfaceImpl::abortTransmit(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
@@ -232,7 +232,7 @@ void HalUartInterface::abortTransmit(
     );
 }
 
-void HalUartInterface::abortReceive(
+void UartInterfaceImpl::abortReceive(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
@@ -241,7 +241,7 @@ void HalUartInterface::abortReceive(
     );
 }
 
-__IO uint32_t HalUartInterface::getErrorCode(
+__IO uint32_t UartInterfaceImpl::getErrorCode(
     const UART_HandleTypeDef* uartHandlePtr
 ) const
 {
@@ -253,4 +253,4 @@ __IO uint32_t HalUartInterface::getErrorCode(
 /**
  * @}
  */
-/* end - HalUartInterface */
+/* end - UartInterfaceImpl */
