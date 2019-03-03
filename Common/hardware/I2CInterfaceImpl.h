@@ -1,10 +1,10 @@
 /**
  *****************************************************************************
- * @file    HalI2CInterface.h
+ * @file
  * @author  Hannah L
- * @brief   Defines the HALI2CInterface class, which calls HAL functions related to I2C
+ * @brief   Defines the I2CInterfaceImpl class, which calls HAL functions related to I2C
  *
- * @defgroup HalI2CInterface
+ * @defgroup I2CInterfaceImpl
  * @ingroup  I2C
  * @{
  *****************************************************************************
@@ -24,10 +24,10 @@ namespace hal{
  * @class Concrete HAL implementation of the abstract I2CInterface class, to be
  *        used in production builds
  */
-class HALI2CInterface: public I2CInterface {
+class I2CInterfaceImpl: public I2CInterface {
 public:
-    HALI2CInterface();
-    ~HALI2CInterface();
+    I2CInterfaceImpl();
+    ~I2CInterfaceImpl();
     HAL_StatusTypeDef memWrite(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress, uint16_t MemAddress,
             uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
             uint32_t Timeout) const; //HAL_I2C_Mem_Write
