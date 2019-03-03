@@ -18,6 +18,6 @@
 
 
 /***************************** Function prototypes ***************************/
-void copySensorDataToSend(buffer::BufferMaster*);
+void copySensorDataToSend(buffer::BufferMaster* p_buffer_master);
 
 #endif /* TX_HELPER_H */

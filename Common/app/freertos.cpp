@@ -134,7 +134,7 @@ osMessageQId LowerLeftLeg_reqHandle;
 uint8_t LowerLeftLeg_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t LowerLeftLeg_reqControlBlock;
 osMessageQId BufferWriteQueueHandle;
-uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
+uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TxData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
@@ -323,7 +323,7 @@ void MX_FREERTOS_Init(void) {
   LowerLeftLeg_reqHandle = osMessageCreate(osMessageQ(LowerLeftLeg_req), NULL);
 
   /* definition and creation of BufferWriteQueue */
-  osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
+  osMessageQStaticDef(BufferWriteQueue, 32, TxData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
   BufferWriteQueueHandle = osMessageCreate(osMessageQ(BufferWriteQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -637,7 +637,7 @@ void StartIMUTask(void const * argument)
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
     imu::ImuStruct_t imu_data;
-    TXData_t data_to_send = {eIMUData, &imu_data};
+    TxData_t data_to_send = {eIMUData, &imu_data};
     TickType_t last_wake_time = xTaskGetTickCount();
     uint8_t num_samples = 0;
     bool need_to_process = false;
@@ -766,7 +766,7 @@ void StartBuffWriterTask(void const * argument)
 {
     osSignalWait(0, osWaitForever);
 
-    TXData_t data_to_write;
+    TxData_t data_to_write;
     imu::ImuStruct_t* imu_data_ptr;
     MotorData_t* motor_data_ptr;
 
@@ -786,7 +786,7 @@ void StartBuffWriterTask(void const * argument)
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
                 if (motor_data_ptr->id <= periph::NUM_MOTORS) {
-                    buffer_master.MotorBufferArray[motor_data_ptr->id - 1].write(*motor_data_ptr);
+                    buffer_master.m_motor_buffer_array[motor_data_ptr->id - 1].write(*motor_data_ptr);
                 }
                 break;
             case eIMUData:
@@ -797,7 +797,7 @@ void StartBuffWriterTask(void const * argument)
                 }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                buffer_master.IMUBuffer.write(*imu_data_ptr);
+                buffer_master.m_imu_buffer.write(*imu_data_ptr);
                 break;
             default:
                 break;

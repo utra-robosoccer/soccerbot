@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    Notification.h
+  * @file
   * @author  Tyler
   * @brief   This file defines resources used throughout various parts of the
   *          system that engage in non-blocking I/O transfers
@@ -17,8 +17,8 @@
 
 
 /******************** Define to prevent recursive inclusion ******************/
-#ifndef __SHAREDMACROS_H__
-#define __SHAREDMACROS_H__
+#ifndef SHAREDMACROS_H
+#define SHAREDMACROS_H
 
 
 
@@ -47,8 +47,8 @@
 #define MAX_DELAY_TIME pdMS_TO_TICKS(2)
 
 /****************************** Public functions *****************************/
-inline bool CHECK_NOTIFICATION(uint32_t val, uint32_t notificationMask){
-    return (val & notificationMask) == notificationMask;
+inline bool CHECK_NOTIFICATION(uint32_t val, uint32_t mask){
+    return (val & mask) == mask;
 }
 
 

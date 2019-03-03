@@ -46,10 +46,10 @@ static imu::ImuStruct_t read_imu_data;
  * @brief   Validates and copies sensor data to transmit
  * @details This function receives two types of sensor data(motor and IMU) and
  *          updates to the according section of robotState.msg
- * @param 	BufferMasterPtr Pointer to the sensor data buffer
+ * @param 	p_buffer_master Pointer to the sensor data buffer
  */
-void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
-    read_imu_data = BufferMasterPtr->IMUBuffer.read();
+void copySensorDataToSend(buffer::BufferMaster* p_buffer_master) {
+    read_imu_data = p_buffer_master->m_imu_buffer.read();
     comm::RobotState_t& robot_state = comm::get_robot_state();
 
     memcpy(
@@ -62,7 +62,7 @@ void copySensorDataToSend(buffer::BufferMaster* BufferMasterPtr) {
 
     for(int i = 0; i <= periph::MOTOR12; ++i)
     {
-        read_motor_data = BufferMasterPtr->MotorBufferArray[i].read();
+        read_motor_data = p_buffer_master->m_motor_buffer_array[i].read();
         memcpy(
             &robot_state.msg[4 * (read_motor_data.id - 1)],
             &read_motor_data.payload,
