@@ -88,12 +88,12 @@ public:
     ~BufferMaster() {}
     void setup_buffers(osMutexId lock, OsInterface *osInterface)
     {
-        m_imu_buffer.set_lock(lock);
-        m_imu_buffer.set_osInterface(osInterface);
+        imu_buffer.set_lock(lock);
+        imu_buffer.set_osInterface(osInterface);
         for(int i = 0; i < periph::NUM_MOTORS; ++i)
         {
-            m_motor_buffer_array[i].set_lock(lock);
-            m_motor_buffer_array[i].set_osInterface(osInterface);
+            motor_buffer_array[i].set_lock(lock);
+            motor_buffer_array[i].set_osInterface(osInterface);
         }
         m_lock = lock;
         m_os_interface_ptr = osInterface;
@@ -101,20 +101,20 @@ public:
     bool all_data_ready()
     {
         m_os_interface_ptr->OS_xSemaphoreTake(m_lock, osWaitForever);
-        bool ready =  (m_imu_buffer.num_reads() == 0);
+        bool ready =  (imu_buffer.num_reads() == 0);
 
         if(ready)
         {
             for(int i = 0; i < periph::NUM_MOTORS; ++i)
             {
-                ready = (ready && m_motor_buffer_array[i].num_reads() == 0);
+                ready = (ready && motor_buffer_array[i].num_reads() == 0);
             }
         }
         m_os_interface_ptr->OS_xSemaphoreGive(m_lock);
         return ready;
     }
-    BufferBase<imu::ImuStruct_t> m_imu_buffer;
-    BufferBase<MotorData_t> m_motor_buffer_array[periph::NUM_MOTORS];
+    BufferBase<imu::ImuStruct_t> imu_buffer;
+    BufferBase<MotorData_t> motor_buffer_array[periph::NUM_MOTORS];
     // Add buffer items here as necessary
 private:
     osMutexId m_lock = nullptr;
