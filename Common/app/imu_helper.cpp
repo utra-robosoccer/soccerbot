@@ -75,10 +75,10 @@ void processImuData(imu::ImuStruct_t& imu){
     );
 }
 
-bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
+bool readFromSensor(imu::MPU6050& imu_data, uint8_t* num_samples){
     bool success = false;
 
-    IMUdata.Read_Accelerometer_IT();
+    imu_data.Read_Accelerometer_IT();
 
     // Gyroscope data is much more volatile/sensitive to changes than
     // acceleration data. To compensate, we feed in samples to the filter
@@ -89,9 +89,9 @@ bool readFromSensor(imu::MPU6050& IMUdata, uint8_t* numSamples){
     // designer we are using does not allow us to generate such filters in
     // the free version, so this is the best we can do unless we use other
     // software.
-    ++*numSamples;
-    if(*numSamples % 16 == 0){
-        IMUdata.Read_Gyroscope_IT();
+    ++*num_samples;
+    if(*num_samples % 16 == 0){
+        imu_data.Read_Gyroscope_IT();
         success = true;
     }
 
