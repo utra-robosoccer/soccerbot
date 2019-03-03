@@ -12,8 +12,8 @@
 
 
 
-#ifndef HAL_UART_INTERFACE_H
-#define HAL_UART_INTERFACE_H
+#ifndef UART_INTERFACE_IMPL_H
+#define UART_INTERFACE_IMPL_H
 
 
 

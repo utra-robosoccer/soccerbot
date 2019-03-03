@@ -10,8 +10,8 @@
  *****************************************************************************
  */
 
-#ifndef COMMON_HALI2CINTERFACE_H_
-#define COMMON_HALI2CINTERFACE_H_
+#ifndef COMMON_I2CINTERFACEIMPL_H_
+#define COMMON_I2CINTERFACEIMPL_H_
 
 /********************************* Includes **********************************/
 
@@ -47,4 +47,4 @@ public:
  */
 /* end - Header */
 
-#endif /* COMMON_HALI2CINTERFACE_H_ */
+#endif /* COMMON_I2CINTERFACEIMPL_H_ */
