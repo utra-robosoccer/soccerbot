@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file   Dynamixel.cpp
+  * @file
   * @author Tyler Gamvrelis
   * @author Gokul Dharan
   * @author Hannah Lee
@@ -162,16 +162,16 @@ namespace dynamixel{
 // Public
 // ----------------------------------------------------------------------------
 Motor::Motor(
-    uint8_t id,
-    DaisyChain* daisyChain,
-    ResolutionDivider divider
+    uint8_t m_id,
+    DaisyChain* m_daisy_chain,
+    ResolutionDivider m_res_divider
 )
     :
-        m_id(id),
-        resolutionDivider(static_cast<uint16_t>(divider)),
-        daisyChain(daisyChain)
+        m_id(m_id),
+        m_daisy_chain(m_daisy_chain),
+        m_res_divider(static_cast<uint16_t>(m_res_divider))
 {
-    m_isJointMode = true;
+    m_is_joint_mode = true;
 }
 
 Motor::~Motor(){
@@ -179,18 +179,18 @@ Motor::~Motor(){
 }
 
 bool Motor::reset(){
-    uint8_t arrTransmit[6];
+    uint8_t arr_transmit[6];
 
-    arrTransmit[0] = 0xff;
-    arrTransmit[1] = 0xff;
-    arrTransmit[2] = m_id;
-    arrTransmit[3] = 2;
-    arrTransmit[4] = INST_RESET;
-    arrTransmit[5] = computeChecksum(arrTransmit, 6);
+    arr_transmit[0] = 0xff;
+    arr_transmit[1] = 0xff;
+    arr_transmit[2] = m_id;
+    arr_transmit[3] = 2;
+    arr_transmit[4] = INST_RESET;
+    arr_transmit[5] = computeChecksum(arr_transmit, 6);
 
-    bool success = daisyChain->requestTransmission(
-        arrTransmit,
-        sizeof(arrTransmit)
+    bool success = m_daisy_chain->requestTransmission(
+        arr_transmit,
+        sizeof(arr_transmit)
     );
 
     if(success){
@@ -216,25 +216,25 @@ bool Motor::setId(uint8_t id){
     return success;
 }
 
-bool Motor::setReturnDelayTime(uint16_t microSec) const{
-    if((microSec < 2) || (microSec > 508)){
+bool Motor::setReturnDelayTime(uint16_t micro_sec) const{
+    if((micro_sec < 2) || (micro_sec > 508)){
         return false;
     }
 
-    uint8_t motor_data = static_cast<uint8_t>(microSec >> 1);
+    uint8_t motor_data = static_cast<uint8_t>(micro_sec >> 1);
 
     /* Write data to motor. */
     uint8_t args[2] = {REG_RETURN_DELAY_TIME, motor_data};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setCwAngleLimit(float minAngle) const{
-    if((minAngle < MIN_ANGLE) || (minAngle > MAX_ANGLE)){
+bool Motor::setCwAngleLimit(float min_angle) const{
+    if((min_angle < MIN_ANGLE) || (min_angle > MAX_ANGLE)){
         return false;
     }
 
     uint16_t normalized_value = static_cast<uint16_t>(
-        minAngle / MAX_ANGLE * resolutionDivider
+        min_angle / MAX_ANGLE * m_res_divider
     );
 
     uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
@@ -245,13 +245,13 @@ bool Motor::setCwAngleLimit(float minAngle) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setCcwAngleLimit(float maxAngle) const{
-    if((maxAngle < MIN_ANGLE) || (maxAngle > MAX_ANGLE)){
+bool Motor::setCcwAngleLimit(float max_angle) const{
+    if((max_angle < MIN_ANGLE) || (max_angle > MAX_ANGLE)){
         return false;
     }
 
     uint16_t normalized_value = static_cast<uint16_t>(
-            maxAngle / MAX_ANGLE * resolutionDivider
+            max_angle / MAX_ANGLE * m_res_divider
     );
 
     uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
@@ -285,21 +285,21 @@ bool Motor::setVoltageLimit(VoltageLimit limit, float voltage) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setMaxTorque(float maxTorque) const{
-    if((maxTorque < MIN_TORQUE) || (maxTorque > MAX_TORQUE)){
+bool Motor::setMaxTorque(float max_torque) const{
+    if((max_torque < MIN_TORQUE) || (max_torque > MAX_TORQUE)){
         return false;
     }
 
     // Translate the input from percentage into a 10-bit number
     uint16_t normalized_value = static_cast<uint16_t>(
-        maxTorque / 100 * 1023
+        max_torque / 100 * 1023
     );
 
-    uint8_t lowByte = normalized_value & 0xFF;
-    uint8_t highByte = (normalized_value >> 8) & 0xFF;
+    uint8_t low_byte = normalized_value & 0xFF;
+    uint8_t high_byte = (normalized_value >> 8) & 0xFF;
 
     // Write data to motor
-    uint8_t args[3] = {REG_MAX_TORQUE, lowByte, highByte};
+    uint8_t args[3] = {REG_MAX_TORQUE, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
@@ -337,52 +337,52 @@ bool Motor::setAlarm(AlarmType type, AlarmCondition condition) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::enableTorque(bool isEnabled) const{
+bool Motor::enableTorque(bool is_enabled) const{
     // Write data to motor
-    uint8_t args[2] = {REG_TORQUE_ENABLE, static_cast<uint8_t>(isEnabled)};
+    uint8_t args[2] = {REG_TORQUE_ENABLE, static_cast<uint8_t>(is_enabled)};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::enableLed(bool isEnabled) const{
+bool Motor::enableLed(bool is_enabled) const{
     // Write data to motor
-    uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(isEnabled)};
+    uint8_t args[2] = {REG_LED_ENABLE, static_cast<uint8_t>(is_enabled)};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setGoalPosition(float goalAngle) const{
-    if((goalAngle < MIN_ANGLE) || (goalAngle > MAX_ANGLE)){
+bool Motor::setGoalPosition(float goal_angle) const{
+    if((goal_angle < MIN_ANGLE) || (goal_angle > MAX_ANGLE)){
         return false;
     }
 
     // Translate the angle from degrees into a binary code with the resolution
     // selected at construction
     uint16_t normalized_value = static_cast<uint16_t>(
-        (goalAngle / MAX_ANGLE) * resolutionDivider
+        (goal_angle / MAX_ANGLE) * m_res_divider
     );
 
-    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
-    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+    uint8_t low_byte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t high_byte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
-    uint8_t args[3] = {REG_GOAL_POSITION, lowByte, highByte};
+    uint8_t args[3] = {REG_GOAL_POSITION, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::setGoalTorque(float goalTorque) const{
-    if((goalTorque < 0) || (goalTorque > 100.0)){
+bool Motor::setGoalTorque(float goal_torque) const{
+    if((goal_torque < 0) || (goal_torque > 100.0)){
         return false;
     }
 
     // Translate the input from percentage into and 10-bit number
     uint16_t normalized_value = static_cast<uint16_t>(
-        goalTorque / 100 * 1023
+        goal_torque / 100 * 1023
     );
 
-    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
-    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+    uint8_t low_byte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t high_byte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
-    uint8_t args[3] = {REG_GOAL_TORQUE, lowByte, highByte};
+    uint8_t args[3] = {REG_GOAL_TORQUE, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
@@ -400,41 +400,41 @@ bool Motor::setPunch(float punch) const{
     // Translate the punch into a 10-bit number
     uint16_t normalized_value = static_cast<uint16_t>(punch / 100.0 * 1023);
 
-    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
-    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+    uint8_t low_byte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t high_byte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
-    uint8_t args[3] = {REG_PUNCH, lowByte, highByte};
+    uint8_t args[3] = {REG_PUNCH, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::getPosition(float& retVal) const{
+bool Motor::getPosition(float& position_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_POSITION, 2, raw);
 
     // Parse data and write it into R-val
     if(success){
-        retVal = (raw * MAX_ANGLE / resolutionDivider);
+        position_out = static_cast<float>(raw * MAX_ANGLE / m_res_divider);
     }
 
     return success;
 }
 
-bool Motor::getLoad(float& retVal) const{
+bool Motor::getLoad(float& load_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_LOAD, 2, raw);
 
     // Parse data and write it into R-val
     if(success){
-        bool isNegative = static_cast<bool>((raw >> 9) & 0x1);
+        bool is_negative = static_cast<bool>((raw >> 9) & 0x1);
         if(raw > 1023){
             raw = raw - 1023;
         }
 
-        float retVal = (float)(raw / 1023.0 * 100.0);
-        if(isNegative){
+        float retVal = static_cast<float>(raw / 1023.0 * 100.0);
+        if(is_negative){
             retVal *= -1;
         }
     }
@@ -442,34 +442,34 @@ bool Motor::getLoad(float& retVal) const{
     return success;
 }
 
-bool Motor::getVoltage(float& retVal) const{
+bool Motor::getVoltage(float& voltage_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_VOLTAGE, 1, raw);
 
     // Parse data and write it into R-val
     if(success){
-        retVal = (float)(raw / 10.0);
+        voltage_out = static_cast<float>(raw / 10.0);
     }
 
     return success;
 }
 
-bool Motor::getTemperature(uint8_t& retVal) const{
+bool Motor::getTemperature(uint8_t& temp_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_TEMPERATURE, 1, raw);
 
     if(success){
-        retVal = static_cast<uint8_t>(raw);
+        temp_out = static_cast<uint8_t>(raw);
     }
 
     return success;
 }
 
-bool Motor::isJointMode(bool& retVal){
+bool Motor::isJointMode(bool& is_joint_mode_out){
     // Read data from motor
-    uint16_t retValCW;
-    bool success = dataReader(REG_CW_ANGLE_LIMIT, 2, retValCW);
+    uint16_t ret_val_cw;
+    bool success = dataReader(REG_CW_ANGLE_LIMIT, 2, ret_val_cw);
 
     if(!success){
         return false;
@@ -482,26 +482,26 @@ bool Motor::isJointMode(bool& retVal){
         return false;
     }
 
-    retVal = (retValCW == retValCCW);
-    m_isJointMode = retVal;
+    is_joint_mode_out = (ret_val_cw == retValCCW);
+    m_is_joint_mode = is_joint_mode_out;
 
     return success;
 }
 
-bool Motor::ping(uint8_t& retVal) const{
-    uint8_t arrTransmit[6];
+bool Motor::ping(uint8_t& id_out) const{
+    uint8_t arr_transmit[6];
 
-    arrTransmit[0] = 0xff;
-    arrTransmit[1] = 0xff;
-    arrTransmit[2] = m_id;
-    arrTransmit[3] = 2;
-    arrTransmit[4] = INST_PING;
-    arrTransmit[5] = computeChecksum(arrTransmit, 6);
+    arr_transmit[0] = 0xff;
+    arr_transmit[1] = 0xff;
+    arr_transmit[2] = m_id;
+    arr_transmit[3] = 2;
+    arr_transmit[4] = INST_PING;
+    arr_transmit[5] = computeChecksum(arr_transmit, 6);
 
     // Transmit read request
-    bool success = daisyChain->requestTransmission(
-        arrTransmit,
-        sizeof(arrTransmit)
+    bool success = m_daisy_chain->requestTransmission(
+        arr_transmit,
+        sizeof(arr_transmit)
     );
 
     if(!success){
@@ -509,24 +509,24 @@ bool Motor::ping(uint8_t& retVal) const{
     }
 
     // Receive requested data
-    success = daisyChain->requestReception(
-        arrTransmit,
-        sizeof(arrTransmit)
+    success = m_daisy_chain->requestReception(
+        arr_transmit,
+        sizeof(arr_transmit)
     );
 
     if(success){
-        retVal = arrTransmit[2];
+        id_out = arr_transmit[2];
     }
 
     return success;
 }
 
-bool Motor::isMoving(bool& retVal) const{
+bool Motor::isMoving(bool& is_moving_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_MOVING, 1, raw);
 
     if(success){
-        retVal = static_cast<bool>(raw & 1);
+        is_moving_out = static_cast<bool>(raw & 1);
     }
 
     return success;
@@ -543,7 +543,7 @@ bool Motor::enterWheelMode(){
         return false;
     }
 
-    m_isJointMode = 0;
+    m_is_joint_mode = 0;
 
     return success;
 }
@@ -559,7 +559,7 @@ bool Motor::enterJointMode(){
         return false;
     }
 
-    m_isJointMode = true;
+    m_is_joint_mode = true;
 
     return success;
 }
@@ -571,7 +571,7 @@ bool Motor::enterJointMode(){
 // ----------------------------------------------------------------------------
 bool Motor::dataWriter(
     uint8_t* args,
-    size_t numArgs
+    size_t num_args
 )  const
 {
     // Check validity so that we don't accidentally make a read request that is
@@ -579,36 +579,36 @@ bool Motor::dataWriter(
     // We cannot dynamically allocate an array to hold all the data to be
     // transmitted, so 3 args was chosen as the cutoff since our use cases
     // don't require more than that
-    if(numArgs > 3){
+    if(num_args > 3){
         return false;
     }
 
-    uint8_t arrTransmit[9];
+    uint8_t arr_transmit[9];
 
-    arrTransmit[0] = 0xFF;
-    arrTransmit[1] = 0xFF;
-    arrTransmit[2] = m_id;
-    arrTransmit[3] = 2 + numArgs;
-    arrTransmit[4] = INST_WRITE_DATA;
+    arr_transmit[0] = 0xFF;
+    arr_transmit[1] = 0xFF;
+    arr_transmit[2] = m_id;
+    arr_transmit[3] = 2 + num_args;
+    arr_transmit[4] = INST_WRITE_DATA;
 
-    for(uint8_t i = 0; i < numArgs; i ++){
-        arrTransmit[5 + i] = args[i];
+    for(uint8_t i = 0; i < num_args; i ++){
+        arr_transmit[5 + i] = args[i];
     }
 
     // Checksum
-    arrTransmit[4 + numArgs + 1] = computeChecksum(
-        arrTransmit,
-        4 + numArgs + 2
+    arr_transmit[4 + num_args + 1] = computeChecksum(
+        arr_transmit,
+        4 + num_args + 2
     );
 
     // Transmit
-    return daisyChain->requestTransmission(arrTransmit, 4 + numArgs + 2);
+    return m_daisy_chain->requestTransmission(arr_transmit, 4 + num_args + 2);
 }
 
 bool Motor::dataReader(
-    uint8_t readAddr,
-    uint8_t readLength,
-    uint16_t& retVal
+    uint8_t read_addr,
+    uint8_t read_length,
+    uint16_t& ret_val_out
 ) const
 {
     // Check validity so that we don't accidentally make a read request that is
@@ -616,7 +616,7 @@ bool Motor::dataReader(
     // Since we cannot dynamically allocate an array to hold all the returned
     // data, we chose 2 as the cutoff. This supports our use cases just fine,
     // but in the future it could be tweaked if need be
-    if(readLength > 2){
+    if(read_length > 2){
         return false;
     }
 
@@ -627,30 +627,30 @@ bool Motor::dataReader(
     arr[2] = m_id;
     arr[3] = 4;
     arr[4] = INST_READ_DATA;
-    arr[5] = readAddr;
-    arr[6] = readLength;
+    arr[5] = read_addr;
+    arr[6] = read_length;
     arr[7] = computeChecksum(arr, 8);
 
     // Transmit read request
-    if(!daisyChain->requestTransmission(arr, 8)){
+    if(!m_daisy_chain->requestTransmission(arr, 8)){
         return false;
     }
 
     // Receive requested data
-    uint8_t rxPacketSize = (readLength == 1) ? 7 : 8;
-    if(!daisyChain->requestReception(arr, rxPacketSize)){
+    uint8_t rx_packet_size = (read_length == 1) ? 7 : 8;
+    if(!m_daisy_chain->requestReception(arr, rx_packet_size)){
         return false;
     }
 
     // Check data integrity before passing data to application
-    uint8_t recvChecksum = arr[rxPacketSize - 1];
-    uint8_t computedChecksum = computeChecksum(arr, rxPacketSize);
-    bool success = (computedChecksum == recvChecksum);
+    uint8_t recv_checksum = arr[rx_packet_size - 1];
+    uint8_t computed_checksum = computeChecksum(arr, rx_packet_size);
+    bool success = (computed_checksum == recv_checksum);
 
     if(success){
-        retVal = (uint16_t)arr[5];
-        if(readLength == 2){
-            retVal |= (arr[6] << 8);
+        ret_val_out = static_cast<uint16_t>(arr[5]);
+        if(read_length == 2){
+            ret_val_out |= (arr[6] << 8);
         }
     }
 

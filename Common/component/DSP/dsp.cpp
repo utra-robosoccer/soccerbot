@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    dsp.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup DSP
@@ -27,8 +27,10 @@ fir_f32::~fir_f32(){
 
 }
 
-void fir_f32::update(float* dataSrc, float* dataDest, uint32_t blockSize){
-    arm_fir_f32(&instance, dataSrc, dataDest, blockSize);
+void fir_f32::update(float* data_src, float* data_dest, uint32_t block_size){
+    // TODO(tgamvrel): runtime assertion that count(data_src) and
+    // count(data_dest) must be greater than or equal to block_size
+    arm_fir_f32(&m_inst, data_src, data_dest, block_size);
 }
 
 
@@ -51,11 +53,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // Add CMSIS/Lib/GCC to the library search path
 // Add CMSIS/Include to the include search path
 // A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
-/**
- * @brief Filter coefficients for angular velocity filter. Coefficients
- *        generated using MicroModeler DSP, a free online tool
- */
-const float32_t imuVelocityFilter::velCoeff[11] =
+const float32_t ImuVelocityFilter::m_velocity_coeff[11] =
 {
     0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315,
     0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841
@@ -64,32 +62,32 @@ const float32_t imuVelocityFilter::velCoeff[11] =
 
 // Public
 // ----------------------------------------------------------------------------
-imuVelocityFilter::imuVelocityFilter(){
+ImuVelocityFilter::ImuVelocityFilter(){
 
 }
 
-imuVelocityFilter::~imuVelocityFilter(){
+ImuVelocityFilter::~ImuVelocityFilter(){
 
 }
 
-void imuVelocityFilter::init(
-    float startVal
+void ImuVelocityFilter::init(
+    float start_value
 )
 {
     arm_fir_init_f32(
-        &instance,
+        &m_inst,
         11,
-        const_cast<float32_t*>(velCoeff),
-        state,
+        const_cast<float32_t*>(m_velocity_coeff),
+        m_state,
         1
     );
 
-    if(startVal == 0){
-        memset(state, startVal, sizeof(state));
+    if(start_value == 0){
+        memset(m_state, start_value, sizeof(m_state));
     }
     else{
-        for(size_t i = 0; i < sizeof(state); ++i){
-            state[i] = startVal;
+        for(size_t i = 0; i < sizeof(m_state); ++i){
+            m_state[i] = start_value;
         }
     }
 }

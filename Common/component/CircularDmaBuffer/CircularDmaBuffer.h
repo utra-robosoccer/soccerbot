@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    CircularDmaBuffer.h
+  * @file
   * @author  Robert
   *
   * @defgroup Header
@@ -45,11 +45,11 @@ class CircularDmaBuffer{
 public:
     CircularDmaBuffer();
     CircularDmaBuffer(
-        const UART_HandleTypeDef *uart_handle_in,
-        const UartInterface* hw_if_in,
-        const uint16_t transmission_size_in,
-        const size_t buff_size_in,
-        uint8_t *buff_p_in
+        const UART_HandleTypeDef *m_uart_handle,
+        const UartInterface* m_hw_if,
+        const uint16_t m_transmission_size,
+        const size_t m_buff_size,
+        uint8_t *m_buff_p
     );
     bool selfCheck() const;
     size_t updateHead();

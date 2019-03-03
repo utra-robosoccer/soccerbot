@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    AX12A.h
+  * @file
   * @author  Tyler
   *
   * @defgroup AX12A
@@ -71,7 +71,7 @@ public:
     /** @see Motor */
     AX12A(
         uint8_t id,
-        DaisyChain* daisyChain
+        DaisyChain* daisy_chain
     );
 
     ~AX12A();
@@ -93,13 +93,13 @@ public:
     // ------------------------------------------------------------------------
     /**
      * @brief Sets the goal velocity of the motor in RAM
-     * @param goalVelocity the goal velocity in RPM. Arguments of 0-114 are
+     * @param goal_velocity the goal velocity in RPM. Arguments of 0-114 are
      *        valid when in joint mode. 0 corresponds to MAX motion in joint
      *        mode, and minimum motion in wheel mode. In wheel mode, negative
      *        arguments correspond to CW rotation
      * @return true if successful, otherwise false
      */
-    bool setGoalVelocity(float goalVelocity) const override;
+    bool setGoalVelocity(float goal_velocity) const override;
 
     /**
      * @brief Sets the motor's clockwise compliance margin, that is, the
@@ -107,11 +107,11 @@ public:
      *        current position is CW of the goal position
      * @details ~0.29 times the argument passed in equals the the CW compliance
      *          margin that the motor is set to have
-     * @param ccwComplianceMargin the CW compliance margin. Arguments in range
+     * @param margin the CW compliance margin. Arguments in range
      *        [0, 255]
      * @return true if successful, otherwise false
      */
-    bool setCwComplianceMargin(uint8_t cwComplianceMargin) const;
+    bool setCwComplianceMargin(uint8_t margin) const;
 
     /**
      * @brief Sets the motor's counter-clockwise compliance margin, that is,
@@ -119,11 +119,11 @@ public:
      *        the current position is CW of the goal position
      * @details ~0.29 times the argument passed in equals the the CCW
      *          compliance margin that the motor is set to have
-     * @param ccwComplianceMargin the CCW compliance margin. Arguments in
+     * @param margin the CCW compliance margin. Arguments in
      *        range [0, 255]
      * @return true if successful, otherwise false
      */
-    bool setCcwComplianceMargin(uint8_t ccwComplianceMargin) const;
+    bool setCcwComplianceMargin(uint8_t margin) const;
 
     /**
      * @brief Sets the motor's clockwise compliance slope, that is, the level
@@ -131,11 +131,11 @@ public:
      *        the level of torque is more heavily reduced as the goal position
      *        is approached; a lower value indicates that the torque will not
      *        be reduced much as the goal position is approached
-     * @param cwComplianceSlope arguments in range [0, 7], with 0 being the
+     * @param slope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */
-    bool setCwComplianceSlope(uint8_t cwComplianceSlope) const;
+    bool setCwComplianceSlope(uint8_t slope) const;
 
     /**
      * @brief Sets the motor's counter-clockwise compliance slope, that is, the
@@ -143,42 +143,42 @@ public:
      *        that the level of torque is more heavily reduced as the goal
      *        position is approached; a lower value indicates that the torque
      *         will not be reduced much as the goal position is approached
-     * @param ccwComplianceSlope arguments in range [0, 7], with 0 being the
+     * @param slope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */
-    bool setCcwComplianceSlope(uint8_t ccwComplianceSlope) const;
+    bool setCcwComplianceSlope(uint8_t slope) const;
 
     /**
      * @brief Sets the motor's counter-clockwise and clockwise compliance
      *        slopes
      * @see setCcwComplianceSlope
      * @see setCwComplianceSlope
-     * @param complianceSlope arguments in range [0, 7], with 0 being the
+     * @param slope arguments in range [0, 7], with 0 being the
      *        least flexible
      * @return true if successful, otherwise false
      */
-    bool setComplianceSlope(uint8_t complianceSlope) const;
+    bool setComplianceSlope(uint8_t slope) const;
 
     /**
      * @brief Sets the motor's counter-clockwise and clockwise compliance
      *        margins
      * @see setCcwComplianceMargin
      * @see setCwComplianceMargin
-     * @param complianceMargin arguments in range [0, 255]
+     * @param margin arguments in range [0, 255]
      * @return true if successful, otherwise false
      */
-    bool setComplianceMargin(uint8_t complianceMargin) const;
+    bool setComplianceMargin(uint8_t margin) const;
 
 
     // Getters (use the READ DATA instruction)
     // ------------------------------------------------------------------------
     /**
      * @brief Reads the angular velocity of the motor, in RPM
-     * @param[out] retVal R-val return type (not modified upon failure)
+     * @param[out] velocity_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getVelocity(float& retVal) const override;
+    bool getVelocity(float& velocity_out) const override;
 };
 
 } // end namespace dynamixel

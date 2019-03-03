@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file   MX28.cpp
+  * @file
   * @author Tyler Gamvrelis
   *
   * @ingroup MX28
@@ -53,9 +53,9 @@ namespace dynamixel{
 // ----------------------------------------------------------------------------
 MX28::MX28(
     uint8_t id,
-    DaisyChain* daisyChain
+    DaisyChain* daisy_chain
 )
-    :   Motor(id, daisyChain, ResolutionDivider::MX28)
+    :   Motor(id, daisy_chain, ResolutionDivider::MX28)
 {
 
 }
@@ -90,36 +90,62 @@ bool MX28::setBaudRate(uint32_t baud) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool MX28::setGoalVelocity(float goalVelocity) const{
-    if(m_isJointMode){
-        if((goalVelocity < MIN_VELOCITY) || (goalVelocity > MX28_MAX_VELOCITY)){
+bool MX28::setGoalVelocity(float goal_velocity) const{
+    if(m_is_joint_mode){
+        if((goal_velocity < MIN_VELOCITY) || (goal_velocity > MX28_MAX_VELOCITY)){
             return false;
         }
     }
 
     uint16_t normalized_value;
-    if(goalVelocity > 0){
+    if(goal_velocity > 0){
         normalized_value = static_cast<uint8_t>(
-            goalVelocity / MX28_MAX_VELOCITY * 1023
+            goal_velocity / MX28_MAX_VELOCITY * 1023
         );
     }
     else{
         normalized_value = static_cast<uint16_t>(
-            (goalVelocity * -1) / MX28_MAX_VELOCITY * 1023
+            (goal_velocity * -1) / MX28_MAX_VELOCITY * 1023
         );
 
         normalized_value |= 0b000010000000000;
     }
 
-    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
-    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+    uint8_t low_byte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t high_byte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
-    uint8_t args[3] = {REG_GOAL_VELOCITY, lowByte, highByte};
+    uint8_t args[3] = {REG_GOAL_VELOCITY, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
-bool MX28::getVelocity(float& retVal) const{
+bool MX28::setGoalAcceleration(float goal_acceleration) const{
+    if((goal_acceleration > 2180) || (goal_acceleration < 0)){
+        return false;
+    }
+
+    uint8_t accel_arg = static_cast<int8_t>(goal_acceleration / 8.583);
+
+    uint8_t args[2] = {MX28_REG_GOAL_ACCELERATION, accel_arg};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setDGain(uint8_t d_gain) const{
+    uint8_t args[2] = {MX28_REG_D_GAIN, d_gain};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setIGain(uint8_t i_gain) const{
+    uint8_t args[2] = {MX28_REG_I_GAIN, i_gain};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::setPGain(uint8_t p_gain) const{
+    uint8_t args[2] = {MX28_REG_P_GAIN, p_gain};
+    return dataWriter(args, sizeof(args));
+}
+
+bool MX28::getVelocity(float& velocity_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_VELOCITY, 2, raw);
 
@@ -127,36 +153,10 @@ bool MX28::getVelocity(float& retVal) const{
         return false;
     }
 
-    uint16_t modifier = m_isJointMode ? 1023 : 2047;
-    retVal = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
+    uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
+    velocity_out = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
 
     return success;
-}
-
-bool MX28::setGoalAcceleration(float goalAcceleration) const{
-    if((goalAcceleration > 2180) || (goalAcceleration < 0)){
-        return false;
-    }
-
-    uint8_t accelArg = static_cast<int8_t>(goalAcceleration / 8.583);
-
-    uint8_t args[2] = {MX28_REG_GOAL_ACCELERATION, accelArg};
-    return dataWriter(args, sizeof(args));
-}
-
-bool MX28::setDGain(uint8_t DGain) const{
-    uint8_t args[2] = {MX28_REG_D_GAIN, DGain};
-    return dataWriter(args, sizeof(args));
-}
-
-bool MX28::setIGain(uint8_t IGain) const{
-    uint8_t args[2] = {MX28_REG_I_GAIN, IGain};
-    return dataWriter(args, sizeof(args));
-}
-
-bool MX28::setPGain(uint8_t PGain) const{
-    uint8_t args[2] = {MX28_REG_P_GAIN, PGain};
-    return dataWriter(args, sizeof(args));
 }
 
 }

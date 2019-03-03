@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    UART_Handler.h
+  * @file
   * @author  Gokul
   * @author  Tyler
   * @brief   Header file for the UART event processor, which is called whenever
@@ -45,7 +45,7 @@ typedef enum{
     cmdReadPosition,  /**< Command to read motor position */
     cmdWritePosition, /**< Command to set new motor goal position */
     cmdWriteTorque    /**< Command to refresh the motor torque enable */
-}eUARTcmd_t;
+}UartCmd_e;
 
 /**
  * @brief The container type for motor commands. The control thread sends these
@@ -54,14 +54,14 @@ typedef enum{
  *        action (reading from or writing to motor command registers)
  */
 typedef struct {
-    eUARTcmd_t        type;          /**< Indicates the type of motor
+    UartCmd_e        type;          /**< Indicates the type of motor
 	                                      command                        */
     dynamixel::Motor* motorHandle;   /**< Pointer to the motor container */
     float             value;         /**< The value to be written in the
                                           case of a write instruction    */
     QueueHandle_t    qHandle;       /**< Pointer to the queue for this
                                           motor's commands               */
-}UARTcmd_t;
+}UartCmd_t;
 
 /**
  * @brief Enumerates the types of data that can be sent to the sensor queue.
@@ -71,8 +71,8 @@ typedef struct {
  */
 typedef enum{
     eMotorData, /**< Indicates that the pointer is a Motor   */
-    eIMUData    /**< Indicates that the pointer is a MPU6050 */
-}eTXData_t;
+    eImuData    /**< Indicates that the pointer is a MPU6050 */
+}TxData_e;
 
 /** @brief Motor data sent from the UART threads to the TX thread */
 typedef struct{
@@ -95,15 +95,15 @@ typedef struct{
  *          allows any type of sensor data to be sent through the queue
  */
 typedef struct {
-    eTXData_t eDataType; /**< Tells the receiving task what the data is */
+    TxData_e eDataType; /**< Tells the receiving task what the data is */
     void* pData;         /**< Points to the container for the data      */
-}TXData_t;
+}TxData_t;
 
 
 
 
 /***************************** Function prototypes ****************************/
-void UART_ProcessEvent(UARTcmd_t* cmdPtr);
+void UART_ProcessEvent(UartCmd_t* p_cmd);
 
 /**
  * @}

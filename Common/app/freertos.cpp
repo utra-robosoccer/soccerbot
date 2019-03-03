@@ -119,22 +119,22 @@ osThreadId MotorCmdGenTaskHandle;
 uint32_t MotorCmdGenTaskBuffer[ 128 ];
 osStaticThreadDef_t MotorCmdGenTaskControlBlock;
 osMessageQId UpperLeftLeg_reqHandle;
-uint8_t UpperLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+uint8_t UpperLeftLeg_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t UpperLeftLeg_reqControlBlock;
 osMessageQId LowerRightLeg_reqHandle;
-uint8_t LowerRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+uint8_t LowerRightLeg_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t LowerRightLeg_reqControlBlock;
 osMessageQId HeadAndArms_reqHandle;
-uint8_t HeadAndArms_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+uint8_t HeadAndArms_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t HeadAndArms_reqControlBlock;
 osMessageQId UpperRightLeg_reqHandle;
-uint8_t UpperRightLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+uint8_t UpperRightLeg_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t UpperRightLeg_reqControlBlock;
 osMessageQId LowerLeftLeg_reqHandle;
-uint8_t LowerLeftLeg_reqBuffer[ 16 * sizeof( UARTcmd_t ) ];
+uint8_t LowerLeftLeg_reqBuffer[ 16 * sizeof( UartCmd_t ) ];
 osStaticMessageQDef_t LowerLeftLeg_reqControlBlock;
 osMessageQId BufferWriteQueueHandle;
-uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TXData_t ) ];
+uint8_t BufferWriteQueueBuffer[ 32 * sizeof( TxData_t ) ];
 osStaticMessageQDef_t BufferWriteQueueControlBlock;
 osMutexId PCUARTHandle;
 osStaticMutexDef_t PCUARTControlBlock;
@@ -149,12 +149,12 @@ namespace{
 
 // TODO: these variables are to be moved out of freertos.cpp
 
-buffer::BufferMaster BufferMaster;
-cmsis::OsInterfaceImpl osInterfaceImpl;
-hal::HalUartInterface uartInterface;
-uart::UartDriver uartDriver(&osInterfaceImpl, &uartInterface, UART_HANDLE_PC);
+buffer::BufferMaster buffer_master;
+cmsis::OsInterfaceImpl os_if_impl;
+hal::HalUartInterface uart_if;
+uart::UartDriver pc_uart_driver(&os_if_impl, &uart_if, UART_HANDLE_PC);
 
-bool setupIsDone = false;
+bool setup_is_done = false;
 static volatile uint32_t error;
 
 /* Set the period the TxThread waits before being timed out when waiting for DMA
@@ -163,7 +163,6 @@ static volatile uint32_t error;
  * scheduling delays, so this is set to 5ms. */
 constexpr TickType_t TX_CYCLE_TIME_MS = 5;
 }
-
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -189,6 +188,7 @@ extern "C" {
 #endif
 
 using hal::IO_Type;
+using namespace soccerbot; // TODO(tgamvrel) using namespace
 
 /* USER CODE END FunctionPrototypes */
 
@@ -303,27 +303,27 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of UART1_req */
-  osMessageQStaticDef(UpperLeftLeg_req, 16, UARTcmd_t, UpperLeftLeg_reqBuffer, &UpperLeftLeg_reqControlBlock);
+  osMessageQStaticDef(UpperLeftLeg_req, 16, UartCmd_t, UpperLeftLeg_reqBuffer, &UpperLeftLeg_reqControlBlock);
   UpperLeftLeg_reqHandle = osMessageCreate(osMessageQ(UpperLeftLeg_req), NULL);
 
   /* definition and creation of LowerRightLeg_req */
-  osMessageQStaticDef(LowerRightLeg_req, 16, UARTcmd_t, LowerRightLeg_reqBuffer, &LowerRightLeg_reqControlBlock);
+  osMessageQStaticDef(LowerRightLeg_req, 16, UartCmd_t, LowerRightLeg_reqBuffer, &LowerRightLeg_reqControlBlock);
   LowerRightLeg_reqHandle = osMessageCreate(osMessageQ(LowerRightLeg_req), NULL);
 
   /* definition and creation of HeadAndArms_req */
-  osMessageQStaticDef(HeadAndArms_req, 16, UARTcmd_t, HeadAndArms_reqBuffer, &HeadAndArms_reqControlBlock);
+  osMessageQStaticDef(HeadAndArms_req, 16, UartCmd_t, HeadAndArms_reqBuffer, &HeadAndArms_reqControlBlock);
   HeadAndArms_reqHandle = osMessageCreate(osMessageQ(HeadAndArms_req), NULL);
 
   /* definition and creation of UpperRightLeg_req */
-  osMessageQStaticDef(UpperRightLeg_req, 16, UARTcmd_t, UpperRightLeg_reqBuffer, &UpperRightLeg_reqControlBlock);
+  osMessageQStaticDef(UpperRightLeg_req, 16, UartCmd_t, UpperRightLeg_reqBuffer, &UpperRightLeg_reqControlBlock);
   UpperRightLeg_reqHandle = osMessageCreate(osMessageQ(UpperRightLeg_req), NULL);
 
   /* definition and creation of LowerLeftLeg_req */
-  osMessageQStaticDef(LowerLeftLeg_req, 16, UARTcmd_t, LowerLeftLeg_reqBuffer, &LowerLeftLeg_reqControlBlock);
+  osMessageQStaticDef(LowerLeftLeg_req, 16, UartCmd_t, LowerLeftLeg_reqBuffer, &LowerLeftLeg_reqControlBlock);
   LowerLeftLeg_reqHandle = osMessageCreate(osMessageQ(LowerLeftLeg_req), NULL);
 
   /* definition and creation of BufferWriteQueue */
-  osMessageQStaticDef(BufferWriteQueue, 32, TXData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
+  osMessageQStaticDef(BufferWriteQueue, 32, TxData_t, BufferWriteQueueBuffer, &BufferWriteQueueControlBlock);
   BufferWriteQueueHandle = osMessageCreate(osMessageQ(BufferWriteQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -369,8 +369,8 @@ void StartCommandTask(void const * argument)
     // Wait for the motors to turn on
     osDelay(osKernelSysTickMicroSec(100000));
 
-    uartDriver.setIOType(IO_Type::DMA);
-    uartDriver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
+    pc_uart_driver.setIOType(IO_Type::DMA);
+    pc_uart_driver.setMaxBlockTime(pdMS_TO_TICKS(TX_CYCLE_TIME_MS));
 
     // Use polled IO here for 2 reasons:
     //   1. Have to initialize the motors from this one thread, so using DMA
@@ -413,13 +413,13 @@ void StartCommandTask(void const * argument)
 
     // Configure the IMU to use the tightest filter bandwidth
     constexpr uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
-    periph::imuData.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
+    periph::imu_data.init(IMU_DIGITAL_LOWPASS_FILTER_SETTING);
 
     // Set up the sensor data buffer
-    BufferMaster.setup_buffers(DATABUFFERHandle, &osInterfaceImpl);
+    buffer_master.setup_buffers(DATABUFFERHandle, &os_if_impl);
 
     // Unblock the other tasks now that initialization is done
-    setupIsDone = true;
+    setup_is_done = true;
 
     osSignalSet(RxTaskHandle, NOTIFIED_FROM_TASK);
     osSignalSet(TxTaskHandle, NOTIFIED_FROM_TASK);
@@ -432,18 +432,19 @@ void StartCommandTask(void const * argument)
     osSignalSet(UpperRightLegHandle, NOTIFIED_FROM_TASK);
     osSignalSet(LowerLeftLegHandle, NOTIFIED_FROM_TASK);
 
-    UARTcmd_t cmd;
+    UartCmd_t cmd;
     cmd.type = cmdWritePosition;
     float positions[18];
     while(1){
         osSignalWait(NOTIFIED_FROM_TASK, osWaitForever);
 
         // Convert raw bytes from robotGoal received from PC into floats
-        uint8_t* ptr = NULL;
+        uint8_t* ptr = nullptr;
+        comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
         for(uint8_t i = 0; i < 18; i++){
             ptr = (uint8_t*)&positions[i];
             for(uint8_t j = 0; j < 4; j++){
-                *ptr = robotGoal.msg[i * 4 + j];
+                *ptr = robot_goal.msg[i * 4 + j];
                 ptr++;
             }
         }
@@ -494,12 +495,12 @@ void StartUpperLeftLeg(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    UARTcmd_t cmdMessage;
+    UartCmd_t cmd_msg;
 
     for(;;)
     {
-        while(xQueueReceive(UpperLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage);
+        while(xQueueReceive(UpperLeftLeg_reqHandle, &cmd_msg, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmd_msg);
     }
 }
 
@@ -522,12 +523,12 @@ void StartLowerRightLeg(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    UARTcmd_t cmdMessage;
+    UartCmd_t cmd_msg;
 
     for(;;)
     {
-        while(xQueueReceive(LowerRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage);
+        while(xQueueReceive(LowerRightLeg_reqHandle, &cmd_msg, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmd_msg);
     }
 }
 
@@ -550,12 +551,12 @@ void StartHeadAndArms(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    UARTcmd_t cmdMessage;
+    UartCmd_t cmd_msg;
 
     for(;;)
     {
-        while(xQueueReceive(HeadAndArms_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage);
+        while(xQueueReceive(HeadAndArms_reqHandle, &cmd_msg, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmd_msg);
     }
 }
 
@@ -578,12 +579,12 @@ void StartUpperRightLeg(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    UARTcmd_t cmdMessage;
+    UartCmd_t cmd_msg;
 
     for(;;)
     {
-        while(xQueueReceive(UpperRightLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage);
+        while(xQueueReceive(UpperRightLeg_reqHandle, &cmd_msg, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmd_msg);
     }
 }
 
@@ -606,12 +607,12 @@ void StartLowerLeftLeg(void const * argument)
     // is received. This allows one-time setup to complete in a low-priority task.
     osSignalWait(0, osWaitForever);
 
-    UARTcmd_t cmdMessage;
+    UartCmd_t cmd_msg;
 
     for(;;)
     {
-        while(xQueueReceive(LowerLeftLeg_reqHandle, &cmdMessage, portMAX_DELAY) != pdTRUE);
-        UART_ProcessEvent(&cmdMessage);
+        while(xQueueReceive(LowerLeftLeg_reqHandle, &cmd_msg, portMAX_DELAY) != pdTRUE);
+        UART_ProcessEvent(&cmd_msg);
     }
 }
 
@@ -635,27 +636,27 @@ void StartIMUTask(void const * argument)
 
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
-    imu::IMUStruct_t myIMUStruct;
-    TXData_t dataToSend = {eIMUData, &myIMUStruct};
-    TickType_t xLastWakeTime = xTaskGetTickCount();
-    uint8_t numSamples = 0;
-    bool needsProcessing = false;
+    imu::ImuStruct_t imu_data;
+    TxData_t data_to_send = {eImuData, &imu_data};
+    TickType_t last_wake_time = xTaskGetTickCount();
+    uint8_t num_samples = 0;
+    bool need_to_process = false;
 
     app::initImuProcessor();
 
     for(;;)
     {
         // Service this thread every 2 ms for a 500 Hz sample rate
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
+        vTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(IMU_CYCLE_TIME_MS));
 
-        needsProcessing = app::readFromSensor(periph::imuData, &numSamples);
-        periph::imuData.Fill_Struct(&myIMUStruct);
+        need_to_process = app::readFromSensor(periph::imu_data, &num_samples);
+        periph::imu_data.Fill_Struct(&imu_data);
 
-        if(needsProcessing){
-            app::processImuData(myIMUStruct);
+        if(need_to_process){
+            app::processImuData(imu_data);
         }
 
-        xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
+        xQueueSend(BufferWriteQueueHandle, &data_to_send, 0);
     }
     /* USER CODE END StartIMUTask */
 }
@@ -677,27 +678,31 @@ void StartRxTask(void const * argument) {
     initializeVars();
 
     const uint32_t RX_CYCLE_TIME = osKernelSysTickMicroSec(1000);
-    uint32_t xLastWakeTime = osKernelSysTick();
+    uint32_t last_wake_time = osKernelSysTick();
 
     bool parse_out = 0;
     uint8_t raw[RX_BUFF_SIZE];
-    uint8_t processingBuff[RX_BUFF_SIZE];
-    uart::CircularDmaBuffer rxBuffer = uart::CircularDmaBuffer(UART_HANDLE_PC,
-            &uartInterface, RX_BUFF_SIZE, RX_BUFF_SIZE, raw);
+    uint8_t processing_buff[RX_BUFF_SIZE];
+    uart::CircularDmaBuffer rx_buffer = uart::CircularDmaBuffer(
+        UART_HANDLE_PC,
+        &uart_if,
+        RX_BUFF_SIZE,
+        RX_BUFF_SIZE,
+        raw
+    );
 
-    rxBuffer.initiate();
+    rx_buffer.initiate();
 
     for (;;) {
-        osDelayUntil(&xLastWakeTime, RX_CYCLE_TIME);
+        osDelayUntil(&last_wake_time, RX_CYCLE_TIME);
 
-        rxBuffer.updateHead();
-        if(rxBuffer.dataAvail()){
-            uint8_t numBytesReceived = rxBuffer.readBuff(processingBuff);
-
-            parseByteSequence(processingBuff, numBytesReceived, parse_out);
+        rx_buffer.updateHead();
+        if(rx_buffer.dataAvail()){
+            uint8_t num_bytes_received = rx_buffer.readBuff(processing_buff);
+            parseByteSequence(processing_buff, num_bytes_received, parse_out);
         }
 
-        rxBuffer.reinitiateIfError();
+        rx_buffer.reinitiateIfError();
 
         if (parse_out) {
             parse_out = false;
@@ -731,11 +736,19 @@ void StartTxTask(void const * argument) {
         // Wait until woken up by Rx ("read command event")
         osSignalWait(0, osWaitForever);
 
-        copySensorDataToSend(&BufferMaster);
+        copySensorDataToSend(&buffer_master);
 
         // TODO: should have a way to back out of a failed transmit and reinitiate
         // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
-        while(!uartDriver.transmit((uint8_t*) &robotState, sizeof(RobotState))) {;}
+        comm::RobotState_t& robot_state = comm::getRobotState();
+        while(!pc_uart_driver.transmit(
+                reinterpret_cast<uint8_t*>(&robot_state),
+                sizeof(comm::RobotState_t)
+            )
+        )
+        {
+            continue;
+        }
     }
 }
 
@@ -753,34 +766,38 @@ void StartBuffWriterTask(void const * argument)
 {
     osSignalWait(0, osWaitForever);
 
-    TXData_t dataToWrite;
-    imu::IMUStruct_t* IMUDataPtr;
-    MotorData_t* motorDataPtr;
+    TxData_t data_to_write;
+    imu::ImuStruct_t* imu_data_ptr;
+    MotorData_t* motor_data_ptr;
 
     for(;;)
     {
-        while(xQueueReceive(BufferWriteQueueHandle, &dataToWrite, osWaitForever) != pdTRUE);
-        switch (dataToWrite.eDataType) {
+        while(xQueueReceive(BufferWriteQueueHandle, &data_to_write, osWaitForever) != pdTRUE);
+        switch (data_to_write.eDataType) {
             case eMotorData:
-                motorDataPtr = static_cast<MotorData_t*>(dataToWrite.pData);
+                motor_data_ptr = static_cast<MotorData_t*>(data_to_write.pData);
 
-                if (motorDataPtr == NULL) { break; }
+                if (motor_data_ptr == nullptr) {
+                    break;
+                }
 
                 // Validate data and store it in buffer (thread-safe)
                 // Each type of buffer could have its own mutex but this will probably
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
-                if (motorDataPtr->id <= periph::NUM_MOTORS) {
-                    BufferMaster.MotorBufferArray[motorDataPtr->id - 1].write(*motorDataPtr);
+                if (motor_data_ptr->id <= periph::NUM_MOTORS) {
+                    buffer_master.motor_buffer_array[motor_data_ptr->id - 1].write(*motor_data_ptr);
                 }
                 break;
-            case eIMUData:
-                IMUDataPtr = (imu::IMUStruct_t*)dataToWrite.pData;
+            case eImuData:
+                imu_data_ptr = (imu::ImuStruct_t*)data_to_write.pData;
 
-                if(IMUDataPtr == NULL){ break; }
+                if(imu_data_ptr == nullptr){
+                    break;
+                }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                BufferMaster.IMUBuffer.write(*IMUDataPtr);
+                buffer_master.imu_buffer.write(*imu_data_ptr);
                 break;
             default:
                 break;
@@ -802,13 +819,13 @@ void StartMotorCmdGenTask(void const * argument){
     osSignalWait(0, osWaitForever);
 
     constexpr uint32_t CYCLE_TIME_MS = osKernelSysTickMicroSec(2000);
-    TickType_t xLastWakeTime = osKernelSysTick();
-    UARTcmd_t cmd;
+    TickType_t last_wake_time = osKernelSysTick();
+    UartCmd_t cmd;
     cmd.type = cmdReadPosition;
 
     for(;;)
     {
-        vTaskDelayUntil(&xLastWakeTime, CYCLE_TIME_MS);
+        vTaskDelayUntil(&last_wake_time, CYCLE_TIME_MS);
 
         for(uint8_t i = periph::MOTOR1; i < periph::NUM_MOTORS; ++i){
             cmd.motorHandle = periph::motors[i];
@@ -880,7 +897,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
   * @ingroup Callbacks
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart){
-    if(setupIsDone){
+    if(setup_is_done){
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
         if(huart == UART_HANDLE_PC){
             xTaskNotifyFromISR(TxTaskHandle, NOTIFIED_FROM_TX_ISR, eSetBits, &xHigherPriorityTaskWoken);
@@ -953,7 +970,6 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     error = HAL_UART_GetError(huart);
 }
-
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -76,7 +76,7 @@ enum motorNames_e : uint8_t {
 // Variables
 // ----------------------------------------------------------------------------
 extern std::array<Motor*, 18> motors;
-extern MPU6050 imuData;
+extern MPU6050 imu_data;
 
 
 

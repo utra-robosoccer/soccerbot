@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Communication.c
+  * @file
   * @author  Jason
   * @author  Tyler
   * @brief   Top-level communcation module
@@ -17,17 +17,16 @@
 /********************************** Includes **********************************/
 #include "Communication.h"
 
-
-
-
-/******************************* Public Variables *****************************/
+namespace{
+// Variables
+// ----------------------------------------------------------------------------
 /**
  * This is the container for the goal state of the robot. Each control cycle
  * begins by refreshing this data structure (by receiving a new goal from the
  * control systems running on the PC) and then sending commands to actuators
  * stop reduce the error between the current state and the goal state
  */
-RobotGoal robotGoal = {0};
+soccerbot::comm::RobotGoal_t robot_goal = {0};
 
 /**
  * This is the container for the current state of the robot. Each control cycle
@@ -35,7 +34,24 @@ RobotGoal robotGoal = {0};
  * time this container is serialized and sent back to the PC for feedback
  * control
  */
-RobotState robotState = {0};
+soccerbot::comm::RobotState_t robot_state = {0};
+
+} // end anonymous namespace
+
+namespace soccerbot{
+namespace comm{
+// Public Functions
+// ----------------------------------------------------------------------------
+RobotGoal_t& getRobotGoal(void){
+    return robot_goal;
+}
+
+RobotState_t& getRobotState(void){
+    return robot_state;
+}
+
+} // end namespace comm
+} // end namespace soccerbot
 
 /**
  * @}

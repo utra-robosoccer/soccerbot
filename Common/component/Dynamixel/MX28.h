@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    MX28.h
+  * @file
   * @author  Tyler
   *
   * @defgroup MX28
@@ -75,7 +75,7 @@ public:
     /** @see Motor */
     MX28(
         uint8_t id,
-        DaisyChain* daisyChain
+        DaisyChain* daisy_chain
     );
 
     ~MX28();
@@ -98,13 +98,13 @@ public:
     // ------------------------------------------------------------------------
     /**
      * @brief Sets the goal velocity of the motor in RAM
-     * @param goalVelocity the goal velocity in RPM. Arguments of 0-117 are
+     * @param goal_velocity the goal velocity in RPM. Arguments of 0-117 are
      *        valid when in joint mode. 0 corresponds to MAX motion in joint
      *        mode, and minimum motion in wheel mode. In wheel mode, negative
      *        arguments correspond to CW rotation
      * @return true if successful, otherwise false
      */
-    bool setGoalVelocity(float goalVelocity) const override;
+    bool setGoalVelocity(float goal_velocity) const override;
 
     /**
      * @brief Sets the goal acceleration. The argument should be in units of
@@ -114,48 +114,48 @@ public:
      * @details goalAcceleration of 0 or goalSpeed of 0 means no
      *          control over acceleration (uses max acceleration of motor)
      * @note All arguments are converted to an integer multiple of 8.583
-     * @param goalAcceleration the target acceleration in degree/s^2. Values
+     * @param goal_acceleration the target acceleration in degree/s^2. Values
      *        in range [0, 2180] are permitted
      * @return true if successful, otherwise false
      */
-    bool setGoalAcceleration(float goalAcceleration) const;
+    bool setGoalAcceleration(float goal_acceleration) const;
 
     /**
      * @brief Sets the value of the derivative gain used in the motor's PID
      *        controller
-     * @details kD = DGain / 250
-     * @param DGain the derivative gain parameter
+     * @details kD = d_gain / 250
+     * @param d_gain the derivative gain parameter
      * @return true if successful, otherwise false
      */
-    bool setDGain(uint8_t DGain) const;
+    bool setDGain(uint8_t d_gain) const;
 
     /**
      * @brief Sets the value of the integral gain used in the motor's PID
      *        controller
-     * @details kI = IGain * 125/256
-     * @param IGain the integral gain parameter
+     * @details kI = i_gain * 125/256
+     * @param i_gain the integral gain parameter
      * @return true if successful, otherwise false
      */
-    bool setIGain(uint8_t IGain) const;
+    bool setIGain(uint8_t i_gain) const;
 
     /**
      * @brief Sets the value of the proportional gain used in the motor's PID
      *        controller
-     * @details kP = PGain / 8
-     * @param PGain the proportional gain parameter
+     * @details kP = p_gain / 8
+     * @param p_gain the proportional gain parameter
      * @return true if successful, otherwise false
      */
-    bool setPGain(uint8_t PGain) const;
+    bool setPGain(uint8_t p_gain) const;
 
 
     // Getters (use the READ DATA instruction)
     // ------------------------------------------------------------------------
     /**
      * @brief Reads the angular velocity of the motor, in RPM
-     * @param[out] retVal R-val return type (not modified upon failure)
+     * @param[out] velocity_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getVelocity(float& retVal) const override;
+    bool getVelocity(float& velocity_out) const override;
 };
 
 } // end namespace dynamixel

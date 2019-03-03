@@ -37,73 +37,73 @@ using hal::GpioInterfaceImpl;
 namespace periph{
 // Variables
 // ----------------------------------------------------------------------------
-HalUartInterface uartif;
-OsInterfaceImpl osif;
-GpioInterfaceImpl gpioif;
+HalUartInterface uart_if;
+OsInterfaceImpl os_if;
+GpioInterfaceImpl gpio_if;
 
-UartDriver upperLeftLegDriver(&osif, &uartif, UART_HANDLE_UpperLeftLeg);
-DaisyChainParams upperLeftLegParams = {
-    &upperLeftLegDriver,
-    &gpioif,
+UartDriver upper_left_leg_driver(&os_if, &uart_if, UART_HANDLE_UpperLeftLeg);
+DaisyChainParams upper_left_leg_params = {
+    &upper_left_leg_driver,
+    &gpio_if,
     GPIOA,
     GPIO_PIN_8
 };
-DaisyChain upperLeftLegDaisyChain(upperLeftLegParams);
+DaisyChain upper_left_leg_daisy_chain(upper_left_leg_params);
 
-UartDriver lowerRightLegDriver(&osif, &uartif, UART_HANDLE_LowerRightLeg);
-DaisyChainParams lowerRightLegParams = {
-    &lowerRightLegDriver,
-    &gpioif,
+UartDriver lower_right_leg_driver(&os_if, &uart_if, UART_HANDLE_LowerRightLeg);
+DaisyChainParams lower_right_leg_params = {
+    &lower_right_leg_driver,
+    &gpio_if,
     GPIOA,
     GPIO_PIN_4
 };
-DaisyChain lowerRightLegDaisyChain(lowerRightLegParams);
+DaisyChain lower_right_leg_daisy_chain(lower_right_leg_params);
 
-UartDriver headAndArmsDriver(&osif, &uartif, UART_HANDLE_HeadAndArms);
-DaisyChainParams headAndArmsParams = {
-    &headAndArmsDriver,
-    &gpioif,
+UartDriver head_and_arms_driver(&os_if, &uart_if, UART_HANDLE_HeadAndArms);
+DaisyChainParams head_and_arms_params = {
+    &head_and_arms_driver,
+    &gpio_if,
     GPIOB,
     GPIO_PIN_2
 };
-DaisyChain headAndArmsDaisyChain(headAndArmsParams);
+DaisyChain head_and_arms_daisy_chain(head_and_arms_params);
 
-UartDriver upperRightLegDriver(&osif, &uartif, UART_HANDLE_UpperRightLeg);
-DaisyChainParams upperRightLegParams = {
-    &upperRightLegDriver,
-    &gpioif,
+UartDriver upper_right_leg_driver(&os_if, &uart_if, UART_HANDLE_UpperRightLeg);
+DaisyChainParams upper_right_leg_params = {
+    &upper_right_leg_driver,
+    &gpio_if,
     GPIOC,
     GPIO_PIN_3
 };
-DaisyChain upperRightLegDaisyChain(upperRightLegParams);
+DaisyChain upper_right_leg_daisy_chain(upper_right_leg_params);
 
-UartDriver lowerLeftLegDriver(&osif, &uartif, UART_HANDLE_LowerLeftLeg);
-DaisyChainParams lowerLeftLegParams = {
-    &lowerLeftLegDriver,
-    &gpioif,
+UartDriver lower_left_leg_driver(&os_if, &uart_if, UART_HANDLE_LowerLeftLeg);
+DaisyChainParams lower_left_leg_params = {
+    &lower_left_leg_driver,
+    &gpio_if,
     GPIOC,
     GPIO_PIN_8
 };
-DaisyChain lowerLeftLegDaisyChain(lowerLeftLegParams);
+DaisyChain lower_left_leg_daisy_chain(lower_left_leg_params);
 
-MX28 motor1(1, &lowerRightLegDaisyChain);
-MX28 motor2(2, &lowerRightLegDaisyChain);
-MX28 motor3(3, &lowerRightLegDaisyChain);
-MX28 motor4(4, &upperRightLegDaisyChain);
-MX28 motor5(5, &upperRightLegDaisyChain);
-MX28 motor6(6, &upperRightLegDaisyChain);
-MX28 motor7(7, &upperLeftLegDaisyChain);
-MX28 motor8(8, &upperLeftLegDaisyChain);
-MX28 motor9(9, &upperLeftLegDaisyChain);
-MX28 motor10(10, &lowerLeftLegDaisyChain);
-MX28 motor11(11, &lowerLeftLegDaisyChain);
-MX28 motor12(12, &lowerLeftLegDaisyChain);
-AX12A motor13(13, &headAndArmsDaisyChain);
-AX12A motor14(14, &headAndArmsDaisyChain);
-AX12A motor15(15, &headAndArmsDaisyChain);
-AX12A motor16(16, &headAndArmsDaisyChain);
-AX12A motor17(17, &headAndArmsDaisyChain);
-AX12A motor18(18, &headAndArmsDaisyChain);
+MX28 motor1(1, &lower_right_leg_daisy_chain);
+MX28 motor2(2, &lower_right_leg_daisy_chain);
+MX28 motor3(3, &lower_right_leg_daisy_chain);
+MX28 motor4(4, &upper_right_leg_daisy_chain);
+MX28 motor5(5, &upper_right_leg_daisy_chain);
+MX28 motor6(6, &upper_right_leg_daisy_chain);
+MX28 motor7(7, &upper_left_leg_daisy_chain);
+MX28 motor8(8, &upper_left_leg_daisy_chain);
+MX28 motor9(9, &upper_left_leg_daisy_chain);
+MX28 motor10(10, &lower_left_leg_daisy_chain);
+MX28 motor11(11, &lower_left_leg_daisy_chain);
+MX28 motor12(12, &lower_left_leg_daisy_chain);
+AX12A motor13(13, &head_and_arms_daisy_chain);
+AX12A motor14(14, &head_and_arms_daisy_chain);
+AX12A motor15(15, &head_and_arms_daisy_chain);
+AX12A motor16(16, &head_and_arms_daisy_chain);
+AX12A motor17(17, &head_and_arms_daisy_chain);
+AX12A motor18(18, &head_and_arms_daisy_chain);
 
 std::array<Motor*, 18> motors = {
     &motor1,
@@ -126,7 +126,7 @@ std::array<Motor*, 18> motors = {
     &motor18
 };
 
-MPU6050 imuData(&hi2c1);
+MPU6050 imu_data(&hi2c1);
 
 
 
@@ -136,17 +136,17 @@ MPU6050 imuData(&hi2c1);
 void initMotorIOType(IO_Type io_type){
     constexpr TickType_t MOTOR_MAX_BLOCK_TIME = pdMS_TO_TICKS(2);
 
-    upperLeftLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    lowerRightLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    headAndArmsDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    upperRightLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
-    lowerLeftLegDriver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    upper_left_leg_driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    lower_right_leg_driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    head_and_arms_driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    upper_right_leg_driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
+    lower_left_leg_driver.setMaxBlockTime(MOTOR_MAX_BLOCK_TIME);
 
-    upperLeftLegDaisyChain.setIOType(io_type);
-    lowerRightLegDaisyChain.setIOType(io_type);
-    headAndArmsDaisyChain.setIOType(io_type);
-    upperRightLegDaisyChain.setIOType(io_type);
-    lowerLeftLegDaisyChain.setIOType(io_type);
+    upper_left_leg_daisy_chain.setIOType(io_type);
+    lower_right_leg_daisy_chain.setIOType(io_type);
+    head_and_arms_daisy_chain.setIOType(io_type);
+    upper_right_leg_daisy_chain.setIOType(io_type);
+    lower_left_leg_daisy_chain.setIOType(io_type);
 }
 
 } // end namespace periph

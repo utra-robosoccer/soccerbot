@@ -53,29 +53,29 @@ public:
      * @brief Initializes the handle to the low-level hardware routines,
      *        associates a particular UART module on the board with this
      *        driver, and initializes the handle to the OS for system calls
-     * @param os_if Pointer to the object handling the calls to the OS
-     * @param hw_if Pointer to the hardware-facing object handling the
+     * @param m_os_if Pointer to the object handling the calls to the OS
+     * @param m_hw_if Pointer to the hardware-facing object handling the
      *        low-level UART routines
-     * @param uartHandlePtr Pointer to a structure that contains
+     * @param m_uart_handle_ptr Pointer to a structure that contains
      *        the configuration information for the desired UART module
      */
     UartDriver(
-        OsInterface* os_if,
-        UartInterface* hw_if,
-        UART_HandleTypeDef* uartHandlePtr
+        OsInterface* m_os_if,
+        UartInterface* m_hw_if,
+        UART_HandleTypeDef* m_uart_handle_ptr
     );
 #else
     /**
      * @brief Initializes the handle to the low-level hardware routines, and
      *        associates a particular UART module on the board with this driver
-     * @param hw_if Pointer to the hardware-facing object handling the
+     * @param m_hw_if Pointer to the hardware-facing object handling the
      *        low-level UART routines
-     * @param uartHandlePtr Pointer to a structure that contains
+     * @param m_uart_handle_ptr Pointer to a structure that contains
      *        the configuration information for the desired UART module
      */
     UartDriver(
-        UartInterface* hw_if,
-        UART_HandleTypeDef* uartHandlePtr
+        UartInterface* m_hw_if,
+        UART_HandleTypeDef* m_uart_handle_ptr
     );
 #endif
 
@@ -104,59 +104,59 @@ public:
      * @brief  Instruct the driver to transmit data from the UART that was set
      *         by setUartInterface, and using the IO transfer mode set by
      *         setIOType.
-     * @param  arrTransmit The byte array to be sent
-     * @param  numBytes The number of bytes to be sent from the array
+     * @param  arr_transmit The byte array to be sent
+     * @param  num_bytes The number of bytes to be sent from the array
      * @return True if the transfer succeeded, otherwise false
      * @note   Some reasons why false may be returned include:
      *           -# Incomplete initialization of the driver
      *           -# UartInterface returns an error upon requesting a transfer
      *           -# OS block time is exceeded
      */
-    bool transmit(uint8_t* arrTransmit, size_t numBytes) const;
+    bool transmit(uint8_t* arr_transmit, size_t num_bytes) const;
 
     /**
      * @brief  Instruct the driver to receive data from the UART that was set
      *         by setUartInterface, and using the IO transfer mode set by
      *         setIOType.
-     * @param  arrReceive The byte array which the received data is to be
+     * @param  arr_receive The byte array which the received data is to be
      *         written into
-     * @param  numBytes The number of bytes to be received
+     * @param  num_bytes The number of bytes to be received
      * @return True if the transfer succeeded, otherwise false
      * @note   Some reasons why false may be returned include:
      *           -# Incomplete initialization of the driver
      *           -# UartInterface returns an error upon requesting a transfer
      *           -# OS block time is exceeded
      */
-    bool receive(uint8_t* arrReceive, size_t numBytes) const;
+    bool receive(uint8_t* arr_receive, size_t num_bytes) const;
 
 private:
     /**
      * @brief IO Type used by the driver, i.e. whether the driver uses polled,
      *        interrupt-driven, or DMA-driven IO
      */
-    IO_Type io_type = IO_Type::POLL;
+    IO_Type m_io_type = IO_Type::POLL;
 
 #if defined(THREADED)
     /** @brief Pointer to the object handling system calls to the OS */
-    const OsInterface* os_if = nullptr;
+    const OsInterface* m_os_if = nullptr;
 #endif
 
     /**
      * @brief Pointer to the object handling direct calls to the UART hardware
      */
-    const UartInterface* hw_if = nullptr;
+    const UartInterface* m_hw_if = nullptr;
 
     /**
      * @brief Address of the container for the UART module associated with this
      *        object
      */
-    const UART_HandleTypeDef* uartHandlePtr = nullptr;
+    const UART_HandleTypeDef* m_uart_handle_ptr = nullptr;
 
     /**
      * @brief true if the UartInterface has been set and its UART_HandleTypeDef
      *        pointer has been set, otherwise false
      */
-    bool hw_is_initialized = false;
+    bool m_hw_is_initialized = false;
 
     /** @brief Maximum permitted time for blocking on a data transfer */
     TickType_t m_max_block_time;
