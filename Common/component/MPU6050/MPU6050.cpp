@@ -91,17 +91,17 @@ uint8_t wait_for_gpio_state_timeout(
   *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
   *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
   *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
-  * @param   numClocks The number of times to cycle the I2C master clock
-  * @param   sendStopBits 1 if stop bits are to be sent on SDA
+  * @param   num_clocks The number of times to cycle the I2C master clock
+  * @param   send_stop_bits 1 if stop bits are to be sent on SDA
   * @return  None
   */
-void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
+void generateClocks(uint8_t num_clocks, uint8_t send_stop_bits){
     static struct I2C_Module{
         I2C_HandleTypeDef* instance;
-        uint16_t           sdaPin;
-        GPIO_TypeDef*      sdaPort;
-        uint16_t           sclPin;
-        GPIO_TypeDef*      sclPort;
+        uint16_t           sda_pin;
+        GPIO_TypeDef*      sda_port;
+        uint16_t           scl_pin;
+        GPIO_TypeDef*      scl_port;
     }i2cmodule = {&hi2c1, GPIO_PIN_7, GPIOB, GPIO_PIN_6, GPIOB};
     static struct I2C_Module* i2c = &i2cmodule;
     static uint8_t timeout = 1;
@@ -119,42 +119,42 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     gpio_init_struct.Pull = GPIO_NOPULL;
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 
-    gpio_init_struct.Pin = i2c->sclPin;
-    HAL_GPIO_Init(i2c->sclPort, &gpio_init_struct);
+    gpio_init_struct.Pin = i2c->scl_pin;
+    HAL_GPIO_Init(i2c->scl_port, &gpio_init_struct);
 
-    gpio_init_struct.Pin = i2c->sdaPin;
-    HAL_GPIO_Init(i2c->sdaPort, &gpio_init_struct);
+    gpio_init_struct.Pin = i2c->sda_pin;
+    HAL_GPIO_Init(i2c->sda_port, &gpio_init_struct);
 
-    for(uint8_t i = 0; i < numClocks; i++){
+    for(uint8_t i = 0; i < num_clocks; i++){
         // 3. Check SCL and SDA High level in GPIOx_IDR.
-        if(sendStopBits){
-            HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET);
         }
-        HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET);
 
-        wait_for_gpio_state_timeout(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET, timeout);
-        if(sendStopBits){
-            wait_for_gpio_state_timeout(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET, timeout);
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET, timeout);
+        if(send_stop_bits){
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET, timeout);
         }
 
         // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
-        if(sendStopBits){
-            HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_RESET);
-            wait_for_gpio_state_timeout(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_RESET, timeout); // 5. Check SDA Low level in GPIOx_IDR
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_RESET);
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_RESET, timeout); // 5. Check SDA Low level in GPIOx_IDR
         }
 
         // 6. Configure the SCL I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
-        HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_RESET);
-        wait_for_gpio_state_timeout(i2c->sclPort, i2c->sclPin, GPIO_PIN_RESET, timeout); // 7. Check SCL Low level in GPIOx_IDR.
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_RESET);
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_RESET, timeout); // 7. Check SCL Low level in GPIOx_IDR.
 
         // 8. Configure the SCL I/O as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
-        HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET);
-        wait_for_gpio_state_timeout(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET, timeout); // 9. Check SCL High level in GPIOx_IDR.
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET);
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET, timeout); // 9. Check SCL High level in GPIOx_IDR.
 
         // 10. Configure the SDA I/O as General Purpose Output Open-Drain , High level (Write 1 to GPIOx_ODR).
-        if(sendStopBits){
-            HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);
-            wait_for_gpio_state_timeout(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET, timeout); // 11. Check SDA High level in GPIOx_IDR.
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET);
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET, timeout); // 11. Check SDA High level in GPIOx_IDR.
         }
     }
 
@@ -162,11 +162,11 @@ void generateClocks(uint8_t numClocks, uint8_t sendStopBits){
     gpio_init_struct.Mode = GPIO_MODE_AF_OD;
     gpio_init_struct.Alternate = GPIO_AF4_I2C1;
 
-    gpio_init_struct.Pin = i2c->sclPin;
-    HAL_GPIO_Init(i2c->sclPort, &gpio_init_struct);
+    gpio_init_struct.Pin = i2c->scl_pin;
+    HAL_GPIO_Init(i2c->scl_port, &gpio_init_struct);
 
-    gpio_init_struct.Pin = i2c->sdaPin;
-    HAL_GPIO_Init(i2c->sdaPort, &gpio_init_struct);
+    gpio_init_struct.Pin = i2c->sda_pin;
+    HAL_GPIO_Init(i2c->sda_port, &gpio_init_struct);
 
     // 13. Set SWRST bit in I2Cx_CR1 register.
     SET_BIT(handler->Instance->CR1, I2C_CR1_SWRST);

@@ -54,12 +54,12 @@ static uint8_t *robot_goal_data_ptr;
  */
 void initializeVars(void) {
     //sending
-    comm::RobotGoal_t& robot_goal = comm::get_robot_goal();
+    comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
     robot_goal.id = 0;
     robot_goal_data_ptr = robot_goal_data;
 
     //receiving
-    comm::RobotState_t& robot_state = comm::get_robot_state();
+    comm::RobotState_t& robot_state = comm::getRobotState();
     robot_state.id = 0;
     robot_state.start_seq = UINT32_MAX;
     robot_state.end_seq = 0;
@@ -70,14 +70,14 @@ static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
     constexpr size_t SIZE_DATA = sizeof(comm::RobotGoal_t);
     static RxParseState state = RxParseState::CHECKING_HEADER;
-    static size_t state_seq_count = 0;
+    static size_t start_seq_count = 0;
     static size_t data_bytes_read = 0;
     RxParseState prev_state = state;
 
     switch(byte_in) {
     case 0xFF:
         if (state == RxParseState::CHECKING_HEADER) {
-            state_seq_count++;
+            start_seq_count++;
         }
         if (state == RxParseState::READING_DATA) {
             data_bytes_read++;
@@ -90,13 +90,13 @@ static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
         break;
     }
 
-    if (state == RxParseState::CHECKING_HEADER && state_seq_count == SIZE_START_SEQ) {
+    if (state == RxParseState::CHECKING_HEADER && start_seq_count == SIZE_START_SEQ) {
         state = RxParseState::READING_DATA;
     }
     else if (state == RxParseState::READING_DATA && data_bytes_read == SIZE_DATA) {
         complete_out = true;
         state = RxParseState::CHECKING_HEADER;
-        state_seq_count = 0;
+        start_seq_count = 0;
         data_bytes_read = 0;
     }
 
@@ -117,8 +117,8 @@ void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete) {
 }
 
 void copyParsedData(void) {
-    comm::RobotGoal_t& robot_goal = comm::get_robot_goal();
-    comm::RobotState_t& robot_state = comm::get_robot_state();
+    comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
+    comm::RobotState_t& robot_state = comm::getRobotState();
 
     robot_state.id = robot_goal.id;
     memcpy(&robot_goal, robot_goal_data, sizeof(comm::RobotGoal_t));

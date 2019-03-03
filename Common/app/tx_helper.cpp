@@ -50,7 +50,7 @@ static imu::ImuStruct_t read_imu_data;
  */
 void copySensorDataToSend(buffer::BufferMaster* p_buffer_master) {
     read_imu_data = p_buffer_master->imu_buffer.read();
-    comm::RobotState_t& robot_state = comm::get_robot_state();
+    comm::RobotState_t& robot_state = comm::getRobotState();
 
     memcpy(
         &reinterpret_cast<uint8_t*>(

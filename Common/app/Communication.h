@@ -61,8 +61,8 @@ typedef struct {
 
 // Public Function Prototypes
 // ----------------------------------------------------------------------------
-RobotGoal_t& get_robot_goal(void);
-RobotState_t& get_robot_state(void);
+RobotGoal_t& getRobotGoal(void);
+RobotState_t& getRobotState(void);
 
 } // end namespace comm
 } // end namespace soccerbot
