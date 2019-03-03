@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    DaisyChain.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @ingroup DaisyChain
@@ -24,10 +24,10 @@ namespace dynamixel{
 // ----------------------------------------------------------------------------
 DaisyChain::DaisyChain(const DaisyChainParams& params)
     :
-        uartDriver(params.uartDriver),
-        gpioif(params.gpioif),
-        dataDirPort(params.dataDirPort),
-        dataDirPinNum(params.dataDirPinNum)
+        m_uart_driver(params.uartDriver),
+        m_gpio_if(params.gpioif),
+        m_data_dir_port(params.dataDirPort),
+        m_data_dir_pin_num(params.dataDirPinNum)
 {
 
 }
@@ -37,21 +37,21 @@ DaisyChain::~DaisyChain(){
 }
 
 void DaisyChain::setIOType(IO_Type io_type){
-    const_cast<UartDriver*>(uartDriver)->setIOType(io_type);
+    const_cast<UartDriver*>(m_uart_driver)->setIOType(io_type);
 }
 
 IO_Type DaisyChain::getIOType(void) const{
-    return uartDriver->getIOType();
+    return m_uart_driver->getIOType();
 }
 
-bool DaisyChain::requestTransmission(uint8_t* arr, size_t arrSize) const{
+bool DaisyChain::requestTransmission(uint8_t* arr, size_t arr_size) const{
     changeBusDir(Direction::TX);
-    return uartDriver->transmit(arr, arrSize);
+    return m_uart_driver->transmit(arr, arr_size);
 }
 
-bool DaisyChain::requestReception(uint8_t* buf, size_t bufSize) const{
+bool DaisyChain::requestReception(uint8_t* buf, size_t buf_size) const{
     changeBusDir(Direction::RX);
-    return uartDriver->receive(buf, bufSize);
+    return m_uart_driver->receive(buf, buf_size);
 }
 
 
@@ -62,16 +62,16 @@ bool DaisyChain::requestReception(uint8_t* buf, size_t bufSize) const{
 void DaisyChain::changeBusDir(Direction dir) const{
     switch(dir){
         case Direction::RX:
-            gpioif->writePin(
-                const_cast<GPIO_TypeDef*>(dataDirPort),
-                dataDirPinNum,
+            m_gpio_if->writePin(
+                const_cast<GPIO_TypeDef*>(m_data_dir_port),
+                m_data_dir_pin_num,
                 GPIO_PIN_RESET
             );
             break;
         case Direction::TX:
-            gpioif->writePin(
-                const_cast<GPIO_TypeDef*>(dataDirPort),
-                dataDirPinNum,
+            m_gpio_if->writePin(
+                const_cast<GPIO_TypeDef*>(m_data_dir_port),
+                m_data_dir_pin_num,
                 GPIO_PIN_SET
             );
             break;

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    uart_handler.c
+  * @file
   * @author  Tyler
   * @brief   This file implements a generic event processor for UART events,
   *          which occur when commands for the motors need to be distributed
@@ -35,36 +35,34 @@ extern osMessageQId BufferWriteQueueHandle;
 /**
  * @brief  The UART event processor calls the low-level libraries to execute
  *         reads and writes for motors
- * @param  cmdPtr the handle for the command structure containing all relevant
+ * @param  p_cmd the handle for the command structure containing all relevant
  *         data fields
- * @param  DataToSend the handle for the data structure to copy into the sensor
- *         queue if a read is executed
  * @return None
  */
-void UART_ProcessEvent(UARTcmd_t* cmdPtr){
+void UART_ProcessEvent(UartCmd_t* p_cmd){
     float pos;
     bool success;
     MotorData_t data;
-    TXData_t dataToSend;
-    dataToSend.eDataType = eMotorData;
-    dataToSend.pData = &data;
+    TxData_t data_to_send;
+    data_to_send.eDataType = eMotorData;
+    data_to_send.pData = &data;
 
-    switch(cmdPtr->type){
+    switch(p_cmd->type){
         case cmdReadPosition:
-            success = cmdPtr->motorHandle->getPosition(pos);
+            success = p_cmd->motorHandle->getPosition(pos);
 
             // issue #130: send NAN upon read failure
             data.payload = success ? pos : NAN;
-            data.id = cmdPtr->motorHandle->id();
+            data.id = p_cmd->motorHandle->id();
             data.type = MotorData_t::T_FLOAT;
 
-            xQueueSend(BufferWriteQueueHandle, &dataToSend, 0);
+            xQueueSend(BufferWriteQueueHandle, &data_to_send, 0);
             break;
         case cmdWritePosition:
-            cmdPtr->motorHandle->setGoalPosition(cmdPtr->value);
+            p_cmd->motorHandle->setGoalPosition(p_cmd->value);
             break;
         case cmdWriteTorque:
-            cmdPtr->motorHandle->enableTorque(cmdPtr->value);
+            p_cmd->motorHandle->enableTorque(p_cmd->value);
             break;
         default:
             break;

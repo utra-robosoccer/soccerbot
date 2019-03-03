@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    dsp.h
+  * @file
   * @author  Tyler
   *
   * @defgroup Header
@@ -40,34 +40,33 @@ public:
 
     /**
      * @brief Initialize the filter
-     * @param startVal The starting value
+     * @param start_value The starting value
      */
     virtual void init(
-        float startVal = 0
+        float start_value = 0
     ) = 0;
 
     /**
      * @brief  Write an input (or block of inputs) into the filter
-     * @param  dataSrc Array of new data to be written into the filter
-     * @param  dataDest Array of output data, where the i-th element is the
-     *         filter output after writing the i-th input from dataSrc
-     * @param  blockSize Number of samples to be processed in this batch
-     * @note   (count(dataSrc) == count(dataDest) == blockSize) must be true
+     * @param  data_src Array of new data to be written into the filter
+     * @param  data_dest Array of output data, where the i-th element is the
+     *         filter output after writing the i-th input from data_src
+     * @param  block_size Number of samples to be processed in this batch
      */
-    void update(float* dataSrc, float* dataDest, uint32_t blockSize);
+    void update(float* data_src, float* data_dest, uint32_t block_size);
 
 protected:
-    arm_fir_instance_f32 instance; /**< Filter instance */
+    arm_fir_instance_f32 m_inst; /**< Filter instance */
 };
 
 
 /**
  * @class imuVelocityFilter FIR filter for angular velocity data from the IMU
  */
-class imuVelocityFilter : public fir_f32{
+class ImuVelocityFilter : public fir_f32{
 public:
-    imuVelocityFilter();
-    ~imuVelocityFilter();
+    ImuVelocityFilter();
+    ~ImuVelocityFilter();
 
     /**
      * @brief Initialize the filter by configuring its coefficients, state
@@ -83,9 +82,9 @@ private:
      * @brief Filter coefficients for angular velocity filter. Coefficients
      *        generated using MicroModeler DSP, a free online tool
      */
-    static const float32_t velCoeff[11];
+    static const float32_t m_velocity_coeff[11];
 
-    float32_t state[12]; /**< Filter state */
+    float32_t m_state[12]; /**< Filter state */
 };
 
 } // end namespace dsp

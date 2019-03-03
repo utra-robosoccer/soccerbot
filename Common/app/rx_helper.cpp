@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @file    rx_helper.c
+ * @file
  * @author  Hannah
  * @brief   Helper file for the function StartRXTask in freertos.cpp
  *
@@ -15,14 +15,14 @@
 #include "rx_helper.h"
 #include "Notification.h"
 #include "cmsis_os.h"
-#include "robotGoal.h"
-#include "robotState.h"
 #include "Communication.h"
 #include "usart.h"
 
+using namespace soccerbot; // TODO(tgamvrel) using namespace
+
 /***************************** Private Variables *****************************/
-static uint8_t robotGoalData[sizeof(RobotGoal)];
-static uint8_t *robotGoalDataPtr;
+static uint8_t robot_goal_data[sizeof(comm::RobotGoal_t)];
+static uint8_t *robot_goal_data_ptr;
 
 /********************************  Functions  ********************************/
 /*****************************************************************************/
@@ -54,68 +54,74 @@ static uint8_t *robotGoalDataPtr;
  */
 void initializeVars(void) {
     //sending
-    robotGoal.id = 0;
-    robotGoalDataPtr = robotGoalData;
+    comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
+    robot_goal.id = 0;
+    robot_goal_data_ptr = robot_goal_data;
+
     //receiving
-    robotState.id = 0;
-    robotState.start_seq = UINT32_MAX;
-    robotState.end_seq = 0;
+    comm::RobotState_t& robot_state = comm::getRobotState();
+    robot_state.id = 0;
+    robot_state.start_seq = UINT32_MAX;
+    robot_state.end_seq = 0;
 }
 
 // TODO: refactor this after researching more standard parsing techniques.
 static RxParseState readByte(const uint8_t byte_in, bool& complete_out) {
     constexpr size_t SIZE_START_SEQ = 4;
-    constexpr size_t SIZE_DATA = sizeof(RobotGoal);
+    constexpr size_t SIZE_DATA = sizeof(comm::RobotGoal_t);
     static RxParseState state = RxParseState::CHECKING_HEADER;
-    static size_t startSeqCount = 0;
-    static size_t dataBytesRead = 0;
-    RxParseState prevState = state;
+    static size_t start_seq_count = 0;
+    static size_t data_bytes_read = 0;
+    RxParseState prev_state = state;
 
     switch(byte_in) {
     case 0xFF:
         if (state == RxParseState::CHECKING_HEADER) {
-            startSeqCount++;
+            start_seq_count++;
         }
         if (state == RxParseState::READING_DATA) {
-            dataBytesRead++;
+            data_bytes_read++;
         }
         break;
     default:
         if (state == RxParseState::READING_DATA) {
-            dataBytesRead++;
+            data_bytes_read++;
         }
         break;
     }
 
-    if (state == RxParseState::CHECKING_HEADER && startSeqCount == SIZE_START_SEQ) {
+    if (state == RxParseState::CHECKING_HEADER && start_seq_count == SIZE_START_SEQ) {
         state = RxParseState::READING_DATA;
     }
-    else if (state == RxParseState::READING_DATA && dataBytesRead == SIZE_DATA) {
+    else if (state == RxParseState::READING_DATA && data_bytes_read == SIZE_DATA) {
         complete_out = true;
         state = RxParseState::CHECKING_HEADER;
-        startSeqCount = 0;
-        dataBytesRead = 0;
+        start_seq_count = 0;
+        data_bytes_read = 0;
     }
 
-    return prevState;
+    return prev_state;
 }
 
 void parseByteSequence(uint8_t *in_buff, size_t in_buff_size, bool& complete) {
     for (size_t i = 0; i < in_buff_size; i++) {
         if (readByte(in_buff[i], complete) == RxParseState::READING_DATA) {
-            *(robotGoalDataPtr++) = in_buff[i];
+            *(robot_goal_data_ptr++) = in_buff[i];
         }
         if (complete) {
             // Reset the variables to help with reception of a RobotGoal
-            robotGoalDataPtr = robotGoalData;
+            robot_goal_data_ptr = robot_goal_data;
             break;
         }
     }
 }
 
 void copyParsedData(void) {
-    robotState.id = robotGoal.id;
-    memcpy(&robotGoal, robotGoalData, sizeof(RobotGoal));
+    comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
+    comm::RobotState_t& robot_state = comm::getRobotState();
+
+    robot_state.id = robot_goal.id;
+    memcpy(&robot_goal, robot_goal_data, sizeof(comm::RobotGoal_t));
 }
 
 /**

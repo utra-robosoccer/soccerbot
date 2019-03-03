@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file   AX12A.cpp
+  * @file
   * @author Tyler Gamvrelis
   *
   * @ingroup AX12A
@@ -47,9 +47,9 @@ namespace dynamixel{
 // ----------------------------------------------------------------------------
 AX12A::AX12A(
     uint8_t id,
-    DaisyChain* daisyChain
+    DaisyChain* daisy_chain
 )
-    :   Motor(id, daisyChain, ResolutionDivider::AX12A)
+    :   Motor(id, daisy_chain, ResolutionDivider::AX12A)
 {
 
 }
@@ -69,99 +69,99 @@ bool AX12A::setBaudRate(uint32_t baud) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool AX12A::setGoalVelocity(float goalVelocity) const{
-    if(m_isJointMode){
-        if((goalVelocity < MIN_VELOCITY) || (goalVelocity > AX12A_MAX_VELOCITY)){
+bool AX12A::setGoalVelocity(float goal_velocity) const{
+    if(m_is_joint_mode){
+        if((goal_velocity < MIN_VELOCITY) || (goal_velocity > AX12A_MAX_VELOCITY)){
             return false;
         }
     }
 
     uint16_t normalized_value;
-    if(goalVelocity > 0){
+    if(goal_velocity > 0){
         normalized_value = static_cast<uint8_t>(
-            goalVelocity / AX12A_MAX_VELOCITY * 1023
+            goal_velocity / AX12A_MAX_VELOCITY * 1023
         );
     }
     else{
         normalized_value = static_cast<uint16_t>(
-            (goalVelocity * -1) / AX12A_MAX_VELOCITY * 1023
+            (goal_velocity * -1) / AX12A_MAX_VELOCITY * 1023
         );
 
         normalized_value |= 0b000010000000000;
     }
 
-    uint8_t lowByte = static_cast<uint8_t>(normalized_value & 0xFF);
-    uint8_t highByte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
+    uint8_t low_byte = static_cast<uint8_t>(normalized_value & 0xFF);
+    uint8_t high_byte = static_cast<uint8_t>((normalized_value >> 8) & 0xFF);
 
     // Write data to motor
-    uint8_t args[3] = {REG_GOAL_VELOCITY, lowByte, highByte};
+    uint8_t args[3] = {REG_GOAL_VELOCITY, low_byte, high_byte};
     return dataWriter(args, sizeof(args));
 }
 
-bool AX12A::getVelocity(float& retVal) const{
-    uint16_t raw = 0;
-    bool success = dataReader(REG_CURRENT_VELOCITY, 2, raw);
-
-    if(!success){
-        return false;
-    }
-
-    uint16_t modifier = m_isJointMode ? 1023 : 2047;
-    retVal = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
-
-    return success;
-}
-
-bool AX12A::setCwComplianceMargin(uint8_t cwComplianceMargin) const{
-    uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, cwComplianceMargin};
+bool AX12A::setCwComplianceMargin(uint8_t margin) const{
+    uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_MARGIN, margin};
     return dataWriter(arr, sizeof(arr));
 }
 
-bool AX12A::setCcwComplianceMargin(uint8_t ccwComplianceMargin) const{
-    uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, ccwComplianceMargin};
+bool AX12A::setCcwComplianceMargin(uint8_t margin) const{
+    uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_MARGIN, margin};
     return dataWriter(arr, sizeof(arr));
 }
 
-bool AX12A::setCwComplianceSlope(uint8_t cwComplianceSlope) const{
-    if(cwComplianceSlope > 7){
+bool AX12A::setCwComplianceSlope(uint8_t slope) const{
+    if(slope > 7){
         return false;
     }
 
-    uint8_t step = 1 << cwComplianceSlope;
+    uint8_t step = 1 << slope;
 
     uint8_t arr[2] = {AX12A_REG_CW_COMPLIANCE_SLOPE, step};
     return dataWriter(arr, sizeof(arr));
 }
 
-bool AX12A::setCcwComplianceSlope(uint8_t ccwComplianceSlope) const{
-    if(ccwComplianceSlope > 7){
+bool AX12A::setCcwComplianceSlope(uint8_t slope) const{
+    if(slope > 7){
         return false;
     }
 
-    uint8_t step = 1 << ccwComplianceSlope;
+    uint8_t step = 1 << slope;
 
     uint8_t arr[2] = {AX12A_REG_CCW_COMPLIANCE_SLOPE, step};
     return dataWriter(arr, sizeof(arr));
 }
 
-bool AX12A::setComplianceSlope(uint8_t complianceSlope) const{
-    bool success = setCcwComplianceSlope(complianceSlope);
+bool AX12A::setComplianceSlope(uint8_t slope) const{
+    bool success = setCcwComplianceSlope(slope);
 
     if(success){
-        success = setCwComplianceSlope(complianceSlope);
+        success = setCwComplianceSlope(slope);
     }
 
     return success;
 }
 
-bool AX12A::setComplianceMargin(uint8_t complianceMargin) const{
-    bool success = setCcwComplianceMargin(complianceMargin);
+bool AX12A::setComplianceMargin(uint8_t margin) const{
+    bool success = setCcwComplianceMargin(margin);
 
     if(success){
-        success = setCwComplianceMargin(complianceMargin);
+        success = setCwComplianceMargin(margin);
     }
 
     return success;
+}
+
+bool AX12A::getVelocity(float& velocity_out) const{
+    uint16_t raw = 0;
+    bool ok = dataReader(REG_CURRENT_VELOCITY, 2, raw);
+
+    if(!ok){
+        return false;
+    }
+
+    uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
+    velocity_out = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
+
+    return ok;
 }
 
 }

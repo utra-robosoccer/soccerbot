@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    DaisyChain.h
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup DaisyChain
@@ -30,7 +30,6 @@ using hal::GpioInterface;
 
 
 /********************************* DaisyChain ********************************/
-// TODO: pick better namespace for this component (then update module name)
 namespace dynamixel{
 // Classes and structs
 // ----------------------------------------------------------------------------
@@ -57,20 +56,20 @@ public:
      *        the exact implementation details may vary (processors classes may
      *        be used to pack the data from several requests into 1 packet)
      * @param arr The array of bytes to be transmitted
-     * @param arrSize The number of bytes to be transmitted
+     * @param arr_size The number of bytes to be transmitted
      * @return true if successful, otherwise false
      */
-    bool requestTransmission(uint8_t* arr, size_t arrSize) const;
+    bool requestTransmission(uint8_t* arr, size_t arr_size) const;
 
     /**
      * @brief Request a reception on the daisy chain. This is guaranteed to
      *        start the reception within a timely manner. However,
      *        the exact implementation details may vary
-     * @param arr The array of bytes to buffer the received data
-     * @param arrSize The number of bytes to be received
+     * @param buf The array of bytes to buffer the received data
+     * @param buf_size The number of bytes to be received
      * @return true if successful, otherwise false
      */
-    bool requestReception(uint8_t* buf, size_t bufSize) const;
+    bool requestReception(uint8_t* buf, size_t buf_size) const;
 
 
     // TODO(tyler): add method for "receive until condition...", where the
@@ -84,10 +83,10 @@ private:
 
     void changeBusDir(Direction dir) const;
 
-    const UartDriver* uartDriver;    /**< @see UartDriver               */
-    const GpioInterface* gpioif;     /**< @see GpioInterface            */
-    const GPIO_TypeDef* dataDirPort; /**< Port data direction pin is on */
-    const uint16_t dataDirPinNum;    /**< Data direction pin number     */
+    const UartDriver* m_uart_driver;     /**< @see UartDriver               */
+    const GpioInterface* m_gpio_if;      /**< @see GpioInterface            */
+    const GPIO_TypeDef* m_data_dir_port; /**< Port data direction pin is on */
+    const uint16_t m_data_dir_pin_num;   /**< Data direction pin number     */
 };
 
 } // end namespace dynamixel
