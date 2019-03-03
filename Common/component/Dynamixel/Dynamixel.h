@@ -360,34 +360,34 @@ public:
     // ------------------------------------------------------------------------
     /**
      * @brief Reads the angular position of the motor in degrees
-     * @param[out] position R-val return type (not modified upon failure)
+     * @param[out] position_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getPosition(float& position) const;
+    bool getPosition(float& position_out) const;
 
     /**
      * @brief Reads the "load", the percentage of the maximum torque the motor
      *        is exerting. Counterclockwise loads are positive and clockwise
      *        are negative
-     * @param[out] load R-val return type (not modified upon failure)
+     * @param[out] load_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getLoad(float& load) const;
+    bool getLoad(float& load_out) const;
 
     /**
      * @brief   Reads the motor supply voltage
-     * @param[out] voltage R-val return type
+     * @param[out] voltage_out R-val return type
      * @return true if successful, otherwise false
      */
-    bool getVoltage(float& voltage) const;
+    bool getVoltage(float& voltage_out) const;
 
     /**
      * @brief Reads the internal motor temperature. Results are in degrees
      *        Celsius
-     * @param[out] temperature R-val return type (not modified upon failure)
+     * @param[out] temp_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getTemperature(uint8_t& temperature) const;
+    bool getTemperature(uint8_t& temp_out) const;
 
     /**
      * @brief   Indicates whether the motor is operating in joint mode or wheel
@@ -395,10 +395,11 @@ public:
      * @details Reads the CW (addr: 0x06) and CCW (addr: 0x08) angle limits. If
      *          both are 0, motor is in wheel mode and can spin indefinitely.
      *          Otherwise, motor is in joint mode and has angle limits set
-     * @param[out] is_joint_mode true if in joint mode, false if in wheel mode
+     * @param[out] is_joint_mode_out true if in joint mode, false if in wheel
+     *             mode
      * @return true if successful, otherwise false
      */
-    bool isJointMode(bool& is_joint_mode);
+    bool isJointMode(bool& is_joint_mode_out);
 
     // Other motor instruction functions
     /**
@@ -406,18 +407,18 @@ public:
      * @details Used only for returning a status packet or checking the
      *          existence of a motor with a specified ID. Does not command any
      *          operations
-     * @param[out] id The motor ID seen in status packet if received a valid
+     * @param[out] id_out The motor ID seen in status packet if received a valid
      *          status packet, otherwise the max uint8_t value
      * @return true if successful, otherwise false
      */
-    bool ping(uint8_t& id) const;
+    bool ping(uint8_t& id_out) const;
 
     /**
      * @brief Indicates whether the motor is in motion
-     * @param is_moving true if motor is moving, otherwise false
+     * @param is_moving_out true if motor is moving, otherwise false
      * @return true if successful, otherwise false
      */
-    bool isMoving(bool& is_moving) const;
+    bool isMoving(bool& is_moving_out) const;
 
     /**
      * @brief Sets the control registers such that the rotational angle of the
@@ -440,7 +441,7 @@ public:
     /** @brief See child implementation for details */
     virtual bool setBaudRate(uint32_t baud) const = 0;
     virtual bool setGoalVelocity(float goal_velocity) const = 0;
-    virtual bool getVelocity(float& velocity) const = 0;
+    virtual bool getVelocity(float& velocity_out) const = 0;
 
 protected:
     /**
@@ -468,13 +469,13 @@ protected:
      * @param read_addr The address inside the motor memory table where reading
      *        is to begin
      * @param read_length The number of bytes to be read. Must be either 1 or 2
-     * @param[out] ret_val R-value return type
+     * @param[out] ret_val_out R-value return type
      * @return true if successful and checksums match, otherwise false
      */
     bool dataReader(
         uint8_t read_addr,
         uint8_t read_length,
-        uint16_t& ret_val
+        uint16_t& ret_val_out
     ) const;
 
     /** @brief true if motor is in joint mode, false if in wheel mode */

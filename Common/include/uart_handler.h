@@ -71,7 +71,7 @@ typedef struct {
  */
 typedef enum{
     eMotorData, /**< Indicates that the pointer is a Motor   */
-    eIMUData    /**< Indicates that the pointer is a MPU6050 */
+    eImuData    /**< Indicates that the pointer is a MPU6050 */
 }TxData_e;
 
 /** @brief Motor data sent from the UART threads to the TX thread */

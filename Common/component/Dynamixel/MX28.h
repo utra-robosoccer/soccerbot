@@ -152,10 +152,10 @@ public:
     // ------------------------------------------------------------------------
     /**
      * @brief Reads the angular velocity of the motor, in RPM
-     * @param[out] velocity R-val return type (not modified upon failure)
+     * @param[out] velocity_out R-val return type (not modified upon failure)
      * @return true if successful, otherwise false
      */
-    bool getVelocity(float& velocity) const override;
+    bool getVelocity(float& velocity_out) const override;
 };
 
 } // end namespace dynamixel

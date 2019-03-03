@@ -150,7 +150,7 @@ bool AX12A::setComplianceMargin(uint8_t margin) const{
     return success;
 }
 
-bool AX12A::getVelocity(float& success) const{
+bool AX12A::getVelocity(float& velocity_out) const{
     uint16_t raw = 0;
     bool ok = dataReader(REG_CURRENT_VELOCITY, 2, raw);
 
@@ -159,7 +159,7 @@ bool AX12A::getVelocity(float& success) const{
     }
 
     uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
-    success = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
+    velocity_out = static_cast<float>(raw / modifier * AX12A_MAX_VELOCITY);
 
     return ok;
 }

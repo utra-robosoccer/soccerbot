@@ -408,20 +408,20 @@ bool Motor::setPunch(float punch) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool Motor::getPosition(float& position) const{
+bool Motor::getPosition(float& position_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_POSITION, 2, raw);
 
     // Parse data and write it into R-val
     if(success){
-        position = static_cast<float>(raw * MAX_ANGLE / m_res_divider);
+        position_out = static_cast<float>(raw * MAX_ANGLE / m_res_divider);
     }
 
     return success;
 }
 
-bool Motor::getLoad(float& load) const{
+bool Motor::getLoad(float& load_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_LOAD, 2, raw);
@@ -442,31 +442,31 @@ bool Motor::getLoad(float& load) const{
     return success;
 }
 
-bool Motor::getVoltage(float& voltage) const{
+bool Motor::getVoltage(float& voltage_out) const{
     // Read data from motor
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_VOLTAGE, 1, raw);
 
     // Parse data and write it into R-val
     if(success){
-        voltage = static_cast<float>(raw / 10.0);
+        voltage_out = static_cast<float>(raw / 10.0);
     }
 
     return success;
 }
 
-bool Motor::getTemperature(uint8_t& temperature) const{
+bool Motor::getTemperature(uint8_t& temp_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_TEMPERATURE, 1, raw);
 
     if(success){
-        temperature = static_cast<uint8_t>(raw);
+        temp_out = static_cast<uint8_t>(raw);
     }
 
     return success;
 }
 
-bool Motor::isJointMode(bool& is_joint_mode){
+bool Motor::isJointMode(bool& is_joint_mode_out){
     // Read data from motor
     uint16_t ret_val_cw;
     bool success = dataReader(REG_CW_ANGLE_LIMIT, 2, ret_val_cw);
@@ -482,13 +482,13 @@ bool Motor::isJointMode(bool& is_joint_mode){
         return false;
     }
 
-    is_joint_mode = (ret_val_cw == retValCCW);
-    m_is_joint_mode = is_joint_mode;
+    is_joint_mode_out = (ret_val_cw == retValCCW);
+    m_is_joint_mode = is_joint_mode_out;
 
     return success;
 }
 
-bool Motor::ping(uint8_t& id) const{
+bool Motor::ping(uint8_t& id_out) const{
     uint8_t arr_transmit[6];
 
     arr_transmit[0] = 0xff;
@@ -515,18 +515,18 @@ bool Motor::ping(uint8_t& id) const{
     );
 
     if(success){
-        id = arr_transmit[2];
+        id_out = arr_transmit[2];
     }
 
     return success;
 }
 
-bool Motor::isMoving(bool& is_moving) const{
+bool Motor::isMoving(bool& is_moving_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_MOVING, 1, raw);
 
     if(success){
-        is_moving = static_cast<bool>(raw & 1);
+        is_moving_out = static_cast<bool>(raw & 1);
     }
 
     return success;
@@ -608,7 +608,7 @@ bool Motor::dataWriter(
 bool Motor::dataReader(
     uint8_t read_addr,
     uint8_t read_length,
-    uint16_t& ret_val
+    uint16_t& ret_val_out
 ) const
 {
     // Check validity so that we don't accidentally make a read request that is
@@ -648,9 +648,9 @@ bool Motor::dataReader(
     bool success = (computed_checksum == recv_checksum);
 
     if(success){
-        ret_val = static_cast<uint16_t>(arr[5]);
+        ret_val_out = static_cast<uint16_t>(arr[5]);
         if(read_length == 2){
-            ret_val |= (arr[6] << 8);
+            ret_val_out |= (arr[6] << 8);
         }
     }
 

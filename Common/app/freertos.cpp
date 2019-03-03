@@ -440,7 +440,7 @@ void StartCommandTask(void const * argument)
 
         // Convert raw bytes from robotGoal received from PC into floats
         uint8_t* ptr = nullptr;
-        comm::RobotGoal_t& robot_goal = comm::get_robot_goal();
+        comm::RobotGoal_t& robot_goal = comm::getRobotGoal();
         for(uint8_t i = 0; i < 18; i++){
             ptr = (uint8_t*)&positions[i];
             for(uint8_t j = 0; j < 4; j++){
@@ -637,7 +637,7 @@ void StartIMUTask(void const * argument)
     constexpr TickType_t IMU_CYCLE_TIME_MS = 2;
 
     imu::ImuStruct_t imu_data;
-    TxData_t data_to_send = {eIMUData, &imu_data};
+    TxData_t data_to_send = {eImuData, &imu_data};
     TickType_t last_wake_time = xTaskGetTickCount();
     uint8_t num_samples = 0;
     bool need_to_process = false;
@@ -740,7 +740,7 @@ void StartTxTask(void const * argument) {
 
         // TODO: should have a way to back out of a failed transmit and reinitiate
         // (e.g. timeout), number of attempts, ..., rather than infinitely loop.
-        comm::RobotState_t& robot_state = comm::get_robot_state();
+        comm::RobotState_t& robot_state = comm::getRobotState();
         while(!pc_uart_driver.transmit(
                 reinterpret_cast<uint8_t*>(&robot_state),
                 sizeof(comm::RobotState_t)
@@ -789,7 +789,7 @@ void StartBuffWriterTask(void const * argument)
                     buffer_master.motor_buffer_array[motor_data_ptr->id - 1].write(*motor_data_ptr);
                 }
                 break;
-            case eIMUData:
+            case eImuData:
                 imu_data_ptr = (imu::ImuStruct_t*)data_to_write.pData;
 
                 if(imu_data_ptr == nullptr){

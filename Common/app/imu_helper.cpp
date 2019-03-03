@@ -37,7 +37,7 @@ enum class VFilter : uint8_t{
 // Variables
 // ----------------------------------------------------------------------------
 /** @brief Angular velocity filters along x-, y-, and z-axes */
-static dsp::imuVelocityFilter velocityFilters[
+static dsp::ImuVelocityFilter velocityFilters[
     static_cast<int>(VFilter::NUM_VFILTERS)
 ];
 

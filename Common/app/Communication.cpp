@@ -42,11 +42,11 @@ namespace soccerbot{
 namespace comm{
 // Public Functions
 // ----------------------------------------------------------------------------
-RobotGoal_t& get_robot_goal(void){
+RobotGoal_t& getRobotGoal(void){
     return robot_goal;
 }
 
-RobotState_t& get_robot_state(void){
+RobotState_t& getRobotState(void){
     return robot_state;
 }
 

@@ -145,7 +145,7 @@ bool MX28::setPGain(uint8_t p_gain) const{
     return dataWriter(args, sizeof(args));
 }
 
-bool MX28::getVelocity(float& velocity) const{
+bool MX28::getVelocity(float& velocity_out) const{
     uint16_t raw = 0;
     bool success = dataReader(REG_CURRENT_VELOCITY, 2, raw);
 
@@ -154,7 +154,7 @@ bool MX28::getVelocity(float& velocity) const{
     }
 
     uint16_t modifier = m_is_joint_mode ? 1023 : 2047;
-    velocity = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
+    velocity_out = static_cast<float>(raw / modifier * MX28_MAX_VELOCITY);
 
     return success;
 }

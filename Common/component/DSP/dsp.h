@@ -50,9 +50,8 @@ public:
      * @brief  Write an input (or block of inputs) into the filter
      * @param  data_src Array of new data to be written into the filter
      * @param  data_dest Array of output data, where the i-th element is the
-     *         filter output after writing the i-th input from dataSrc
+     *         filter output after writing the i-th input from data_src
      * @param  block_size Number of samples to be processed in this batch
-     * @note   `count(data_src) == count(data_dest) == block_size` must be true
      */
     void update(float* data_src, float* data_dest, uint32_t block_size);
 
@@ -64,10 +63,10 @@ protected:
 /**
  * @class imuVelocityFilter FIR filter for angular velocity data from the IMU
  */
-class imuVelocityFilter : public fir_f32{
+class ImuVelocityFilter : public fir_f32{
 public:
-    imuVelocityFilter();
-    ~imuVelocityFilter();
+    ImuVelocityFilter();
+    ~ImuVelocityFilter();
 
     /**
      * @brief Initialize the filter by configuring its coefficients, state
