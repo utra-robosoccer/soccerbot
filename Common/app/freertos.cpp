@@ -786,7 +786,7 @@ void StartBuffWriterTask(void const * argument)
                 // only improve efficiency if there are multiple writer/reader threads
                 // and BufferWrite queues.
                 if (motor_data_ptr->id <= periph::NUM_MOTORS) {
-                    buffer_master.m_motor_buffer_array[motor_data_ptr->id - 1].write(*motor_data_ptr);
+                    buffer_master.motor_buffer_array[motor_data_ptr->id - 1].write(*motor_data_ptr);
                 }
                 break;
             case eIMUData:
@@ -797,7 +797,7 @@ void StartBuffWriterTask(void const * argument)
                 }
 
                 // Copy sensor data into the IMU Buffer (thread-safe)
-                buffer_master.m_imu_buffer.write(*imu_data_ptr);
+                buffer_master.imu_buffer.write(*imu_data_ptr);
                 break;
             default:
                 break;

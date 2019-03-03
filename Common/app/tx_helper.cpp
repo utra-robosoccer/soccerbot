@@ -49,7 +49,7 @@ static imu::ImuStruct_t read_imu_data;
  * @param 	p_buffer_master Pointer to the sensor data buffer
  */
 void copySensorDataToSend(buffer::BufferMaster* p_buffer_master) {
-    read_imu_data = p_buffer_master->m_imu_buffer.read();
+    read_imu_data = p_buffer_master->imu_buffer.read();
     comm::RobotState_t& robot_state = comm::get_robot_state();
 
     memcpy(
@@ -62,7 +62,7 @@ void copySensorDataToSend(buffer::BufferMaster* p_buffer_master) {
 
     for(int i = 0; i <= periph::MOTOR12; ++i)
     {
-        read_motor_data = p_buffer_master->m_motor_buffer_array[i].read();
+        read_motor_data = p_buffer_master->motor_buffer_array[i].read();
         memcpy(
             &robot_state.msg[4 * (read_motor_data.id - 1)],
             &read_motor_data.payload,
