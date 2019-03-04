@@ -12,12 +12,13 @@
 
 
 /********************************* Includes **********************************/
-#include <UartInterfaceImpl.h>
+
 #include "PeripheralInstances.h"
 
 #include "GpioInterfaceImpl.h"
 #include "OsInterfaceImpl.h"
 #include "SystemConf.h"
+#include "UartInterfaceImpl.h"
 
 #include "usart.h"
 #include "gpio.h"

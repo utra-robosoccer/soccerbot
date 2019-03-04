@@ -65,7 +65,6 @@
  */
 
 #include <math.h>
-#include <UartInterfaceImpl.h>
 
 #include "uart_handler.h"
 #include "Notification.h"
@@ -79,6 +78,7 @@
 #include "UartDriver/UartDriver.h"
 #include "OsInterfaceImpl.h"
 #include "CircularDmaBuffer/CircularDmaBuffer.h"
+#include "UartInterfaceImpl.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/

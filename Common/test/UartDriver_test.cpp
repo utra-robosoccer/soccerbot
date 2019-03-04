@@ -20,8 +20,9 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <OsInterfaceMock.h>
-#include <UartInterfaceMock.h>
+
+#include "OsInterfaceMock.h"
+#include "UartInterfaceMock.h"
 
 
 using ::testing::DoAll;
