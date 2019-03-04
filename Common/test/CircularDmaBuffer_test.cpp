@@ -15,7 +15,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <UartInterfaceMock.h>
+#include "UartInterfaceMock.h"
 
 using uart::CircularDmaBuffer;
 using hal::gmock::UartInterfaceMock;

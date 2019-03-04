@@ -16,10 +16,11 @@
 /********************************* Includes **********************************/
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <GpioInterfaceMock.h>
-#include <MotorMock.h>
-#include <OsInterfaceMock.h>
-#include <UartInterfaceMock.h>
+
+#include "GpioInterfaceMock.h"
+#include "MotorMock.h"
+#include "OsInterfaceMock.h"
+#include "UartInterfaceMock.h"
 
 using ::testing::_;
 using ::testing::Args;

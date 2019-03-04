@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <OsInterfaceMock.h>
+#include "OsInterfaceMock.h"
 
 
 using ::testing::DoAll;

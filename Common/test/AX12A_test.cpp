@@ -16,13 +16,13 @@
 /********************************* Includes **********************************/
 #include "Dynamixel/AX12A.h"
 
-#include "UartDriver/UartDriver.h"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <GpioInterfaceMock.h>
-#include <OsInterfaceMock.h>
-#include <UartInterfaceMock.h>
+
+#include "GpioInterfaceMock.h"
+#include "OsInterfaceMock.h"
+#include "UartDriver/UartDriver.h"
+#include "UartInterfaceMock.h"
 
 using ::testing::_;
 
