@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    OsInterfaceImpl.h
+  * @file
   * @author  Izaak Niksan
   * @brief   An interface to various production FreeRTOS functions, which serves
   *          as a wrapper to the true functionality of the OS.
@@ -76,7 +76,7 @@ public:
     osMutexId OS_osMutexCreate (
         const osMutexDef_t *mutex_def
     ) const override final;
-    
+
     osSemaphoreId OS_osSemaphoreCreate (
         const osSemaphoreDef_t *semaphore_def,
         int32_t count

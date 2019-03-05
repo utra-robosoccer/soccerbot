@@ -75,9 +75,10 @@ Including the files in this order helps avoid dependencies being brought in indi
 
 An example:
 
+shapes/circle.cpp
 ```C++
 /**
- * @file shapes/circle.cpp
+ * @file
  */
 
 // The corresponding header file that this source file implements

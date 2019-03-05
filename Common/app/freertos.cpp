@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN Includes */
 /**
- * @file    freertos.c
+ * @file
  * @brief   Code for freertos application
  * @author  Gokul
  * @author  Tyler
@@ -76,9 +76,9 @@
 #include "rx_helper.h"
 #include "tx_helper.h"
 #include "UartDriver/UartDriver.h"
-#include "HalUartInterface.h"
 #include "OsInterfaceImpl.h"
 #include "CircularDmaBuffer/CircularDmaBuffer.h"
+#include "UartInterfaceImpl.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -151,7 +151,7 @@ namespace{
 
 buffer::BufferMaster buffer_master;
 cmsis::OsInterfaceImpl os_if_impl;
-hal::HalUartInterface uart_if;
+hal::UartInterfaceImpl uart_if;
 uart::UartDriver pc_uart_driver(&os_if_impl, &uart_if, UART_HANDLE_PC);
 
 bool setup_is_done = false;
@@ -406,7 +406,7 @@ void StartCommandTask(void const * argument)
             pMotor->setComplianceMargin(1);
         }
     }
- 
+
     // The only other communication with the motors will occur in the UART
     // threads, so we can use DMA now.
     periph::initMotorIOType(IO_Type::DMA);

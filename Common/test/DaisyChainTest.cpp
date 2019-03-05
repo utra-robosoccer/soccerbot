@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    DaisyChain_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup DaisyChain_Test
@@ -16,14 +16,12 @@
 /********************************* Includes **********************************/
 #include "DaisyChain/DaisyChain.h"
 
-#include "DaisyChain/DaisyChain.h"
-#include "MockUartInterface.h"
-#include "MockOsInterface.h"
-#include "MockGpioInterface.h"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "GpioInterfaceMock.h"
+#include "OsInterfaceMock.h"
+#include "UartInterfaceMock.h"
 
 using ::testing::DoAll;
 using ::testing::Return;
@@ -31,9 +29,9 @@ using ::testing::_;
 
 using uart::UartDriver;
 using hal::IO_Type;
-using cmsis::gmock::MockOsInterface;
-using hal::gmock::MockUartInterface;
-using hal::gmock::MockGpioInterface;
+using cmsis::gmock::OsInterfaceMock;
+using hal::gmock::UartInterfaceMock;
+using hal::gmock::GpioInterfaceMock;
 
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
@@ -69,9 +67,9 @@ protected:
     }
 
     UartDriver *UARTxDriver = nullptr;
-    MockUartInterface uart;
-    MockOsInterface os;
-    MockGpioInterface gpio;
+    UartInterfaceMock uart;
+    OsInterfaceMock os;
+    GpioInterfaceMock gpio;
     DaisyChainParams p;
 };
 

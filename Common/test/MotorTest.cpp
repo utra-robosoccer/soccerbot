@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    Motor_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup Motor_Test
@@ -14,14 +14,13 @@
 
 
 /********************************* Includes **********************************/
-#include "MockMotor.h"
-
-#include "MockUartInterface.h"
-#include "MockOsInterface.h"
-#include "MockGpioInterface.h"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+#include "GpioInterfaceMock.h"
+#include "MotorMock.h"
+#include "OsInterfaceMock.h"
+#include "UartInterfaceMock.h"
 
 using ::testing::_;
 using ::testing::Args;
@@ -31,10 +30,10 @@ using ::testing::Return;
 
 using uart::UartDriver;
 
-using dynamixel::gmock::MockMotor;
-using cmsis::gmock::MockOsInterface;
-using hal::gmock::MockUartInterface;
-using hal::gmock::MockGpioInterface;
+using dynamixel::gmock::MotorMock;
+using cmsis::gmock::OsInterfaceMock;
+using hal::gmock::UartInterfaceMock;
+using hal::gmock::GpioInterfaceMock;
 
 using dynamixel::Motor;
 using dynamixel::DaisyChainParams;
@@ -76,9 +75,9 @@ protected:
     }
 
     UartDriver *UARTxDriver = nullptr;
-    MockUartInterface uart;
-    MockOsInterface os;
-    MockGpioInterface gpio;
+    UartInterfaceMock uart;
+    OsInterfaceMock os;
+    GpioInterfaceMock gpio;
     DaisyChainParams p;
 };
 
@@ -89,13 +88,13 @@ protected:
 // ----------------------------------------------------------------------------
 TEST_F(MotorTest, CanBeCreated){
     DaisyChain chain(p);
-    MockMotor m1(1, &chain, ResolutionDivider::AX12A);
-    MockMotor m2(1, &chain, ResolutionDivider::MX28);
+    MotorMock m1(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m2(1, &chain, ResolutionDivider::MX28);
 }
 
 TEST_F(MotorTest, CanResetMotor){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.reset();
 }
@@ -103,22 +102,22 @@ TEST_F(MotorTest, CanResetMotor){
 TEST_F(MotorTest, IdReturnsIdSetAtInitialization){
     DaisyChain chain(p);
 
-    MockMotor m0(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m0(1, &chain, ResolutionDivider::AX12A);
     ASSERT_EQ(m0.id(), 1);
 
-    MockMotor m1(2, &chain, ResolutionDivider::AX12A);
+    MotorMock m1(2, &chain, ResolutionDivider::AX12A);
     ASSERT_EQ(m1.id(), 2);
 
-    MockMotor m2(18, &chain, ResolutionDivider::AX12A);
+    MotorMock m2(18, &chain, ResolutionDivider::AX12A);
     ASSERT_EQ(m2.id(), 18);
 
-    MockMotor m3(42, &chain, ResolutionDivider::AX12A);
+    MotorMock m3(42, &chain, ResolutionDivider::AX12A);
     ASSERT_NE(m3.id(), 0);
 }
 
 TEST_F(MotorTest, setIdBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setId(10);
 
@@ -128,7 +127,7 @@ TEST_F(MotorTest, setIdBoundsCheckPasses){
 
 TEST_F(MotorTest, setReturnDelayTimeBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setReturnDelayTime(150);
 
@@ -138,7 +137,7 @@ TEST_F(MotorTest, setReturnDelayTimeBoundsCheckPasses){
 
 TEST_F(MotorTest, setCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setCwAngleLimit(dynamixel::MIN_ANGLE);
 
@@ -148,7 +147,7 @@ TEST_F(MotorTest, setCWAngleLimitBoundsCheckPasses){
 
 TEST_F(MotorTest, setCCWAngleLimitBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setCcwAngleLimit(dynamixel::MAX_ANGLE);
 
@@ -158,7 +157,7 @@ TEST_F(MotorTest, setCCWAngleLimitBoundsCheckPasses){
 
 TEST_F(MotorTest, setVoltageLimitsBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setVoltageLimit(VoltageLimit::HIGHEST, dynamixel::MAX_VOLTAGE);
     m.setVoltageLimit(VoltageLimit::LOWEST, dynamixel::MIN_VOLTAGE);
@@ -174,7 +173,7 @@ TEST_F(MotorTest, setVoltageLimitsBoundsCheckPasses){
 
 TEST_F(MotorTest, setMaxTorqueBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setMaxTorque(100.0);
 
@@ -184,7 +183,7 @@ TEST_F(MotorTest, setMaxTorqueBoundsCheckPasses){
 
 TEST_F(MotorTest, setStatusReturnLevelBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setStatusReturnLevel(StatusReturnLevel::PING_ONLY);
     m.setStatusReturnLevel(StatusReturnLevel::READS_ONLY);
@@ -195,7 +194,7 @@ TEST_F(MotorTest, setStatusReturnLevelBoundsCheckPasses){
 
 TEST_F(MotorTest, setAlarmBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setAlarm(AlarmType::LED, AlarmCondition::INPUT_VOLTAGE_ERR);
     m.setAlarm(AlarmType::SHUTDOWN, AlarmCondition::OVERHEATING_ERR);
@@ -209,7 +208,7 @@ TEST_F(MotorTest, setAlarmBoundsCheckPasses){
 
 TEST_F(MotorTest, CanEnableTorque){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.enableTorque(true);
     m.enableTorque(false);
@@ -217,7 +216,7 @@ TEST_F(MotorTest, CanEnableTorque){
 
 TEST_F(MotorTest, CanEnableLed){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.enableLed(true);
     m.enableLed(false);
@@ -225,7 +224,7 @@ TEST_F(MotorTest, CanEnableLed){
 
 TEST_F(MotorTest, setGoalPositionBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setGoalPosition(150.0);
 
@@ -235,7 +234,7 @@ TEST_F(MotorTest, setGoalPositionBoundsCheckPasses){
 
 TEST_F(MotorTest, setGoalTorqueBoundsCheckPasses){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setGoalTorque(100.0);
 
@@ -245,14 +244,14 @@ TEST_F(MotorTest, setGoalTorqueBoundsCheckPasses){
 
 TEST_F(MotorTest, CanLockEEPROM){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.lockEEPROM();
 }
 
 TEST_F(MotorTest, CanSetPunch){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.setPunch(10.0);
 
@@ -262,7 +261,7 @@ TEST_F(MotorTest, CanSetPunch){
 
 TEST_F(MotorTest, CanGetGoalPosition){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     float angle = 0;
     m.getPosition(angle);
@@ -270,7 +269,7 @@ TEST_F(MotorTest, CanGetGoalPosition){
 
 TEST_F(MotorTest, CanGetLoad){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     float load = 0;
     m.getLoad(load);
@@ -278,7 +277,7 @@ TEST_F(MotorTest, CanGetLoad){
 
 TEST_F(MotorTest, CanGetVoltage){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     float voltage = 0;
     m.getVoltage(voltage);
@@ -286,7 +285,7 @@ TEST_F(MotorTest, CanGetVoltage){
 
 TEST_F(MotorTest, CanGetTemperature){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     uint8_t temp = 0;
     m.getTemperature(temp);
@@ -294,7 +293,7 @@ TEST_F(MotorTest, CanGetTemperature){
 
 TEST_F(MotorTest, CanCheckIfIsJointMode){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     bool isJointMode = false;
     m.isJointMode(isJointMode);
@@ -302,7 +301,7 @@ TEST_F(MotorTest, CanCheckIfIsJointMode){
 
 TEST_F(MotorTest, CanPing){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     uint8_t retrievedId;
     m.ping(retrievedId);
@@ -310,7 +309,7 @@ TEST_F(MotorTest, CanPing){
 
 TEST_F(MotorTest, CanCheckIfIsMoving){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     bool isMoving = false;
     m.isMoving(isMoving);
@@ -318,21 +317,21 @@ TEST_F(MotorTest, CanCheckIfIsMoving){
 
 TEST_F(MotorTest, CanEnterWheelMode){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.enterWheelMode();
 }
 
 TEST_F(MotorTest, CanEnterJointMode){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     m.enterJointMode();
 }
 
 TEST_F(MotorTest, ParsesReadDataExampleProperly){
     DaisyChain chain(p);
-    MockMotor m(1, &chain, ResolutionDivider::AX12A);
+    MotorMock m(1, &chain, ResolutionDivider::AX12A);
 
     // AX12A datasheet page 20, section 4-2
     uint8_t expectedTxArray[] = {0xFF, 0xFF, 0x01, 0x04, 0x02, 0x2B, 0x01, 0xCC};

@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @file    tx_helper.c
+ * @file
  * @author  Hannah
  * @brief   Helper file for the function StartTXTask() in freertos.cpp
  *****************************************************************************

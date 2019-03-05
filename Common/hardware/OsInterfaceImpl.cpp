@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    OsInterfaceImpl.cpp
+  * @file
   * @author  Izaak Niksan
   * @brief   Implements the FreeRTOS wrapper class, which makes direct calls
   *          to the true functions defined in the FreeRTOS library

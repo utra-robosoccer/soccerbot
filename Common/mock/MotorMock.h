@@ -1,11 +1,11 @@
 /**
   *****************************************************************************
-  * @file    MockMotor.h
+  * @file
   * @author  Tyler Gamvrelis
   * @brief   Since this is an abstract class, it needs to be mocked to test the
   *          concrete methods
   *
-  * @defgroup MockMotor
+  * @defgroup MotorMock
   * @ingroup Mocks
   * @{
   *****************************************************************************
@@ -14,8 +14,8 @@
 
 
 
-#ifndef MOCK_MOTOR_H
-#define MOCK_MOTOR_H
+#ifndef MOTOR_MOCK_H
+#define MOTOR_MOCK_H
 
 
 
@@ -32,18 +32,18 @@ using dynamixel::ResolutionDivider;
 
 
 
-/****************************** MockMotorInterface ******************************/
+/****************************** MotorMockInterface ******************************/
 namespace dynamixel {
 namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class MockMotor Mocks the abstract methods of Motor so that it can be
+ * @class MotorMock Mocks the abstract methods of Motor so that it can be
  *        unit tested
  */
-class MockMotor : public Motor {
+class MotorMock : public Motor {
 public:
-    MockMotor(
+    MotorMock(
         uint8_t id,
         DaisyChain* daisyChain,
         ResolutionDivider divider
@@ -84,6 +84,6 @@ public:
 /**
  * @}
  */
-/* end MockMotor */
+/* end MotorMock */
 
 #endif /* MOCK_MOTOR_H */

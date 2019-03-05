@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    imu_helper.h
+  * @file
   * @author  Tyler Gamvrelis
   * @brief   Helper file for the IMU thread in the main program flow
   *

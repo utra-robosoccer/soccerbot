@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    OsInterface.h
+  * @file
   * @author  Izaak Niksan
   * @brief   Defines an abstract interface of FreeRTOS functions.
   *
