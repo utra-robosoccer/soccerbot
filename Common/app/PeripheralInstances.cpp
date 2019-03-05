@@ -12,12 +12,13 @@
 
 
 /********************************* Includes **********************************/
+
 #include "PeripheralInstances.h"
 
-#include "HalUartInterface.h"
 #include "GpioInterfaceImpl.h"
 #include "OsInterfaceImpl.h"
 #include "SystemConf.h"
+#include "UartInterfaceImpl.h"
 
 #include "usart.h"
 #include "gpio.h"
@@ -26,7 +27,7 @@
 using dynamixel::Motor;
 using dynamixel::DaisyChain;
 using dynamixel::DaisyChainParams;
-using hal::HalUartInterface;
+using hal::UartInterfaceImpl;
 using cmsis::OsInterfaceImpl;
 using hal::GpioInterfaceImpl;
 
@@ -37,7 +38,7 @@ using hal::GpioInterfaceImpl;
 namespace periph{
 // Variables
 // ----------------------------------------------------------------------------
-HalUartInterface uart_if;
+UartInterfaceImpl uart_if;
 OsInterfaceImpl os_if;
 GpioInterfaceImpl gpio_if;
 

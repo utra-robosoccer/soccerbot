@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    MockOsInterface.h
+  * @file
   * @author  Izaak Niksan
   * @author  Tyler Gamvrelis
   *
-  * @defgroup MockOsInterface
+  * @defgroup OsInterfaceMock
   * @ingroup Mocks
   * @{
   *****************************************************************************
@@ -13,8 +13,8 @@
 
 
 
-#ifndef MOCK_OS_INTERFACE_H
-#define MOCK_OS_INTERFACE_H
+#ifndef OS_INTERFACE_MOCK_H
+#define OS_INTERFACE_MOCK_H
 
 
 
@@ -29,16 +29,16 @@ using cmsis::OsInterface;
 
 
 
-/****************************** MockOsInterface ******************************/
+/****************************** OsInterfaceMock ******************************/
 namespace cmsis {
 namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class MockOsInterface Implements OsInterface for unit testing
+ * @class OsInterfaceMock Implements OsInterface for unit testing
  *        purposes
  */
-class MockOsInterface : public OsInterface {
+class OsInterfaceMock : public OsInterface {
 public:
     MOCK_CONST_METHOD4(
         OS_xTaskNotifyWait,
@@ -153,6 +153,6 @@ public:
 /**
  * @}
  */
-/* end - MockOsInterface */
+/* end - OsInterfaceMock */
 
-#endif /* MOCK_OS_INTERFACE_H */
+#endif /* OS_INTERFACE_MOCK_H */

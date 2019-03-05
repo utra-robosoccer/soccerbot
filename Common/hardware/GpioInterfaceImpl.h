@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    GpioInterfaceImpl.h
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup Header

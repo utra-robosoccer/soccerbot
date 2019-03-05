@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @file    I2CInterface.h
+ * @file
  * @author  Hannah L
  *
  * @defgroup I2CInterface
@@ -9,8 +9,8 @@
  *****************************************************************************
  */
 
-#ifndef COMMON_INCLUDE_I2CINTERFACE_H_
-#define COMMON_INCLUDE_I2CINTERFACE_H_
+#ifndef COMMON_INCLUDE_I2CINTERFACE_H
+#define COMMON_INCLUDE_I2CINTERFACE_H
 
 /********************************* Includes **********************************/
 #include <stdint.h>
@@ -101,4 +101,4 @@ public:
 // ----------------------------------------------------------------------------
 }// end namespace hal
 
-#endif /* COMMON_INCLUDE_I2CINTERFACE_H_ */
+#endif /* COMMON_INCLUDE_I2CINTERFACE_H */

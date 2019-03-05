@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    UartDriver.h
+  * @file
   * @author  Tyler Gamvrelis
   * @author  Robert Fairley
   *

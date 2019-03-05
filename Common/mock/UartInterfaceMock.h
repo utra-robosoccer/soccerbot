@@ -1,9 +1,9 @@
 /**
   *****************************************************************************
-  * @file    MockUartInterface.h
+  * @file
   * @author  Tyler Gamvrelis
   *
-  * @defgroup MockUartInterface
+  * @defgroup UartInterfaceMock
   * @ingroup Mocks
   * @{
   *****************************************************************************
@@ -28,15 +28,15 @@ using hal::UartInterface;
 
 
 
-/***************************** MockUartInterface *****************************/
+/***************************** UartInterfaceMock *****************************/
 namespace hal {
 namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
 /**
- * @class MockUartInterface Implements UartInterface for unit testing purposes
+ * @class UartInterfaceMock Implements UartInterface for unit testing purposes
  */
-class MockUartInterface : public UartInterface{
+class UartInterfaceMock : public UartInterface{
 public:
     MOCK_CONST_METHOD4(
         transmitPoll,
@@ -94,6 +94,6 @@ public:
 /**
  * @}
  */
-/* end - MockUartInterface */
+/* end - UartInterfaceMock */
 
 #endif /* MOCK_UART_INTERFACE_H */

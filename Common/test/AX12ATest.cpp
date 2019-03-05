@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    AX12A_test.cpp
+  * @file
   * @author  Tyler Gamvrelis
   *
   * @defgroup AX12A_Test
@@ -16,19 +16,19 @@
 /********************************* Includes **********************************/
 #include "Dynamixel/AX12A.h"
 
-#include "MockUartInterface.h"
-#include "MockOsInterface.h"
-#include "MockGpioInterface.h"
-#include "UartDriver/UartDriver.h"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "GpioInterfaceMock.h"
+#include "OsInterfaceMock.h"
+#include "UartDriver/UartDriver.h"
+#include "UartInterfaceMock.h"
+
 using ::testing::_;
 
-using cmsis::gmock::MockOsInterface;
-using hal::gmock::MockUartInterface;
-using hal::gmock::MockGpioInterface;
+using cmsis::gmock::OsInterfaceMock;
+using hal::gmock::UartInterfaceMock;
+using hal::gmock::GpioInterfaceMock;
 
 using dynamixel::DaisyChainParams;
 using dynamixel::DaisyChain;
@@ -66,9 +66,9 @@ protected:
     }
 
     UartDriver *UARTxDriver = nullptr;
-    MockUartInterface uart;
-    MockOsInterface os;
-    MockGpioInterface gpio;
+    UartInterfaceMock uart;
+    OsInterfaceMock os;
+    GpioInterfaceMock gpio;
     DaisyChainParams p;
 };
 

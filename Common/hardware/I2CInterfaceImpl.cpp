@@ -1,10 +1,10 @@
 /**
  *****************************************************************************
- * @file    HalI2CInterface.cpp
+ * @file
  * @author  Hannah
  * @brief   Performs HAL related functions for I2C Interface
  *
- * @defgroup HalI2CInterface
+ * @defgroup I2CInterfaceImpl
  * @ingroup  I2C
  * @brief    HAL related functions for I2C Interface
  * @{
@@ -12,16 +12,16 @@
  */
 
 /********************************* Includes **********************************/
-#include "HalI2CInterface.h"
+#include "I2CInterfaceImpl.h"
 
 
 namespace hal{
 /**************************** HAL I2C Interface ******************************/
 // Public
-HALI2CInterface::HALI2CInterface() {}
-HALI2CInterface::~HALI2CInterface() {}
+I2CInterfaceImpl::I2CInterfaceImpl() {}
+I2CInterfaceImpl::~I2CInterfaceImpl() {}
 
-HAL_StatusTypeDef HALI2CInterface::memWrite(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
+HAL_StatusTypeDef I2CInterfaceImpl::memWrite(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
         uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
         uint32_t Timeout) const { //HAL_I2C_Mem_Write
 
@@ -29,21 +29,21 @@ HAL_StatusTypeDef HALI2CInterface::memWrite(I2C_HandleTypeDef *i2cHandlePtr, uin
             pData, Size, Timeout);
 }
 
-HAL_StatusTypeDef HALI2CInterface::memRead(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
+HAL_StatusTypeDef I2CInterfaceImpl::memRead(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
         uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size,
         uint32_t Timeout) const { //HAL_I2C_Mem_Read
     return HAL_I2C_Mem_Read(i2cHandlePtr, DevAddress, MemAddress, MemAddSize,
             pData, Size, Timeout);
 }
 
-HAL_StatusTypeDef HALI2CInterface::memWriteIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
+HAL_StatusTypeDef I2CInterfaceImpl::memWriteIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
         uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
         uint16_t Size) const { //HAL_I2C_Mem_Write_IT
     return HAL_I2C_Mem_Write_IT(i2cHandlePtr, DevAddress, MemAddress,
             MemAddSize, pData, Size);
 }
 
-HAL_StatusTypeDef HALI2CInterface::memReadIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
+HAL_StatusTypeDef I2CInterfaceImpl::memReadIT(I2C_HandleTypeDef *i2cHandlePtr, uint16_t DevAddress,
         uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData,
         uint16_t Size) const { //HAL_I2C_Mem_Read_IT
     return HAL_I2C_Mem_Read_IT(i2cHandlePtr, DevAddress, MemAddress, MemAddSize,
@@ -56,5 +56,5 @@ HAL_StatusTypeDef HALI2CInterface::memReadIT(I2C_HandleTypeDef *i2cHandlePtr, ui
 /**
  * @}
  */
-/* end - HalI2CInterface */
+/* end - I2CInterfaceImpl */
 

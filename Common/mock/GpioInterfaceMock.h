@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    MockGpioInterface.h
+  * @file
   * @author  Tyler Gamvrelis
   * @brief   Mocks GPIO functions
   *
-  * @defgroup MockGpioInterface
+  * @defgroup GpioInterfaceMock
   * @ingroup  Mocks
   * @{
   *****************************************************************************
@@ -13,8 +13,8 @@
 
 
 
-#ifndef MOCK_GPIO_INTERFACE_H
-#define MOCK_GPIO_INTERFACE_H
+#ifndef GPIO_INTERFACE_MOCK_H
+#define GPIO_INTERFACE_MOCK_H
 
 
 
@@ -34,7 +34,7 @@ namespace hal {
 namespace gmock {
 // Classes and structs
 // ----------------------------------------------------------------------------
-class MockGpioInterface : public GpioInterface{
+class GpioInterfaceMock : public GpioInterface{
 public:
     MOCK_CONST_METHOD2(
         readPin,
@@ -71,6 +71,6 @@ public:
 /**
  * @}
  */
-/* end - MockGpioInterface */
+/* end - GpioInterfaceMock */
 
-#endif /* MOCK_GPIO_INTERFACE_H */
+#endif /* GPIO_INTERFACE_MOCK_H */

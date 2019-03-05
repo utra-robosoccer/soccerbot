@@ -1,9 +1,9 @@
 /**
   *****************************************************************************
-  * @file    HalUartInterface.h
+  * @file
   * @author  Tyler Gamvrelis
   *
-  * @defgroup   HalUartInterface
+  * @defgroup   UartInterfaceImpl
   * @addtogroup UART
   * @{
   *****************************************************************************
@@ -12,8 +12,8 @@
 
 
 
-#ifndef HAL_UART_INTERFACE_H
-#define HAL_UART_INTERFACE_H
+#ifndef UART_INTERFACE_IMPL_H
+#define UART_INTERFACE_IMPL_H
 
 
 
@@ -24,7 +24,7 @@
 
 
 
-/****************************** HalUartInterface *****************************/
+/****************************** UartInterfaceImpl *****************************/
 namespace hal{
 // Classes and structs
 // ----------------------------------------------------------------------------
@@ -32,10 +32,10 @@ namespace hal{
  * @class Concrete implementation of the abstract UartInterface class, to be
  *        used in production builds
  */
-class HalUartInterface : public UartInterface{
+class UartInterfaceImpl : public UartInterface{
 public:
-    HalUartInterface();
-    ~HalUartInterface();
+    UartInterfaceImpl();
+    ~UartInterfaceImpl();
 
     HAL_StatusTypeDef transmitPoll(
         const UART_HandleTypeDef* uartHandlePtr,

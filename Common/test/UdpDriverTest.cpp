@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    UdpDriver_test.cpp
+  * @file
   * @author  Robert Fairley
   *
-  * @defgroup udp_driver_test
-  * @ingroup  udp_driver
+  * @defgroup UdpDriver_Test
+  * @ingroup  UDP
   * @brief    Unit tests for the UdpDriver class.
   * @{
   *****************************************************************************
@@ -15,19 +15,16 @@
 
 
 /********************************* Includes **********************************/
-#include <MockOsInterface.h>
-#include <UdpDriver/UdpDriver.h>
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+#include "OsInterfaceMock.h"
 #include "UdpRawInterfaceMock.h"
-
-
-
+#include "UdpDriver/UdpDriver.h"
 
 using udp::UdpDriver;
 using lwip::gmock::UdpRawInterfaceMock;
-using cmsis::gmock::MockOsInterface;
+using cmsis::gmock::OsInterfaceMock;
 
 using ::testing::Return;
 using ::testing::_;
@@ -56,10 +53,10 @@ const ip_addr_t ZERO_IP_ADDR_T = {0x0};
 class UdpDriverTest : public ::testing::Test {
 protected:
     UdpRawInterfaceMock udp_if;
-    MockOsInterface os_if;
+    OsInterfaceMock os_if;
 };
 
-}
+} // end anonymous namespace
 
 
 
@@ -67,12 +64,12 @@ protected:
 TEST_F(UdpDriverTest, DefaultInitializeMembersToZero) {
     UdpDriver udpDriverUnderTest;
 
-    EXPECT_EQ(udpDriverUnderTest.getIpaddr(), ZERO_IP_ADDR_T);
-    EXPECT_EQ(udpDriverUnderTest.getIpaddrPc(), ZERO_IP_ADDR_T);
-    EXPECT_EQ(udpDriverUnderTest.getPort(), (u16_t) 0);
-    EXPECT_EQ(udpDriverUnderTest.getPortPc(), (u16_t) 0);
-    EXPECT_EQ(udpDriverUnderTest.getUdpInterface(), nullptr);
-    EXPECT_EQ(udpDriverUnderTest.getOsInterface(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getIpAddrSrc(), ZERO_IP_ADDR_T);
+    EXPECT_EQ(udpDriverUnderTest.getIpAddrDest(), ZERO_IP_ADDR_T);
+    EXPECT_EQ(udpDriverUnderTest.getPortSrc(), (u16_t) 0);
+    EXPECT_EQ(udpDriverUnderTest.getPortDest(), (u16_t) 0);
+    EXPECT_EQ(udpDriverUnderTest.getUdpIf(), nullptr);
+    EXPECT_EQ(udpDriverUnderTest.getOsIf(), nullptr);
 }
 
 TEST_F(UdpDriverTest, InitializeMembersWithParameterizedConstructor) {
@@ -82,12 +79,12 @@ TEST_F(UdpDriverTest, InitializeMembersWithParameterizedConstructor) {
     UdpDriver udpDriverUnderTest(TEST_IP_ADDR, TEST_IP_ADDR_PC, (u16_t) 7,
             (u16_t) 6340, &udp_if, &os_if);
 
-    EXPECT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpaddr());
-    EXPECT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpaddrPc());
-    EXPECT_EQ((u16_t) 7, udpDriverUnderTest.getPort());
-    EXPECT_EQ((u16_t) 6340, udpDriverUnderTest.getPortPc());
-    EXPECT_EQ(&udp_if, udpDriverUnderTest.getUdpInterface());
-    EXPECT_EQ(&os_if, udpDriverUnderTest.getOsInterface());
+    EXPECT_EQ(TEST_IP_ADDR, udpDriverUnderTest.getIpAddrSrc());
+    EXPECT_EQ(TEST_IP_ADDR_PC, udpDriverUnderTest.getIpAddrDest());
+    EXPECT_EQ((u16_t) 7, udpDriverUnderTest.getPortSrc());
+    EXPECT_EQ((u16_t) 6340, udpDriverUnderTest.getPortDest());
+    EXPECT_EQ(&udp_if, udpDriverUnderTest.getUdpIf());
+    EXPECT_EQ(&os_if, udpDriverUnderTest.getOsIf());
 }
 
 TEST_F(UdpDriverTest, SucceedInitialize) {
@@ -347,3 +344,8 @@ TEST_F(UdpDriverTest, FailTransmitWhenUdpSendUnsuccessful) {
 
     ASSERT_FALSE(udpDriverUnderTest.transmit(txBuff, sizeof(txBuff)));
 }
+
+/**
+ * @}
+ */
+/* end - UdpDriver_Test */
