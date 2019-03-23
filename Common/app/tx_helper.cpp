@@ -53,10 +53,8 @@ void copySensorDataToSend(buffer::BufferMaster* p_buffer_master) {
     comm::RobotState_t& robot_state = comm::getRobotState();
 
     memcpy(
-        &reinterpret_cast<uint8_t*>(
-            &robot_state
-        )[comm::ROBOT_STATE_MPU_DATA_OFFSET],
-        (&read_imu_data.x_Gyro),
+        &robot_state.msg[comm::ROBOT_STATE_MPU_DATA_OFFSET],
+        &read_imu_data.x_Gyro,
         sizeof(imu::ImuStruct_t)
     );
 
