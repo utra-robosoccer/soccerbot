@@ -2,7 +2,7 @@
 <package format="2">
   <name>soccer_transforms</name>
   <version>0.0.0</version>
-  <description>The soccer_transforms package</description>
+    <description>To be deleted, currently contains redundant transofmration stuff</description>
 
   <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
 

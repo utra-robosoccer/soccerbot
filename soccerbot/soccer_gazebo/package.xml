@@ -2,7 +2,7 @@
 <package format="2">
   <name>soccer_gazebo</name>
   <version>0.1.0</version>
-  <description>Provides Gazebo launch files to expose nubot model in ROS</description>
+    <description>Contains the launch files for gazebo and extra static models and the worlds</description>
   <maintainer email="jiashen.wang@mail.utoronto.ca">Jason Wang</maintainer>
   <license>BSD</license>
   <author email="jiashen.wang@mail.utoronto.ca">Jason Wang</author>

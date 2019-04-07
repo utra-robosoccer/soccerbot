@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle n;
 	nh = &n;
 
-
+    // TODO (Nam) Move all the controls out of the /soccerbot/ namespace
 	torso_right_hip_side = n.advertise<std_msgs::Float64>("/soccerbot/torso_right_hip_side_position_controller/command", 1);
 	right_hip_side_hip_front = n.advertise<std_msgs::Float64>("/soccerbot/right_hip_side_hip_front_position_controller/command", 1);
 	right_hip_front_thigh = n.advertise<std_msgs::Float64>("/soccerbot/right_hip_front_thigh_position_controller/command", 1);

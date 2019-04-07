@@ -3,6 +3,7 @@
     <arg name="darknet"     default="false" />
     <arg name="field_name"  default="robocup" />
     <arg name="frozen"      default="false" />
+    <!-- TODO combine all 4 launch files into a single one -->
 
     <!-- Environment -->
     <include file="$(find soccer_gazebo)/launch/soccerbot_gazebo.launch">
@@ -30,8 +31,8 @@
     </group>
 
     <!-- Control -->
-    
-    <!-- TODO -->
+
+    <!-- TODO (Unassigned) -->
 
     <!-- RViz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true" />

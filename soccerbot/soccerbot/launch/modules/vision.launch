@@ -19,12 +19,13 @@
             <param name="pixel_format" value="$(arg pixel_format)" />
             <param name="camera_frame_id" value="$(arg camera_frame_id)" />
             <param name="io_method" value="$(arg io_method)"/>
-        </node>-->
+        </node>
     </group>
 
     <!-- Object detection -->
     <group if="$(arg darknet)">
         <group if="$(arg simulation)">
+            <!-- TODO (Remove the soccerbot namespaces ) -->
             <remap from="/camera" to="/soccerbot/camera" />
         </group>
 

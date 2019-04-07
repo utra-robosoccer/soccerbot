@@ -24,7 +24,7 @@
 
     <!-- Control -->
 
-    <!-- TODO -->
+    <!-- TODO (Unassigned) launch files -->
 
     <!-- RViz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true"/>

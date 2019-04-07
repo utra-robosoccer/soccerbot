@@ -13,6 +13,7 @@
     </node>
 
     <!-- Localization using AMCL -->
+    <!-- TODO (Jason) combine this and the other launch file -->
     <include file="$(find soccerbot)/launch/modules/amcl.launch">
         <arg name="use_map_topic"   default="true"/>
         <arg name="scan_topic"      default="$(arg scan_topic)"/>

@@ -35,6 +35,3 @@ add_executable(draw_trajectories src/draw_trajectories.cpp)
 add_dependencies(draw_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(draw_trajectories ${catkin_LIBRARIES})
 
-add_executable(vision_points_to_scan src/vision_points_to_scan.cpp)
-add_dependencies(vision_points_to_scan ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(vision_points_to_scan ${catkin_LIBRARIES})
