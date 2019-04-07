@@ -50,7 +50,7 @@ class omnibot_hardware:
         parser.add_argument(
             '--port',
             help='Specifies the port argument to the serial.Serial constructor. Default: /dev/ttyUSB0',
-            default='/dev/ttyUSB0'
+            default='/dev/ttyACM0'
         )
         
         parser.add_argument(
@@ -81,7 +81,8 @@ class omnibot_hardware:
         self.isROSmode = args['ros']
         self.port = args['port']
         self.baud = args['baud']
-        self.dryrun = args['dryrun']
+        #self.dryrun = args['dryrun']
+        self.dryrun = False
         
         
         logString("Started with ROS = {0}".format(args['ros'] == True))
@@ -155,10 +156,6 @@ class omnibot_hardware:
                 sys.exit(1)
         
             self.ser.write(self.fsm(msg))
-    def camera_callback(self, msg):
-	if self.dryrun:
-            print("camera_angle 1: " + str(msg.camera_yaw))
-            print("camera_angle 2: " + str(msg.camera_pitch))
     
 if __name__ == "__main__":
     sh = omnibot_hardware()
