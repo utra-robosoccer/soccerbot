@@ -23,6 +23,7 @@ try:
     #from geometry_msgs.msg import Vector3
     #from geometry_msgs.msg import Quaternion
     from geometry_msgs.msg import Twist
+    from omnibot_msgs.msg import OmnibotGoal
     #from tf.msg import tfMessage
     #from tf.transformations import quaternion_from_euler
 except:
@@ -60,7 +61,6 @@ class omnibot_hardware:
 
         parser.add_argument(
             '--dryrun',
-            nargs='?',
             help='Dryrun, does not need hardware connected'
         )
         
@@ -88,7 +88,8 @@ class omnibot_hardware:
         logString("Started with ROS = {0}".format(args['ros'] == True))
         
     def connectToEmbedded(self):
-        if self.dryrun:
+        print(self.dryrun.lower())
+        if self.dryrun.lower() == 'true': # Needs improvement, but now works with roslaunch file.
             logString("Dryrun invoked, will not connect to real hardware")
         else:
             logString(
@@ -162,7 +163,8 @@ if __name__ == "__main__":
     
     if(sh.isROSmode == True):
         rospy.init_node('omnibot_hardware', anonymous=True)
-        rospy.Subscriber("/omnibot/cmd_vel", Twist, sh.cmd_callback, queue_size=1)        
+        rospy.Subscriber("/omnibot/cmd_vel", Twist, sh.cmd_callback, queue_size=1)
+        rospy.Subscriber("/omnibot/camera_angles", OmnibotGoal, sh.camera_callback, queue_size=1)       
         #rospy.Subscriber("robotGoal", RobotGoal, sh.cmd_callback, queue_size=1)
         rospy.spin() 
     else:
