@@ -39,8 +39,11 @@ cd ~/catkin_ws
 ```
 #### Installing submodules and dependencies
 ```
+cd ~/catkin_ws/src/soccer_ws
 git submodule update --recursive --init
+sudo rosdep init # If first time using ROS in your environment.
 rosdep update
+cd ~/catkin_ws/
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
@@ -85,5 +88,11 @@ roslaunch soccerbot soccerbot_simulation.launch frozen:=true
 For omnibot, just run the omnibot launch file, replace robot.launch with simulation.launch for simulation
 
 ```bash
-roslaunch soccerbot omnibot.launch
+roslaunch soccerbot omnibot.launch dryrun:=true
+```
+
+For running in a mode where the hardware is not connected and you need to examine the output of what would be sent to hardware if the hardware was connected.
+
+```bash
+roslaunch soccerbot omnibot.launch dryrun:=false
 ```
