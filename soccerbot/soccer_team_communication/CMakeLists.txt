@@ -61,5 +61,3 @@ add_executable(team_communication_server src/team_communication_server.cpp)
 add_dependencies(team_communication_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(team_communication_server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
-catkin_install_python(PROGRAMS test/test_client.py test/test_server.py test/test_tc_integrate.py test/test_test.py
-		DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

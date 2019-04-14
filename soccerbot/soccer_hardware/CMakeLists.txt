@@ -10,11 +10,4 @@ find_package(catkin REQUIRED COMPONENTS
   soccer_msgs
 )
 
-## Uncomment this if the package has a setup.py. This macro ensures
-catkin_python_setup()
-
 catkin_package()
-
-catkin_install_python(PROGRAMS src/soccer_communication/soccer_hardware.py
-        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
