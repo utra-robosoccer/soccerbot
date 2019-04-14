@@ -4,7 +4,7 @@
     <arg name="field_name"      default="robocup" />
 
     <arg name="global_frame_id" default="map"/>
-    <arg name="scan_topic"      default="soccerbot/vision_poses"/>
+    <arg name="scan_topic" default="vision_poses"/>
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"

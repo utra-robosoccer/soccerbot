@@ -24,11 +24,6 @@
 
     <!-- Object detection -->
     <group if="$(arg darknet)">
-        <group if="$(arg simulation)">
-            <!-- TODO (Remove the soccerbot namespaces ) -->
-            <remap from="/camera" to="/soccerbot/camera" />
-        </group>
-
         <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
     </group>
 

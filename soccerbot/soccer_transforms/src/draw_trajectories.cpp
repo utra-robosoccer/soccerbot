@@ -102,27 +102,28 @@ int main(int argc, char **argv) {
 	nh = &n;
 
     // TODO (Nam) Move all the controls out of the /soccerbot/ namespace
-	torso_right_hip_side = n.advertise<std_msgs::Float64>("/soccerbot/torso_right_hip_side_position_controller/command", 1);
-	right_hip_side_hip_front = n.advertise<std_msgs::Float64>("/soccerbot/right_hip_side_hip_front_position_controller/command", 1);
-	right_hip_front_thigh = n.advertise<std_msgs::Float64>("/soccerbot/right_hip_front_thigh_position_controller/command", 1);
-	right_thigh_calve = n.advertise<std_msgs::Float64>("/soccerbot/right_thigh_calve_position_controller/command", 1);
-	right_calve_ankle = n.advertise<std_msgs::Float64>("/soccerbot/right_calve_ankle_position_controller/command", 1);
-	right_ankle_foot = n.advertise<std_msgs::Float64>("/soccerbot/right_ankle_foot_position_controller/command", 1);
+    torso_right_hip_side = n.advertise<std_msgs::Float64>("torso_right_hip_side_position_controller/command", 1);
+    right_hip_side_hip_front = n.advertise<std_msgs::Float64>("right_hip_side_hip_front_position_controller/command",
+                                                              1);
+    right_hip_front_thigh = n.advertise<std_msgs::Float64>("right_hip_front_thigh_position_controller/command", 1);
+    right_thigh_calve = n.advertise<std_msgs::Float64>("right_thigh_calve_position_controller/command", 1);
+    right_calve_ankle = n.advertise<std_msgs::Float64>("right_calve_ankle_position_controller/command", 1);
+    right_ankle_foot = n.advertise<std_msgs::Float64>("right_ankle_foot_position_controller/command", 1);
 
-	torso_left_hip_side = n.advertise<std_msgs::Float64>("/soccerbot/torso_left_hip_side_position_controller/command", 1);
-	left_hip_side_hip_front = n.advertise<std_msgs::Float64>("/soccerbot/left_hip_side_hip_front_position_controller/command", 1);
-	left_hip_front_thigh = n.advertise<std_msgs::Float64>("/soccerbot/left_hip_front_thigh_position_controller/command", 1);
-	left_thigh_calve = n.advertise<std_msgs::Float64>("/soccerbot/left_thigh_calve_position_controller/command", 1);
-	left_calve_ankle = n.advertise<std_msgs::Float64>("/soccerbot/left_calve_ankle_position_controller/command", 1);
-	left_ankle_foot = n.advertise<std_msgs::Float64>("/soccerbot/left_ankle_foot_position_controller/command", 1);
+    torso_left_hip_side = n.advertise<std_msgs::Float64>("torso_left_hip_side_position_controller/command", 1);
+    left_hip_side_hip_front = n.advertise<std_msgs::Float64>("left_hip_side_hip_front_position_controller/command", 1);
+    left_hip_front_thigh = n.advertise<std_msgs::Float64>("left_hip_front_thigh_position_controller/command", 1);
+    left_thigh_calve = n.advertise<std_msgs::Float64>("left_thigh_calve_position_controller/command", 1);
+    left_calve_ankle = n.advertise<std_msgs::Float64>("left_calve_ankle_position_controller/command", 1);
+    left_ankle_foot = n.advertise<std_msgs::Float64>("left_ankle_foot_position_controller/command", 1);
 
-	torso_right_bicep = n.advertise<std_msgs::Float64>("/soccerbot/torso_right_bicep_position_controller/command", 1);
-	right_bicep_forearm = n.advertise<std_msgs::Float64>("/soccerbot/right_bicep_forearm_position_controller/command", 1);
-	torso_left_bicep = n.advertise<std_msgs::Float64>("/soccerbot/torso_left_bicep_position_controller/command", 1);
-	left_bicep_forearm = n.advertise<std_msgs::Float64>("/soccerbot/left_bicep_forearm_position_controller/command", 1);
+    torso_right_bicep = n.advertise<std_msgs::Float64>("torso_right_bicep_position_controller/command", 1);
+    right_bicep_forearm = n.advertise<std_msgs::Float64>("right_bicep_forearm_position_controller/command", 1);
+    torso_left_bicep = n.advertise<std_msgs::Float64>("torso_left_bicep_position_controller/command", 1);
+    left_bicep_forearm = n.advertise<std_msgs::Float64>("left_bicep_forearm_position_controller/command", 1);
 
-	torso_neck = n.advertise<std_msgs::Float64>("/soccerbot/torso_neck_position_controller/command", 1);
-	neck_head = n.advertise<std_msgs::Float64>("/soccerbot/neck_head_position_controller/command", 1);
+    torso_neck = n.advertise<std_msgs::Float64>("torso_neck_position_controller/command", 1);
+    neck_head = n.advertise<std_msgs::Float64>("neck_head_position_controller/command", 1);
 	
 	ros::Rate r(100); // 100 Hz
 
