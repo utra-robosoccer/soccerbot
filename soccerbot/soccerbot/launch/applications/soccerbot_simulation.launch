@@ -11,9 +11,6 @@
         <arg name="frozen"  value="$(arg frozen)"/>
     </include>
 
-    <!-- Command for trajectories -->
-    <node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories"/>
-
     <!-- Model and transformations -->
     <include file="$(find soccer_hardware)/launch/soccer_hardware.launch"/>
 
