@@ -12,7 +12,7 @@
     </include>
 
     <!-- Command for trajectories -->
-    <node name="draw_trajectories" pkg="soccer_transforms" type="draw_trajectories" />
+    <node name="draw_trajectories" pkg="soccer_hardware" type="draw_trajectories"/>
 
     <!-- Model and transformations -->
     <include file="$(find soccer_transforms)/launch/soccer_transforms.launch" />
