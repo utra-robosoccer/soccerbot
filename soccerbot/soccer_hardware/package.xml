@@ -17,6 +17,5 @@
   <depend>rospy</depend>
   <depend>python-numpy</depend>
   <depend>python-prettytable</depend>
-  <depend>soccer_transforms</depend>
 
 </package>
