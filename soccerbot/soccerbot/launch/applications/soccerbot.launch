@@ -3,11 +3,8 @@
     <arg name="darknet" value="false" />
     <arg name="field_name" default="robocup" />
 
-    <!-- Connection to the robot -->
+    <!-- Connection to the robot and transformations-->
     <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
-
-    <!-- Model and transformations -->
-    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch"/>
 
     <!-- Computer Vision and Camera -->
     <group if="$(arg vision)">
