@@ -13,6 +13,5 @@
   <depend>std_msgs</depend>
   <depend>rospy</depend>
   <depend>python-numpy</depend>
-  <depend>soccer_transforms</depend>
 
 </package>

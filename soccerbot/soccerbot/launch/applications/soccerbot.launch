@@ -3,11 +3,8 @@
     <arg name="darknet" value="false" />
     <arg name="field_name" default="robocup" />
 
-    <!-- Connection to the robot -->
+    <!-- Connection to the robot and transformations-->
     <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
-
-    <!-- Model and transformations -->
-    <include file="$(find soccer_transforms)/launch/soccer_transforms.launch"/>
 
     <!-- Computer Vision and Camera -->
     <group if="$(arg vision)">
@@ -24,7 +21,7 @@
 
     <!-- Control -->
 
-    <!-- TODO -->
+    <!-- TODO (Unassigned) launch files -->
 
     <!-- RViz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find soccerbot)/rviz/soccerbot.rviz" respawn="true"/>

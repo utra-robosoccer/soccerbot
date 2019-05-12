@@ -4,7 +4,7 @@
     <arg name="field_name"      default="robocup" />
 
     <arg name="global_frame_id" default="map"/>
-    <arg name="scan_topic"      default="soccerbot/vision_poses"/>
+    <arg name="scan_topic" default="vision_poses"/>
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
@@ -13,6 +13,7 @@
     </node>
 
     <!-- Localization using AMCL -->
+    <!-- TODO (Jason) combine this and the other launch file -->
     <include file="$(find soccerbot)/launch/modules/amcl.launch">
         <arg name="use_map_topic"   default="true"/>
         <arg name="scan_topic"      default="$(arg scan_topic)"/>

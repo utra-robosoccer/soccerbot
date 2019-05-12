@@ -1,9 +1,6 @@
 [submodule "external/darknet_ros"]
 	path = external/darknet_ros
 	url = https://github.com/utra-robosoccer/darknet_ros
-[submodule "external/humanoid_league_msgs"]
-	path = external/humanoid_league_msgs
-	url = https://github.com/utra-robosoccer/humanoid_league_msgs
 [submodule "soccerbot/soccer_description"]
 	path = soccerbot/soccer_description
 	url = https://www.github.com/utra-robosoccer/soccer_description
