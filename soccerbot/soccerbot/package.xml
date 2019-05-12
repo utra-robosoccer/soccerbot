@@ -12,7 +12,6 @@
   <depend>soccer_description</depend>
   <depend>soccer_gazebo</depend>
   <depend>soccer_msgs</depend>
-  <depend>soccer_transforms</depend>
   <depend>soccer_team_communication</depend>
   <depend>soccer_common</depend>
   <depend>soccer_matlab</depend>

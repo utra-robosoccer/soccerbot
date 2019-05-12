@@ -2,9 +2,12 @@
 <package format="2">
   <name>soccer_hardware</name>
   <version>0.0.0</version>
-  <description>The soccer_hardware package</description>
+    <description>Contains the soccer-communication python code for communicating with the robot using the
+        microcontroller
+    </description>
 
-  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
+    <author email="jiashen.wang@mail.utoronto.ca">Jason</author>
+    <maintainer email="ty.gamvrelis@mail.utoronto.ca">Tyler</maintainer>
 
   <license>BSD</license>
 
@@ -14,6 +17,5 @@
   <depend>rospy</depend>
   <depend>python-numpy</depend>
   <depend>python-prettytable</depend>
-  <depend>soccer_transforms</depend>
 
 </package>

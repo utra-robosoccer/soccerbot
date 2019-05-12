@@ -71,7 +71,7 @@ Visualization Manager:
       Displays:
         - Class: rviz/Image
           Enabled: true
-          Image Topic: /soccerbot/camera/image_raw
+          Image Topic: /camera/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -120,7 +120,7 @@ Visualization Manager:
           Size (Pixels): 3
           Size (m): 0.0299999993
           Style: Flat Squares
-          Topic: /soccerbot/vision_poses
+          Topic: /vision_poses
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true

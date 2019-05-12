@@ -5,12 +5,12 @@
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" ns="/soccerbot" args="torso_right_hip_side_position_controller right_hip_side_hip_front_position_controller right_hip_front_thigh_position_controller right_thigh_calve_position_controller right_calve_ankle_position_controller right_ankle_foot_position_controller torso_left_hip_side_position_controller left_hip_side_hip_front_position_controller left_hip_front_thigh_position_controller left_thigh_calve_position_controller left_calve_ankle_position_controller left_ankle_foot_position_controller torso_neck_position_controller neck_head_position_controller torso_right_bicep_position_controller right_bicep_forearm_position_controller torso_left_bicep_position_controller left_bicep_forearm_position_controller joint_state_controller"/>
+        output="screen"
+        args="torso_right_hip_side_position_controller right_hip_side_hip_front_position_controller right_hip_front_thigh_position_controller right_thigh_calve_position_controller right_calve_ankle_position_controller right_ankle_foot_position_controller torso_left_hip_side_position_controller left_hip_side_hip_front_position_controller left_hip_front_thigh_position_controller left_thigh_calve_position_controller left_calve_ankle_position_controller left_ankle_foot_position_controller torso_neck_position_controller neck_head_position_controller torso_right_bicep_position_controller right_bicep_forearm_position_controller torso_left_bicep_position_controller left_bicep_forearm_position_controller joint_state_controller"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
     respawn="true" output="screen">
-    <remap from="/joint_states" to="/soccerbot/joint_states" />
   </node>
 
 </launch>
