@@ -7,3 +7,9 @@ float Segment2::slope() const {
     }
     return (p2.y - p1.y) / (p2.x - p1.x);
 }
+
+float Segment2::length() const {
+    return p1.distance(p1, p2);
+}
+
+
