@@ -11,12 +11,38 @@ http://wiki.ros.org/ROS/Installation
 #### Prerequisites
 
 Debian packages needed for robots (sudo apt-get install)
-- git
-- git-gui
-- python-catkin-tools
-- vim
-- net-tools
-- indicator-ip
+```bash
+sudo apt-get install -y git vim net-tools python-catkin-tools
+```
+
+#### Initialization of the code
+```bash
+# Initialize the workspace
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+catkin_init_workspace
+
+# Cloning and checking out the repository
+git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
+cd soccer_ws
+git checkout initials_branchname  # TO create a new branch, use git checkout -b initials_branchname
+
+# Install GIT LFS
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git-lfs
+git lfs install
+
+# Updating submodules and dependencies
+sudo rosdep init # If first time using ROS in your environment.
+rosdep update
+git submodule update --recursive --init
+rosdep install --from-paths $PWD --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
+
+# Installing Soccer control center
+source ~/catkin_ws/devel/setup.bash
+roscd soccer_control_center/scripts
+./install.sh
+```
 
 #### Setting up your IDE
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
@@ -27,44 +53,21 @@ Debian packages needed for robots (sudo apt-get install)
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
 - For debugging processes follow the steps here https://www.jetbrains.com/help/clion/attaching-to-local-process.html
 - For convenience, there is a Clion Settings Repository for Soccer. Go to File > Settings > Settings Respository and add this as a read-only source https://github.com/utra-robosoccer/soccer-ws-clion-settings
-#### Initialization of the code
-```bash
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/src
-sudo apt-get install python-catkin-tools # If you don't have the package installed yet.
-catkin_init_workspace
-git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
-cd soccer_ws
-git checkout initials_branchname  # TO create a new branch, use git checkout -b initials_branchname
-cd ~/catkin_ws
-```
-#### Installing submodules and dependencies
-```
-cd ~/catkin_ws/src/soccer_ws
-git submodule update --recursive --init
-sudo rosdep init # If first time using ROS in your environment.
-rosdep update
-cd ~/catkin_ws/
-rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
-```
 
 #### Building the code
-```
-sudo apt-get install python-catkin-tools # Installs catkin tools
+```bash
 catkin build soccerbot # Use catkin clean to start with a clean build
-source devel/setup.bash # Needs to be done everytime you finish building
+source ~/catkin_ws/devel/setup.bash # Needs to be done everytime you finish building
 ```
 
 #### Connecting the Robot
 Edit your .bashrc, 
 - it should look like this, but you have to run ifconfig to see the correct interface for your Wifi (replace wlp110s0)
-- Remember to have the correct distro (melodic or kinetic)
 
 ```bash
-source /opt/ros/melodic/setup.bash
+source /opt/ros/$ROS_DISTRO/setup.bash
 source ~/catkin_ws/devel/setup.bash
-MY_IP=$(ifconfig wlp110s0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-export ROS_IP=$MY_IP
+export ROS_IP=$(ifconfig $(ifconfig -a | sed 's/[ \t].*//;/^$/d' | tail -1 | sed 's/.$//') | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 export ROS_MASTER_URI=http://$ROS_IP:11311
 ```
 #### Launching the robot
