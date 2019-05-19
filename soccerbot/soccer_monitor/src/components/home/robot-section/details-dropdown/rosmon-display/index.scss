@@ -1,0 +1,13 @@
+.details-dropdown-section {
+  & > .overall-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: .75rem;
+  }
+
+  &:nth-child(2) {
+    border-left: 1px solid black;
+  }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>soccer_monitor</name>
+  <version>0.0.1</version>
+  <description>The monitoring UI for Soccerbot</description>
+  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason Wang</maintainer>
+  <license>Private</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>nodejs</depend>
+  <depend>iputils-ping</depend>
+  <exec_depend>soccer_control_center</exec_depend>
+</package>

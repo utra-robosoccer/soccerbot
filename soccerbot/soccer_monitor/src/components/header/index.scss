@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid black;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  position: fixed;
+  top: 0;
+  background: white;
+  z-index: 3;
+
+  &-section {
+    position: relative;
+    width: 100%;
+  }
+
+  &-name {
+    height: 2.5rem;
+    line-height: 2.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
+.logo {
+  position: absolute;
+  height: 1.5rem;
+  width: auto;
+  float: left;
+  margin: 0.5rem;
+}

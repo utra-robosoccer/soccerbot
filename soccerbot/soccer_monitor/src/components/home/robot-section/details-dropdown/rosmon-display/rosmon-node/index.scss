@@ -1,0 +1,65 @@
+.node-status-stale {
+  color: lightgrey;
+}
+
+.node-status {
+  display: flex;
+  border: 1px solid black;
+  margin-bottom: .5em;
+  flex-direction: column;
+  padding: .5rem;
+
+  & > .node-status-up {
+    display: flex;
+    width: 100%;
+
+    & > .identifier {
+      display: flex;
+      align-items: center;
+
+      & > .status-icon {
+        width: .9em;
+        height: .9em;
+        border-radius: 50%;
+        background-color: lightgreen;
+      }
+
+      & > .status-icon-idle {
+        background-color: lightgrey;
+      }
+
+      & > .status-icon-waiting {
+        background-color: lightyellow;
+      }
+
+      & > .status-icon-crashed {
+        background-color: red;
+      }
+
+      & > .node-name {
+        margin-right: 1rem;
+      }
+    }
+
+    & > .identifier-left {
+      width: 90%;
+    }
+
+    & > .identifier-right {
+      width: 10%;
+    }
+  }
+
+  & > .node-status-down {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    margin-top: .75rem;
+    align-items: center;
+
+    & > .stats {
+      height: 100%;
+      display: flex;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="rosbridge_url"      default="ws://localhost:9091" />
+  <arg name="monitoring_ui_host" default="0.0.0.0"/>
+  <arg name="monitoring_ui_port" default="9099"/>
+
+  <!-- Launch the monitoring UI node -->
+  <node pkg="sootballs_monitoring_ui" type="start.sh" output="log" name="sootballs_monitoring_ui">
+    <env name="ROSBRIDGE_URL" value="$(arg rosbridge_url)" />
+    <env name="UI_HOST"       value="$(arg monitoring_ui_host)"/>
+    <env name="UI_PORT"       value="$(arg monitoring_ui_port)"/>
+  </node>
+</launch>

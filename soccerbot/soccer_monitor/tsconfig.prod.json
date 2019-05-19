@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "types": ["webpack-env", "node"],
+    "lib": ["dom", "es5", "scripthost", "es2015"],
+    "downlevelIteration": true
+  }
+}

@@ -8,20 +8,33 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <depend>soccer_control</depend>
-  <depend>soccer_description</depend>
-  <depend>soccer_gazebo</depend>
+
+  <!-- Hardware and Sensors-->
+  <depend>soccer_hardware</depend>
+
+  <!-- Communication and UI-->
   <depend>soccer_msgs</depend>
   <depend>soccer_team_communication</depend>
-  <depend>soccer_common</depend>
-  <depend>soccer_matlab</depend>
-  <depend>soccer_hardware</depend>
-  <depend>usb_cam</depend>
+  <depend>soccer_monitor</depend>
+  <depend>soccer_control_center</depend>
+
+  <!-- Computer Vision and Localization-->
   <depend>amcl</depend>
+  <depend>usb_cam</depend>
+  <depend>map_server</depend>
+  <depend>darknet_ros</depend>
+
+  <!-- Control and Movement -->
+  <depend>soccer_description</depend>
+  <depend>soccer_matlab</depend>
+
+  <!-- Simulation -->
+  <depend>soccer_gazebo</depend>
+  <depend>soccer_control</depend>
   <depend>controller_manager</depend>
   <depend>ros_control</depend>
-  <depend>map_server</depend>
 
+  <!-- Omnibot-->
   <depend>omnibot_teleop</depend>
   <depend>omnibot_drive</depend>
 

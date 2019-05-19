@@ -1,0 +1,46 @@
+.details-dropdown {
+  width: 100%;
+  min-height: 100px;
+  max-height: 200px;
+  border: 1px solid black;
+  border-top: 0;
+  display: flex;
+
+  &-section {
+    padding: 1rem;
+    overflow-y: auto;
+
+    &:nth-child(2) {
+      flex: 1;
+      margin-left: auto;
+      max-width: 65%;
+    }
+
+    & > .launch-config-section {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      margin-bottom: .5em;
+
+      & > .launch-config-name {
+        width: 50%;
+        margin: 0 1em;
+      }
+
+      & > .launch-config-name-error {
+        color: crimson;
+      }
+
+      & > .retry-button {
+        padding: .25rem 1rem;
+        background-color: crimson;
+        color: white;
+        font-size: .8rem;
+        border: 1px solid crimson;
+        border-radius: 2em;
+        cursor: pointer;
+        margin-left: auto;
+      }
+    }
+  }
+}

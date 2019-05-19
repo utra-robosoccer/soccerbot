@@ -1,0 +1,31 @@
+.stats {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  & > .stats-holder-1 {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+
+    & > .section {
+      min-width: 21.4%;
+      font-size: .75rem;
+      padding-right: 2%;
+    }
+  }
+
+  & > .stats-holder-2 {
+    display: inline-flex;
+    width: 100%;
+    height: 50%;
+    align-items: center;
+
+    & > .section {
+      width: 46.8%;
+      font-size: .75rem;
+    }
+  }
+}

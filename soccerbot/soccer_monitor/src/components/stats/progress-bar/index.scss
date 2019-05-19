@@ -1,0 +1,13 @@
+.progress-bar {
+  display: flex;
+  border: 1px solid black;
+
+  & > .bar-block {
+    width: 1%;
+    height: .9em;
+  }
+
+  & > .filled {
+    background-color: lightgreen;
+  }
+}

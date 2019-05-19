@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>soccer_control_center</name>
+  <version>0.1.0</version>
+  <description>soccer_control_center</description>
+  <maintainer email="jiashen.wang@mail.utoronto.ca">Jason Wang</maintainer>
+  <license>Private</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rr_common_config</depend>
+  <depend>rr_base_utils</depend>
+  <depend>soccer_msgs</depend>
+
+  <depend>supervisor</depend>
+  <depend>python-scp</depend>
+  <depend>python-yaml</depend>
+  <depend>python-flask</depend>
+  <depend>python-paramiko</depend>
+  <depend>python-flask-cors-pip</depend>
+  <depend>lighttpd</depend>
+  <depend>gamin</depend>
+  <depend>openssh-server</depend>
+
+  <test_depend>rr_base_utils</test_depend>
+
+</package>

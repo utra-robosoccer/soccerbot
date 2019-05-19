@@ -10,3 +10,6 @@
 [submodule "soccerbot/soccer_matlab/matlab"]
 	path = soccerbot/soccer_matlab/matlab
 	url = https://github.com/utra-robosoccer/soccer-matlab
+[submodule "external/rosmon"]
+	path = external/rosmon
+	url = https://github.com/utra-robosoccer/rosmon

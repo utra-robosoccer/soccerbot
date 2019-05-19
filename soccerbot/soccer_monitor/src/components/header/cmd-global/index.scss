@@ -1,0 +1,71 @@
+.cmd-global {
+  font-size: 1rem;
+
+  margin: 1em 0;
+  width: 100%;
+  text-align: center;
+
+  &-pane {
+    $pane_padding: 0.75em;
+
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: $pane_padding;
+    min-width: 250px;
+    max-width: 75vw;
+
+    &-header {
+      border: 1px solid black;
+      padding: 0.5em;
+      min-width: 75%;
+      text-align: center;
+      background: #dc1d30;
+      color: white;
+    }
+
+    &-header-started {
+      background: #41803f;
+    }
+
+    &-body {
+      margin-top: $pane_padding;
+    }
+  }
+
+  &-button {
+    $btn_radius: 2em;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0.4em 2em;
+    border: 1px solid grey;
+    color: white;
+    border-radius: $btn_radius;
+    font-family: inherit;
+    user-select: none;
+    overflow: hidden;
+
+    &-start {
+      background-color: #41803f;
+      border-radius: $btn_radius 0 0 $btn_radius;
+    }
+
+    &-stop {
+      background-color: crimson;
+      border-radius: 0 $btn_radius $btn_radius 0;
+    }
+
+    &:active:before {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.2);
+      content: "";
+    }
+  }
+}

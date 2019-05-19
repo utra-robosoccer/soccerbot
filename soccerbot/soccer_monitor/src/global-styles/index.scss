@@ -1,0 +1,52 @@
+@import "./reset.css";
+@import "./toggle.css";
+/* open-sans-regular - latin */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Open Sans Regular"), local("OpenSans-Regular"),
+    url("./fonts/open-sans-v15-latin-regular.woff2") format("woff2");
+}
+
+@mixin full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
+  font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Open Sans", sans-serif;
+  @include full-screen;
+}
+
+#root {
+  @include full-screen;
+}
+
+.noty_type__error {
+  background-color: #dc1d30 !important;
+}
+
+.noty_body {
+  background-color: #dc1d30 !important;
+  font-size: 20px !important;
+}
+
+.noty-refresh-button {
+  height: 5vh;
+  font-size: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  padding-top: 0.5vh;
+  background-color: white;
+  border: none;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.noty_progressbar {
+  position: relative !important;
+  height: 2vh !important;
+}

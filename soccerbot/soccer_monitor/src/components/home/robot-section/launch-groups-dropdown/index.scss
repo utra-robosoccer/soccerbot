@@ -1,0 +1,40 @@
+.launch-groups-dropdown-selected {
+  display: flex;
+
+  & > .text {
+    padding: 0.35rem 1rem;
+    font-size: 1rem;
+  }
+
+  & > .dropdown-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -0.25em 0 0 auto;
+    padding-right: 0.75em;
+  }
+}
+
+.launch-groups-dropdown-list {
+  z-index: 2;
+  position: absolute;
+  width: 95%;
+  right: 0;
+  background-color: white;
+  font-size: 0.85rem;
+
+  & > .entry {
+    border: 1px solid black;
+    display: block;
+    align-items: center;
+    padding: 0.5rem 1rem;
+
+    &:not(:first-child) {
+      border-top: 0;
+    }
+  }
+
+  & > .entry-highlighted {
+    background-color: #e4989d;
+  }
+}

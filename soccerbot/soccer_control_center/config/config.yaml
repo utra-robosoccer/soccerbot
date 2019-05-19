@@ -1,0 +1,15 @@
+--- 
+# env: 
+  #Ros master uri should not be set here, it can vary per robot
+  #ROS_MASTER_URI: "http://localhost:11311"
+launch_configs:
+  -
+    command: "mon launch soccerbot computer_vision.launch"
+    monitor_node: true
+    name: computer_vision
+
+launch_groups: 
+  - 
+    launch_configs: 
+      - computer_vision
+    name: soccerbot
