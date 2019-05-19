@@ -9,5 +9,5 @@ float Segment2::slope() const {
 }
 
 float Segment2::length() const {
-    return p1.distance(p1, p2);
+    return Point2::distance(p1, p2);
 }

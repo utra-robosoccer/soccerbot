@@ -2,6 +2,7 @@
 
 #include <geometry/point3.hpp>
 #include <memory>
+#include <vector>
 
 struct Segment3 {
     Point3 p1;
@@ -11,4 +12,6 @@ struct Segment3 {
     Segment3(Point3 p1, Point3 p2) : p1(std::move(p1)), p2(std::move(p2)) {}
 
     float length() const;
+
+    std::vector<Point3> getSpacedPoints(float spacing) const;
 };
