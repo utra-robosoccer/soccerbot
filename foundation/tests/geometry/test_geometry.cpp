@@ -2,6 +2,7 @@
 #include <geometry/point2.hpp>
 #include <geometry/point3.hpp>
 #include <geometry/segment2.hpp>
+#include <geometry/segment3.hpp>
 
 TEST(Geometry, Segment2Slope) {
     Point2 p1(1, 1);
@@ -26,6 +27,13 @@ TEST(Geometry, Point2Distance) {
 TEST(Geometry, Point2Norm) {
     Point2 p1(3, 4);
     ASSERT_FLOAT_EQ(5.0, p1.norm());
+}
+
+TEST(Geometry, Segment3Length) {
+    Point3 p1(1, 1, 1);
+    Point3 p2(2, 2, 2);
+    Segment3 s(p1, p2);
+    ASSERT_FLOAT_EQ(1.732050808, s.length());
 }
 
 TEST(Geometry, Point3Distance) {

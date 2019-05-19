@@ -28,6 +28,7 @@ add_library(geometry
     src/geometry/point2.cpp
     src/geometry/point3.cpp
     src/geometry/segment2.cpp
+    src/geometry/segment3.cpp
     )
 add_dependencies(geometry ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(geometry
