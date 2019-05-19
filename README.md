@@ -55,6 +55,11 @@ catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
 
+Build and run tests
+```
+catkin build <pkg name> --verbose --catkin-make-args run_tests
+```
+
 #### Connecting the Robot
 Edit your .bashrc, 
 - it should look like this, but you have to run ifconfig to see the correct interface for your Wifi (replace wlp110s0)
