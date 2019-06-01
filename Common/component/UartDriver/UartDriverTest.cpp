@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "osInterfaceMock.h"
+#include "OsInterfaceMock.h"
 #include "UartInterfaceMock.h"
 
 
