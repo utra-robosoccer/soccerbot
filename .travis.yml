@@ -1,7 +1,7 @@
 matrix:
   include:
-    -os: linux
-     addons:
+    - os: linux
+      addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
