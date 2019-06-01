@@ -180,8 +180,6 @@ $(TARGET_BUILD_DIR)/Test/%.o: %.cpp
 	
 $(TARGET_BUILD_DIR)/Test/%.o: $(COMMON_DIR)/%.cpp
 	@echo 'GCC C++ Compiler: Building file: $<'
-	$(info $(@D))
-	$(info directory $(TARGET_BUILD_DIR)/Test/$(patsubst /%.cpp,,$*))
 	@mkdir -p $(@D)
 	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
