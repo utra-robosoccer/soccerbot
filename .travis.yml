@@ -9,7 +9,7 @@ matrix:
           packages:
             - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CXX_FOR_BUILD=g++-8 && CC_FOR_BUILD=gcc-8 && TRAVIS_COMPILER=g++-8"
 
 language: cpp
 
@@ -36,8 +36,7 @@ before_script:
   - export PATH=/usr/local/bin/:$PATH
 
 script:
-  - eval "${MATRIX_EVAL}"
   - cd $TRAVIS_BUILD_DIR/Robot/
-  - g++ --version
+  - g++-8 --version
   - make -j12 TARGET=F4 all
   - make -j12 TARGET=F7 all
