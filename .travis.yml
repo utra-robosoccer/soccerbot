@@ -38,7 +38,7 @@ before_script:
 script:
   - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
-  - g++ --version
+  - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
   - make -j12 TARGET=F4 all
   - make -j12 TARGET=F7 all
