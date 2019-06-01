@@ -764,52 +764,16 @@ void print_ip_address(char ip_address[]){
 
 int main(){
 	int FileDescriptor = open();
-	//ssd1306_command(0x20,FileDescriptor);
 	begin(FileDescriptor);
-	
 
-
-	//ssd1306_command(0xA7, FileDescriptor);
-	//for (int i = 0; i< SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8; i++){
-	//	buffer[i] = 0x00;
-	//}
-	
-	//drawPixel(0, 0, INVERSE);
-	//drawPixel(120,  0, INVERSE);
-	//drawPixel(120,60, INVERSE);
-	//writeDisplay(FileDescriptor);
 	clear();
 	setTextSize(2);
 	setTextColor(WHITE);
 	setCursor(0,0);
-	//writePixel(0,0, WHITE);
-	//writePixel(0,1,	WHITE);
-	//writePixel(0,2, WHITE);
-	//writePixel(0,3, WHITE);
-	//writePixel(0,4, WHITE);
-	//write('1');
-	//write(2);
-	//write('.');
-	//for (uint8_t i=0; i< 5; i++){
-	//	if (i== '\n'){
-	//		continue;
-	//	}
-	//	write(i);
-	//}
+
 	print_ip_address(ip);
 	writeDisplay(FileDescriptor);
-
 	close(FileDescriptor);
 	
-	
-	
-	
-	
-	//int FileDescriptor = get_filedescriptor();
-	//if (FileDescriptor != -1){
-	//	i2c_smbus_write_byte(FileDescriptor, 2);
-	//}
-	//delay(5000);
-	//i2c_smbus_write_byte(FileDescriptor,2);
 	return 0;
 }
