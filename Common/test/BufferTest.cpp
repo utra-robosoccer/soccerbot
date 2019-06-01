@@ -27,6 +27,7 @@ using ::testing::DoAll;
 using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
+using ::testing::NiceMock;
 
 using cmsis::gmock::OsInterfaceMock;
 using namespace buffer;
@@ -43,7 +44,7 @@ osMutexId mutex = nullptr;
 // ----------------------------------------------------------------------------
 class BufferTest : public ::testing::Test {
 protected:
-    OsInterfaceMock os;
+    NiceMock<OsInterfaceMock> os;
 };
 
 // Functions

@@ -25,6 +25,7 @@
 #include "UartInterfaceMock.h"
 
 using ::testing::_;
+using ::testing::NiceMock;
 
 using cmsis::gmock::OsInterfaceMock;
 using hal::gmock::UartInterfaceMock;
@@ -66,9 +67,9 @@ protected:
     }
 
     UartDriver *UARTxDriver = nullptr;
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
-    GpioInterfaceMock gpio;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
+    NiceMock<GpioInterfaceMock> gpio;
     DaisyChainParams p;
 };
 
@@ -77,17 +78,12 @@ protected:
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST_F(AX12ATest, CanBeCreated){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-}
-
 TEST_F(AX12ATest, setBaudRateBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setBaudRate(dynamixel::AX12A_DEFAULT_BAUD_RATE);
-    m.setBaudRate(7844);
+    ASSERT_TRUE(m.setBaudRate(dynamixel::AX12A_DEFAULT_BAUD_RATE));
+    ASSERT_TRUE(m.setBaudRate(7844));
 
     ASSERT_FALSE(m.setBaudRate(1000000 + 1));
     ASSERT_FALSE(m.setBaudRate(7844 - 1));
@@ -97,36 +93,18 @@ TEST_F(AX12ATest, setGoalVelocityBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY);
-    m.setGoalVelocity(dynamixel::MIN_VELOCITY);
+    ASSERT_TRUE(m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY));
+    ASSERT_TRUE(m.setGoalVelocity(dynamixel::MIN_VELOCITY));
 
     ASSERT_FALSE(m.setGoalVelocity(dynamixel::AX12A_MAX_VELOCITY + 1));
     ASSERT_FALSE(m.setGoalVelocity(dynamixel::MIN_VELOCITY - 1));
-}
-
-TEST_F(AX12ATest, CanSetCwComplianceMargin){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-
-    uint8_t cwMargin = 1; // 0.29 degrees
-    m.setCwComplianceMargin(cwMargin);
-    m.setCwComplianceMargin(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_MARGIN);
-}
-
-TEST_F(AX12ATest, CanSetCcwComplianceMargin){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-
-    uint8_t cwMargin = 8; // 2.32 degrees
-    m.setCcwComplianceMargin(cwMargin);
-    m.setCcwComplianceMargin(dynamixel::AX12A_DEFAULT_CCW_COMPLIANCE_MARGIN);
 }
 
 TEST_F(AX12ATest, setCwComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setCwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE);
+    ASSERT_TRUE(m.setCwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE));
 
     ASSERT_FALSE(m.setCwComplianceSlope(8));
 }
@@ -135,7 +113,7 @@ TEST_F(AX12ATest, setCcwComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setCcwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE);
+    ASSERT_TRUE(m.setCcwComplianceSlope(dynamixel::AX12A_DEFAULT_CW_COMPLIANCE_SLOPE));
 
     ASSERT_FALSE(m.setCcwComplianceSlope(8));
 }
@@ -144,25 +122,9 @@ TEST_F(AX12ATest, setComplianceSlopeBoundsCheckPasses){
     DaisyChain chain(p);
     AX12A m(1, &chain);
 
-    m.setComplianceSlope(5);
+    ASSERT_TRUE(m.setComplianceSlope(5));
 
     ASSERT_FALSE(m.setComplianceSlope(8));
-}
-
-TEST_F(AX12ATest, CanSetComplianceMargin){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-
-    uint8_t margin = 4; // 1.16 degrees
-    m.setComplianceMargin(margin);
-}
-
-TEST_F(AX12ATest, CanGetVelocity){
-    DaisyChain chain(p);
-    AX12A m(1, &chain);
-
-    float currentVelocity = 0;
-    m.getVelocity(currentVelocity);
 }
 
 } // end anonymous namespace

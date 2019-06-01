@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "OsInterfaceMock.h"
+#include "osInterfaceMock.h"
 #include "UartInterfaceMock.h"
 
 
@@ -29,6 +29,7 @@ using ::testing::DoAll;
 using ::testing::SetArgPointee;
 using ::testing::Return;
 using ::testing::_;
+using ::testing::NiceMock;
 
 
 using uart::UartDriver;
@@ -81,7 +82,7 @@ TEST(UartDriver, ShouldFailReceiveWithNullInitializers){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailTransmitWithNullUartInterface){
-    OsInterfaceMock os;
+    NiceMock<OsInterfaceMock> os;
 
     UART_HandleTypeDef UARTx = {0};
 
@@ -96,7 +97,7 @@ TEST(UartDriver, ShouldFailTransmitWithNullUartInterface){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailReceiveWithNullUartInterface){
-    OsInterfaceMock os;
+    NiceMock<OsInterfaceMock> os;
 
     UART_HandleTypeDef UARTx = {0};
 
@@ -111,8 +112,8 @@ TEST(UartDriver, ShouldFailReceiveWithNullUartInterface){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailTransmitWithNullUartHandle){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
 
     UartDriver UARTxDriver(&os, &uart, nullptr);
 
@@ -125,8 +126,8 @@ TEST(UartDriver, ShouldFailTransmitWithNullUartHandle){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailReceiveWithNullUartHandle){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
 
     UartDriver UARTxDriver(&os, &uart, nullptr);
 
@@ -139,7 +140,7 @@ TEST(UartDriver, ShouldFailReceiveWithNullUartHandle){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailTransmitITWithNullOSInterface){
-    UartInterfaceMock uart;
+    NiceMock<UartInterfaceMock> uart;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -154,7 +155,7 @@ TEST(UartDriver, ShouldFailTransmitITWithNullOSInterface){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailTransmitDMAWithNullOSInterface){
-    UartInterfaceMock uart;
+    NiceMock<UartInterfaceMock> uart;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -169,7 +170,7 @@ TEST(UartDriver, ShouldFailTransmitDMAWithNullOSInterface){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailReceiveITWithNullOSInterface){
-    UartInterfaceMock uart;
+    NiceMock<UartInterfaceMock> uart;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -184,7 +185,7 @@ TEST(UartDriver, ShouldFailReceiveITWithNullOSInterface){
 // This is needed so that the driver won't work unless it's initialized
 // properly
 TEST(UartDriver, ShouldFailReceiveDMAWithNullOSInterface){
-    UartInterfaceMock uart;
+    NiceMock<UartInterfaceMock> uart;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -197,7 +198,7 @@ TEST(UartDriver, ShouldFailReceiveDMAWithNullOSInterface){
 }
 
 TEST(UartDriver, ShouldCallTransmitPollForPollIOType){
-    UartInterfaceMock uart;
+    NiceMock<UartInterfaceMock> uart;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -212,8 +213,8 @@ TEST(UartDriver, ShouldCallTransmitPollForPollIOType){
 }
 
 TEST(UartDriver, ShouldCallTransmitITPollForITIOType){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -228,8 +229,8 @@ TEST(UartDriver, ShouldCallTransmitITPollForITIOType){
 }
 
 TEST(UartDriver, ShouldCallTransmitDMAForDMAIOType){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -244,8 +245,8 @@ TEST(UartDriver, ShouldCallTransmitDMAForDMAIOType){
 }
 
 TEST(UartDriver, ShouldFailAndAbortTransmitPollWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -263,8 +264,8 @@ TEST(UartDriver, ShouldFailAndAbortTransmitPollWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortTransmitITWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -282,8 +283,8 @@ TEST(UartDriver, ShouldFailAndAbortTransmitITWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortTransmitDMAWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -301,8 +302,8 @@ TEST(UartDriver, ShouldFailAndAbortTransmitDMAWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortTransmitITWhenOSBlockTimesOut){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -322,8 +323,8 @@ TEST(UartDriver, ShouldFailAndAbortTransmitITWhenOSBlockTimesOut){
 }
 
 TEST(UartDriver, ShouldFailAndAbortTransmitDMAWhenOSBlockTimesOut){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -343,8 +344,8 @@ TEST(UartDriver, ShouldFailAndAbortTransmitDMAWhenOSBlockTimesOut){
 }
 
 TEST(UartDriver, PollTransmitCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -360,8 +361,8 @@ TEST(UartDriver, PollTransmitCanSucceed){
 }
 
 TEST(UartDriver, ITTransmitCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -379,8 +380,8 @@ TEST(UartDriver, ITTransmitCanSucceed){
 }
 
 TEST(UartDriver, DMATransmitCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -398,8 +399,8 @@ TEST(UartDriver, DMATransmitCanSucceed){
 }
 
 TEST(UartDriver, ShouldCallReceivePollForPollIOType){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -414,8 +415,8 @@ TEST(UartDriver, ShouldCallReceivePollForPollIOType){
 }
 
 TEST(UartDriver, ShouldCallReceiveITForITIOType){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -430,8 +431,8 @@ TEST(UartDriver, ShouldCallReceiveITForITIOType){
 }
 
 TEST(UartDriver, ShouldCallReceiveDMAForDMAIOType){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -446,8 +447,8 @@ TEST(UartDriver, ShouldCallReceiveDMAForDMAIOType){
 }
 
 TEST(UartDriver, ShouldFailAndAbortReceivePollWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -465,8 +466,8 @@ TEST(UartDriver, ShouldFailAndAbortReceivePollWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortReceiveITWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -484,8 +485,8 @@ TEST(UartDriver, ShouldFailAndAbortReceiveITWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortReceiveDMAWhenHardwareCallFails){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -503,8 +504,8 @@ TEST(UartDriver, ShouldFailAndAbortReceiveDMAWhenHardwareCallFails){
 }
 
 TEST(UartDriver, ShouldFailAndAbortReceiveITWhenOSBlockTimesOut){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -524,8 +525,8 @@ TEST(UartDriver, ShouldFailAndAbortReceiveITWhenOSBlockTimesOut){
 }
 
 TEST(UartDriver, ShouldFailAndAbortReceiveDMAWhenOSBlockTimesOut){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -545,8 +546,8 @@ TEST(UartDriver, ShouldFailAndAbortReceiveDMAWhenOSBlockTimesOut){
 }
 
 TEST(UartDriver, PollReceiveCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(nullptr, &uart, &UARTx);
@@ -562,8 +563,8 @@ TEST(UartDriver, PollReceiveCanSucceed){
 }
 
 TEST(UartDriver, ITReceiveCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
@@ -581,8 +582,8 @@ TEST(UartDriver, ITReceiveCanSucceed){
 }
 
 TEST(UartDriver, DMAReceiveCanSucceed){
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
     UART_HandleTypeDef UARTx = {0};
 
     UartDriver UARTxDriver(&os, &uart, &UARTx);
