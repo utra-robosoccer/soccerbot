@@ -7,9 +7,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8.2
+            - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8.2 && CXX=g++-8.2 && CXX_FOR_BUILD=g++-8.2 && CC_FOR_BUILD=gcc-8.2 && TRAVIS_COMPILER=g++-8.2"
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CXX_FOR_BUILD=g++-8 && CC_FOR_BUILD=gcc-8 && TRAVIS_COMPILER=g++-8"
 
 language: cpp
 

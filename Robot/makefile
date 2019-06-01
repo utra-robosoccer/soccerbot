@@ -174,14 +174,14 @@ $(TARGET_BUILD_DIR)/%.o: %.s
 $(TARGET_BUILD_DIR)/Test/%.o: %.cpp
 	@echo 'GCC C++ Compiler: Building file: $<'
 	@mkdir -p $(@D)
-	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 	
 $(TARGET_BUILD_DIR)/Test/%.o: $(COMMON_DIR)/%.cpp
 	@echo 'GCC C++ Compiler: Building file: $<'
 	@mkdir -p $(@D)
-	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '	
 	
