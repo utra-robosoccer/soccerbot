@@ -50,12 +50,18 @@ $(COMMON_DIR)/component/MPU6050 \
 $(COMMON_DIR)/component/UartDriver \
 $(COMMON_DIR)/hardware \
 
+TEST_SUBDIR := \
+$(SUBDIRS) \
+$(COMMON_DIR)/test \
 
 # Sources to be excluded from the build
 ifeq ($(TARGET),$(F4))
-EXCL_SRCS := $(COMMON_DIR)/hardware/UdpRawInterfaceImpl.cpp
+EXCL_SRCS :=\
+$(COMMON_DIR)/hardware/UdpRawInterfaceImpl.cpp \
+%_test.cpp
 else ifeq ($(TARGET),$(F7))
-EXCL_SRCS :=
+EXCL_SRCS :=\
+%_test.cpp
 else
 $(error EXCL_SRCS not configured for target $(TARGET))
 endif
@@ -91,6 +97,10 @@ INC := \
 -I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
 $(MCU_UNIQUE_INC)
 
+TEST_INC := \
+-I"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\googletest\include" \
+-I"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\googlemock\include" \
+
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
 C_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.c,$(SUBDIRS))))
@@ -99,21 +109,27 @@ S_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.s,$(SUBDIRS))))
 C_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(C_SRCS:.c=.o)))
 CPP_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_SRCS:.cpp=.o)))
 S_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(S_SRCS:.s=.o)))
-
+CPP_TEST_SRCS := $(wildcard $(addsuffix /*_test.cpp,$(TEST_SUBDIR)))
+CPP_TEST_INC_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(patsubst %_test.cpp,%.cpp,$(CPP_TEST_SRCS))))
+CPP_TEST_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_SRCS:.cpp=.o)))
+CPP_TEST_OBJECTS += $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_INC_SRCS:.cpp=.o)))
+CPP_TEST_OBJECTS += ../gmock/src/Test.o 
 
 # Define compiler flags
 ifeq ($(TARGET),$(F4))
 MCPU := -mcpu=cortex-m4
+MCU_DSTM := -DSTM32F446xx
 MCU_FLAG := -mcpu=cortex-m4 -DSTM32F446xx
 else ifeq ($(TARGET),$(F7))
 MCPU := -mcpu=cortex-m7
+MCU_DSTM := -DSTM32F767xx
 MCU_FLAG := -mcpu=cortex-m7 -DSTM32F767xx
 else
 $(error MCU_FLAG not configured for target $(TARGET))
 endif
 
 CFLAGS := -fprofile-arcs -ftest-coverage $(MCU_FLAG) -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
-
+TEST_LIBS := -lgtest -lgmock -lgmock_main
 
 # Define target recipes for all objects in object list, create object in BUILD_DIR
 TARGET_BUILD_DIR := $(BUILD_DIR)/$(TARGET)
@@ -154,6 +170,22 @@ $(TARGET_BUILD_DIR)/%.o: %.s
 	@echo 'Finished building: $<'
 	@echo ' '
 
+$(TARGET_BUILD_DIR)/Test/%.o: %.cpp
+	@echo 'GCC C++ Compiler: Building file: $<'
+	@mkdir -p $(@D)
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+	
+$(TARGET_BUILD_DIR)/Test/%.o: $(COMMON_DIR)/%.cpp
+	@echo 'GCC C++ Compiler: Building file: $<'
+	$(info $(@D))
+	$(info directory $(TARGET_BUILD_DIR)/Test/$(patsubst /%.cpp,,$*))
+	@mkdir -p $(@D)
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '	
+	
 
 # Define libraries
 ifeq ($(TARGET),$(F4))
@@ -166,7 +198,7 @@ endif
 
 
 # All Target
-all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf
+all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
@@ -179,7 +211,6 @@ $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
 	
-# Tool invocations
 $(BUILD_DIR)/F7/Robot_F7.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU G++ Linker'
@@ -187,6 +218,17 @@ $(BUILD_DIR)/F7/Robot_F7.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
+	
+$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe: $(CPP_TEST_OBJECTS)
+	$(info $(CPP_TEST_SRCS))
+	$(info $(CPP_TEST_INC_SRCS))
+	$(info $(CPP_TEST_OBJECTS))
+	@echo 'Building target: $@'
+	@echo 'Invoking: MinGW C++ Linker'
+	g++ -L"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\build\googlemock" -L"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\build\googlemock\gtest" -o "$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe" $(CPP_TEST_OBJECTS) $(TEST_LIBS)
+	@echo 'Finished building target: $@'
+	@echo ' '
+	./$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
 
 # Other Targets
 clean:
