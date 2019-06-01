@@ -14,20 +14,21 @@ BUILD_DIR = Build
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 PROJECT_DIR := $(CURDIR)
 COMMON_DIR := $(abspath ../Common)
+REPO_DIR := $(abspath ../)
 
 
 # Every subdirectory with source files must be described here
 ifeq ($(TARGET),$(F4))
 MCU_UNIQUE_SRC_SUBDIRS := \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+Src/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Src/F4 \
 startup/F4 
 else ifeq ($(TARGET),$(F7))
 MCU_UNIQUE_SRC_SUBDIRS := \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 \
-Middlewares/Third_Party/LwIP/src/* \
-Middlewares/Third_Party/LwIP/system/* \
+Src/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 \
+Src/Middlewares/Third_Party/LwIP/src/* \
+Src/Middlewares/Third_Party/LwIP/system/* \
 Drivers/STM32F7xx_HAL_Driver/Src  \
 Src/F7 \
 startup/F7 
@@ -37,9 +38,9 @@ endif
 
 SUBDIRS := \
 $(MCU_UNIQUE_SRC_SUBDIRS) \
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
-Middlewares/Third_Party/FreeRTOS/Source \
-Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
+Src/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
+Src/Middlewares/Third_Party/FreeRTOS/Source \
+Src/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
 $(COMMON_DIR)/app \
 $(COMMON_DIR)/component/CircularDmaBuffer \
 $(COMMON_DIR)/component/Communication \
@@ -58,10 +59,10 @@ $(COMMON_DIR)/test \
 ifeq ($(TARGET),$(F4))
 EXCL_SRCS :=\
 $(COMMON_DIR)/hardware/UdpRawInterfaceImpl.cpp \
-%_test.cpp
+%Test.cpp
 else ifeq ($(TARGET),$(F7))
 EXCL_SRCS :=\
-%_test.cpp
+%Test.cpp
 else
 $(error EXCL_SRCS not configured for target $(TARGET))
 endif
@@ -72,15 +73,15 @@ MCU_UNIQUE_INC :=\
 -I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc" \
 -I"$(PROJECT_DIR)/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy" \
 -I"$(PROJECT_DIR)/Drivers/CMSIS/Device/ST/STM32F4xx/Include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
 else ifeq ($(TARGET),$(F7))
 MCU_UNIQUE_INC :=\
 -I"$(PROJECT_DIR)/Drivers/STM32F7xx_HAL_Driver/Inc" \
 -I"$(PROJECT_DIR)/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" \
 -I"$(PROJECT_DIR)/Drivers/CMSIS/Device/ST/STM32F7xx/Include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/LwIP/src/include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/LwIP/system"
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1" \
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/LwIP/src/include" \
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/LwIP/system"
 else
 $(error MCU_UNIQUE_INC not configured for target $(TARGET))
 endif
@@ -93,13 +94,13 @@ INC := \
 -I"$(COMMON_DIR)/interface" \
 -I"$(COMMON_DIR)/mock" \
 -I"$(PROJECT_DIR)/Drivers/CMSIS/Include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/include" \
--I"$(PROJECT_DIR)/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/include" \
+-I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
 $(MCU_UNIQUE_INC)
 
 TEST_INC := \
--I"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\googletest\include" \
--I"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\googlemock\include" \
+-I"$(REPO_DIR)\googletest\googletest\include" \
+-I"$(REPO_DIR)\googletest\googlemock\include" \
 
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
@@ -109,11 +110,11 @@ S_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.s,$(SUBDIRS))))
 C_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(C_SRCS:.c=.o)))
 CPP_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_SRCS:.cpp=.o)))
 S_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/,$(patsubst $(COMMON_DIR)/%,%,$(S_SRCS:.s=.o)))
-CPP_TEST_SRCS := $(wildcard $(addsuffix /*_test.cpp,$(TEST_SUBDIR)))
-CPP_TEST_INC_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(patsubst %_test.cpp,%.cpp,$(CPP_TEST_SRCS))))
+CPP_TEST_SRCS := $(wildcard $(addsuffix /*Test.cpp,$(TEST_SUBDIR)))
+CPP_TEST_INC_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(patsubst %Test.cpp,%.cpp,$(CPP_TEST_SRCS))))
 CPP_TEST_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_SRCS:.cpp=.o)))
 CPP_TEST_OBJECTS += $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_INC_SRCS:.cpp=.o)))
-CPP_TEST_OBJECTS += ../gmock/src/Test.o 
+CPP_TEST_OBJECTS += $(REPO_DIR)/gmock/src/Test.o 
 
 # Define compiler flags
 ifeq ($(TARGET),$(F4))
@@ -129,7 +130,7 @@ $(error MCU_FLAG not configured for target $(TARGET))
 endif
 
 CFLAGS := -fprofile-arcs -ftest-coverage $(MCU_FLAG) -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
-TEST_LIBS := -lgtest -lgmock -lgmock_main
+TEST_FLAGS := -lgtest -lgmock -lgmock_main
 
 # Define target recipes for all objects in object list, create object in BUILD_DIR
 TARGET_BUILD_DIR := $(BUILD_DIR)/$(TARGET)
@@ -196,6 +197,7 @@ else
 $(error LIBS not configured for target $(TARGET))
 endif
 
+TEST_LIBS := -L"$(REPO_DIR)/googletest/build/googlemock" -L"$(REPO_DIR)/googletest/build/googlemock/gtest" 
 
 # All Target
 all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
@@ -225,7 +227,7 @@ $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe: $(CPP_TEST_OBJECTS)
 	$(info $(CPP_TEST_OBJECTS))
 	@echo 'Building target: $@'
 	@echo 'Invoking: MinGW C++ Linker'
-	g++ -L"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\build\googlemock" -L"C:\Users\gokul\Documents\GitHub\soccer-embedded\RobotTest\googletest\build\googlemock\gtest" -o "$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe" $(CPP_TEST_OBJECTS) $(TEST_LIBS)
+	g++ $(TEST_LIBS) -o "$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe" $(CPP_TEST_OBJECTS) $(TEST_FLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	./$(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
