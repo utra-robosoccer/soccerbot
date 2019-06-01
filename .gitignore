@@ -91,6 +91,7 @@ tmp/
 # STM Microelectronics stuff
 **/Debug/
 **/Build/
+!googletest/build/
 **/output.map
 RemoteSystemsTempFiles/
 .metadata/
