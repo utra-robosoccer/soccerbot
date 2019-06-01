@@ -36,6 +36,7 @@ before_script:
   - export PATH=/usr/local/bin/:$PATH
 
 script:
+  - eval "${MATRIX_EVAL}"
   - cd $TRAVIS_BUILD_DIR/Robot/
   - g++ --version
   - make -j12 TARGET=F4 all
