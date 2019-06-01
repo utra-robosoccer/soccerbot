@@ -99,8 +99,8 @@ INC := \
 $(MCU_UNIQUE_INC)
 
 TEST_INC := \
--I"$(REPO_DIR)\googletest\googletest\include" \
--I"$(REPO_DIR)\googletest\googlemock\include" \
+-I"$(REPO_DIR)/googletest/googletest/include" \
+-I"$(REPO_DIR)/googletest/googlemock/include" \
 
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
