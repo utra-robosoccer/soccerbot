@@ -56,6 +56,11 @@
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/mock</locationURI>
 		</link>
+		<link>
+			<name>test</name>
+			<type>2</type>
+			<locationURI>$%257BPARENT-1-PROJECT_LOC%257D/Common/test</locationURI>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>

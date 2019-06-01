@@ -26,6 +26,7 @@
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::_;
+using ::testing::NiceMock;
 
 using uart::UartDriver;
 using hal::IO_Type;
@@ -67,9 +68,9 @@ protected:
     }
 
     UartDriver *UARTxDriver = nullptr;
-    UartInterfaceMock uart;
-    OsInterfaceMock os;
-    GpioInterfaceMock gpio;
+    NiceMock<UartInterfaceMock> uart;
+    NiceMock<OsInterfaceMock> os;
+    NiceMock<GpioInterfaceMock> gpio;
     DaisyChainParams p;
 };
 
@@ -78,10 +79,6 @@ protected:
 
 // Functions
 // ----------------------------------------------------------------------------
-TEST_F(DaisyChainShould, Construct){
-    DaisyChain chain(p);
-}
-
 // We cannot really test much more than this for transmit without totally
 // whiteboxing the test, which isn't good as we may change the implementation
 // soon to buffer the requests then package them as a sync write command
