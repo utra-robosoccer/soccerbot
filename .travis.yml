@@ -37,5 +37,6 @@ before_script:
 
 script:
   - cd $TRAVIS_BUILD_DIR/Robot/
+  - g++ --version
   - make -j12 TARGET=F4 all
   - make -j12 TARGET=F7 all
