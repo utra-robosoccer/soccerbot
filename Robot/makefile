@@ -174,14 +174,14 @@ $(TARGET_BUILD_DIR)/%.o: %.s
 $(TARGET_BUILD_DIR)/Test/%.o: %.cpp
 	@echo 'GCC C++ Compiler: Building file: $<'
 	@mkdir -p $(@D)
-	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -m32 -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 	
 $(TARGET_BUILD_DIR)/Test/%.o: $(COMMON_DIR)/%.cpp
 	@echo 'GCC C++ Compiler: Building file: $<'
 	@mkdir -p $(@D)
-	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -m32 -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ $(MCU_DSTM) $(TEST_INC) $(INC) -fpermissive -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '	
 	
@@ -198,7 +198,11 @@ endif
 TEST_LIBS := -L"$(REPO_DIR)/googletest/build/googlemock" -L"$(REPO_DIR)/googletest/build/googlemock/gtest" 
 
 # All Target
+ifndef CI
 all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
+else
+all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf
+endif
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
