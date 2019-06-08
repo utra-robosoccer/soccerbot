@@ -39,13 +39,14 @@ before_script:
   # add Make to path
   - export PATH=/usr/local/bin/:$PATH
 
-  - wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
-  - tar xf gcc-8.2.0.tar.xz
-  - cd gcc-8.2.0
-  - ./contrib/download_prerequisites
-  - mkdir build && cd build
-  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make -j16
-
+#  - wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
+#  - tar xf gcc-8.2.0.tar.xz
+#  - cd gcc-8.2.0
+#  - ./contrib/download_prerequisites
+#  - mkdir build && cd build
+#  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make -j16
+  - sudo add-apt-repository ppa:jonathonf/gcc-8.2
+  - sudo apt-get update
 script:
   - ls /usr/bin/
   - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
