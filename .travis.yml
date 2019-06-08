@@ -1,20 +1,20 @@
-matrix:
-  include:
-    # works on Precise and Trusty
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-      env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CXX_FOR_BUILD=g++-8 && CC_FOR_BUILD=gcc-8 && TRAVIS_COMPILER=g++-8"
+# matrix:
+#  include:
+#    # works on Precise and Trusty
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-8
+#      env:
+#        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CXX_FOR_BUILD=g++-8 && CC_FOR_BUILD=gcc-8 && TRAVIS_COMPILER=g++-8"
 
 language: cpp
 
-before_install:
-  - eval "${MATRIX_EVAL}"
+#before_install:
+#  - eval "${MATRIX_EVAL}"
 
 before_script:
   # install GCC ARM from GNU ARM Embedded Toolchain PPA
@@ -35,9 +35,16 @@ before_script:
   # add Make to path
   - export PATH=/usr/local/bin/:$PATH
 
+  - wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
+  - tar xzf gcc-8.2.0.tar.xz
+  - cd gcc-8.2.0
+  - mkdir build && cd build
+  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make
+
 script:
-  - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
+  - ls /usr/bin/
+  - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
   #- sudo apt-get install gcc-8-multilib g++-8-multilib
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
