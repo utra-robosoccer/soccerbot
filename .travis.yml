@@ -17,6 +17,9 @@ language: cpp
 #  - eval "${MATRIX_EVAL}"
 
 before_script:
+  - ls /usr/
+  - ls /usr/local/
+  - ls /usr/bin/
   # install GCC ARM from GNU ARM Embedded Toolchain PPA
   - sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa -y
   - sudo apt-get -qq update
