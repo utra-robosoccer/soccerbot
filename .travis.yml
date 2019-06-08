@@ -17,8 +17,8 @@ language: cpp
 #  - eval "${MATRIX_EVAL}"
 
 before_script:
-  - dpkg -l
-  - ls /usr/
+  # - dpkg -l
+  # - ls /usr/
   - ls /usr/local/
   - ls /usr/bin/
   # install GCC ARM from GNU ARM Embedded Toolchain PPA
@@ -45,7 +45,7 @@ before_script:
 #  - ./contrib/download_prerequisites
 #  - mkdir build && cd build
 #  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make -j16
-  - sudo add-apt-repository ppa:jonathonf/gcc-8.2
+  - sudo add-apt-repository ppa:jonathonf/gcc-8.2 -y
   - sudo apt-get update
 script:
   - ls /usr/bin/
