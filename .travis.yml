@@ -36,7 +36,7 @@ before_script:
   - export PATH=/usr/local/bin/:$PATH
 
   - wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
-  - tar xzf gcc-8.2.0.tar.xz
+  - tar xvf gcc-8.2.0.tar.xz
   - cd gcc-8.2.0
   - mkdir build && cd build
   - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make
