@@ -17,6 +17,7 @@ language: cpp
 #  - eval "${MATRIX_EVAL}"
 
 before_script:
+  - dpkg -l
   - ls /usr/
   - ls /usr/local/
   - ls /usr/bin/
@@ -30,7 +31,7 @@ before_script:
   - tar xvf make-4.1.tar.gz
   - cd make-4.1
   - ./configure
-  - make
+  - make -j16
   - sudo make install
   - cd ..
   - rm -rf make-4.1
@@ -43,7 +44,7 @@ before_script:
   - cd gcc-8.2.0
   - ./contrib/download_prerequisites
   - mkdir build && cd build
-  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make
+  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make -j16
 
 script:
   - ls /usr/bin/
