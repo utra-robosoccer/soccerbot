@@ -120,7 +120,7 @@ CPP_TEST_SRCS := $(wildcard $(addsuffix /*Test.cpp,$(TEST_SUBDIR)))
 CPP_TEST_INC_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(patsubst %Test.cpp,%.cpp,$(CPP_TEST_SRCS))))
 CPP_TEST_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_SRCS:.cpp=.o)))
 CPP_TEST_OBJECTS += $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_INC_SRCS:.cpp=.o)))
-CPP_TEST_OBJECTS += $(REPO_DIR)/gmock/src/Test.o 
+#CPP_TEST_OBJECTS += $(REPO_DIR)/gmock/src/Test.o 
 
 # Define compiler flags
 ifeq ($(TARGET),$(F4))
