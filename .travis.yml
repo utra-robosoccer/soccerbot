@@ -17,10 +17,6 @@ language: cpp
 #  - eval "${MATRIX_EVAL}"
 
 before_script:
-  # - dpkg -l
-  # - ls /usr/
-  - ls /usr/local/
-  - ls /usr/bin/
   # install GCC ARM from GNU ARM Embedded Toolchain PPA
   - sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa -y
   - sudo apt-get -qq update
@@ -39,20 +35,20 @@ before_script:
   # add Make to path
   - export PATH=/usr/local/bin/:$PATH
 
-#  - wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
-#  - tar xf gcc-8.2.0.tar.xz
-#  - cd gcc-8.2.0
-#  - ./contrib/download_prerequisites
-#  - mkdir build && cd build
-#  - ../configure --prefix=/usr --disable-multilib --disable-libmpx --with-system-zlib --enable-languages=c,c++,fortran,go,objc,obj-c++ && make -j16
-  - sudo add-apt-repository ppa:jonathonf/gcc-8.2 -y
-  - sudo apt-get update
-script:
-  - ls /usr/bin/
+  # make gcc 8.2 default
   - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
-  #- sudo apt-get install gcc-8-multilib g++-8-multilib
+
+  # compile googletest/mock libraries
+  - sudo apt-get -y install cmake
+  - cd $TRAVIS_BUILD_DIR/Robot/ && mkdir googletest_clone && cd googletest_clone
+  - git clone https://github.com/google/googletest.git
+  - cd googletest && mkdir build && cd build
+  - cmake .. 
+  - make -j16 DGTEST_CREATE_SHARED_LIBRARY=1
+
+script:
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
-  - make -j12 TARGET=F4 all
-  - make -j12 TARGET=F7 all
+  - make -j16 TARGET=F4 all
+  - make -j16 TARGET=F7 all
