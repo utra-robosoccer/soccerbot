@@ -24,7 +24,7 @@ before_script:
 
   # build GNU Make 4.1 from source
   - wget http://ftp.gnu.org/gnu/make/make-4.1.tar.gz
-  - tar xvf make-4.1.tar.gz
+  - tar xf make-4.1.tar.gz
   - cd make-4.1
   - ./configure
   - make -j16
@@ -35,10 +35,6 @@ before_script:
   # add Make to path
   - export PATH=/usr/local/bin/:$PATH
 
-  # make gcc 8.2 default
-  - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
-
   # compile googletest/mock libraries
   - sudo apt-get -y install cmake
   - cd $TRAVIS_BUILD_DIR/Robot/ && mkdir googletest_clone && cd googletest_clone
@@ -48,7 +44,12 @@ before_script:
   - make -j16 DGTEST_CREATE_SHARED_LIBRARY=1
 
 script:
+  # make gcc 8.2 default
+  - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
+  - ls /home/travis/build/utra-robosoccer/soccer-embedded/googletest_clone/googletest/googletest/include
+  - ls /home/travis/build/utra-robosoccer/soccer-embedded/googletest_clone/googletest/googlemock/include
   - make -j16 TARGET=F4 all
   - make -j16 TARGET=F7 all
