@@ -102,11 +102,11 @@ $(MCU_UNIQUE_INC)
 ifndef CI
 TEST_INC := \
 -I"$(REPO_DIR)/googletest/googletest/include" \
--I"$(REPO_DIR)/googletest/googlemock/include" \
+-I"$(REPO_DIR)/googletest/googlemock/include"
 else
 TEST_INC := \
 -I"$(REPO_DIR)/googletest_clone/googletest/googletest/include" \
--I"$(REPO_DIR)/googletest_clone/googletest/googlemock/include" \
+-I"$(REPO_DIR)/googletest_clone/googletest/googlemock/include"
 endif
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
