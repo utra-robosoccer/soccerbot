@@ -44,9 +44,9 @@ before_script:
   - make -j16 DGTEST_CREATE_SHARED_LIBRARY=1
 
 script:
-  # make gcc 8.2 default
-  - sudo ln -s /usr/bin/gcc-8.2 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
+  # make gcc 8 default
+  - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
   - make -j16 TARGET=F4 all
