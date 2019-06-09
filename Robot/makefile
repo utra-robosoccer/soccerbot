@@ -136,7 +136,12 @@ $(error MCU_FLAG not configured for target $(TARGET))
 endif
 
 CFLAGS := -fprofile-arcs -ftest-coverage $(MCU_FLAG) -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
+
+ifndef CI
 TEST_FLAGS := -lgtest -lgmock -lgmock_main
+else
+TEST_FLAGS := -lgtest -lgmock -lgmock_main -pthread
+endif
 
 # Define target recipes for all objects in object list, create object in BUILD_DIR
 TARGET_BUILD_DIR := $(BUILD_DIR)/$(TARGET)
