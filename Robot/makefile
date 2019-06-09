@@ -98,10 +98,16 @@ INC := \
 -I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
 $(MCU_UNIQUE_INC)
 
+
+ifndef CI
 TEST_INC := \
 -I"$(REPO_DIR)/googletest/googletest/include" \
 -I"$(REPO_DIR)/googletest/googlemock/include" \
-
+else
+TEST_INC := \
+-I"$(REPO_DIR)/googletest_clone/googletest/googletest/include" \
+-I"$(REPO_DIR)/googletest_clone/googletest/googlemock/include" \
+endif
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
 C_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.c,$(SUBDIRS))))
@@ -195,14 +201,15 @@ else
 $(error LIBS not configured for target $(TARGET))
 endif
 
+ifndef CI
 TEST_LIBS := -L"$(REPO_DIR)/googletest/build/googlemock" -L"$(REPO_DIR)/googletest/build/googlemock/gtest" 
+else
+TEST_LIBS := -L"$(REPO_DIR)/googletest_clone/googletest/build/lib"
+endif
+
 
 # All Target
-ifndef CI
 all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
-else
-all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf
-endif
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
