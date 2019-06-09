@@ -209,7 +209,7 @@ endif
 ifndef CI
 TEST_LIBS := -L"$(REPO_DIR)/googletest/build/googlemock" -L"$(REPO_DIR)/googletest/build/googlemock/gtest" 
 else
-TEST_LIBS := -L"$(REPO_DIR)/googletest_clone/googletest/build/lib" -L "/usr/lib/x86_64-linux-gnu"
+TEST_LIBS := -L"$(REPO_DIR)/googletest_clone/googletest/build/lib" -L"/usr/lib/x86_64-linux-gnu"
 endif
 
 
