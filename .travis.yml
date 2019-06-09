@@ -37,7 +37,7 @@ before_script:
 
   # compile googletest/mock libraries
   - sudo apt-get -y install cmake
-  - cd $TRAVIS_BUILD_DIR/Robot/ && mkdir googletest_clone && cd googletest_clone
+  - cd $TRAVIS_BUILD_DIR && mkdir googletest_clone && cd googletest_clone
   - git clone https://github.com/google/googletest.git
   - cd googletest && mkdir build && cd build
   - cmake .. 
@@ -49,7 +49,5 @@ script:
   - sudo ln -s /usr/bin/g++-8.2 /usr/local/bin/g++
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
-  - ls /home/travis/build/utra-robosoccer/soccer-embedded/googletest_clone/googletest/googletest/include
-  - ls /home/travis/build/utra-robosoccer/soccer-embedded/googletest_clone/googletest/googlemock/include
   - make -j16 TARGET=F4 all
   - make -j16 TARGET=F7 all
