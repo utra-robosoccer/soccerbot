@@ -98,10 +98,16 @@ INC := \
 -I"$(PROJECT_DIR)/Src/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS" \
 $(MCU_UNIQUE_INC)
 
+
+ifndef CI
 TEST_INC := \
 -I"$(REPO_DIR)/googletest/googletest/include" \
--I"$(REPO_DIR)/googletest/googlemock/include" \
-
+-I"$(REPO_DIR)/googletest/googlemock/include"
+else
+TEST_INC := \
+-I"$(REPO_DIR)/googletest_clone/googletest/googletest/include" \
+-I"$(REPO_DIR)/googletest_clone/googletest/googlemock/include"
+endif
 
 # Find all sources in given subdirectories, filter out exclusions, and create objects list
 C_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(addsuffix /*.c,$(SUBDIRS))))
@@ -114,7 +120,7 @@ CPP_TEST_SRCS := $(wildcard $(addsuffix /*Test.cpp,$(TEST_SUBDIR)))
 CPP_TEST_INC_SRCS := $(filter-out $(EXCL_SRCS),$(wildcard $(patsubst %Test.cpp,%.cpp,$(CPP_TEST_SRCS))))
 CPP_TEST_OBJECTS := $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_SRCS:.cpp=.o)))
 CPP_TEST_OBJECTS += $(addprefix $(BUILD_DIR)/$(TARGET)/Test/,$(patsubst $(COMMON_DIR)/%,%,$(CPP_TEST_INC_SRCS:.cpp=.o)))
-CPP_TEST_OBJECTS += $(REPO_DIR)/gmock/src/Test.o 
+#CPP_TEST_OBJECTS += $(REPO_DIR)/gmock/src/Test.o 
 
 # Define compiler flags
 ifeq ($(TARGET),$(F4))
@@ -130,7 +136,12 @@ $(error MCU_FLAG not configured for target $(TARGET))
 endif
 
 CFLAGS := -fprofile-arcs -ftest-coverage $(MCU_FLAG) -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -Og -g3 -Wall -fmessage-length=0 -ffunction-sections
+
+ifndef CI
 TEST_FLAGS := -lgtest -lgmock -lgmock_main
+else
+TEST_FLAGS := -lgtest -lgmock -lgmock_main -pthread
+endif
 
 # Define target recipes for all objects in object list, create object in BUILD_DIR
 TARGET_BUILD_DIR := $(BUILD_DIR)/$(TARGET)
@@ -195,14 +206,15 @@ else
 $(error LIBS not configured for target $(TARGET))
 endif
 
+ifndef CI
 TEST_LIBS := -L"$(REPO_DIR)/googletest/build/googlemock" -L"$(REPO_DIR)/googletest/build/googlemock/gtest" 
+else
+TEST_LIBS := -L"$(REPO_DIR)/googletest_clone/googletest/build/lib" -L"/usr/lib/x86_64-linux-gnu"
+endif
+
 
 # All Target
-ifndef CI
 all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
-else
-all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf
-endif
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)

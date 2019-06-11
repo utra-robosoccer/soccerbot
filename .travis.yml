@@ -24,10 +24,10 @@ before_script:
 
   # build GNU Make 4.1 from source
   - wget http://ftp.gnu.org/gnu/make/make-4.1.tar.gz
-  - tar xvf make-4.1.tar.gz
+  - tar xf make-4.1.tar.gz
   - cd make-4.1
   - ./configure
-  - make
+  - make -j16
   - sudo make install
   - cd ..
   - rm -rf make-4.1
@@ -35,11 +35,19 @@ before_script:
   # add Make to path
   - export PATH=/usr/local/bin/:$PATH
 
+  # compile googletest/mock libraries
+  - sudo apt-get -y install cmake
+  - cd $TRAVIS_BUILD_DIR && mkdir googletest_clone && cd googletest_clone
+  - git clone https://github.com/google/googletest.git
+  - cd googletest && mkdir build && cd build
+  - cmake .. 
+  - make -j16 DGTEST_CREATE_SHARED_LIBRARY=1
+
 script:
+  # make gcc 8 default
   - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
-  #- sudo apt-get install gcc-8-multilib g++-8-multilib
   - g++ -v
   - cd $TRAVIS_BUILD_DIR/Robot/
-  - make -j12 TARGET=F4 all
-  - make -j12 TARGET=F7 all
+  - make -j16 TARGET=F4 all
+  - make -j16 TARGET=F7 all
