@@ -92,11 +92,11 @@ tmp/
 **/Debug/
 **/Build/
 !googletest/build/
+!RobotTest/
 **/output.map
 RemoteSystemsTempFiles/
 .metadata/
 */language.settings.xml
-RobotTest/.settings/language.settings.xml
 Robot/.settings/language.settings.xml
 Robot/NUCLEO-F767ZI.xml
 CubeMX/F4/*
