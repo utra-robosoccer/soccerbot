@@ -18,12 +18,17 @@ add_message_files(
     RobotEstimate.msg
     MapOverview.msg
     MapOverviewIndividual.msg
+    Waypoints.msg
+    Pose.msg
+    PoseAction.msg
+    ActionLabel.msg
 )
 
 generate_messages(
    DEPENDENCIES
    std_msgs
    geometry_msgs
+   soccer_msgs
 )
 
 catkin_package(
