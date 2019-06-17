@@ -1,6 +1,12 @@
 import time
 import os
 
+# Rough program to keep the CPU busy with a mix of
+# floating point operations, and blocking on IO
+# operations. Use when testing ethernet transmission
+# performance with different scheduling parameters on
+# the ethernet communication script.
+
 start = time.time()
 
 t0 = 0
