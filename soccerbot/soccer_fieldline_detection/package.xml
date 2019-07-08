@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>soccer_fieldline_detection</name>
+  <version>0.0.0</version>
+  <description>The soccer_fieldline_detection package</description>
+
+  <maintainer email="namnam.nguyen@utoronto.ca">nam</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>foundation</depend>
+
+</package>
