@@ -1,5 +1,7 @@
 #pragma once
 
+#include <soccer_fieldline_detection/camera.hpp>
+
 /* The soccer fieldine detector class (TODO)
  * 1. add geometry_msgs/Pose2d into the Cmakelist.txt and package.xml of soccer_foundations
  * 2. IN soccer_foundation in the geometry library, create a class called Pose3D that inherits from geometry_msgs::Pose2D
