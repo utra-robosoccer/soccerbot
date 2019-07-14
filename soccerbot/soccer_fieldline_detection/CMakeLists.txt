@@ -18,7 +18,13 @@ include_directories(
 
 )
 
-add_executable(soccer_fieldline_detector src/soccer_fieldline_detector.cpp)
+add_executable(
+    soccer_fieldline_detector
+    src/soccer_fieldline_detector.cpp
+    src/camera.cpp
+    src/image.cpp
+)
+
 add_dependencies(soccer_fieldline_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(soccer_fieldline_detector
     ${catkin_LIBRARIES}
