@@ -11,5 +11,8 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>foundation</depend>
+  <depend>opencv3</depend>
+  <depend>image_transport</depend>
+  <depend>sensor_msgs</depend>
 
 </package>

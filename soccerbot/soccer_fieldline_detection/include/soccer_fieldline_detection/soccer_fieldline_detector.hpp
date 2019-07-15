@@ -1,6 +1,8 @@
 #pragma once
 
 #include <soccer_fieldline_detection/camera.hpp>
+#include <image_transport/image_transport.h>
+#include <ros/ros.h>
 
 /* The soccer fieldine detector class (TODO)
  * 1. add geometry_msgs/Pose2d into the Cmakelist.txt and package.xml of soccer_foundations
@@ -12,4 +14,21 @@
  * 6. Create the draw frame test function (ask me later)
  * */
 
+
+/*
+ * int test create image_transport pub
+ * use opncv to load video file
+ * use image_transport to convert video to image_transport and publish video
+ * result subscriber print received image
+ */
 // Camera contains an Image, Camera contains a Pose2d
+
+class SoccerFieldlineDetector {
+    ros::NodeHandle nh;
+    image_transport::Subscriber image_subscriber;
+
+public:
+    SoccerFieldlineDetector();
+
+    void imageCallback(const sensor_msgs::ImageConstPtr &msg);
+};
