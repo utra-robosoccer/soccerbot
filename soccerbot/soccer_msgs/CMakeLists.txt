@@ -7,17 +7,28 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
 )
 
 add_message_files(
     FILES
     RobotGoal.msg
     RobotState.msg
+    RobotCommand.msg
+    RobotEstimate.msg
+    MapOverview.msg
+    MapOverviewIndividual.msg
+    Waypoints.msg
+    Pose.msg
+    PoseAction.msg
+    ActionLabel.msg
 )
 
 generate_messages(
    DEPENDENCIES
    std_msgs
+   geometry_msgs
+   soccer_msgs #not sure if necessary
 )
 
 catkin_package(

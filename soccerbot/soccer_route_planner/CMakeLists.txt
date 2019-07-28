@@ -1,0 +1,34 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(soccer_route_planner)
+add_compile_options(-std=c++11)
+
+find_package(catkin REQUIRED
+    roscpp
+    soccer_msgs
+)
+
+catkin_package()
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ../../../../devel/include # Hack
+)
+
+add_executable(route_planner src/route_planner_node.cpp)
+add_dependencies(route_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(route_planner
+    ${catkin_LIBRARIES}
+)
+
+#############
+## Testing ##
+#############
+
+## Add gtest based cpp test target and link libraries
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_soccer_route_planner.cpp)
+# if(TARGET ${PROJECT_NAME}-test)
+#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+# endif()
+
+## Add folders to be run by python nosetests
+# catkin_add_nosetests(test)
