@@ -12,7 +12,9 @@
   <depend>roscpp</depend>
   <depend>foundation</depend>
   <depend>opencv3</depend>
+  <depend>cv_bridge</depend>
   <depend>image_transport</depend>
   <depend>sensor_msgs</depend>
+  <depend>video_stream_opencv</depend>
 
 </package>
