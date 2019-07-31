@@ -13,17 +13,25 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
     try {
         const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-        cv::Mat inverted;
-        cv::bitwise_not(image, inverted);
-        cv::imshow("view", inverted);
+
+        cv::Point start = cv::Point(300, 300);
+        cv::Point end = cv::Point(500, 500);
+        cv::line(image, start, end, cv::Scalar(0, 0, 0), 3);
+
+        cv::Mat edges;
+        cv::Canny(image, edges, 200, 400);
+
+        cv::imshow("original view", image);
+        cv::imshow("edge view", edges);
+
         cv::waitKey(1);
-    }
-    catch (cv_bridge::Exception &e) {
+    } catch (cv_bridge::Exception &e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
     }
     // Cover Horizon (Ignore for now)
 
     // Detect Field Lines (Copy from simulink)
+
 
     // Organize Fieldlines
 
