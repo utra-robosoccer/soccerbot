@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     foundation
     image_transport
+    cv_bridge
     sensor_msgs
     )
 
@@ -36,3 +37,15 @@ target_link_libraries(soccer_fieldline_detector
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
+
+#############
+## Testing ##
+#############
+
+if (CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(test_fieldline_detector test/test_soccer_fieldline_detector.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
+    target_link_libraries(test_fieldline_detector
+        ${catkin_LIBRARIES}
+        ${OpenCV_LIBRARIES}
+        )
+endif ()
