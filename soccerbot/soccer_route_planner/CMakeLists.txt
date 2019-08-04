@@ -25,10 +25,12 @@ target_link_libraries(route_planner
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_soccer_route_planner.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
 
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
+if(CATKIN_ENABLE_TESTING)
+    find_package(rostest REQUIRED)
+    include_directories(${catkin_INCLUDE_DIRS})
+
+    add_rostest_gtest(route_planner_test test/route_planner_test.test test/route_planner_test.cpp)
+    target_link_libraries(route_planner_test ${catkin_LIBRARIES})
+
+endif()

@@ -1,0 +1,6 @@
+<launch>
+
+    <include file="$(find soccer_route_planner)/launch/soccer_route_planner.launch" />
+
+    <test pkg="soccer_route_planner" type="route_planner_test" test-name="route_planner_test" time-limit="400.0"/>
+</launch>

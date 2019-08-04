@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="soccer_route_planner" type="route_planner" name="route_planner" />
+</launch>
