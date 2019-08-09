@@ -9,35 +9,56 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() {
 }
 
 void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
-    ROS_INFO_STREAM("received image");
 
     try {
         const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-
         cv::Point start = cv::Point(300, 300);
         cv::Point end = cv::Point(500, 500);
         cv::line(image, start, end, cv::Scalar(0, 0, 0), 3);
 
-        cv::Mat edges;
-        cv::Canny(image, edges, 200, 400);
+        // Detect Field Lines (Copy from simulink)
+        cv::Mat dst, cdst;
+        cv::Canny(image, dst, 200, 400);
+        cvtColor(dst, cdst, CV_GRAY2BGR);
+
+        // Cover Horizon (Ignore for now)
+
+        // Organize Fieldlines
+        if(0) {
+            std::vector<cv::Vec2f> lines;
+            HoughLines(dst, lines, 1, CV_PI / 180, 100, 0, 0);
+            for (size_t i = 0; i < lines.size(); i++) {
+                float rho = lines[i][0], theta = lines[i][1];
+                cv::Point pt1, pt2;
+                double a = std::cos(theta), b = std::sin(theta);
+                double x0 = a * rho, y0 = b * rho;
+                pt1.x = cvRound(x0 + 1000 * (-b));
+                pt1.y = cvRound(y0 + 1000 * (a));
+                pt2.x = cvRound(x0 - 1000 * (-b));
+                pt2.y = cvRound(y0 - 1000 * (a));
+                cv::line(cdst, pt1, pt2, cv::Scalar(0, 0, 255), 3, CV_AA);
+            }
+        } else {
+            std::vector<cv::Vec4i> lines;
+            HoughLinesP(dst, lines, 1, CV_PI / 180, 50, 50, 10);
+            for (int i = 0; i < lines.size(); i++) {
+                cv::Vec4i l = lines[i];
+                cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+            }
+            ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
+        }
+
+        // Project fieldlines from 2d to 3d
+
+        // Publish fieldlines in a LaserScan data format
 
         cv::imshow("original view", image);
-        cv::imshow("edge view", edges);
-
+        cv::imshow("edge view", cdst);
         cv::waitKey(1);
-    } catch (cv_bridge::Exception &e) {
-        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+
+    } catch (const cv_bridge::Exception &e) {
+        ROS_ERROR_STREAM("CV Exception" << e.what());
     }
-    // Cover Horizon (Ignore for now)
-
-    // Detect Field Lines (Copy from simulink)
-
-
-    // Organize Fieldlines
-
-    // Project fieldlines from 2d to 3d
-
-    // Publish fieldlines in a LaserScan data format
 }
 
 int main(int argc, char **argv) {
