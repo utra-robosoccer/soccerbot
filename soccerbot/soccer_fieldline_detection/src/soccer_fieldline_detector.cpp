@@ -18,35 +18,21 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
-        cv::Canny(image, dst, 200, 400);
+        int cannythreshold1 = 200;
+        nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
+        cv::Canny(image, dst, cannythreshold1, 400);
         cvtColor(dst, cdst, CV_GRAY2BGR);
 
         // Cover Horizon (Ignore for now)
 
         // Organize Fieldlines
-        if(0) {
-            std::vector<cv::Vec2f> lines;
-            HoughLines(dst, lines, 1, CV_PI / 180, 100, 0, 0);
-            for (size_t i = 0; i < lines.size(); i++) {
-                float rho = lines[i][0], theta = lines[i][1];
-                cv::Point pt1, pt2;
-                double a = std::cos(theta), b = std::sin(theta);
-                double x0 = a * rho, y0 = b * rho;
-                pt1.x = cvRound(x0 + 1000 * (-b));
-                pt1.y = cvRound(y0 + 1000 * (a));
-                pt2.x = cvRound(x0 - 1000 * (-b));
-                pt2.y = cvRound(y0 - 1000 * (a));
-                cv::line(cdst, pt1, pt2, cv::Scalar(0, 0, 255), 3, CV_AA);
-            }
-        } else {
-            std::vector<cv::Vec4i> lines;
-            HoughLinesP(dst, lines, 1, CV_PI / 180, 50, 50, 10);
-            for (int i = 0; i < lines.size(); i++) {
-                cv::Vec4i l = lines[i];
-                cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
-            }
-            ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
+        std::vector<cv::Vec4i> lines;
+        HoughLinesP(dst, lines, 1, CV_PI / 180, 50, 50, 10);
+        for (int i = 0; i < lines.size(); i++) {
+            cv::Vec4i l = lines[i];
+            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
         }
+        ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
 
