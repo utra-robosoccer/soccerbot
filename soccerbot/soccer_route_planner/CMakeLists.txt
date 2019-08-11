@@ -25,7 +25,7 @@ target_link_libraries(route_planner
 #############
 
 ## Add gtest based cpp test target and link libraries
-
+# catkin build soccer_route_planner --verbose --no-deps --catkin-make-args run_tests
 if(CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     include_directories(${catkin_INCLUDE_DIRS})

@@ -21,7 +21,6 @@ add_message_files(
     Waypoints.msg
     Pose.msg
     PoseAction.msg
-    ActionLabel.msg
 )
 
 generate_messages(

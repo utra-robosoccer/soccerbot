@@ -2,17 +2,25 @@
 
 
 RoutePlannerNode::RoutePlannerNode() {
-    robotCommandSubscriber = nh.subscribe("topic_namc", callback)
-
+    mapOverviewSubscriber = nh.subscribe("map_overview", 1, &RoutePlannerNode::mapOverviewCallback, this);
+    robotCommandSubscriber = nh.subscribe("robot_command", 1, &RoutePlannerNode::robotCommandCallback, this);
 }
 
-RoutePLannerNode::CallbackFunction() {
-
+void RoutePlannerNode::mapOverviewCallback(const soccer_msgs::MapOverviewConstPtr &mapOverview) {
+    std::cerr << "test" << std::endl;
+    ROS_INFO_STREAM("Received map overview");
 }
 
-int main() {
-    // Create RoutePLannerNode class instance
+void RoutePlannerNode::robotCommandCallback(const soccer_msgs::RobotCommandConstPtr &robotCommand) {
+    std::cerr << "test" << std::endl;
+    ROS_INFO_STREAM("Received robot command");
+}
 
-    // Ros::spin();
+int main(int argc, char** argv) {
+    ros::init(argc, argv, "route_planner_node");
+
+    // Create RoutePlannerNode class instance
+    RoutePlannerNode routePlannerNode;
+    ros::spin();
     return 0;
 }
