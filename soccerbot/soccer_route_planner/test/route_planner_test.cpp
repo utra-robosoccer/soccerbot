@@ -19,6 +19,7 @@ public:
 //        ASSERT_TRUE(waypoint->poseActions[0].pose);
 //        ASSERT_TRUE(waypoint->poseActions[0].actionLabel == 1);
 //        ASSERT_TRUE(waypoint->poseActions[0].duration);
+        ASSERT_TRUE(1);
     }
 protected:
     ros::NodeHandle nh;
