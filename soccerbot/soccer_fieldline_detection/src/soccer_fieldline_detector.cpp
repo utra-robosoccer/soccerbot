@@ -19,15 +19,44 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
         int cannythreshold1 = 200;
+        int cannythreshold2 = 400;
         nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
-        cv::Canny(image, dst, cannythreshold1, 400);
+        nh.getParam("soccer_fieldline_detector/cannythreshold2", cannythreshold2);
+
+        cv::Canny(
+                image,
+                dst,
+                cannythreshold1,
+                cannythreshold2);
+
         cvtColor(dst, cdst, CV_GRAY2BGR);
 
         // Cover Horizon (Ignore for now)
 
         // Organize Fieldlines
         std::vector<cv::Vec4i> lines;
-        HoughLinesP(dst, lines, 1, CV_PI / 180, 50, 50, 10);
+        double rho = 1;
+        double theta = CV_PI / 180;
+        int threshold = 50;
+        int minLineLength = 50;
+        int maxLineGap = 50;
+        nh.getParam("soccer_fieldline_detector/houghRho", rho);
+        nh.getParam("soccer_fieldline_detector/houghTheta", theta);
+        nh.getParam("soccer_fieldline_detector/houghThreshold", threshold);
+        nh.getParam("soccer_fieldline_detector/houghMinLineLength", minLineLength);
+        nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
+
+        ROS_INFO_STREAM(theta);
+
+        HoughLinesP(
+                dst,
+                lines,
+                rho,
+                theta,
+                threshold,
+                minLineLength,
+                maxLineGap);
+
         for (int i = 0; i < lines.size(); i++) {
             cv::Vec4i l = lines[i];
             cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
