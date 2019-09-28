@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(soccer_route_planner)
-add_compile_options(-std=c++11)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(SOURCE_FILES src/Lgraph.cpp)
 
 find_package(catkin REQUIRED
     roscpp
@@ -14,7 +16,7 @@ include_directories(
   ../../../../devel/include # Hack
 )
 
-add_executable(route_planner src/route_planner_node.cpp)
+add_executable(route_planner src/route_planner_node.cpp src/Lgraph.cpp)
 add_dependencies(route_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(route_planner
     ${catkin_LIBRARIES}

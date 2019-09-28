@@ -1,35 +1,39 @@
 #include <soccer_route_planner/route_planner_node.hpp>
+#include <soccer_route_planner/Lgraph.hpp>
 #include <cmath>
-
+#include <memory>
 
 RoutePlannerNode::RoutePlannerNode() {
     mapOverviewSubscriber = nh.subscribe("map_overview", 1, &RoutePlannerNode::mapOverviewCallback, this);
     robotCommandSubscriber = nh.subscribe("robot_command", 1, &RoutePlannerNode::robotCommandCallback, this);
     waypointPublisher = nh.advertise<soccer_msgs::Waypoints>("waypoints", 1);
 
-    mapOverviewStore = nullptr;
     robotCommandStore = nullptr;
 }
 
-void RoutePlannerNode::mapOverviewCallback(const soccer_msgs::MapOverviewConstPtr &mapOverview) {
+void RoutePlannerNode::mapOverviewCallback(const soccer_msgs::MapOverviewPtr &mapOverview) {
     std::cerr << "test" << std::endl;
     mapOverviewStore = mapOverview;
     ROS_INFO_STREAM("Received map overview");
-
-    if (this->robotCommandStore != nullptr) publishWaypoints();
 }
 
-void RoutePlannerNode::robotCommandCallback(const soccer_msgs::RobotCommandConstPtr &robotCommand) {
+void RoutePlannerNode::robotCommandCallback(const soccer_msgs::RobotCommandPtr &robotCommand) {
     std::cerr << "test" << std::endl;
     robotCommandStore = robotCommand;
     ROS_INFO_STREAM("Received robot command");
 
-    if (this->mapOverviewStore != nullptr) publishWaypoints();
+    if (!mapOverviewStore)
+        return;
+
+    auto waypoints = createWaypoints();
+    publishWaypoints(waypoints);
 }
 
 soccer_msgs::Waypoints RoutePlannerNode::createWaypoints() {
     soccer_msgs::Waypoints msg_temp;
     // build msg_temp here from stored mapOverview(s) and robotCommand(s)
+
+    // Create graph etc for path planning recursive tree or some sort to go etc.
 
     msg_temp.poseActions[0].duration = 0; // not sure how to assign this for now
 
@@ -38,16 +42,35 @@ soccer_msgs::Waypoints RoutePlannerNode::createWaypoints() {
 //            msg_temp.poseActions[0].actionLabel = 3; // Turn command
 //    }
 
-
-    // reset pointers so that new messages can be stored.
-    mapOverviewStore = nullptr;
-    robotCommandStore = nullptr;
-
     return msg_temp;
 }
 
-void RoutePlannerNode::publishWaypoints() {
-    waypointPublisher.publish(this->createWaypoints());
+void RoutePlannerNode::publishWaypoints(soccer_msgs::Waypoints waypoints) {
+    waypointPublisher.publish(waypoints);
+}
+
+Lgraph RoutePlannerNode::RRTstar(int r, int n) {
+
+}
+
+void RoutePlannerNode::nearestNeighbour() {
+
+}
+
+void RoutePlannerNode::nearVertices() {
+
+}
+
+void RoutePlannerNode::steering() {
+
+}
+
+void RoutePlannerNode::collisionTest() {
+
+}
+
+void RoutePlannerNode::sample() {
+
 }
 
 int main(int argc, char** argv) {
@@ -58,3 +81,4 @@ int main(int argc, char** argv) {
     ros::spin();
     return 0;
 }
+

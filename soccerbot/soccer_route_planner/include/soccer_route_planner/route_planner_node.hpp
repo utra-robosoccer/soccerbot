@@ -1,5 +1,6 @@
 #pragma once
 
+#include <soccer_route_planner/Lgraph.hpp>
 #include <ros/ros.h>
 #include <soccer_msgs/Waypoints.h>
 #include <soccer_msgs/MapOverview.h>
@@ -19,12 +20,21 @@ private:
     soccer_msgs::RobotCommandPtr robotCommandStore;
 
     // upon overview subscription update Map
-    void mapOverviewCallback(const soccer_msgs::MapOverviewConstPtr& mapOverview);
-    void robotCommandCallback(const soccer_msgs::RobotCommandConstPtr& robotCommand);
+    void mapOverviewCallback(const soccer_msgs::MapOverviewPtr &mapOverview);
+    void robotCommandCallback(const soccer_msgs::RobotCommandPtr& robotCommand);
 
+    // Waypoints functions
     soccer_msgs::Waypoints createWaypoints();
 
-    void publishWaypoints();
+    void publishWaypoints(soccer_msgs::Waypoints);
+
+    // RRT* algorithm / primitives below.
+    Lgraph RRTstar(int r, int n);
+    void sample();
+    void nearestNeighbour();
+    void nearVertices();
+    void steering();
+    void collisionTest();
 
     // Upon subscription, first use the map to find a path, and then publish using the waypoint publisher
 //    void robotCommandCallback(/* Robot Command message */);
