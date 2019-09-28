@@ -1,6 +1,6 @@
 #pragma once
 
-#include <soccer_route_planner/Lgraph.hpp>
+#include <soccer_route_planner/Graph.hpp>
 #include <ros/ros.h>
 #include <soccer_msgs/Waypoints.h>
 #include <soccer_msgs/MapOverview.h>
@@ -29,7 +29,7 @@ private:
     void publishWaypoints(soccer_msgs::Waypoints);
 
     // RRT* algorithm / primitives below.
-    Lgraph RRTstar(int r, int n);
+    Graph RRTstar(int r, int n);
     void sample();
     void nearestNeighbour();
     void nearVertices();
