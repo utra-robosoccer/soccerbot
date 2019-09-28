@@ -1,6 +1,7 @@
 #pragma once
 
 #include <geometry/pose3.hpp>
+#include <geometry/point3.hpp>
 #include <cmath>
 
 class Camera {
@@ -27,4 +28,22 @@ public:
     Camera(const Pose3 &pose, int resolution_y, int resolution_x);
 
     void DrawPixelRayTrace(int pixel_y, int pixel_x);
+
+    Point3 FindFloorCoordinate(int pos_x, int pos_y);
+
+    float VerticalFOV();
+
+    float HorizontalFOV();
+
+    float ImageSensorHeight();
+
+    float ImageSensorWidth();
+
+    int PixelHeight();
+
+    int PixelWidth();
+
+    int ImageSensorLocation_X(int pos_x, int pos_y);
+
+    int ImageSensorLocation_Y(int pos_x, int pos_y);
 };
