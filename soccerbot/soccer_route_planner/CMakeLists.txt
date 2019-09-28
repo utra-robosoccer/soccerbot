@@ -16,7 +16,7 @@ include_directories(
   ../../../../devel/include # Hack
 )
 
-add_executable(route_planner src/route_planner_node.cpp src/Lgraph.cpp)
+add_executable(route_planner src/route_planner_node.cpp src/Lgraph.cpp src/Map.cpp)
 add_dependencies(route_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(route_planner
     ${catkin_LIBRARIES}
