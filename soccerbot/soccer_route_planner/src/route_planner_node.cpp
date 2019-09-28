@@ -1,5 +1,5 @@
 #include <soccer_route_planner/route_planner_node.hpp>
-#include <soccer_route_planner/Lgraph.hpp>
+#include <soccer_route_planner/Graph.hpp>
 #include <cmath>
 #include <memory>
 
@@ -49,29 +49,7 @@ void RoutePlannerNode::publishWaypoints(soccer_msgs::Waypoints waypoints) {
     waypointPublisher.publish(waypoints);
 }
 
-Lgraph RoutePlannerNode::RRTstar(int r, int n) {
 
-}
-
-void RoutePlannerNode::nearestNeighbour() {
-
-}
-
-void RoutePlannerNode::nearVertices() {
-
-}
-
-void RoutePlannerNode::steering() {
-
-}
-
-void RoutePlannerNode::collisionTest() {
-
-}
-
-void RoutePlannerNode::sample() {
-
-}
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "route_planner_node");

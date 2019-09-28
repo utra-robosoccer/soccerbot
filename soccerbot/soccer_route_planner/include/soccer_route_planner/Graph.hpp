@@ -4,13 +4,13 @@
 #include <vector>
 #include <iostream>
 
-class Lgraph
+class Graph
 {
 private:
     std::vector<struct lnode*> adj;
     int num_nodes;
 public:
-    Lgraph();
+    Graph();
 
     void add_vertex();
     void add_edge();
