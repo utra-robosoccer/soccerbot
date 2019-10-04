@@ -1,0 +1,104 @@
+    <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+        <xacro:macro name="arm" params="name origin direction">
+            <link name="${name}_bicep">
+                <inertial>
+                    <mass value="213.5130"/>
+                    <origin rpy="0  0  0" xyz="0.000 ${direction * 0.02579} -0.04955"/>
+                    <inertia ixx="0.282" ixy="0.000" ixz="${direction * 0.000}"
+                             iyy="0.274" iyz="${direction * 0.012}"
+                             izz="0.024" />
+                </inertial>
+                <collision name="collision">
+                    <origin rpy="0  0  0" xyz="0 ${direction * 0.0225} -0.05001"/>
+                    <geometry>
+                        <box size="0.04 0.04776 0.123"/>
+                    </geometry>
+                </collision>
+                <visual name="visual">
+                    <origin rpy="0  0  0" xyz="0  0  0"/>
+                    <geometry>
+                        <mesh filename="package://soccer_description/meshes/${name}_bicep.dae" scale="1 1 1"/>
+                    </geometry>
+                    <material name="black" />
+                </visual>
+            </link>
+            <link name="${name}_forearm">
+                <inertial>
+                    <mass value="45.7"/>
+                    <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097" />
+                    <inertia ixx="0.113" ixy="0.000" ixz="${direction * 0.001}"
+                             iyy="0.107" iyz="${direction * 0.000}"
+                             izz="0.012" />
+                </inertial>
+                <collision name="collision">
+                    <origin rpy="0  0  0" xyz="-0.0055 0.01750 -0.0600"/>
+                    <geometry>
+                        <box size="0.035 0.049 0.144"/>
+                    </geometry>
+                </collision>
+                <visual name="visual">
+                    <origin rpy="0  0  0" xyz="0  0  0"/>
+                    <geometry>
+                        <mesh filename="package://soccer_description/meshes/${name}_forearm.dae" scale="1 1 1"/>
+                    </geometry>
+                    <material name="black" />
+                </visual>
+            </link>
+
+            <joint name="${origin}_${name}_bicep" type="revolute">
+                <parent link="${origin}"/>
+                <child link="${name}_bicep"/>
+                <origin rpy="0 0 0" xyz="-0.0157 ${direction * 0.0725} 0"/>
+                <axis xyz="0 -1 0"/>
+                <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+                <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${AX12_VELOCITY}"/>
+            </joint>
+            <joint name="${name}_bicep_forearm" type="revolute">
+                <parent link="${name}_bicep"/>
+                <child link="${name}_forearm"/>
+                <origin rpy="0 0 0" xyz="0 0 -0.10"/>
+                <axis xyz="0 -1 0"/>
+                <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+                <limit effort="${AX12_TORQUE}" lower="0" upper="${PI}" velocity="${AX12_VELOCITY}"/>
+            </joint>
+
+            <gazebo reference="${name}_forearm">
+                <mu1>${FOREARM_MU1}</mu1>
+                <mu2>${FOREARM_MU2}</mu2>
+            </gazebo>
+
+            <transmission name="${origin}_${name}_bicep">
+                <type>transmission_interface/SimpleTransmission</type>
+                <joint name="${origin}_${name}_bicep">
+                    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                </joint>
+                <actuator name="motor15">
+                    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                    <mechanicalReduction>1</mechanicalReduction>
+                </actuator>
+            </transmission>
+            <transmission name="${name}_bicep_forearm">
+                <type>transmission_interface/SimpleTransmission</type>
+                <joint name="${name}_bicep_forearm">
+                    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                </joint>
+                <actuator name="motor16">
+                    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                    <mechanicalReduction>1</mechanicalReduction>
+                </actuator>
+            </transmission>
+
+            <gazebo reference="${name}_bicep">
+                <kp>${JOINT_KP}</kp>
+                <kd>${JOINT_KD}</kd>
+                <mu1>${JOINT_MU1}</mu1>
+                <mu2>${JOINT_MU2}</mu2>
+            </gazebo>
+            <gazebo reference="${name}_forearm">
+                <kp>${JOINT_KP}</kp>
+                <kd>${JOINT_KD}</kd>
+                <mu1>${JOINT_MU1}</mu1>
+                <mu2>${JOINT_MU2}</mu2>
+            </gazebo>
+        </xacro:macro>
+    </robot>

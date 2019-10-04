@@ -1,0 +1,99 @@
+<robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="head" params="origin">
+        <link name="neck">
+            <inertial>
+                <mass value="11.294"/>
+                <origin rpy="0  0  0" xyz="0 -0.0006476 0.0092453"/>
+                <inertia ixx="0.005" ixy="0" ixz="0"
+                         iyy="0.001" iyz="0"
+                         izz="0.005"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0  0  0" xyz="0 0 0.0165"/>
+                <geometry>
+                    <box size="0.022 0.0523 0.033"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/neck.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="head">
+            <inertial>
+                <mass value="282.919"/>
+                <origin rpy="0  0  0" xyz="0.0237166 0.0018096 0.0255966"/>
+                <inertia ixx="0.206" ixy="0.001" ixz="-0.057"
+                         iyy="0.206" iyz="0.003"
+                         izz="0.160"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0  0  0" xyz="0.01735 0 0.01995"/>
+                <geometry>
+                    <box size="0.0712 0.094 0.0839"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/head.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="${origin}_neck" type="revolute">
+            <parent link="${origin}"/>
+            <child link="neck"/>
+            <origin rpy="0 0 0" xyz="0.024 0 0.05875"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+        </joint>
+        <joint name="neck_head" type="revolute">
+            <parent link="neck"/>
+            <child link="head"/>
+            <origin rpy="0 0 0" xyz="0 0 0.024"/>
+            <axis xyz="0 1 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${AX12_TORQUE}" lower="-${PI*3/4}" upper="${PI*3/4}" velocity="${MX28_VELOCITY}"/>
+        </joint>
+
+        <transmission name="${origin}_neck">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${origin}_neck">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${origin}_neck">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="neck_head">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="neck_head">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="neck_head">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <gazebo reference="neck">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="head">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+    </xacro:macro>
+</robot>
