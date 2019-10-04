@@ -12,8 +12,8 @@ private:
     std::vector<struct node> adj_list;
     std::map<int, struct node_info> node_info_map;
 
-    int num_nodes;
-    int id_generator;
+    int m_num_nodes;
+    int m_id_generator;
 
     int find_vertex(int id); // Returns index of vertex within adjacency list.
 public:

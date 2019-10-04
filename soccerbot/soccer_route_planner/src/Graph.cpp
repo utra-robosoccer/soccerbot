@@ -1,17 +1,17 @@
 #include <soccer_route_planner/Graph.hpp>
 
 Graph::Graph() {
-    num_nodes = 0;
-    id_generator = 0;
+    m_num_nodes = 0;
+    m_id_generator = 0;
 }
 
 int Graph::add_vertex(float x, float y) {
     struct node new_node;
 
-    new_node.id = id_generator;
+    new_node.id = m_id_generator;
 
-    num_nodes++;
-    id_generator++;
+    m_num_nodes++;
+    m_id_generator++;
 
     adj_list.push_back(new_node);
 
@@ -40,7 +40,7 @@ void Graph::delete_edge(int id_0, int id_1) {
 
 int Graph::find_vertex(int id) {
     int i = 0;
-    while(adj_list[i].id != id && i < num_nodes) i++;
+    while(adj_list[i].id != id && i < m_num_nodes) i++;
     return i;
 }
 
