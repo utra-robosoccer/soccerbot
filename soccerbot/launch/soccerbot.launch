@@ -1,0 +1,10 @@
+<launch>
+    <arg name="simulation" default="false" />
+
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)"/>
+    <include file="$(find soccerbot)/launch/modules/simulation.launch" if="$(arg simulation)"/>
+
+    <include file="$(find soccerbot)/launch/modules/localization.launch" />
+    <include file="$(find soccerbot)/launch/modules/navigation.launch" />
+    <include file="$(find soccerbot)/launch/modules/communication.launch" />
+</launch>

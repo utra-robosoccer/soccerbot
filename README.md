@@ -82,23 +82,5 @@ roslaunch soccerbot soccerbot.launch
 For simulation you can just run this
 
 ```bash
-roslaunch soccerbot soccerbot_simulation.launch
-```
-
-To keep the robot midair
-
-```bash
-roslaunch soccerbot soccerbot_simulation.launch frozen:=true
-```
-
-For omnibot, just run the omnibot launch file, replace robot.launch with simulation.launch for simulation
-
-```bash
-roslaunch soccerbot omnibot.launch dryrun:=true
-```
-
-For running in a mode where the hardware is not connected and you need to examine the output of what would be sent to hardware if the hardware was connected.
-
-```bash
-roslaunch soccerbot omnibot.launch dryrun:=false
+roslaunch soccerbot soccerbot.launch simulation:=true
 ```
