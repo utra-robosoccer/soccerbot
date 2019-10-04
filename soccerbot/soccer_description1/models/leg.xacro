@@ -1,0 +1,287 @@
+<robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="leg" params="name origin direction">
+        <link name="${name}_hip_side">
+            <inertial>
+                <mass value="9.364"/>
+                <origin rpy="0  0  0" xyz="0.0003695 0.0000 0.01689"/>
+                <inertia ixx="0.002" ixy="0.000" ixz="0.000"
+                         iyy="0.005" iyz="0.000"
+                         izz="0.004"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0  0  0" xyz="0 0 0.00899"/>
+                <geometry>
+                    <box size="0.0485 0.022 0.0039"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_hip_side.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="${name}_hip_front">
+            <inertial>
+                <mass value="153.186"/>
+                <origin rpy="0 0 0" xyz="-0.02093 0 -0.011313"/>
+                <inertia ixx="0.041" ixy="0.000" ixz="-0.002"
+                         iyy="0.118" iyz="0.000"
+                         izz="0.106"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0 0 0" xyz="-0.02187 0 -0.01332"/>
+                <geometry>
+                    <box size="0.083747 0.04885 0.0506"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_hip_front.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="${name}_thigh">
+            <inertial>
+                <mass value="21.438"/>
+                <origin rpy="0 0 0" xyz="0.0019422 ${direction * 0.0001419} -0.0469409"/>
+                <inertia ixx="0.025" ixy="${direction * 0.002}" ixz="0.000"
+                         iyy="0.016" iyz="0.000"
+                         izz="0.010"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0 0 0" xyz="0 0 -0.0445"/>
+                <geometry>
+                    <box size="0.022 0.048 0.111"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_thigh.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="${name}_calve">
+            <inertial>
+                <mass value="86.547"/>
+                <origin rpy="0  0  0" xyz="0 ${direction * -0.0003259} -0.0150123"/>
+                <inertia ixx="0.054" ixy="0.000" ixz="0.000"
+                         iyy="0.046" iyz="-0.001"
+                         izz="0.019"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0 0 0" xyz="0 0 -0.03385"/>
+                <geometry>
+                    <box size="0.031883 0.048 0.105683"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_calve.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="${name}_ankle">
+            <inertial>
+                <mass value="153.186"/>
+                <origin rpy="0 0 0" xyz="-0.020939 0.000 0.011313"/>
+                <inertia ixx="0.041" ixy="0.000" ixz="0.002"
+                         iyy="0.118" iyz="0.000"
+                         izz="0.106"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0 0 0" xyz="-0.02014 0 0.01031"/>
+                <geometry>
+                    <box size="0.090769 0.042 0.0506"/>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <origin rpy="0 0 0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_ankle.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <link name="${name}_foot">
+            <inertial>
+                <mass value="23.216"/>
+                <origin rpy="0 0 0" xyz="-0.020939 0.0 0.011313"/>
+                <inertia ixx="0.006" ixy="0.000" ixz="0.000"
+                         iyy="0.018" iyz="0.000"
+                         izz="0.022"/>
+            </inertial>
+            <collision name="collision">
+                <origin rpy="0 0 0" xyz="0.00385 ${direction * -0.00401} -0.00737 "/>
+                <geometry>
+                    <box size="0.09 0.07 0.03674"/>
+                </geometry>
+                <contact_coefficients mu ="100.0" />
+            </collision>
+            <visual name="visual">
+                <origin rpy="0  0  0" xyz="0  0  0"/>
+                <geometry>
+                    <mesh filename="package://soccer_description/meshes/${name}_foot.dae" scale="1 1 1"/>
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="torso_${name}_hip_side" type="revolute">
+            <parent link="torso"/>
+            <child link="${name}_hip_side"/>
+            <origin rpy="0 0 0" xyz="0.0135 ${direction * 0.035} -0.156"/>
+            <axis xyz="0 0 ${direction * -1}"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${MX28_TORQUE}" lower="-1.309" upper="0.524" velocity="${MX28_VELOCITY}"/>
+        </joint>
+        <joint name="${name}_hip_side_hip_front" type="revolute">
+            <parent link="${name}_hip_side"/>
+            <child link="${name}_hip_front"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <axis xyz="-1 0 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <xacro:if value="${direction == 1}">
+             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+            </xacro:if>
+            <xacro:if value="${direction == -1}">
+            <limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
+            </xacro:if>
+        </joint>
+        <joint name="${name}_hip_front_thigh" type="revolute">
+            <parent link="${name}_hip_front"/>
+            <child link="${name}_thigh"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <axis xyz="0 -1 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${MX28_VELOCITY}"/>
+        </joint>
+        <joint name="${name}_thigh_calve" type="revolute">
+            <parent link="${name}_thigh"/>
+            <child link="${name}_calve"/>
+            <origin rpy="0 0 0" xyz="0 0 -0.09290"/>
+            <axis xyz="0 -1 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${MX28_TORQUE}" lower="-2.793" upper="0" velocity="${MX28_VELOCITY}"/>
+        </joint>
+        <joint name="${name}_calve_ankle" type="revolute">
+            <parent link="${name}_calve"/>
+            <child link="${name}_ankle"/>
+            <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
+            <axis xyz="0 -1 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+        </joint>
+        <joint name="${name}_ankle_foot" type="revolute">
+            <parent link="${name}_ankle"/>
+            <child link="${name}_foot"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <axis xyz="-1 0 0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
+        </joint>
+
+        <transmission name="torso_${name}_hip_side">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="torso_${name}_hip_side">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="torso_${name}_hip_side_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${name}_hip_side_hip_front">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}_hip_side_hip_front">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_hip_side_hip_front_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${name}_hip_front_thigh">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}_hip_front_thigh">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_hip_front_thigh_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${name}_thigh_calve">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}_thigh_calve">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_thigh_calve_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${name}_calve_ankle">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}_calve_ankle">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_calve_ankle_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${name}_ankle_foot">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}_ankle_foot">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_ankle_foot_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <gazebo reference="${name}_hip_side">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="${name}_hip_front">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="${name}_thigh">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="${name}_calve">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="${name}_ankle">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+        <gazebo reference="${name}_foot">
+            <mu1>${FOREARM_MU1}</mu1>
+            <mu2>${FOREARM_MU2}</mu2>
+        </gazebo>
+    </xacro:macro>
+</robot>
