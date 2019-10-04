@@ -8,13 +8,20 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <depend>soccer_description</depend>
-  <depend>soccer_msgs</depend>
-  <depend>soccer_common</depend>
-  <depend>soccer_hardware</depend>
 
+  <!-- Simulation -->
+  <depend>soccer_description</depend>
+
+  <!-- Sensors -->
+  <depend>soccer_hardware</depend>
   <depend>usb_cam</depend>
+
+  <!-- Localization -->
   <depend>amcl</depend>
+  <depend>darknet_ros</depend>
   <depend>map_server</depend>
+
+  <!-- Navigation-->
+  <!-- Communication-->
 
 </package>

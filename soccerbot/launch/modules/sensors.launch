@@ -1,0 +1,15 @@
+<!-- Launches the sensors and darknet for the robot -->
+<launch>
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+        <param name="video_device" value="/dev/video0" />
+        <param name="image_width" value="640" />
+        <param name="image_height" value="480" />
+        <param name="pixel_format" value="yuyv" />
+        <param name="camera_frame_id" value="camera" />
+        <param name="io_method" value="mmap"/>
+    </node>
+
+    <!-- Motor Drivers -->
+    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
+
+</launch>
