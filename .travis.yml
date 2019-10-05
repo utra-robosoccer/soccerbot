@@ -6,7 +6,6 @@ compiler:
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
-    - WRITABLE_SOURCE=true
   matrix:
     - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
