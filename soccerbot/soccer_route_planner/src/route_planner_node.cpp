@@ -1,5 +1,6 @@
 #include <soccer_route_planner/route_planner_node.hpp>
 #include <soccer_route_planner/Graph.hpp>
+#include <soccer_route_planner/Map.hpp>
 #include <cmath>
 #include <memory>
 
