@@ -9,7 +9,8 @@ protected:
 TEST_F(SoccerFieldlineDetectorFixture, CameraFindFloorCoordinate) {
     Camera camera();
     Point2 p1  (3,4);
-    Point3 p2 = Camera::FindFloorCoordinate(3,4);
+    Point3 p2;
+    p2 = camera().FindFloorCoordinate(3, 4)
     ASSERT(3dpoint = 3dpoint);
 }
 
