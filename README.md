@@ -68,9 +68,6 @@ Edit your .bashrc,
 ```bash
 source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
-MY_IP=$(ifconfig wlp110s0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-export ROS_IP=$MY_IP
-export ROS_MASTER_URI=http://$ROS_IP:11311
 ```
 #### Launching the robot
 You should be ready to go now. Before running, setup your CLion IDE (above),  To run the robot:
