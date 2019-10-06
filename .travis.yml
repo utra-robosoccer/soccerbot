@@ -6,6 +6,8 @@ compiler:
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
+    - DCATKIN_BLACKLIST_PACKAGES="darknet_ros" #Will probably need to take out to run integration tests
+
   matrix:
     - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
