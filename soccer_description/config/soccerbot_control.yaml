@@ -4,78 +4,78 @@ joint_state_controller:
   publish_rate: 50
 
 # Position Controllers ---------------------------------------
-torso_right_hip_side_position_controller:
+motor1:
   type: effort_controllers/JointPositionController
   joint: torso_right_hip_side
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_hip_side_hip_front_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor2:
   type: effort_controllers/JointPositionController
   joint: right_hip_side_hip_front
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_hip_front_thigh_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor3:
   type: effort_controllers/JointPositionController
   joint: right_hip_front_thigh
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_thigh_calve_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor4:
   type: effort_controllers/JointPositionController
   joint: right_thigh_calve
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_calve_ankle_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor5:
   type: effort_controllers/JointPositionController
   joint: right_calve_ankle
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_ankle_foot_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor6:
   type: effort_controllers/JointPositionController
   joint: right_ankle_foot
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
+  pid: {p: 300.0, i: 0.01, d: 2.0}
 
-torso_left_hip_side_position_controller:
+motor7:
   type: effort_controllers/JointPositionController
   joint: torso_left_hip_side
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_hip_side_hip_front_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor8:
   type: effort_controllers/JointPositionController
   joint: left_hip_side_hip_front
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_hip_front_thigh_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor9:
   type: effort_controllers/JointPositionController
   joint: left_hip_front_thigh
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_thigh_calve_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor10:
   type: effort_controllers/JointPositionController
   joint: left_thigh_calve
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_calve_ankle_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor11:
   type: effort_controllers/JointPositionController
   joint: left_calve_ankle
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_ankle_foot_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor12:
   type: effort_controllers/JointPositionController
   joint: left_ankle_foot
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
+  pid: {p: 300.0, i: 0.01, d: 2.0}
 
-torso_right_bicep_position_controller:
+motor13:
   type: effort_controllers/JointPositionController
   joint: torso_right_bicep
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-right_bicep_forearm_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor14:
   type: effort_controllers/JointPositionController
   joint: right_bicep_forearm
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-torso_left_bicep_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor15:
   type: effort_controllers/JointPositionController
   joint: torso_left_bicep
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
-left_bicep_forearm_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 2.0}
+motor16:
   type: effort_controllers/JointPositionController
   joint: left_bicep_forearm
-  pid: {p: 30000.0, i: 0.01, d: 2.0}
+  pid: {p: 300.0, i: 0.01, d: 2.0}
 
-torso_neck_position_controller:
+motor17:
   type: effort_controllers/JointPositionController
   joint: torso_neck
-  pid: {p: 30000.0, i: 0.01, d: 30.0}
-neck_head_position_controller:
+  pid: {p: 300.0, i: 0.01, d: 30.0}
+motor18:
   type: effort_controllers/JointPositionController
   joint: neck_head
-  pid: {p: 30000.0, i: 0.01, d: 30.0}
+  pid: {p: 300.0, i: 0.01, d: 30.0}
