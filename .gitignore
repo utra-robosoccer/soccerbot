@@ -32,3 +32,5 @@ soccer_vision_build.stat
 src/cmake-build-debug
 src/.idea
 src/soccer_strategy
+*.autosave
+soccer_description/models/soccerbot.urdf

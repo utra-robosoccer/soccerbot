@@ -18,5 +18,4 @@
     <xacro:property name="AX12_VELOCITY" value="0.0"/>
 
 
-
 </robot>

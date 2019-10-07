@@ -17,7 +17,7 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_hip_side.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_hip_side.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -39,7 +39,7 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_hip_front.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_hip_front.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -61,7 +61,7 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_thigh.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_thigh.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -83,7 +83,7 @@
             <visual name="visual">
                 <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_calve.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_calve.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -105,7 +105,7 @@
             <visual name="visual">
                 <origin rpy="0 0 0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_ankle.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_ankle.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -128,7 +128,7 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/${name}_foot.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}meshes/${name}_foot.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
