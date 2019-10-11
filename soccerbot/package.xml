@@ -20,7 +20,7 @@
   <depend>amcl</depend>
   <depend>darknet_ros</depend>
   <depend>map_server</depend>
-
+  <depend>soccer_common</depend>
   <!-- Navigation-->
   <!-- Communication-->
 
