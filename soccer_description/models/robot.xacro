@@ -8,15 +8,13 @@
         <xacro:include filename="$(find soccer_description)/models/front_camera.xacro" />
         <xacro:include filename="$(find soccer_description)/models/imu.xacro" />
 
-        <link name="base_link" />
-
         <link name="torso">
             <inertial>
-                <mass value="1529.201"/>
+                <mass value="1.529"/>
                 <origin rpy="0 0 0" xyz="0.0082498 -0.0017440 -0.0522479"/>
-                <inertia ixx="4.323" ixy="0.006" ixz="0.040"
-                         iyy="5.198" iyz="-0.015"
-                         izz="3.567"/>
+                <inertia ixx="4.323e-3" ixy="5.549e-6" ixz="3.960e-5"
+                         iyy="5.198e-3" iyz="-1.509e-5"
+                         izz="3.567e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="0 0 -0.052"/>
@@ -32,14 +30,6 @@
             </visual>
         </link>
 
-        <!-- Joints -->
-        <joint name="base_link_torso" type="fixed">
-            <parent link="base_link"/>
-            <child link="torso"/>
-            <origin rpy="0 0 0" xyz="0 0 0.3536"/>
-            <axis xyz="1 0 0"/>
-        </joint>
-
         <arm name="right" origin="torso" direction="1" />
         <arm name="left" origin="torso" direction="-1" />
         <leg name="right" origin="torso" direction="1" />
@@ -53,13 +43,6 @@
                 <robotNamespace>/</robotNamespace>
                 <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
             </plugin>
-        </gazebo>
-
-        <gazebo reference="base_link">
-            <kp>${JOINT_KP}</kp>
-            <kd>${JOINT_KD}</kd>
-            <mu1>${JOINT_MU1}</mu1>
-            <mu2>${JOINT_MU2}</mu2>
         </gazebo>
 
         <gazebo reference="torso">

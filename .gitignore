@@ -21,7 +21,8 @@ Icon[
 *.log
 *.stat
 =======
-Icon[]
+Icon[
+]
 .metadata/
 .catkin_workspace
 *.log
@@ -34,3 +35,4 @@ src/.idea
 src/soccer_strategy
 *.autosave
 soccer_description/models/soccerbot.urdf
+/soccer_description/models/soccerbot_stl.urdf

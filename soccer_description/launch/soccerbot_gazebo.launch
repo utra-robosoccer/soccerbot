@@ -9,11 +9,13 @@
         <arg name="paused"          value="true"/>
         <arg name="use_sim_time"    value="true"/>
         <arg name="headless"        value="false"/>
-        <arg name="verbose"         value="false" />
+        <arg name="verbose"         value="true" />
     </include>
     <node name="kill_gazebo" pkg="soccer_description" type="kill_gazebo.sh" />
 
-    <include file="$(find soccer_description)/launch/soccerbot_rviz.launch" />
+    <include file="$(find soccer_description)/launch/soccerbot_rviz.launch">
+        <arg name="gazebo" value="true" />
+    </include>
 
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model soccerbot -param robot_description -z 0.05"/>
@@ -41,7 +43,6 @@
             right_bicep_forearm_position_controller
             torso_left_bicep_position_controller
             left_bicep_forearm_position_controller
-            joint_state_controller
-            --shutdown-timeout 2"/>
+            "/>
 
 </launch>

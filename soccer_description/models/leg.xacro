@@ -2,11 +2,11 @@
     <xacro:macro name="leg" params="name origin direction">
         <link name="${name}_hip_side">
             <inertial>
-                <mass value="9.364"/>
+                <mass value="9.364e-3"/>
                 <origin rpy="0  0  0" xyz="0.0003695 0.0000 0.01689"/>
-                <inertia ixx="0.002" ixy="0.000" ixz="0.000"
-                         iyy="0.005" iyz="0.000"
-                         izz="0.004"/>
+                <inertia ixx="0.002e-3" ixy="0.000" ixz="0.000"
+                         iyy="0.005e-3" iyz="0.000"
+                         izz="0.004e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0  0  0" xyz="0 0 0.00899"/>
@@ -24,11 +24,11 @@
         </link>
         <link name="${name}_hip_front">
             <inertial>
-                <mass value="153.186"/>
+                <mass value="153.186e-3"/>
                 <origin rpy="0 0 0" xyz="-0.02093 0 -0.011313"/>
-                <inertia ixx="0.041" ixy="0.000" ixz="-0.002"
-                         iyy="0.118" iyz="0.000"
-                         izz="0.106"/>
+                <inertia ixx="0.041e-3" ixy="0.000" ixz="-0.002e-3"
+                         iyy="0.118e-3" iyz="0.000"
+                         izz="0.106e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="-0.02187 0 -0.01332"/>
@@ -46,11 +46,11 @@
         </link>
         <link name="${name}_thigh">
             <inertial>
-                <mass value="21.438"/>
+                <mass value="21.438e-3"/>
                 <origin rpy="0 0 0" xyz="0.0019422 ${direction * 0.0001419} -0.0469409"/>
-                <inertia ixx="0.025" ixy="${direction * 0.002}" ixz="0.000"
-                         iyy="0.016" iyz="0.000"
-                         izz="0.010"/>
+                <inertia ixx="0.025e-3" ixy="${direction * 0.002e-3}" ixz="0.000"
+                         iyy="0.016e-3" iyz="0.000"
+                         izz="0.010e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="0 0 -0.0445"/>
@@ -68,11 +68,11 @@
         </link>
         <link name="${name}_calve">
             <inertial>
-                <mass value="86.547"/>
-                <origin rpy="0  0  0" xyz="0 ${direction * -0.0003259} -0.0150123"/>
-                <inertia ixx="0.054" ixy="0.000" ixz="0.000"
-                         iyy="0.046" iyz="-0.001"
-                         izz="0.019"/>
+                <mass value="86.547e-3"/>
+                <origin rpy="0  0  0" xyz="0 ${direction * -0.0003259e-3} -0.0150123e-3"/>
+                <inertia ixx="0.054e-3" ixy="0.000" ixz="0.000"
+                         iyy="0.046e-3" iyz="-0.001e-3"
+                         izz="0.019e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="0 0 -0.03385"/>
@@ -90,11 +90,11 @@
         </link>
         <link name="${name}_ankle">
             <inertial>
-                <mass value="153.186"/>
-                <origin rpy="0 0 0" xyz="-0.020939 0.000 0.011313"/>
-                <inertia ixx="0.041" ixy="0.000" ixz="0.002"
-                         iyy="0.118" iyz="0.000"
-                         izz="0.106"/>
+                <mass value="153.186e-3"/>
+                <origin rpy="0 0 0" xyz="-0.020939e-3 0.000 0.011313e-3"/>
+                <inertia ixx="0.041e-3" ixy="0.000" ixz="0.002e-3"
+                         iyy="0.118e-3" iyz="0.000"
+                         izz="0.106e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="-0.02014 0 0.01031"/>
@@ -112,11 +112,11 @@
         </link>
         <link name="${name}_foot">
             <inertial>
-                <mass value="23.216"/>
+                <mass value="23.216e-3"/>
                 <origin rpy="0 0 0" xyz="-0.020939 0.0 0.011313"/>
-                <inertia ixx="0.006" ixy="0.000" ixz="0.000"
-                         iyy="0.018" iyz="0.000"
-                         izz="0.022"/>
+                <inertia ixx="0.006e-3" ixy="0.000" ixz="0.000"
+                         iyy="0.018e-3" iyz="0.000"
+                         izz="0.022e-3"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0 0 0" xyz="0.00385 ${direction * -0.00401} -0.00737 "/>

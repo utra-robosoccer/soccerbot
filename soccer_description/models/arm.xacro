@@ -2,11 +2,11 @@
         <xacro:macro name="arm" params="name origin direction">
             <link name="${name}_bicep">
                 <inertial>
-                    <mass value="213.5130"/>
+                    <mass value="0.213e-3"/>
                     <origin rpy="0  0  0" xyz="0.000 ${direction * 0.02579} -0.04955"/>
-                    <inertia ixx="0.282" ixy="0.000" ixz="${direction * 0.000}"
-                             iyy="0.274" iyz="${direction * 0.012}"
-                             izz="0.024" />
+                    <inertia ixx="2.824e-4" ixy="0.000" ixz="${direction * 0.000}"
+                             iyy="2.744e-4" iyz="${direction * 1.165e-5}"
+                             izz="2.433e-5" />
                 </inertial>
                 <collision name="collision">
                     <origin rpy="0  0  0" xyz="0 ${direction * 0.0225} -0.05001"/>
@@ -24,11 +24,11 @@
             </link>
             <link name="${name}_forearm">
                 <inertial>
-                    <mass value="45.7"/>
+                    <mass value="45.7e-3"/>
                     <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097" />
-                    <inertia ixx="0.113" ixy="0.000" ixz="${direction * 0.001}"
-                             iyy="0.107" iyz="${direction * 0.000}"
-                             izz="0.012" />
+                    <inertia ixx="0.113e-3" ixy="0.000" ixz="${direction * 0.001e-3}"
+                             iyy="0.107e-3" iyz="${direction * 0.000}"
+                             izz="0.012e-3" />
                 </inertial>
                 <collision name="collision">
                     <origin rpy="0  0  0" xyz="-0.0055 0.01750 -0.0600"/>
