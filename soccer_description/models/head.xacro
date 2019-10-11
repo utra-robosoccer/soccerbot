@@ -2,11 +2,11 @@
     <xacro:macro name="head" params="origin">
         <link name="neck">
             <inertial>
-                <mass value="11.294"/>
+                <mass value="0.011294"/>
                 <origin rpy="0  0  0" xyz="0 -0.0006476 0.0092453"/>
-                <inertia ixx="0.005" ixy="0" ixz="0"
-                         iyy="0.001" iyz="0"
-                         izz="0.005"/>
+                <inertia ixx="5.489e-6" ixy="0" ixz="0"
+                         iyy="1.433e-6" iyz="0"
+                         izz="4.955e-6"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0  0  0" xyz="0 0 0.0165"/>
@@ -17,18 +17,18 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/neck.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}/meshes/neck.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
         </link>
         <link name="head">
             <inertial>
-                <mass value="282.919"/>
+                <mass value="0.282"/>
                 <origin rpy="0  0  0" xyz="0.0237166 0.0018096 0.0255966"/>
-                <inertia ixx="0.206" ixy="0.001" ixz="-0.057"
-                         iyy="0.206" iyz="0.003"
-                         izz="0.160"/>
+                <inertia ixx="2.06e-4" ixy="1.06e-6" ixz="-5.73e-5"
+                         iyy="2.057e-4" iyz="2.534e-6"
+                         izz="1.603e-4"/>
             </inertial>
             <collision name="collision">
                 <origin rpy="0  0  0" xyz="0.01735 0 0.01995"/>
@@ -39,7 +39,7 @@
             <visual name="visual">
                 <origin rpy="0  0  0" xyz="0  0  0"/>
                 <geometry>
-                    <mesh filename="package://soccer_description/meshes/head.dae" scale="1 1 1"/>
+                    <mesh filename="${FILE_PATH}/meshes/head.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
                 <material name="black" />
             </visual>
@@ -51,7 +51,7 @@
             <origin rpy="0 0 0" xyz="0.024 0 0.05875"/>
             <axis xyz="0 0 1"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
-            <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+            <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${AX12_VELOCITY}"/>
         </joint>
         <joint name="neck_head" type="revolute">
             <parent link="neck"/>
@@ -59,7 +59,7 @@
             <origin rpy="0 0 0" xyz="0 0 0.024"/>
             <axis xyz="0 1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
-            <limit effort="${AX12_TORQUE}" lower="-${PI*3/4}" upper="${PI*3/4}" velocity="${MX28_VELOCITY}"/>
+            <limit effort="${AX12_TORQUE}" lower="-${PI*3/4}" upper="${PI*3/4}" velocity="${AX12_VELOCITY}"/>
         </joint>
 
         <transmission name="${origin}_neck">
