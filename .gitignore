@@ -5,3 +5,4 @@
 # Matlab Build Files
 soccer_description/models/soccerbot.urdf
 soccer_description/models/soccerbot_stl.urdf
+*.original
