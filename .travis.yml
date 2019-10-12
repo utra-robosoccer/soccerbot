@@ -11,6 +11,6 @@ env:
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
 before_script:
-  - touch /home/travis/build/utra-robosoccer/soccer_ws/external/CATKIN_IGNORE
+  - catkin config --blacklist darknet_ros
 script: 
 - source .ci_config/travis.sh
