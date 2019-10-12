@@ -1,0 +1,64 @@
+component PS_force_hardstop_trans
+% Translational Hard Stop Force
+% This block represents a double-sided mechanical translational hard stop
+% that restricts motion of a body between upper and lower bounds. The stop
+% is implemented as a spring and damper that comes into contact with the 
+% slider as the gap closes.
+
+% Copyright 2016-2017 The MathWorks, Inc.
+
+parameters
+    upper_bnd = {0.1 , 'm'    }; % Upper bound
+    lower_bnd = {0   , 'm'    }; % Lower bound
+    stiff_up  = {1e6 , 'N/m'  }; % Stiffness (upper bound)
+    stiff_low = {1e6 , 'N/m'  }; % Stiffness (lower bound)
+    D_up      = {150 , 'N*s/m'}; % Damping (upper bound)
+    D_low     = {150 , 'N*s/m'}; % Damping (lower bound)
+end
+
+inputs
+    v = {0, 'm/s'}; % v:left
+    p = {0, 'm'  }; % p:left
+end
+
+outputs
+    f = {0, 'N'}; %f:right
+end
+
+function setup %#simple
+    if lower_bnd >= upper_bnd
+        pm_error('simscape:LessThan','Lower bound','Upper bound')
+    end
+    if stiff_up <= 0
+        pm_error('simscape:GreaterThanZero','Contact stiffness at upper bound')
+    end
+    if stiff_low <= 0
+        pm_error('simscape:GreaterThanZero','Contact stiffness at lower bound')
+    end
+    if D_up < 0
+        pm_error('simscape:GreaterThanOrEqualToZero','Contact damping at upper bound')
+    end
+    if D_low < 0
+        pm_error('simscape:GreaterThanOrEqualToZero','Contact damping at lower bound')
+    end
+end
+
+equations
+	assert(lower_bnd<upper_bnd)
+    assert(stiff_up>0)
+    assert(stiff_low>0)
+    assert(D_up>=0)
+    assert(D_low>=0)
+    if (p > upper_bnd)
+        % Slider hits upper bound
+        f == stiff_up * (p - upper_bnd) + D_up * v;
+    elseif (p < lower_bnd)
+        % Slider hits lower bound
+        f == stiff_low * (p - lower_bnd) + D_low * v;
+    else
+        % Slider is between hard stops
+        f == {0 'N'};
+    end
+end
+
+end
