@@ -11,6 +11,6 @@ env:
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
 before_script:
-  - touch $HOME/soccer_ws/external/CATKIN_IGNORE
+  - touch $HOME/utra-robosoccer/soccer_ws/external/CATKIN_IGNORE
 script: 
 - source .ci_config/travis.sh
