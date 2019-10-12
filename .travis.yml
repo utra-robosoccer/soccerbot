@@ -6,7 +6,7 @@ compiler:
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
-    - BEFORE_SCRIPT="catkin config --blacklist darknet_ros"
+    - BEFORE_SCRIPT="cd /root/catkin_ws && catkin config --blacklist darknet_ros"
   matrix:
     - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
