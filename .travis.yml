@@ -6,10 +6,13 @@ compiler:
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
-    - BEFORE_SCRIPT="cd /root/catkin_ws && catkin config --blacklist darknet_ros"
-  matrix:
+matrix:
     - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+before_script:
+  - wget http://pjreddie.com/media/files/yolov2-tiny.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2-tiny.weights
+  - wget http://pjreddie.com/media/files/yolov3.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov3.weights
+  - wget http://pjreddie.com/media/files/yolov2.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2.weights
 script: 
 - source .ci_config/travis.sh
