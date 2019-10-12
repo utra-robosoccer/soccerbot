@@ -1,34 +1,7 @@
-logs/
-build/
-devel/
-#src/darknet_ros/darknet_ros/weights/yolo.weights
-#src/darknet_ros/weights/yolo.weights
-#src/darknet_ros/darknet_ros/yolo_network_config/weights/tiny-yolo-voc.weights
-.catkin_tools/
-src/soccerbot/
-soccerbot_build.log
-soccerbot_build.stat
-soccer_ws.sublime-project
-soccer_ws.sublime-workspace
-deploy_background_build.sh
-deploy_build_ros_model.sh
-<<<<<<< HEAD
-Icon[
-]*
-.metadata/
-.catkin_workspace
 *.swp
 *.log
 *.stat
-=======
-Icon[]
-.metadata/
-.catkin_workspace
-*.log
 
 # Matlab Build Files
-soccer_vision_build.stat
->>>>>>> f034160bf346457d529040a5ab836b42c9bd8806
-src/cmake-build-debug
-src/.idea
-src/soccer_strategy
+soccer_description/models/soccerbot.urdf
+soccer_description/models/soccerbot_stl.urdf
