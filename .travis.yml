@@ -6,11 +6,10 @@ compiler:
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
+    - BEFORE_SCRIPT="catkin build darknet_ros && catkin config --blacklist darknet_ros"
   matrix:
     - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
-before_script:
-  - catkin config --blacklist darknet_ros
 script: 
 - source .ci_config/travis.sh
