@@ -28,8 +28,7 @@ codegen/
 octave-workspace
 
 *.slxc
-.DS_Store
-Icon[]
+*.original
 
 *.sh
 *.tgz
