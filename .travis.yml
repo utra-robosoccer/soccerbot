@@ -12,12 +12,12 @@ env:
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
 before_script:
-  - ls $HOME
-  - wget http://pjreddie.com/media/files/yolov2-tiny.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
-  - wget http://pjreddie.com/media/files/yolov3.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
-  - wget http://pjreddie.com/media/files/yolov2.weights -P $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
-  - chmod 644 $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2-tiny.weights
-  - chmod 644 $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov3.weights
-  - chmod 644 $HOME/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2.weights
+  - ls $HOME/build
+  - wget http://pjreddie.com/media/files/yolov2-tiny.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
+  - wget http://pjreddie.com/media/files/yolov3.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
+  - wget http://pjreddie.com/media/files/yolov2.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
+  - chmod 644 $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2-tiny.weights
+  - chmod 644 $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov3.weights
+  - chmod 644 $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights/yolov2.weights
 script: 
  - source .ci_config/travis.sh
