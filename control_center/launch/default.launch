@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <node name="control_center" pkg="sootballs_control_center" type="app.py" output="screen"/>
+</launch>
