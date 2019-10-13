@@ -123,13 +123,13 @@ class Comm:
                     # TODO: them properly
                     for i in range(self.trajectory.shape[1]):
                         if(self.step_is_on):
-                            wait = input('Press enter to send next pose')
+                            input('Press enter to send next pose')
                         
                         goal_angles = self.trajectory[:, i:i+1]
                         self.communicate(goal_angles)
                 else:
                      # Send standing pose
                     if(self.step_is_on):
-                        wait = input('Press enter to send next pose')
+                        input('Press enter to send next pose')
 
                     self.communicate(np.zeros((18,1)))
