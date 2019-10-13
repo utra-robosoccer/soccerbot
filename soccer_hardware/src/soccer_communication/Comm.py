@@ -18,7 +18,7 @@ try:
     from tf.msg import tfMessage
     from tf.transformations import quaternion_from_euler
     from transformations import *
-except:
+except ImportError:
     pass
 
 class Comm:
