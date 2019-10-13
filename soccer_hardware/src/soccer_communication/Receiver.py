@@ -6,14 +6,9 @@ import struct
 from transformations import *
 
 try:
-    import rospy
-    from soccer_msgs.msg import RobotGoal
     from soccer_msgs.msg import RobotState
     from sensor_msgs.msg import Imu
     from geometry_msgs.msg import Vector3
-    from geometry_msgs.msg import Quaternion
-    from tf.msg import tfMessage
-    from tf.transformations import quaternion_from_euler
 except ImportError:
     pass
 
