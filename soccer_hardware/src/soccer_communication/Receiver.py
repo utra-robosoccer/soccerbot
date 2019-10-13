@@ -14,7 +14,7 @@ try:
     from geometry_msgs.msg import Quaternion
     from tf.msg import tfMessage
     from tf.transformations import quaternion_from_euler
-except:
+except ImportError:
     pass
 
 class Receiver:
