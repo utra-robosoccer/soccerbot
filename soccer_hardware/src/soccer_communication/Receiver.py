@@ -1,7 +1,6 @@
 # Receiver.py
 
 import time
-import serial
 import numpy as np
 import struct
 from transformations import *
