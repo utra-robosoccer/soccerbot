@@ -2,8 +2,8 @@
 <package format="2">
   <name>soccer_hardware</name>
   <version>0.0.0</version>
-    <description>Contains the soccer-communication python code for communicating with the robot using the
-        microcontroller
+    <description>Soccer-communication python code for communicating with the robot using the
+        microcontroller.
     </description>
 
     <author email="jiashen.wang@mail.utoronto.ca">Jason</author>
