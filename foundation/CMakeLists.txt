@@ -3,15 +3,14 @@ project(foundation)
 
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roscpp)
 
 set(PKG_DEPS
-    roscpp
-    )
+    roscpp)
 
 catkin_package(
     INCLUDE_DIRS include
-    LIBRARIES foundation
+    LIBRARIES ${PROJECT_NAME}
     CATKIN_DEPENDS ${PKG_DEPS}
 )
 
@@ -35,6 +34,11 @@ target_link_libraries(geometry
     ${catkin_LIBRARIES}
     )
 
+install(TARGETS geometry
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
 #############
 ## Testing ##
 #############
