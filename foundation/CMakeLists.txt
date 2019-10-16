@@ -10,7 +10,7 @@ set(PKG_DEPS
 
 catkin_package(
     INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
+    LIBRARIES geometry
     CATKIN_DEPENDS ${PKG_DEPS}
 )
 
