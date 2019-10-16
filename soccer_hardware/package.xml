@@ -12,6 +12,7 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
   <depend>soccer_msgs</depend>
   <depend>std_msgs</depend>
   <depend>rospy</depend>

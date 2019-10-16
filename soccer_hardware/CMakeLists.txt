@@ -5,15 +5,15 @@ project(soccer_hardware)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-        rospy
-        roscpp
-        std_msgs
         soccer_msgs
+	std_msgs
+	roscpp
+	rospy
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS soccer_msgs std_msgs)
 
-catkin_install_python(PROGRAMS src/soccer_communication/soccer_hardware.py
+catkin_install_python(PROGRAMS src/soccer_communication/${PROJECT_NAME}.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ###########
@@ -30,3 +30,9 @@ include_directories(
 add_executable(draw_trajectories src/draw_trajectories.cpp)
 add_dependencies(draw_trajectories ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(draw_trajectories ${catkin_LIBRARIES})
+
+install(TARGETS draw_trajectories
+	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
