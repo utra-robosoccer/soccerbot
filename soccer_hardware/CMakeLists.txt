@@ -5,10 +5,10 @@ project(soccer_hardware)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-        soccer_msgs
-	std_msgs
-	roscpp
+        roscpp
 	rospy
+	soccer_msgs
+	std_msgs
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs std_msgs)
