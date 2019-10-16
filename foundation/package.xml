@@ -2,7 +2,7 @@
 <package format="2">
     <name>foundation</name>
     <version>0.0.0</version>
-    <description>Contains all math libraries for soccer and omnibot projects</description>
+    <description>Math libraries for soccer and omnibot projects</description>
     <maintainer email="lkunelk@gmail.com">nam</maintainer>
     <license>BSD</license>
     <buildtool_depend>catkin</buildtool_depend>
