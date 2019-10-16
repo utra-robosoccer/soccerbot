@@ -2,7 +2,7 @@
 <package format="2">
   <name>soccer_msgs</name>
   <version>0.0.0</version>
-  <description>The soccer_msgs package</description>
+  <description>Message definitions for the soccerbot.</description>
 
   <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
   <license>BSD</license>
