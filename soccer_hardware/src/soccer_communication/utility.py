@@ -10,7 +10,7 @@ from datetime import datetime
 has_ros = True
 try:
     import rospy
-except:
+except ImportError:
     has_ros = False
     
 def logString(userMsg):
