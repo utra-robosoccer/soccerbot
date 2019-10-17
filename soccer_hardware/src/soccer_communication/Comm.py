@@ -13,12 +13,8 @@ try:
     from soccer_msgs.msg import RobotGoal
     from soccer_msgs.msg import RobotState
     from sensor_msgs.msg import Imu
-    from geometry_msgs.msg import Vector3
-    from geometry_msgs.msg import Quaternion
-    from tf.msg import tfMessage
-    from tf.transformations import quaternion_from_euler
     from transformations import *
-except:
+except ImportError:
     pass
 
 class Comm:
@@ -127,13 +123,13 @@ class Comm:
                     # TODO: them properly
                     for i in range(self.trajectory.shape[1]):
                         if(self.step_is_on):
-                            wait = input('Press enter to send next pose')
+                            input('Press enter to send next pose')
                         
                         goal_angles = self.trajectory[:, i:i+1]
                         self.communicate(goal_angles)
                 else:
                      # Send standing pose
                     if(self.step_is_on):
-                        wait = input('Press enter to send next pose')
+                        input('Press enter to send next pose')
 
                     self.communicate(np.zeros((18,1)))
