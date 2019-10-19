@@ -30,3 +30,6 @@ Contains C and C++ source file and header file templates and examples illustrati
 
 # Testing
 Contains various test programs serving as "checkpoints" for integrating features as well as other projects for scratchwork.
+
+# Tutorials
+Contains tutorials for setting up your development environment and learning the basics of embedded development.
