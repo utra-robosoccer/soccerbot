@@ -39,11 +39,11 @@ public:
 
     float ImageSensorWidth();
 
-    int PixelHeight();
+    float PixelHeight();
 
-    int PixelWidth();
+    float PixelWidth();
 
-    int ImageSensorLocation_X(int pos_x, int pos_y);
+    float ImageSensorLocation_X(int pos_x, int pos_y);
 
-    int ImageSensorLocation_Y(int pos_x, int pos_y);
+    float ImageSensorLocation_Y(int pos_x, int pos_y);
 };
