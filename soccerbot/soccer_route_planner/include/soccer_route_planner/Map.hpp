@@ -3,31 +3,29 @@
 #include <stdio.h>
 #include <math.h>
 #include <vector>
+#include <nav_msgs/OccupancyGrid.h>
 
-typedef std::vector<std::vector<double>> grid;
-
-class Map
-{
+class Map : public nav_msgs::OccupancyGrid {
 private:
     float m_InflationRadius;
-    float m_Resolution;
     float m_StepSize;
     int m_nNodes;
-    int m_Height;
-    int m_Width;
 
-    int m_Rows;
-    int m_Cols;
-    grid m_OccupancyMap;
+
 
 public:
     Map();
-    ~Map();
-    void UpdateOccupancyMap();
-    void InflateOccupancyMap();
-    void InflatePoint(int row, int col, grid &OccupancyMap);
 
-    // Lukasz Update
-    int GetWidth();
-    int GetHeight();
+    ~Map() = default;
+
+    int getRows() { return info.width / info.resolution; }
+    int getCols() { return info.height / info.resolution; }
+
+    int8_t& getOccupancy(int row, int column);
+
+    void UpdateOccupancyMap();
+
+    void InflateOccupancyMap();
+
+    void InflatePoint(int row, int col);
 };
