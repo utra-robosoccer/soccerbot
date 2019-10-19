@@ -12,17 +12,17 @@ For this walkthrough, we will either need a serial terminal program or a custom 
 ## Peripheral Configuration (Cube)
 Continuing from the last tutorial, our project should be all set up. In fact, the default peripheral initialization already enables the USART which is connected to the programmer, USART2.
 
-![VCP Pins](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_2/1-USART2-Pins.jpg?raw=true)
+![VCP Pins](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_2/1-USART2-Pins.jpg?raw=true)
 
 Opening up the USART2 window from the Configuration tab shows us all the settings we can manipulate for this peripheral. It is of key importance that both the sender and the receiver agree on the baud rate, word length, parity, and number of stop bits, so we will need to remember to set up the PC program with the exact same parameters. For now, we will stick with the default of `115200 8-N-1`, meaning baud rate of 115200 symbols per second, 8-bit word length, no parity, and 1 stop bit.
 
-![USART Parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_2/2-USART-Params.jpg)
+![USART Parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_2/2-USART-Params.jpg)
 
 Also in the USART2 window, we will enable interrupts from the NVIC Settings tab and enable TX and RX DMA channels from the DMA Settings tab. We will see the differences between polled IO, interrupt-based IO, and DMA-based IO in this tutorial.
 
-![NVIC Settings](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/images/tutorial_2/3-USART-NVIC.jpg?raw=true)
+![NVIC Settings](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/3-USART-NVIC.jpg?raw=true)
 
-![DMA Settings](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/images/tutorial_2/4-USART-DMA.jpg?raw=true)
+![DMA Settings](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/4-USART-DMA.jpg?raw=true)
 
 We can then generate the code as before.
 
@@ -47,7 +47,7 @@ Important points:
 - huart2 is an auto-generated struct which the HAL UART APIs use to manage transfer requests. If we were to have enabled USART1 in Cube, we would be able to use the huart1 handle in the exact same way
 - When the `HAL_UART_Transmit()` function is called, the function is not exited until (1) all the bytes passed in have been sent, or (2) the `timeout` period has elapsed. This is typical of blocking I/O, and it _really_ wastes CPU resources! Consider this: according to the Clock Configuration tab in Cube, the microcontroller's CPU is running at 32 MHz (HCLK). Assuming the 3-stage pipeline in the ARM M4 processor is flowing nicely, 32 million instructions can be executed per second (32 ns per instruction). Well, at a baud rate of 115200, and with 10 bits sent per word (1 start bit + 8 data bits + 1 stop bit), it takes about 87 us to send one byte via UART. In that 87 us, the CPU could have executed about 2700 instructions. "Hello world!" is 13 bytes including the null character, meaning that sending it via blocking I/O wastes about 35000 instructions worth of processing time.
 
-![Clock Configuration](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/images/tutorial_2/5-Clock-Config.jpg?raw=true)
+![Clock Configuration](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/5-Clock-Config.jpg?raw=true)
 
 ## Polled Reception (RX)
 The `HAL_UART_Receive()` function is the blocking API for receiving bytes via UART. In this example, we'll change the LED state from the PC by sending either 0 or 1 as ASCII.
@@ -131,13 +131,13 @@ The UART DMA APIs are very similar to the others for the most part. Sending uses
 
 There's no reason why we can't just replace the `HAL_UART_Transmit_IT()` call in the example above with `HAL_UART_Transmit_DMA`, and similarly for the receive functions, but we also mentioned earlier that we can use a callback instead of polling the UART handle state. So Let's check that out. First, open up `stm32l4xx_hal_uart.h` and scroll down to the functions whose names end in "Callback".
 
-![USART Callbacks](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/images/tutorial_2/6-Callbacks.jpg?raw=true)
+![USART Callbacks](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/6-Callbacks.jpg?raw=true)
 
 These functions are all declared `__weak` which means they won't be compiled into your code unless you provide an implementation for them. If you _do_ provide an implementation, they'll automatically be called due to the magic of how HAL works. For example, if we implement `HAL_UART_RxCpltCallback()`, then whenever the reception we initiate is complete, that function will be invoked and our custom implementation will be executed.
 
 Let's also enable circular receptions for the RX DMA stream (remember to generate the code after making this change!).
 
-![Mode = Circular](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/images/tutorial_2/7-DMA-Circular-Receive.jpg?raw=true)
+![Mode = Circular](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/7-DMA-Circular-Receive.jpg?raw=true)
 
 ```C
 /* Private variables ---------------------------------------------------------*/
