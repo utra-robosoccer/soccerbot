@@ -1,7 +1,9 @@
+# Getting Started with Cube and System Workbench
+
 This page walks through the process of creating microcontroller projects using the Cube and System Workbench flow.
 
-# Overview of the Tools
-## Cube
+## Overview of the Tools
+### Cube
 Cube is graphical tool that helps us initialize our microcontroller peripherals (e.g. ADCs, timers, communication modules). As per our configuration, Cube generates peripheral initialization code that uses ST's hardware abstraction layer (HAL) API. It is a nice convenience, but you'll find that you'll still need access to datasheets for the microcontroller and the development board you're using. For example, although you can configure timer prescalers and preload values in Cube, you'll need to use the microcontroller's datasheet to find which clock domain drives the timer. Similarly, you'll need to look at your development board's datasheet to figure out how the microcontroller pin names map to the development board pin names.
 
 To download Cube:
@@ -9,7 +11,7 @@ To download Cube:
 2. At the bottom of the page click "Get Software". Login or register as needed
 3. The download should automatically begin; if not, repeat the process once logged in
 
-## System Workbench
+### System Workbench
 System Workbench is where the programming happens. It is an Eclipse-based IDE, and it comes with all the tools required to program and debug STM32 microcontrollers.
 
 To download System Workbench:
@@ -17,14 +19,14 @@ To download System Workbench:
 2. Go to http://www.openstm32.org/Downloading%2Bthe%2BSystem%2BWorkbench%2Bfor%2BSTM32%2Binstaller
 3. Choose the appropriate installer for your system (note: the Windows version is compatible with Windows 10)
 
-## STLink USB Driver
+### STLink USB Driver
 You will need this USB driver to program code into the microcontroller. To download it, follow the link below and click "Get Software" at the bottom.
 https://www.st.com/en/development-tools/stsw-link009.html
 
-# Creating Your First Project
+## Creating Your First Project
 This tutorial will demonstrate how to use Cube and System Workbench to create a LED blinking program for a STM32L432KC microcontroller on a Nucleo-L432KC development board.
 
-## Cube: Selecting the Development Board
+### Cube: Selecting the Development Board
 First, we want to create a new Cube project for the Nucleo-L432KC development board:
 1. Open Cube and select New Project
 2. In the New Project window, choose the Board Selector tab and type in "nucleo-l432kc" in the search bar
@@ -36,7 +38,7 @@ This will open up the view in the image below.
 
 ![Cube](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/2-Blank-Project.jpg)
 
-## Cube: Project Settings
+### Cube: Project Settings
 Next, we want to set up code generation & toolchain settings:
 1. In the top panel, select Project -> Settings ...
 
@@ -48,21 +50,21 @@ Next, we want to set up code generation & toolchain settings:
 
 3. In the code generator tab, check the option "Generate peripheral initialization as a pair of '.c/.h' files per peripheral"
 
-![Project Settings 2](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/4-Project-Settings-2.jpg)
+![Project Settings 2](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/5-Project-Settings-2.jpg)
 
 4. Click OK to exit to save current settings and exit the project settings window
 
-## Cube: Peripheral Initialization
+### Cube: Peripheral Initialization
 At this point, our project is all set up and we can see Cube automatically tells us which pin is connected to the LED. Thus, this example program does not really require peripheral configuration. We can still dive a bit deeper by going to the Configuration tab and opening up the Pin Configuration window. From this window, we can change the GPIO operation frequency, default value (low or high), mode, and label. The label allows you to set an alias for the pin which you can use to make your code more readable.
 
 ![Pin Alias](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/6-LED-Pin.jpg)
 
 ![GPIO Config](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/7-GPIO-Config.jpg)
 
-## Cube: Code Generation
+### Cube: Code Generation
 We can now generate the Eclipse project and peripheral initialization code. To do this, click Project -> Generate Code. Choose the option "Open Project" to open the project in the System Workbench IDE. You may need to create a new Eclipse workspace. It is suggested that you use 1 workspace for all embedded projects. You can import and remove projects from a workspace as needed to keep it organized.
 
-### Known manual adjustments after generating code
+#### Known manual adjustments after generating code
 
 CubeMX does not always behave as expected, and modifications made to the project may be overwritten when re-generating code. Below is a list of known settings that must be changed back manually after re-generating code on a project:
 
@@ -70,7 +72,7 @@ CubeMX does not always behave as expected, and modifications made to the project
 
 ![Generate Code](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/8-Generate-Code.jpg)
 
-## System Workbench: a Look at the Files
+### System Workbench: a Look at the Files
 Upon opening the project in the System Workbench, we can take a look at some key files in the Src and Inc directories:
 - `Src/main.c`: contains the `main` function, from which all program execution begins. We notice this function automatically calls some peripheral initialization functions before entering a while loop which user code can go into
 - `Src/gpio.c`: implements functions for initializing the GPIO peripherals
@@ -78,7 +80,7 @@ Upon opening the project in the System Workbench, we can take a look at some key
 
 ![System Workbench Project Explorer](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/9-System-Workbench-Project-Explorer.jpg)
 
-## System Workbench: Toggling the LED
+### System Workbench: Toggling the LED
 Let's open up stm32l4xx_hal_gpio.h. This can be found inside the Drivers folder. Inside the Outline panel in the System Workbench, we can see all the functions declared in this file (Window -> Show View -> Outline). These declarations form the public interface for the GPIO peripherals.
 
 ![GPIO APIs](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/10-GPIO-APIs.jpg)
@@ -102,7 +104,7 @@ while (1)
 }
 ```
 
-## System Workbench: Compiling & Programming
+### System Workbench: Compiling & Programming
 To compile, either press the hammer icon or right-click the project in the Project Explorer and choose the Build Project option.
 
 ![Building](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/12-Compiling.jpg)

@@ -1,13 +1,15 @@
+# Getting Started with FreeRTOS
+
 This page builds on top of the [previous tutorial](https://github.com/utra-robosoccer/soccer-embedded/wiki/STM32:-Communication-Between-MCU-and-PC) by extending the program to run on top of FreeRTOS (free real-time operating system).
 
-# Overview: Why an OS?
+## Overview: Why an OS?
 An operating system (OS) is a collection of algorithms which manage the microcontroller's resources—for example, scheduling the execution of _tasks_ ("**threads**") on the CPU. You are probably already familiar with the idea of tasks: reading from a sensor, executing a control algorithm, listening for commands, streaming data, generating control signals, etc. For simple systems, a state machine inside a super-loop is sometimes sufficient. However, this type of program does not scale well: adding in new tasks is laborious, and it can become difficult to satisfy timing requirements.
 
 An RTOS is one solution which makes this situation easier to manage. RTOSes provide a means by which different tasks can be created, each with their own purpose, execution context, timing requirements, etc. Perhaps the most fundamental service provided by an RTOS is a _scheduler_ for the tasks. This is the algorithm which decides which task gets to run on the CPU, and it is hooked onto a timer interrupt, causing it to run at a fixed, deterministic frequency (e.g. 1000 times per second). When a task is scheduled, it gets full access to the CPU, memory, etc. If it finishes what it needs to do before the timer interrupt is triggered, it can tell the scheduler it is done early by _yielding_, thereby allowing a different task to run for the remainder of the period. Alternatively, if it does not yield within its execution period, then it may be forcibly stopped by the scheduler when the timer interrupt is generated. This would depend on several factors, such as whether there were any higher-priority tasks ready to run, and the scheduling algorithm used. By default, FreeRTOS uses a priority-based preemptive scheduler, which means the highest-priority task that is ready to run is the one that will be scheduled.
 
 RTOSes also come with their own sets of challenges. For example, setting task priorities incorrectly may result in an unresponsive system or task starvation, and correct synchronization and communication between tasks is nontrivial.
 
-# FreeRTOS Configuration (Cube)
+## FreeRTOS Configuration (Cube)
 In the Configuration tab in Cube, place a check in the box under "FREERTOS" to enable it. This will create a new clickable box for FreeRTOS in the Middlewares panel in the middle of the window.
 
 ![FreeRTOS Panel](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_3/1-FreeRTOS-enable.jpg)
@@ -43,7 +45,7 @@ As the last step before generating code, we need to change the HAL timebase sour
 
 ![Timebase](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_3/6-Timebase-source.jpg)
 
-# Which Files Do I Write My Code in Now?
+## Which Files Do I Write My Code in Now?
 When we open up `main.c` now, we will see a call to `MX_FREERTOS_Init` and `osKernelStart`. After calling this latter function, things completely change as all code execution is now managed by the operating system. This means that the while loop in main.c will never be executed.
 
 ```C
@@ -136,10 +138,10 @@ void StartTxTask(void const * argument){
 
 For the purposes of this tutorial, we will do all the coding inside these functions in `freertos.c`. However, real projects should use several files for better organization (one of the reasons we chose the "external" task code generation option in Cube is so that we could easily implement the threads in other files).
 
-# Quick Note on APIs
+## Quick Note on APIs
 Cortex Microcontroller Software Interface Standard (CMSIS) is a set of standardized APIs for various types of embedded software. CMSIS-RTOS is the set of RTOS APIs, and one of the files Cube provides is the FreeRTOS implementation of these APIs. These can be accessed transparently through `cmsis_os.h`. It is suggested that these standardized CMSIS-RTOS APIs are used to improve code portability. For details, please see http://arm-software.github.io/CMSIS_5/RTOS2/html/genRTOS2IF.html
 
-# PC Communication
+## PC Communication
 Let us first include the usart header file.
 
 ```C
@@ -149,7 +151,7 @@ Let us first include the usart header file.
 /* USER CODE END Includes */
 ```
 
-## Tx
+### Tx
 We will begin by implementing the TX thread as it runs independently of the others. We wish for this thread to execute at a fixed frequency, namely 2 Hz, during which time the message "Hello world!" will be sent. We will use the `osDelayUntil` function ([FreeRTOS docs](https://www.freertos.org/vtaskdelayuntil.html)) to achieve this. Looking at the code below, we can see that after calling the DMA transmit function, the Tx thread will call `osDelayUntil`. This _delay_ function is not the same delay we usually think of (where the CPU wastes cycles comparing a counter to some value). Instead, _this_ delay causes the Tx thread to _yield_ ("block" itself) until the desired time of 500 ms has passed. As mentioned earlier, yielding causes the scheduler to run, thereby allowing a different thread to execute. This makes a lot of sense for a multitasking system.
 
 ```C
@@ -182,7 +184,7 @@ void StartTxTask(void const * argument){
 
 **Note**: we call `HAL_UART_AbortTransmit` if the `HAL_UART_Transmit_DMA` call fails to recover from whatever erroneous state the hardware entered. This abort function will clear error flags in the hardware, and allow things to continue smoothly as before. We will see something similar on the receiver side
 
-## Rx
+### Rx
 We recall from the previous tutorial that circular RX DMA is a solution to the communication problem that keeps us continuously subscribed to the transmitter sending us information. As we saw with TX above, since we set the RX thread to have the highest priority, we must periodically block it so other threads can run. During the time it is blocked, bytes will be written into the buffer by the DMA hardware, so we need to be careful we don't block for too long otherwise the buffer contents could start being overwritten.
 
 Given our baud rate, our buffer size needs to be at least BAUD_RATE/(10*1000) bytes so that nothing gets overwritten if we check every millisecond. Using this formula, we can see that for a baud rate of 230400 and checks occurring every ms, a buffer of 32 bytes would be sufficient.
@@ -322,7 +324,7 @@ void parse(uint8_t* bytes, uint8_t numBytes){
 
 We have now figured out how to reliably receive data and process it to extract commands. The last step on our journey is figuring out how to send data safely between tasks, in our case, to change the state of the LED.
 
-# Sharing Data Between Threads
+## Sharing Data Between Threads
 Anytime shared data is accessed from multiple execution contexts (such as in a multithreaded program), there is the potential for a race condition. This often happens due to the inability of a CPU to make certain actions atomic—for example, i++ in C typically translates to 3 assembly instructions (read, modify, write). We can often solve these race conditions by enforcing _mutual exclusion_ for critical sections of code. By mutual exclusion, we mean only 1 thread can run that code at any given time.
 
 There is much to be said about inter-task communication, but suffice to say that we will use mechanisms provided by the OS to transfer data between threads. For this tutorial, we will use OS-managed queues to send messages between tasks (in our case, sending a 1 or a 0 to the LED task). The OS is able to guarantee that actions with the queues are mutually exclusive, which makes them perfect for intertask communication. We can create queues through Cube from the FreeRTOS Tasks and Queues tab. Let us create a new queue then generate the code.
