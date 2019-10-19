@@ -10,7 +10,7 @@ RTOSes also come with their own sets of challenges. For example, setting task pr
 # FreeRTOS Configuration (Cube)
 In the Configuration tab in Cube, place a check in the box under "FREERTOS" to enable it. This will create a new clickable box for FreeRTOS in the Middlewares panel in the middle of the window.
 
-![FreeRTOS Panel](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/1-FreeRTOS-enable.jpg)
+![FreeRTOS Panel](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/1-FreeRTOS-enable.jpg)
 
 Upon opening this window we are greeted with the main configuration parameters for the operating system. A few worth pointing out are:
 - **USE_PREEMPTION**: if disabled, tasks will run until they block or yield (cooperative scheduling). If enabled, the scheduler will run the highest-priority task that is in the ready state (not blocked). We will use *preemptive*
@@ -19,29 +19,29 @@ Upon opening this window we are greeted with the main configuration parameters f
 
 **Note**: Many embedded systems strictly use static allocation schemes, and we will do the same. The main reason is that dynamic allocation is an non-deterministic action, i.e. it can fail. It is difficult to handle such failures gracefully, and even worse, such failures many not appear for hours, weeks, or even years if they are related to heap fragmentation.
 
-![Config Parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/2-FreeRTOS-config.jpg)
+![Config Parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/2-FreeRTOS-config.jpg)
 
 The next tab, Include parameters, allows us to enable/disable certain FreeRTOS functions (another compile-time thing). One that has good utility is `vTaskDelayUntil`. **Let us enable it**.
 
-![vTaskDelayUntil](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/3-FreeRTOS-includes1.jpg)
+![vTaskDelayUntil](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/3-FreeRTOS-includes1.jpg)
 
 Heading over to the Tasks and Queues tab, we can see that we're able to create new tasks to run on the RTOS directly through Cube. This can also be done in code, but for now we'll stick with Cube. Some main task parameters are:
 - Task Name: the identifier for the task. Useful when referring to tasks in design documents
 - Priority: how important the task is relative to others. This is a _very_ important parameter as it directly impacts when the task will get run
 - Stack Size: the amount of memory to allocate for this task. Local variables and function calls will use the stack, so make sure this is sized appropriately for the application. Failing to do so will result in a stack overflow which is a critical system fault
 
-![Task creation parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/4-FreeRTOS-tasks.jpg)
+![Task creation parameters](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/4-FreeRTOS-tasks.jpg)
 
 Let us create 3 tasks as follows:
 - LED: Will service the LED state
 - Rx: Will receive commands from a PC
 - Tx: Will send data to a PC
 
-![The 3 tasks](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/5-Tasks.jpg)
+![The 3 tasks](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/5-Tasks.jpg)
 
 As the last step before generating code, we need to change the HAL timebase source to be something other than SysTick. We will choose TIM1 for convenience, then generate code.
 
-![Timebase](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/6-Timebase-source.jpg)
+![Timebase](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/6-Timebase-source.jpg)
 
 # Which Files Do I Write My Code in Now?
 When we open up `main.c` now, we will see a call to `MX_FREERTOS_Init` and `osKernelStart`. After calling this latter function, things completely change as all code execution is now managed by the operating system. This means that the while loop in main.c will never be executed.
@@ -327,7 +327,7 @@ Anytime shared data is accessed from multiple execution contexts (such as in a m
 
 There is much to be said about inter-task communication, but suffice to say that we will use mechanisms provided by the OS to transfer data between threads. For this tutorial, we will use OS-managed queues to send messages between tasks (in our case, sending a 1 or a 0 to the LED task). The OS is able to guarantee that actions with the queues are mutually exclusive, which makes them perfect for intertask communication. We can create queues through Cube from the FreeRTOS Tasks and Queues tab. Let us create a new queue then generate the code.
 
-![Queue creation in Cube](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Diagrams/wiki/stm32/Getting-Started-with-FreeRTOS/7-cmdQ.jpg)
+![Queue creation in Cube](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/images/tutorial_3/7-cmdQ.jpg)
 
 CMSIS provides the `osMessagePut` API to enqueue data, and the `osMessageGet` API to dequeue data. Note that for both of these, the last parameter is the number of milliseconds to wait on the action (sending or receiving). We can send the 1 or 0 signal into the queue by modifying the last switch statement in the `parse` function as follows:
 
