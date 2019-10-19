@@ -1,7 +1,0 @@
-cannythreshold1: 300
-cannythreshold2: 411
-houghRho: 1
-houghTheta: rad(pi/180)
-houghThreshold: 50
-houghMinLineLength: 50
-houghMaxLineGap: 50

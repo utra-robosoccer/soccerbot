@@ -1,6 +1,0 @@
-<launch>
-    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector"
-          output="screen">
-        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
-    </node>
-</launch>
