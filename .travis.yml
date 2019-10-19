@@ -1,14 +1,18 @@
 sudo: required 
-dist: trusty 
+dist: bionic 
 language: generic 
 compiler:
   - gcc
 env:
   global:
     - CCACHE_DIR=$HOME/.ccache
-  matrix:
-    - ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu BEFORE_SCRIPT='./scripts/ci_prebuild.sh' AFTER_SCRIPT='./scripts/ci_postbuild.sh'
+    - ROS_DISTRO="kinetic" 
+    - ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 install:
-  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config  
+  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+before_script:
+  - wget http://pjreddie.com/media/files/yolov2-tiny.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
+  - wget http://pjreddie.com/media/files/yolov3.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
+  - wget http://pjreddie.com/media/files/yolov2.weights -P $HOME/build/utra-robosoccer/soccer_ws/external/darknet_ros/darknet_ros/yolo_network_config/weights
 script: 
-- source .ci_config/travis.sh
+  - source .ci_config/travis.sh

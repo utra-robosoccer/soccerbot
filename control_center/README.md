@@ -15,8 +15,8 @@ Modify required keys in control_center/settings.py
 
 #### 4. Run Monitoring development server:
 ```
-$ catkin build sootballs_control_center
-$ roslaunch sootballs_control_center default.launch 
+$ catkin build soccer_control_center
+$ roslaunch soccer_control_center default.launch
 ```
 server will be running at http://localhost:8001
 

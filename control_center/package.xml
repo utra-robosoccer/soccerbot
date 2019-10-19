@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>sootballs_control_center</name>
+  <name>control_center</name>
   <version>0.1.0</version>
-  <description>The sootballs monitoring api package</description>
-  <maintainer email="alankrita.pathak@rapyuta-robotics.com">Alankrita Pathak</maintainer>
+  <description>The soccer monitoring api package</description>
+  <maintainer email="anthonyjlem@gmail.com">Anthony Lem</maintainer>
   <license>Commercial</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>rosmon</depend>
   <depend>roscpp</depend>
-  <depend>rr_common_config</depend>
-  <depend>rr_base_utils</depend>
-  <depend>sootballs_msgs</depend>
+  <depend>soccer_msgs</depend>
 
   <depend>supervisor</depend>
   <depend>python-scp</depend>
