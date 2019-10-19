@@ -26,4 +26,8 @@ public:
     void UpdateOccupancyMap();
     void InflateOccupancyMap();
     void InflatePoint(int row, int col, grid &OccupancyMap);
+
+    // Lukasz Update
+    int GetWidth();
+    int GetHeight();
 };

@@ -79,3 +79,11 @@ void Map::InflatePoint(int row, int col, grid &OccupancyMap)
         }
     }
 }
+
+int Map::GetWidth() {
+    return m_Width;
+}
+
+int Map::GetHeight() {
+    return m_Height;
+}
