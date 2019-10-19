@@ -2,9 +2,9 @@
 // Created by manx52 on 2019-09-28.
 //
 
-#include "../../../soccerbot/soccer_fieldline_detection/include/soccer_fieldline_detection/transform.hpp"
+#include "../include/soccer_fieldline_detection/transform.hpp"
 #include <cmath>
-
+#include <stdio.h>
 transform::transform(float pos[]) {
     transform::position[0] = pos[0];
     transform::position[1] = pos[1];
@@ -20,7 +20,7 @@ transform::transform(float pos[]) {
 transform::transform(float pos [], float orient[]) {
     transform::position[0] = pos[0];
     transform::position[1] = pos[1];
-    transform::position[2] = pos[0];
+    transform::position[2] = pos[2];
 
 
     transform::orientation[0] = orient[0];
@@ -32,8 +32,8 @@ transform::transform(float pos [], float orient[]) {
 
 
 
-float * transform::rotm2quat(float (&array) [4][4]){ // Convert rot matrix to quaternion
-    float quat [4];// [w,x,y,z]
+float * transform::rotm2quat(float array [4][4]){ // Convert rot matrix to quaternion
+    static float quat [4] = {0,0,0,0};// [w,x,y,z]
     float tr = array[0][0] + array[1][1] + array[2][2];
 
     if (tr > 0) {
@@ -90,7 +90,7 @@ float ** transform::quat2tform(float orient []){// Convert quaternion to homogen
 
     //If quaternion is not already normalised
 
-    float invs = 1 / (sqw + sqx+ sqy + sqz);
+    float invs = 1.0 / (sqw + sqx+ sqy + sqz);
     matrix [0][0] = (sqx - sqy -sqz +sqw)*invs;
     matrix [1][1] = (-sqx + sqy -sqz +sqw)*invs;
     matrix [2][2] = (-sqx - sqy +sqz +sqw)*invs;
@@ -104,8 +104,8 @@ float ** transform::quat2tform(float orient []){// Convert quaternion to homogen
     tmp1 = orient[1] * orient[3];
     tmp2 = orient[2] * orient[0];
 
-    matrix[2][0] = 2.0 * (tmp1 + tmp2)*invs;
-    matrix[0][2] = 2.0 * (tmp1 - tmp2)*invs;
+    matrix[2][0] = 2.0 * (tmp1 - tmp2)*invs;
+    matrix[0][2] = 2.0 * (tmp1 + tmp2)*invs;
 
     tmp1 = orient[2] * orient[3];
     tmp2 = orient[1] * orient[0];
@@ -137,7 +137,7 @@ float ** transform::H (transform c) {
     for (int i = 0; i < 3; i++){
 
         for (int j = 0; j < 3; j++) {
-            matrix[i] [j] = tmp[i][j];
+            matrix[i][j] = tmp[i][j];
 
         }
     }
@@ -145,25 +145,18 @@ float ** transform::H (transform c) {
     matrix[0][3] = c.position[0];
     matrix[1][3] = c.position[1];
     matrix[2][3] = c.position[2];
-
+    matrix[3][3] = 1;
     return matrix;
 }
 
-float ** transform::ApplyTransformation(float a [], float b []){
-    float ** matrix ;
+transform transform::ApplyTransformation(transform a, transform b){
+    float matrix [4][4]  ={ { 0 } };
 
-    matrix = new float*[4];
 
-    for (int i = 0; i < 4; i++){
-        matrix[i] = new float[4];
-        for (int j = 0; j < 4; j++) {
 
-            matrix[i][j] = 0;
-        }
-    }
-
-    /*float ** H1 = H(b);
+    float ** H1 = H(b);
     float ** H2 = H(a);
+
 
     //Matrix multiplication
     for (int i = 0; i < 4; i++) {
@@ -174,11 +167,22 @@ float ** transform::ApplyTransformation(float a [], float b []){
 
         }
     }
-    float *orient = transform::rotm2quat(reinterpret_cast<float (&)[4][4]>(matrix));
+   /* for (int i = 0; i < 4; i++) {
+        printf("\n");
+        for (int j = 0; j < 4; j++) {
+            printf("  %f  ",matrix[i][j]);
+
+        }
+        //printf("\n");
+    }
+    */
+    float *orient ;
+    orient  =  transform::rotm2quat(matrix);//{0,0,0,0};
     float pos [3] = {matrix[0][3],matrix[1][3],matrix[2][3]};
 
-    */
-    return matrix;
+
+    transform result = transform(pos,orient);
+    return result;
 
 
 

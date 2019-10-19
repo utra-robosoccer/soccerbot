@@ -13,7 +13,7 @@ public:
 
     transform(float pos [], float orient []);
 
-    float * rotm2quat(float (&array) [4][4]);
+    float * rotm2quat(float array [4][4]);
 
     float ** quat2tform(float orient []);
 
@@ -23,5 +23,7 @@ public:
 
     float **H(transform c);
 
-    float **ApplyTransformation(float *a, float *b);
+   // transform ApplyTransformation(float *a, float *b);
+
+    transform ApplyTransformation(transform a, transform b);
 };
