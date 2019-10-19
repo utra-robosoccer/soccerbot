@@ -1,11 +1,7 @@
 //
 // Created by manx52 on 2019-09-28.
 //
-
-#ifndef SRC_TRANSFORM_HPP
-#define SRC_TRANSFORM_HPP
-
-#endif //SRC_TRANSFORM_HPP
+#pragma once
 
 class transform{
 
@@ -24,7 +20,8 @@ public:
     float orientation [4] = {1,0,0,0};
     float position [3] = {0,0,0};
 
-    transform ApplyTransformation(transform a, transform b);
 
     float **H(transform c);
+
+    float **ApplyTransformation(float *a, float *b);
 };

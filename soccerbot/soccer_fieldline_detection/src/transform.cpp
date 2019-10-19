@@ -2,10 +2,10 @@
 // Created by manx52 on 2019-09-28.
 //
 
-#include <geometry/transform.hpp>
+#include "../../../soccerbot/soccer_fieldline_detection/include/soccer_fieldline_detection/transform.hpp"
 #include <cmath>
 
-transform::transform(float *pos) {
+transform::transform(float pos[]) {
     transform::position[0] = pos[0];
     transform::position[1] = pos[1];
     transform::position[2] = pos[2];
@@ -17,7 +17,7 @@ transform::transform(float *pos) {
 
 }
 
-transform::transform(float *pos, float *orient) {
+transform::transform(float pos [], float orient[]) {
     transform::position[0] = pos[0];
     transform::position[1] = pos[1];
     transform::position[2] = pos[0];
@@ -149,8 +149,8 @@ float ** transform::H (transform c) {
     return matrix;
 }
 
-transform transform::ApplyTransformation(transform a, transform b){
-    float ** matrix = 0;
+float ** transform::ApplyTransformation(float a [], float b []){
+    float ** matrix ;
 
     matrix = new float*[4];
 
@@ -162,7 +162,7 @@ transform transform::ApplyTransformation(transform a, transform b){
         }
     }
 
-    float ** H1 = H(b);
+    /*float ** H1 = H(b);
     float ** H2 = H(a);
 
     //Matrix multiplication
@@ -177,8 +177,8 @@ transform transform::ApplyTransformation(transform a, transform b){
     float *orient = transform::rotm2quat(reinterpret_cast<float (&)[4][4]>(matrix));
     float pos [3] = {matrix[0][3],matrix[1][3],matrix[2][3]};
 
-
-    return {pos,orient};
+    */
+    return matrix;
 
 
 
