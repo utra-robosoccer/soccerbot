@@ -1,15 +1,17 @@
+# Communication Between MCU and PC
+
 This page walks through how to move bytes back and forth between a PC and MCU. For instructions setting up the development environment and running a simple microcontroller program, please see the [previous tutorial](https://github.com/utra-robosoccer/soccer-embedded/wiki/STM32:-Getting-Started-with-Cube-and-System-Workbench).
 
-# Overview
+## Overview
 All Nucleo development boards come with integrated programmers (for the L432KC, this is located on the bottom). This is a diverse chip, with the ability to flash new code into the MCU, debug code running on it, and also bridge UART communication on the MCU side with USB communication on the PC side. Essentially, the microcontroller can send bytes via UART, and the programmer chip will convert it to a USB packet and send it to the PC. The USB protocol defines a software interface called a virtual COM port (VCP) which allows an application to interact with a device as though it were streaming raw bytes. Serial monitor programs such as Docklight can then display these raw bytes to a user, perhaps formatted as human-readable strings. The same idea holds for sending messages to the microcontroller from the PC.
 
 Later tutorials on FreeRTOS will build on top of this one.
 
-# PC Side
+## PC Side
 For this walkthrough, we will either need a serial terminal program or a custom script that sends and receives bytes via virtual serial port (e.g. PySerial). A popular cross-platform serial terminal is PuTTY. One that works nicely for Windows and provides a rich GUI is Docklight (download: https://docklight.de/downloads/). We will use Docklight in this tutorial.
 
-# MCU Side
-## Peripheral Configuration (Cube)
+## MCU Side
+### Peripheral Configuration (Cube)
 Continuing from the last tutorial, our project should be all set up. In fact, the default peripheral initialization already enables the USART which is connected to the programmer, USART2.
 
 ![VCP Pins](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_2/1-USART2-Pins.jpg?raw=true)
@@ -26,7 +28,7 @@ Also in the USART2 window, we will enable interrupts from the NVIC Settings tab 
 
 We can then generate the code as before.
 
-## Polled Transmission (TX)
+### Polled Transmission (TX)
 The `HAL_UART_Transmit()` function is the blocking API for sending bytes via UART. We'll show how to use it first then make a few important points after.
 ```C
 const uint32_t timeout = 10; // ms
@@ -49,7 +51,7 @@ Important points:
 
 ![Clock Configuration](https://github.com/utra-robosoccer/soccer-embedded/blob/master/Tutorials/Images/tutorial_2/5-Clock-Config.jpg?raw=true)
 
-## Polled Reception (RX)
+### Polled Reception (RX)
 The `HAL_UART_Receive()` function is the blocking API for receiving bytes via UART. In this example, we'll change the LED state from the PC by sending either 0 or 1 as ASCII.
 ```C
 const uint32_t rx_timeout = UINT32_MAX; // ms
@@ -79,7 +81,7 @@ Important points:
 - The program does not do _anything_ until a byte is received, hence the maximum RX timeout. That is the sad reality of blocking I/O
 - We call the variable `ascii_value` a buffer
 
-## Interrupt-Based TX and RX
+### Interrupt-Based TX and RX
 Suppose we would like to be able to send "Hello world!" to the PC twice per second while also being able to change the LED state by sending a command from the PC. If we were only able to use polled I/O, we would not be able to accomplish this reliably as we would be constrained to transmit and receive at separate times. To get around this, we use the interrupt-based APIs `HAL_UART_Transmit_IT()` and `HAL_UART_Receive_IT()`. Both of these functions will _initiate_ a transfer of bytes, then return and allow the CPU to continue executing instructions from the caller's context. Basically, the CPU operates in parallel with the UART hardware while it sends a single byte. When the byte is done being transmitted, the UART hardware generates an interrupt, and the auto-generated interrupt handler will load the next byte into the UART hardware, and the cycle begins again.
 
 Since `HAL_UART_Receive_IT()` returns immediately after being called, we need a way of checking whether it it is done before using the buffer. This can be done by polling the UART handle's state in our application loop, or by means of a _callback_. We'll look at the former option first, and will use the latter option when we go through DMA.
@@ -124,7 +126,7 @@ Important points:
 - Interrupt-based APIs allow us to initiate data transfers in parallel with each other and with the CPU. For a UART, such transfers are constrained to the length of a byte, so after a byte is sent or received, the CPU is interrupted for a brief period of time to handle the event. This is a huge improvement compared to the blocking I/O cases illustrated above, as now the system can go do other things. Usually, interrupts occur infrequently relative to the core operating frequency, and interrupt handling code is small
 - The `HAL_GetTick()` returns the number of ms the program has been operating for (this is tracked by the "SysTick" hardware timer, which is always running). We can use this to time-trigger events
 
-## DMA-Based TX and RX
+### DMA-Based TX and RX
 The DMA controller is a module completely distinct from the CPU. The CPU talks with the DMA controller to initiate data transfers of several bytes long, in general. Once the CPU performs this initial step, the DMA controller performs the entire transfer itself, and notifies the CPU via interrupt once it is entirely done. Imagine a scenario where you have 5 UARTs sending and receiving several bytes simultaneously at 1 Mbps. This would generate a ton of interrupts, causing the CPU to be frequently diverted from the application code. DMA has an obvious advantage in this case since the CPU is only needed at the start and the end of transfers. One caveat is that the CPU and DMA controller have to share the system bus to access memory, so if the CPU is involved in memory-intensive tasks the bus contention may cause a slowdown.
 
 The UART DMA APIs are very similar to the others for the most part. Sending uses `HAL_UART_Transmit_DMA()` and receiving uses `HAL_UART_Receive_DMA()`. One difference of note is that these can be configured to use _circular_ buffering. For example, if circular receive is used, then calling `HAL_UART_Receive_DMA()` will cause bytes to be read from the RX line into the buffer forever. This is good in cases where an unknown amount of data needs to be received or where the application must continuously be subscribed to the RX line.
@@ -186,7 +188,7 @@ Important points:
 - Since we are using circular DMA, we only need to initiate the reception once. In a real-world situation, you'd probably want to implement the error callback to restart the transfer if there were communication errors
 - The reception event processing can all be moved into the callback, which more closely resembles how we envision the system's operation in an abstract sense
 
-## Circular RX DMA For Variable-Sized Packets
+### Circular RX DMA For Variable-Sized Packets
 In the previous example, we saw how DMA allows us to stay continuously subscribed to a source of information while at the same time offloading the CPU's involvement in the communication process. The DMA channel `CNDTR` register tells us (indirectly) how many bytes have been received into the buffer. Specifically, it is a downcounter which starts at the transfer size passed into `HAL_UART_Receive_DMA()` as the third argument, and each time a new byte is received it is decremented. When `CNDTR` equals 1, the next reception will cause it to wrap around the number line back to its initial value. In this way, reception can continue forever and applications can treat the receive buffer like a FIFO.
 
 ```C
