@@ -2,7 +2,7 @@
 
 import rospy
 from std_msgs.msg import Float64
-import trajectories_publisher
+from soccer_trajectories import trajectories_publisher
 
 if __name__ == '__main__':
     try:
