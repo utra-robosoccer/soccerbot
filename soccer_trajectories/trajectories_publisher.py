@@ -24,7 +24,9 @@ joints = ["left_ankle_foot",
 
 
 def get_setpoints(timestamp):
-    return {joint: 0.0 for joint in joints}
+    setpoints = {joint: 0.0 for joint in joints}
+    setpoints["left_hip_front_thigh"] = 1.0
+    return setpoints
 
 def publish_trajectories():
     # TODO: Is this a good queue size?

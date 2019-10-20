@@ -1,0 +1,11 @@
+#!/usr/bin/env python2
+
+import rospy
+from std_msgs.msg import Float64
+import trajectories_publisher
+
+if __name__ == '__main__':
+    try:
+        trajectories_publisher.publish_trajectories()
+    except rospy.ROSInterruptException:
+        pass
