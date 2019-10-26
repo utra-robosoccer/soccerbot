@@ -1,8 +1,6 @@
 #include <soccer_route_planner/Map.hpp>
 
 Map::Map() {
-    m_InflationRadius = 0.2;
-    m_nNodes = 2000;
     info.resolution = 0.05;
     info.height = 9;
     info.width = 6;
