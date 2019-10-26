@@ -6,11 +6,24 @@ Map::Map() {
     info.resolution = 0.05;
     info.height = 9;
     info.width = 6;
+    info.origin.position.x = -info.width/2;
+    info.origin.position.y = -info.height/2;
     data.reserve(getCols() * getRows());
 }
 
 int8_t &Map::getOccupancy(int row, int column) {
     return data.at(row * getCols() + column);
+}
+
+int8_t &Map::getOccupancy(Pose2D position){
+    return data.at((position.y - info.origin.position.y)/info.resolution * getCols() + (position.x - info.origin.position.x)/info.resolution);
+}
+
+Pose2D Map::getClosestPoint(Pose2D position){
+    Pose2D closest;
+    closest.x = round(position.x/info.resolution)*info.resolution;
+    closest.y = round(position.y/info.resolution)*info.resolution;
+    return closest;
 }
 
 void Map::UpdateOccupancyMap() {
