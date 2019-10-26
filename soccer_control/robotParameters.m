@@ -2,7 +2,7 @@
 density = 1000;
 
 % Field parameters
-plane_dim = [9 6 0.025];
+plane_dim = [9 6 0.09];
 
 % Contact/friction parameters
 contact_stiffness = 2500;
@@ -13,7 +13,7 @@ mu_vth = 0.1;
 contact_point_radius = 1e-4;
 
 % Foot Parameters
-cleat_length = 0.022;
+cleat_length = 0.00;
 foot_box = [0.09 0.07 0.01474 + cleat_length];
 left_collision_center = [0.00385 0.00401 -0.00737];
 
