@@ -6,6 +6,8 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/Pose2D.h>
 
+using namespace geometry_msgs;
+
 class Map : public nav_msgs::OccupancyGrid {
 private:
     float m_InflationRadius;
