@@ -14,10 +14,6 @@ add_message_files(
     FILES
     RobotGoal.msg
     RobotState.msg
-    RobotCommand.msg
-    RobotEstimate.msg
-    MapOverview.msg
-    MapOverviewIndividual.msg
 )
 
 generate_messages(
