@@ -10,7 +10,7 @@ Map::Map() {
 }
 
 int8_t &Map::getOccupancy(int row, int column) {
-    return data.at(column * getRows() + row);
+    return data.at(row * getCols() + column);
 }
 
 void Map::UpdateOccupancyMap() {
@@ -20,7 +20,7 @@ void Map::UpdateOccupancyMap() {
             getOccupancy(rows, cols) = 0;
             // Set border of map to 1
             if ((rows == getRows() - 1) || (cols == getCols() - 1)) {
-                getOccupancy(rows, cols) = 1;
+                getOccupancy(rows, cols) = 100;
             }
         }
     }
@@ -41,7 +41,7 @@ void Map::InflateOccupancyMap() {
     // For point that is 1 inflate by inflation radius
     for (int rows = 0; rows < getRows(); rows++) {
         for (int cols = 0; cols < getCols(); cols++) {
-            if (getOccupancy(rows, cols) == 1) {
+            if (getOccupancy(rows, cols) == 100) {
                 InflatePoint(rows, cols);
             }
         }
@@ -63,7 +63,7 @@ void Map::InflatePoint(int row, int col) {
             int d_rows = std::abs(rows - row);
             int d_cols = std::abs(cols - col);
             if (d_rows * d_rows + d_cols * d_cols <= GridInflationRadius * GridInflationRadius) {
-                getOccupancy(rows, cols) = 1;
+                getOccupancy(rows, cols) = 100;
             }
         }
     }

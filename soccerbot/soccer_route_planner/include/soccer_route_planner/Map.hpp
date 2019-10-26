@@ -18,8 +18,8 @@ public:
 
     ~Map() = default;
 
-    int getRows() { return info.width / info.resolution; }
-    int getCols() { return info.height / info.resolution; }
+    int getRows() { return info.height / info.resolution; }
+    int getCols() { return info.width / info.resolution; }
 
     int8_t& getOccupancy(int row, int column);
 
