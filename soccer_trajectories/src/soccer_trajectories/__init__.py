@@ -1,1 +1,2 @@
-import trajectories_publisher
+from trajectory_publisher import publish_trajectories
+from trajectory import Trajectory

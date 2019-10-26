@@ -1,11 +1,12 @@
 #!/usr/bin/env python2
 
 import rospy
-from std_msgs.msg import Float64
-from soccer_trajectories import trajectories_publisher
+import soccer_trajectories
 
 if __name__ == '__main__':
     try:
-        trajectories_publisher.publish_trajectories()
+        #TODO: Fix relative path here...
+        getup = soccer_trajectories.Trajectory("/home/henrypm/catkin_ws/src/soccer_ws/soccer_trajectories/trajectories/getupback.csv")
+        soccer_trajectories.publish_trajectories(getup)
     except rospy.ROSInterruptException:
         pass
