@@ -28,3 +28,6 @@ right_foot_to_corner_1 = right_collision_center + [foot_box(1)/2 foot_box(2)/2 -
 right_foot_to_corner_2 = right_collision_center + [foot_box(1)/2 -foot_box(2)/2 -foot_box(3)];
 right_foot_to_corner_3 = right_collision_center + [-foot_box(1)/2 -foot_box(2)/2 -foot_box(3)];
 right_foot_to_corner_4 = right_collision_center + [-foot_box(1)/2 foot_box(2)/2 -foot_box(3)];
+
+% Motion Parameters
+hip_height = 0.16;
