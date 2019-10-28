@@ -30,15 +30,23 @@ add_executable(
     src/soccer_fieldline_detector.cpp
     src/camera.cpp
     src/image.cpp
-        src/transform.cpp
+    src/transform.cpp
 )
-
 add_dependencies(soccer_fieldline_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(soccer_fieldline_detector
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
 
+add_executable(
+    ball_detector
+    src/ball_detector.cpp
+)
+add_dependencies(ball_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(ball_detector
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    )
 #############
 ## Testing ##
 #############
