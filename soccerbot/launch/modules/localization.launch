@@ -17,9 +17,13 @@
     3. Run the 2d to 3d point thing
     4. Publish the point with the reference frame being the robot's base_link
      -->
-    <!--<node name="ball_detector" pkg="soccer_fieldline_detector" type="ball_detector" />-->
-    <!--<node name="ball_detector" pkg="soccer_fieldline_detector" type="line_detector" />-->
+
     <!-- TODO: NAM -->
+    <!-- create node for readking in the ball location from picture-->
+    <!-- based on dimension of the ball localize where the ball is -->
+    <!-- publish a message on the location of the ball-->
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+
 
     <!-- Object detection -->
     <group if="$(arg darknet)">
