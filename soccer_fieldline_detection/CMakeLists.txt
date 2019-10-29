@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     image_transport
     cv_bridge
     sensor_msgs
+    darknet_ros_msgs
     )
 
 find_package(OpenCV 3 REQUIRED)
