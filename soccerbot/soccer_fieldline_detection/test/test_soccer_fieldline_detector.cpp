@@ -7,7 +7,6 @@ protected:
 };
 
 TEST_F(SoccerFieldlineDetectorFixture, CameraFindFloorCoordinate) {
-
     Pose3 pose_msgs;
     pose_msgs.position.x = -0.5;
     pose_msgs.position.y = -0.5;
@@ -22,16 +21,14 @@ TEST_F(SoccerFieldlineDetectorFixture, CameraFindFloorCoordinate) {
     Camera cam (pose_msgs,240,360);
     Point3 p2 = cam.FindFloorCoordinate(130, 70);
     //Point3 p2 (1,2,3);
-   // ASSERT();
-    printf("   %f, %f, %f",p2.x,p2.y,p2.z);
+    ASSERT_NEAR(p2.x, -0.1666, 0.0001);
+    ASSERT_NEAR(p2.y, -0.2763, 0.0001);
+    ASSERT_NEAR(p2.z, 0.0, 0.0001);
 }
 
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     ros::init(argc, argv, "test_fieldline_detector");
-
-
-
     return RUN_ALL_TESTS();
 }
