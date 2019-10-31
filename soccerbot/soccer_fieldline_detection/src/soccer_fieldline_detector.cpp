@@ -2,6 +2,7 @@
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <geometry/segment2.hpp>
 
 SoccerFieldlineDetector::SoccerFieldlineDetector() {
     image_transport::ImageTransport it(nh);
@@ -57,15 +58,52 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 minLineLength,
                 maxLineGap);
 
+        std::vector<Point2> pts;
+
         for (auto l : lines) {
             cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+
+            Point2 pt1(l[0],l[1]);
+            Point2 pt2(l[2],l[3]);
+            Segment2 s(pt1,pt2);
+            float b = l[1] - s.slope()*l[0];
+
+            for (int i = l[0]; i < l[2];i++) {
+                float y = s.slope()*i + b;
+                Point2 pt(i,y);
+                pts.push_back(pt);
+
+            }
+
         }
+
+
 
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
+        Pose3 pose_msgs;
+        pose_msgs.position.x = -0.5;
+        pose_msgs.position.y = -0.5;
+        pose_msgs.position.z = 0.5;
+
+        pose_msgs.orientation.w = 0.8536;
+        pose_msgs.orientation.x = -0.1464;
+        pose_msgs.orientation.y = 0.3536;
+        pose_msgs.orientation.z = 0.3536;
+        pose_msgs.orientation.w = 0.8536;
+
+        Camera cam (pose_msgs,240,360);
+        std::vector<Point3> rPts;
+        for (auto p : pts) {
+            Point3 p2 = cam.FindFloorCoordinate(p.x, p.y);
+            rPts.push_back(p2);
+        }
 
         // Publish fieldlines in a LaserScan data format
+        ros::NodeHandle n;
+
+        ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
         cv::imshow("original view", image);
         cv::imshow("edge view", cdst);
