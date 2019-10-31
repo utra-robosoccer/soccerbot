@@ -1,0 +1,48 @@
+component PS_force_hydraulic_chamber_trans_incomp
+% Translational Hydraulic Chamber Force Incompressible
+% The block models an ideal transducer that converts hydraulic
+% energy into mechanical energy in the form of translational motion of the
+% converter output member.
+
+% Copyright 2016-2017 The MathWorks, Inc.
+
+nodes
+    A = foundation.hydraulic.hydraulic;                    % A:right
+end
+
+inputs
+    velocity = {0, 'm/s'}; % v:left
+    position = {0, 'm'};   % p:left
+end
+
+outputs
+    force = {0, 'N'}; % f:left
+end
+
+parameters
+    area        = { 5e-4,   'm^2'	};	% Piston area
+end
+
+variables
+    q = { 0, 'm^3/s'    }; % Flow rate leaving the converter
+end
+
+function setup %#simple
+    % Parameter range checking
+    if area <= 0
+        pm_error('simscape:GreaterThanZero','Piston area');
+    end
+end
+
+branches
+    q: A.q -> *;
+end
+
+equations
+    % Fluid mechanical interface
+    force == area*A.p;
+        
+	% Flow rate exiting the converter
+	q == area*velocity;
+end
+end

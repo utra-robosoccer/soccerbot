@@ -1,0 +1,45 @@
+component PS_force_friction_trans
+% Translational Friction Force
+% The block represents friction in the contact between moving bodies. The 
+% friction force is simulated as a function of relative velocity and 
+% assumed to be the sum of Stribeck, Coulomb, and viscous components. The
+% sum of the Coulomb and Stribeck frictions at zero velocity is often 
+% referred to as the breakaway friction.
+
+% Copyright 2016-2017 The MathWorks, Inc.
+
+inputs
+    v = {0, 'm/s'}; % v:left
+end
+
+outputs
+    f = {0, 'N'}; %f:right
+end
+
+parameters
+    brkwy_frc = { 25, 'N' };        % Breakaway friction force
+    brkwy_vel = { 0.1, 'm/s' };     % Breakaway friction velocity
+    Col_frc = { 20, 'N' };          % Coulomb friction force
+    visc_coef = { 100, 'N*s/m' };   % Viscous friction coefficient
+end
+
+parameters (Access=private)
+    static_scale = sqrt(2*exp(1))*(brkwy_frc-Col_frc);  % Scale factor for static torque
+    static_thr = sqrt(2)*brkwy_vel;                     % Velocity threshold for static torque
+    Col_thr = brkwy_vel/10;                             % Velocity threshold for Coulomb torque
+end
+
+equations
+    % Parameter range checking
+    assert(brkwy_frc>0)
+    assert(brkwy_vel>0)
+    assert(Col_frc>0)
+    assert(Col_frc<=brkwy_frc)
+    assert(visc_coef>=0)
+    % Force is a combination of viscous, static, and Coulomb losses
+    f == visc_coef * v ...
+         + static_scale * (v/static_thr*exp(-(v/static_thr)^2)) ...
+         + Col_frc * tanh(v/Col_thr);
+end
+
+end

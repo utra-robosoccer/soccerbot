@@ -1,0 +1,79 @@
+<robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="front_camera" params="origin">
+        <link name="camera" />
+        <joint name="${origin}_camera" type="fixed">
+            <parent link="head"/>
+            <child link="camera"/>
+            <origin rpy="0 0 0" xyz="0.05295 0.00145 0.04740"/>
+            <axis xyz="0  0  0"/>
+            <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+            <limit effort="0" lower="0" upper="0" velocity="0"/>
+        </joint>
+        <gazebo reference="imu_link">
+            <gravity>true</gravity>
+            <sensor name="imu_sensor" type="imu">
+                <always_on>true</always_on>
+                <update_rate>100</update_rate>
+                <visualize>true</visualize>
+                <topic>__default_topic__</topic>
+                <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                    <topicName>imu</topicName>
+                    <bodyName>imu_link</bodyName>
+                    <updateRateHZ>50.0</updateRateHZ>
+                    <gaussianNoise>0.0</gaussianNoise>
+                    <xyzOffset>0 0 0</xyzOffset>
+                    <rpyOffset>0 0 0</rpyOffset>
+                    <frameName>imu_link</frameName>
+                </plugin>
+                <pose>0 0 0 0 0 0</pose>
+            </sensor>
+        </gazebo>
+
+        <gazebo reference="camera">
+            <sensor type="camera" name="main_camera" >
+                <always_on>1</always_on>
+                <visualize>1</visualize>
+                <update_rate>30</update_rate>
+                <camera>
+                    <horizontal_fov>1.39626</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.2</near>
+                        <far>10</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0</mean>
+                        <stddev>0.007</stddev>
+                    </noise>
+                </camera>
+                <plugin  filename='libgazebo_ros_camera.so' name='camera_controller'>
+                    <alwaysOn>true</alwaysOn>
+                    <updateRate>0.0</updateRate>
+                    <cameraName>camera</cameraName>
+                    <imageTopicName>image_raw</imageTopicName>
+                    <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                    <frameName>camera_link</frameName>
+                    <hackBaseline>0.07</hackBaseline>
+                    <distortionK1>0.0</distortionK1>
+                    <distortionK2>0.0</distortionK2>
+                    <distortionK3>0.0</distortionK3>
+                    <distortionT1>0.0</distortionT1>
+                    <distortionT2>0.0</distortionT2>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+        <gazebo reference="camera">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+    </xacro:macro>
+</robot>
