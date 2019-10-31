@@ -57,10 +57,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 minLineLength,
                 maxLineGap);
 
-        for (int i = 0; i < lines.size(); i++) {
-            cv::Vec4i l = lines[i];
+        for (auto l : lines) {
             cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
         }
+
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
