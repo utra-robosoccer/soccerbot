@@ -13,20 +13,20 @@
     <!-- TODO: NAM -->
 
     <!-- Object detection -->
-    <group if="$(arg darknet)">
-        <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
-    </group>
+<!--    <group if="$(arg darknet)">-->
+<!--        <include file="$(find darknet_ros)/launch/darknet_ros.launch" />-->
+<!--    </group>-->
 
     <!-- AMCL Localization -->
-    <include file="$(find soccerbot)/launch/modules/amcl.launch">
-        <arg name="use_map_topic"   value="true"/>
-        <arg name="scan_topic"      value="vision_poses"/>
-        <arg name="initial_pose_x"  value="0.0"/>
-        <arg name="initial_pose_y"  value="0.0"/>
-        <arg name="initial_pose_a"  value="0.0"/>
-        <arg name="odom_frame_id"   value="odom"/>
-        <arg name="base_frame_id"   value="base_link"/>
-        <arg name="global_frame_id" value="map"/>
-    </include>
+<!--    <include file="$(find soccerbot)/launch/modules/amcl.launch">-->
+<!--        <arg name="use_map_topic"   value="true"/>-->
+<!--        <arg name="scan_topic"      value="vision_poses"/>-->
+<!--        <arg name="initial_pose_x"  value="0.0"/>-->
+<!--        <arg name="initial_pose_y"  value="0.0"/>-->
+<!--        <arg name="initial_pose_a"  value="0.0"/>-->
+<!--        <arg name="odom_frame_id"   value="odom"/>-->
+<!--        <arg name="base_frame_id"   value="base_link"/>-->
+<!--        <arg name="global_frame_id" value="map"/>-->
+<!--    </include>-->
 
 </launch>

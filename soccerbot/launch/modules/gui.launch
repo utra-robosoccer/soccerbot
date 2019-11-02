@@ -1,0 +1,4 @@
+<launch>
+    <arg name="rvizconfig"  default="$(find soccerbot)/rviz/soccerbot.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

@@ -1,0 +1,32 @@
+<launch>
+    <arg name="simulation" default="false" />
+    <arg name="single" default="true" />
+
+    <include file="$(find soccerbot)/launch/modules/simulator.launch" />
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
+    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1" >
+        <arg name="simulation" value="true" />
+        <arg name="robot_name" value="robot1" />
+        <arg name="x_pos" value="-1.00" />
+        <arg name="y_pos" value="0.00" />
+    </include>
+    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
+        <arg name="simulation" value="true" />
+        <arg name="robot_name" value="robot2" />
+        <arg name="x_pos" value="-2.00" />
+        <arg name="y_pos" value="2.00" />
+    </include>
+    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
+        <arg name="simulation" value="true" />
+        <arg name="robot_name" value="robot3" />
+        <arg name="x_pos" value="-2.00" />
+        <arg name="y_pos" value="-2.00" />
+    </include>
+    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
+        <arg name="simulation" value="true" />
+        <arg name="robot_name" value="robot4" />
+        <arg name="x_pos" value="-3.00" />
+        <arg name="y_pos" value="0.00" />
+    </include>
+</launch>
