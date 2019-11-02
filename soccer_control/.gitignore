@@ -1,0 +1,38 @@
+# Windows default autosave extension
+*.asv
+
+# OSX / *nix default autosave extension
+*.m~
+
+# Compiled MEX binaries (all platforms)
+*.mex*
+
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
+
+# Generated helpsearch folders
+helpsearch*/
+
+# Simulink code generation folders
+slprj/
+sccprj/
+
+# Matlab code generation folders
+codegen/
+
+# Simulink autosave extension
+*.autosave
+
+# Octave session info
+octave-workspace
+
+*.slxc
+*.original
+
+*.sh
+*.tgz
+*_ert_rtw/
+soccer-utility/soccer_msgs/matlab_gen/
+soccer-utility/connectrobot.m
+soccer-rl/__pycache__/agent.cpython-36.pyc soccer-rl/__pycache__/environment.cpython-36.pyc
