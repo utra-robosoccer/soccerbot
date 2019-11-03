@@ -58,11 +58,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 minLineLength,
                 maxLineGap);
 
-<<<<<<< HEAD:soccerbot/soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         std::vector<Point2> pts;
 
-=======
->>>>>>> 074df468f3426af4039874c4ed47609511c36f1b:soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         for (auto l : lines) {
             cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
 
@@ -80,11 +77,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         }
 
-<<<<<<< HEAD:soccerbot/soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
-
-
-=======
->>>>>>> 074df468f3426af4039874c4ed47609511c36f1b:soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
@@ -109,7 +101,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         // Publish fieldlines in a LaserScan data format
         ros::NodeHandle n;
 
-        ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+//        ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
         cv::imshow("original view", image);
         cv::imshow("edge view", cdst);
