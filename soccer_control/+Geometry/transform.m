@@ -9,10 +9,10 @@ classdef transform < handle
     methods
         function obj = transform(arg1, arg2, arg3, arg4)
             if nargin == 1
-                setPosition(arg1);
+                obj.setPosition(arg1);
             elseif nargin == 2
-                setPosition(arg1);
-                setRotation(arg2);
+                obj.setPosition(arg1);
+                obj.setRotation(arg2);
             elseif nargin == 4
                 a = arg1;
                 alpha = arg2;
@@ -35,7 +35,7 @@ classdef transform < handle
             quat = tform2quat(obj.H);
         end
         
-        function setRotation(obj, rot)
+        function setOrientation(obj, rot)
             obj.H(1:3,1:3) = quat2rotm(rot);
         end
         
@@ -49,6 +49,11 @@ classdef transform < handle
         
         function rpy = rpy(obj)
             rpy = quat2eul(obj.orientation);
+        end
+    end
+    methods(Static)
+        function distance = distance(p1, p2)
+            distance = norm(p1.H(1:3,4) - p2.H(1:3,4));
         end
     end
 end
