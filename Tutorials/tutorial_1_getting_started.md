@@ -20,7 +20,7 @@ To download System Workbench:
 3. Choose the appropriate installer for your system (note: the Windows version is compatible with Windows 10)
 
 ### STLink USB Driver
-You will need this USB driver to program code into the microcontroller. To download it, follow the link below and click "Get Software" at the bottom.
+You will need this USB driver to program code into the microcontroller. To download it, follow the link below and click "Get Software" at the bottom. This USB driver is not necessary for macos and linux systems.
 https://www.st.com/en/development-tools/stsw-link009.html
 
 ## Creating Your First Project
@@ -64,11 +64,6 @@ At this point, our project is all set up and we can see Cube automatically tells
 ### Cube: Code Generation
 We can now generate the Eclipse project and peripheral initialization code. To do this, click Project -> Generate Code. Choose the option "Open Project" to open the project in the System Workbench IDE. You may need to create a new Eclipse workspace. It is suggested that you use 1 workspace for all embedded projects. You can import and remove projects from a workspace as needed to keep it organized.
 
-#### Known manual adjustments after generating code
-
-CubeMX does not always behave as expected, and modifications made to the project may be overwritten when re-generating code. Below is a list of known settings that must be changed back manually after re-generating code on a project:
-
-- Compiler optimization settings for a project are by default set to the `-O3` (optimize most) flag by Cube. We are using `-Og` (optimize for debug) for our Debug builds (we currently program the Debug build on the robot) (see [related](https://github.com/utra-robosoccer/soccer-embedded/issues/128#issuecomment-439647194)). This must be manually changed back by going to project `Properties -> C/C++ build -> Settings -> Tool settings -> <MCU ... Compiler> -> Optimization`. Do this for both the MCU GCC and MCU G++ compilers.
 
 ![Generate Code](https://raw.githubusercontent.com/utra-robosoccer/soccer-embedded/master/Tutorials/Images/tutorial_1/8-Generate-Code.jpg)
 
