@@ -3,10 +3,33 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry/segment2.hpp>
-
+#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/point_cloud2_iterator.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 SoccerFieldlineDetector::SoccerFieldlineDetector() {
     image_transport::ImageTransport it(nh);
     image_subscriber = it.subscribe("front_camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
+    pose.position.x = 0;
+    pose.position.y = 0;
+    pose.position.z = 0;
+
+    pose.orientation.x = 0;
+    pose.orientation.y = 0;
+    pose.orientation.z = 0;
+    pose.orientation.w = 1;
+}
+void SoccerFieldlineDetector::callback(const sensor_msgs::PointCloud2ConstPtr& msg) {
+
+}
+void SoccerFieldlineDetector::pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg) {
+    pose.position.x = msg->pose.pose.position.x;
+    pose.position.y = msg->pose.pose.position.y;
+    pose.position.z = msg->pose.pose.position.z;
+
+    pose.orientation.x = msg->pose.pose.orientation.x;
+    pose.orientation.y = msg->pose.pose.orientation.y;
+    pose.orientation.z = msg->pose.pose.orientation.z;
+    pose.orientation.w = msg->pose.pose.orientation.w;
 }
 
 void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
@@ -58,11 +81,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 minLineLength,
                 maxLineGap);
 
-<<<<<<< HEAD:soccerbot/soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         std::vector<Point2> pts;
 
-=======
->>>>>>> 074df468f3426af4039874c4ed47609511c36f1b:soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         for (auto l : lines) {
             cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
 
@@ -80,26 +100,13 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         }
 
-<<<<<<< HEAD:soccerbot/soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
 
-
-=======
->>>>>>> 074df468f3426af4039874c4ed47609511c36f1b:soccer_fieldline_detection/src/soccer_fieldline_detector.cpp
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
-        Pose3 pose_msgs;
-        pose_msgs.position.x = -0.5;
-        pose_msgs.position.y = -0.5;
-        pose_msgs.position.z = 0.5;
+        ros::Subscriber amcl_pose = SoccerFieldlineDetector::nh.subscribe("amcl_pose",100,&SoccerFieldlineDetector::pose_callback,this);
 
-        pose_msgs.orientation.w = 0.8536;
-        pose_msgs.orientation.x = -0.1464;
-        pose_msgs.orientation.y = 0.3536;
-        pose_msgs.orientation.z = 0.3536;
-        pose_msgs.orientation.w = 0.8536;
-
-        Camera cam (pose_msgs,240,360);
+        Camera cam (pose,240,360);
         std::vector<Point3> rPts;
         for (auto p : pts) {
             Point3 p2 = cam.FindFloorCoordinate(p.x, p.y);
@@ -107,9 +114,43 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         }
 
         // Publish fieldlines in a LaserScan data format
-        ros::NodeHandle n;
+        sensor_msgs::PointCloud2 msg;
 
-        ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+        msg.header.stamp = ros::Time::now();
+        msg.height = 1;
+        msg.width = rPts.size();
+        msg.is_bigendian = false;
+        msg.is_dense = false;
+        msg.point_step = 12;
+        msg.row_step = 12*rPts.size();
+
+        sensor_msgs::PointCloud2Modifier modifier(msg);
+        modifier.setPointCloud2Fields(1,"xyz");
+        modifier.resize(rPts.size());
+
+        sensor_msgs::PointCloud2Iterator<float> iter_x(msg, "x");
+        sensor_msgs::PointCloud2Iterator<float> iter_y(msg, "y");
+        sensor_msgs::PointCloud2Iterator<float> iter_z(msg, "z");
+
+        for (auto p : rPts){
+            *iter_x = p.x;
+            *iter_y = p.y;
+            *iter_z = p.z;
+
+            ++iter_x;
+            ++iter_y;
+            ++iter_z;
+
+        }
+
+
+        ros::Publisher cloudIn = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("cloud_in",1);
+
+        cloudIn.publish(msg);
+
+        ros::Subscriber laserScan = SoccerFieldlineDetector::nh.subscribe("scan",1, &SoccerFieldlineDetector::callback,this);
+
+
 
         cv::imshow("original view", image);
         cv::imshow("edge view", cdst);
@@ -119,6 +160,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         ROS_ERROR_STREAM("CV Exception" << e.what());
     }
 }
+
+
+
+
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "soccer_fieldline_detector");
