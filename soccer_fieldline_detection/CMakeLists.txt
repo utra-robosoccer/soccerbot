@@ -42,6 +42,8 @@ target_link_libraries(soccer_fieldline_detector
 add_executable(
     ball_detector
     src/ball_detector.cpp
+    src/camera.cpp
+    src/transform.cpp
 )
 add_dependencies(ball_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(ball_detector

@@ -2,11 +2,18 @@
 
 #include <ros/ros.h>
 
-// take in position of the ball
+/*
+ * take box of ball position in pixels
+ * take transform of the camera
+ * calculate location of ball in 3D
+ */
+
 class BallDetector {
-    int ball_x;
-    int ball_y;
+    int ballPxlX;
+    int ballPxlY;
+
+    tf::StampedTransform cameraTF;
 
 public:
-    void ballLocationCallback()
+    void ballDetectorCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &msg);
 };

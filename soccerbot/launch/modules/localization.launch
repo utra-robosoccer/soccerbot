@@ -22,7 +22,7 @@
     <!-- create node for readking in the ball location from picture-->
     <!-- based on dimension of the ball localize where the ball is -->
     <!-- publish a message on the location of the ball-->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+    <node launch-prefix="xterm -e" name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
 
 
     <!-- Object detection -->
