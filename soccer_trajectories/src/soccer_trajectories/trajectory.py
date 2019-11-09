@@ -22,7 +22,7 @@ class Trajectory:
             for row in csv_traj:
                 n = len(row) - 1
                 x_values = np.linspace(0, n * timestep, num=n)
-                self.splines[row[0]] = interp1d(x_values, map(float, row[1:]), bounds_error=False, fill_value=0, kind="cubic", assume_sorted=True)
+                self.splines[row[0]] = interp1d(x_values, map(float, row[1:]), bounds_error=False, fill_value="extrapolate", kind="cubic", assume_sorted=True)
         self.total_time = n * timestep
 
     def get_setpoint(self, timestamp):
