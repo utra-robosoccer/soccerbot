@@ -3,6 +3,9 @@
 #include <soccer_fieldline_detection/camera.hpp>
 #include <image_transport/image_transport.h>
 #include <ros/ros.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/LaserScan.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 /* The soccer fieldine detector class (TODO)
  * 1. add geometry_msgs/Pose2d into the Cmakelist.txt and package.xml of soccer_foundations
@@ -24,11 +27,20 @@
 // Camera contains an Image, Camera contains a Pose2d
 
 class SoccerFieldlineDetector {
-    ros::NodeHandle nh;
+
     image_transport::Subscriber image_subscriber;
+    Pose3 pose;
 
 public:
+    ros::NodeHandle nh;
+
     SoccerFieldlineDetector();
 
     void imageCallback(const sensor_msgs::ImageConstPtr &msg);
+
+
+
+    void callback(const sensor_msgs::PointCloud2ConstPtr& msg);
+
+    void pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg);
 };
