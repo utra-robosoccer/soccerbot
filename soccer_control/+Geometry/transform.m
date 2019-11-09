@@ -9,10 +9,14 @@ classdef transform < handle
     methods
         function obj = transform(arg1, arg2, arg3, arg4)
             if nargin == 1
-                obj.setPosition(arg1);
+                if (size(arg1) == 4)
+                    obj.H = arg1;
+                else
+                    obj.setPosition(arg1);
+                end
             elseif nargin == 2
                 obj.setPosition(arg1);
-                obj.setRotation(arg2);
+                obj.setOrientation(arg2);
             elseif nargin == 4
                 a = arg1;
                 alpha = arg2;

@@ -23,7 +23,8 @@ classdef path < handle
             prev_pose = obj.positionAtRatio(0);
             
             obj.distanceMap = zeros(length(precisions), 2);
-            j = 1;
+            obj.distanceMap(1,1:2) = [0, 0];
+            j = 2;
             for i = precisions
                 new_pose = obj.positionAtRatio(i);
                 obj.distance = obj.distance + Geometry.transform.distance(prev_pose, new_pose);
@@ -52,7 +53,11 @@ classdef path < handle
         end
         
         function duration = duration(obj)
-            duration = obj.speed * obj.distance;
+            duration = obj.distance / obj.speed;
+        end
+        
+        function stepTime = stepTime(obj)
+            stepTime = obj.duration / obj.stepCount;
         end
         
         function pose = positionAtRatio(obj, t)
