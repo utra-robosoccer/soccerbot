@@ -50,7 +50,7 @@
                     <script>
                         <uri>model://RoboCup Field/materials/scripts/</uri>
                         <uri>model://RoboCup Field/materials/textures/</uri>
-                        <name>RoboCup/Carpet</name>
+                        <name>RoboCup/RealGrass</name>
                     </script>
                 </material>
             </visual>
@@ -283,7 +283,7 @@
                 <cast_shadows>0</cast_shadows>
                 <geometry>
                     <mesh>
-                        <scale>1 1 0.75</scale>
+                        <scale>1 1 0.02</scale>
                         <uri>model://robocup14_spl_field/meshes/circle.dae</uri>
                     </mesh>
                 </geometry>
