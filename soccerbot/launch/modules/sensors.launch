@@ -10,6 +10,6 @@
     </node>
 
     <!-- Motor Drivers -->
-    <!--<include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />-->
+    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
 
 </launch>

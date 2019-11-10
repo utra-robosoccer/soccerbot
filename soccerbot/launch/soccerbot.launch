@@ -11,7 +11,9 @@
         <arg name="y_pos" value="$(arg y_pos)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/localization.launch" />
+    <include file="$(find soccerbot)/launch/modules/localization.launch">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
     <!--<include file="$(find soccerbot)/launch/modules/navigation.launch" />-->
     <!--<include file="$(find soccerbot)/launch/modules/communication.launch" />-->
 </launch>

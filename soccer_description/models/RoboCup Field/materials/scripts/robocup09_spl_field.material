@@ -17,7 +17,7 @@ material RoboCup/Net
     }
 }
 
-material RoboCup/Carpet
+material RoboCup/RealGrass
 {
     technique
     {
