@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
     cv_bridge
     sensor_msgs
     darknet_ros_msgs
+    geometry_msgs
+    tf2_ros
     )
 
 find_package(OpenCV 3 REQUIRED)

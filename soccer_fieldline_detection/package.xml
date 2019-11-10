@@ -17,4 +17,7 @@
     <depend>sensor_msgs</depend>
     <depend>video_stream_opencv</depend>
     <depend>darknet_ros_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>ros-melodic-tf2-ros</depend>
+
 </package>
