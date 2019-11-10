@@ -2,9 +2,7 @@
     <arg name="robot_name" default="robot1"/>
     <arg name="x_pos" default="0.00" />
     <arg name="y_pos" default="0.00" />
-
-
-
+ro
     <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
@@ -13,9 +11,9 @@
 
     <!-- Controller -->
     <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" ns="$(arg robot_name)"
-          output="screen"
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--namespace=/$(arg robot_name)
+            joint_state_controller
             torso_right_hip_side
             right_hip_side_hip_front
             right_hip_front_thigh

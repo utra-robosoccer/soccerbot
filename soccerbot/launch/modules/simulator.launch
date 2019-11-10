@@ -13,6 +13,4 @@
     </include>
     <node name="kill_gazebo" pkg="soccer_description" type="kill_gazebo.sh" />
 
-<!--    <node name="controller_manager" pkg="controller_manager" type="controller_manager" />-->
-
 </launch>
