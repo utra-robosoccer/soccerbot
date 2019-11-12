@@ -13,6 +13,13 @@ classdef path < handle
     
     methods
         function obj = path(start_transform, end_transform)
+            
+            
+            if nargin == 0
+                start_transform =Geometry.transform([0 0 0]);
+                end_transform = Geometry.transform([0 0 0]);
+            end
+            
             obj.start_transform = start_transform;
             obj.end_transform = end_transform;
             
