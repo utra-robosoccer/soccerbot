@@ -30,7 +30,7 @@ classdef footpath < Geometry.crotchpath
             next_step = obj.getStep(step_num + 2); % take next step on same side
             
             % check if right
-            if rem(step_num + 1, 2) == 1
+            if rem(step_num + 1, 2) == obj.first_step_left
                 position = obj.getStep(step_num+1).H;
                 position(2,4) = position(2,4) + obj.foot_separation/2;
                 return
@@ -112,7 +112,7 @@ classdef footpath < Geometry.crotchpath
             
             
             % check if left
-            if rem(step_num + 1, 2) == 0
+            if rem(step_num + 1, 2) ~= obj.first_step_left
                 position = obj.getStep(step_num+1).H;
                 position(2,4) = position(2,4) - obj.foot_separation/2;
           
