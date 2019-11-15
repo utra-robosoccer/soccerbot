@@ -26,15 +26,17 @@ classdef soccerbot < handle
             hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'left_hip_front');
             position(3) = position(3) + hip_to_torso(3,4);
             obj.pose.setPosition(position);
-
+            
+            foot_center_z_to_foot = 0.00737 + 0.014747; % Using foot box height and foot to thing parameter
+            
             left_foot_position = obj.robot_left_leg_subtree.getTransform(obj.robot_left_leg_subtree.homeConfiguration, 'left_foot', 'torso');
-            left_foot_position(3,4) = - position(3) + 0.01474;
+            left_foot_position(3,4) = - position(3) + foot_center_z_to_foot;
             configSolL = obj.ik_left_foot(left_foot_position);
 %             weights_left = [0.25 0.25 0.25 1 1 1];
 %             [configSolL,~] = obj.ik_left('left_foot',left_foot_position,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
             
             right_foot_position = obj.robot_right_leg_subtree.getTransform(obj.robot_right_leg_subtree.homeConfiguration, 'right_foot', 'torso');
-            right_foot_position(3,4) = - position(3) + 0.01474;
+            right_foot_position(3,4) = - position(3) + foot_center_z_to_foot;
             configSolR = obj.ik_right_foot(right_foot_position);
 %             weights_right = [0.25 0.25 0.25 1 1 1];
 %             [configSolR,~] = obj.ik_right('right_foot',right_foot_position,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
@@ -44,6 +46,10 @@ classdef soccerbot < handle
             obj.configuration(13:18) = configSolR;
             
             showdetails(obj.robot)
+        end
+        
+        function footpath = getFootPath(obj, startPosition, finishPosition)
+            
         end
         
         function solveDHTable(obj)

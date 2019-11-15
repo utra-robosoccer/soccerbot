@@ -1,19 +1,12 @@
 classdef footpath < Geometry.crotchpath
     properties
-        foot_separation = 0.05;
-        step_lag = 0.2; % step window ratio complement 
-        step_height = 0.015;
-        
+        foot_separation = 0.05;     % seperation between feet
+        step_lag = 0.2;             % step window ratio complement 
+        step_height = 0.015;        % height of step
     end
     
     methods
         function obj = footpath(start_transform, end_transform)
-            
-            if nargin == 0
-                start_transform = '';
-                end_transform = '';
-            end
-            
             obj@Geometry.crotchpath(start_transform, end_transform);
             
         end
@@ -181,7 +174,7 @@ classdef footpath < Geometry.crotchpath
         end
         
         function show(obj)
-            show@Geometry.path(obj);
+            show@Geometry.crotchpath(obj);
             
             % Draw the foot position
             i = 1;
