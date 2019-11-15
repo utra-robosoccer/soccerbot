@@ -1,7 +1,7 @@
 <launch>
     <include file="$(find soccer_fieldline_detection)/launch/soccer_fieldline_detector.launch"/>
     <include file="$(find video_stream_opencv)/launch/camera.launch">
-        <arg name="camera_name" value="front_camera"/>
+        <arg name="camera_name" value="camera"/>
         <arg name="video_stream_provider" value="$(find soccer_fieldline_detection)/media/videos/test2.mp4"/>
         <arg name="visualize" value="false"/>
     </include>

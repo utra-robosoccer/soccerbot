@@ -17,9 +17,8 @@
     </node>
 
     <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan" name="pointcloud_to_laserscan">
-        <remap from="cloud_in" to="/camera/depth/points"/>
-        <remap from="scan" to="/camera/scan" />
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <remap from="cloud_in" to="field_point_cloud" />
     </node>
 
     <!-- Ball Detection -->
