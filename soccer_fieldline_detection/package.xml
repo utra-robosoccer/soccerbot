@@ -11,10 +11,14 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>foundation</depend>
-    <depend>libopencv-dev</depend>
+  <depend>libopencv-dev</depend>
   <depend>cv_bridge</depend>
   <depend>image_transport</depend>
   <depend>sensor_msgs</depend>
   <depend>video_stream_opencv</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf</depend>
+  <depend>pointcloud_to_laserscan</depend>
+  <depend>geometry_msgs</depend>
 
 </package>

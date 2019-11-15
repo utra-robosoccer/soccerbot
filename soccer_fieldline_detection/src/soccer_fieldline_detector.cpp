@@ -6,6 +6,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <tf/transform_listener.h>
 SoccerFieldlineDetector::SoccerFieldlineDetector() {
     image_transport::ImageTransport it(nh);
     image_subscriber = it.subscribe("front_camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
@@ -30,6 +31,31 @@ void SoccerFieldlineDetector::pose_callback(const geometry_msgs::PoseWithCovaria
     pose.orientation.y = msg->pose.pose.orientation.y;
     pose.orientation.z = msg->pose.pose.orientation.z;
     pose.orientation.w = msg->pose.pose.orientation.w;
+}
+
+void SoccerFieldlineDetector::initPose(double x, double y, double theta) {
+
+    ros::Publisher pub = SoccerFieldlineDetector::nh.advertise<geometry_msgs::PoseWithCovarianceStamped> ("/initialpose",1);
+
+    geometry_msgs::PoseWithCovarianceStamped tmpPose;
+    tmpPose.header.frame_id = "map";
+    tmpPose.header.stamp = ros::Time::now();
+
+    tmpPose.pose.pose.position.x = x;
+    tmpPose.pose.pose.position.y = y;
+    tmpPose.pose.pose.position.z = 0.0;
+
+    tf::Quaternion q;
+    q.setRPY(0.0,0.0,theta);
+    tf::quaternionStampedTFToMsg(q,tmpPose.pose.pose.orientation);
+
+    tmpPose.pose.covariance[6] = 0.5 * 0.5;
+    tmpPose.pose.covariance[7] = 0.5 * 0.5;
+    tmpPose.pose.covariance[6*5 + 5] = (M_PI/12.0 )*(M_PI/12.0 );
+
+    pub.publish((tmpPose));
+
+
 }
 
 void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
@@ -104,7 +130,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
-        ros::Subscriber amcl_pose = SoccerFieldlineDetector::nh.subscribe("amcl_pose",100,&SoccerFieldlineDetector::pose_callback,this);
+        ros::Subscriber amcl_pose = SoccerFieldlineDetector::nh.subscribe("/amcl_pose",100,&SoccerFieldlineDetector::pose_callback,this);
 
         Camera cam (pose,240,360);
         std::vector<Point3> rPts;
@@ -144,11 +170,11 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         }
 
 
-        ros::Publisher cloudIn = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("cloud_in",1);
+        ros::Publisher cloudIn = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("/cloud_in",1);
 
         cloudIn.publish(msg);
 
-        ros::Subscriber laserScan = SoccerFieldlineDetector::nh.subscribe("scan",1, &SoccerFieldlineDetector::callback,this);
+        ros::Subscriber laserScan = SoccerFieldlineDetector::nh.subscribe("/scan",1, &SoccerFieldlineDetector::callback,this);
 
 
 
@@ -165,10 +191,13 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
 
 
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, "soccer_fieldline_detector");
 
     SoccerFieldlineDetector detector;
+
+    detector.initPose(0,0,0);
 
     ros::spin();
 

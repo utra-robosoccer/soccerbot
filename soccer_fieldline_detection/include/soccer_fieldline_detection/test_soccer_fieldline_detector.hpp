@@ -38,7 +38,7 @@ public:
 
     void imageCallback(const sensor_msgs::ImageConstPtr &msg);
 
-
+    void initPose (double x, double y, double theta);
 
     void callback(const sensor_msgs::PointCloud2ConstPtr& msg);
 
