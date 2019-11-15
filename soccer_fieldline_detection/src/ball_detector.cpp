@@ -57,6 +57,7 @@ private:
         catch (tf2::TransformException &ex) {
             return;
         }
+        camera->
 
         for (const darknet_ros_msgs::BoundingBox& box: msg->bounding_boxes) {
             //ROS_INFO("found a %s", box.Class.data());

@@ -78,3 +78,7 @@ Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
 
     return point;
 }
+
+void Camera::setPose(const Pose3 &pose) {
+    Camera::pose = pose;
+}
