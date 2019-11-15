@@ -2,6 +2,7 @@
 
 <launch>
     <arg name="darknet"         default="true" />
+    <arg name="robot_name" />
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
@@ -17,25 +18,35 @@
     3. Run the 2d to 3d point thing
     4. Publish the point with the reference frame being the robot's base_link
      -->
-    <!--<node name="ball_detector" pkg="soccer_fieldline_detector" type="ball_detector" />-->
-    <!--<node name="ball_detector" pkg="soccer_fieldline_detector" type="line_detector" />-->
-    <!-- TODO: NAM -->
 
-    <!-- Object detection -->
-    <group if="$(arg darknet)">
-        <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
-    </group>
+    <!-- TODO: NAM -->
+    <!-- create node for readking in the ball location from picture-->
+    <!-- based on dimension of the ball localize where the ball is -->
+    <!-- publish a message on the location of the ball-->
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+
+    <!-- Start darknet and ros wrapper -->
+    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>
+    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>
+    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>
+    <rosparam ns="darknet_ros" param="publishers/object_detector/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/found_object</rosparam>
+    <rosparam ns="darknet_ros" param="publishers/bounding_boxes/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/bounding_boxes</rosparam>
+    <rosparam ns="darknet_ros" param="publishers/detection_image/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/detection_image</rosparam>
+    <node pkg="darknet_ros" type="darknet_ros" name="darknet_ros" output="log">
+        <param name="weights_path"          value="$(find darknet_ros)/yolo_network_config/weights" />
+        <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />
+    </node>
 
     <!-- AMCL Localization -->
-    <!--<include file="$(find soccerbot)/launch/modules/amcl.launch">-->
-    <!--<arg name="use_map_topic"   value="true"/>-->
-    <!--<arg name="scan_topic"      value="vision_poses"/>-->
-    <!--<arg name="initial_pose_x"  value="0.0"/>-->
-    <!--<arg name="initial_pose_y"  value="0.0"/>-->
-    <!--<arg name="initial_pose_a"  value="0.0"/>-->
-    <!--<arg name="odom_frame_id"   value="odom"/>-->
-    <!--<arg name="base_frame_id"   value="base_link"/>-->
-    <!--<arg name="global_frame_id" value="map"/>-->
-    <!--</include>-->
+<!--    <include file="$(find soccerbot)/launch/modules/amcl.launch">-->
+<!--        <arg name="use_map_topic"   value="true"/>-->
+<!--        <arg name="scan_topic"      value="vision_poses"/>-->
+<!--        <arg name="initial_pose_x"  value="0.0"/>-->
+<!--        <arg name="initial_pose_y"  value="0.0"/>-->
+<!--        <arg name="initial_pose_a"  value="0.0"/>-->
+<!--        <arg name="odom_frame_id"   value="odom"/>-->
+<!--        <arg name="base_frame_id"   value="base_link"/>-->
+<!--        <arg name="global_frame_id" value="map"/>-->
+<!--    </include>-->
 
 </launch>

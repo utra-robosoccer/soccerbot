@@ -18,8 +18,8 @@ class Camera {
     float max_line_distance = 10;   // Maximum distance to project the current line, if the endpoint is above the horizon
 
     // Laser scan data laser_scan_angle_delta = deg2rad(3);
-    double angmin = 0;
-    double angmax = M_PI;
+    float angmin = 0;
+    float angmax = M_PI;
 
     // Camera Image (type Camera Image)
     // image

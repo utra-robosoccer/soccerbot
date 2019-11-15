@@ -1,7 +1,11 @@
 *.swp
 *.log
 *.stat
+.DS_Store/
+
+# Python compiled files
+__pycache__/
+*.pyc
 
 # Matlab Build Files
 soccer_description/models/soccerbot.urdf
-soccer_description/models/soccerbot_stl.urdf
