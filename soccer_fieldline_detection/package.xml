@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <package format="2">
     <name>soccer_fieldline_detection</name>
     <version>0.0.0</version>
@@ -14,14 +13,12 @@
     <depend>libopencv-dev</depend>
     <depend>cv_bridge</depend>
     <depend>image_transport</depend>
-    <depend>sensor_msgs</depend>
     <depend>video_stream_opencv</depend>
     <depend>sensor_msgs</depend>
     <depend>tf</depend>
     <depend>pointcloud_to_laserscan</depend>
-    <depend>geometry_msgs</depend>
     <depend>darknet_ros_msgs</depend>
     <depend>geometry_msgs</depend>
-    <depend>ros-melodic-tf2-ros</depend>
+    <depend>tf2_ros</depend>
 
 </package>

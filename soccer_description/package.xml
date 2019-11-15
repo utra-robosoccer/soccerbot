@@ -14,6 +14,7 @@
   <depend>gazebo_ros_control</depend>
   <depend>dynamic_reconfigure</depend>
   <depend>ros_control</depend>
+  <depend>effort_controllers</depend>
 
   <export>
     <gazebo_ros gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/models" />
