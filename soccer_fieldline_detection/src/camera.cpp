@@ -16,20 +16,20 @@ void Camera::DrawPixelRayTrace(int pixel_y, int pixel_x) {
 }
 
 float Camera::VerticalFOV() {
-    return Camera::resolution_y / sqrt(std::pow(Camera::resolution_x, 2.0) + std::pow(Camera::resolution_y, 2.0));
+    return Camera::resolution_y / std::sqrt(std::pow(Camera::resolution_x, 2.f) + std::pow(Camera::resolution_y, 2.f));
 }
 
 float Camera::HorizontalFOV() {
-    return Camera::resolution_x / sqrt(pow(Camera::resolution_x, 2.0) + pow(Camera::resolution_y, 2.0));
+    return Camera::resolution_x / std::sqrt(pow(Camera::resolution_x, 2.f) + std::pow(Camera::resolution_y, 2.f));
 }
 
 float Camera::ImageSensorHeight() {
-    return tan(Camera::VerticalFOV() / 2.0) * 2.0 * Camera::focal_length;
+    return tan(Camera::VerticalFOV() / 2.f) * 2.f * Camera::focal_length;
 
 }
 
 float Camera::ImageSensorWidth() {
-    return tan(Camera::HorizontalFOV() / 2.0) * 2.0 * Camera::focal_length;
+    return tan(Camera::HorizontalFOV() / 2.f) * 2.f * Camera::focal_length;
 }
 
 float Camera::PixelHeight() {
@@ -43,19 +43,16 @@ float Camera::PixelWidth() {
 }
 
 float Camera::ImageSensorLocation_X(int pos_x, int pos_y) {
-
-    return (pos_x - Camera::resolution_x / 2.0) * PixelWidth();
+    return (pos_x - Camera::resolution_x / 2.f) * PixelWidth();
 
 }
 
 float Camera::ImageSensorLocation_Y(int pos_x, int pos_y) {
-
-    return (pos_y - Camera::resolution_y / 2.0) * PixelHeight();
+    return (pos_y - Camera::resolution_y / 2.f) * PixelHeight();
 
 }
 
 Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
-
 
     float tx = Camera::ImageSensorLocation_X(pos_x, pos_y);
     float ty = Camera::ImageSensorLocation_Y(pos_x, pos_y);
@@ -66,7 +63,8 @@ Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
                      static_cast<float>(Camera::pose.position.z)};
     float tmp3[4] = {static_cast<float>(Camera::pose.orientation.w), static_cast<float>(Camera::pose.orientation.x),
                      static_cast<float>(Camera::pose.orientation.y), static_cast<float>(Camera::pose.orientation.z)};
-    transform pixelrelLocation3d = transform(tmp1);
+
+    auto pixelrelLocation3d = transform(tmp1);
     transform t2 = transform(tmp2, tmp3);
 
     transform pixelLocation3d = pixelrelLocation3d.ApplyTransformation(pixelrelLocation3d, t2);

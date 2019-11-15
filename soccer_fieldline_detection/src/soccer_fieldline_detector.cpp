@@ -5,8 +5,8 @@
 #include <geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_listener.h>
+
 SoccerFieldlineDetector::SoccerFieldlineDetector() {
     image_transport::ImageTransport it(nh);
     image_subscriber = it.subscribe("front_camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
@@ -130,7 +130,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         ROS_INFO_STREAM("Line n: " + std::to_string(lines.size()));
 
         // Project fieldlines from 2d to 3d
-        ros::Subscriber amcl_pose = SoccerFieldlineDetector::nh.subscribe("/amcl_pose",100,&SoccerFieldlineDetector::pose_callback,this);
+        Pose3 pose_msgs;
+        pose_msgs.position.x = -0.5;
+        pose_msgs.position.y = -0.5;
+        pose_msgs.position.z = 0.5;
 
         Camera cam (pose,240,360);
         std::vector<Point3> rPts;
