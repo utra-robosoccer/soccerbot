@@ -3,15 +3,16 @@ project(foundation)
 
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED)
-
 set(PKG_DEPS
     roscpp
+    geometry_msgs
     )
+
+find_package(catkin REQUIRED ${PKG_DEPS})
 
 catkin_package(
     INCLUDE_DIRS include
-    LIBRARIES foundation
+    LIBRARIES geometry
     CATKIN_DEPENDS ${PKG_DEPS}
 )
 
@@ -21,6 +22,7 @@ catkin_package(
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ../../../devel/include # Temproary hack to code easier
 )
 
 # Geometry Library
@@ -29,6 +31,8 @@ add_library(geometry
     src/geometry/point3.cpp
     src/geometry/segment2.cpp
     src/geometry/segment3.cpp
+    src/geometry/pose3.cpp
+    src/geometry/line2.cpp
     )
 add_dependencies(geometry ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(geometry
