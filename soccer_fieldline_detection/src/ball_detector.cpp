@@ -43,7 +43,7 @@ public:
         camera_position.orientation.x = camera_pose.transform.rotation.x;
         camera_position.orientation.y = camera_pose.transform.rotation.y;
         camera_position.orientation.z = camera_pose.transform.rotation.z;
-        camera = std::make_unique<Camera>(camera_position,240,360);
+        camera = std::make_unique<Camera>(camera_position);
     }
 
 private:
@@ -57,7 +57,10 @@ private:
         catch (tf2::TransformException &ex) {
             return;
         }
-        camera->
+
+        if (!camera->ready()) {
+            return;
+        }
 
         for (const darknet_ros_msgs::BoundingBox& box: msg->bounding_boxes) {
             //ROS_INFO("found a %s", box.Class.data());

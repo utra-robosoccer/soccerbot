@@ -135,7 +135,6 @@ float ** transform::H (transform c) {
     float ** tmp = transform::quat2tform(c.orientation);
 
     for (int i = 0; i < 3; i++){
-
         for (int j = 0; j < 3; j++) {
             matrix[i][j] = tmp[i][j];
 
@@ -152,11 +151,8 @@ float ** transform::H (transform c) {
 transform transform::ApplyTransformation(transform a, transform b){
     float matrix [4][4]  ={ { 0 } };
 
-
-
     float ** H1 = H(b);
     float ** H2 = H(a);
-
 
     //Matrix multiplication
     for (int i = 0; i < 4; i++) {
@@ -167,15 +163,7 @@ transform transform::ApplyTransformation(transform a, transform b){
 
         }
     }
-   /* for (int i = 0; i < 4; i++) {
-        printf("\n");
-        for (int j = 0; j < 4; j++) {
-            printf("  %f  ",matrix[i][j]);
 
-        }
-        //printf("\n");
-    }
-    */
     float *orient ;
     orient  =  transform::rotm2quat(matrix);//{0,0,0,0};
     float pos [3] = {matrix[0][3],matrix[1][3],matrix[2][3]};
@@ -183,12 +171,4 @@ transform transform::ApplyTransformation(transform a, transform b){
 
     transform result = transform(pos,orient);
     return result;
-
-
-
-
-
-
-
-
 }
