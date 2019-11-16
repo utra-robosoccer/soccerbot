@@ -4,8 +4,7 @@
 #include <ctime>
 
 RRTStar::RRTStar() {
-    m_nNodes = 2000;
-    m_InflationRadius = 0.2;
+
 }
 
 void RRTStar::RRTStar_func(int r, int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose2D x_goal) {

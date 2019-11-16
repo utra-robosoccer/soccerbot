@@ -11,6 +11,8 @@ using namespace geometry_msgs;
 class Map : public nav_msgs::OccupancyGrid {
 private:
     float m_InflationRadius;
+    float m_StepSize;
+    int m_nNodes;
 
 public:
     Map();
