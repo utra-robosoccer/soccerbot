@@ -14,7 +14,7 @@ void RRTStar::RRTStar_func(int r, int n, geometry_msgs::Pose2D x_init, geometry_
     int i = 0;
 
     while (i < n) {
-//        geometry_msgs::Pose2D x_rand = sample();
+        geometry_msgs::Pose2D x_rand = sample();
         i++;
     }
 }
@@ -36,5 +36,12 @@ void RRTStar::collisionTest() {
 }
 
 geometry_msgs::Pose2D RRTStar::sample() {
-
+    geometry_msgs::Pose2D temp;
+    temp.x = rand() % M.info.width;
+    temp.y = rand() % M.info.height;
+    while(M.getOccupancy(temp)) {
+        temp.x = rand() % M.info.width;
+        temp.y = rand() % M.info.height;
+    }
+    return temp;
 }
