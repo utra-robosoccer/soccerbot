@@ -27,6 +27,8 @@ class Camera {
 public:
     Camera(const Pose3 &pose, int resolution_y, int resolution_x);
 
+    void setPose(const Pose3 &pose);
+
     void DrawPixelRayTrace(int pixel_y, int pixel_x);
 
     Point3 FindFloorCoordinate(int pos_x, int pos_y);
