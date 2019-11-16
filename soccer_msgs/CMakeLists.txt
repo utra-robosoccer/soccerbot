@@ -28,7 +28,6 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    geometry_msgs
-   soccer_msgs #not sure if necessary
 )
 
 catkin_package(
