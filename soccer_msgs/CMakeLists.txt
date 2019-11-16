@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(soccer_msgs)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   message_runtime
@@ -16,20 +14,12 @@ add_message_files(
     FILES
     RobotGoal.msg
     RobotState.msg
-    RobotCommand.msg
-    RobotEstimate.msg
-    MapOverview.msg
-    MapOverviewIndividual.msg
-    Waypoints.msg
-    Pose.msg
-    PoseAction.msg
 )
 
 generate_messages(
    DEPENDENCIES
    std_msgs
    geometry_msgs
-   soccer_msgs #not sure if necessary
 )
 
 catkin_package(
