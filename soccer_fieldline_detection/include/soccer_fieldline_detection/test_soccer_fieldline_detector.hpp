@@ -6,9 +6,9 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <opencv-3.3.1-dev/opencv2/core/cvdef.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <opencv2/core/cvdef.h>
 
 class SoccerFieldlineDetector {
 

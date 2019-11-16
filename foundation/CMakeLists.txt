@@ -22,7 +22,6 @@ catkin_package(
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ../../../devel/include # Temproary hack to code easier
 )
 
 # Geometry Library
