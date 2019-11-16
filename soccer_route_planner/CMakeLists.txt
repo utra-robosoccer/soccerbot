@@ -11,9 +11,9 @@ find_package(catkin REQUIRED
 
 catkin_package()
 include_directories(
-  include
+        include
   ${catkin_INCLUDE_DIRS}
-  ../../../../devel/include # Hack
+        ../../../devel/include # Hack
 )
 
 add_executable(route_planner src/route_planner_node.cpp src/Graph.cpp src/RRTStar.cpp src/Map.cpp)
