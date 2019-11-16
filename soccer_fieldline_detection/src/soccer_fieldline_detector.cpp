@@ -45,13 +45,17 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     camera_position.orientation.x = camera_pose.transform.rotation.x;
     camera_position.orientation.y = camera_pose.transform.rotation.y;
     camera_position.orientation.z = camera_pose.transform.rotation.z;
-    camera = std::make_unique<Camera>(camera_position,240,360);
+    camera = std::make_unique<Camera>(camera_position);
 }
 
 void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
     std::vector<cv::Vec4i> lines;
     std::vector<Point2> pts;
+
+    if (!camera->ready()) {
+        return;
+    }
 
     try {
         const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
@@ -119,6 +123,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     }
 
     point_cloud_publisher.publish(point_cloud_msg);
+    pts.clear();
 }
 
 
