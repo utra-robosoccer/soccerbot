@@ -7,7 +7,7 @@ ro
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.05 "/>
+          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.02 "/>
 
     <!-- Controller -->
     <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>
