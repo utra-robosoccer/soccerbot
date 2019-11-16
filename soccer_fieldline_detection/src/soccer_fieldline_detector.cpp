@@ -9,8 +9,8 @@
 
 SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_transport::ImageTransport it(nh);
-    image_subscriber = it.subscribe("front_camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
-    point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("/field_point_cloud",1);
+    image_subscriber = it.subscribe("camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
+    point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
 
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
@@ -93,6 +93,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     sensor_msgs::PointCloud2 point_cloud_msg;
 
     point_cloud_msg.header.stamp = ros::Time::now();
+    point_cloud_msg.header.frame_id = "base_link";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
     point_cloud_msg.is_bigendian = false;
@@ -101,7 +102,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     point_cloud_msg.row_step = 12 * points3d.size();
 
     sensor_msgs::PointCloud2Modifier modifier(point_cloud_msg);
-    modifier.setPointCloud2Fields(1,"xyz");
+    modifier.setPointCloud2FieldsByString(1,"xyz");
     modifier.resize(points3d.size());
 
     sensor_msgs::PointCloud2Iterator<float> iter_x(point_cloud_msg, "x");
@@ -117,7 +118,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         ++iter_z;
     }
 
-    point_cloud_publisher.publish(msg);
+    point_cloud_publisher.publish(point_cloud_msg);
 }
 
 
