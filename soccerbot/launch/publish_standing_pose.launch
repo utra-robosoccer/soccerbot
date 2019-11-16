@@ -1,0 +1,46 @@
+<launch>
+    <arg name="robot_name" default="robot1"/>
+    <node pkg="rostopic" type="rostopic" name="stand1"
+          args="pub -r 1 /$(arg robot_name)/torso_neck/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand2"
+          args="pub -r 1 /$(arg robot_name)/neck_head/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+
+    <node pkg="rostopic" type="rostopic" name="stand3"
+          args="pub -r 1 /$(arg robot_name)/torso_right_bicep/command std_msgs/Float64 'data: 0.2'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand4"
+          args="pub -r 1 /$(arg robot_name)/right_bicep_forearm/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand5"
+          args="pub -r 1 /$(arg robot_name)/torso_left_bicep/command std_msgs/Float64 'data: 0.2'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand6"
+          args="pub -r 1 /$(arg robot_name)/left_bicep_forearm/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+
+    <node pkg="rostopic" type="rostopic" name="stand7"
+          args="pub -r 1 /$(arg robot_name)/left_ankle_foot/command std_msgs/Float64 'data: -0.15'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand8"
+          args="pub -r 1 /$(arg robot_name)/left_calve_ankle/command std_msgs/Float64 'data: 0.2'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand9"
+          args="pub -r 1 /$(arg robot_name)/left_thigh_calve/command std_msgs/Float64 'data: -0.4'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand10"
+          args="pub -r 1 /$(arg robot_name)/left_hip_front_thigh/command std_msgs/Float64 'data: 0.25'"
+          output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand11"
+          args="pub -r 1 /$(arg robot_name)/left_hip_side_hip_front/command std_msgs/Float64 'data: 0.15'"
+          output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand12"
+          args="pub -r 1 /$(arg robot_name)/torso_left_hip_side/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+
+    <node pkg="rostopic" type="rostopic" name="stand13"
+          args="pub -r 1 /$(arg robot_name)/right_ankle_foot/command std_msgs/Float64 'data: 0.15'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand14"
+          args="pub -r 1 /$(arg robot_name)/right_calve_ankle/command std_msgs/Float64 'data: 0.2'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand15"
+          args="pub -r 1 /$(arg robot_name)/right_thigh_calve/command std_msgs/Float64 'data: -0.4'" output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand16"
+          args="pub -r 1 /$(arg robot_name)/right_hip_front_thigh/command std_msgs/Float64 'data: 0.25'"
+          output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand17"
+          args="pub -r 1 /$(arg robot_name)/right_hip_side_hip_front/command std_msgs/Float64 'data: -0.15'"
+          output="screen"/>
+    <node pkg="rostopic" type="rostopic" name="stand18"
+          args="pub -r 1 /$(arg robot_name)/torso_right_hip_side/command std_msgs/Float64 'data: 0.0'" output="screen"/>
+</launch>
