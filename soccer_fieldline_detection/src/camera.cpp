@@ -16,33 +16,6 @@ void Camera::cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr &camera_
     resolution_y = camera_info->height;
 }
 
-void Camera::setPose(){
-    tf2_ros::Buffer tfBuffer;
-
-        geometry_msgs::TransformStamped camera_pose;
-
-        while(ros::ok()) {
-            try{
-                camera_pose = tfBuffer.lookupTransform("camera", "base_link",
-                                                       ros::Time(0), ros::Duration(1.0));
-                break;
-            }
-            catch (tf2::TransformException &ex) {
-                std::string s = ex.what();
-            }
-        }
-
-    Pose3 camera_position;
-    camera_position.position.x = camera_pose.transform.translation.x;
-    camera_position.position.y = camera_pose.transform.translation.y;
-    camera_position.position.z = camera_pose.transform.translation.z;
-    camera_position.orientation.w = camera_pose.transform.rotation.w;
-    camera_position.orientation.x = camera_pose.transform.rotation.x;
-    camera_position.orientation.y = camera_pose.transform.rotation.y;
-    camera_position.orientation.z = camera_pose.transform.rotation.z;
-    this->pose = camera_position;
-}
-
 void Camera::DrawPixelRayTrace(int pixel_y, int pixel_x) {
 
 }
@@ -108,9 +81,13 @@ Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
     float xdelta = (pixelLocation3d.position[0] - pose.position.x) / ratio;
     float ydelta = (pixelLocation3d.position[1] - pose.position.y) / ratio;
 
-    Point3 point(pose.position.x - xdelta, pose.position.y - ydelta, 0);
+    Point3 point(pose.position.x - xdelta, -1*(pose.position.y - ydelta), 0);
 
     return point;
+}
+
+void Camera::setPose(const Pose3 &pose) {
+    Camera::pose = pose;
 }
 
 

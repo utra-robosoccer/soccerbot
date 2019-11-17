@@ -33,7 +33,7 @@ public:
 
     void cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr& camera_info);
 
-    void setPose();
+    void setPose(const Pose3 &pose);
 
     void DrawPixelRayTrace(int pixel_y, int pixel_x);
 

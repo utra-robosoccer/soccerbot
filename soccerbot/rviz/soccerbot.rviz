@@ -9,6 +9,7 @@ Panels:
         - /Grid1/Offset1
         - /TF1/Frames1
         - /Image1
+        - /Field Lines Point Cloud1
         - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 510
@@ -308,7 +309,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.00300000003
+      Size (m): 0.00700000022
       Style: Spheres
       Topic: /robot1/field_point_cloud
       Unreliable: false
