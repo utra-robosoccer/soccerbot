@@ -7,7 +7,26 @@ ro
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.02 "/>
+          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.02
+            -J torso_right_bicep        0.0
+            -J torso_right_hip_side     0.0
+            -J right_hip_side_hip_front -0.15
+            -J right_hip_front_thigh    0.25
+            -J right_thigh_calve        -0.4
+            -J right_calve_ankle        0.2
+            -J right_ankle_foot         0.15
+            -J torso_left_hip_side      0.0
+            -J left_hip_side_hip_front  0.15
+            -J left_hip_front_thigh     0.25
+            -J left_thigh_calve         -0.4
+            -J left_calve_ankle         0.2
+            -J left_ankle_foot          -0.15
+            -J torso_neck               0.0
+            -J neck_head                0.0
+            -J torso_right_bicep        0.0
+            -J right_bicep_forearm      0.2
+            -J torso_left_bicep         0.2
+            -J left_bicep_forearm       0.0"/>
 
     <!-- Controller -->
     <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>
