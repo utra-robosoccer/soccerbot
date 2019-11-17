@@ -2,13 +2,12 @@
     <arg name="robot_name" default="robot1"/>
     <arg name="x_pos" default="0.00" />
     <arg name="y_pos" default="0.00" />
-ro
+
     <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.02
-
+          args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.022
             -J torso_right_hip_side     0.0
             -J right_hip_side_hip_front -0.05
             -J right_hip_front_thigh    0.25
