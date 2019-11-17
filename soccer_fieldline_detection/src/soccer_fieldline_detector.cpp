@@ -57,6 +57,26 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         return;
     }
 
+    // Get transformation
+    geometry_msgs::TransformStamped camera_pose;
+    try{
+        camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+                                               ros::Time(0), ros::Duration(0.1));
+
+        Pose3 camera_position;
+        camera_position.position.x = camera_pose.transform.translation.x;
+        camera_position.position.y = camera_pose.transform.translation.y;
+        camera_position.position.z = camera_pose.transform.translation.z;
+        camera_position.orientation.w = camera_pose.transform.rotation.w;
+        camera_position.orientation.x = camera_pose.transform.rotation.x;
+        camera_position.orientation.y = camera_pose.transform.rotation.y;
+        camera_position.orientation.z = camera_pose.transform.rotation.z;
+        camera->setPose(camera_position);
+    }
+    catch (tf2::TransformException &ex) {
+        return;
+    }
+
     try {
         const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
 
@@ -76,7 +96,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i++) {
+            for (size_t i = l[0]; i < l[2];i += 3) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
