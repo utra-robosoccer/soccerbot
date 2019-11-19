@@ -18,14 +18,14 @@ TEST_F(SoccerFieldlineDetectorFixture, CameraFindFloorCoordinate) {
     pose_msgs.orientation.z = 0.3536;
     pose_msgs.orientation.w = 0.8536;
 
-    pose_msgs.position.x = 0;
+    /*pose_msgs.position.x = 0;
     pose_msgs.position.y = 0;
     pose_msgs.position.z = 1;
 
     pose_msgs.orientation.w = 1;
     pose_msgs.orientation.x = 0;
     pose_msgs.orientation.y = 0;
-    pose_msgs.orientation.z = 0;
+    pose_msgs.orientation.z = 0;*/
 
 
     Camera cam (pose_msgs,240,360);

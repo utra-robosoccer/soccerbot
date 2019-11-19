@@ -1,11 +1,14 @@
 #pragma once
-
+#include "../include/soccer_fieldline_detection/transform.hpp"
 #include <geometry/pose3.hpp>
 #include <geometry/point3.hpp>
 #include <cmath>
 #include <ros/ros.h>
 #include <sensor_msgs/CameraInfo.h>
-
+#include <tf2_ros/buffer.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2/LinearMath/Transform.h>
 class Camera {
 
     Pose3 pose;
@@ -30,12 +33,10 @@ public:
     }
 
     explicit Camera(const Pose3 &pose);
-
+    explicit Camera(const Pose3 &pose,int resx, int resy);
     void cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr& camera_info);
 
     void setPose(const Pose3 &pose);
-
-    void DrawPixelRayTrace(int pixel_y, int pixel_x);
 
     Point3 FindFloorCoordinate(int pos_x, int pos_y);
 
