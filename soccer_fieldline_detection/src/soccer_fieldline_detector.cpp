@@ -115,7 +115,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
     // Publish fieldlines in a LaserScan data format
     sensor_msgs::PointCloud2 point_cloud_msg;
-
+    //Setting up PointCloud2 msg
     point_cloud_msg.header.stamp = ros::Time::now();
     point_cloud_msg.header.frame_id = "base_link";
     point_cloud_msg.height = 1;
@@ -125,6 +125,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     point_cloud_msg.point_step = 12;
     point_cloud_msg.row_step = 12 * points3d.size();
 
+    //Adding points to the PointCloud2 msg
     sensor_msgs::PointCloud2Modifier modifier(point_cloud_msg);
     modifier.setPointCloud2FieldsByString(1,"xyz");
     modifier.resize(points3d.size());
@@ -144,6 +145,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
     point_cloud_publisher.publish(point_cloud_msg);
     pts.clear();
+    points3d.clear();
 }
 
 
