@@ -1,4 +1,4 @@
-#include <geometry/segment2.hpp>
+#include <soccer_geometry/segment2.hpp>
 #include <cmath>
 
 float Segment2::slope() const {
