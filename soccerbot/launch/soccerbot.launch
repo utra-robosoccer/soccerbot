@@ -12,7 +12,7 @@
     </include>
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
-        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="robot_name" value="$(arg robot_name)"/>
     </include>
     <!--<include file="$(find soccerbot)/launch/modules/navigation.launch" />-->
     <!--<include file="$(find soccerbot)/launch/modules/communication.launch" />-->

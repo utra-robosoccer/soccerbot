@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geometry/point2.hpp>
+#include <soccer_geometry/point2.hpp>
 #include <memory>
 
 struct Segment2 {

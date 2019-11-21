@@ -11,21 +11,19 @@
     </node>
 
     <!-- Line and goal detection -->
-    <!-- Insert the camera field line detection node -->
-    <!-- Create new node that
-    1. Subscribe from /darknet_ros/bounding_boxes
-    2. Find the center point
-    3. Run the 2d to 3d point thing
-    4. Publish the point with the reference frame being the robot's base_link
-     -->
+    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector"
+          output="screen">
+        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
+    </node>
 
-    <!-- TODO: NAM -->
-    <!-- create node for readking in the ball location from picture-->
-    <!-- based on dimension of the ball localize where the ball is -->
-    <!-- publish a message on the location of the ball-->
+    <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <remap from="cloud_in" to="field_point_cloud" />
+    </node>
+
+    <!-- Ball Detection -->
     <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
 
-    <!-- Start darknet and ros wrapper -->
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>
     <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>
