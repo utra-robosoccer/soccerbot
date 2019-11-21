@@ -16,9 +16,4 @@
     </include>
     <!--<include file="$(find soccerbot)/launch/modules/navigation.launch" />-->
     <!--<include file="$(find soccerbot)/launch/modules/communication.launch" />-->
-
-    <!--temp measure for standing-->
-<!--    <include file="$(find soccerbot)/launch/publish_standing_pose.launch">-->
-<!--        <arg name="robot_name" value="$(arg robot_name)"/>-->
-<!--    </include>-->
 </launch>
