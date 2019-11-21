@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(PKG_DEPS
     roscpp
-    foundation
+    soccer_geometry
     image_transport
     cv_bridge
     sensor_msgs

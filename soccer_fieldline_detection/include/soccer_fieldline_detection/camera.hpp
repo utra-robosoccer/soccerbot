@@ -1,7 +1,8 @@
 #pragma once
-#include "../include/soccer_fieldline_detection/transform.hpp"
-#include <geometry/pose3.hpp>
-#include <geometry/point3.hpp>
+
+#include <soccer_fieldline_detection/transform.hpp>
+#include <soccer_geometry/pose3.hpp>
+#include <soccer_geometry/point3.hpp>
 #include <cmath>
 #include <ros/ros.h>
 #include <sensor_msgs/CameraInfo.h>
