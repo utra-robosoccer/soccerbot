@@ -49,16 +49,13 @@ classdef soccerbot < handle
             showdetails(obj.robot)
         end
         
-        function footpath = getPath(obj, startPosition, finishPosition)
+        function footpath = getPath(obj, finishPosition)
             crotch = obj.pose.position;
-            startPositionCoordinate = startPosition.position;
             finishPositionCoordinate = finishPosition.position;
-            startPositionCoordinate(3) = crotch(3);
             finishPositionCoordinate(3) = crotch(3);
-            startPosition.setPosition(startPositionCoordinate);
             finishPosition.setPosition(finishPositionCoordinate);
             
-            footpath = Geometry.robotpath(startPosition, finishPosition, ...
+            footpath = Geometry.robotpath(obj.pose, finishPosition, ...
                 obj.foot_center_to_floor);
         end
         
@@ -144,6 +141,28 @@ classdef soccerbot < handle
             configSolR(6).JointPosition = -configSolL(6).JointPosition;        
         end
         
+        function stepPath(obj, t, robot_path)
+            crotch_position = robot_path.crotchPosition(t);
+            [left_foot_position, right_foot_position] = robot_path.footPosition(t);
+            
+            torso_to_right_foot = right_foot_position / crotch_position;
+            torso_to_left_foot = left_foot_position / crotch_position;
+            
+            weights_left = [0.25 0.25 0.25 1 1 1];
+            [configSolL,~] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
+            weights_right = [0.25 0.25 0.25 1 1 1];
+            [configSolR,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
+
+%             configSolL = obj.ik_left_foot(torso_to_left_foot);
+%             configSolR = obj.ik_right_foot(torso_to_right_foot);
+
+            obj.configuration(3:8) = configSolL;
+            obj.configuration(13:18) = configSolR;
+            
+            obj.pose = Geometry.transform(crotch_position);
+            
+        end
+        
         function show(obj)
             maprobot = robotics.RigidBodyTree;
             maplink = robotics.RigidBody('torso');
@@ -152,7 +171,6 @@ classdef soccerbot < handle
             maprobot.addSubtree('torso', obj.robot);
             maprobot.show(obj.configuration);
             patch( [-3 -3 3 3 -3], [5 -5 -5 5 5], [0 0 0 0 0], 'green')
-
         end
     end
 end
