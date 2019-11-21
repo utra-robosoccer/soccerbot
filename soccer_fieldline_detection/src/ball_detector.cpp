@@ -3,7 +3,7 @@
 #include <darknet_ros_msgs/BoundingBox.h>
 #include <vector>
 #include <string>
-#include <geometry/pose3.hpp>
+#include <soccer_geometry/pose3.hpp>
 #include <geometry_msgs/Pose.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
@@ -43,7 +43,7 @@ public:
         camera_position.orientation.x = camera_pose.transform.rotation.x;
         camera_position.orientation.y = camera_pose.transform.rotation.y;
         camera_position.orientation.z = camera_pose.transform.rotation.z;
-        camera = std::make_unique<Camera>(camera_position,240,360);
+        camera = std::make_unique<Camera>(camera_position);
     }
 
 private:
@@ -53,8 +53,22 @@ private:
         try{
             camera_pose = tfBuffer.lookupTransform("camera", "base_link",
                                                    ros::Time(0), ros::Duration(0.1));
+
+            Pose3 camera_position;
+            camera_position.position.x = camera_pose.transform.translation.x;
+            camera_position.position.y = camera_pose.transform.translation.y;
+            camera_position.position.z = camera_pose.transform.translation.z;
+            camera_position.orientation.w = camera_pose.transform.rotation.w;
+            camera_position.orientation.x = camera_pose.transform.rotation.x;
+            camera_position.orientation.y = camera_pose.transform.rotation.y;
+            camera_position.orientation.z = camera_pose.transform.rotation.z;
+            camera->setPose(camera_position);
         }
         catch (tf2::TransformException &ex) {
+            return;
+        }
+
+        if (!camera->ready()) {
             return;
         }
 

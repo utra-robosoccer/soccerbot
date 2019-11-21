@@ -1,0 +1,18 @@
+target_frame: camera_link
+transform_tolerance: 0.01
+min_height: 0.0
+max_height: 1.0
+
+angle_min: -1.5708
+angle_max: 1.5708
+angle_increment: 0.0087
+scan_time: 0.3333
+range_min: 0.45
+range_max: 4.0
+use_inf: true
+
+#concurrency_level affects number of pc queued for processing and the number of threadsused
+# 0: Detect number of cores
+# 1: Single threaded
+# 2: inf : Parallelism level
+concurrency_level: 1

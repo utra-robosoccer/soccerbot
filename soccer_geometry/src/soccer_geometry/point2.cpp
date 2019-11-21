@@ -1,4 +1,4 @@
-#include <geometry/point2.hpp>
+#include <soccer_geometry/point2.hpp>
 #include <cmath>
 
 float Point2::norm() const {

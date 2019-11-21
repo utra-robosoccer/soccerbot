@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geometry/point2.hpp>
+#include <soccer_geometry/point2.hpp>
 
 struct Point3 : public Point2 {
     float z = 0;
