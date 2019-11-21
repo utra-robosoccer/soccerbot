@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geometry/point3.hpp>
+#include <soccer_geometry/point3.hpp>
 #include <memory>
 #include <vector>
 
