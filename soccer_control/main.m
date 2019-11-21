@@ -7,10 +7,19 @@ robot.show();
 %% Create Robot Path
 hold on;
 
-start_position = Geometry.transform([-0.5 0 0]);
 end_position = Geometry.transform([0.5 0.5 0]);
 
-robot_path = robot.getPath(start_position, end_position);
-% robot_path.showTimingDiagram();
+robot_path = robot.getPath(end_position);
+figure;
+robot_path.showTimingDiagram();
+figure;
+robot_path.show();
 
-% robot_path.show();
+%% Follow the path
+
+figure;
+for t = 0:robot_path.step_size:robot_path.duration
+    robot.stepPath(t, robot_path);
+    robot.show();
+    drawnow;
+end

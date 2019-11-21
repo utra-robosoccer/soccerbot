@@ -10,7 +10,7 @@ classdef robotpath < Geometry.footpath
         function show(obj)
             show@Geometry.path(obj);
             hold on;
-%             show@Geometry.crotchpath(obj);
+            show@Geometry.crotchpath(obj);
             show@Geometry.footpath(obj);
             hold off;
         end
@@ -25,21 +25,13 @@ classdef robotpath < Geometry.footpath
                 if (length(left_foot_action) == 1)
                     left_foot_body_pose(i) = left_foot_action;
                 else
-                    if left_foot_step_ratio(i) == 0
-                        left_foot_body_pose(i) = nan;
-                    else
-                        left_foot_body_pose(i) = (left_foot_action(2) - left_foot_action(1))  * left_foot_step_ratio(i) + left_foot_action(1);
-                    end
+                    left_foot_body_pose(i) = (left_foot_action(2) - left_foot_action(1))  * left_foot_step_ratio(i) + left_foot_action(1);
                 end
                 
                 if (length(right_foot_action) == 1)
                     right_foot_body_pose(i) = right_foot_action;
                 else
-                    if right_foot_step_ratio(i) == 0
-                        right_foot_body_pose(i) = nan;
-                    else
-                        right_foot_body_pose(i) = (right_foot_action(2) - right_foot_action(1))  * right_foot_step_ratio(i) + right_foot_action(1);
-                    end
+                    right_foot_body_pose(i) = (right_foot_action(2) - right_foot_action(1))  * right_foot_step_ratio(i) + right_foot_action(1);
                 end
                 
                 i = i + 1;

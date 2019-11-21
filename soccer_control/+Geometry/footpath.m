@@ -2,7 +2,7 @@ classdef footpath < Geometry.crotchpath
     properties
         half_to_full_step_time_ratio = 0.7; % Duration difference between half and full step
         
-        foot_separation = 0.05;     % seperation between feet and center
+        foot_separation = 0.035;     % seperation between feet and center
         step_height = 0.015;        % height of step
         step_outwardness = 0.0;
         step_rotation = 0.0;
@@ -42,15 +42,19 @@ classdef footpath < Geometry.crotchpath
 
             % First foot
             if t < half_step_time
-                if (t < post_step_time || t > (half_step_time - pre_step_time))
+                if (t < post_step_time)
                     first_foot_step_ratio = 0;
+                elseif(t > (half_step_time - pre_step_time))
+                    first_foot_step_ratio = 1;
                 else
                     first_foot_step_ratio = (t - post_step_time) / (half_step_time - post_step_time - pre_step_time);
                 end
             elseif last_foot_same && t > obj.duration - half_step_time
                 adjusted_step_time = t - (obj.duration - half_step_time);
-                if (adjusted_step_time < post_step_time || adjusted_step_time > (half_step_time - pre_step_time))
-                    first_foot_step_ratio = 0;
+                if (adjusted_step_time < post_step_time)
+                     first_foot_step_ratio = 0;
+                elseif(adjusted_step_time > (half_step_time - pre_step_time))
+                    first_foot_step_ratio = 1;
                 else
                     first_foot_step_ratio = (adjusted_step_time - post_step_time) / (half_step_time - post_step_time - pre_step_time);
                 end
@@ -61,8 +65,10 @@ classdef footpath < Geometry.crotchpath
                 if (mod(step_num, 2) == 0)
                     first_foot_step_ratio = 0;
                 else
-                    if (adjusted_step_time < post_step_time || adjusted_step_time > (full_step_time - pre_step_time))
+                    if (adjusted_step_time < post_step_time)
                         first_foot_step_ratio = 0;
+                    elseif (adjusted_step_time > (full_step_time - pre_step_time))
+                        first_foot_step_ratio = 1;
                     else
                         first_foot_step_ratio = (adjusted_step_time - post_step_time) / (full_step_time - post_step_time - pre_step_time);
                     end
@@ -74,8 +80,10 @@ classdef footpath < Geometry.crotchpath
                 second_foot_step_ratio = 0;
             elseif ~last_foot_same && t > obj.duration - half_step_time
                 adjusted_step_time = t - (obj.duration - half_step_time);
-                if (adjusted_step_time < post_step_time || adjusted_step_time > (half_step_time - pre_step_time))
+                if (adjusted_step_time < post_step_time)
                     second_foot_step_ratio = 0;
+                elseif (adjusted_step_time > (half_step_time - pre_step_time))
+                    second_foot_step_ratio = 1;
                 else
                     second_foot_step_ratio = (adjusted_step_time - post_step_time) / (half_step_time - post_step_time - pre_step_time);
                 end
@@ -86,8 +94,10 @@ classdef footpath < Geometry.crotchpath
                 if (mod(step_num, 2) == 1)
                     second_foot_step_ratio = 0;
                 else
-                    if (adjusted_step_time < post_step_time || adjusted_step_time > (full_step_time - pre_step_time))
+                    if (adjusted_step_time < post_step_time)
                         second_foot_step_ratio = 0;
+                    elseif(adjusted_step_time > (full_step_time - pre_step_time))
+                        second_foot_step_ratio = 1;
                     else
                         second_foot_step_ratio = (adjusted_step_time - post_step_time) / (full_step_time - post_step_time -pre_step_time);
                     end

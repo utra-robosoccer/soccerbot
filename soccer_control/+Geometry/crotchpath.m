@@ -56,7 +56,7 @@ classdef crotchpath < Geometry.path
             % (http://mathworld.wolfram.com/ParabolicSegment.html)
             step_time = obj.bodyStepTime;
             distance_between_step = Geometry.transform.distance(startTransform, endTransform);
-            height_per_step = norm(zdiff, sidediff);
+            height_per_step = norm([zdiff, sidediff]);
             
             h = height_per_step;
             a = distance_between_step / 2;
