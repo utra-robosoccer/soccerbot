@@ -13,6 +13,9 @@ class BallDetector {
     int ballPxlY;
 
     tf::StampedTransform cameraTF;
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener;
+    tf2_ros::TransformBroadcaster br;
 
 public:
     void ballDetectorCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &msg);

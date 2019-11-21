@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <geometry/point2.hpp>
-#include <geometry/point3.hpp>
-#include <geometry/segment2.hpp>
-#include <geometry/segment3.hpp>
+#include <soccer_geometry/point2.hpp>
+#include <soccer_geometry/point3.hpp>
+#include <soccer_geometry/segment2.hpp>
+#include <soccer_geometry/segment3.hpp>
 #include <iostream>
 
 TEST(Geometry, Segment2Slope) {
