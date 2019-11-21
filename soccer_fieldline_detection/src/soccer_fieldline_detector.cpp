@@ -2,7 +2,7 @@
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
-#include <geometry/segment2.hpp>
+#include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
 #include <tf/transform_listener.h>

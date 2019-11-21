@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <geometry/segment2.hpp>
-#include <geometry/line2.hpp>
+#include <soccer_geometry/segment2.hpp>
+#include <soccer_geometry/line2.hpp>
 
 class Image {
     int height = 240;   // Y

@@ -3,7 +3,7 @@
 #include <darknet_ros_msgs/BoundingBox.h>
 #include <vector>
 #include <string>
-#include <geometry/pose3.hpp>
+#include <soccer_geometry/pose3.hpp>
 #include <geometry_msgs/Pose.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>

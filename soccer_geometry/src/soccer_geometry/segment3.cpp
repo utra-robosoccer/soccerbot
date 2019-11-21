@@ -1,4 +1,4 @@
-#include <geometry/segment3.hpp>
+#include <soccer_geometry/segment3.hpp>
 #include <cmath>
 #include <iostream>
 #include <cassert>

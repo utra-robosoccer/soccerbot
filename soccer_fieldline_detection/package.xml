@@ -9,7 +9,7 @@
 
     <buildtool_depend>catkin</buildtool_depend>
     <depend>roscpp</depend>
-    <depend>foundation</depend>
+    <depend>soccer_geometry</depend>
     <depend>libopencv-dev</depend>
     <depend>cv_bridge</depend>
     <depend>image_transport</depend>
