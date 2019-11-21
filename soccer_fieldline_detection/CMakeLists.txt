@@ -3,7 +3,7 @@ project(soccer_fieldline_detection)
 
 set(CMAKE_CXX_FLAGS "-std=c++17")
 
-find_package(catkin REQUIRED COMPONENTS
+set(PKG_DEPS
     roscpp
     foundation
     image_transport
@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     tf2_ros
     )
+find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
 find_package(OpenCV 3 REQUIRED)
 
