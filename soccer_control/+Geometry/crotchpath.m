@@ -1,7 +1,7 @@
 classdef crotchpath < Geometry.path
     properties
-        crotch_zdiff_per_step = 0.02;
-        crotch_sidediff_step = 0.02;
+        crotch_zdiff_per_step = 0.01;
+        crotch_sidediff_step = 0.01;
         crotch_rotation_per_step = pi/30;
         
         first_step_left = 0;
@@ -62,23 +62,40 @@ classdef crotchpath < Geometry.path
             a = distance_between_step / 2;
             
             length_arc = sqrt(a^2 + 4*h^2) + a^2/2/h * asinh(2*h/a);
-            length_so_far = ratio * length_arc;
-            half_length = length_arc / 2;
+%             length_so_far = ratio * length_arc;
             
-            diff_length = abs(length_so_far - half_length);
-            syms x;
+            % Evenly spaced points on parabola Method 1 - Numerical Solve
+%             half_length = length_arc / 2;
+%             diff_length = abs(length_so_far - half_length);
+%             syms x;
+%             lindist = sqrt(a^2 + h^2);
+%             guess = acosh(sqrt(((abs(step_time*lindist - lindist/2))*2*h/a^2)^2 + 1));
+%             lhs = diff_length*4*h/a^2;
+%             tmp = double(vpasolve(lhs == x + 0.5*sinh(2*x), x, guess));
+%             tmp = sqrt(cosh(tmp)^2 - 1)*a^2/2/h;
+%             if (length_so_far < half_length)
+%                 dist = distance_between_step/2 - tmp;
+%             else
+%                 dist = distance_between_step/2 + tmp;
+%             end
             
-            lindist = sqrt(a^2 + h^2);
-            guess = acosh(sqrt(((abs(step_time*lindist - lindist/2))*2*h/a^2)^2 + 1));
-%             tmp = guess;
-            tmp = double(vpasolve(diff_length*4*h/a^2 == x + sinh(x)*cosh(x), x, guess));
-            tmp = sqrt(cosh(tmp)^2 - 1)*a^2/2/h;
-            if (length_so_far < half_length)
-                dist = distance_between_step/2 - tmp;
-            else
-                dist = distance_between_step/2 + tmp;
+            % Using Newton Approximation Method
+            % https://math.stackexchange.com/questions/3129154/divide-a-parabola-in-segments-of-equal-length
+            L = distance_between_step;
+            aa = 4*h/L;
+            
+            f = @(x) x * sqrt(1+x^2) + asinh(x);
+            s = ratio;
+            J = @(X) 2 * sqrt(1+X^2);
+            r = @(X) f(X) - (1-2*s)*f(aa);
+            
+            X = 0;
+            while(abs(r(X)) > 0.0001)
+                X = X - r(X)/J(X);
             end
+            dist = 0.5*(1-X/aa) * L;
             
+            % Calculate intermediate transform
             position_time = dist / distance_between_step * step_time;
             if position_time < 0
                 position_time = 0;
@@ -88,7 +105,6 @@ classdef crotchpath < Geometry.path
             x = -a + dist;
             y = h * (1 - x^2/a^2);
             
-
             zdelta = cos(atan2(sidediff, obj.crotch_zdiff_per_step)) * y;
             ydelta = sin(atan2(sidediff, obj.crotch_zdiff_per_step)) * y;
             thetadelta = y / height_per_step * rotdiff;

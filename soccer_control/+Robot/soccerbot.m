@@ -63,13 +63,12 @@ classdef soccerbot < handle
             H3 = obj.robot.getTransform(obj.robot.homeConfiguration, 'left_thigh', 'left_calve');
             H4 = obj.robot.getTransform(obj.robot.homeConfiguration, 'left_calve', 'left_ankle');
             
-            syms theta1 theta2 theta3 theta4 theta5 theta6
-            obj.dh = [0 -pi/2 0 theta1; ...
-                  0 pi/2 0 theta2; ...
-                  H3(3,4) 0 0 theta3; ...
-                  H4(3,4) 0 0 theta4; ...
-                  0 pi/2 0 theta5; ...
-                  0 0 0 theta6];
+            obj.dh = [0 -pi/2 0 0; ...
+                  0 pi/2 0 0; ...
+                  H3(3,4) 0 0 0; ...
+                  H4(3,4) 0 0 0; ...
+                  0 pi/2 0 0; ...
+                  0 0 0 0];
         end
         
         function H = leftFootPose(obj)
@@ -87,8 +86,8 @@ classdef soccerbot < handle
             configuration(1:3,4) = configuration(1:3,4) - torso_to_hip(1:3,4);
             invconf = inv(configuration);
             
-            d3 = double(obj.dh(3,1));
-            d4 = double(obj.dh(4,1));
+            d3 = obj.dh(3,1);
+            d4 = obj.dh(4,1);
             
             Xd = invconf(1,4);
             Yd = invconf(2,4);
@@ -110,7 +109,7 @@ classdef soccerbot < handle
             H5 = Geometry.transform(obj.dh(5,1), obj.dh(5,2), obj.dh(5,3), theta5);
             H6 = Geometry.transform(obj.dh(6,1), obj.dh(6,2), obj.dh(6,3), theta6);
             
-            H46 = double(H4.H * H5.H * H6.H);
+            H46 = H4.H * H5.H * H6.H;
             
             H03 = configuration / H46;
             
@@ -142,25 +141,30 @@ classdef soccerbot < handle
         end
         
         function stepPath(obj, t, robot_path)
+            tstart = tic;
             crotch_position = robot_path.crotchPosition(t);
+            tend1 = toc(tstart);
             [left_foot_position, right_foot_position] = robot_path.footPosition(t);
+            tend2 = toc(tstart);
+                        
+            torso_to_right_foot = crotch_position \ right_foot_position;
+            torso_to_left_foot = crotch_position \ left_foot_position;
             
-            torso_to_right_foot = right_foot_position / crotch_position;
-            torso_to_left_foot = left_foot_position / crotch_position;
-            
+%             configSolLtest = obj.ik_left_foot(torso_to_left_foot);
+%             configSolRtest = obj.ik_right_foot(torso_to_right_foot);
+        
             weights_left = [0.25 0.25 0.25 1 1 1];
             [configSolL,~] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
             weights_right = [0.25 0.25 0.25 1 1 1];
             [configSolR,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
-
-%             configSolL = obj.ik_left_foot(torso_to_left_foot);
-%             configSolR = obj.ik_right_foot(torso_to_right_foot);
-
+            
             obj.configuration(3:8) = configSolL;
             obj.configuration(13:18) = configSolR;
             
             obj.pose = Geometry.transform(crotch_position);
+            tend3 = toc(tstart);
             
+            fprintf('Torso Time: %f, Foot Path Time: %f, IK Time: %f\n\n', tend1, tend2, tend3);
         end
         
         function show(obj)
