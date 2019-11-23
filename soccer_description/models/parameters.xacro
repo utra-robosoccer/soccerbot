@@ -9,7 +9,7 @@
     <xacro:property name="FOREARM_MU1" value="0.2"/>
     <xacro:property name="FOREARM_MU2" value="0.2"/>
 
-    <xacro:property name="JOINT_FRICTION" value="0.00"/>
+    <xacro:property name="JOINT_FRICTION" value="0.1"/>
     <xacro:property name="JOINT_DAMPING" value="0.01"/>
 
     <xacro:property name="MX28_TORQUE" value="2.5"/>
