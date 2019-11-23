@@ -2,8 +2,8 @@
 robotParameters;
 foot_center_to_floor = -left_collision_center(3) + foot_box(3);
 robot = Robot.soccerbot([-0.5, 0, hip_height], foot_center_to_floor);
+start_position = robot.pose.position();
 robot.show();
-
 %% Create Robot Path
 hold on;
 
@@ -13,14 +13,28 @@ robot_path.show();
 figure;
 robot_path.showTimingDiagram();
 
-%% Follow the path
+%% Follow the path (matlab step draw)
 
 figure;
-set(gca, 'CameraPosition', [16.2252546176456,1.97312476814183,5.73130798700572]);
+set(gca, 'CameraPosition', [16,2,5.73]);
+angles = timeseries;
 for t = 0:robot_path.step_size:robot_path.duration
     robot.stepPath(t, robot_path);
-    robot.show();
-    view(110,20);
-    zoom(1.5);
-    drawnow;
+    angles = angles.addsample('Time',t, 'Data',robot.getAngles);
+%     robot.show();
+%     view(110,20);
+%     zoom(1.5);
+%     drawnow;
 end
+
+%% Follow the path (simulink)
+
+load_system('soccerbot');
+in = Simulink.SimulationInput('soccerbot');
+in = in.setModelParameter('StartTime', '0', 'StopTime', num2str(angles.TimeInfo.End));
+in = in.setModelParameter('SimulationMode', 'Normal');
+
+in = in.setExternalInput('angles');
+in = in.setVariable('angles',angles);
+
+simOut = sim(in);

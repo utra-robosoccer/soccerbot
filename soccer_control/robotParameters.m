@@ -31,3 +31,5 @@ right_foot_to_corner_4 = right_collision_center + [-foot_box(1)/2 foot_box(2)/2 
 
 % Motion Parameters
 hip_height = 0.18;
+
+% Simulink to motor remapping

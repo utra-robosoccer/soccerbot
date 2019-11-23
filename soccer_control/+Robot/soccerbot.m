@@ -33,15 +33,10 @@ classdef soccerbot < handle
             left_foot_position = obj.robot_left_leg_subtree.getTransform(obj.robot_left_leg_subtree.homeConfiguration, 'left_foot', 'torso');
             left_foot_position(3,4) = - position(3) + foot_center_to_floor;
             configSolL = obj.ik_left_foot(left_foot_position);
-%             weights_left = [0.25 0.25 0.25 1 1 1];
-%             [configSolL,~] = obj.ik_left('left_foot',left_foot_position,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
             
             right_foot_position = obj.robot_right_leg_subtree.getTransform(obj.robot_right_leg_subtree.homeConfiguration, 'right_foot', 'torso');
             right_foot_position(3,4) = - position(3) + foot_center_to_floor;
             configSolR = obj.ik_right_foot(right_foot_position);
-%             weights_right = [0.25 0.25 0.25 1 1 1];
-%             [configSolR,~] = obj.ik_right('right_foot',right_foot_position,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
-
             
             obj.configuration(3:8) = configSolL;
             obj.configuration(13:18) = configSolR;
@@ -63,6 +58,7 @@ classdef soccerbot < handle
             H3 = obj.robot.getTransform(obj.robot.homeConfiguration, 'left_thigh', 'left_calve');
             H4 = obj.robot.getTransform(obj.robot.homeConfiguration, 'left_calve', 'left_ankle');
             
+            % Started from the foot to the top
             obj.dh = [0 -pi/2 0 0; ...
                   0 pi/2 0 0; ...
                   H3(3,4) 0 0 0; ...
@@ -93,7 +89,7 @@ classdef soccerbot < handle
             Yd = invconf(2,4);
             Zd = invconf(3,4);
             
-            theta6 = atan2(Yd, Zd);
+            theta6 = -atan2(Yd, Zd);
             
             tmp1 = Zd / cos(theta6);
             tmp2 = sqrt(Xd^2 + Yd^2);
@@ -102,21 +98,23 @@ classdef soccerbot < handle
             theta4 = tmp3 - pi/2;
             
             alp = atan2(tmp1, tmp2);
-            beta = atan2(-d3 * cos(tmp3), d4 + d3 * sin(tmp3));
-            theta5 = alp - beta - pi/2;
+            beta = atan2(d3 * cos(tmp3), d4 + d3 * sin(tmp3));
+            theta5 = pi/2 - (alp - beta);
             
             H4 = Geometry.transform(obj.dh(4,1), obj.dh(4,2), obj.dh(4,3), theta4);
             H5 = Geometry.transform(obj.dh(5,1), obj.dh(5,2), obj.dh(5,3), theta5);
             H6 = Geometry.transform(obj.dh(6,1), obj.dh(6,2), obj.dh(6,3), theta6);
             
             H46 = H4.H * H5.H * H6.H;
-            
-            H03 = configuration / H46;
-            
-            theta1 = atan2(H03(2,3), H03(1,3)) - pi/2;
-            theta2 = atan2(sqrt(1-H03(3,3)^2), H03(3,3)) - pi/2;
-            theta3 = atan2(-H03(3,2), H03(3,1)) - pi/2;
-            
+            final_rotation = rotm2tform(eul2rotm([0,pi/2,pi]));
+            H03 = (configuration * final_rotation) / (H46);
+            assert(norm(H03(1:3,4)) - d3 < 0.03);
+
+            angles = rotm2eul(inv(H03(1:3,1:3)), 'ZYX');
+            theta3 = pi/2 - angles(1);
+            theta1 = -angles(2);
+            theta2 = -(angles(3) + pi/2);            
+        
             configSolL(1).JointPosition = theta1;
             configSolL(2).JointPosition = theta2;
             configSolL(3).JointPosition = theta3;
@@ -137,7 +135,7 @@ classdef soccerbot < handle
             configSolR(3).JointPosition = configSolL(3).JointPosition;
             configSolR(4).JointPosition = configSolL(4).JointPosition;
             configSolR(5).JointPosition = configSolL(5).JointPosition;
-            configSolR(6).JointPosition = -configSolL(6).JointPosition;        
+            configSolR(6).JointPosition = configSolL(6).JointPosition;        
         end
         
         function stepPath(obj, t, robot_path)
@@ -149,15 +147,15 @@ classdef soccerbot < handle
                         
             torso_to_right_foot = crotch_position \ right_foot_position;
             torso_to_left_foot = crotch_position \ left_foot_position;
-            
-%             configSolLtest = obj.ik_left_foot(torso_to_left_foot);
-%             configSolRtest = obj.ik_right_foot(torso_to_right_foot);
         
-            weights_left = [0.25 0.25 0.25 1 1 1];
-            [configSolL,~] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
-            weights_right = [0.25 0.25 0.25 1 1 1];
-            [configSolR,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
-            
+%             weights_left = [0.25 0.25 0.25 1 1 1];
+%             [configSolL,~] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
+%             weights_right = [0.25 0.25 0.25 1 1 1];
+%             [configSolR,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
+                        
+            configSolL = obj.ik_left_foot(torso_to_left_foot);
+            configSolR = obj.ik_right_foot(torso_to_right_foot);
+
             obj.configuration(3:8) = configSolL;
             obj.configuration(13:18) = configSolR;
             
@@ -165,6 +163,10 @@ classdef soccerbot < handle
             tend3 = toc(tstart);
             
             fprintf('Torso Time: %f, Foot Path Time: %f, IK Time: %f\n\n', tend1, tend2, tend3);
+        end
+        
+        function angles = getAngles(obj)
+            angles = [obj.configuration.JointPosition];
         end
         
         function show(obj)
