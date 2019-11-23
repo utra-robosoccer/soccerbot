@@ -29,12 +29,7 @@ private:
     void publishWaypoints(soccer_msgs::Waypoints);
 
     // RRT* algorithm / primitives below.
-    Graph RRTstar(int r, int n);
-    void sample();
-    void nearestNeighbour();
-    void nearVertices();
-    void steering();
-    void collisionTest();
+    Graph solution(geometry_msgs::Pose2D init, geometry_msgs::Pose2D goal);
 
     // Upon subscription, first use the map to find a path, and then publish using the waypoint publisher
 //    void robotCommandCallback(/* Robot Command message */);

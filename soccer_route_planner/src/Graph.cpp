@@ -44,8 +44,23 @@ int Graph::find_vertex(int id) {
     return i;
 }
 
+int Graph::get_num_nodes() {
+    return m_num_nodes;
+}
+
 struct node_info Graph::get_node_info(int id) {
     return node_info_map[id];
 }
 
+void Graph::assign_cost_simple(int id, double cost) {
+    node_info_map[id].cost = cost;
+}
+
+void Graph::assign_parent(int id, int parent) {
+    node_info_map[id].parent = id;
+}
+
+int Graph::parent(int id) {
+    return node_info_map[id].parent;
+}
 

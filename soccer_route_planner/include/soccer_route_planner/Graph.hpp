@@ -24,11 +24,22 @@ public:
     void delete_edge(int id_0, int id_1);
 
     struct node_info get_node_info(int id);
+
+    // Assign cost to node specified by id.
+    void assign_cost_simple(int id, double cost);
+    void assign_parent(int id, int parent);
+
+    // Return ID of the parent of node specified by id.
+    int parent(int id);
+
+    int get_num_nodes();
 };
 
 struct node_info {
+    double cost = -1;
     bool is_alive = true;
     geometry_msgs::Pose2D location;
+    int parent = 0;
 };
 
 struct node {

@@ -21,6 +21,7 @@ public:
 
     int getRows() { return info.height / info.resolution; }
     int getCols() { return info.width / info.resolution; }
+    float getStepSize() { return m_StepSize; }
 
     int8_t& getOccupancy(int row, int column);
     int8_t& getOccupancy(Pose2D position);

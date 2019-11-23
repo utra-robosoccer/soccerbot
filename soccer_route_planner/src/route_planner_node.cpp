@@ -1,6 +1,8 @@
 #include <soccer_route_planner/route_planner_node.hpp>
 #include <soccer_route_planner/Graph.hpp>
 #include <soccer_route_planner/Map.hpp>
+#include <soccer_route_planner/RRTStar.hpp>
+
 #include <cmath>
 #include <memory>
 
@@ -36,6 +38,8 @@ soccer_msgs::Waypoints RoutePlannerNode::createWaypoints() {
 
     // Create graph etc for path planning recursive tree or some sort to go etc.
 
+
+
     msg_temp.poseActions[0].duration = 0; // not sure how to assign this for now
 
 //    if (this->mapOverviewStore.get()->estimates[0].pose != this->mapOverviewStore.get()->ballPose) {
@@ -48,6 +52,12 @@ soccer_msgs::Waypoints RoutePlannerNode::createWaypoints() {
 
 void RoutePlannerNode::publishWaypoints(soccer_msgs::Waypoints waypoints) {
     waypointPublisher.publish(waypoints);
+}
+
+Graph RoutePlannerNode::solution(geometry_msgs::Pose2D init, geometry_msgs::Pose2D goal) {
+    RRTStar rrt_star_alg;
+    Graph solution = rrt_star_alg.RRT_Star(400, init, goal);
+    return solution;
 }
 
 
