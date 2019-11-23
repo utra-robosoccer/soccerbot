@@ -60,7 +60,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Get transformation
     geometry_msgs::TransformStamped camera_pose;
     try{
-        camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+        camera_pose = tfBuffer.lookupTransform("base_link", "camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
