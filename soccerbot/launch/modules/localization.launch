@@ -37,6 +37,7 @@
 
     <!-- AMCL Localization -->
     <node pkg="amcl" type="amcl" name="amcl">
+        <param name="update_min_d"      value="0.0" />
         <param name="use_sim_time"      value="true" />
         <param name="use_map_topic"     value="true"/>
         <param name="scan_topic"        value="scan"/>
