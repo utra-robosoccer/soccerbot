@@ -262,38 +262,38 @@
                     </script>
                 </material>
             </visual>
-            <visual name='center_point'>
-                <pose frame=''>0 0 0.001 0 -0 0</pose>
-                <cast_shadows>0</cast_shadows>
-                <geometry>
-                    <cylinder>
-                        <radius>0.05</radius>
-                        <length>0.0005</length>
-                    </cylinder>
-                </geometry>
-                <material>
-                    <script>
-                        <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/White</name>
-                    </script>
-                </material>
-            </visual>
-            <visual name='center_circle'>
-                <pose frame=''>0 0 0.0001 0 -0 0</pose>
-                <cast_shadows>0</cast_shadows>
-                <geometry>
-                    <mesh>
-                        <scale>1 1 0.02</scale>
-                        <uri>model://robocup14_spl_field/meshes/circle.dae</uri>
-                    </mesh>
-                </geometry>
-                <material>
-                    <script>
-                        <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/White</name>
-                    </script>
-                </material>
-            </visual>
+<!--            <visual name='center_point'>-->
+<!--                <pose frame=''>0 0 0.001 0 -0 0</pose>-->
+<!--                <cast_shadows>0</cast_shadows>-->
+<!--                <geometry>-->
+<!--                    <cylinder>-->
+<!--                        <radius>0.05</radius>-->
+<!--                        <length>0.0005</length>-->
+<!--                    </cylinder>-->
+<!--                </geometry>-->
+<!--                <material>-->
+<!--                    <script>-->
+<!--                        <uri>file://media/materials/scripts/gazebo.material</uri>-->
+<!--                        <name>Gazebo/White</name>-->
+<!--                    </script>-->
+<!--                </material>-->
+<!--            </visual>-->
+<!--            <visual name='center_circle'>-->
+<!--                <pose frame=''>0 0 0.0001 0 -0 0</pose>-->
+<!--                <cast_shadows>0</cast_shadows>-->
+<!--                <geometry>-->
+<!--                    <mesh>-->
+<!--                        <scale>1 1 0.02</scale>-->
+<!--                        <uri>model://robocup14_spl_field/meshes/circle.dae</uri>-->
+<!--                    </mesh>-->
+<!--                </geometry>-->
+<!--                <material>-->
+<!--                    <script>-->
+<!--                        <uri>file://media/materials/scripts/gazebo.material</uri>-->
+<!--                        <name>Gazebo/White</name>-->
+<!--                    </script>-->
+<!--                </material>-->
+<!--            </visual>-->
             <self_collide>0</self_collide>
             <kinematic>1</kinematic>
         </link>
