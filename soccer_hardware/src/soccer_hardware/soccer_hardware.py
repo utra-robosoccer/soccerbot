@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Created June 6 2018
 
@@ -20,6 +19,7 @@ def main():
     baud = args['baud']
     traj = args['traj']
     step_is_on = args['step']
+    wait_feedback_is_on = args['use_wait_feedback']
 
     logString(list_ports())
 
@@ -29,28 +29,34 @@ def main():
 
     num_tries = 0
     comm = Comm()
-    while True:
-        try:
-            with serial.Serial(port, baud, timeout=0) as ser:
+    ser = serial.Serial(port, baud, timeout=0)
+    first = True
+    try:
+        while True:
+            try:
                 logString("Connected")
-                comm.start_up(ser, ros_is_on, traj, step_is_on)
+                if not first:
+                    ser.open()
+                first = False
+                comm.init(ser, ros_is_on, traj, step_is_on, wait_feedback_is_on)
                 comm.begin_event_loop()
-
-        except serial.serialutil.SerialException as e:
-            if num_tries % 100 == 0:
-                if (str(e).find("FileNotFoundError")):
-                    logString("Port not found. Retrying...(attempt {0})".format(num_tries))
-                else:
-                    logString("Serial exception. Retrying...(attempt {0})".format(num_tries))
-
-            time.sleep(0.01)
-            num_tries = num_tries + 1
+            except serial.serialutil.SerialException as e:
+                comm.cleanup()
+                ser.close()
+                if (num_tries % 10 == 0):
+                    if (str(e).find("FileNotFoundError")):
+                        logString("Port not found. Retrying...(attempt {0})".format(num_tries))
+                    else:
+                        logString("Serial exception. Retrying...(attempt {0})".format(num_tries))
+                time.sleep(0.1)
+                num_tries = num_tries + 1
+    except KeyboardInterrupt as e:
+        logString("Interrupted main: {0}".format(repr(e)))
+        comm.cleanup()
+        ser.close()
+        return
 
 
 if __name__ == "__main__":
-    try:
-        main()
-        sys.exit(0)
-    except KeyboardInterrupt as e:
-        print("Interrupted: {0}".format(e))
-        sys.exit(1)
+    main()
+    sys.exit(0)
