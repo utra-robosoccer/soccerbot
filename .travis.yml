@@ -2,9 +2,10 @@ language: generic
 dist: bionic 
 services:
   - docker
+cache:
+  directories:
+    - $HOME/.ccache
 env:
-  matrix:
-    - ROS_DISTRO="melodic"
   global:
     - CCACHE_DIR=$HOME/.ccache
     - ROS_DISTRO="melodic"
