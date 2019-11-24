@@ -5,7 +5,8 @@ from std_msgs.msg import Float64
 
 
 def publish_trajectories(trajectory):
-    publishers = {joint: rospy.Publisher("/{}/command".format(joint), Float64, queue_size=10) for joint in trajectory.joints()}
+    publishers = {joint: rospy.Publisher("/robot1/{}/command".format(joint), Float64, queue_size=10) for joint in
+                  trajectory.joints()}
     
     rospy.init_node("trajectory_publisher")
     while not rospy.get_rostime():
