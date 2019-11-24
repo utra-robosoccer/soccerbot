@@ -15,15 +15,15 @@ except ImportError:
 
 
 def logString(userMsg):
-    ''' Prints the desired string to the shell, precedded by the date and time.
-    '''
+    """ Prints the desired string to the shell, precedded by the date and time.
+    """
     print(datetime.now().strftime('%H.%M.%S.%f') + " " + userMsg)
 
 
 def list_ports():
     ports = serial.tools.list_ports.comports()
     msg = ""
-    if (len(ports) == 0):
+    if len(ports) == 0:
         msg = "Error: No COM ports have been detected"
     else:
         ports = [port.device for port in ports]
@@ -90,12 +90,12 @@ def parse_args():
 
     arg_str = ""
     for k in args.keys():
-        if (k == 'ros' and not has_ros):
+        if k == 'ros' and not has_ros:
             original_arg = args[k]
             args[k] = False
 
             arg_str = arg_str + k + "=" + str(False)
-            if (original_arg == True):
+            if original_arg == True:
                 arg_str = arg_str + " (ROS is not installed)"
 
             arg_str = arg_str + ", "

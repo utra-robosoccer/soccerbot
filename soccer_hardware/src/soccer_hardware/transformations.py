@@ -5,12 +5,12 @@ import unittest
 
 
 def getCtrlToMcuAngleMap():
-    ''' Converts an angle vector received from the control system into the angle
+    """ Converts an angle vector received from the control system into the angle
         vector used by the embedded systems. This involves a shuffling of
         positions and changing of signs
-        
+
         m[embeddedID, ctrlID] = 1 to create a mapping
-    '''
+    """
     m = np.zeros((18, 18))
 
     # Right leg (Jason's Left)
@@ -45,10 +45,10 @@ def getCtrlToMcuAngleMap():
 
 
 def ctrlToMcuAngles(ctrlAngles):
-    ''' Applies a linear transformation to the motor angles
+    """ Applies a linear transformation to the motor angles
         received from the control system to convert them to
         the coordinate system used by the motors
-    '''
+    """
     arr = np.zeros((18, 1), dtype=np.float)
     arr[:ctrlAngles.shape[0], :ctrlAngles.shape[1]] = ctrlAngles
 
@@ -65,10 +65,10 @@ def ctrlToMcuAngles(ctrlAngles):
 
 
 def mcuToCtrlAngles(mcuAngles):
-    ''' Applies a linear transformation to the motor angles
+    """ Applies a linear transformation to the motor angles
         received from the embedded systems to convert them to
         the coordinate system used by the control systems
-    '''
+    """
     arr = np.zeros((18, 1), dtype=np.float)
     arr[:mcuAngles.shape[0], :mcuAngles.shape[1]] = mcuAngles
 

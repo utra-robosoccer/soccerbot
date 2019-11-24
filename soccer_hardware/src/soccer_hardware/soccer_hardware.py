@@ -29,7 +29,7 @@ def main():
 
     num_tries = 0
     comm = Comm()
-    while (True):
+    while True:
         try:
             with serial.Serial(port, baud, timeout=0) as ser:
                 logString("Connected")
@@ -37,7 +37,7 @@ def main():
                 comm.begin_event_loop()
 
         except serial.serialutil.SerialException as e:
-            if (num_tries % 100 == 0):
+            if num_tries % 100 == 0:
                 if (str(e).find("FileNotFoundError")):
                     logString("Port not found. Retrying...(attempt {0})".format(num_tries))
                 else:

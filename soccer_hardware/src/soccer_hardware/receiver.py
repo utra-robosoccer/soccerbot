@@ -22,10 +22,10 @@ class Receiver:
         self.ser = ser
 
     def decode(self, raw):
-        ''' Decodes raw bytes received from the microcontroller. As per the agreed
+        """ Decodes raw bytes received from the microcontroller. As per the agreed
             upon protocol, the first 4 bytes are for a header while the remaining
             80 bytes contain floats for each motor.
-        '''
+        """
         motors = list()
         imu = list()
 
@@ -39,11 +39,11 @@ class Receiver:
         return (motors, imu)
 
     def receive_packet_from_mcu(self):
-        '''
-        Receives 80 bytes of the MCU provided that there is a valid 4-byte 
+        """
+        Receives 80 bytes of the MCU provided that there is a valid 4-byte
         header attached to the front. Returns the list of data interpreted as
         32-bit floats.
-        '''
+        """
 
         receive_succeeded = False
 
@@ -56,38 +56,38 @@ class Receiver:
         time_curr = time_start
 
         num_bytes_available = 0
-        while (True):
+        while True:
             # First, we wait until we have received some data, or until the timeout
             # has elapsed
-            while ((num_bytes_available == 0) and (time_curr - time_start < timeout)):
+            while (num_bytes_available == 0) and (time_curr - time_start < timeout):
                 time.sleep(0.001)
                 time_curr = time.time()
                 num_bytes_available = self.ser.in_waiting
 
-            if ((num_bytes_available == 0) and (time_curr - time_start >= timeout)):
+            if (num_bytes_available == 0) and (time_curr - time_start >= timeout):
                 break
             else:
                 # If we receive some data, we process it here then go back to
                 # waiting for more
                 rawData = self.ser.read(num_bytes_available)
                 for i in range(num_bytes_available):
-                    if (startSeqCount == 4):
+                    if startSeqCount == 4:
                         buff = buff + rawData[i:i + 1]
                         totalBytesRead = totalBytesRead + 1
 
-                        if (totalBytesRead == 84):
+                        if totalBytesRead == 84:
                             # If we get here, we have received a full packet
                             receive_succeeded = True
                             break
                     else:
-                        if (struct.unpack('<B', rawData[i:i + 1])[0] == 0xFF):
+                        if struct.unpack('<B', rawData[i:i + 1])[0] == 0xFF:
                             startSeqCount = startSeqCount + 1
                         else:
                             startSeqCount = 0
                 num_bytes_available = 0
-                if (receive_succeeded):
+                if receive_succeeded:
                     break
-        return (receive_succeeded, buff)
+        return receive_succeeded, buff
 
     def publish_sensor_data(self):
         # IMU FEEDBACK
@@ -116,7 +116,7 @@ class Receiver:
 
     def receive(self):
         (receive_succeeded, buff) = self.receive_packet_from_mcu()
-        if (receive_succeeded):
+        if receive_succeeded:
             # If our reception was successful, we update the class variables
             # for the received angles and received IMU data. Otherwise, we
             # just send back the last values we got successfully
@@ -128,5 +128,5 @@ class Receiver:
             self.num_receptions = self.num_receptions + 1
 
             # Only publish to ROS on successful receive
-            if (self.ros_is_on == True):
+            if self.ros_is_on == True:
                 self.publish_sensor_data()

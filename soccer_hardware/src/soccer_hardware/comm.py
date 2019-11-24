@@ -23,7 +23,7 @@ class Comm:
     def start_up(self, ser, ros_is_on, traj, step_is_on):
         self.last_print_time = time.time()
 
-        if (not self.first):
+        if not self.first:
             self.ser = ser
             self.tx.change_port(ser)
             self.rx.change_port(ser)
@@ -37,7 +37,7 @@ class Comm:
         self.tx = Transmitter(ser)
         self.rx = Receiver(ser, ros_is_on)
 
-        if (self.ros_is_on == True):
+        if self.ros_is_on:
             rospy.init_node('soccer_hardware', anonymous=True)
             rospy.Subscriber("robotGoal", RobotGoal, self.trajectory_callback, queue_size=1)
             self.rx.pub = rospy.Publisher('soccerbot/imu', Imu, queue_size=1)
@@ -59,9 +59,9 @@ class Comm:
                 logString("Standing pose will be sent instead...")
 
     def print_angles(self, sent, received):
-        ''' Prints out 2 numpy vectors side-by-side, where the first vector entry
+        """ Prints out 2 numpy vectors side-by-side, where the first vector entry
             is interpreted as belonging to motor 1, the seconds to motor 2, etc.
-        '''
+        """
         assert sent.shape[0] == received.shape[0]
         t = PrettyTable(['Motor Number', 'Sent', 'Received'])
 
@@ -71,9 +71,9 @@ class Comm:
         print(t)
 
     def print_imu(self, received):
-        ''' Prints out a numpy vector interpreted as data from the IMU, in the
+        """ Prints out a numpy vector interpreted as data from the IMU, in the
             order X-gyro, Y-gyro, Z-gyro, X-accel, Y-accel, Z-accel.
-        '''
+        """
 
         t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
 
@@ -85,12 +85,12 @@ class Comm:
 
     def print_handler(self, goal_angles):
         current_time = time.time()
-        if (current_time - self.last_print_time >= 1):
+        if current_time - self.last_print_time >= 1:
             self.last_print_time = current_time
             print('\n')
             logString("Received: {0}".format(self.rx.num_receptions))
             logString("Transmitted: {0}\n".format(self.tx.num_transmissions))
-            if (self.rx.num_receptions > 0):
+            if self.rx.num_receptions > 0:
                 # Prints the last valid data received
                 self.print_angles(goal_angles[0:12], self.rx.received_angles[0:12])
                 self.print_imu(self.rx.received_imu)
@@ -101,34 +101,34 @@ class Comm:
         self.print_handler(goal_angles)
 
     def trajectory_callback(self, robotGoal):
-        '''
+        """
         Used by ROS. Converts the motor array from the order and sign convention
         used by controls to that used by embedded
-        '''
+        """
         m = getCtrlToMcuAngleMap()
         goalangles = m.dot(robotGoal.trajectories[0:18])
         goalangles = goalangles[:, np.newaxis]
         self.communicate(goalangles)
 
     def begin_event_loop(self):
-        if (self.ros_is_on == True):
+        if self.ros_is_on == True:
             rospy.spin()
         else:
-            while (True):
-                if (self.use_trajectory):
+            while True:
+                if self.use_trajectory:
                     # Iterate through the static trajectory forever
                     # TODO: If the static trajectories are ever re-generated, we will need
                     # TODO: to dot the trajectories with the ctrlToMcuAngleMap to shuffle
                     # TODO: them properly
                     for i in range(self.trajectory.shape[1]):
-                        if (self.step_is_on):
+                        if self.step_is_on:
                             input('Press enter to send next pose')
 
                         goal_angles = self.trajectory[:, i:i + 1]
                         self.communicate(goal_angles)
                 else:
                     # Send standing pose
-                    if (self.step_is_on):
+                    if self.step_is_on:
                         input('Press enter to send next pose')
 
                     self.communicate(np.zeros((18, 1)))
