@@ -1,0 +1,8 @@
+scan_filter_chain:
+  - name: range
+    type: LaserScanRangeFilter
+    params:
+      lower_threshold: 0.2
+      upper_threshold: .inf
+      lower_replacement_value: 0.2
+      upper_replacement_value: 10
