@@ -5,25 +5,25 @@ import struct
 from threading import Thread, Event, Lock
 from Queue import Queue
 from transformations import *
-from utility import logString
+from utility import log_string
 
 
-class Tx(Thread):
-    def __init__(self, ser, dryrun=False, group=None, target=None, name=None):
-        super(Tx, self).__init__(group=group, target=target, name=name)
+class Transmitter(Thread):
+    def __init__(self, ser, dry_run=False, group=None, target=None, name=None):
+        super(Transmitter, self).__init__(group=group, target=target, name=name)
         self._name = name
         self._cmd_queue = Queue(1)
         self._stop_event = Event()
-        self._dryrun = dryrun
+        self._dry_run = dry_run
         self._ser = ser
         self._num_tx = 0
         self._num_tx_lock = Lock()
 
     def stop(self):
-        '''
+        """
         Prevents any more commands from being added to the queue and causes the
         thread to exit once the queue is empty.
-        '''
+        """
         self._stop_event.set()
 
     def _stopped(self):
@@ -37,12 +37,12 @@ class Tx(Thread):
         padding = bytes(''.encode())
         footer = struct.pack('<L', 0x00000000)
 
-        numBytes = len(byteStream)
-        if (numBytes < 80):
-            padding = struct.pack('<B', 0x00) * (80 - numBytes)
+        num_bytes = len(byteStream)
+        if num_bytes < 80:
+            padding = struct.pack('<B', 0x00) * (80 - num_bytes)
 
         packet = header + id + byteStream + padding + footer
-        if self._dryrun:
+        if self._dry_run:
             print(str(packet) + "\n")
         else:
             self._ser.write(packet)
@@ -51,10 +51,10 @@ class Tx(Thread):
         """ Transforms a numpy vector to a byte array, with entries interpreted as
             32-bit floats.
         """
-        byteArr = bytes(''.encode())
+        byte_arr = bytes(''.encode())
         for element in vec:
-            byteArr = byteArr + struct.pack('f', element)
-        return byteArr
+            byte_arr = byte_arr + struct.pack('f', element)
+        return byte_arr
 
     def get_num_tx(self):
         with self._num_tx_lock:
@@ -71,9 +71,9 @@ class Tx(Thread):
         """
         Services the command queue; sends packets to the microcontroller.
         """
-        logString("Starting Tx thread ({0})...".format(self._name))
+        log_string("Starting Tx thread ({0})...".format(self._name))
         try:
-            while (1):
+            while True:
                 if self._stopped() and self._cmd_queue.empty():
                     break
                 while not self._cmd_queue.empty():
@@ -82,18 +82,6 @@ class Tx(Thread):
                     self._send_packet_to_mcu(self._vec2bytes(goal_angles))
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
-        except serial.serialutil.SerialException as e:
-            logString("Serial exception in thread {0}".format(self._name))
-        logString("Stopping Tx thread ({0})...".format(self._name))
-        return
-
-
-if __name__ == "__main__":
-    tx_thread = Tx(name="tx_th", ser="", dryrun=True)
-    tx_thread.start()
-    angles = np.zeros((18, 1))
-    for i in range(20):
-        tx_thread.send(angles)
-    tx_thread.stop()
-    tx_thread.join()
-    print("Stopping main")
+        except serial.serialutil.SerialException:
+            log_string("Serial exception in thread {0}".format(self._name))
+        log_string("Stopping Tx thread ({0})...".format(self._name))
