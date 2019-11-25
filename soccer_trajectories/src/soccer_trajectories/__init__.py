@@ -1,2 +1,1 @@
-from trajectory_publisher import publish_trajectories
 from trajectory import Trajectory

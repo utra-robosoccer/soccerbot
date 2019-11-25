@@ -2,8 +2,10 @@ from scipy.interpolate import interp1d
 import numpy as np
 import csv
 import rospy
+from std_msgs.msg import Float64
 
-#Doesn't safely handle non-rectangular trajectories.
+
+# Doesn't safely handle non-rectangular trajectories.
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints for some timestep.
 
@@ -12,7 +14,8 @@ class Trajectory:
         timestep - The time distance between two points in the interpolation.
         total_time - The total amount of time this trajectory will take.
     """
-    def __init__(self, trajectory_path, timestep=0.001):
+
+    def __init__(self, trajectory_path, timestep=0.5):
         """Initialize a Trajectory from a CSV file at trajectory_path."""
         self.splines = {}
         self.timestep = timestep
@@ -22,7 +25,9 @@ class Trajectory:
             for row in csv_traj:
                 n = len(row) - 1
                 x_values = np.linspace(0, n * timestep, num=n)
-                self.splines[row[0]] = interp1d(x_values, map(float, row[1:]), bounds_error=False, fill_value="extrapolate", kind="cubic", assume_sorted=True)
+                self.splines[row[0]] = interp1d(x_values, map(float, row[1:]), bounds_error=False,
+                                                fill_value="extrapolate", kind="cubic", assume_sorted=True)
+        print n
         self.total_time = n * timestep
 
     def get_setpoint(self, timestamp):
@@ -34,3 +39,21 @@ class Trajectory:
     def joints(self):
         """Returns a list of joints in this trajectory."""
         return self.splines.keys()
+
+    def publish(self):
+        publishers = {
+            joint: rospy.Publisher("/{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
+
+        rate = rospy.Rate(10)  # 10hz
+        start = rospy.get_rostime()
+        now = rospy.get_rostime()
+        delta = (now - start).to_sec()
+
+        print delta
+        print self.total_time
+        while not rospy.is_shutdown() and delta < self.total_time:
+            now = rospy.get_rostime()
+            delta = (now - start).to_sec()
+            for joint, setpoint in self.get_setpoint(delta).iteritems():
+                publishers[joint].publish(setpoint)
+            rate.sleep()

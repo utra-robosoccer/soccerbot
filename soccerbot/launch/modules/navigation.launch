@@ -1,3 +1,7 @@
 <launch>
+    <node pkg="soccer_trajectories" type="soccer_trajectories" name="soccer_trajectories" output="screen">
+        <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
+    </node>
+
     <!-- TODO Daniel -->
 </launch>
