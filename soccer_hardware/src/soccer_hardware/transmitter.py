@@ -1,10 +1,10 @@
 # Transmitter.py
 
+import rospy as rp
 import serial
 import struct
 from threading import Thread, Event, Lock
 from Queue import Queue
-from transformations import *
 from utility import log_string
 
 
@@ -73,9 +73,7 @@ class Transmitter(Thread):
         """
         log_string("Starting Tx thread ({0})...".format(self._name))
         try:
-            while True:
-                if self._stopped() and self._cmd_queue.empty():
-                    break
+            while not rp.is_shutdown():
                 while not self._cmd_queue.empty():
                     goal_angles = self._cmd_queue.get()
                     self._send_packet_to_mcu(self._vec2bytes(goal_angles))

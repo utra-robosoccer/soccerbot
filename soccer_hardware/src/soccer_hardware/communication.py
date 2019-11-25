@@ -29,8 +29,8 @@ class Communication:
         # MCU Callbacks
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
-        self._rx_thread.set_timeout(0.010)
-        self._rx_thread.bind(self.receive_callback)
+        # self._rx_thread.set_timeout(0.010)
+        # self._rx_thread.bind(self.receive_callback)
 
         self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
@@ -41,41 +41,8 @@ class Communication:
 
         self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
 
-
-    def __del__(self):
-        if self._started:
-            log_string("Cleaning up threads...")
-            self._rx_thread.stop()
-            self._tx_thread.stop()
-            self._num_rx, num_rx_failures = self._rx_thread.get_num_rx()
-            self._num_tx = self._tx_thread.get_num_tx()
-            self._rx_thread.join()
-            log_string("Rx thread joined")
-            self._tx_thread.join()
-            log_string("Tx thread joined")
-            t_stop = time.time()
-            if self._num_rx != 0 and self._num_tx != 0:
-                log_string("Transmitted {0} packets and received {1} ({2}% success)".format(
-                    self._num_tx, self._num_rx, np.round(self._num_rx * 100.0 / self._num_tx, 2)
-                )
-                )
-
-                tx_period = (t_stop - self._t_start) / self._num_tx
-                log_string("Transmitted {0} packets/s on average (period = {1} ms)".format(
-                    np.round(1 / tx_period, 2), np.round(tx_period * 1000, 2)
-                )
-                )
-
-                rx_period = (t_stop - self._t_start) / self._num_rx
-                log_string("Received {0} packets/s on average (period = {1} ms)".format(
-                    np.round(1 / rx_period, 2), np.round(rx_period * 1000, 2)
-                )
-                )
-
-                log_string("{0} reception(s) timed out".format(num_rx_failures))
-
     def run(self):
-        self._rx_thread.start()
+        # self._rx_thread.start()
         self._tx_thread.start()
         self._t_start = time.time()
         self._started = True
@@ -91,9 +58,9 @@ class Communication:
         self._motor_map[motor]["value"] = robot_goal.data
 
     def send_angles(self, event):
-        motor_angles = []
+        motor_angles = [0] * len(self._motor_map)
         for motor in self._motor_map:
-            motor_angles.append(np.rad2deg(self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])) + float(self._motor_map[motor]["offset"]))
+            motor_angles[int(self._motor_map[motor]["id"])] = (np.rad2deg(self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])) + float(self._motor_map[motor]["offset"]))
         self._tx_thread.send(motor_angles)
 
     def print_imu(self):
