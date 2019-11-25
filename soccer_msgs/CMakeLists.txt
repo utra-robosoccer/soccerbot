@@ -12,8 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
     FILES
-    RobotGoal.msg
-    RobotState.msg
 )
 
 generate_messages(

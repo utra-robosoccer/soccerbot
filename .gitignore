@@ -9,3 +9,4 @@ __pycache__/
 
 # Matlab Build Files
 soccer_description/models/soccerbot.urdf
+.idea/
