@@ -5,8 +5,8 @@ from prettytable import PrettyTable
 from transmitter import Transmitter
 from receiver import Receiver
 from utility import *
-from soccer_msgs.msg import RobotGoal
-from soccer_msgs.msg import RobotState
+from std_msgs.msg import Float32
+from control_msgs.msg import JointControllerState
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
 from transformations import *
@@ -26,15 +26,21 @@ class Communication:
         self._wait_feedback_is_on = wait_feedback_is_on
         self._use_trajectory = False
 
+        # MCU Callbacks
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
         self._rx_thread.set_timeout(0.010)
         self._rx_thread.bind(self.receive_callback)
 
-        rp.init_node('soccer_hardware', anonymous=True)
-        rp.Subscriber("robotGoal", RobotGoal, self.trajectory_callback, queue_size=1)
-        self._pub_imu = rp.Publisher('soccerbot/imu', Imu, queue_size=1)
-        self._pub_angles = rp.Publisher('soccerbot/robotState', RobotState, queue_size=1)
+        self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
+        self._motor_map = rp.get_param("~motor_mapping")
+        for motor in self._motor_map:
+            self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float32, self.trajectory_callback, motor)
+            self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
+            self._motor_map[motor]["value"] = 0.0
+
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+
 
     def __del__(self):
         if self._started:
@@ -81,18 +87,14 @@ class Communication:
         tx_cycle.set_e_lim(0, -3.0)
         rp.spin()
 
-    def print_angles(self):
-        """ Prints out 2 numpy vectors side-by-side, where the first vector entry
-            is interpreted as belonging to motor 1, the seconds to motor 2, etc.
-        """
-        sent = self._goal_angles[0:12]
-        received = self._last_angles[0:12]
+    def trajectory_callback(self, robot_goal, motor):
+        self._motor_map[motor]["value"] = robot_goal.data
 
-        assert sent.shape[0] == received.shape[0]
-        t = PrettyTable(['Motor Number', 'Sent', 'Received'])
-        for i in range(sent.shape[0]):
-            t.add_row([str(i + 1), round(sent[i][0], 4), round(received[i][0], 2)])
-        print(t)
+    def send_angles(self, event):
+        motor_angles = []
+        for motor in self._motor_map:
+            motor_angles.append(np.rad2deg(self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])) + float(self._motor_map[motor]["offset"]))
+        self._tx_thread.send(motor_angles)
 
     def print_imu(self):
         """ Prints out a numpy vector interpreted as data from the IMU, in the
@@ -120,16 +122,6 @@ class Communication:
                 self.print_angles()
                 self.print_imu()
 
-    def trajectory_callback(self, robot_goal):
-        """
-        Used by ROS. Converts the motor array from the order and sign convention
-        used by controls to that used by embedded
-        """
-        m = getCtrlToMcuAngleMap()
-        self._goal_angles = m.dot(robot_goal.trajectories[0:18])
-        self._goal_angles = self._goal_angles[:, np.newaxis]
-        self._tx_thread.send(self._goal_angles)
-
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles
         self._last_imu = received_imu
@@ -138,10 +130,8 @@ class Communication:
     def publish_sensor_data(self, received_angles, received_imu):
         # IMU FEEDBACK
         imu = Imu()
-        vec1 = Vector3(-received_imu[2][0], received_imu[1][0], received_imu[0][0])
-        imu.angular_velocity = vec1
-        vec2 = Vector3(received_imu[5][0], received_imu[4][0], received_imu[3][0])
-        imu.linear_acceleration = vec2
+        imu.angular_velocity = Vector3(-received_imu[2][0], received_imu[1][0], received_imu[0][0])
+        imu.linear_acceleration = Vector3(received_imu[5][0], received_imu[4][0], received_imu[3][0])
         self._pub_imu.publish(imu)
 
         # MOTOR FEEDBACK

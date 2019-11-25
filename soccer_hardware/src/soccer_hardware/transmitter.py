@@ -77,8 +77,7 @@ class Transmitter(Thread):
                 if self._stopped() and self._cmd_queue.empty():
                     break
                 while not self._cmd_queue.empty():
-                    cmd = self._cmd_queue.get()
-                    goal_angles = ctrlToMcuAngles(cmd)
+                    goal_angles = self._cmd_queue.get()
                     self._send_packet_to_mcu(self._vec2bytes(goal_angles))
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1

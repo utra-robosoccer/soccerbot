@@ -1,0 +1,73 @@
+motor_mapping:
+  torso_right_hip_side:
+    id: 0
+    direction: -1
+    offset: 150
+  right_hip_side_hip_front:
+    id: 1
+    direction: 1
+    offset: 150
+  right_hip_front_thigh:
+    id: 2
+    direction: 1
+    offset: 150
+  right_thigh_calve:
+    id: 3
+    direction: 1
+    offset: 150
+  right_calve_ankle:
+    id: 4
+    direction: -1
+    offset: 150
+  right_ankle_foot:
+    id: 5
+    direction: 1
+    offset: 150
+  torso_left_hip_side:
+    id: 11
+    direction: -1
+    offset: 150
+  left_hip_side_hip_front:
+    id: 10
+    direction: 1
+    offset: 150
+  left_hip_front_thigh:
+    id: 9
+    direction: 1
+    offset: 150
+  left_thigh_calve:
+    id: 8
+    direction: 1
+    offset: 150
+  left_calve_ankle:
+    id: 7
+    direction: -1
+    offset: 150
+  left_ankle_foot:
+    id: 6
+    direction: 1
+    offset: 150
+  torso_right_bicep:
+    id: 12
+    direction: 1
+    offset: 150
+  right_bicep_forearm:
+    id: 13
+    direction: 1
+    offset: 60
+  torso_left_bicep:
+    id: 14
+    direction: 1
+    offset: 150
+  left_bicep_forearm:
+    id: 15
+    direction: 1
+    offset: 240
+  torso_neck:
+    id: 16
+    direction: 1
+    offset: 150
+  neck_head:
+    id: 17
+    direction: 1
+    offset: 150
