@@ -5,12 +5,12 @@ import struct
 import time
 from threading import Thread, Event, Lock
 from transformations import *
-from utility import logString
+from utility import log_string
 
 
-class Rx(Thread):
+class Receiver(Thread):
     def __init__(self, ser, dryrun=False, group=None, target=None, name=None):
-        super(Rx, self).__init__(group=group, target=target, name=name)
+        super(Receiver, self).__init__(group=group, target=target, name=name)
         self._name = name
         self._stop_event = Event()
         self._num_rx = 0
@@ -74,12 +74,12 @@ class Rx(Thread):
             time the first byte of the packet is received
         """
         if self._dryrun:
-            return (True, self._get_fake_packet())
+            return True, self._get_fake_packet()
 
         receive_succeeded = False
 
-        totalBytesRead = 0
-        startSeqCount = 0
+        total_bytes_read = 0
+        start_seq_count = 0
         buff = bytes(''.encode())
 
         time_start = time.time()
@@ -87,7 +87,7 @@ class Rx(Thread):
 
         num_bytes_available = 0
         data_received = False
-        while (True):
+        while True:
             # First, we wait until we have received some data. If data has
             # already been received, then we quit if the timeout has elapsed
             while ((num_bytes_available == 0) and
@@ -105,26 +105,26 @@ class Rx(Thread):
                 # waiting for more
                 rawData = self._ser.read(num_bytes_available)
                 for i in range(num_bytes_available):
-                    if startSeqCount == 4:
+                    if start_seq_count == 4:
 
                         buff = buff + rawData[i:i + 1]
-                        totalBytesRead = totalBytesRead + 1
+                        total_bytes_read = total_bytes_read + 1
 
-                        if totalBytesRead == 84:
+                        if total_bytes_read == 84:
                             # If we get here, we have received a full packet
                             receive_succeeded = True
                             break
                     else:
                         if struct.unpack('<B', rawData[i:i + 1])[0] == 0xFF:
-                            startSeqCount = startSeqCount + 1
+                            start_seq_count = start_seq_count + 1
                         else:
-                            startSeqCount = 0
+                            start_seq_count = 0
                 num_bytes_available = 0
                 if receive_succeeded:
                     with self._num_rx_lock:
                         self._num_rx = self._num_rx + 1
                     break
-        return (receive_succeeded, buff)
+        return receive_succeeded, buff
 
     def get_num_rx(self):
         """
@@ -134,7 +134,7 @@ class Rx(Thread):
             return self._num_rx, self._num_rx_failures
 
     def set_timeout(self, timeout):
-        self._timeout = timeout;
+        self._timeout = timeout
 
     def bind(self, callback):
         """
@@ -147,37 +147,21 @@ class Rx(Thread):
         Reads packets from the microcontroller and sends the data up to the
         application through a callback function
         """
-        logString("Starting Rx thread ({0})...".format(self._name))
+        log_string("Starting Rx thread ({0})...".format(self._name))
         try:
-            while (1):
+            while True:
                 if self._stop_requested():
                     break
                 else:
                     (receive_succeeded, buff) = self._receive_packet_from_mcu(self._timeout)
                     if receive_succeeded:
                         (recvAngles, recvIMUData) = self._decode(buff)
-                        angleArray = np.array(recvAngles)
-                        received_angles = angleArray[:, np.newaxis]
+                        angle_array = np.array(recvAngles)
+                        received_angles = angle_array[:, np.newaxis]
                         received_imu = np.array(recvIMUData).reshape((6, 1))
                         self._callback(received_angles, received_imu)
                     else:
                         self._num_rx_failures = self._num_rx_failures + 1
-        except serial.serialutil.SerialException as e:
-            logString("Serial exception in thread {0}".format(self._name))
-        logString("Stopping Rx thread ({0})...".format(self._name))
-        return
-
-
-def test_callback(received_angles, received_imu):
-    logString("Got angles and imu data")
-
-
-if __name__ == "__main__":
-    rx_thread = Rx(name="rx_th", ser="", dryrun=True)
-    rx_thread.bind(test_callback)
-    rx_thread.start()
-    while rx_thread.get_num_rx() < 20:
-        pass
-    rx_thread.stop()
-    rx_thread.join()
-    print("Stopping main")
+        except serial.serialutil.SerialException:
+            log_string("Serial exception in thread {0}".format(self._name))
+        log_string("Stopping Rx thread ({0})...".format(self._name))
