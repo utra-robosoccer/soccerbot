@@ -6,6 +6,7 @@
     <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
+    <!-- TODO load this automatically from the motor_mapping.yaml (https://answers.ros.org/question/213145/use-rosparam-get-in-launch-file/) -->
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
           args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.022
             -J torso_right_hip_side     0.0
@@ -28,7 +29,8 @@
             -J torso_right_bicep        0.2
             -J right_bicep_forearm      0.0
             -J torso_left_bicep         0.2
-            -J left_bicep_forearm       0.0"/>
+            -J left_bicep_forearm       0.0
+    "/>
 
     <!-- Controller -->
     <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>

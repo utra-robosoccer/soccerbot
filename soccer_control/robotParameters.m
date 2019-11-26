@@ -1,3 +1,6 @@
+% Recreate the model
+% smimport('../soccer_description/models/soccerbot_stl.urdf')
+
 % General World parameters
 density = 1000;
 
