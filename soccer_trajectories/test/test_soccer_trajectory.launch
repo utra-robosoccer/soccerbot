@@ -2,6 +2,6 @@
     <include file="$(find soccerbot)/launch/modules/navigation.launch" />
     <include file="$(find soccerbot)/launch/modules/sensors.launch" />
 
-    <node pkg="rostopic" type="rostopic" name="rostopic" args="pub command std_msgs/String 'data: 'standing''"/>
+    <node pkg="rostopic" type="rostopic" name="rostopic" args="pub command std_msgs/String 'data: 'getupfront''"/>
 
 </launch>

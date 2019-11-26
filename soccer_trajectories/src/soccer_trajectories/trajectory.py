@@ -15,20 +15,19 @@ class Trajectory:
         total_time - The total amount of time this trajectory will take.
     """
 
-    def __init__(self, trajectory_path, timestep=0.5):
+    def __init__(self, trajectory_path):
         """Initialize a Trajectory from a CSV file at trajectory_path."""
         self.splines = {}
-        self.timestep = timestep
-        n = 0
+        self.step_map = {}
+
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
-                n = len(row) - 1
-                x_values = np.linspace(0, n * timestep, num=n)
-                self.splines[row[0]] = interp1d(x_values, map(float, row[1:]), bounds_error=False,
-                                                fill_value="extrapolate", kind="cubic", assume_sorted=True)
-        print n
-        self.total_time = n * timestep
+                if row[0] == 'time':
+                    interpolated_time = map(float, row[1:])
+                    self.max_time = interpolated_time[-1]
+                else:
+                    self.splines[row[0]] = interp1d(interpolated_time, map(float, row[1:]))
 
     def get_setpoint(self, timestamp):
         """Get the position of each joint at timestamp.
@@ -44,16 +43,10 @@ class Trajectory:
         publishers = {
             joint: rospy.Publisher("/{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
 
-        rate = rospy.Rate(10)  # 10hz
-        start = rospy.get_rostime()
-        now = rospy.get_rostime()
-        delta = (now - start).to_sec()
-
-        print delta
-        print self.total_time
-        while not rospy.is_shutdown() and delta < self.total_time:
-            now = rospy.get_rostime()
-            delta = (now - start).to_sec()
-            for joint, setpoint in self.get_setpoint(delta).iteritems():
+        rate = rospy.Rate(100)
+        t = 0
+        while not rospy.is_shutdown() and t < self.max_time:
+            for joint, setpoint in self.get_setpoint(t).iteritems():
                 publishers[joint].publish(setpoint)
+            t = t + 0.01
             rate.sleep()

@@ -54,7 +54,7 @@ motor_mapping:
   right_bicep_forearm:
     id: 13
     direction: 1
-    offset: 60
+    offset: 150
   torso_left_bicep:
     id: 14
     direction: 1
@@ -62,7 +62,7 @@ motor_mapping:
   left_bicep_forearm:
     id: 15
     direction: 1
-    offset: 240
+    offset: 150
   torso_neck:
     id: 16
     direction: 1
