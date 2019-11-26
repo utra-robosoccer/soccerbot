@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>soccer_embedded</name>
+  <version>0.0.0</version>
+  <description>Embedded Portion of the code</description>
+  <maintainer email="todo@todo.com">Cameron Alizadeh</maintainer>
+  <license>BSD</license>
+  <author email="todo@todo.com">Cameron Alizadeh</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <!-- TODO add other dependencies -->
+</package>
