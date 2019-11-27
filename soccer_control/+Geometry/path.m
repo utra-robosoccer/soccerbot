@@ -5,8 +5,8 @@ classdef path < handle
         turn_duration = 4;      % Number of body steps to turn
         step_size = 0.05;        % Time for a single step
         
-        pre_footstep_ratio = 0.1;   % Ratio of fullstep duration to keep foot on ground on prefootstep
-        post_footstep_ratio = 0.1;  % Ratio of fullstep duration to keep foot on ground on postfootstep
+        pre_footstep_ratio = 0.2;   % Ratio of fullstep duration to keep foot on ground on prefootstep
+        post_footstep_ratio = 0.2;  % Ratio of fullstep duration to keep foot on ground on postfootstep
         
         start_transform;
         end_transform;
@@ -56,6 +56,7 @@ classdef path < handle
         
         function bodystep = getBodyStep(obj, n)
             [~, idx] = min(abs((n * obj.bodystep_size) - obj.distanceMap(:,2)));
+            
             bodystep = obj.positionAtRatio(obj.distanceMap(idx, 1));
         end
         

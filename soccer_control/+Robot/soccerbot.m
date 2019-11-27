@@ -89,16 +89,17 @@ classdef soccerbot < handle
             Yd = invconf(2,4);
             Zd = invconf(3,4);
             
-            theta6 = -atan2(Yd, Zd);
+            assert(norm([Xd, Yd, Zd]) <= d3 + d4, "IK Position Unreachable: Desired Distance: " + num2str(norm([Xd, Yd, Zd])) + ", Limited Distance: " + num2str(d3 + d4));
             
+            theta6 = -atan2(Yd, Zd);            
             tmp1 = Zd / cos(theta6);
-            tmp2 = sqrt(Xd^2 + Yd^2);
+            tmp2 = Xd;
             D = (tmp1^2 + tmp2^2 - d3^2 - d4^2) / 2 / d3 / d4;
-            tmp3 = atan2(D, sqrt(1-D^2));
-            theta4 = tmp3 - pi/2;
+            tmp3 = atan2(D, -sqrt(1-D^2));
+            theta4 = -wrapTo2Pi(tmp3 - pi/2);
             
             alp = atan2(tmp1, tmp2);
-            beta = atan2(d3 * cos(tmp3), d4 + d3 * sin(tmp3));
+            beta = atan2(-d3 * cos(tmp3), d4 + d3 * sin(tmp3));
             theta5 = pi/2 - (alp - beta);
             
             H4 = Geometry.transform(obj.dh(4,1), obj.dh(4,2), obj.dh(4,3), theta4);
@@ -113,7 +114,7 @@ classdef soccerbot < handle
             angles = rotm2eul(inv(H03(1:3,1:3)), 'ZYX');
             theta3 = pi/2 - angles(1);
             theta1 = -angles(2);
-            theta2 = -(angles(3) + pi/2);            
+            theta2 = (angles(3) + pi/2);            
         
             configSolL(1).JointPosition = theta1;
             configSolL(2).JointPosition = theta2;
@@ -131,7 +132,7 @@ classdef soccerbot < handle
             
             configSolR = obj.robot_right_leg_subtree.homeConfiguration;
             configSolR(1).JointPosition = -configSolL(1).JointPosition;
-            configSolR(2).JointPosition = -configSolL(2).JointPosition;
+            configSolR(2).JointPosition = configSolL(2).JointPosition;
             configSolR(3).JointPosition = configSolL(3).JointPosition;
             configSolR(4).JointPosition = configSolL(4).JointPosition;
             configSolR(5).JointPosition = configSolL(5).JointPosition;
@@ -149,13 +150,14 @@ classdef soccerbot < handle
             torso_to_left_foot = crotch_position \ left_foot_position;
         
 %             weights_left = [0.25 0.25 0.25 1 1 1];
-%             [configSolL,~] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
+%             [configSolL1,err] = obj.ik_left('left_foot',torso_to_left_foot,weights_left,obj.robot_left_leg_subtree.homeConfiguration);
 %             weights_right = [0.25 0.25 0.25 1 1 1];
-%             [configSolR,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
-                        
+%             [configSolR1,~] = obj.ik_right('right_foot',torso_to_right_foot,weights_right,obj.robot_right_leg_subtree.homeConfiguration);
+%             assert(err.ExitFlag == 1)
+            
             configSolL = obj.ik_left_foot(torso_to_left_foot);
             configSolR = obj.ik_right_foot(torso_to_right_foot);
-
+            
             obj.configuration(3:8) = configSolL;
             obj.configuration(13:18) = configSolR;
             

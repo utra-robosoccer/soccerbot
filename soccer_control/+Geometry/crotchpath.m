@@ -1,15 +1,18 @@
-classdef crotchpath < Geometry.path
+classdef crotchpath < Geometry.footpath
     properties
-        crotch_zdiff_per_step = 0.01;
+        crotch_zdiff_per_step = -0.01;
         crotch_sidediff_step = 0.01;
-        crotch_rotation_per_step = pi/30;
+        crotch_rotation_per_step = 0.0;
+        
+        sideways_exponential_decay_rate = 5;
+        sideways
         
         first_step_left = 0;
     end
     
     methods
-        function obj = crotchpath(start_transform, end_transform)
-            obj = obj@Geometry.path(start_transform, end_transform);
+        function obj = crotchpath(start_transform, end_transform, foot_center_to_floor)
+            obj = obj@Geometry.footpath(start_transform, end_transform, foot_center_to_floor);
             
             % Calculate the foot for the first step (based on destination)
             axang = quat2axang(obj.start_transform.orientation);
@@ -24,96 +27,64 @@ classdef crotchpath < Geometry.path
         end
         
         function position = crotchPosition(obj, t)
-            if (abs(t - obj.duration) < 1e-5)
-                position = obj.end_transform.H;
-                return;
-            end
-            step_time = obj.bodyStepTime;
-            step_num = fix(t / step_time);
-            step_ratio = rem(t, step_time)/step_time;
-            previous_step = obj.getBodyStep(step_num);
-            next_step = obj.getBodyStep(step_num + 1);
-            
-            if (mod(step_num, 2) == obj.first_step_left)
-                rotdiff = obj.crotch_sidediff_step;
+            [step_num, left_foot_ratio, right_foot_ratio] = footHeightRatio(obj, t, 1);
+            [left_foot_action, ~] = whatIsTheFootDoing(obj, step_num);
+            if (length(left_foot_action) == 2)
+                ratio = left_foot_ratio;
             else
-                rotdiff = -obj.crotch_sidediff_step;
+                ratio = right_foot_ratio;
             end
-            
-            if (mod(step_num, 2) == obj.first_step_left)
-                sidediff = -obj.crotch_sidediff_step;
-            else
-                sidediff = obj.crotch_sidediff_step;
-            end
-            
-            position = obj.parabolicPath(previous_step, next_step, obj.crotch_zdiff_per_step, ...
-                sidediff, rotdiff, step_ratio);
 
-        end
-        
-        function position = parabolicPath(obj, startTransform, endTransform, zdiff, sidediff, rotdiff, ratio)
-            % Simple Parabolic trajectory
-            % (http://mathworld.wolfram.com/ParabolicSegment.html)
-            step_time = obj.bodyStepTime;
-            distance_between_step = Geometry.transform.distance(startTransform, endTransform);
-            height_per_step = norm([zdiff, sidediff]);
-            
-            h = height_per_step;
-            a = distance_between_step / 2;
-            
-            length_arc = sqrt(a^2 + 4*h^2) + a^2/2/h * asinh(2*h/a);
-%             length_so_far = ratio * length_arc;
-            
-            % Evenly spaced points on parabola Method 1 - Numerical Solve
-%             half_length = length_arc / 2;
-%             diff_length = abs(length_so_far - half_length);
-%             syms x;
-%             lindist = sqrt(a^2 + h^2);
-%             guess = acosh(sqrt(((abs(step_time*lindist - lindist/2))*2*h/a^2)^2 + 1));
-%             lhs = diff_length*4*h/a^2;
-%             tmp = double(vpasolve(lhs == x + 0.5*sinh(2*x), x, guess));
-%             tmp = sqrt(cosh(tmp)^2 - 1)*a^2/2/h;
-%             if (length_so_far < half_length)
-%                 dist = distance_between_step/2 - tmp;
-%             else
-%                 dist = distance_between_step/2 + tmp;
-%             end
-            
-            % Using Newton Approximation Method
-            % https://math.stackexchange.com/questions/3129154/divide-a-parabola-in-segments-of-equal-length
-            L = distance_between_step;
-            aa = 4*h/L;
-            
-            f = @(x) x * sqrt(1+x^2) + asinh(x);
-            s = ratio;
-            J = @(X) 2 * sqrt(1+X^2);
-            r = @(X) f(X) - (1-2*s)*f(aa);
-            
-            X = 0;
-            while(abs(r(X)) > 0.0001)
-                X = X - r(X)/J(X);
+            % Base position for the torso
+            if step_num == 0
+                from = obj.getBodyStep(0);
+                to = obj.getBodyStep(1);
+                body_movement_ratio = ratio / 2;
+            elseif step_num == obj.num_steps - 1
+                from = obj.getBodyStep(step_num - 1);
+                to = obj.getBodyStep(step_num);
+                body_movement_ratio = ratio / 2 + 1/2;
+            else                
+                if (ratio < 0.5)
+                    from = obj.getBodyStep(step_num - 1);
+                    to = obj.getBodyStep(step_num);
+                    body_movement_ratio = ratio + 0.5;
+                else
+                    from = obj.getBodyStep(step_num);
+                    to = obj.getBodyStep(step_num + 1);
+                    body_movement_ratio = ratio - 0.5;
+                end
             end
-            dist = 0.5*(1-X/aa) * L;
             
-            % Calculate intermediate transform
-            position_time = dist / distance_between_step * step_time;
-            if position_time < 0
-                position_time = 0;
+            position = obj.parabolicPath(from, to, 0, 0, 0, body_movement_ratio);
+            
+            % Add horizontal delta (exponential decay)
+            [~, left_foot_ratio, ~] = footHeightRatio(obj, t, 2);
+            if (length(left_foot_action) == 2) % Left foot moving, lean right
+                ydiff = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio));
+            else
+                ydiff = -obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio));
             end
-            [t1, ~, ~] = transformtraj(startTransform.H,endTransform.H,[0 step_time],position_time);
             
-            x = -a + dist;
-            y = h * (1 - x^2/a^2);
+            % Add vertical delta (sinusoidal wave)
+            [~, left_foot_ratio, ~] = footHeightRatio(obj, t, 3);
+            if (length(left_foot_action) == 2) % Left foot moving, lean right
+                ratio = left_foot_ratio;
+            else
+                ratio = right_foot_ratio;
+            end
+            if t < obj.half_step_time
+                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi));
+            elseif t > obj.duration - obj.half_step_time
+                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi + pi));
+            else
+                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * 2 * pi + pi));
+            end
             
-            zdelta = cos(atan2(sidediff, obj.crotch_zdiff_per_step)) * y;
-            ydelta = sin(atan2(sidediff, obj.crotch_zdiff_per_step)) * y;
-            thetadelta = y / height_per_step * rotdiff;
-            
-            t2 = Geometry.transform([0 ydelta zdelta], axang2quat([1 0 0 thetadelta]));
-            
-            position = t1 * t2.H;
+            H = Geometry.transform([0 ydiff zdiff]);
+            position = position * H.H;
         end
-        
+                
         function show(obj)            
             % Draw the crotch position
             i = 1;

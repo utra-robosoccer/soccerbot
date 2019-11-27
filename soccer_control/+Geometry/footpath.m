@@ -1,4 +1,4 @@
-classdef footpath < Geometry.crotchpath
+classdef footpath < Geometry.path
     properties
         half_to_full_step_time_ratio = 0.7; % Duration difference between half and full step
         
@@ -12,7 +12,7 @@ classdef footpath < Geometry.crotchpath
     
     methods
         function obj = footpath(start_transform, end_transform, foot_center_to_floor)
-            obj@Geometry.crotchpath(start_transform, end_transform);
+            obj@Geometry.path(start_transform, end_transform);
             obj.foot_center_to_floor = foot_center_to_floor;
         end
         
@@ -29,12 +29,34 @@ classdef footpath < Geometry.crotchpath
             full_step_time = total_step_time / (2 * obj.half_to_full_step_time_ratio + (obj.num_steps - 2));
         end
         
-        function [step_num, left_foot_step_ratio, right_foot_step_ratio] = footHeightRatio(obj, t)
+        function [step_num, left_foot_step_ratio, right_foot_step_ratio] = footHeightRatio(obj, t, post_pre_settings)
             full_step_time = obj.full_step_time;
             half_step_time = obj.half_step_time;
             
             post_step_time = obj.post_footstep_ratio * full_step_time;
             pre_step_time = obj.pre_footstep_ratio * full_step_time;
+            
+            % post_pre_settings: 0 = with post and pre
+            % post_pre_settings: 1 = only post and pre on last ones
+            % post_pre_settings: 2 = only post
+            % post_pre_settings: 3 = no post nor pre
+            if (nargin == 3)
+                if (post_pre_settings == 1)
+                    if t < half_step_time
+                        pre_step_time = 0;
+                    elseif t > obj.duration - half_step_time
+                        post_step_time = 0;
+                    else
+                        post_step_time = 0;
+                        pre_step_time = 0;
+                    end
+                elseif (post_pre_settings == 2)
+                    post_step_time = 0;
+                elseif (post_pre_settings == 3)
+                    post_step_time = 0;
+                    pre_step_time = 0;
+                end
+            end
             
             last_foot_same = mod(obj.num_steps, 2);
             
@@ -163,14 +185,8 @@ classdef footpath < Geometry.crotchpath
         end
         
         function [left_foot_position, right_foot_position] = footPosition(obj, t)
-            if (abs(t - obj.duration) < 1e-5)
-                left_foot_position = obj.end_transform.H;
-                right_foot_position = obj.end_transform.H;
-                return;
-            end
             
             [step_num, left_foot_step_ratio, right_foot_step_ratio] = footHeightRatio(obj, t);
-            
             [left_foot_action, right_foot_action] = whatIsTheFootDoing(obj, step_num);
             
             % Left foot
@@ -196,6 +212,75 @@ classdef footpath < Geometry.crotchpath
                 right_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
                     obj.step_outwardness, obj.step_rotation, right_foot_step_ratio);
             end
+        end
+        
+        function position = parabolicPath(obj, startTransform, endTransform, zdiff, sidediff, rotdiff, ratio)
+            % Simple Parabolic trajectory
+            % (http://mathworld.wolfram.com/ParabolicSegment.html)
+            step_time = obj.bodyStepTime;
+            distance_between_step = Geometry.transform.distance(startTransform, endTransform);
+            height_per_step = norm([zdiff, sidediff]);
+            
+            h = height_per_step;
+            a = distance_between_step / 2;
+            
+            % Evenly spaced points on parabola Method 1 - Numerical Solve
+%             length_arc = sqrt(a^2 + 4*h^2) + a^2/2/h * asinh(2*h/a);
+%             half_length = length_arc / 2;
+%             diff_length = abs(length_so_far - half_length);
+%             syms x;
+%             lindist = sqrt(a^2 + h^2);
+%             guess = acosh(sqrt(((abs(step_time*lindist - lindist/2))*2*h/a^2)^2 + 1));
+%             lhs = diff_length*4*h/a^2;
+%             tmp = double(vpasolve(lhs == x + 0.5*sinh(2*x), x, guess));
+%             tmp = sqrt(cosh(tmp)^2 - 1)*a^2/2/h;
+%             if (length_so_far < half_length)
+%                 dist = distance_between_step/2 - tmp;
+%             else
+%                 dist = distance_between_step/2 + tmp;
+%             end
+            
+            % Using Newton Approximation Method
+            % https://math.stackexchange.com/questions/3129154/divide-a-parabola-in-segments-of-equal-length
+            L = distance_between_step;
+            aa = 4*h/L;
+            
+            f = @(x) x * sqrt(1+x^2) + asinh(x);
+            s = ratio;
+            J = @(X) 2 * sqrt(1+X^2);
+            r = @(X) f(X) - (1-2*s)*f(aa);
+            
+            X = 0;
+            while(abs(r(X)) > 0.0001)
+                X = X - r(X)/J(X);
+            end
+            if aa == 0
+                dist = ratio * L;
+            else
+                dist = 0.5*(1-X/aa) * L;
+            end
+            
+            % Calculate intermediate transform
+            position_time = dist / distance_between_step * step_time;
+            if position_time < 0
+                position_time = 0;
+            end
+            [t1, ~, ~] = transformtraj(startTransform.H,endTransform.H,[0 step_time],position_time);
+            
+            x = -a + dist;
+            y = h * (1 - x^2/a^2);
+            
+            zdelta = cos(atan2(sidediff, zdiff)) * y;
+            ydelta = sin(atan2(sidediff, zdiff)) * y;
+            if rotdiff ~= 0
+                thetadelta = y / height_per_step * rotdiff;
+            else
+                thetadelta = 0;
+            end
+            
+            t2 = Geometry.transform([0 ydelta zdelta], axang2quat([1 0 0 thetadelta]));
+            
+            position = t1 * t2.H;
         end
         
         function show(obj)            
