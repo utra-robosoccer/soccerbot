@@ -11,6 +11,7 @@ Camera::Camera(const Pose3 &pose,int resx, int resy){
     resolution_x = resx;
     resolution_y = resy;
 
+
 }
 
 void Camera::cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr &camera_info) {
@@ -77,10 +78,19 @@ Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
 }
 
 void Camera::setPose(const Pose3 &pose) {
-    Camera::pose = pose;
+    this->pose = pose;
 }
 
 Pose3 Camera::getPose() {
-    return Camera::pose;
+    return this->pose;
 }
+
+float Camera::getResolutionX()  {
+    return resolution_x;
+}
+
+float Camera::getResolutionY()  {
+    return resolution_y;
+}
+
 

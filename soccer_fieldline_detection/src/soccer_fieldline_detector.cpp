@@ -87,22 +87,13 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         cv::Canny(image, dst,cannythreshold1,cannythreshold2);
         cvtColor(dst, cdst, CV_GRAY2BGR);
 
-        // Cover Horizon (Ignore for now)
-        //cv::rectangle(image, cv::Point(0,240), cv::Point(640,0), cv::Scalar(0, 0, 0), -1, 8);
-        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
+        // Cover Horizon
         double roll, pitch, yaw;
+        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
         tf2::Matrix3x3 m(q);
-
         m.getRPY(roll, pitch, yaw);
-
-        ROS_INFO("R,P,Y: %f/%f/%f",roll, pitch, yaw);
-
-        cv::rectangle(dst, cv::Point(0,240), cv::Point(640,0), cv::Scalar(0, 0, 0), -1, 8);
-
-        //cv::namedWindow("Hi",cv::WINDOW_AUTOSIZE);
-        //cv::imshow("Hi", cdst);
-
-        //cv::waitKey(0);
+        //Draw black box on screen based on the pitch of the camera
+        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) -400*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
 
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
