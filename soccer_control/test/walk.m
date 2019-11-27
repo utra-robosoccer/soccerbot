@@ -8,7 +8,7 @@ robot.show();
 %% Create Robot Path
 hold on;
 
-end_position = Geometry.transform([0.0 0 0]);
+end_position = Geometry.transform([0.5 0.5 0]);
 robot_path = robot.getPath(end_position);
 robot_path.show();
 figure;

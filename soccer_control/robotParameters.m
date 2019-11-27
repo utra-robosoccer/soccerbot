@@ -8,8 +8,8 @@ density = 1000;
 plane_dim = [9 6 0.09];
 
 % Contact/friction parameters
-contact_stiffness = 2500;
-contact_damping = 100;
+contact_stiffness = 10000;
+contact_damping = 2000;
 mu_k = 0.6;
 mu_s = 0.8;
 mu_vth = 0.1;
