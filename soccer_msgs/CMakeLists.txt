@@ -12,17 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
     FILES
-    ActionLabel.msg
-    MapOverview.msg
-    MapOverviewIndividual.msg
-    PoseAction.msg
-    RobotCommand.msg
-    RobotGoal.msg
-    RobotState.msg
-    Pose.msg
-    PoseAction.msg
-    RobotEstimate.msg
-    Waypoints.msg
 )
 
 generate_messages(
