@@ -5,7 +5,6 @@ classdef crotchpath < Geometry.footpath
         crotch_rotation_per_step = 0.0;
         
         sideways_exponential_decay_rate = 5;
-        sideways
         
         first_step_left = 0;
     end
