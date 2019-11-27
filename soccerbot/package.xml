@@ -14,6 +14,7 @@
 
   <!-- Sensors -->
   <depend>soccer_hardware</depend>
+<!--  <depend>soccer_embedded</depend>-->
   <depend>usb_cam</depend>
 
   <!-- Localization -->
@@ -23,7 +24,9 @@
   <depend>soccer_common</depend>
   <depend>soccer_fieldline_detection</depend>
 
-    <!-- Navigation-->
+  <!-- Navigation-->
+  <depend>soccer_trajectories</depend>
+
   <!-- Communication-->
 
 </package>

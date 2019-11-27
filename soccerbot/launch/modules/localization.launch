@@ -7,7 +7,7 @@
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
           args="$(find soccer_common)/maps/robocup.yaml">
-        <param name="frame_id" value="map"/>
+        <param name="frame_id" value="world"/>
     </node>
 
     <!-- Line and goal detection -->
@@ -36,15 +36,17 @@
     </node>
 
     <!-- AMCL Localization -->
-<!--    <include file="$(find soccerbot)/launch/modules/amcl.launch">-->
-<!--        <arg name="use_map_topic"   value="true"/>-->
-<!--        <arg name="scan_topic"      value="vision_poses"/>-->
-<!--        <arg name="initial_pose_x"  value="0.0"/>-->
-<!--        <arg name="initial_pose_y"  value="0.0"/>-->
-<!--        <arg name="initial_pose_a"  value="0.0"/>-->
-<!--        <arg name="odom_frame_id"   value="odom"/>-->
-<!--        <arg name="base_frame_id"   value="base_link"/>-->
-<!--        <arg name="global_frame_id" value="map"/>-->
-<!--    </include>-->
+    <node pkg="amcl" type="amcl" name="amcl">
+        <param name="update_min_d"      value="0.0" />
+        <param name="use_sim_time"      value="true" />
+        <param name="use_map_topic"     value="true"/>
+        <param name="scan_topic"        value="scan"/>
+        <param name="initial_pose_x"    value="0.0"/>
+        <param name="initial_pose_y"    value="0.0"/>
+        <param name="initial_pose_a"    value="0.0"/>
+        <param name="odom_frame_id"     value="/base_link"/>
+        <param name="base_frame_id"     value="/base_link"/>
+        <param name="global_frame_id"   value="/world"/>
+    </node>
 
 </launch>
