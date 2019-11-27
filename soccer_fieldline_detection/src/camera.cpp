@@ -80,4 +80,7 @@ void Camera::setPose(const Pose3 &pose) {
     Camera::pose = pose;
 }
 
+Pose3 Camera::getPose() {
+    return Camera::pose;
+}
 

@@ -39,6 +39,8 @@ public:
 
     void setPose(const Pose3 &pose);
 
+    Pose3 getPose() ;
+
     Point3 FindFloorCoordinate(int pos_x, int pos_y);
 
     float VerticalFOV();
@@ -56,4 +58,6 @@ public:
     float ImageSensorLocation_X(int pos_x, int pos_y);
 
     float ImageSensorLocation_Y(int pos_x, int pos_y);
+
+
 };

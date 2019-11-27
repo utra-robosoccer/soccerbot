@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
@@ -86,6 +88,22 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         cvtColor(dst, cdst, CV_GRAY2BGR);
 
         // Cover Horizon (Ignore for now)
+        //cv::rectangle(image, cv::Point(0,240), cv::Point(640,0), cv::Scalar(0, 0, 0), -1, 8);
+        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
+        double roll, pitch, yaw;
+        tf2::Matrix3x3 m(q);
+
+        m.getRPY(roll, pitch, yaw);
+
+        ROS_INFO("R,P,Y: %f/%f/%f",roll, pitch, yaw);
+
+        cv::rectangle(dst, cv::Point(0,240), cv::Point(640,0), cv::Scalar(0, 0, 0), -1, 8);
+
+        //cv::namedWindow("Hi",cv::WINDOW_AUTOSIZE);
+        //cv::imshow("Hi", cdst);
+
+        //cv::waitKey(0);
+
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
