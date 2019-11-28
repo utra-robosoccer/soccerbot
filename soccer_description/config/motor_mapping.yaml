@@ -2,90 +2,72 @@ motor_mapping:
   torso_right_hip_side:
     id: 5
     direction: -1
-    offset: 150
-    initial_angle: 0.0
+    offset: 153
   right_hip_side_hip_front:
     id: 4
-    direction: 1
-    offset: 152
-    initial_angle: -0.05
+    direction: -1
+    offset: 150
   right_hip_front_thigh:
     id: 3
-    direction: 1
+    direction: -1
     offset: 153
-    initial_angle: 0.25
   right_thigh_calve:
     id: 2
     direction: 1
     offset: 150
-    initial_angle: -0.4
   right_calve_ankle:
     id: 1
-    direction: -1
+    direction: 1
     offset: 150
-    initial_angle: 0.2
   right_ankle_foot:
     id: 0
     direction: 1
     offset: 150
-    initial_angle: 0.05
   torso_left_hip_side:
     id: 6
-    direction: -1
-    offset: 150
-    initial_angle: 0.0
-  left_hip_side_hip_front:
-    id: 7
     direction: 1
     offset: 150
-    initial_angle: 0.05
+  left_hip_side_hip_front:
+    id: 7
+    direction: -1
+    offset: 150
   left_hip_front_thigh:
     id: 8
     direction: 1
-    offset: 152
-    initial_angle: 0.25
+    offset: 150
   left_thigh_calve:
     id: 9
-    direction: 1
-    offset: 150
-    initial_angle: -0.4
+    direction: -1
+    offset: 145
   left_calve_ankle:
     id: 10
     direction: -1
-    offset: 150
-    initial_angle: 0.2
+    offset: 151
   left_ankle_foot:
     id: 11
-    direction: 1
+    direction: -1
     offset: 150
-    initial_angle: -0.05
   torso_right_bicep:
     id: 12
     direction: 1
     offset: 150
-    initial_angle: 0.2
   right_bicep_forearm:
-    id: 13
-    direction: 1
-    offset: 60
-    initial_angle: 0.0
-  torso_left_bicep:
-    id: 14
-    direction: 1
-    offset: 150
-    initial_angle: 0.2
-  left_bicep_forearm:
     id: 15
     direction: 1
-    offset: 240
-    initial_angle: 0.0
+    offset: 150
+  torso_left_bicep:
+    id: 14
+    direction: -1
+    offset: 150
+  left_bicep_forearm:
+    id: 13
+    direction: -1
+    offset: 150
   torso_neck:
     id: 16
-    direction: 1
+    direction: -1
     offset: 150
-    initial_angle: 0.0
   neck_head:
     id: 17
-    direction: 1
+    direction: -1
     offset: 150
-    initial_angle: 0.0

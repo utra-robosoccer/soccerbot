@@ -17,5 +17,6 @@
   <depend>rospy</depend>
   <depend>python-numpy</depend>
   <depend>python-prettytable</depend>
+  <depend>python-serial</depend>
 
 </package>

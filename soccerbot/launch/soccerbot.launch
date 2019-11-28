@@ -1,8 +1,11 @@
 <launch>
     <arg name="simulation" default="false" />
     <arg name="robot_name" default="robot1" />
+    <arg name="ip_address" default="localhost" />
     <arg name="x_pos" default="0.00" />
     <arg name="y_pos" default="0.00" />
+
+    <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)"/>
     <include file="$(find soccerbot)/launch/modules/simulation.launch" if="$(arg simulation)">
