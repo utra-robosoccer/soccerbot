@@ -5,7 +5,7 @@ from prettytable import PrettyTable
 from transmitter import Transmitter
 from receiver import Receiver
 from utility import *
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
@@ -35,7 +35,7 @@ class Communication:
         self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
         for motor in self._motor_map:
-            self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float32, self.trajectory_callback, motor)
+            self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
             self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
             self._motor_map[motor]["value"] = 0.0
 

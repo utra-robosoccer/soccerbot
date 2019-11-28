@@ -25,6 +25,8 @@
   <depend>soccer_fieldline_detection</depend>
 
   <!-- Navigation-->
+  <depend>soccer_trajectories</depend>
+
   <!-- Communication-->
 
 </package>
