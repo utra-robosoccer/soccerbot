@@ -25,8 +25,9 @@ if __name__ == "__main__":
         except serial.serialutil.SerialException as e:
             pass
 
-    if i == 10:
-        print("No serial port found: " + port)
+    if i == 9:
+        rospy.logerr("No serial port found: " + port)
+        exit(0)
 
 
     attempt = 0
