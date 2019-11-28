@@ -1,10 +1,10 @@
 classdef crotchpath < Geometry.footpath
     properties
         crotch_zdiff_per_step = -0.01;
-        crotch_sidediff_step = 0.01;
+        crotch_sidediff_step = 0.04;
         crotch_rotation_per_step = 0.0;
         
-        sideways_exponential_decay_rate = 3;
+        sideways_exponential_decay_rate = 4;
         
         first_step_left = 0;
     end
@@ -55,15 +55,32 @@ classdef crotchpath < Geometry.footpath
                 end
             end
             
-            position = obj.parabolicPath(from, to, 0, 0, 0, body_movement_ratio);
+            position = obj.parabolicPath(from, to, 0.001, 0.001, obj.crotch_rotation_per_step, body_movement_ratio);
             
             % Add horizontal delta (exponential decay)
-            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 2);
-            if (length(right_foot_action) == 2) % Left foot moving, lean right
-                ydiff = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio));
-            else
-                ydiff = -obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio));
-            end
+           [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 2);
+           if t < obj.half_step_time
+               ydiff_offset = 0;
+               decay_offset = 0;
+           elseif t > obj.duration - obj.half_step_time
+               ydiff_offset_prev = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
+               ydiff_offset = (obj.crotch_sidediff_step + ydiff_offset_prev) * (1 - exp(-obj.sideways_exponential_decay_rate)) - ydiff_offset_prev;
+               decay_offset = ydiff_offset_prev - ydiff_offset;
+           elseif t < obj.half_step_time + obj.full_step_time
+               ydiff_offset = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
+               decay_offset = ydiff_offset;
+           else
+               ydiff_offset_prev = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
+               ydiff_offset = (obj.crotch_sidediff_step + ydiff_offset_prev) * (1 - exp(-obj.sideways_exponential_decay_rate)) - ydiff_offset_prev;
+               decay_offset = ydiff_offset;
+           end
+
+           if (length(right_foot_action) == 2) % Left foot moving, lean right
+               ydiff = (obj.crotch_sidediff_step + decay_offset) * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio)) - ydiff_offset;
+           else
+               ydiff = (-obj.crotch_sidediff_step - decay_offset) * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio)) + ydiff_offset;
+           end
+           ydiff = -ydiff;
             
             % Add vertical delta (sinusoidal wave)
             [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);

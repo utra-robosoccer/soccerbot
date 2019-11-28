@@ -45,7 +45,7 @@ motor_mapping:
     offset: 151
   left_leg_motor_5:
     id: 11
-    direction: -1
+    direction: 1
     offset: 150
   left_arm_motor_0:
     id: 12

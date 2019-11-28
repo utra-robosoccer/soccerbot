@@ -21,8 +21,8 @@ end_position = Geometry.transform([0 0 0]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
-robot_path.show();
-robot_path.showTimingDiagram();
+% robot_path.show();
+% robot_path.showTimingDiagram();
 
 % Create the path of the robot into a timeseries
 rate = rateControl(1/robot_path.step_size);
@@ -35,4 +35,5 @@ for t = 0:robot_path.step_size:robot_path.duration
         p.send(msg);
     end
     waitfor(rate);
+%    waitforbuttonpress;
 end
