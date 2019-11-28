@@ -11,7 +11,6 @@
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Transform.h>
 class Camera {
-
     Pose3 pose;
 
     // Values for the C920 camera
@@ -19,6 +18,8 @@ class Camera {
     float resolution_y = 0;
 
 private:
+
+
     float diagonal_fov = 1.57; // radians (field of view)
     float focal_length = 3.67; // mm
 
@@ -33,11 +34,17 @@ public:
         return resolution_x != 0 && resolution_y != 0;
     }
 
+    float getResolutionX();
+
+    float getResolutionY();
+
     explicit Camera(const Pose3 &pose);
     explicit Camera(const Pose3 &pose,int resx, int resy);
     void cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr& camera_info);
 
     void setPose(const Pose3 &pose);
+
+    Pose3 getPose();
 
     Point3 FindFloorCoordinate(int pos_x, int pos_y);
 
@@ -56,4 +63,7 @@ public:
     float ImageSensorLocation_X(int pos_x, int pos_y);
 
     float ImageSensorLocation_Y(int pos_x, int pos_y);
+
+
+
 };
