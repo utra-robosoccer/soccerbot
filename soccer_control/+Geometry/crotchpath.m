@@ -4,7 +4,7 @@ classdef crotchpath < Geometry.footpath
         crotch_sidediff_step = 0.01;
         crotch_rotation_per_step = 0.0;
         
-        sideways_exponential_decay_rate = 5;
+        sideways_exponential_decay_rate = 3;
         
         first_step_left = 0;
     end
@@ -26,12 +26,12 @@ classdef crotchpath < Geometry.footpath
         end
         
         function position = crotchPosition(obj, t)
-            [step_num, left_foot_ratio, right_foot_ratio] = footHeightRatio(obj, t, 1);
-            [left_foot_action, ~] = whatIsTheFootDoing(obj, step_num);
-            if (length(left_foot_action) == 2)
-                ratio = left_foot_ratio;
-            else
+            [step_num, right_foot_ratio, left_foot_ratio] = footHeightRatio(obj, t, 1);
+            [right_foot_action, ~] = whatIsTheFootDoing(obj, step_num);
+            if (length(right_foot_action) == 2)
                 ratio = right_foot_ratio;
+            else
+                ratio = left_foot_ratio;
             end
 
             % Base position for the torso
@@ -58,19 +58,19 @@ classdef crotchpath < Geometry.footpath
             position = obj.parabolicPath(from, to, 0, 0, 0, body_movement_ratio);
             
             % Add horizontal delta (exponential decay)
-            [~, left_foot_ratio, ~] = footHeightRatio(obj, t, 2);
-            if (length(left_foot_action) == 2) % Left foot moving, lean right
-                ydiff = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio));
+            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 2);
+            if (length(right_foot_action) == 2) % Left foot moving, lean right
+                ydiff = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio));
             else
-                ydiff = -obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio));
+                ydiff = -obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio));
             end
             
             % Add vertical delta (sinusoidal wave)
-            [~, left_foot_ratio, ~] = footHeightRatio(obj, t, 3);
-            if (length(left_foot_action) == 2) % Left foot moving, lean right
-                ratio = left_foot_ratio;
-            else
+            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);
+            if (length(right_foot_action) == 2) % Left foot moving, lean right
                 ratio = right_foot_ratio;
+            else
+                ratio = left_foot_ratio;
             end
             if t < obj.half_step_time
                 zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi));

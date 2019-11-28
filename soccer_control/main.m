@@ -1,7 +1,7 @@
 % Setup the publishers and subscribers
 rosshutdown;
-rosinit('NodeName', '/soccer_control');
-motor_list = rosparam("get", "motor_mapping");
+rosinit('192.168.0.100', 'NodeName', '/soccer_control');
+motor_list = rosparam("get", "soccer_hardware/motor_mapping");
 
 motors = fieldnames(motor_list);
 pubs = containers.Map;
@@ -13,7 +13,7 @@ end
 imu_sub = rossubscriber("imu", "sensor_msgs/Imu");
 
 robotParameters;
-foot_center_to_floor = -left_collision_center(3) + foot_box(3);
+foot_center_to_floor = -right_collision_center(3) + foot_box(3);
 robot = Robot.soccerbot([-0.5, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();

@@ -29,7 +29,7 @@ classdef footpath < Geometry.path
             full_step_time = total_step_time / (2 * obj.half_to_full_step_time_ratio + (obj.num_steps - 2));
         end
         
-        function [step_num, left_foot_step_ratio, right_foot_step_ratio] = footHeightRatio(obj, t, post_pre_settings)
+        function [step_num, right_foot_step_ratio, left_foot_step_ratio] = footHeightRatio(obj, t, post_pre_settings)
             full_step_time = obj.full_step_time;
             half_step_time = obj.half_step_time;
             
@@ -131,77 +131,65 @@ classdef footpath < Geometry.path
             assert (second_foot_step_ratio <= 1);
             
             if obj.first_step_left
-                left_foot_step_ratio = first_foot_step_ratio;
-                right_foot_step_ratio = second_foot_step_ratio;
-            else
-                left_foot_step_ratio = second_foot_step_ratio;
                 right_foot_step_ratio = first_foot_step_ratio;
+                left_foot_step_ratio = second_foot_step_ratio;
+            else
+                right_foot_step_ratio = second_foot_step_ratio;
+                left_foot_step_ratio = first_foot_step_ratio;
             end
             step_num = step_num + 1;
-        end
-        
-        function position = left_foot_position_at_step(obj, n)
-            bodystep = getBodyStep(obj, n);
-            
-            bodypos = bodystep.position;
-            transformToLeftFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
-            position = bodystep * transformToLeftFoot;
         end
         
         function position = right_foot_position_at_step(obj, n)
             bodystep = getBodyStep(obj, n);
             
             bodypos = bodystep.position;
-            transformToRightFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            transformToLeftFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            position = bodystep * transformToLeftFoot;
+        end
+        
+        function position = left_foot_position_at_step(obj, n)
+            bodystep = getBodyStep(obj, n);
+            
+            bodypos = bodystep.position;
+            transformToRightFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
             position = bodystep * transformToRightFoot;
         end
         
-        function [left_foot_action, right_foot_action] = whatIsTheFootDoing(obj, step_num)
+        function [right_foot_action, left_foot_action] = whatIsTheFootDoing(obj, step_num)
             if step_num == 0
                 if obj.first_step_left
-                    left_foot_action = [0 1];   % Go from body position 0 to 1
-                    right_foot_action = 0;      % Stay put at position 0
+                    right_foot_action = [0 1];   % Go from body position 0 to 1
+                    left_foot_action = 0;      % Stay put at position 0
                 else
-                    left_foot_action = 0;
-                    right_foot_action = [0 1];
+                    right_foot_action = 0;
+                    left_foot_action = [0 1];
                 end
             elseif step_num == obj.num_steps - 1
                 if xor(obj.first_step_left, mod(obj.num_steps, 2) == 0)
-                    left_foot_action = [obj.num_steps-2 obj.num_steps-1];
-                    right_foot_action = obj.num_steps-1;
-                else
                     right_foot_action = [obj.num_steps-2 obj.num_steps-1];
                     left_foot_action = obj.num_steps-1;
+                else
+                    left_foot_action = [obj.num_steps-2 obj.num_steps-1];
+                    right_foot_action = obj.num_steps-1;
                 end
             else
                 if (mod(step_num, 2) == 0) % Left foot moving
-                    right_foot_action = step_num;
-                    left_foot_action = [step_num-1 step_num+1];
-                else
-                    right_foot_action = [step_num-1 step_num+1];
                     left_foot_action = step_num;
+                    right_foot_action = [step_num-1 step_num+1];
+                else
+                    left_foot_action = [step_num-1 step_num+1];
+                    right_foot_action = step_num;
                 end
             end
         end
         
-        function [left_foot_position, right_foot_position] = footPosition(obj, t)
+        function [right_foot_position, left_foot_position] = footPosition(obj, t)
             
-            [step_num, left_foot_step_ratio, right_foot_step_ratio] = footHeightRatio(obj, t);
-            [left_foot_action, right_foot_action] = whatIsTheFootDoing(obj, step_num);
+            [step_num, right_foot_step_ratio, left_foot_step_ratio] = footHeightRatio(obj, t);
+            [right_foot_action, left_foot_action] = whatIsTheFootDoing(obj, step_num);
             
             % Left foot
-            if (length(left_foot_action) == 1)
-                tmp = obj.left_foot_position_at_step(left_foot_action);
-                left_foot_position = tmp.H;
-            else
-                from = obj.left_foot_position_at_step(left_foot_action(1));
-                to = obj.left_foot_position_at_step(left_foot_action(2));
-                
-                left_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    -obj.step_outwardness, -obj.step_rotation, left_foot_step_ratio);
-            end
-            
-            % Right foot
             if (length(right_foot_action) == 1)
                 tmp = obj.right_foot_position_at_step(right_foot_action);
                 right_foot_position = tmp.H;
@@ -210,7 +198,19 @@ classdef footpath < Geometry.path
                 to = obj.right_foot_position_at_step(right_foot_action(2));
                 
                 right_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    obj.step_outwardness, obj.step_rotation, right_foot_step_ratio);
+                    -obj.step_outwardness, -obj.step_rotation, right_foot_step_ratio);
+            end
+            
+            % Right foot
+            if (length(left_foot_action) == 1)
+                tmp = obj.left_foot_position_at_step(left_foot_action);
+                left_foot_position = tmp.H;
+            else
+                from = obj.left_foot_position_at_step(left_foot_action(1));
+                to = obj.left_foot_position_at_step(left_foot_action(2));
+                
+                left_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
+                    obj.step_outwardness, obj.step_rotation, left_foot_step_ratio);
             end
         end
         
