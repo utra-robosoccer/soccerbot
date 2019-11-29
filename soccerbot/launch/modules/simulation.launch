@@ -6,53 +6,55 @@
     <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
+    <!-- TODO load this automatically from the motor_mapping.yaml (https://answers.ros.org/question/213145/use-rosparam-get-in-launch-file/) -->
     <node name="spawn_soccerbot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
           args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z 0.022
-            -J torso_right_hip_side     0.0
-            -J right_hip_side_hip_front -0.05
-            -J right_hip_front_thigh    0.25
-            -J right_thigh_calve        -0.4
-            -J right_calve_ankle        0.2
-            -J right_ankle_foot         0.05
+            -J right_leg_motor_0  0.0
+            -J right_leg_motor_1  -0.05
+            -J right_leg_motor_2  0.25
+            -J right_leg_motor_3  -0.4
+            -J right_leg_motor_4  0.2
+            -J right_leg_motor_5  0.05
 
-            -J torso_left_hip_side      0.0
-            -J left_hip_side_hip_front  0.05
-            -J left_hip_front_thigh     0.25
-            -J left_thigh_calve         -0.4
-            -J left_calve_ankle         0.2
-            -J left_ankle_foot          -0.05
+            -J left_leg_motor_0  0.0
+            -J left_leg_motor_1   0.05
+            -J left_leg_motor_2   0.25
+            -J left_leg_motor_3   -0.4
+            -J left_leg_motor_4   0.2
+            -J left_leg_motor_5   -0.05
 
-            -J torso_neck               0.0
-            -J neck_head                0.0
+            -J head_motor_0       0.0
+            -J head_motor_1       0.0
 
-            -J torso_right_bicep        0.2
-            -J right_bicep_forearm      0.0
-            -J torso_left_bicep         0.2
-            -J left_bicep_forearm       0.0"/>
+            -J left_arm_motor_0   0.2
+            -J left_arm_motor_1   0.0
+            -J right_arm_motor_0   0.2
+            -J right_arm_motor_1   0.0
+    "/>
 
     <!-- Controller -->
     <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--namespace=/$(arg robot_name)
             joint_state_controller
-            torso_right_hip_side
-            right_hip_side_hip_front
-            right_hip_front_thigh
-            right_thigh_calve
-            right_calve_ankle
-            right_ankle_foot
-            torso_left_hip_side
-            left_hip_side_hip_front
-            left_hip_front_thigh
-            left_thigh_calve
-            left_calve_ankle
-            left_ankle_foot
-            torso_neck
-            neck_head
-            torso_right_bicep
-            right_bicep_forearm
-            torso_left_bicep
-            left_bicep_forearm
+            right_leg_motor_0
+            right_leg_motor_1
+            right_leg_motor_2
+            right_leg_motor_3
+            right_leg_motor_4
+            right_leg_motor_5
+            left_leg_motor_0
+            left_leg_motor_1
+            left_leg_motor_2
+            left_leg_motor_3
+            left_leg_motor_4
+            left_leg_motor_5
+            head_motor_0
+            head_motor_1
+            left_arm_motor_0
+            left_arm_motor_1
+            right_arm_motor_0
+            right_arm_motor_1
             "/>
 
 </launch>

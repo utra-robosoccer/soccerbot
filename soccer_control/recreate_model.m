@@ -1,1 +1,0 @@
-smimport('../soccer_description/models/soccerbot_stl.urdf')

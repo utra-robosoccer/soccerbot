@@ -1,4 +1,6 @@
 <launch>
+    <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+
     <node pkg="soccer_trajectories" type="soccer_trajectories" name="soccer_trajectories" output="screen">
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
     </node>

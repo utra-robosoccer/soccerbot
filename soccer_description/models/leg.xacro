@@ -134,7 +134,7 @@
             </visual>
         </link>
 
-        <joint name="torso_${name}_hip_side" type="revolute">
+        <joint name="${name}_leg_motor_0" type="revolute">
             <parent link="torso"/>
             <child link="${name}_hip_side"/>
             <origin rpy="0 0 0" xyz="0.0135 ${direction * 0.035} -0.156"/>
@@ -142,7 +142,7 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-1.309" upper="0.524" velocity="${MX28_VELOCITY}"/>
         </joint>
-        <joint name="${name}_hip_side_hip_front" type="revolute">
+        <joint name="${name}_leg_motor_1" type="revolute">
             <parent link="${name}_hip_side"/>
             <child link="${name}_hip_front"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -155,7 +155,7 @@
             <limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
             </xacro:if>
         </joint>
-        <joint name="${name}_hip_front_thigh" type="revolute">
+        <joint name="${name}_leg_motor_2" type="revolute">
             <parent link="${name}_hip_front"/>
             <child link="${name}_thigh"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -163,7 +163,7 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${MX28_VELOCITY}"/>
         </joint>
-        <joint name="${name}_thigh_calve" type="revolute">
+        <joint name="${name}_leg_motor_3" type="revolute">
             <parent link="${name}_thigh"/>
             <child link="${name}_calve"/>
             <origin rpy="0 0 0" xyz="0 0 -0.09290"/>
@@ -171,7 +171,7 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-2.793" upper="0" velocity="${MX28_VELOCITY}"/>
         </joint>
-        <joint name="${name}_calve_ankle" type="revolute">
+        <joint name="${name}_leg_motor_4" type="revolute">
             <parent link="${name}_calve"/>
             <child link="${name}_ankle"/>
             <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
@@ -179,7 +179,7 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
         </joint>
-        <joint name="${name}_ankle_foot" type="revolute">
+        <joint name="${name}_leg_motor_5" type="revolute">
             <parent link="${name}_ankle"/>
             <child link="${name}_foot"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -188,62 +188,62 @@
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
         </joint>
 
-        <transmission name="torso_${name}_hip_side">
+        <transmission name="${name}_leg_motor_0">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="torso_${name}_hip_side">
+            <joint name="${name}_leg_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="torso_${name}_hip_side_motor">
+            <actuator name="${name}_leg_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="${name}_hip_side_hip_front">
+        <transmission name="${name}_leg_motor_1">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${name}_hip_side_hip_front">
+            <joint name="${name}_leg_motor_1">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${name}_hip_side_hip_front_motor">
+            <actuator name="${name}_leg_motor_1">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="${name}_hip_front_thigh">
+        <transmission name="${name}_leg_motor_2">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${name}_hip_front_thigh">
+            <joint name="${name}_leg_motor_2">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${name}_hip_front_thigh_motor">
+            <actuator name="${name}_leg_motor_2">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="${name}_thigh_calve">
+        <transmission name="${name}_leg_motor_3">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${name}_thigh_calve">
+            <joint name="${name}_leg_motor_3">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${name}_thigh_calve_motor">
+            <actuator name="${name}_leg_motor_3">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="${name}_calve_ankle">
+        <transmission name="${name}_leg_motor_4">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${name}_calve_ankle">
+            <joint name="${name}_leg_motor_4">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${name}_calve_ankle_motor">
+            <actuator name="${name}_leg_motor_4">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="${name}_ankle_foot">
+        <transmission name="${name}_leg_motor_5">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${name}_ankle_foot">
+            <joint name="${name}_leg_motor_5">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${name}_ankle_foot_motor">
+            <actuator name="${name}_leg_motor_5">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
