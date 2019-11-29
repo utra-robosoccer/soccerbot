@@ -1,7 +1,7 @@
 % Setup the publishers and subscribers
 close all; clear; clc;
 rosshutdown;
-rosinit('192.168.0.100', 'NodeName', '/soccer_control');
+rosinit('192.168.0.100', 'NodeName', '/soccefr_control');
 motor_list = rosparam("get", "soccer_hardware/motor_mapping");
 
 motors = fieldnames(motor_list);
@@ -15,7 +15,7 @@ imu_sub = rossubscriber("imu", "sensor_msgs/Imu");
 
 robotParameters;
 foot_center_to_floor = -right_collision_center(3) + foot_box(3);
-robot = Robot.soccerbot([-0.1, 0, hip_height], foot_center_to_floor);
+robot = Robot.soccerbot([-0.5, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
 end_position = Geometry.transform([0 0 0]);
@@ -27,8 +27,8 @@ robot_path = robot.getPath(end_position);
 % robot_path.show();
 % figure;
 % robot_path.showTimingDiagram();
-
-figure;
+% 
+% figure;
 % Create the path of the robot into a timeseries
 rate = rateControl(1/robot_path.step_size);
 for t = 0:robot_path.step_size:robot_path.duration

@@ -1,7 +1,7 @@
 classdef crotchpath < Geometry.footpath
     properties
         crotch_zdiff_sway = 0.000;
-        crotch_sidediff_sway = 0.05;
+        crotch_sidediff_sway = 0.03;
         crotch_sidediff_sway_decay = 5;
         crotch_thetadiff_sway = [0 0 -0.1];
         
@@ -77,30 +77,16 @@ classdef crotchpath < Geometry.footpath
             end
             
             % Horizontal Sway (exponential decay)
-            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);
-            if t < obj.half_step_time
-               ydiff_offset = 0;
-               decay_offset = 0;
-            elseif t > obj.duration - obj.half_step_time
-               ydiff_offset_prev = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
-               ydiff_offset = (obj.crotch_sidediff_sway + ydiff_offset_prev) * (1 - exp(-obj.crotch_sidediff_sway_decay)) - ydiff_offset_prev;
-               decay_offset = ydiff_offset_prev - ydiff_offset;
-            elseif t < obj.half_step_time + obj.full_step_time
-               ydiff_offset = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
-               decay_offset = ydiff_offset;
+            [~, right_foot_ratio, left_foot_ratio] = footHeightRatio(obj, t, 3);
+            if (length(right_foot_action) == 2)
+                ratio = right_foot_ratio;
+                is_right_foot = -1;
             else
-               ydiff_offset_prev = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
-               ydiff_offset = (obj.crotch_sidediff_sway + ydiff_offset_prev) * (1 - exp(-obj.crotch_sidediff_sway_decay)) - ydiff_offset_prev;
-               decay_offset = ydiff_offset;
+                ratio = left_foot_ratio;
+                is_right_foot = 1;
             end
-
-            if (length(right_foot_action) == 2) % Left foot moving, lean right
-               ydiff = (obj.crotch_sidediff_sway + decay_offset) * (1 - exp(-obj.crotch_sidediff_sway_decay * right_foot_ratio)) - ydiff_offset;
-            else
-               ydiff = (-obj.crotch_sidediff_sway - decay_offset) * (1 - exp(-obj.crotch_sidediff_sway_decay * left_foot_ratio)) + ydiff_offset;
-            end
-            
-            ydiff = -ydiff;
+            r = -4 * ratio^2 + 4 * ratio;
+            ydiff = r * obj.crotch_sidediff_sway * is_right_foot;
             thetadiff = ydiff / obj.crotch_sidediff_sway * obj.crotch_thetadiff_sway;
 
             H = eul2tform(thetadiff);
