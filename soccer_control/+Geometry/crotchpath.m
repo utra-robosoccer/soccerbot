@@ -1,10 +1,14 @@
 classdef crotchpath < Geometry.footpath
     properties
-        crotch_zdiff_per_step = -0.01;
-        crotch_sidediff_step = 0.04;
-        crotch_rotation_per_step = 0.0;
+        crotch_zdiff_sway = 0.000;
+        crotch_sidediff_sway = 0.05;
+        crotch_sidediff_sway_decay = 5;
+        crotch_thetadiff_sway = [0 0 -0.1];
         
-        sideways_exponential_decay_rate = 4;
+        % Distort per step
+        crotch_zdiff_step = 0.000;
+        crotch_sidediff_step = 0.000;
+        crotch_rot_step = [0 0 0.0];
         
         first_step_left = 0;
     end
@@ -55,34 +59,9 @@ classdef crotchpath < Geometry.footpath
                 end
             end
             
-            position = obj.parabolicPath(from, to, 0.001, 0.001, obj.crotch_rotation_per_step, body_movement_ratio);
+            position = obj.parabolicPath(from, to, 0.0, 0.0, 0.0, body_movement_ratio);
             
-            % Add horizontal delta (exponential decay)
-           [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 2);
-           if t < obj.half_step_time
-               ydiff_offset = 0;
-               decay_offset = 0;
-           elseif t > obj.duration - obj.half_step_time
-               ydiff_offset_prev = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
-               ydiff_offset = (obj.crotch_sidediff_step + ydiff_offset_prev) * (1 - exp(-obj.sideways_exponential_decay_rate)) - ydiff_offset_prev;
-               decay_offset = ydiff_offset_prev - ydiff_offset;
-           elseif t < obj.half_step_time + obj.full_step_time
-               ydiff_offset = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
-               decay_offset = ydiff_offset;
-           else
-               ydiff_offset_prev = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate));
-               ydiff_offset = (obj.crotch_sidediff_step + ydiff_offset_prev) * (1 - exp(-obj.sideways_exponential_decay_rate)) - ydiff_offset_prev;
-               decay_offset = ydiff_offset;
-           end
-
-           if (length(right_foot_action) == 2) % Left foot moving, lean right
-               ydiff = (obj.crotch_sidediff_step + decay_offset) * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio)) - ydiff_offset;
-           else
-               ydiff = (-obj.crotch_sidediff_step - decay_offset) * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio)) + ydiff_offset;
-           end
-           ydiff = -ydiff;
-            
-            % Add vertical delta (sinusoidal wave)
+            % Vertical Sway (sinusoidal wave)
             [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);
             if (length(right_foot_action) == 2) % Left foot moving, lean right
                 ratio = right_foot_ratio;
@@ -90,15 +69,64 @@ classdef crotchpath < Geometry.footpath
                 ratio = left_foot_ratio;
             end
             if t < obj.half_step_time
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * pi));
             elseif t > obj.duration - obj.half_step_time
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi + pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * pi + pi));
             else
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * 2 * pi + pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * 2 * pi + pi));
             end
             
-            H = Geometry.transform([0 ydiff zdiff]);
-            position = position * H.H;
+            % Horizontal Sway (exponential decay)
+            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);
+            if t < obj.half_step_time
+               ydiff_offset = 0;
+               decay_offset = 0;
+            elseif t > obj.duration - obj.half_step_time
+               ydiff_offset_prev = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
+               ydiff_offset = (obj.crotch_sidediff_sway + ydiff_offset_prev) * (1 - exp(-obj.crotch_sidediff_sway_decay)) - ydiff_offset_prev;
+               decay_offset = ydiff_offset_prev - ydiff_offset;
+            elseif t < obj.half_step_time + obj.full_step_time
+               ydiff_offset = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
+               decay_offset = ydiff_offset;
+            else
+               ydiff_offset_prev = obj.crotch_sidediff_sway * (1 - exp(-obj.crotch_sidediff_sway_decay));
+               ydiff_offset = (obj.crotch_sidediff_sway + ydiff_offset_prev) * (1 - exp(-obj.crotch_sidediff_sway_decay)) - ydiff_offset_prev;
+               decay_offset = ydiff_offset;
+            end
+
+            if (length(right_foot_action) == 2) % Left foot moving, lean right
+               ydiff = (obj.crotch_sidediff_sway + decay_offset) * (1 - exp(-obj.crotch_sidediff_sway_decay * right_foot_ratio)) - ydiff_offset;
+            else
+               ydiff = (-obj.crotch_sidediff_sway - decay_offset) * (1 - exp(-obj.crotch_sidediff_sway_decay * left_foot_ratio)) + ydiff_offset;
+            end
+            
+            ydiff = -ydiff;
+            thetadiff = ydiff / obj.crotch_sidediff_sway * obj.crotch_thetadiff_sway;
+
+            H = eul2tform(thetadiff);
+            H(3,4) = zdiff;
+            H(2,4) = ydiff;
+            position = position * H;
+            
+%             % Step Transformations (parabola)
+%             [~, right_foot_ratio, left_foot_ratio] = footHeightRatio(obj, t);
+%             if (length(right_foot_action) == 2)
+%                 ratio = right_foot_ratio;
+%                 is_right_foot = 1;
+%             else
+%                 ratio = left_foot_ratio;
+%                 is_right_foot = -1;
+%             end
+%             if (ratio ~= 0 && ratio ~= 1)
+%                 r = -4 * ratio^2 + 4 * ratio;
+%                 
+%                 rot_step = obj.crotch_rot_step * is_right_foot * r;
+%                 step_diff = eul2tform(rot_step);
+%                 step_diff(3,4) = obj.crotch_zdiff_step * r;
+%                 step_diff(2,4) = obj.crotch_sidediff_step * is_right_foot * r;
+%                 position = position * step_diff;
+%             end
+            
         end
                 
         function show(obj)            
