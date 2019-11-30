@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
@@ -60,7 +62,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Get transformation
     geometry_msgs::TransformStamped camera_pose;
     try{
-        camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+        camera_pose = tfBuffer.lookupTransform("base_link", "camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
@@ -85,7 +87,14 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         cv::Canny(image, dst,cannythreshold1,cannythreshold2);
         cvtColor(dst, cdst, CV_GRAY2BGR);
 
-        // Cover Horizon (Ignore for now)
+        // Cover Horizon
+        double roll, pitch, yaw;
+        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
+        tf2::Matrix3x3 m(q);
+        m.getRPY(roll, pitch, yaw);
+        //Draw black box on screen based on the pitch of the camera
+        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) -400*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {

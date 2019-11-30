@@ -11,6 +11,7 @@ Camera::Camera(const Pose3 &pose,int resx, int resy){
     resolution_x = resx;
     resolution_y = resy;
 
+
 }
 
 void Camera::cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr &camera_info) {
@@ -47,12 +48,12 @@ float Camera::PixelWidth() {
 }
 
 float Camera::ImageSensorLocation_X(int pos_x, int pos_y) {
-    return (pos_x - Camera::resolution_x / 2.f) * PixelWidth();
+    return (Camera::resolution_x / 2.f - pos_x) * PixelWidth();
 
 }
 
 float Camera::ImageSensorLocation_Y(int pos_x, int pos_y) {
-    return (pos_y - Camera::resolution_y / 2.f) * PixelHeight();
+    return (Camera::resolution_y / 2.f - pos_y) * PixelHeight();
 
 }
 
@@ -61,46 +62,35 @@ Point3 Camera::FindFloorCoordinate(int pos_x, int pos_y) {
     float tx = ImageSensorLocation_X(pos_x, pos_y);
     float ty = ImageSensorLocation_Y(pos_x, pos_y);
 
-    //old Version of code
-    /*float tmp1[3] = {focal_length / 1000, tx / 1000, ty / 1000};
-    float tmp2[3] = {static_cast<float>(pose.position.x), static_cast<float>(pose.position.y),
-                     static_cast<float>(pose.position.z)};
-
-    float tmp3[4] = {static_cast<float>(pose.orientation.w), static_cast<float>(pose.orientation.x),
-                     static_cast<float>(pose.orientation.y), static_cast<float>(pose.orientation.z)};
-
-    auto pixelrelLocation3d = transform(tmp1);
-    transform t2 = transform(tmp2, tmp3);
-
-    transform pixelLocation3d = pixelrelLocation3d.ApplyTransformation(pixelrelLocation3d, t2);
-     //Raytrace that pixel onto the floor
-    float ratio = (pixelLocation3d.position[2] - pose.position.z) / pose.position.z;
-    float xdelta = (pixelLocation3d.position[0] - pose.position.x) / ratio;
-    float ydelta = (pixelLocation3d.position[1] - pose.position.y) / ratio;
-
-    Point3 point(pose.position.x - xdelta, -1*(pose.position.y - ydelta), 0);
-    */
-
     //New version of code
-    tf2::Transform pixelLocation3dd(tf2::Quaternion  (0,0,0,1),tf2::Vector3 (focal_length / 1000, tx / 1000, ty / 1000));
-    tf2::Transform t2 (tf2::Quaternion (pose.orientation.x,pose.orientation.y,pose.orientation.z,pose.orientation.w),tf2::Vector3 (pose.position.x,pose.position.y,pose.position.z));
-    pixelLocation3dd.mult(t2,pixelLocation3dd);
-
-
+    tf2::Transform pixel_pose(tf2::Quaternion  (0, 0, 0, 1), tf2::Vector3 (focal_length, tx, ty));
+    tf2::Transform camera_pose (tf2::Quaternion (pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w), tf2::Vector3 (pose.position.x, pose.position.y, pose.position.z));
+    pixel_pose.mult(camera_pose, pixel_pose);
 
     //Raytrace that pixel onto the floor
-    float ratio = (pixelLocation3dd.getOrigin().getZ() - pose.position.z) / pose.position.z;
-    float xdelta = (pixelLocation3dd.getOrigin().getX()- pose.position.x) / ratio;
-    float ydelta = (pixelLocation3dd.getOrigin().getY() - pose.position.y) / ratio;
+    float ratio = (pose.position.z - pixel_pose.getOrigin().getZ()) / pose.position.z;
+    float xdelta = (pixel_pose.getOrigin().getX() - pose.position.x) / ratio;
+    float ydelta = (pixel_pose.getOrigin().getY() - pose.position.y) / ratio;
 
-    Point3 point(pose.position.x - xdelta, -1*(pose.position.y - ydelta), 0);
-
+    Point3 point(xdelta, ydelta, 0);
 
     return point;
 }
 
 void Camera::setPose(const Pose3 &pose) {
-    Camera::pose = pose;
+    this->pose = pose;
+}
+
+Pose3 Camera::getPose() {
+    return this->pose;
+}
+
+float Camera::getResolutionX()  {
+    return resolution_x;
+}
+
+float Camera::getResolutionY()  {
+    return resolution_y;
 }
 
 
