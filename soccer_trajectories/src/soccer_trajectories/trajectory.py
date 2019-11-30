@@ -30,7 +30,6 @@ class Trajectory:
                     if self.is_getup_trajectory:
                         param = '/soccer_hardware/motor_mapping/{}/initial_state'.format(joint_name)
                         last_pose_value = float(rospy.get_param(param))
-                        print(param, last_pose_value)
                         joint_values.append(last_pose_value)
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
