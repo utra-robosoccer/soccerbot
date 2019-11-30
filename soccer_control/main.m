@@ -1,7 +1,7 @@
 % Setup the publishers and subscribers
 close all; clear; clc;
 rosshutdown;
-rosinit('192.168.0.100', 'NodeName', '/soccefr_control');
+rosinit('192.168.0.120', 'NodeName', '/soccer_control');
 motor_list = rosparam("get", "soccer_hardware/motor_mapping");
 
 motors = fieldnames(motor_list);
