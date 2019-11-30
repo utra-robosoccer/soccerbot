@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-
 import rospy
 import soccer_trajectories
 import os
@@ -21,11 +20,9 @@ def run_trajectory(command):
     except rospy.ROSInterruptException:
         pass
 
+
 if __name__ == '__main__':
     rospy.init_node("soccer_trajectories")
     trajectory_path = rospy.get_param("~trajectory_path")
-
     rospy.Subscriber("command", String, run_trajectory)
-
     rospy.spin()
-
