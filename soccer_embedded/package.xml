@@ -8,5 +8,6 @@
   <author email="todo@todo.com">Cameron Alizadeh</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>gcc-arm-none-eabi</build_depend>
   <!-- TODO add other dependencies -->
 </package>
