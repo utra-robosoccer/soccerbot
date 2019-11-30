@@ -8,11 +8,14 @@
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
-
+#include <std_msgs/Float64.h>
+#include <std_msgs/Time.h>
 class BallDetector {
 public:
     ros::NodeHandle n;
     ros::Subscriber darknet_pose_sub;
+    ros::Subscriber check_ball;
+    ros::Publisher head_motor_0;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
@@ -20,6 +23,8 @@ public:
 
     BallDetector() : tfListener(tfBuffer) {
         darknet_pose_sub = n.subscribe("darknet_ros/bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
+        check_ball = n.subscribe("head_motor_1/command", 1, &BallDetector::checkBall, this);
+        head_motor_0 = n.advertise<std_msgs::Float64>("head_motor_1/command",1);
 
         geometry_msgs::TransformStamped camera_pose;
 
@@ -97,6 +102,58 @@ private:
             BallDetector::br.sendTransform(camera_pose);
         }
     }
+
+    void checkBall (const std_msgs::Float64::ConstPtr& msg){
+        std_msgs::Float64 newMsg;
+
+
+        geometry_msgs::TransformStamped camera_pose;
+        try{
+            camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+                                                   ros::Time(0), ros::Duration(1.0));
+
+        }
+        catch (tf2::TransformException &ex) {
+            std::string s = ex.what();
+        }
+
+        double timeSinceBall = ros::Time::now().sec - camera_pose.header.stamp.sec;
+        double threshold = 0.1;
+
+        int count = 0;
+        if (msg->data >= 1.57) {
+            count = 0;
+        }
+        else if (msg->data <= -1.57){
+            count = 1;
+        }
+
+        if (timeSinceBall > threshold) {
+            //stop rotating head
+
+            head_motor_0.publish(msg);
+
+        }
+
+        else {
+
+            if (count == 0) {
+                    newMsg.data = msg->data + 0.1;
+                }
+            else {
+                    newMsg.data = msg->data - 0.1;
+                }
+            }
+
+
+
+
+        }
+
+
+
+
+
 };
 
 
