@@ -8,8 +8,9 @@ from transformations import *
 from utility import log_string
 import rospy as rp
 
+
 class Receiver(Thread):
-    def __init__(self, ser, dryrun=False, group=None, target=None, name=None):
+    def __init__(self, ser, group=None, target=None, name=None):
         super(Receiver, self).__init__(group=group, target=target, name=name)
         self._name = name
         self._stop_event = Event()
@@ -19,7 +20,6 @@ class Receiver(Thread):
         self._timeout = 0.010  # 10 ms
         self._imu_payload = np.ndarray(shape=(6, 1))
         self._angles_payload = np.ndarray(shape=(12, 1))
-        self._num_rx_failures = 0
 
     def stop(self):
         """
@@ -45,7 +45,7 @@ class Receiver(Thread):
         for i in range(6):
             # Unpack IMU Data
             imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
-        return (motors, imu)
+        return motors, imu
 
     def _receive_packet_from_mcu(self, timeout):
         """
@@ -61,8 +61,6 @@ class Receiver(Thread):
             decimal such as 0.010, i.e. 10 ms) and is always relative to the
             time the first byte of the packet is received
         """
-        if self._dryrun:
-            return True, self._get_fake_packet()
 
         receive_succeeded = False
 
@@ -75,7 +73,7 @@ class Receiver(Thread):
 
         num_bytes_available = 0
         data_received = False
-        while True:
+        while not rp.is_shutdown():
             # First, we wait until we have received some data. If data has
             # already been received, then we quit if the timeout has elapsed
             while ((num_bytes_available == 0) and
@@ -119,7 +117,7 @@ class Receiver(Thread):
         Returns the number of successful and failed receptions
         """
         with self._num_rx_lock:
-            return self._num_rx, self._num_rx_failures
+            return self._num_rx
 
     def set_timeout(self, timeout):
         self._timeout = timeout
@@ -137,19 +135,14 @@ class Receiver(Thread):
         """
         log_string("Starting Rx thread ({0})...".format(self._name))
         try:
-            while not :
-                if self._stop_requested():
-                    break
-                else:
-                    (receive_succeeded, buff) = self._receive_packet_from_mcu(self._timeout)
-                    if receive_succeeded:
-                        (recvAngles, recvIMUData) = self._decode(buff)
-                        angle_array = np.array(recvAngles)
-                        received_angles = angle_array[:, np.newaxis]
-                        received_imu = np.array(recvIMUData).reshape((6, 1))
-                        self._callback(received_angles, received_imu)
-                    else:
-                        self._num_rx_failures = self._num_rx_failures + 1
+            while not rp.is_shutdown() and not self._stop_requested():
+                (receive_succeeded, buff) = self._receive_packet_from_mcu(self._timeout)
+                if receive_succeeded:
+                    (recvAngles, recvIMUData) = self._decode(buff)
+                    angle_array = np.array(recvAngles)
+                    received_angles = angle_array[:, np.newaxis]
+                    received_imu = np.array(recvIMUData).reshape((6, 1))
+                    self._callback(received_angles, received_imu)
         except serial.serialutil.SerialException:
             log_string("Serial exception in thread {0}".format(self._name))
         log_string("Stopping Rx thread ({0})...".format(self._name))

@@ -13,11 +13,10 @@ from transformations import *
 
 
 class Communication:
-    def __init__(self, ser, step_is_on, wait_feedback_is_on):
+    def __init__(self, ser):
         self._last_angles = np.ndarray
         self._last_imu = np.ndarray
 
-        # MCU Callbacks
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
         self._rx_thread.set_timeout(0.010)
@@ -52,18 +51,6 @@ class Communication:
             motor_angles[int(self._motor_map[motor]["id"])] = (np.rad2deg(self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])) + float(self._motor_map[motor]["offset"]))
         self._tx_thread.send(motor_angles)
 
-    def print_imu(self):
-        """ Prints out a numpy vector interpreted as data from the IMU, in the
-            order X-gyro, Y-gyro, Z-gyro, X-accel, Y-accel, Z-accel.
-        """
-        received = self._last_imu
-
-        t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
-        t.add_row(["X", round(received[0][0], 2), round(received[3][0], 2)])
-        t.add_row(["Y", round(received[1][0], 2), round(received[4][0], 2)])
-        t.add_row(["Z", round(received[2][0], 2), round(received[5][0], 2)])
-        print(t)
-
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles
         self._last_imu = received_imu
@@ -77,15 +64,17 @@ class Communication:
         self._pub_imu.publish(imu)
 
         # MOTOR FEEDBACK
-        # Convert motor array from the embedded coordinate system to that
-        # used by controls
-        ctrl_angle_array = mcuToCtrlAngles(received_angles)
-        robot_state = RobotState()
-        for i in range(12):
-            robot_state.joint_angles[i] = ctrl_angle_array[i][0]
-
-        # Convert motor array from the embedded order and sign convention
-        # to that used by controls
-        m = getCtrlToMcuAngleMap()
-        robot_state.joint_angles[0:12] = np.linalg.inv(m).dot(robot_state.joint_angles[0:18])[0:12]
-        self._pub_angles.publish(robot_state)
+        for motor in self._motor_map:
+            if int(self._motor_map[motor]["id"]) < 12:
+                angle = received_angles[int(self._motor_map[motor]["id"])]
+                angle = (angle - float(self._motor_map[motor]["offset"])) / float(self._motor_map[motor]["direction"])
+                angle = np.deg2rad(angle)
+            else:
+                angle = self._motor_map[motor]["value"]
+            state = JointControllerState()
+            state.process_value = angle
+            state.command = self._motor_map[motor]["value"]
+            state.error = angle - self._motor_map[motor]["value"]
+            state.process_value_dot = 0 # TODO PID settings and process value dot
+            state.header.stamp = rp.rostime.get_rostime()
+            self._motor_map[motor]["publisher"].publish(state)
