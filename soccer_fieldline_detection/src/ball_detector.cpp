@@ -72,7 +72,6 @@ private:
         }
 
         for (const darknet_ros_msgs::BoundingBox &box: msg->bounding_boxes) {
-            //ROS_INFO("found a %s", box.Class.data());
             std::string objectClass = box.Class;
             if (objectClass != "sports ball") {
                 continue;
@@ -85,6 +84,8 @@ private:
             geometry_msgs::TransformStamped camera_pose;
             camera_pose.header.frame_id = "base_link";
             camera_pose.child_frame_id = "ball";
+            camera_pose.header.stamp = msg->header.stamp;
+            camera_pose.header.seq = msg->header.seq;
             camera_pose.transform.translation.x = floor_coordinate.x;
             camera_pose.transform.translation.y = floor_coordinate.y;
             camera_pose.transform.translation.z = floor_coordinate.z;

@@ -6,7 +6,7 @@ import time
 from threading import Thread, Event, Lock
 from transformations import *
 from utility import log_string
-
+import rospy as rp
 
 class Receiver(Thread):
     def __init__(self, ser, dryrun=False, group=None, target=None, name=None):
@@ -14,7 +14,6 @@ class Receiver(Thread):
         self._name = name
         self._stop_event = Event()
         self._num_rx = 0
-        self._dryrun = dryrun
         self._ser = ser
         self._num_rx_lock = Lock()
         self._timeout = 0.010  # 10 ms
@@ -31,17 +30,6 @@ class Receiver(Thread):
 
     def _stop_requested(self):
         return self._stop_event.is_set()
-
-    def _get_fake_packet(self):
-        """
-        Testing-only method
-        """
-        header = struct.pack('<L', 0xFFFFFFFF)
-        id = struct.pack('<I', 0x1234)
-        payload = struct.pack('<B', 0x00) * 80
-        footer = struct.pack('<L', 0x00000000)
-        packet = header + id + payload + footer
-        return packet
 
     def _decode(self, raw):
         """ Decodes raw bytes received from the microcontroller. As per the agreed
@@ -149,7 +137,7 @@ class Receiver(Thread):
         """
         log_string("Starting Rx thread ({0})...".format(self._name))
         try:
-            while True:
+            while not :
                 if self._stop_requested():
                     break
                 else:
