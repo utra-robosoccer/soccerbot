@@ -5,5 +5,6 @@
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
     </node>
 
+    <!--  rotate head if can't see a soccer ball  -->
     <node pkg="soccer_trajectories" type="head_rotator" name="head_rotator" output="screen" />
 </launch>
