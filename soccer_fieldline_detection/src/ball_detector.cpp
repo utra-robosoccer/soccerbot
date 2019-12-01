@@ -1,20 +1,16 @@
 #include <ros/ros.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
 #include <darknet_ros_msgs/BoundingBox.h>
-#include <vector>
 #include <string>
 #include <soccer_geometry/pose3.hpp>
-#include <geometry_msgs/Pose.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
-#include <std_msgs/Float64.h>
-#include <std_msgs/Time.h>
+
 class BallDetector {
 public:
     ros::NodeHandle n;
     ros::Subscriber darknet_pose_sub;
-    ros::Subscriber check_ball;
     ros::Publisher head_motor_0;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
@@ -23,15 +19,13 @@ public:
 
     BallDetector() : tfListener(tfBuffer) {
         darknet_pose_sub = n.subscribe("darknet_ros/bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
-        check_ball = n.subscribe("head_motor_1/command", 1, &BallDetector::checkBall, this);
-        head_motor_0 = n.advertise<std_msgs::Float64>("head_motor_1/command",1);
 
         geometry_msgs::TransformStamped camera_pose;
 
-        while(ros::ok()) {
-            try{
+        while (ros::ok()) {
+            try {
                 camera_pose = tfBuffer.lookupTransform("camera", "base_link",
-                                                            ros::Time(0), ros::Duration(1.0));
+                                                       ros::Time(0), ros::Duration(1.0));
                 break;
             }
             catch (tf2::TransformException &ex) {
@@ -55,7 +49,7 @@ private:
     void ballDetectorCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &msg) {
         // Get transformation
         geometry_msgs::TransformStamped camera_pose;
-        try{
+        try {
             camera_pose = tfBuffer.lookupTransform("base_link", "camera",
                                                    ros::Time(0), ros::Duration(0.1));
 
@@ -77,16 +71,16 @@ private:
             return;
         }
 
-        for (const darknet_ros_msgs::BoundingBox& box: msg->bounding_boxes) {
+        for (const darknet_ros_msgs::BoundingBox &box: msg->bounding_boxes) {
             //ROS_INFO("found a %s", box.Class.data());
             std::string objectClass = box.Class;
-            if(objectClass != "sports ball") {
+            if (objectClass != "sports ball") {
                 continue;
             }
             // For now take the center of the box
             int xavg = (box.xmin + box.xmax) / 2;
             int yavg = (box.ymin + box.ymax) / 2;
-            Point3 floor_coordinate =  camera->FindFloorCoordinate(xavg,yavg);
+            Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
 
             geometry_msgs::TransformStamped camera_pose;
             camera_pose.header.frame_id = "base_link";
@@ -102,60 +96,7 @@ private:
             BallDetector::br.sendTransform(camera_pose);
         }
     }
-
-    void checkBall (const std_msgs::Float64::ConstPtr& msg){
-        std_msgs::Float64 newMsg;
-
-
-        geometry_msgs::TransformStamped camera_pose;
-        try{
-            camera_pose = tfBuffer.lookupTransform("camera", "base_link",
-                                                   ros::Time(0), ros::Duration(1.0));
-
-        }
-        catch (tf2::TransformException &ex) {
-            std::string s = ex.what();
-        }
-
-        double timeSinceBall = ros::Time::now().sec - camera_pose.header.stamp.sec;
-        double threshold = 0.1;
-
-        int count = 0;
-        if (msg->data >= 1.57) {
-            count = 0;
-        }
-        else if (msg->data <= -1.57){
-            count = 1;
-        }
-
-        if (timeSinceBall > threshold) {
-            //stop rotating head
-
-            head_motor_0.publish(msg);
-
-        }
-
-        else {
-
-            if (count == 0) {
-                    newMsg.data = msg->data + 0.1;
-                }
-            else {
-                    newMsg.data = msg->data - 0.1;
-                }
-            }
-
-
-
-
-        }
-
-
-
-
-
 };
-
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "ball_detector");

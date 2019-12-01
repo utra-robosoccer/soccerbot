@@ -5,5 +5,5 @@
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
     </node>
 
-    <!-- TODO Daniel -->
+    <node pkg="soccer_trajectories" type="head_rotator" name="head_rotator" output="screen" />
 </launch>
