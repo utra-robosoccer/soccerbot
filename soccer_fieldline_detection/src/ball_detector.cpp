@@ -81,20 +81,20 @@ private:
             int yavg = (box.ymin + box.ymax) / 2;
             Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
 
-            geometry_msgs::TransformStamped camera_pose;
-            camera_pose.header.frame_id = "base_link";
-            camera_pose.child_frame_id = "ball";
-            camera_pose.header.stamp = msg->header.stamp;
-            camera_pose.header.seq = msg->header.seq;
-            camera_pose.transform.translation.x = floor_coordinate.x;
-            camera_pose.transform.translation.y = floor_coordinate.y;
-            camera_pose.transform.translation.z = floor_coordinate.z;
-            camera_pose.transform.rotation.x = 0;
-            camera_pose.transform.rotation.y = 0;
-            camera_pose.transform.rotation.z = 0;
-            camera_pose.transform.rotation.w = 1;
+            geometry_msgs::TransformStamped ball_pose;
+            ball_pose.header.frame_id = "base_link";
+            ball_pose.child_frame_id = "ball";
+            ball_pose.header.stamp = msg->header.stamp;
+            ball_pose.header.seq = msg->header.seq;
+            ball_pose.transform.translation.x = floor_coordinate.x;
+            ball_pose.transform.translation.y = floor_coordinate.y;
+            ball_pose.transform.translation.z = floor_coordinate.z;
+            ball_pose.transform.rotation.x = 0;
+            ball_pose.transform.rotation.y = 0;
+            ball_pose.transform.rotation.z = 0;
+            ball_pose.transform.rotation.w = 1;
 
-            BallDetector::br.sendTransform(camera_pose);
+            BallDetector::br.sendTransform(ball_pose);
         }
     }
 };
