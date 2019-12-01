@@ -8,7 +8,10 @@
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <group ns="$(arg robot_name)">
-        <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)"/>
+        <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
         <include file="$(find soccerbot)/launch/modules/simulation.launch" if="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
             <arg name="x_pos" value="$(arg x_pos)" />
@@ -18,7 +21,7 @@
         <include file="$(find soccerbot)/launch/modules/localization.launch">
             <arg name="robot_name" value="$(arg robot_name)"/>
         </include>
-        <!--<include file="$(find soccerbot)/launch/modules/navigation.launch" />-->
+        <include file="$(find soccerbot)/launch/modules/navigation.launch" />
         <!--<include file="$(find soccerbot)/launch/modules/communication.launch" />-->
     </group>
 </launch>
