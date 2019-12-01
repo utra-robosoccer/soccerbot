@@ -14,23 +14,14 @@ from transformations import *
 
 class Communication:
     def __init__(self, ser, step_is_on, wait_feedback_is_on):
-        self._started = False
         self._last_angles = np.ndarray
         self._last_imu = np.ndarray
-        self._num_rx = 0
-        self._num_tx = 0
-        self._t_start = 0
-
-        self._last_print_time = time.time()
-        self._step_is_on = step_is_on
-        self._wait_feedback_is_on = wait_feedback_is_on
-        self._use_trajectory = False
 
         # MCU Callbacks
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
-        # self._rx_thread.set_timeout(0.010)
-        # self._rx_thread.bind(self.receive_callback)
+        self._rx_thread.set_timeout(0.010)
+        self._rx_thread.bind(self.receive_callback)
 
         self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
@@ -42,10 +33,8 @@ class Communication:
         self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
 
     def run(self):
-        # self._rx_thread.start()
+        self._rx_thread.start()
         self._tx_thread.start()
-        self._t_start = time.time()
-        self._started = True
 
         tx_cycle = WaitForMs(10)
         tx_cycle.set_e_gain(1.5)
@@ -74,20 +63,6 @@ class Communication:
         t.add_row(["Y", round(received[1][0], 2), round(received[4][0], 2)])
         t.add_row(["Z", round(received[2][0], 2), round(received[5][0], 2)])
         print(t)
-
-    def print_handler(self):
-        current_time = time.time()
-        if current_time - self._last_print_time >= 1:
-            self._last_print_time = current_time
-            print('\n')
-            self._num_rx = self._rx_thread.get_num_rx()[0]
-            log_string("Received: {0}".format(self._num_rx))
-            self._num_tx = self._tx_thread.get_num_tx()
-            log_string("Transmitted: {0}\n".format(self._num_tx))
-            if self._num_rx > 0:
-                # Prints the last valid data received
-                self.print_angles()
-                self.print_imu()
 
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles
