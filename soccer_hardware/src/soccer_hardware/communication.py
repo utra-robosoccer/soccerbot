@@ -1,16 +1,13 @@
-import time
 import rospy as rp
 from wait_for_ms import WaitForMs
-from prettytable import PrettyTable
 from transmitter import Transmitter
 from receiver import Receiver
-from utility import *
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
 from transformations import *
-
+from sensor_msgs.msg import JointState
 
 class Communication:
     def __init__(self, ser):
@@ -23,6 +20,7 @@ class Communication:
         self._rx_thread.bind(self.receive_callback)
 
         self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
+        self._pub_joint_states = rp.Publisher('joint_states', JointState, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
         for motor in self._motor_map:
             self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
@@ -64,6 +62,9 @@ class Communication:
         self._pub_imu.publish(imu)
 
         # MOTOR FEEDBACK
+        joint_state = JointState()
+        joint_state.header.stamp = rp.rostime.get_rostime()
+
         for motor in self._motor_map:
             if int(self._motor_map[motor]["id"]) < 12:
                 angle = received_angles[int(self._motor_map[motor]["id"])]
@@ -71,6 +72,8 @@ class Communication:
                 angle = np.deg2rad(angle)
             else:
                 angle = self._motor_map[motor]["value"]
+
+            # Joint controller state
             state = JointControllerState()
             state.process_value = angle
             state.command = self._motor_map[motor]["value"]
@@ -78,3 +81,8 @@ class Communication:
             state.process_value_dot = 0 # TODO PID settings and process value dot
             state.header.stamp = rp.rostime.get_rostime()
             self._motor_map[motor]["publisher"].publish(state)
+
+            # Joint State
+            joint_state.name.append(motor)
+            joint_state.position.append(angle)
+        self._pub_joint_states.publish(joint_state)
