@@ -16,7 +16,7 @@ robot_path.show();
 figure;
 robot_path.showTimingDiagram();
 
-%% Follow the path (matlab step draw)
+%% Calculate robot angles
 
 angles = timeseries;
 for t = 0:robot_path.step_size:robot_path.duration

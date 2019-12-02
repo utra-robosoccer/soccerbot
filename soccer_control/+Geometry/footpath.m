@@ -145,7 +145,7 @@ classdef footpath < Geometry.path
             bodystep = getBodyStep(obj, n);
             
             bodypos = bodystep.position;
-            transformToLeftFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            transformToLeftFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
             position = bodystep * transformToLeftFoot;
         end
         
@@ -153,7 +153,7 @@ classdef footpath < Geometry.path
             bodystep = getBodyStep(obj, n);
             
             bodypos = bodystep.position;
-            transformToRightFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            transformToRightFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
             position = bodystep * transformToRightFoot;
         end
         
@@ -199,7 +199,7 @@ classdef footpath < Geometry.path
                 to = obj.right_foot_position_at_step(right_foot_action(2));
                 
                 right_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    obj.step_outwardness, -obj.step_rotation, right_foot_step_ratio);
+                    -obj.step_outwardness, -obj.step_rotation, right_foot_step_ratio);
             end
             
             % Right foot
@@ -211,7 +211,7 @@ classdef footpath < Geometry.path
                 to = obj.left_foot_position_at_step(left_foot_action(2));
                 
                 left_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    -obj.step_outwardness, obj.step_rotation, left_foot_step_ratio);
+                    obj.step_outwardness, obj.step_rotation, left_foot_step_ratio);
             end
         end
         

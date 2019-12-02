@@ -23,9 +23,9 @@ end_position = Geometry.transform([0 0 0]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
-% robot.show();
-% hold on;
-% robot_path.show();
+robot.show();
+hold on;
+robot_path.show();
 % figure;
 % robot_path.showTimingDiagram();
 % 
@@ -71,5 +71,5 @@ for t = 0:robot_path.step_size:10000%robot_path.duration
     
     odom_pub.send(msg);
     
-%    robot.stepPath(t, robot_path);
+    robot.stepPath(t, robot_path);
 end
