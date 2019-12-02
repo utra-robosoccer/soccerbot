@@ -14,6 +14,8 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_subscriber = it.subscribe("camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
     point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
 
+    image_publisher = it.advertise("camera/line_image",1);
+
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
     nh.getParam("soccer_fieldline_detector/cannythreshold2", cannythreshold2);
@@ -98,7 +100,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
-            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+            cv::line(dst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
 
             Point2 pt1(l[0],l[1]);
             Point2 pt2(l[2],l[3]);
@@ -112,9 +114,15 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
         }
 
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
+        //if(image_publisher.getNumSubscribers() > 1){
+        image_publisher.publish(message);
+        //}
+
     } catch (const cv_bridge::Exception &e) {
         ROS_ERROR_STREAM("CV Exception" << e.what());
     }
+
 
     std::vector<Point3> points3d;
     for (const auto& p : pts) {
