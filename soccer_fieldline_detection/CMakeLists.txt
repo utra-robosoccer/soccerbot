@@ -52,7 +52,7 @@ add_dependencies(ball_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPO
 target_link_libraries(ball_detector
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    )
+)
 #############
 ## Testing ##
 #############
