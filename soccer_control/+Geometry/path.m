@@ -3,7 +3,7 @@ classdef path < handle
         bodystep_size = 0.03;   % Not absolutely fixed, will be modified slightly when
         speed = 1.5 * 0.03;
         turn_duration = 4;      % Number of body steps to turn
-        step_size = 0.03;        % Time for a single step
+        step_size = 0.02;        % Time for a single step
         
         pre_footstep_ratio = 0.05;   % Ratio of fullstep duration to keep foot on ground on prefootstep
         post_footstep_ratio = 0.15;  % Ratio of fullstep duration to keep foot on ground on postfootstep

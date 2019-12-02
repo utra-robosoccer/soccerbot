@@ -5,7 +5,7 @@ classdef footpath < Geometry.path
         foot_separation = 0.04;     % seperation between feet and center
         step_height = 0.03;        % height of step
         step_outwardness = 0.015;
-        step_rotation = -0.15;
+        step_rotation = -0.10;
         
         foot_center_to_floor;
     end

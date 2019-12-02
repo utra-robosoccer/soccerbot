@@ -142,11 +142,11 @@ classdef soccerbot < handle
             configSolL(6).JointName = tmp(6).JointName;
 
             configSolL(1).JointPosition = -configSolL(1).JointPosition;
-            configSolL(2).JointPosition = configSolL(2).JointPosition;
+            configSolL(2).JointPosition = -configSolL(2).JointPosition;
             configSolL(3).JointPosition = configSolL(3).JointPosition;
             configSolL(4).JointPosition = configSolL(4).JointPosition;
             configSolL(5).JointPosition = configSolL(5).JointPosition;
-            configSolL(6).JointPosition = configSolL(6).JointPosition;        
+            configSolL(6).JointPosition = -configSolL(6).JointPosition;        
         end
         
         function stepPath(obj, t, robot_path)
@@ -158,15 +158,15 @@ classdef soccerbot < handle
                         
             torso_to_left_foot = crotch_position \ left_foot_position;
             torso_to_right_foot = crotch_position \ right_foot_position;
-        
+            
+            configSolR = obj.ik_right_foot(torso_to_right_foot);
+            configSolL = obj.ik_left_foot(torso_to_left_foot);
+            
 %             weights_left = [0.25 0.25 0.25 1 1 1];
 %             [configSolL1,err] = obj.ik_left('right_foot',torso_to_right_foot,weights_left,obj.robot_right_leg_subtree.homeConfiguration);
 %             weights_right = [0.25 0.25 0.25 1 1 1];
 %             [configSolR1,~] = obj.ik_right('left_foot',torso_to_left_foot,weights_right,obj.robot_left_leg_subtree.homeConfiguration);
 %             assert(err.ExitFlag == 1)
-            
-            configSolR = obj.ik_right_foot(torso_to_right_foot);
-            configSolL = obj.ik_left_foot(torso_to_left_foot);
             
             obj.configuration(5:10) = configSolL;
             obj.configuration(13:18) = configSolR;

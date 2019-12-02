@@ -148,12 +148,7 @@
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <axis xyz="${direction} 0 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
-            <xacro:if value="${direction == 1}">
-             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
-            </xacro:if>
-            <xacro:if value="${direction == -1}">
-            <limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
-            </xacro:if>
+            <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_2" type="revolute">
             <parent link="${name}_hip_front"/>
@@ -183,7 +178,7 @@
             <parent link="${name}_ankle"/>
             <child link="${name}_foot"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
-            <axis xyz="-1 0 0"/>
+            <axis xyz="${direction} 0 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX28_VELOCITY}"/>
         </joint>

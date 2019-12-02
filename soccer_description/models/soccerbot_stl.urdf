@@ -372,7 +372,7 @@
     <parent link="left_ankle"/>
     <child link="left_foot"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <axis xyz="-1 0 0"/>
+    <axis xyz="1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.785398163397" upper="0.785398163397" velocity="1"/>
   </joint>
@@ -605,7 +605,7 @@
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
-    <limit effort="2.5" lower="-1.57079632679" upper="0.785398163397" velocity="1"/>
+    <limit effort="2.5" lower="-0.785398163397" upper="1.57079632679" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_2" type="revolute">
     <parent link="right_hip_front"/>

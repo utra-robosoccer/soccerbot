@@ -32,7 +32,7 @@ robot_path = robot.getPath(end_position);
 % figure;
 % Create the path of the robot into a timeseries
 rate = rateControl(1/robot_path.step_size);
-for t = 0:robot_path.step_size:10000%robot_path.duration
+for t = 0:robot_path.step_size:robot_path.duration
     for i = 1:numel(robot.configuration)
         msg = pubs(robot.configuration(i).JointName).rosmessage;
         msg.Data = robot.configuration(i).JointPosition;
@@ -43,7 +43,7 @@ for t = 0:robot_path.step_size:10000%robot_path.duration
         p = pubs(robot.configuration(i).JointName);
         p.send(msg);
     end
-%     waitfor(rate);
+    waitfor(rate);
 %     robot.show();
 %     view(-90,0);
 %     campos([-6,0,0]);
