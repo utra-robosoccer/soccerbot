@@ -3,7 +3,7 @@ classdef crotchpath < Geometry.footpath
         crotch_zdiff_sway = 0.000;
         crotch_sidediff_sway = 0.03;
         crotch_sidediff_sway_decay = 5;
-        crotch_thetadiff_sway = [0 0 -0.1];
+        crotch_thetadiff_sway = [0 0 -0.08];
         
         % Distort per step
         crotch_zdiff_step = 0.000;
@@ -92,6 +92,7 @@ classdef crotchpath < Geometry.footpath
             H = eul2tform(thetadiff);
             H(3,4) = zdiff;
             H(2,4) = ydiff;
+            H(1,4) = 0.0;
             position = position * H;
             
 %             % Step Transformations (parabola)
