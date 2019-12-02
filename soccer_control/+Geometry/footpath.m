@@ -2,10 +2,10 @@ classdef footpath < Geometry.path
     properties
         half_to_full_step_time_ratio = 0.7; % Duration difference between half and full step
         
-        foot_separation = 0.035;     % seperation between feet and center
-        step_height = 0.04;        % height of step
-        step_outwardness = 0.0;
-        step_rotation = 0.0;
+        foot_separation = 0.04;     % seperation between feet and center
+        step_height = 0.03;        % height of step
+        step_outwardness = 0.025;
+        step_rotation = -0.15;
         
         foot_center_to_floor;
     end
@@ -51,7 +51,8 @@ classdef footpath < Geometry.path
                         pre_step_time = 0;
                     end
                 elseif (post_pre_settings == 2)
-                    post_step_time = 0;
+                    pre_step_time = 0;
+                    post_step_time = -post_step_time;
                 elseif (post_pre_settings == 3)
                     post_step_time = 0;
                     pre_step_time = 0;
@@ -198,7 +199,7 @@ classdef footpath < Geometry.path
                 to = obj.right_foot_position_at_step(right_foot_action(2));
                 
                 right_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    -obj.step_outwardness, -obj.step_rotation, right_foot_step_ratio);
+                    obj.step_outwardness, -obj.step_rotation, right_foot_step_ratio);
             end
             
             % Right foot
@@ -210,7 +211,7 @@ classdef footpath < Geometry.path
                 to = obj.left_foot_position_at_step(left_foot_action(2));
                 
                 left_foot_position = obj.parabolicPath(from, to, obj.step_height, ...
-                    obj.step_outwardness, obj.step_rotation, left_foot_step_ratio);
+                    -obj.step_outwardness, obj.step_rotation, left_foot_step_ratio);
             end
         end
         

@@ -1,10 +1,14 @@
 classdef crotchpath < Geometry.footpath
     properties
-        crotch_zdiff_per_step = -0.01;
-        crotch_sidediff_step = 0.01;
-        crotch_rotation_per_step = 0.0;
+        crotch_zdiff_sway = 0.000;
+        crotch_sidediff_sway = 0.03;
+        crotch_sidediff_sway_decay = 5;
+        crotch_thetadiff_sway = [0 0 -0.08];
         
-        sideways_exponential_decay_rate = 3;
+        % Distort per step
+        crotch_zdiff_step = 0.000;
+        crotch_sidediff_step = 0.000;
+        crotch_rot_step = [0 0 0.0];
         
         first_step_left = 0;
     end
@@ -55,17 +59,9 @@ classdef crotchpath < Geometry.footpath
                 end
             end
             
-            position = obj.parabolicPath(from, to, 0, 0, 0, body_movement_ratio);
+            position = obj.parabolicPath(from, to, 0.0, 0.0, 0.0, body_movement_ratio);
             
-            % Add horizontal delta (exponential decay)
-            [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 2);
-            if (length(right_foot_action) == 2) % Left foot moving, lean right
-                ydiff = obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * right_foot_ratio));
-            else
-                ydiff = -obj.crotch_sidediff_step * (1 - exp(-obj.sideways_exponential_decay_rate * left_foot_ratio));
-            end
-            
-            % Add vertical delta (sinusoidal wave)
+            % Vertical Sway (sinusoidal wave)
             [~, right_foot_ratio, ~] = footHeightRatio(obj, t, 3);
             if (length(right_foot_action) == 2) % Left foot moving, lean right
                 ratio = right_foot_ratio;
@@ -73,15 +69,51 @@ classdef crotchpath < Geometry.footpath
                 ratio = left_foot_ratio;
             end
             if t < obj.half_step_time
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * pi));
             elseif t > obj.duration - obj.half_step_time
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * pi + pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * pi + pi));
             else
-                zdiff = obj.crotch_zdiff_per_step * (1 - cos(ratio * 2 * pi + pi));
+                zdiff = obj.crotch_zdiff_sway * (1 - cos(ratio * 2 * pi + pi));
             end
             
-            H = Geometry.transform([0 ydiff zdiff]);
-            position = position * H.H;
+            % Horizontal Sway (exponential decay)
+            [~, right_foot_ratio, left_foot_ratio] = footHeightRatio(obj, t, 3);
+            if (length(right_foot_action) == 2)
+                ratio = right_foot_ratio;
+                is_right_foot = -1;
+            else
+                ratio = left_foot_ratio;
+                is_right_foot = 1;
+            end
+            r = -4 * ratio^2 + 4 * ratio;
+            ydiff = r * obj.crotch_sidediff_sway * is_right_foot;
+            thetadiff = ydiff / obj.crotch_sidediff_sway * obj.crotch_thetadiff_sway;
+
+            H = eul2tform(thetadiff);
+            H(3,4) = zdiff;
+            H(2,4) = ydiff;
+            H(1,4) = 0.0;
+            position = position * H;
+            
+%             % Step Transformations (parabola)
+%             [~, right_foot_ratio, left_foot_ratio] = footHeightRatio(obj, t);
+%             if (length(right_foot_action) == 2)
+%                 ratio = right_foot_ratio;
+%                 is_right_foot = 1;
+%             else
+%                 ratio = left_foot_ratio;
+%                 is_right_foot = -1;
+%             end
+%             if (ratio ~= 0 && ratio ~= 1)
+%                 r = -4 * ratio^2 + 4 * ratio;
+%                 
+%                 rot_step = obj.crotch_rot_step * is_right_foot * r;
+%                 step_diff = eul2tform(rot_step);
+%                 step_diff(3,4) = obj.crotch_zdiff_step * r;
+%                 step_diff(2,4) = obj.crotch_sidediff_step * is_right_foot * r;
+%                 position = position * step_diff;
+%             end
+            
         end
                 
         function show(obj)            

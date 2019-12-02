@@ -24,7 +24,7 @@ public:
 
         while (ros::ok()) {
             try {
-                camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+                camera_pose = tfBuffer.lookupTransform("camera", "base_footprint",
                                                        ros::Time(0), ros::Duration(1.0));
                 break;
             }
@@ -50,7 +50,7 @@ private:
         // Get transformation
         geometry_msgs::TransformStamped camera_pose;
         try {
-            camera_pose = tfBuffer.lookupTransform("base_link", "camera",
+            camera_pose = tfBuffer.lookupTransform("base_footprint", "camera",
                                                    ros::Time(0), ros::Duration(0.1));
 
             Pose3 camera_position;
@@ -82,7 +82,7 @@ private:
             Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
 
             geometry_msgs::TransformStamped ball_pose;
-            ball_pose.header.frame_id = "base_link";
+            ball_pose.header.frame_id = "base_footprint";
             ball_pose.child_frame_id = "ball";
             ball_pose.header.stamp = msg->header.stamp;
             ball_pose.header.seq = msg->header.seq;
