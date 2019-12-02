@@ -13,24 +13,23 @@ class Trajectory:
         expects rectangular shape for csv table"""
         self.splines = {}
         self.step_map = {}
-        self.is_getup_trajectory = 'getup' in trajectory_path
         self.time_to_last_pose = 5.0  # seconds
 
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
                 joint_name = row[0]
+                if joint_name == 'comment':
+                    continue
                 if joint_name == 'time':
                     self.times = map(float, row[1:])
-                    if self.is_getup_trajectory:
-                        self.times.append(self.times[-1] + self.time_to_last_pose)
+                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = map(float, row[1:])
-                    if self.is_getup_trajectory:
-                        param = '/soccer_hardware/motor_mapping/{}/initial_state'.format(joint_name)
-                        last_pose_value = float(rospy.get_param(param))
-                        joint_values.append(last_pose_value)
+                    param = '/soccer_hardware/motor_mapping/{}/initial_state'.format(joint_name)
+                    last_pose_value = float(rospy.get_param(param))
+                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
