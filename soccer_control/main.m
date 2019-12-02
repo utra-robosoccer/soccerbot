@@ -16,16 +16,16 @@ imu_sub = rossubscriber("robot1/imu", "sensor_msgs/Imu");
 odom_pub = rospublisher("robot1/odom", "nav_msgs/Odometry");
 robotParameters;
 foot_center_to_floor = -right_collision_center(3) + foot_box(3);
-robot = Robot.soccerbot([-0.5, 0, hip_height], foot_center_to_floor);
+robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
-end_position = Geometry.transform([0 0 0]);
+end_position = Geometry.transform([0.5 0 0]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
-robot.show();
-hold on;
-robot_path.show();
+% robot.show();
+% hold on;
+% robot_path.show();
 % figure;
 % robot_path.showTimingDiagram();
 % 

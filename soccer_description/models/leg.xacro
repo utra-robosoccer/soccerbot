@@ -146,7 +146,7 @@
             <parent link="${name}_hip_side"/>
             <child link="${name}_hip_front"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
-            <axis xyz="-1 0 0"/>
+            <axis xyz="${direction} 0 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <xacro:if value="${direction == 1}">
              <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>

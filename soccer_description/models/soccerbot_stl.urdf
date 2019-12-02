@@ -340,7 +340,7 @@
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <axis xyz="-1 0 0"/>
+    <axis xyz="1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.785398163397" upper="1.57079632679" velocity="1"/>
   </joint>
