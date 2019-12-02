@@ -6,7 +6,7 @@
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
-          args="$(find soccer_common)/maps/robocup.yaml">
+          args="$(find soccer_common)/maps/test.yaml">
         <param name="frame_id" value="world"/>
     </node>
 
@@ -16,8 +16,8 @@
         <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
     </node>
 
-    <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
         <remap from="cloud_in" to="field_point_cloud" />
     </node>
 
@@ -35,18 +35,23 @@
         <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />
     </node>
 
+    <!-- Complementary filter -->
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
+        <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
+        <remap from="imu/data_raw" to="imu_raw" />
+        <remap from="imu/data" to="imu" />
+    </node>
+    
+    <!-- IMU location -->
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+        <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
+        <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
+        <remap from="imu_data" to="imu" />
+    </node>
+
     <!-- AMCL Localization -->
     <node pkg="amcl" type="amcl" name="amcl">
-        <param name="update_min_d"      value="0.0" />
-        <param name="use_sim_time"      value="true" />
-        <param name="use_map_topic"     value="true"/>
-        <param name="scan_topic"        value="scan"/>
-        <param name="initial_pose_x"    value="0.0"/>
-        <param name="initial_pose_y"    value="0.0"/>
-        <param name="initial_pose_a"    value="0.0"/>
-        <param name="odom_frame_id"     value="/base_link"/>
-        <param name="base_frame_id"     value="/base_link"/>
-        <param name="global_frame_id"   value="/world"/>
+        <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
     </node>
 
 </launch>

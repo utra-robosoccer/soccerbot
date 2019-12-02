@@ -62,12 +62,12 @@
             <limit effort="${AX12_TORQUE}" lower="-${PI*3/4}" upper="${PI*3/4}" velocity="${AX12_VELOCITY}"/>
         </joint>
 
-        <transmission name="${origin}_neck">
+        <transmission name="head_motor_0">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${origin}_neck">
+            <joint name="head_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${origin}_neck">
+            <actuator name="head_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>

@@ -22,7 +22,11 @@ classdef soccerbot < handle
             
             % Solve DH Table
             solveDHTable(obj);
-
+            
+            % Keep hands in the air
+            obj.configuration(4).JointPosition = 0.8*pi;
+            obj.configuration(12).JointPosition = 0.8*pi;
+           
             % Calculating hip and feet location
             hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'right_hip_front');
             position(3) = position(3) + hip_to_torso(3,4);
