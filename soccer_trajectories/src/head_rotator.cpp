@@ -23,7 +23,7 @@ public:
 
         bool has_pose = false;
         try {
-            ball_pose = tfBuffer.lookupTransform("ball", "base_link",ros::Time(0));
+            ball_pose = tfBuffer.lookupTransform("ball", "torso",ros::Time(0));
             has_pose = true;
         } catch (tf2::TransformException &ex) {}
 
@@ -36,7 +36,7 @@ public:
         angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
         head_rotator_0.publish(angle);
 
-        angle.data = 0.3f;
+        angle.data = 0.6f;
         head_rotator_1.publish(angle);
         last_t += 1;
     }

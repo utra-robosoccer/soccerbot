@@ -8,6 +8,7 @@ from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
 from transformations import *
 from sensor_msgs.msg import JointState
+import math
 
 class Communication:
     def __init__(self, ser):
@@ -64,16 +65,18 @@ class Communication:
         # MOTOR FEEDBACK
         joint_state = JointState()
         joint_state.header.stamp = rp.rostime.get_rostime()
-
         for motor in self._motor_map:
             if int(self._motor_map[motor]["id"]) < 12:
+                assert(int(self._motor_map[motor]["id"]) < len(received_angles))
                 angle = received_angles[int(self._motor_map[motor]["id"])]
-                angle = (angle - float(self._motor_map[motor]["offset"])) / float(self._motor_map[motor]["direction"])
+                if math.isnan(angle): # TODO fix this
+                    continue
+                angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
                 angle = np.deg2rad(angle)
             else:
                 angle = self._motor_map[motor]["value"]
 
-            # Joint controller state
+        # Joint controller state
             state = JointControllerState()
             state.process_value = angle
             state.command = self._motor_map[motor]["value"]

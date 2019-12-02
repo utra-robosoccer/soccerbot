@@ -79,7 +79,7 @@ class Receiver(Thread):
             while ((num_bytes_available == 0) and
                    not (data_received and (time_curr - time_start >= timeout)) and
                    not self._stop_requested()):
-                time.sleep(0.001)
+                time.sleep(0.01)
                 time_curr = time.time()
                 num_bytes_available = self._ser.in_waiting
             if self._stop_requested() or ((num_bytes_available == 0) and
