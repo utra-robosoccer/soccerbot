@@ -35,7 +35,6 @@ git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  T
 cd soccer_ws # To get into the local repository and perform git lfs commands
 git lfs init
 git lfs pull
-cd soccer_ws
 git checkout initials_branchname  # TO create a new branch, use git checkout -b initials_branchname
 cd ~/catkin_ws
 ```
