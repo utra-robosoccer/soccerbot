@@ -6,7 +6,7 @@ motor_mapping:
     offset: 153
   right_leg_motor_1:
     id: 4
-    direction: -1
+    direction: 1
     offset: 150
   right_leg_motor_2:
     id: 3
