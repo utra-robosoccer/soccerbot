@@ -12,14 +12,15 @@ for i = 1:numel(motors)
 %     subs(motors{i}) = rossubscriber(strcat("robot1/", motors{i}, "/state"), "control_msgs/JointControllerState");
 end
 
-imu_sub = rossubscriber("robot1/imu", "sensor_msgs/Imu");
+global imu
+imu_sub = rossubscriber("robot1/imu", "sensor_msgs/Imu", @imu_callback);
 odom_pub = rospublisher("robot1/odom", "nav_msgs/Odometry");
 robotParameters;
 foot_center_to_floor = -right_collision_center(3) + foot_box(3);
-robot = Robot.soccerbot([-0.5, 0, hip_height], foot_center_to_floor);
+robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
-end_position = Geometry.transform([0 0 0]);
+end_position = Geometry.transform([0.5 0.0 0]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
@@ -31,8 +32,10 @@ robot_path = robot.getPath(end_position);
 % 
 % figure;
 % Create the path of the robot into a timeseries
+
+imu = imu_sub.receive();
 rate = rateControl(1/robot_path.step_size);
-for t = 0:robot_path.step_size:10000%robot_path.duration
+for t = 0:robot_path.step_size:robot_path.duration
     for i = 1:numel(robot.configuration)
         msg = pubs(robot.configuration(i).JointName).rosmessage;
         msg.Data = robot.configuration(i).JointPosition;
@@ -43,15 +46,19 @@ for t = 0:robot_path.step_size:10000%robot_path.duration
         p = pubs(robot.configuration(i).JointName);
         p.send(msg);
     end
-%     waitfor(rate);
-%     robot.show();
-%     view(-90,0);
-%     campos([-6,0,0]);
     
+    try
+        angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
+        robot.applyRPYFeedback(quat2eul(angle));
+    catch ex
+        disp "test";
+    end
+    
+    % Publish odom
     robot_position = robot.pose.position;
     robot_orientation = robot.pose.orientation;
     msg = odom_pub.rosmessage;
-    msg.Header.Stamp = rostime('now');
+    msg.Header.Stamp = imu.Header.Stamp;
     msg.Header.FrameId = "odom";
     msg.ChildFrameId = "base_footprint";
     msg.Pose.Pose.Position.X = robot_position(1);
@@ -71,5 +78,19 @@ for t = 0:robot_path.step_size:10000%robot_path.duration
     
     odom_pub.send(msg);
     
-%    robot.stepPath(t, robot_path);
+    % Step Path
+    robot.stepPath(t, robot_path);
+    
+    % Wait
+    waitfor(rate);
+    
+    % Debug
+%     robot.show();
+%     view(-90,0);
+%     campos([-6,0,0]);
+end
+
+function imu_callback(~, imu_data)
+    global imu
+    imu = imu_data;
 end
