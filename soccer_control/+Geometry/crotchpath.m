@@ -92,7 +92,7 @@ classdef crotchpath < Geometry.footpath
             H = eul2tform(thetadiff);
             H(3,4) = zdiff;
             H(2,4) = ydiff;
-            H(1,4) = 0.0;
+            H(1,4) = 0.0035;
             position = position * H;
             
 %             % Step Transformations (parabola)

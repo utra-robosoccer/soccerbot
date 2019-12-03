@@ -4,6 +4,7 @@ classdef soccerbot < handle
         robot_right_leg_subtree;
         robot_left_leg_subtree;
         configuration;
+        torso_offset = eye(4);
         pose = Geometry.transform;              % Pose of the center between the two legs position
         foot_center_to_floor;
         ik_left
@@ -151,7 +152,7 @@ classdef soccerbot < handle
         
         function stepPath(obj, t, robot_path)
             tstart = tic;
-            crotch_position = robot_path.crotchPosition(t);
+            crotch_position = robot_path.crotchPosition(t) * obj.torso_offset;
             tend1 = toc(tstart);
             [right_foot_position, left_foot_position] = robot_path.footPosition(t);
             tend2 = toc(tstart);
@@ -175,6 +176,11 @@ classdef soccerbot < handle
             tend3 = toc(tstart);
             
             fprintf('Torso Time: %f, Foot Path Time: %f, IK Time: %f\n\n', tend1, tend2, tend3);
+        end
+        
+        function applyRPYFeedback(obj, rpy)
+            f_off = -sin(rpy(2)) * 0.02;
+            obj.torso_offset = [1,0,0,f_off; 0,1,0,0; 0,0,1,0; 0,0,0,1];
         end
         
         function angles = getAngles(obj)

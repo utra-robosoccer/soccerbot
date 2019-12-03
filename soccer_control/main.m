@@ -19,7 +19,7 @@ foot_center_to_floor = -right_collision_center(3) + foot_box(3);
 robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
-end_position = Geometry.transform([0.5 0 0]);
+end_position = Geometry.transform([0.5 0.5 0]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
@@ -43,7 +43,18 @@ for t = 0:robot_path.step_size:robot_path.duration
         p = pubs(robot.configuration(i).JointName);
         p.send(msg);
     end
+    
+%     try
+%         tic;
+%         imu_msg = imu_sub.receive(0.001);
+%         toc
+%         angle = [imu_msg.Orientation.W imu_msg.Orientation.X imu_msg.Orientation.Y imu_msg.Orientation.Z];
+%         robot.applyRPYFeedback(quat2eul(angle));
+%     catch ex
+%         
+%     end
     waitfor(rate);
+
 %     robot.show();
 %     view(-90,0);
 %     campos([-6,0,0]);

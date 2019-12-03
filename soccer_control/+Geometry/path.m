@@ -1,7 +1,7 @@
 classdef path < handle
     properties
-        bodystep_size = 0.03;   % Not absolutely fixed, will be modified slightly when
-        speed = 1.5 * 0.03;
+        bodystep_size = 0.025;   % Not absolutely fixed, will be modified slightly when
+        speed = 3.0 * 0.025;
         turn_duration = 4;      % Number of body steps to turn
         step_size = 0.02;        % Time for a single step
         
