@@ -4,5 +4,6 @@
         <param name="baud_rate" value="230400" />
         <rosparam command="load" file="$(find soccer_description)/config/soccerbot_control.yaml" />
         <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+        <rosparam command="load" file="$(find soccer_hardware)/config/imu_calibration.yaml" />
     </node>
 </launch>

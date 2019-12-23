@@ -31,7 +31,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
 
     while(ros::ok()) {
         try{
-            camera_pose = tfBuffer.lookupTransform("camera", "base_link",
+            camera_pose = tfBuffer.lookupTransform("camera", "base_footprint",
                                                    ros::Time(0), ros::Duration(1.0));
             break;
         }
@@ -64,7 +64,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Get transformation
     geometry_msgs::TransformStamped camera_pose;
     try{
-        camera_pose = tfBuffer.lookupTransform("base_link", "camera",
+        camera_pose = tfBuffer.lookupTransform("base_footprint", "camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
@@ -134,7 +134,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     sensor_msgs::PointCloud2 point_cloud_msg;
     //Setting up PointCloud2 msg
     point_cloud_msg.header.stamp = ros::Time::now();
-    point_cloud_msg.header.frame_id = "base_link";
+    point_cloud_msg.header.frame_id = "base_footprint";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
     point_cloud_msg.is_bigendian = false;

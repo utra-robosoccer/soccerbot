@@ -5,16 +5,16 @@
     <xacro:include filename="$(find soccer_description)/models/robot.xacro" />
     <soccerbot />
 
-    <link name="base_link" />
+    <link name="base_footprint" />
 
-    <joint name="base_link_torso" type="fixed">
-        <parent link="base_link"/>
+    <joint name="base_footprint_torso" type="fixed">
+        <parent link="base_footprint"/>
         <child link="torso"/>
         <origin rpy="0 0 0" xyz="0 0 0.3536"/>
         <axis xyz="1 0 0"/>
     </joint>
 
-    <gazebo reference="base_link">
+    <gazebo reference="base_footprint">
         <kp>${JOINT_KP}</kp>
         <kd>${JOINT_KD}</kd>
         <mu1>${JOINT_MU1}</mu1>
