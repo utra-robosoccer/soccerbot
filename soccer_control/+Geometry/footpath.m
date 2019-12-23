@@ -2,10 +2,10 @@ classdef footpath < Geometry.path
     properties
         half_to_full_step_time_ratio = 0.7; % Duration difference between half and full step
         
-        foot_separation = 0.035;     % seperation between feet and center
-        step_height = 0.04;        % height of step
-        step_outwardness = 0.0;
-        step_rotation = 0.0;
+        foot_separation = 0.04;     % seperation between feet and center
+        step_height = 0.03;        % height of step
+        step_outwardness = 0.015;
+        step_rotation = 0.05;
         
         foot_center_to_floor;
     end
@@ -51,7 +51,8 @@ classdef footpath < Geometry.path
                         pre_step_time = 0;
                     end
                 elseif (post_pre_settings == 2)
-                    post_step_time = 0;
+                    pre_step_time = 0;
+                    post_step_time = -post_step_time;
                 elseif (post_pre_settings == 3)
                     post_step_time = 0;
                     pre_step_time = 0;
@@ -144,7 +145,7 @@ classdef footpath < Geometry.path
             bodystep = getBodyStep(obj, n);
             
             bodypos = bodystep.position;
-            transformToLeftFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            transformToLeftFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
             position = bodystep * transformToLeftFoot;
         end
         
@@ -152,7 +153,7 @@ classdef footpath < Geometry.path
             bodystep = getBodyStep(obj, n);
             
             bodypos = bodystep.position;
-            transformToRightFoot = Geometry.transform([0, -obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
+            transformToRightFoot = Geometry.transform([0, obj.foot_separation, -bodypos(3) + obj.foot_center_to_floor]);
             position = bodystep * transformToRightFoot;
         end
         

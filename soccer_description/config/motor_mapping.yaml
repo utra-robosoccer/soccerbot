@@ -1,76 +1,95 @@
+#TODO convert all values to radians
 motor_mapping:
   right_leg_motor_0:
     id: 5
     joint_state_id: 1
-    direction: -1
+    direction: -1 #leg turns inwards
     offset: 153
+    initial_state: 0.0
   right_leg_motor_1:
     id: 4
-    direction: -1
+    direction: 1 #leg goes outwards
     offset: 150
+    initial_state: -0.05
   right_leg_motor_2:
     id: 3
-    direction: -1
+    direction: -1 #leg goes forwards
     offset: 153
+    initial_state: 0.25
   right_leg_motor_3:
     id: 2
-    direction: 1
+    direction: 1 #calve goes forwards
     offset: 150
+    initial_state: -0.4
   right_leg_motor_4:
     id: 1
-    direction: 1
+    direction: 1 #foot points upwards
     offset: 150
+    initial_state: 0.2
   right_leg_motor_5:
     id: 0
-    direction: 1
+    direction: -1 #foot turns outwards
     offset: 150
+    initial_state: 0.05
   left_leg_motor_0:
     id: 6
-    direction: 1
+    direction: 1 #leg turns inwards
     offset: 150
+    initial_state: 0.0
   left_leg_motor_1:
     id: 7
-    direction: -1
+    direction: -1 #leg goes outwards
     offset: 150
+    initial_state: -0.05
   left_leg_motor_2:
     id: 8
-    direction: 1
+    direction: 1 # leg goes forwards
     offset: 150
+    initial_state: 0.25
   left_leg_motor_3:
     id: 9
-    direction: -1
+    direction: -1 # calve goes forwards
     offset: 145
+    initial_state: -0.4
   left_leg_motor_4:
     id: 10
-    direction: -1
+    direction: -1 # foot points upwards
     offset: 151
+    initial_state: 0.2
   left_leg_motor_5:
     id: 11
-    direction: -1
+    direction: 1 # foot turns outwards
     offset: 150
+    initial_state: 0.05
   left_arm_motor_0:
     id: 12
-    direction: 1
+    direction: 1 # arm goes forwards
     offset: 150
+    initial_state: 0.2
   left_arm_motor_1:
     id: 15
-    direction: 1
+    direction: 1 # arm goes forwards
     offset: 150
+    initial_state: 1.5
   right_arm_motor_0:
     id: 14
-    direction: -1
+    direction: -1 # arm goes forwards
     offset: 150
+    initial_state: 0.2
   right_arm_motor_1:
     id: 13
-    direction: -1
+    direction: -1 # arm goes forwards
     offset: 150
+    initial_state: 1.5
   head_motor_0:
     id: 16
     joint_state_id: 0
-    direction: 1
+    direction: 1 # robot looks to the right
     offset: 150
+    initial_state: 0.0
   head_motor_1:
     id: 17
     joint_state_id: 1
-    direction: -1
+    direction: -1 # robot looks down
     offset: 150
+    initial_state: 0.0

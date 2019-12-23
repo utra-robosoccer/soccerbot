@@ -4,6 +4,7 @@ classdef soccerbot < handle
         robot_right_leg_subtree;
         robot_left_leg_subtree;
         configuration;
+        torso_offset = eye(4);
         pose = Geometry.transform;              % Pose of the center between the two legs position
         foot_center_to_floor;
         ik_left
@@ -22,7 +23,11 @@ classdef soccerbot < handle
             
             % Solve DH Table
             solveDHTable(obj);
-
+            
+            % Keep hands in the air
+            obj.configuration(4).JointPosition = 0.8*pi;
+            obj.configuration(12).JointPosition = 0.8*pi;
+           
             % Calculating hip and feet location
             hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'right_hip_front');
             position(3) = position(3) + hip_to_torso(3,4);
@@ -138,31 +143,31 @@ classdef soccerbot < handle
             configSolL(6).JointName = tmp(6).JointName;
 
             configSolL(1).JointPosition = -configSolL(1).JointPosition;
-            configSolL(2).JointPosition = configSolL(2).JointPosition;
+            configSolL(2).JointPosition = -configSolL(2).JointPosition;
             configSolL(3).JointPosition = configSolL(3).JointPosition;
             configSolL(4).JointPosition = configSolL(4).JointPosition;
             configSolL(5).JointPosition = configSolL(5).JointPosition;
-            configSolL(6).JointPosition = configSolL(6).JointPosition;        
+            configSolL(6).JointPosition = -configSolL(6).JointPosition;        
         end
         
         function stepPath(obj, t, robot_path)
             tstart = tic;
-            crotch_position = robot_path.crotchPosition(t);
+            crotch_position = robot_path.crotchPosition(t) * obj.torso_offset;
             tend1 = toc(tstart);
             [right_foot_position, left_foot_position] = robot_path.footPosition(t);
             tend2 = toc(tstart);
                         
             torso_to_left_foot = crotch_position \ left_foot_position;
             torso_to_right_foot = crotch_position \ right_foot_position;
-        
+            
+            configSolR = obj.ik_right_foot(torso_to_right_foot);
+            configSolL = obj.ik_left_foot(torso_to_left_foot);
+            
 %             weights_left = [0.25 0.25 0.25 1 1 1];
 %             [configSolL1,err] = obj.ik_left('right_foot',torso_to_right_foot,weights_left,obj.robot_right_leg_subtree.homeConfiguration);
 %             weights_right = [0.25 0.25 0.25 1 1 1];
 %             [configSolR1,~] = obj.ik_right('left_foot',torso_to_left_foot,weights_right,obj.robot_left_leg_subtree.homeConfiguration);
 %             assert(err.ExitFlag == 1)
-            
-            configSolR = obj.ik_right_foot(torso_to_right_foot);
-            configSolL = obj.ik_left_foot(torso_to_left_foot);
             
             obj.configuration(5:10) = configSolL;
             obj.configuration(13:18) = configSolR;
@@ -171,6 +176,11 @@ classdef soccerbot < handle
             tend3 = toc(tstart);
             
             fprintf('Torso Time: %f, Foot Path Time: %f, IK Time: %f\n\n', tend1, tend2, tend3);
+        end
+        
+        function applyRPYFeedback(obj, rpy)
+            f_off = -sin(rpy(2)) * 0.02;
+            obj.torso_offset = [1,0,0,f_off; 0,1,0,0; 0,0,1,0; 0,0,0,1];
         end
         
         function angles = getAngles(obj)

@@ -15,14 +15,21 @@ class Communication:
         self._last_angles = np.ndarray
         self._last_imu = np.ndarray
 
+        # https://www.pieter-jan.com/node/11
+        self.pitch_acc = 0
+        self.roll_acc = 0
+        self.pitch = 0
+        self.roll = 0
+
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
         self._rx_thread.set_timeout(0.010)
         self._rx_thread.bind(self.receive_callback)
 
-        self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
+        self._pub_imu = rp.Publisher('imu_raw', Imu, queue_size=1)
         self._pub_joint_states = rp.Publisher('joint_states', JointState, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
+        self._imu_calibration = rp.get_param("~imu_calibration")
         for motor in self._motor_map:
             self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
             self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
@@ -58,8 +65,17 @@ class Communication:
     def publish_sensor_data(self, received_angles, received_imu):
         # IMU FEEDBACK
         imu = Imu()
-        imu.angular_velocity = Vector3(-received_imu[2][0], received_imu[1][0], received_imu[0][0])
-        imu.linear_acceleration = Vector3(received_imu[5][0], received_imu[4][0], received_imu[3][0])
+        imu.header.stamp = rp.rostime.get_rostime()
+        imu.header.frame_id = "imu_link"
+
+        # TODO autocalibrate
+        imu.angular_velocity = Vector3((-received_imu[2][0] - self._imu_calibration["gyro_offset"][0]) * self._imu_calibration["gryo_scale"][0],
+                                       (received_imu[1][0] - self._imu_calibration["gyro_offset"][1]) * self._imu_calibration["gryo_scale"][1],
+                                       (received_imu[0][0] - self._imu_calibration["gyro_offset"][2]) * self._imu_calibration["gryo_scale"][2])
+        imu.linear_acceleration = Vector3((received_imu[5][0] - self._imu_calibration["acc_offset"][0]) * self._imu_calibration["acc_scale"][0],
+                                          (received_imu[4][0] - self._imu_calibration["acc_offset"][1]) * self._imu_calibration["acc_scale"][1],
+                                          (received_imu[3][0] - self._imu_calibration["acc_offset"][2]) * self._imu_calibration["acc_scale"][2])
+        imu.orientation_covariance[0] = -1
         self._pub_imu.publish(imu)
 
         # MOTOR FEEDBACK
