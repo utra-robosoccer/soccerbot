@@ -4,30 +4,33 @@ import csv
 import rospy
 from std_msgs.msg import Float64
 
-
-# Doesn't safely handle non-rectangular trajectories.
 class Trajectory:
-    """Interpolates a CSV trajectory for multiple joints for some timestep.
-
-    Attributes:
-        splines - A dictionary of splines that serve as the interpolation for each joint
-        timestep - The time distance between two points in the interpolation.
-        total_time - The total amount of time this trajectory will take.
-    """
+    """Interpolates a CSV trajectory for multiple joints."""
 
     def __init__(self, trajectory_path):
-        """Initialize a Trajectory from a CSV file at trajectory_path."""
+        """Initialize a Trajectory from a CSV file at trajectory_path.
+        if it's getup trajectory append the desired final pose so the robot is ready for next action
+        expects rectangular shape for csv table"""
         self.splines = {}
         self.step_map = {}
+        self.time_to_last_pose = 5.0  # seconds
 
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
-                if row[0] == 'time':
-                    interpolated_time = map(float, row[1:])
-                    self.max_time = interpolated_time[-1]
+                joint_name = row[0]
+                if joint_name == 'comment':
+                    continue
+                if joint_name == 'time':
+                    self.times = map(float, row[1:])
+                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
+                    self.max_time = self.times[-1]
                 else:
-                    self.splines[row[0]] = interp1d(interpolated_time, map(float, row[1:]))
+                    joint_values = map(float, row[1:])
+                    param = '~motor_mapping/{}/initial_state'.format(joint_name)
+                    last_pose_value = float(rospy.get_param(param))
+                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
+                    self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
         """Get the position of each joint at timestamp.
@@ -41,7 +44,7 @@ class Trajectory:
 
     def publish(self):
         publishers = {
-            joint: rospy.Publisher("/{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
+            joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
 
         rate = rospy.Rate(100)
         t = 0

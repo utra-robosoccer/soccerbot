@@ -1,0 +1,17 @@
+time,0.5,1,1.1,1.2
+left_leg_motor_0,0,0,0,0
+right_leg_motor_0,0,0,0,0
+left_leg_motor_1,-0.05,0,0,0
+right_leg_motor_1,-0.05,0,0,0
+left_leg_motor_2,0.25,0.25,0.25,0.25
+right_leg_motor_2,0.25,0.25,1.4,1.4
+left_leg_motor_3,-0.4,-0.4,-0.4,-0.4
+right_leg_motor_3,-0.4,-0.4,-1.4,-0.4
+left_leg_motor_4,0.2,0.2,0.2,0.2
+right_leg_motor_4,0.2,0.2,0.2,0.2
+left_leg_motor_5,0,0,0,0
+right_leg_motor_5,0,0,0,0
+left_arm_motor_0,0,0,0,0
+right_arm_motor_0,0,0,0,0
+right_arm_motor_1,2,2,2,2
+left_arm_motor_1,2,2,2,2
