@@ -3,10 +3,11 @@
 <launch>
     <arg name="darknet"         default="true" />
     <arg name="robot_name" />
+    <arg name="map_name" />
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
-          args="$(find soccer_common)/maps/test.yaml">
+          args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world"/>
     </node>
 
