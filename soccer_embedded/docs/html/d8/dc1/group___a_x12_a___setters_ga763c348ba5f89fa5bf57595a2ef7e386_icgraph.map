@@ -1,0 +1,4 @@
+<map id="AX12A_SetCCWComplianceSlope" name="AX12A_SetCCWComplianceSlope">
+<area shape="rect" id="node2" href="$d5/df6/group___a_x12_a_header.html#ga43a54da2ab8d918bcb85fadf7b69dd41" title="Sets both the CW and CCW compliance slope. " alt="" coords="273,5,463,32"/>
+<area shape="rect" id="node3" href="$d0/d55/group___threads.html#gae9a7f9b9094fd560310f92b214f2c829" title="This function is executed in the context of the commandTask thread. It initializes all data structure..." alt="" coords="511,5,648,32"/>
+</map>
