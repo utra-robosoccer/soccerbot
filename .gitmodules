@@ -1,3 +1,7 @@
 [submodule "external/darknet_ros"]
 	path = external/darknet_ros
 	url = https://github.com/utra-robosoccer/darknet_ros
+[submodule "soccer_control/libraries/ContactLib"]
+	branch = R2019a
+	path = soccer_control/libraries/ContactLib
+	url = https://github.com/mathworks/Simscape-Multibody-Contact-Forces-Library
