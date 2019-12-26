@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SimMechanicsImportXML version="1.0" xmlns="urn:mathworks:simmechanics:import" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Created by="" on="07/25/14||22:03:52" using="SimMechanics Link Version 4.4" from="SolidWorks 20.3.0"/>
+<ModelUnits mass="kilogram" length="millimeter"/>
+<DataUnits mass="kilogram" length="meter"/>
+<RootAssembly name="Geneva_Drive" uid="Geneva_Drive" version="162">
+<AssemblyFile name="Geneva_Drive.SLDASM" type="SolidWorks Assembly"/>
+<InstanceTree>
+<Instance name="Drive_Wheel-1" uid="Drive_Wheel-1" entityUid="Drive_Wheel*:*Default">
+<Transform>
+<Rotation>-0.28007665977471385 0.95997763757779242 0 -1.1756335411126824e-016 0 0.99999999999999989 0.95997763757779242 0.28007665977471385 1.2246467991473572e-016</Rotation>
+<Translation>-0.15900184753534691 0.040000000000000029 0.081166658884292281</Translation>
+</Transform>
+<VisualProperties>
+<Ambient r="0.20000000000000001" g="0.40000000000000002" b="1" a="1"/>
+<Diffuse r="0.20000000000000001" g="0.40000000000000002" b="1" a="1"/>
+<Specular r="0.10000000000000001" g="0.20000000000000001" b="0.5" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.40000000596046448</Shininess>
+</VisualProperties>
+</Instance>
+<Instance name="Geneva-1" uid="Geneva-1" entityUid="Geneva*:*Default">
+<Transform>
+<Rotation>-5.5756675589480748e-014 -1 0 1.2246467991463553e-016 0 1 -1 5.5756675589480748e-014 1.2246467991463553e-016</Rotation>
+<Translation>0.069005818442129871 0.039999999999999987 0.085168895126512073</Translation>
+</Transform>
+<VisualProperties>
+<Ambient r="1" g="0.40000000000000002" b="0" a="1"/>
+<Diffuse r="1" g="0.40000000000000002" b="0" a="1"/>
+<Specular r="1" g="0.40000000000000002" b="0" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.31</Shininess>
+</VisualProperties>
+</Instance>
+<Instance name="Base-1" uid="Base-1" grounded="true" entityUid="Base*:*Default">
+<Transform>
+<Rotation>1 0 0 0 1.2246467991473532e-016 1 0 -1 1.2246467991473532e-016</Rotation>
+<Translation>-0.030994181557875464 0.040000000000000001 -0.01483110487348719</Translation>
+</Transform>
+</Instance>
+</InstanceTree>
+<Constraints>
+<Coincident name="Coincident1">
+<ConstraintGeometry geomType="circle">
+<InstancePath>
+<Uid>Base-1</Uid>
+</InstancePath>
+<Position>0.10000000000000001 0 0</Position>
+<Axis>0 0 1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>Geneva-1</Uid>
+</InstancePath>
+<Position>0.070710678118654766 0.029289321881345212 0</Position>
+<Axis>0 0 -1</Axis>
+</ConstraintGeometry>
+</Coincident>
+<Concentric name="Concentric1">
+<ConstraintGeometry geomType="cylinder">
+<InstancePath>
+<Uid>Base-1</Uid>
+</InstancePath>
+<Position>0.10000000000000001 0 0.05742640687119286</Position>
+<Axis>0 0 -1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="cylinder">
+<InstancePath>
+<Uid>Geneva-1</Uid>
+</InstancePath>
+<Position>0.10000000000000001 0 -0.010000000000000005</Position>
+<Axis>0 0 1</Axis>
+</ConstraintGeometry>
+</Concentric>
+<Concentric name="Concentric2">
+<ConstraintGeometry geomType="cylinder">
+<InstancePath>
+<Uid>Base-1</Uid>
+</InstancePath>
+<Position>-0.099999999999999992 0 0.05742640687119286</Position>
+<Axis>0 0 -1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="cylinder">
+<InstancePath>
+<Uid>Drive_Wheel-1</Uid>
+</InstancePath>
+<Position>-0.10000000000000002 0 -0.009999999999999995</Position>
+<Axis>0 0 0.99999999999999989</Axis>
+</ConstraintGeometry>
+</Concentric>
+<Coincident name="Coincident2">
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>Base-1</Uid>
+</InstancePath>
+<Position>0.26499999999999996 -0.17499999999999999 -0.010000000000000002</Position>
+<Axis>0 0 1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>Drive_Wheel-1</Uid>
+</InstancePath>
+<Position>-0.031332527569575053 0.037439129287373224 -0.0099999999999999915</Position>
+<Axis>0 0 -0.99999999999999989</Axis>
+</ConstraintGeometry>
+</Coincident>
+</Constraints>
+<Frames>
+</Frames>
+</RootAssembly>
+<Assemblies>
+</Assemblies>
+<Parts>
+<Part name="Base" uid="Base*:*Default" version="123">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="Base.sldprt" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>5.6121441650895836</Mass>
+<CenterOfMass>0.00022415415704528136 0 -0.024782168314450626</CenterOfMass>
+<Inertia>0.057246923822174667 0.13116816755878027 0.18751390774897447 0 -2.4879239071091788e-005 0</Inertia>
+</MassProperties>
+<GeometryFile name="Base_Default_sldprt.STL" type="STL"/>
+<VisualProperties>
+<Ambient r="0.82745098039215681" g="0.82745098039215681" b="0.81960784313725488" a="1"/>
+<Diffuse r="0.82745098039215681" g="0.82745098039215681" b="0.81960784313725488" a="1"/>
+<Specular r="0.66196079417770981" g="0.66196079417770981" b="0.65568628428029074" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.10000000149011612</Shininess>
+</VisualProperties>
+<Frames>
+</Frames>
+</Part>
+<Part name="Drive_Wheel" uid="Drive_Wheel*:*Default" version="122">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="Drive_Wheel.sldprt" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>1.1459440199505517</Mass>
+<CenterOfMass>-0.10332572655678197 -0.0033257265567819814 0.00056035000006051977</CenterOfMass>
+<Inertia>0.0050631142307875285 0.0050631142307875293 0.0100081517940936 4.6956086417341879e-005 4.6956086417341899e-005 4.1948612891028123e-005</Inertia>
+</MassProperties>
+<GeometryFile name="Drive_Wheel_Default_sldprt.STL" type="STL"/>
+<VisualProperties>
+<Ambient r="0.20000000000000001" g="0.40000000000000002" b="1" a="1"/>
+<Diffuse r="0.20000000000000001" g="0.40000000000000002" b="1" a="1"/>
+<Specular r="0.040000000596046449" g="0.080000001192092898" b="0.20000000298023224" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.20000000298023224</Shininess>
+</VisualProperties>
+<Frames>
+<Frame name="SMLINK_Rotator_Pin" uid="SMLINK_Rotator_Pin">
+<Transform>
+<Rotation>1 0 0 0 1 0 0 0 1</Rotation>
+<Translation>0 0.099999999999999936 0.0010000000000000009</Translation>
+</Transform>
+</Frame>
+</Frames>
+</Part>
+<Part name="Geneva" uid="Geneva*:*Default" version="123">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="Geneva.sldprt" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>0.24105441419713447</Mass>
+<CenterOfMass>0.10000000000000023 1.1564451014440063e-015 0.005000000000000001</CenterOfMass>
+<Inertia>0.00080362795532691058 0.00080362795532691242 0.0016032615806722311 0 0 0</Inertia>
+</MassProperties>
+<GeometryFile name="Geneva_Default_sldprt.STL" type="STL"/>
+<VisualProperties>
+<Ambient r="1" g="0.40000000000000002" b="0" a="1"/>
+<Diffuse r="1" g="0.40000000000000002" b="0" a="1"/>
+<Specular r="0.20000000298023224" g="0.080000001192092898" b="0" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.20000000298023224</Shininess>
+</VisualProperties>
+<Frames>
+</Frames>
+</Part>
+</Parts>
+</SimMechanicsImportXML>
