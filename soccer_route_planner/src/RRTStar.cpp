@@ -16,8 +16,9 @@ Graph RRTStar::RRT_Star(int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose
     G.assign_parent(root_id, -1); // Proxy for no parent.
 
     int i = 0;
+    int done = 0;
 
-    while (i < n) {
+    while (i < n && done == 0) {
         // Select a random (unobstructed) sample from the map.
         geometry_msgs::Pose2D x_rand = sample();
 
@@ -84,6 +85,7 @@ Graph RRTStar::RRT_Star(int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose
                 }
             }
         }
+        if(compute_dist(x_new, x_goal) > M.info.resolution) done = 1; // IS RESOLUTION A GOOD METRIC HERE??
         i++;
     }
 
