@@ -3,7 +3,10 @@ classdef transform < handle
     
     properties
         % H Matrix
-        H = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+        H = [1 0 0 0; 
+             0 1 0 0; 
+             0 0 1 0; 
+             0 0 0 1];
     end
     
     methods

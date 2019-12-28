@@ -4,7 +4,9 @@ project(soccer_hardware)
 find_package(catkin REQUIRED COMPONENTS
     rospy
     std_msgs
-    soccer_msgs
+    sensor_msgs
+    geometry_msgs
+    control_msgs
 )
 
 catkin_package()

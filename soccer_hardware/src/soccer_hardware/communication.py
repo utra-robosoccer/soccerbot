@@ -1,51 +1,45 @@
-import time
 import rospy as rp
 from wait_for_ms import WaitForMs
-from prettytable import PrettyTable
 from transmitter import Transmitter
 from receiver import Receiver
-from utility import *
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
 from transformations import *
-
+from sensor_msgs.msg import JointState
+import math
 
 class Communication:
-    def __init__(self, ser, step_is_on, wait_feedback_is_on):
-        self._started = False
+    def __init__(self, ser):
         self._last_angles = np.ndarray
         self._last_imu = np.ndarray
-        self._num_rx = 0
-        self._num_tx = 0
-        self._t_start = 0
 
-        self._last_print_time = time.time()
-        self._step_is_on = step_is_on
-        self._wait_feedback_is_on = wait_feedback_is_on
-        self._use_trajectory = False
+        # https://www.pieter-jan.com/node/11
+        self.pitch_acc = 0
+        self.roll_acc = 0
+        self.pitch = 0
+        self.roll = 0
 
-        # MCU Callbacks
         self._tx_thread = Transmitter(name="tx_th", ser=ser)
         self._rx_thread = Receiver(name="rx_th", ser=ser)
-        # self._rx_thread.set_timeout(0.010)
-        # self._rx_thread.bind(self.receive_callback)
+        self._rx_thread.set_timeout(0.010)
+        self._rx_thread.bind(self.receive_callback)
 
-        self._pub_imu = rp.Publisher('imu', Imu, queue_size=1)
+        self._pub_imu = rp.Publisher('imu_raw', Imu, queue_size=1)
+        self._pub_joint_states = rp.Publisher('joint_states', JointState, queue_size=1)
         self._motor_map = rp.get_param("~motor_mapping")
+        self._imu_calibration = rp.get_param("~imu_calibration")
         for motor in self._motor_map:
-            self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float32, self.trajectory_callback, motor)
+            self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
             self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
             self._motor_map[motor]["value"] = 0.0
 
         self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
 
     def run(self):
-        # self._rx_thread.start()
+        self._rx_thread.start()
         self._tx_thread.start()
-        self._t_start = time.time()
-        self._started = True
 
         tx_cycle = WaitForMs(10)
         tx_cycle.set_e_gain(1.5)
@@ -63,32 +57,6 @@ class Communication:
             motor_angles[int(self._motor_map[motor]["id"])] = (np.rad2deg(self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])) + float(self._motor_map[motor]["offset"]))
         self._tx_thread.send(motor_angles)
 
-    def print_imu(self):
-        """ Prints out a numpy vector interpreted as data from the IMU, in the
-            order X-gyro, Y-gyro, Z-gyro, X-accel, Y-accel, Z-accel.
-        """
-        received = self._last_imu
-
-        t = PrettyTable(['', 'Gyro (deg/s)', 'Accel (m/s^2)'])
-        t.add_row(["X", round(received[0][0], 2), round(received[3][0], 2)])
-        t.add_row(["Y", round(received[1][0], 2), round(received[4][0], 2)])
-        t.add_row(["Z", round(received[2][0], 2), round(received[5][0], 2)])
-        print(t)
-
-    def print_handler(self):
-        current_time = time.time()
-        if current_time - self._last_print_time >= 1:
-            self._last_print_time = current_time
-            print('\n')
-            self._num_rx = self._rx_thread.get_num_rx()[0]
-            log_string("Received: {0}".format(self._num_rx))
-            self._num_tx = self._tx_thread.get_num_tx()
-            log_string("Transmitted: {0}\n".format(self._num_tx))
-            if self._num_rx > 0:
-                # Prints the last valid data received
-                self.print_angles()
-                self.print_imu()
-
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles
         self._last_imu = received_imu
@@ -97,20 +65,43 @@ class Communication:
     def publish_sensor_data(self, received_angles, received_imu):
         # IMU FEEDBACK
         imu = Imu()
-        imu.angular_velocity = Vector3(-received_imu[2][0], received_imu[1][0], received_imu[0][0])
-        imu.linear_acceleration = Vector3(received_imu[5][0], received_imu[4][0], received_imu[3][0])
+        imu.header.stamp = rp.rostime.get_rostime()
+        imu.header.frame_id = "imu_link"
+
+        # TODO autocalibrate
+        imu.angular_velocity = Vector3((-received_imu[2][0] - self._imu_calibration["gyro_offset"][0]) * self._imu_calibration["gryo_scale"][0],
+                                       (received_imu[1][0] - self._imu_calibration["gyro_offset"][1]) * self._imu_calibration["gryo_scale"][1],
+                                       (received_imu[0][0] - self._imu_calibration["gyro_offset"][2]) * self._imu_calibration["gryo_scale"][2])
+        imu.linear_acceleration = Vector3((received_imu[5][0] - self._imu_calibration["acc_offset"][0]) * self._imu_calibration["acc_scale"][0],
+                                          (received_imu[4][0] - self._imu_calibration["acc_offset"][1]) * self._imu_calibration["acc_scale"][1],
+                                          (received_imu[3][0] - self._imu_calibration["acc_offset"][2]) * self._imu_calibration["acc_scale"][2])
+        imu.orientation_covariance[0] = -1
         self._pub_imu.publish(imu)
 
         # MOTOR FEEDBACK
-        # Convert motor array from the embedded coordinate system to that
-        # used by controls
-        ctrl_angle_array = mcuToCtrlAngles(received_angles)
-        robot_state = RobotState()
-        for i in range(12):
-            robot_state.joint_angles[i] = ctrl_angle_array[i][0]
+        joint_state = JointState()
+        joint_state.header.stamp = rp.rostime.get_rostime()
+        for motor in self._motor_map:
+            if int(self._motor_map[motor]["id"]) < 12:
+                assert(int(self._motor_map[motor]["id"]) < len(received_angles))
+                angle = received_angles[int(self._motor_map[motor]["id"])]
+                if math.isnan(angle): # TODO fix this
+                    continue
+                angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
+                angle = np.deg2rad(angle)
+            else:
+                angle = self._motor_map[motor]["value"]
 
-        # Convert motor array from the embedded order and sign convention
-        # to that used by controls
-        m = getCtrlToMcuAngleMap()
-        robot_state.joint_angles[0:12] = np.linalg.inv(m).dot(robot_state.joint_angles[0:18])[0:12]
-        self._pub_angles.publish(robot_state)
+        # Joint controller state
+            state = JointControllerState()
+            state.process_value = angle
+            state.command = self._motor_map[motor]["value"]
+            state.error = angle - self._motor_map[motor]["value"]
+            state.process_value_dot = 0 # TODO PID settings and process value dot
+            state.header.stamp = rp.rostime.get_rostime()
+            self._motor_map[motor]["publisher"].publish(state)
+
+            # Joint State
+            joint_state.name.append(motor)
+            joint_state.position.append(angle)
+        self._pub_joint_states.publish(joint_state)

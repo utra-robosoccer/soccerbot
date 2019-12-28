@@ -45,7 +45,7 @@
             </visual>
         </link>
 
-        <joint name="${origin}_neck" type="revolute">
+        <joint name="head_motor_0" type="revolute">
             <parent link="${origin}"/>
             <child link="neck"/>
             <origin rpy="0 0 0" xyz="0.024 0 0.05875"/>
@@ -53,7 +53,7 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${AX12_VELOCITY}"/>
         </joint>
-        <joint name="neck_head" type="revolute">
+        <joint name="head_motor_1" type="revolute">
             <parent link="neck"/>
             <child link="head"/>
             <origin rpy="0 0 0" xyz="0 0 0.024"/>
@@ -62,22 +62,22 @@
             <limit effort="${AX12_TORQUE}" lower="-${PI*3/4}" upper="${PI*3/4}" velocity="${AX12_VELOCITY}"/>
         </joint>
 
-        <transmission name="${origin}_neck">
+        <transmission name="head_motor_0">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${origin}_neck">
+            <joint name="head_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="${origin}_neck">
+            <actuator name="head_motor_0">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
-        <transmission name="neck_head">
+        <transmission name="head_motor_1">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="neck_head">
+            <joint name="head_motor_1">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="neck_head">
+            <actuator name="head_motor_1">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>

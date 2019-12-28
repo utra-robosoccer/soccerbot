@@ -9,15 +9,14 @@ if __name__ == "__main__":
     rospy.init_node("soccer_hardware")
     port = rospy.get_param("~port", "/dev/ttyACM")
     baud = rospy.get_param("~baud", 230400)
-    trajectory = rospy.get_param("~trajectory", "standing.csv")
-    step_is_on = rospy.get_param("~step", False)
-    wait_feedback_is_on = rospy.get_param("~wait_feedback", True)
 
     log_string("Connecting To Embedded system")
     log_string("\tPort: " + port)
     log_string("\tBaud rate: " + str(baud))
 
+    # Try all ranges in port
     i = 0
+    ser = serial.Serial()
     for i in range(0,10):
         try:
             ser = serial.Serial(port + str(i), baud, timeout=0)
@@ -25,15 +24,16 @@ if __name__ == "__main__":
         except serial.serialutil.SerialException as e:
             pass
 
-    if i == 10:
-        print("No serial port found: " + port)
+    if i == 9:
+        rospy.logerr("No serial port found: " + port)
+        exit(0)
 
 
     attempt = 0
     rate = rospy.Rate(1)
     while not rospy.is_shutdown():
         try:
-            comm = Communication(ser, step_is_on, wait_feedback_is_on)
+            comm = Communication(ser)
             comm.run()
             break
 

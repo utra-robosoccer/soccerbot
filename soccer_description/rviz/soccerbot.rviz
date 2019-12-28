@@ -64,7 +64,7 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
+        base_footprint:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -223,7 +223,7 @@ Visualization Manager:
   Global Options:
     Background Color: 238; 238; 238
     Default Light: true
-    Fixed Frame: base_link
+    Fixed Frame: base_footprint
     Frame Rate: 30
   Name: root
   Tools:

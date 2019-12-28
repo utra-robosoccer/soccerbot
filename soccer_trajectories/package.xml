@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>soccer_trajectories</name>
+    <version>0.0.0</version>
+    <description>The soccer_trajectories package</description>
+
+    <maintainer email="arthur@allshire.org">Arthur Allshire</maintainer>
+
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>dynamic_reconfigure</depend>
+    <depend>gazebo_ros</depend>
+    <depend>gazebo_ros_control</depend>
+    <depend>ros_control</depend>
+    <depend>python-scipy</depend>
+    <depend>tf2_ros</depend>
+</package>
