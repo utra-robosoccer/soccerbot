@@ -1,0 +1,8 @@
+<map id="StartIMUTask" name="StartIMUTask">
+<area shape="rect" id="node2" href="$d5/dd2/group___i_m_u___filter___public___functions.html#ga673920b95d4804093d1c53f3f48e8788" title="Initialize acceleration and angular velocity FIR filters for IMU data. " alt="" coords="183,5,338,32"/>
+<area shape="rect" id="node5" href="$dd/d03/group___m_p_u6050.html#ga51e6a1f1993e4262fa3e14338f309618" title="Reads the accelerometer with interrupts and offsets. " alt="" coords="172,56,349,112"/>
+<area shape="rect" id="node6" href="$dd/d03/group___m_p_u6050.html#gab7929977cc2d2a4b76704a4a27295651" title="Reads the gyroscope with interrupts and offsets. " alt="" coords="155,137,367,178"/>
+<area shape="rect" id="node7" href="$dd/d03/group___m_p_u6050.html#ga555821cc04de0f289b7754689a6ffd86" title="Fills an IMUStruct. " alt="" coords="172,202,349,243"/>
+<area shape="rect" id="node3" href="$de/d87/group___i_m_u___filter___private___functions.html#ga1cd85aa20cefe82040d02b3652d422e2" title="Initialize a velocity filter. " alt="" coords="415,5,537,32"/>
+<area shape="rect" id="node4" href="$de/d87/group___i_m_u___filter___private___functions.html#ga2ef910506c16ade4a588ee02328c989a" title="Reset a velocity filter. " alt="" coords="585,5,720,32"/>
+</map>

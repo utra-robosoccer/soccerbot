@@ -1,0 +1,9 @@
+<map id="soccer&#45;embedded/Common/app/UART_Handler.c" name="soccer&#45;embedded/Common/app/UART_Handler.c">
+<area shape="rect" id="node2" href="$d4/d29/_u_a_r_t___handler_8h.html" title="Header file for the UART event processor, which is called whenever there are commands that need to be..." alt="" coords="313,95,432,121"/>
+<area shape="rect" id="node3" href="$dd/d59/_dynamixel_protocol_v1_8h.html" title="Common header code for the AX12A library and MX28 library. It is generic in that any Dynamixel actuat..." alt="" coords="220,169,379,196"/>
+<area shape="rect" id="node5" href="$d7/d9e/_dynamixel___types_8h.html" title="This file defines the data structure used by all Dynamixel actuators, as well as user&#45;defined types i..." alt="" coords="85,423,247,464"/>
+<area shape="rect" id="node8" href="$d7/d41/_dynamixel___data_8h.html" title="../component/Dynamixel\l/h/Dynamixel_Data.h" alt="" coords="455,333,618,375"/>
+<area shape="rect" id="node9" href="$d6/d8e/_a_x12_a_8h.html" title="This file provides interfaces for AX12A&#45;specific functions. " alt="" coords="218,244,381,285"/>
+<area shape="rect" id="node11" href="$d6/d7b/_m_x28_8h.html" title="This file provides interfaces for MX28&#45;specific functions. " alt="" coords="31,244,194,285"/>
+<area shape="rect" id="node10" href="$d5/d15/_dynamixel_protocol_v1___i_o_8h.html" title="DynamixelProtocolV1_IO.h" alt="" coords="202,341,381,367"/>
+</map>

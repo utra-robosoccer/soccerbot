@@ -40,7 +40,7 @@ before_script:
   - cd $TRAVIS_BUILD_DIR && mkdir googletest_clone && cd googletest_clone
   - git clone https://github.com/google/googletest.git
   - cd googletest && mkdir build && cd build
-  - cmake .. 
+  - cmake ..
   - make -j16 DGTEST_CREATE_SHARED_LIBRARY=1
 
 script:
