@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <soccer_geometry/segment2.hpp>
@@ -163,7 +162,38 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     point_cloud_publisher.publish(point_cloud_msg);
     pts.clear();
     points3d.clear();
+
+    geometry_msgs::TransformStamped camera_footprint;
+    try {
+        camera_footprint = tfBuffer.lookupTransform( "camera","base_footprint",
+                                               ros::Time(0), ros::Duration(0.1));
+        camera_footprint.header.frame_id = "base_footprint";
+        camera_footprint.child_frame_id = "base_camera";
+        camera_footprint.header.stamp = msg->header.stamp;
+        camera_footprint.header.seq = msg->header.seq;
+
+        tf2::Quaternion q(camera_footprint.transform.rotation.x,
+                          camera_footprint.transform.rotation.y,
+                          camera_footprint.transform.rotation.z,
+                          camera_footprint.transform.rotation.w);
+        tf2::Matrix3x3 m(q);
+        double r,p,y;
+        m.getRPY(r,p,y);
+        q.setRPY(0,0,y);
+        q.normalize();
+        camera_footprint.transform.rotation.x = q[0];
+        camera_footprint.transform.rotation.y = q[1];
+        camera_footprint.transform.rotation.z = q[2];
+        camera_footprint.transform.rotation.w = q[3];
+        camera_footprint.transform.translation.z = 0;
+
+        br.sendTransform(camera_footprint);
+    }
+    catch (tf2::TransformException &ex) {
+        return;
+    }
 }
+
 
 
 int main(int argc, char **argv) {
