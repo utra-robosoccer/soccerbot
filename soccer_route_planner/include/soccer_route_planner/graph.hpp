@@ -5,6 +5,7 @@
 #include <iostream>
 #include <geometry_msgs/Pose2D.h>
 #include <map>
+#include <visualization_msgs/Marker.h>
 
 class Graph
 {
@@ -33,6 +34,9 @@ public:
     int parent(int id);
 
     int get_num_nodes();
+
+    visualization_msgs::Marker get_graph_marker();
+
 };
 
 struct node_info {

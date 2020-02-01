@@ -1,0 +1,5 @@
+uint8 END_ACTION_NOTHING=0
+uint8 END_ACTION_KICK_LEFT=1
+uint8 END_ACTION_KICK_RIGHT=2
+
+uint8 end_action

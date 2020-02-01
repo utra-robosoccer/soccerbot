@@ -377,7 +377,7 @@ struct ppp_pcb_s {
   lcp_options lcp_allowoptions;  /* Options we allow peer to request */
   lcp_options lcp_hisoptions;    /* Options that we ack'd */
   u16_t peer_mru;                /* currently negotiated peer MRU */
-  u8_t lcp_echos_pending;        /* Number of outstanding echo msgs */
+  u8_t lcp_echos_pending;        /* Number of outstanding echo msg */
   u8_t lcp_echo_number;          /* ID number of next echo frame */
 
   u8_t num_np_open;              /* Number of network protocols which we have opened. */

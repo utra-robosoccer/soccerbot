@@ -1,4 +1,4 @@
-#include <soccer_route_planner/Graph.hpp>
+#include <soccer_route_planner/graph.hpp>
 
 Graph::Graph() {
     m_num_nodes = 0;
@@ -64,3 +64,17 @@ int Graph::parent(int id) {
     return node_info_map[id].parent;
 }
 
+visualization_msgs::Marker Graph::get_graph_marker() {
+     visualization_msgs::Marker marker;
+
+     marker.ns = "rrt_graph_thing";
+     marker.action = visualization_msgs::Marker::ADD;
+     marker.pose.orientation.w = 0.0;
+
+     marker.id = 0;
+     marker.type = visualization_msgs::Marker::LINE_LIST;
+     marker.scale.x = 0.1;
+     marker.color.r = 1.0;
+     marker.color.a = 1.0;
+
+}

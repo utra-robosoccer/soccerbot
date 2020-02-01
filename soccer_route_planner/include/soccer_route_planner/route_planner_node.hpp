@@ -1,36 +1,26 @@
 #pragma once
 
-#include <soccer_route_planner/Graph.hpp>
+#include <soccer_route_planner/graph.hpp>
 #include <ros/ros.h>
-#include <soccer_msgs/Waypoints.h>
-#include <soccer_msgs/MapOverview.h>
 #include <soccer_msgs/RobotCommand.h>
+#include <unordered_map>
 
 class RoutePlannerNode {
 public:
     RoutePlannerNode();
-    // Map map;
+
 private:
     ros::NodeHandle nh;
     ros::Subscriber robotCommandSubscriber;
-    ros::Subscriber mapOverviewSubscriber;
+    ros::Subscriber robotPoseSubscriber;
     ros::Publisher waypointPublisher;
+    ros::Publisher graphPublisher;
 
-    soccer_msgs::MapOverviewPtr mapOverviewStore;
-    soccer_msgs::RobotCommandPtr robotCommandStore;
+    std::unordered_map<int, geometry_msgs::Pose2DPtr> robot_poses;
+
+    // Subscriber to robot information to build robot information
+    void robotPoseCallback(const geometry_msgs::Pose2DPtr& robotPose);
 
     // upon overview subscription update Map
-    void mapOverviewCallback(const soccer_msgs::MapOverviewPtr &mapOverview);
     void robotCommandCallback(const soccer_msgs::RobotCommandPtr& robotCommand);
-
-    // Waypoints functions
-    soccer_msgs::Waypoints createWaypoints();
-
-    void publishWaypoints(soccer_msgs::Waypoints);
-
-    // RRT* algorithm / primitives below.
-    Graph solution(geometry_msgs::Pose2D init, geometry_msgs::Pose2D goal);
-
-    // Upon subscription, first use the map to find a path, and then publish using the waypoint publisher
-//    void robotCommandCallback(/* Robot Command message */);
 };

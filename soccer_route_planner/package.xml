@@ -8,5 +8,6 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>soccer_msgs</depend>
+  <depend>visualization_msgs</depend>
 
 </package>

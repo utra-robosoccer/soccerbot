@@ -1,2 +1,2 @@
-geometry_msgs/Pose2D goal
+nav_msgs/Path path
 soccer_msgs/EndAction end_action

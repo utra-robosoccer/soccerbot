@@ -1,4 +1,4 @@
-#include <soccer_route_planner/Map.hpp>
+#include <soccer_route_planner/map.hpp>
 
 Map::Map() {
     m_InflationRadius = 0.2;
@@ -6,8 +6,8 @@ Map::Map() {
     info.resolution = 0.05;
     info.height = 9;
     info.width = 6;
-    info.origin.position.x = -info.width/2;
-    info.origin.position.y = -info.height/2;
+    info.origin.position.x = 0;
+    info.origin.position.y = 0;
     data.reserve(getCols() * getRows());
 }
 

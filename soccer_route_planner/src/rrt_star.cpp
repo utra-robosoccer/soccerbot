@@ -1,14 +1,10 @@
-#include <soccer_route_planner/RRTStar.hpp>
+#include <soccer_route_planner/rrt_star.hpp>
 
 #include <stdlib.h>
 #include <ctime>
 #include <math.h>
 
 double compute_dist(geometry_msgs::Pose2D first, geometry_msgs::Pose2D second);
-
-RRTStar::RRTStar() {
-
-}
 
 Graph RRTStar::RRT_Star(int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose2D x_goal) {
     int root_id = G.add_vertex(x_init.x, x_init.y);
@@ -73,7 +69,6 @@ Graph RRTStar::RRT_Star(int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose
 
             // Loop through vertices in a neighbourhood of the new vertex (again) - REWIRE THE TREE.
             for(int j = 0; j < num_near; j++) {
-                int parent_id = -1;
                 geometry_msgs::Pose2D near_location = G.get_node_info(near[j]).location;
                 bool collision_free_near = collisionFree(near_location, x_new);
                 // NOTE: c_min = cost(x_new)

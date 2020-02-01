@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stdio.h>
-#include <soccer_route_planner/Graph.hpp>
-#include <soccer_route_planner/Map.hpp>
+#include <cstdio>
+#include <soccer_route_planner/graph.hpp>
+#include <soccer_route_planner/map.hpp>
 #include <geometry_msgs/Pose2D.h>
 
 class RRTStar {
@@ -10,7 +10,7 @@ private:
     Map M;
     Graph G;
 public:
-    RRTStar();
+    RRTStar() = default;
 
     // RRT* algorithm that returns optimal path.
     Graph RRT_Star(int n, geometry_msgs::Pose2D x_init, geometry_msgs::Pose2D x_goal);

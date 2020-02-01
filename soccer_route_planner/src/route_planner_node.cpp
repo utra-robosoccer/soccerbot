@@ -1,65 +1,38 @@
 #include <soccer_route_planner/route_planner_node.hpp>
-#include <soccer_route_planner/Graph.hpp>
-#include <soccer_route_planner/Map.hpp>
-#include <soccer_route_planner/RRTStar.hpp>
+#include <soccer_route_planner/graph.hpp>
+#include <soccer_route_planner/map.hpp>
+#include <soccer_route_planner/rrt_star.hpp>
+#include <soccer_msgs/RobotPath.h>
 
 #include <cmath>
 #include <memory>
 
 RoutePlannerNode::RoutePlannerNode() {
-    mapOverviewSubscriber = nh.subscribe("map_overview", 1, &RoutePlannerNode::mapOverviewCallback, this);
-    robotCommandSubscriber = nh.subscribe("robot_command", 1, &RoutePlannerNode::robotCommandCallback, this);
-    waypointPublisher = nh.advertise<soccer_msgs::Waypoints>("waypoints", 1);
-
-    robotCommandStore = nullptr;
+    robotCommandSubscriber = nh.subscribe("robot1/command", 1, &RoutePlannerNode::robotCommandCallback, this);
+    robotPoseSubscriber = nh.subscribe("robot1/pose", 1, &RoutePlannerNode::robotPoseCallback, this);
+    waypointPublisher = nh.advertise<soccer_msgs::RobotPath>("robot1/robot_path", 1, true);
+    graphPublisher = nh.advertise<visualization_msgs::Marker>("robot1/rrt_graph", 1, true);
 }
 
-void RoutePlannerNode::mapOverviewCallback(const soccer_msgs::MapOverviewPtr &mapOverview) {
-    std::cerr << "test" << std::endl;
-    mapOverviewStore = mapOverview;
-    ROS_INFO_STREAM("Received map overview");
+void RoutePlannerNode::robotPoseCallback(const geometry_msgs::Pose2DPtr &robotPose) {
+    robot_poses[1] = robotPose;
 }
 
 void RoutePlannerNode::robotCommandCallback(const soccer_msgs::RobotCommandPtr &robotCommand) {
-    std::cerr << "test" << std::endl;
-    robotCommandStore = robotCommand;
     ROS_INFO_STREAM("Received robot command");
 
-    if (!mapOverviewStore)
+    if (robot_poses[1] == nullptr) {
         return;
+    }
 
-    auto waypoints = createWaypoints();
-    publishWaypoints(waypoints);
-}
+    soccer_msgs::RobotPath path;
 
-soccer_msgs::Waypoints RoutePlannerNode::createWaypoints() {
-    soccer_msgs::Waypoints msg_temp;
-    // build msg_temp here from stored mapOverview(s) and robotCommand(s)
-
-    // Create graph etc for path planning recursive tree or some sort to go etc.
-
-
-
-    msg_temp.poseActions[0].duration = 0; // not sure how to assign this for now
-
-//    if (this->mapOverviewStore.get()->estimates[0].pose != this->mapOverviewStore.get()->ballPose) {
-//        if(this->mapOverviewStore.get()->estimates[0].pose.theta != this->robotCommandStore.get()->destPose.theta)
-//            msg_temp.poseActions[0].actionLabel = 3; // Turn command
-//    }
-
-    return msg_temp;
-}
-
-void RoutePlannerNode::publishWaypoints(soccer_msgs::Waypoints waypoints) {
-    waypointPublisher.publish(waypoints);
-}
-
-Graph RoutePlannerNode::solution(geometry_msgs::Pose2D init, geometry_msgs::Pose2D goal) {
     RRTStar rrt_star_alg;
-    Graph solution = rrt_star_alg.RRT_Star(400, init, goal);
-    return solution;
-}
+    Graph solution = rrt_star_alg.RRT_Star(400, *robot_poses[1], robotCommand->goal);
 
+    graphPublisher.publish(solution.get_graph_marker());
+    waypointPublisher.publish(path);
+}
 
 
 int main(int argc, char** argv) {

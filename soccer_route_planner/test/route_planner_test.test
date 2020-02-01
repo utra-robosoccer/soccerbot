@@ -2,5 +2,23 @@
 
     <include file="$(find soccer_route_planner)/launch/soccer_route_planner.launch" />
 
-    <test pkg="soccer_route_planner" type="route_planner_test" test-name="route_planner_test" time-limit="10.0"/>
+    <test pkg="soccer_route_planner" type="route_planner_test" test-name="route_planner_test" time-limit="1000.0"/>
+
+    <node pkg="rostopic" type="rostopic" name="robot1_pose" args="pub /robot1/pose geometry_msgs/Pose2D '{x: 0, y: 0, theta: 0}'"/>
+
+<!--    <node pkg="rostopic" type="rostopic" name="robot1_command" args="pub /robot1/command soccer_msgs/RobotCommand '-->
+<!--        {-->
+<!--            goal: {-->
+<!--              x: 0.0,-->
+<!--              y: 0.0,-->
+<!--              theta: 1.57-->
+<!--            },-->
+<!--            end_action: {-->
+<!--                end_action: 0-->
+<!--            }-->
+<!--        }-->
+<!--    '"/>-->
+
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
 </launch>
