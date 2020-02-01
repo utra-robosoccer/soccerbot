@@ -11,51 +11,66 @@ http://wiki.ros.org/ROS/Installation
 #### Prerequisites
 
 Debian packages needed for robots (sudo apt-get install)
-- git
-- git-lfs
-- python-catkin-tools
-- net-tools
-- indicator-ip
-
-#### Setting up your IDE
-- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
-- Follow the CLion Setup here, use method 2 to add bash to the launch file https://github.com/ethz-asl/programming_guidelines/wiki/CLion
-- In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
-- Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
-- For debugging processes follow the steps here https://www.jetbrains.com/help/clion/attaching-to-local-process.html
+```
+sudo apt-get install git git-lfs python-catkin-tools net-tools 
+```
 
 #### Initialization of the code
 ```bash
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
-sudo apt-get install python-catkin-tools # If you don't have the package installed yet.
-catkin_init_workspace
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
 cd soccer_ws # To get into the local repository and perform git lfs commands
-git lfs init
 git lfs pull
-git checkout initials_branchname  # TO create a new branch, use git checkout -b initials_branchname
-cd ~/catkin_ws
+git checkout branch_name  # TO create a new branch, use git checkout -b initials_branchname
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
 ```
-#### Installing submodules and dependencies
-```
+#### Updating submodules and dependencies
+```bash
+# Updating Submodules
 cd ~/catkin_ws/src/soccer_ws
 git submodule update --recursive --init
-sudo rosdep init # If first time using ROS in your environment.
-rosdep update
+
+# Updating Dependencies
 cd ~/catkin_ws/
+sudo rosdep init # Only need to do this once
+rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
-#### Building the code
+#### Setting up your IDE
+- Get the Jetbrains student membership (https://www.jetbrains.com/student/)
+- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion and Pycharm Professional
+- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
+```bash
+gedit ~/.local/share/applications/jetbrains-clion.desktop
+Change the Exec line to this 
+Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
+- Add a CMakelist file
+```bash
+cd ~/catkin_ws/src
+catkin_init_workspace
+```
+- Open CLion,navigate to ~/catkin_ws/src/CMakelists.txt and click open as project
+- On the bottom CMake bar, go to Cmake settings and add this line to Environment
+```bash
+ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
+```
+- Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
+- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
+- Debugging
+  - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
+  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds```
+
+#### Building the code
+```bash
 catkin build soccerbot # Use catkin clean to start with a clean build
-source devel/setup.bash # Needs to be done everytime you finish building
+source devel/setup.bash # Needs to be done everytime you finish building a new package
 ```
 
 Build and run tests
-```
+```bash
 catkin build <pkg name> --verbose --catkin-make-args run_tests
 ```
 
@@ -63,11 +78,6 @@ catkin build <pkg name> --verbose --catkin-make-args run_tests
 You should be ready to go now. Before running, setup your CLion IDE (above),  To run the robot:
 
 ```bash
-roslaunch soccerbot soccerbot.launch
+roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
 ```
-
-For simulation you can just run this
-
-```bash
-roslaunch soccerbot soccerbot.launch simulation:=true
-```
+Note that the arguments := are optional and the default ones are set in the launch files
