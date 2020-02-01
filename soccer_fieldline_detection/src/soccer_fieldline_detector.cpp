@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <soccer_geometry/segment2.hpp>
@@ -13,6 +12,8 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_transport::ImageTransport it(nh);
     image_subscriber = it.subscribe("camera/image_raw", 1, &SoccerFieldlineDetector::imageCallback, this);
     point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
+
+    image_publisher = it.advertise("camera/line_image",1);
 
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
@@ -69,10 +70,20 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         camera_position.position.x = camera_pose.transform.translation.x;
         camera_position.position.y = camera_pose.transform.translation.y;
         camera_position.position.z = camera_pose.transform.translation.z;
-        camera_position.orientation.w = camera_pose.transform.rotation.w;
-        camera_position.orientation.x = camera_pose.transform.rotation.x;
-        camera_position.orientation.y = camera_pose.transform.rotation.y;
-        camera_position.orientation.z = camera_pose.transform.rotation.z;
+
+        tf2::Quaternion q(camera_pose.transform.rotation.x,
+                          camera_pose.transform.rotation.y,
+                          camera_pose.transform.rotation.z,
+                          camera_pose.transform.rotation.w);
+        tf2::Matrix3x3 m(q);
+        double r,p,y;
+        m.getRPY(r,p,y);
+        q.setRPY(r,p,0);
+        q.normalize();
+        camera_position.orientation.x = q[0];
+        camera_position.orientation.y = q[1];
+        camera_position.orientation.z = q[2];
+        camera_position.orientation.w = q[3];
         camera->setPose(camera_position);
     }
     catch (tf2::TransformException &ex) {
@@ -98,7 +109,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
-            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+            cv::line(dst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
 
             Point2 pt1(l[0],l[1]);
             Point2 pt2(l[2],l[3]);
@@ -112,9 +123,15 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
         }
 
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
+        //if(image_publisher.getNumSubscribers() > 1){
+        image_publisher.publish(message);
+        //}
+
     } catch (const cv_bridge::Exception &e) {
         ROS_ERROR_STREAM("CV Exception" << e.what());
     }
+
 
     std::vector<Point3> points3d;
     for (const auto& p : pts) {
@@ -126,7 +143,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     sensor_msgs::PointCloud2 point_cloud_msg;
     //Setting up PointCloud2 msg
     point_cloud_msg.header.stamp = ros::Time::now();
-    point_cloud_msg.header.frame_id = "base_footprint";
+    point_cloud_msg.header.frame_id = "base_camera";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
     point_cloud_msg.is_bigendian = false;
@@ -155,7 +172,31 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     point_cloud_publisher.publish(point_cloud_msg);
     pts.clear();
     points3d.clear();
+
+    geometry_msgs::TransformStamped camera_footprint = camera_pose;
+    camera_footprint.header.frame_id = "base_footprint";
+    camera_footprint.child_frame_id = "base_camera";
+    camera_footprint.header.stamp = msg->header.stamp;
+    camera_footprint.header.seq = msg->header.seq;
+
+    tf2::Quaternion q(camera_footprint.transform.rotation.x,
+                      camera_footprint.transform.rotation.y,
+                      camera_footprint.transform.rotation.z,
+                      camera_footprint.transform.rotation.w);
+    tf2::Matrix3x3 m(q);
+    double r,p,y;
+    m.getRPY(r,p,y);
+    q.setRPY(0,0,y);
+    q.normalize();
+    camera_footprint.transform.rotation.x = q[0];
+    camera_footprint.transform.rotation.y = q[1];
+    camera_footprint.transform.rotation.z = q[2];
+    camera_footprint.transform.rotation.w = q[3];
+    camera_footprint.transform.translation.z = 0;
+
+    br.sendTransform(camera_footprint);
 }
+
 
 
 int main(int argc, char **argv) {

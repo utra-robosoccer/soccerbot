@@ -3,10 +3,11 @@
 <launch>
     <arg name="darknet"         default="true" />
     <arg name="robot_name" />
+    <arg name="map_name" />
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
-          args="$(find soccer_common)/maps/test.yaml">
+          args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world"/>
     </node>
 
@@ -53,5 +54,27 @@
     <node pkg="amcl" type="amcl" name="amcl">
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
     </node>
+
+   <!-- Static publisher for odom
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_broadcaster" args="0 0 0 0 0 0 1 odom base_footprint" />
+
+-->
+    <node pkg="rostopic" type="rostopic" name="odom_broadcaster"
+    args="pub /robot1/odom nav_msgs/Odometry
+        '{header: {seq: 0, stamp: { secs: 0, nsecs: 0}, frame_id: 'odom'},child_frame_id: 'base_footprint',
+        pose:
+          {pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}},
+          covariance:      [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]},
+        twist:
+          {twist: {linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}
+          ,covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}' --once"
+     output="screen"/>
 
 </launch>

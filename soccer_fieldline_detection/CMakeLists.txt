@@ -34,7 +34,6 @@ add_executable(
     src/soccer_fieldline_detector.cpp
     src/camera.cpp
     src/image.cpp
-    src/transform.cpp
 )
 add_dependencies(soccer_fieldline_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(soccer_fieldline_detector
@@ -46,7 +45,6 @@ add_executable(
     ball_detector
     src/ball_detector.cpp
     src/camera.cpp
-    src/transform.cpp
 )
 add_dependencies(ball_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(ball_detector
@@ -58,7 +56,7 @@ target_link_libraries(ball_detector
 #############
 
 if (CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(test_fieldline_detector test/test_soccer_fieldline_detector.cpp src/camera.cpp src/transform.cpp  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
+    catkin_add_gtest(test_fieldline_detector test/test_soccer_fieldline_detector.cpp src/camera.cpp  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
     add_dependencies(test_fieldline_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
     target_link_libraries(test_fieldline_detector
         ${catkin_LIBRARIES}
