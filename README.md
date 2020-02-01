@@ -19,22 +19,22 @@ sudo apt-get install git git-lfs python-catkin-tools net-tools
 ```bash
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
-sudo apt-get install python-catkin-tools # If you don't have the package installed yet.
-catkin_init_workspace
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
 cd soccer_ws # To get into the local repository and perform git lfs commands
-git lfs init
 git lfs pull
-git checkout initials_branchname  # TO create a new branch, use git checkout -b initials_branchname
-cd ~/catkin_ws
+git checkout branch_name  # TO create a new branch, use git checkout -b initials_branchname
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
 ```
-#### Installing submodules and dependencies
+#### Updating submodules and dependencies
 ```
+# Updating Submodules
 cd ~/catkin_ws/src/soccer_ws
 git submodule update --recursive --init
-sudo rosdep init # If first time using ROS in your environment.
-rosdep update
+
+# Updating Dependencies
 cd ~/catkin_ws/
+sudo rosdep init # Only need to do this once
+rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
