@@ -5,7 +5,7 @@
         <joint name="${origin}_camera" type="fixed">
             <parent link="head"/>
             <child link="camera"/>
-            <origin rpy="0 0 0" xyz="0.05295 0.00145 0.04740"/>
+            <origin rpy="0 0 0" xyz="0.015 0.00145 0.04740"/>
             <axis xyz="0  0  0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="0" lower="0" upper="0" velocity="0"/>
