@@ -1,6 +1,5 @@
 #pragma once
 
-#include <soccer_fieldline_detection/transform.hpp>
 #include <soccer_geometry/pose3.hpp>
 #include <soccer_geometry/point3.hpp>
 #include <cmath>
