@@ -26,7 +26,7 @@ git checkout branch_name  # TO create a new branch, use git checkout -b initials
 catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
 ```
 #### Updating submodules and dependencies
-```
+```bash
 # Updating Submodules
 cd ~/catkin_ws/src/soccer_ws
 git submodule update --recursive --init
@@ -41,19 +41,19 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To inst
 #### Setting up your IDE
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
-```
+```bash
 gedit ~/.local/share/applications/jetbrains-clion.desktop
 Change the Exec line to this 
 Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Add a CMakelist file
-```
+```bash
 cd ~/catkin_ws/src
 catkin_init_workspace
 ```
 - Open CLion,navigate to ~/catkin_ws/src/CMakelists.txt and click open as project
 - On the bottom CMake bar, go to Cmake settings and add this line to Environment
-```
+```bash
 ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
@@ -61,13 +61,13 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
 
 #### Building the code
-```
+```bash
 catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building
 ```
 
 Build and run tests
-```
+```bash
 catkin build <pkg name> --verbose --catkin-make-args run_tests
 ```
 
