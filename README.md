@@ -15,14 +15,6 @@ Debian packages needed for robots (sudo apt-get install)
 sudo apt-get install git git-lfs python-catkin-tools net-tools 
 ```
 
-#### Setting up your IDE
-- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
-- Follow the CLion Setup here, use method 2 to add bash to the launch file https://github.com/ethz-asl/programming_guidelines/wiki/CLion
-- In CLion, once you finish following the instructions, you should be able to reload CMake to have code hinting enabled
-- Install the *.launch file plugins if you want to. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
-- For debugging processes follow the steps here https://www.jetbrains.com/help/clion/attaching-to-local-process.html
-
 #### Initialization of the code
 ```bash
 mkdir -p ~/catkin_ws/src
@@ -45,6 +37,28 @@ rosdep update
 cd ~/catkin_ws/
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
+
+#### Setting up your IDE
+- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
+- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
+```
+gedit ~/.local/share/applications/jetbrains-clion.desktop
+Change the Exec line to this 
+Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+```
+- Add a CMakelist file
+```
+cd ~/catkin_ws/src
+catkin_init_workspace
+```
+- Open CLion,navigate to ~/catkin_ws/src/CMakelists.txt and click open as project
+- On the bottom CMake bar, go to Cmake settings and add this line to Environment
+```
+ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
+```
+- Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
+- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
+- Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
 
 #### Building the code
 ```
