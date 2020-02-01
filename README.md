@@ -66,7 +66,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 #### Building the code
 ```bash
 catkin build soccerbot # Use catkin clean to start with a clean build
-source devel/setup.bash # Needs to be done everytime you finish building
+source devel/setup.bash # Needs to be done everytime you finish building a new package
 ```
 
 Build and run tests
@@ -78,11 +78,6 @@ catkin build <pkg name> --verbose --catkin-make-args run_tests
 You should be ready to go now. Before running, setup your CLion IDE (above),  To run the robot:
 
 ```bash
-roslaunch soccerbot soccerbot.launch
+roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
 ```
-
-For simulation you can just run this
-
-```bash
-roslaunch soccerbot soccerbot.launch simulation:=true
-```
+Note that the arguments := are optional and the default ones are set in the launch files
