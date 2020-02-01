@@ -58,7 +58,9 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
-- Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
+- Debugging
+  - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
+  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds```
 
 #### Building the code
 ```bash
