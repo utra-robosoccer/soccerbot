@@ -11,7 +11,9 @@ http://wiki.ros.org/ROS/Installation
 #### Prerequisites
 
 Debian packages needed for robots (sudo apt-get install)
+```
 sudo apt-get install git git-lfs python-catkin-tools net-tools 
+```
 
 #### Setting up your IDE
 - Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/)
