@@ -1,10 +1,11 @@
 update_min_d: 0.05
-update_min_a: 0.2
+update_min_a: 0.1
 use_map_topic: true
 scan_topic: scan
 initial_pose_x: 0.0
 initial_pose_y: 0.0
 initial_pose_a: 0.0
 odom_frame_id: "odom"
-base_frame_id: "base_footprint"
+base_frame_id: "base_camera"
 global_frame_id: "world"
+transform_tolerance: 0.05
