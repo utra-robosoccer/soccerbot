@@ -4,10 +4,13 @@
     <arg name="ip_address" default="localhost" />
     <arg name="x_pos" default="0.00" />
     <arg name="y_pos" default="0.00" />
+    <arg name="is_boss" default="false" />
 
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <group ns="$(arg robot_name)">
+        <include file="$(find soccerbot)/launch/modules/boss.launch" if="$(arg is_boss)" />
+
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>
@@ -20,6 +23,8 @@
 
         <include file="$(find soccerbot)/launch/modules/localization.launch">
             <arg name="robot_name" value="$(arg robot_name)"/>
+                <arg name="x_pos" value="$(arg x_pos)" />
+                <arg name="y_pos" value="$(arg y_pos)" />
             <arg name="map_name" value="robocup" if="$(arg simulation)" />
             <arg name="map_name" value="test" unless="$(arg simulation)" />
         </include>
