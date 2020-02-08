@@ -8,8 +8,9 @@ Panels:
         - /Status1
         - /Grid1/Offset1
         - /TF1/Frames1
-        - /Localization1
         - /Localization1/AMCL Pose1
+        - /Planning1
+        - /Planning1/Successor States1
       Splitter Ratio: 0.4962962865829468
     Tree Height: 410
   - Class: rviz/Selection
@@ -59,6 +60,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        ball:
+          Value: true
         base_camera:
           Value: true
         base_footprint:
@@ -118,8 +121,37 @@ Visualization Manager:
         world:
           odom:
             base_footprint:
-              torso:
+              ball:
                 {}
+              base_camera:
+                {}
+              torso:
+                imu_link:
+                  {}
+                left_bicep:
+                  left_forearm:
+                    {}
+                left_hip_side:
+                  left_hip_front:
+                    left_thigh:
+                      left_calve:
+                        left_ankle:
+                          left_foot:
+                            {}
+                neck:
+                  head:
+                    camera:
+                      {}
+                right_bicep:
+                  right_forearm:
+                    {}
+                right_hip_side:
+                  right_hip_front:
+                    right_thigh:
+                      right_calve:
+                        right_ankle:
+                          right_foot:
+                            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -377,6 +409,18 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Localization
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /successor_states
+          Name: Successor States
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+      Enabled: true
+      Name: Planning
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -405,7 +449,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.320291519165039
+      Distance: 3.626939535140991
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

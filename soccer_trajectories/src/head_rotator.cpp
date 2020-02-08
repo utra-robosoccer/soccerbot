@@ -40,6 +40,7 @@ public:
         head_rotator_1.publish(angle);
         last_t += 1;
     }
+
 };
 
 int main(int argc, char **argv) {
