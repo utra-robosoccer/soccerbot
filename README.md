@@ -73,7 +73,8 @@ Change the Exec line to this
 Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-
+- Debugging
+  - Simply go to Attach to Process and lookup the node. You can find the node by identifying the PID using rosnode info
 #### Building the code
 ```bash
 catkin build soccerbot # Use catkin clean to start with a clean build
