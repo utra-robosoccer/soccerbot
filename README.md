@@ -15,6 +15,9 @@ Debian packages needed for robots (sudo apt-get install)
 sudo apt-get install git git-lfs python-catkin-tools net-tools 
 ```
 
+On Nvidia CUDA involved computers. Follow the instructions carefully here to install CUDA
+https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal
+
 #### Initialization of the code
 ```bash
 mkdir -p ~/catkin_ws/src

@@ -73,7 +73,8 @@ private:
 
         for (const darknet_ros_msgs::BoundingBox &box: msg->bounding_boxes) {
             std::string objectClass = box.Class;
-            if (objectClass != "sports ball") {
+            if (objectClass != "bird") {//sports ball
+
                 continue;
             }
             // For now take the center of the box
