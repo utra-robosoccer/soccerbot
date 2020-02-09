@@ -38,6 +38,8 @@
         <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />
     </node>
 
+    <node pkg="soccer_strategy" type="fall_detector.py" name="fall_detector"/>
+
     <!-- Complementary filter -->
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
