@@ -22,7 +22,7 @@ def imu_callback(msg, pub):
 def main():
     rospy.init_node('soccer_strategy', anonymous=True)
     pub = rospy.Publisher('fall_state', String, queue_size=10)
-    rospy.Subscriber('robot1/imu', Imu, imuCallback, pub)
+    rospy.Subscriber('imu', Imu, imu_callback, pub)
     rospy.spin()
 
 if __name__ == '__main__':
