@@ -26,7 +26,7 @@
 
     <!-- Ball Detection -->
     <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
-    <node name="ball_position" pkg="soccer_fieldline_detection" type="ball_position"/>
+    <!--<node name="ball_position" pkg="soccer_fieldline_detection" type="ball_position"/>-->
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>
     <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>
