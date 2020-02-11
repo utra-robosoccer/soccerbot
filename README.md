@@ -40,11 +40,13 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To inst
 
 #### Setting up your IDE
 - Get the Jetbrains student membership (https://www.jetbrains.com/student/)
-- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion and Pycharm Professional
+- Download Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
+###### CLion
+- Open Jetbains installer and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
 gedit ~/.local/share/applications/jetbrains-clion.desktop
-Change the Exec line to this 
+# Add the bash -i -c to the beginning of this line (rest of the line remain the same)
 Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Add a CMakelist file
@@ -57,11 +59,24 @@ catkin_init_workspace
 ```bash
 ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
+- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
-  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds```
+  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds (you might need to rebuild```
+###### Pycharm Professional
+- Open Jetbains installer and install CLion
+- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
+```bash
+gedit ~/.local/share/applications/jetbrains-pycharm.desktop
+# Add the bash -i -c to the beginning of this line (rest of the line remain the same)
+Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+```
+- Open Pycharm, go to File > Open and open the repository name (soccer_ws)
+- Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
+- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
+- Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 
 #### Building the code
 ```bash
