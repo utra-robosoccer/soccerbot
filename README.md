@@ -41,7 +41,8 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To inst
 #### Setting up your IDE
 - Get the Jetbrains student membership (https://www.jetbrains.com/student/)
 - Download Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
-###### CLion
+
+##### CLion
 - Open Jetbains installer and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
@@ -65,7 +66,9 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
   - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds (you might need to rebuild```
-###### Pycharm Professional
+  - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
+
+##### Pycharm Professional
 - Open Jetbains installer and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
@@ -77,6 +80,17 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 - Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
 - Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
+- Debugging
+  - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
+
+##### Matlab
+- Create a Mathworks account
+- Download Matlab (https://www.mathworks.com/downloads/)
+  - sudo run the install.run script (Might need to chmod +x the script)
+  - Matlab license information can be found here (https://github.com/utra-robosoccer/soccer_ws/wiki/Onboarding)
+  - Install all toolboxes if possible
+- In matlab navigate to the the folder soccer_ws/soccer_control
+- Execute any script (NOTE: Do not double click a folder to enter it, instead click on + to expand the folder when you are navigating). A starter script can be found in /test/walking
 
 #### Building the code
 ```bash
@@ -95,4 +109,5 @@ You should be ready to go now. Before running, setup your CLion IDE (above),  To
 ```bash
 roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
 ```
+This file launches a soccerbot.lauunch which is a single robot. Each of these have multiple modules (localization, navigation) which are launch files for certain components of a robot
 Note that the arguments := are optional and the default ones are set in the launch files
