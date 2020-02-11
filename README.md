@@ -94,6 +94,7 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 
 #### Building the code
 ```bash
+cd ~/catkin_ws # As long as your current path is in a subdirectory of this folder
 catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building a new package
 ```
