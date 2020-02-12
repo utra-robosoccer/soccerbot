@@ -15,14 +15,14 @@ Debian packages needed for robots (sudo apt-get install)
 sudo apt-get install git git-lfs python-catkin-tools net-tools 
 ```
 
-Install Nvidia CUDA Toolkit following the instructions here
-https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal
-Operating System - Linux
-Architecture - x86
-Distribution - Ubuntu
-Version - 18.06
-Installer type - deb [network]
-
+[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?arget_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)
+```
+Operating System - Linux  
+Architecture - x86  
+Distribution - Ubuntu  
+Version - 18.06  
+Installer type - deb [network]  
+```
 
 #### Initialization of the code
 ```bash
