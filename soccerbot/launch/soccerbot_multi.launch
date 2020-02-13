@@ -11,6 +11,7 @@
         <arg name="ip_address" value="$(optenv ROBOT1_IP localhost)" />
         <arg name="x_pos" value="-1.00" />
         <arg name="y_pos" value="0.00" />
+        <arg name="is_boss" value="true" />
     </include>
     <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
         <arg name="simulation" value="true" />

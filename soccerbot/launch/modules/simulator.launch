@@ -8,7 +8,6 @@
         <arg name="gui"             value="true" />
         <arg name="paused"          value="true"/>
         <arg name="use_sim_time"    value="true"/>
-        <arg name="headless"        value="false"/>
         <arg name="verbose"         value="true" />
     </include>
     <node name="kill_gazebo" pkg="soccer_description" type="kill_gazebo.sh" />
