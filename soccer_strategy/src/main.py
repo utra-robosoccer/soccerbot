@@ -2,10 +2,12 @@
 import rospy
 import tf2_ros
 import geometry_msgs.msg
+from geometry_msgs.msg import PoseArray
+import math
 
 # Define the publisher and subscribers here
-ball_position = rospy.Publisher('ball_position', geometry_msgs.msg.Point, queue_size=1)
-robot_pose = rospy.Publisher('amcl_pose', geometry_msgs.msg.Pose, queue_size=1)
+
+
 tfBuffer = None
 listener = None
 
@@ -24,8 +26,7 @@ class Action:
 
 class State:
 
-
-    def update(self):
+    def update(self):  # finished but not scalable
         # Reads all tf transformations and updates the information and the status from nam
         # robot[1]["position"] = (2,3) # geometry_msgs::Pose2D
         # robot[1]["status"] = Status.FallenBack
@@ -53,15 +54,43 @@ class State:
 
             self.ball["position"] = position
 
-
-
-
         pass
 
     def successors(self):  # using pose array for all states
+        # only 180 deg front of robot at 10 degree interval in direction of ball
         # Retrieve list of actions in future (robot can move in radius 1m, and front half circle (slices) 10 degrees
         # If ball is within 1m. robot can also move directly to the ball, slightly to the left and the right because of foot
         # If robot.Status = Fallen, then the only thing you can do is get back up (front and back)
+
+        pose_array = PoseArray()
+        pose_array.header.frame_id = 'world'
+        pose_array.header.stamp = rospy.Time.now()
+
+        dist = self.distance((self.ball["position"]))
+
+        if self.robot_pose[1]["status"] == 1:
+            pass
+        # if ball not in 1m
+        elif dist > 1.0:
+            for i in range(0, 190, 10):
+                future_pose = geometry_msgs.msg.Pose()
+                if i <= 90:
+                    future_pose.position.y = (self.robot_pose[1]["position"].y - math.cos(math.radians(i)))
+                else:
+                    future_pose.position.y = (self.robot_pose[1]["position"].y + math.cos(math.radians(i)))
+                future_pose.position.x = (self.robot_pose[1]["position"].x - math.sin(math.radians(i)))
+                #pose_array.poses.append((future_pose, ))
+            pass
+        # if ball is in 1m but to far x and y
+        else:
+            # right in front of the ball
+            if abs((self.ball["position"].y - self.robot_pose[1]["position"].y)) <= 0.1:
+                # goes forward
+                pass
+            # to the side of the ball
+
+            pass
+
         pass
 
     def value(self):
@@ -72,9 +101,26 @@ class State:
         # distance to ball
         pass
 
+    def robot_pose_callback(self, data):
+        self.robot_pose[1]["position"] = data.position
+        pass
+
+    def distance(self, position):
+        dist = (position.x ** 2 + (position.y) ** 2) ** (1 / 2)
+        return dist
+        pass
+
     def __init__(self):
-        self.robots = {}
-        self.ball = {}
+        self.robot_pose = rospy.Subscriber("amcl_pose", geometry_msgs.msg.Pose, self.robot_pose_callback)
+        # self.ball_position = rospy.Publisher('ball_position', geometry_msgs.msg.Point, queue_size=1)
+
+        position = geometry_msgs.msg.Point()
+        position.x = 0.0
+        position.y = 0.0
+        position.z = 0.0
+
+        self.robots = {1: {'position': position, 'status': 0}}
+        self.ball = {'position': position}
         pass
 
 
