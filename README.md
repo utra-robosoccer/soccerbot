@@ -6,13 +6,33 @@
 
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
+#### Prerequisites
+First you need Ubuntu 18.04. Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
+
+The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu 18.04 because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
+
+For Dual Boot - https://opensource.com/article/18/5/dual-boot-linux  
+For Virtual Machine
+- VM Emulator https://www.virtualbox.org/wiki/Downloads
+- Ubuntu Desktop https://ubuntu.com/download/desktop
+- Make sure when you setup the Virtual Machine, move the .iso into the virtual machine files and also enable more CPU for the virtual machine. 50% of your CPU is good
+
+Next, install ROS Melodic (for Ubuntu 18.04)
 http://wiki.ros.org/ROS/Installation
 
-#### Prerequisites
-
-Debian packages needed for robots (sudo apt-get install)
+Next, install these Debian packages
 ```
-sudo apt-get install git git-lfs python-catkin-tools net-tools 
+sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
+```
+
+[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?arget_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)  
+(This is only for people with NVidia enabled GPUs for simulation and not on VM)
+```
+Operating System - Linux  
+Architecture - x86  
+Distribution - Ubuntu  
+Version - 18.06  
+Installer type - deb [network]  
 ```
 
 #### Initialization of the code
