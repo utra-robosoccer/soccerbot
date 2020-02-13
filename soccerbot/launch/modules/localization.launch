@@ -4,6 +4,8 @@
     <arg name="darknet"         default="true" />
     <arg name="robot_name" />
     <arg name="map_name" />
+    <arg name="x_pos" />
+    <arg name="y_pos" />
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
@@ -24,7 +26,6 @@
 
     <!-- Ball Detection -->
     <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
-
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>
     <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>
     <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>
@@ -53,6 +54,8 @@
     <!-- AMCL Localization -->
     <node pkg="amcl" type="amcl" name="amcl">
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
+        <param name="initial_pose_x" value="$(arg x_pos)" />
+        <param name="initial_pose_y" value="$(arg y_pos)" />
     </node>
 
    <!-- Static publisher for odom

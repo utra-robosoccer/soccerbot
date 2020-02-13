@@ -5,10 +5,15 @@ import os
 from std_msgs.msg import String
 
 trajectory_path = ""
+simulation = False
 
 def run_trajectory(command):
     try:
-        path = trajectory_path + "/" + command.data + ".csv"
+        if simulation:
+            path = trajectory_path + "/" + "simulation_" + command.data + ".csv"
+        else:
+            path = trajectory_path + "/" + command.data + ".csv"
+
         if not os.path.exists(path):
             return
 
@@ -24,5 +29,6 @@ def run_trajectory(command):
 if __name__ == '__main__':
     rospy.init_node("soccer_trajectories")
     trajectory_path = rospy.get_param("~trajectory_path")
+    simulation = rospy.get_param("~simulation")
     rospy.Subscriber("command", String, run_trajectory)
     rospy.spin()

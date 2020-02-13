@@ -1,0 +1,28 @@
+z: 0.05
+orientation:
+  x: 0.0
+  y: 0.707
+  z: 0.0
+  w: 0.707
+
+right_leg_motor_0: 0.0
+right_leg_motor_1: 0.0
+right_leg_motor_2: 0.0
+right_leg_motor_3: 0.0
+right_leg_motor_4: 0.0
+right_leg_motor_5: 0.0
+
+left_leg_motor_0: 0.0
+left_leg_motor_1: 0.0
+left_leg_motor_2: 0.0
+left_leg_motor_3: 0.0
+left_leg_motor_4: 0.0
+left_leg_motor_5: 0.0
+
+head_motor_0: 0.0
+head_motor_1: 0.0
+
+left_arm_motor_0: 0.0
+left_arm_motor_1: 0.0
+right_arm_motor_0: 0.0
+right_arm_motor_1: 0.0

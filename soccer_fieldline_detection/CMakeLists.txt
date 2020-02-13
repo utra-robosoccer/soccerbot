@@ -51,6 +51,7 @@ target_link_libraries(ball_detector
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
+
 #############
 ## Testing ##
 #############
