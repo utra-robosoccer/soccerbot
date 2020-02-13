@@ -6,8 +6,6 @@
 
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
-http://wiki.ros.org/ROS/Installation
-
 #### Prerequisites
 First you need Ubuntu 18.04. Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
 
@@ -18,6 +16,9 @@ For Virtual Machine
 - VM Emulator https://www.virtualbox.org/wiki/Downloads
 - Ubuntu Desktop https://ubuntu.com/download/desktop
 - Make sure when you setup the Virtual Machine, move the .iso into the virtual machine files and also enable more CPU for the virtual machine. 50% of your CPU is good
+
+Next, install ROS Melodic (for Ubuntu 18.04)
+http://wiki.ros.org/ROS/Installation
 
 Next, install these Debian packages
 ```
