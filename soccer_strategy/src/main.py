@@ -53,6 +53,7 @@ class State:
         try:
             ball_pose = tfBuffer.lookup_transform('ball', 'base_footprint', rospy.Time(0))
             has_ball = True
+            self.has_ball_once = True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
             print(e)
             pass
@@ -81,11 +82,14 @@ class State:
         # Retrieve list of actions in future (robot can move in radius 1m, and front half circle (slices) 10 degrees
         # If ball is within 1m. robot can also move directly to the ball, slightly to the left and the right because of foot
         # If robot.Status = Fallen, then the only thing you can do is get back up (front and back)
+        if not self.has_ball_once:
+            return
         self.successor['pose_array'].poses = []
         self.successor['pose_array'].header.frame_id = 'world'
         self.successor['pose_array'].header.stamp = rospy.Time.now()
 
         self.successor['cost'] = []
+        self.successor['status'] = []
         future_pose = geometry_msgs.msg.Pose()
         q = [0, 0, 0, 1]
         future_pose.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
@@ -98,19 +102,21 @@ class State:
             return
         elif self.robots[1]["status"] == Status.fallen_back:
             self.successor['status'].append(Status.fallen_back)
+            self.successor['cost'].append(0)
             self.value(self.successor)
             pass
 
         elif self.robots[1]["status"] == Status.fallen_forward:
             self.successor['status'].append(Status.fallen_forward)
+            self.successor['cost'].append(0)
             self.value(self.successor)
             pass
         # if ball not in 1m
         elif self.robots[1]["status"] == Status.standing:
-            if abs((self.ball["position"].pose.pose.position.y - self.robots[1][
-                "position"].pose.pose.position.y)) <= 0.05:
+            if abs((self.ball["position"].pose.pose.position.y - self.robots[1]["position"].pose.pose.position.y)) <= 0.05:
                 # goes forward and kick
                 self.successor['status'].append(Status.kicking)
+                self.successor['cost'].append(0)
                 self.value(self.successor)
                 pass
             if dist > 1.0:
@@ -155,6 +161,7 @@ class State:
                 self.future_pose.publish(self.successor['pose_array'])
                 self.value(self.successor)
 
+
         pass
 
     def value(self, next_state):
@@ -163,6 +170,8 @@ class State:
         # if fallen, h = 0
         # if standing h = 100
         # distance to ball
+        if not next_state['status']:
+            return
         h = 0
         for i in range(0, len(next_state['status'])):
 
@@ -187,6 +196,8 @@ class State:
 
                 h += self.distance(x, y)
                 pass
+            elif next_state['status'][i] == Status.kicking:
+                h += 10
 
             self.successor['cost'][i] = h
 
@@ -221,6 +232,7 @@ class State:
         pose_array = PoseArray()
         cost = []
         status = []
+        self.has_ball_once = False
         self.successor = {'pose_array': pose_array, 'cost': cost, 'status': status}
         pass
 
