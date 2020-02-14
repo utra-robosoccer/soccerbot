@@ -14,6 +14,7 @@ class Status(Enum):
     fallen_back = 2
     fallen_forward = 3
     getting_up = 4
+    kicking = 5
 
 
 # Define the publisher and subscribers here
@@ -80,11 +81,11 @@ class State:
         # Retrieve list of actions in future (robot can move in radius 1m, and front half circle (slices) 10 degrees
         # If ball is within 1m. robot can also move directly to the ball, slightly to the left and the right because of foot
         # If robot.Status = Fallen, then the only thing you can do is get back up (front and back)
-        self.pose_array.poses = []
-        self.pose_array.header.frame_id = 'world'
-        self.pose_array.header.stamp = rospy.Time.now()
+        self.successor['pose_array'].poses = []
+        self.successor['pose_array'].header.frame_id = 'world'
+        self.successor['pose_array'].header.stamp = rospy.Time.now()
 
-        self.cost = []
+        self.successor['cost'] = []
         future_pose = geometry_msgs.msg.Pose()
         q = [0, 0, 0, 1]
         future_pose.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
@@ -92,19 +93,26 @@ class State:
         future_pose.orientation.z = q[2]
         future_pose.orientation.w = q[3]
 
-        dist = self.distance((self.ball["position"]))
-
-        if self.robots[1]["status"] == Status.fallen_back:
+        dist = self.distance(self.ball["position"].pose.pose.position.x, self.ball["position"].pose.pose.position.y)
+        if self.robots[1]["status"] == Status.walking:
+            return
+        elif self.robots[1]["status"] == Status.fallen_back:
+            self.successor['status'].append(Status.fallen_back)
+            self.value(self.successor)
             pass
 
         elif self.robots[1]["status"] == Status.fallen_forward:
+            self.successor['status'].append(Status.fallen_forward)
+            self.value(self.successor)
             pass
         # if ball not in 1m
         elif self.robots[1]["status"] == Status.standing:
-            # if abs((self.ball["position"].pose.pose.position.y - self.robots[1]["position"].pose.pose.position.y)) <= 0.05:
-            # goes forward and kick
-
-            #   pass
+            if abs((self.ball["position"].pose.pose.position.y - self.robots[1][
+                "position"].pose.pose.position.y)) <= 0.05:
+                # goes forward and kick
+                self.successor['status'].append(Status.kicking)
+                self.value(self.successor)
+                pass
             if dist > 1.0:
                 for i in range(0, 190, 10):
 
@@ -119,10 +127,11 @@ class State:
                         future_pose.position.x = (
                                 self.robots[1]["position"].pose.pose.position.x + math.sin(math.radians(i)))
                     future_pose.position.z = 0.0
-                    self.pose_array.poses.append(future_pose)
-                    self.cost.append(0)
-                self.future_pose.publish(self.pose_array)
-                self.value()
+                    self.successor['pose_array'].poses.append(future_pose)
+                    self.successor['cost'].append(0)
+                    self.successor['status'].append(Status.walking)
+                self.future_pose.publish(self.successor['pose_array'])
+                self.value(self.successor)
 
             elif dist < 1.0:
                 for i in range(0, 190, 10):
@@ -130,37 +139,63 @@ class State:
                     if i > 90:
                         future_pose.position.y = (
                                 self.robots[1]["position"].pose.pose.position.y - (
-                                    math.cos(math.radians(i - 90)) / dist))
+                                math.cos(math.radians(i - 90)) / dist))
                         future_pose.position.x = (
                                 self.robots[1]["position"].pose.pose.position.x + (
-                                    math.sin(math.radians(i - 90)) / dist))
+                                math.sin(math.radians(i - 90)) / dist))
                     else:
                         future_pose.position.y = (
                                 self.robots[1]["position"].pose.pose.position.y + (math.cos(math.radians(i)) / dist))
                         future_pose.position.x = (
                                 self.robots[1]["position"].pose.pose.position.x + (math.sin(math.radians(i)) / dist))
                     future_pose.position.z = 0.0
-                    self.pose_array.poses.append(future_pose)
-                    self.cost.append(0)
-                self.future_pose.publish(self.pose_array)
-                self.value()
+                    self.successor['pose_array'].poses.append(future_pose)
+                    self.successor['cost'].append(0)
+                    self.successor['status'].append(Status.walking)
+                self.future_pose.publish(self.successor['pose_array'])
+                self.value(self.successor)
 
         pass
 
-    def value(self):
+    def value(self, next_state):
         # for every robot. Add them up
         # Return the heuristic value of the state
         # if fallen, h = 0
         # if standing h = 100
         # distance to ball
-        pass
+        h = 0
+        for i in range(0, len(next_state['status'])):
+
+            if next_state['status'][i] == Status.fallen_back:
+                h = 0
+
+                pass
+
+            elif next_state['status'][i] == Status.fallen_forward:
+                h = 0
+                pass
+
+            elif next_state['status'][i] == Status.standing:
+                h += 100
+                # ball position in robot frame + current robot frame = ball in world  => ball in world - robot new position
+                x = self.distance(
+                    self.ball["position"].pose.pose.position.x + self.robots[1]['position'].pose.pose.position.x -
+                    next_state[i]['pose_array'].position.x)
+                y = self.distance(
+                    self.ball["position"].pose.pose.position.y + self.robots[1]['position'].pose.pose.position.y -
+                    next_state[i]['pose_array'].position.y)
+
+                h += self.distance(x, y)
+                pass
+
+            self.successor['cost'][i] = h
 
     def robot_pose_callback(self, data):
         self.robots[1]["position"] = data
         pass
 
-    def distance(self, position):
-        dist = (position.pose.pose.position.x ** 2 + position.pose.pose.position.y ** 2) ** (1 / 2)
+    def distance(self, x, y):
+        dist = (x ** 2 + y ** 2) ** (1 / 2)
         return dist
         pass
 
@@ -182,8 +217,11 @@ class State:
 
         self.robots = {1: {'position': position, 'status': Status.standing}}
         self.ball = {'position': position}
-        self.pose_array = PoseArray()
-        self.cost = []
+
+        pose_array = PoseArray()
+        cost = []
+        status = []
+        self.successor = {'pose_array': pose_array, 'cost': cost, 'status': status}
         pass
 
 
@@ -202,12 +240,14 @@ def main():
     while not rospy.is_shutdown():
         state.update()
 
-        value = 0
-        '''for (action, sucessor) in state.successors():
-            if sucessor.value > value:
-                best_state = sucessor
-
-        action.execute()'''
+        value = 2**16
+        best_state = PoseArray()
+        state.successors()
+        for i in range(0,len(state.successor['status'])):
+            if state.successor['cost'][i] < value:
+                value = state.successor['cost'][i]
+                best_state = state.successor['pose_array']
+        #action.execute()
 
         rate.sleep()
 
