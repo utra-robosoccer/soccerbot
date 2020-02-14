@@ -10,7 +10,6 @@ Panels:
         - /TF1/Frames1
         - /Localization1/AMCL Pose1
         - /Planning1
-        - /Planning1/Successor States1
       Splitter Ratio: 0.4962962865829468
     Tree Height: 410
   - Class: rviz/Selection
@@ -411,13 +410,21 @@ Visualization Manager:
       Name: Localization
     - Class: rviz/Group
       Displays:
-        - Class: rviz/MarkerArray
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz/PoseArray
+          Color: 255; 25; 0
           Enabled: true
-          Marker Topic: /successor_states
-          Name: Successor States
-          Namespaces:
-            {}
-          Queue Size: 100
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: Successor_States
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Arrow (Flat)
+          Topic: /robot1/successor_states
+          Unreliable: false
           Value: true
       Enabled: true
       Name: Planning
@@ -449,7 +456,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.626939535140991
+      Distance: 3.519880533218384
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
