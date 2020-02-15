@@ -90,14 +90,9 @@ class State:
 
         self.successor['cost'] = []
         self.successor['status'] = []
-        future_pose = geometry_msgs.msg.Pose()
-        q = [0, 0, 0, 1]
-        future_pose.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
-        future_pose.orientation.y = q[1]
-        future_pose.orientation.z = q[2]
-        future_pose.orientation.w = q[3]
 
         dist = self.distance(self.ball["position"].pose.pose.position.x, self.ball["position"].pose.pose.position.y)
+
         if self.robots[1]["status"] == Status.walking:
             return
         elif self.robots[1]["status"] == Status.fallen_back:
@@ -113,27 +108,29 @@ class State:
             pass
         # if ball not in 1m
         elif self.robots[1]["status"] == Status.standing:
-            if abs((self.ball["position"].pose.pose.position.y - self.robots[1]["position"].pose.pose.position.y)) <= 0.05:
+            if abs((self.ball["position"].pose.pose.position.y - self.robots[1]["position"].pose.pose.position.y)) <= 0.0: # arbitray distance 0.0 so that the point array is generated
                 # goes forward and kick
                 self.successor['status'].append(Status.kicking)
                 self.successor['cost'].append(0)
                 self.value(self.successor)
                 pass
-            if dist > 1.0:
+            if dist >= 1.0:
                 for i in range(0, 190, 10):
+                    future_state = geometry_msgs.msg.Pose()
+                    q = [0, 0, 0, 1]
+                    future_state.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
+                    future_state.orientation.y = q[1]
+                    future_state.orientation.z = q[2]
+                    future_state.orientation.w = q[3]
 
                     if i > 90:
-                        future_pose.position.y = (
-                                self.robots[1]["position"].pose.pose.position.y - math.cos(math.radians(i - 90)))
-                        future_pose.position.x = (
-                                self.robots[1]["position"].pose.pose.position.x + math.sin(math.radians(i - 90)))
+                            future_state.position.y = (self.robots[1]["position"].pose.pose.position.y - math.cos(math.radians(i - 90)))
+                            future_state.position.x = (self.robots[1]["position"].pose.pose.position.x + math.sin(math.radians(i - 90)))
                     else:
-                        future_pose.position.y = (
-                                self.robots[1]["position"].pose.pose.position.y + math.cos(math.radians(i)))
-                        future_pose.position.x = (
-                                self.robots[1]["position"].pose.pose.position.x + math.sin(math.radians(i)))
-                    future_pose.position.z = 0.0
-                    self.successor['pose_array'].poses.append(future_pose)
+                            future_state.position.y = (self.robots[1]["position"].pose.pose.position.y + math.cos(math.radians(i)))
+                            future_state.position.x = (self.robots[1]["position"].pose.pose.position.x + math.sin(math.radians(i)))
+                    future_state.position.z = 0.0
+                    self.successor['pose_array'].poses.append(future_state)
                     self.successor['cost'].append(0)
                     self.successor['status'].append(Status.walking)
                 self.future_pose.publish(self.successor['pose_array'])
@@ -141,21 +138,27 @@ class State:
 
             elif dist < 1.0:
                 for i in range(0, 190, 10):
+                    future_state = geometry_msgs.msg.Pose()
+                    q = [0, 0, 0, 1]
+                    future_state.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
+                    future_state.orientation.y = q[1]
+                    future_state.orientation.z = q[2]
+                    future_state.orientation.w = q[3]
 
                     if i > 90:
-                        future_pose.position.y = (
+                        future_state.position.y = (
                                 self.robots[1]["position"].pose.pose.position.y - (
                                 math.cos(math.radians(i - 90)) / dist))
-                        future_pose.position.x = (
+                        future_state.position.x = (
                                 self.robots[1]["position"].pose.pose.position.x + (
                                 math.sin(math.radians(i - 90)) / dist))
                     else:
-                        future_pose.position.y = (
+                        future_state.position.y = (
                                 self.robots[1]["position"].pose.pose.position.y + (math.cos(math.radians(i)) / dist))
-                        future_pose.position.x = (
+                        future_state.position.x = (
                                 self.robots[1]["position"].pose.pose.position.x + (math.sin(math.radians(i)) / dist))
-                    future_pose.position.z = 0.0
-                    self.successor['pose_array'].poses.append(future_pose)
+                    future_state.position.z = 0.0
+                    self.successor['pose_array'].poses.append(future_state)
                     self.successor['cost'].append(0)
                     self.successor['status'].append(Status.walking)
                 self.future_pose.publish(self.successor['pose_array'])
