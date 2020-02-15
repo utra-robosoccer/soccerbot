@@ -15,8 +15,8 @@ classdef soccer_system < matlab.System
 
     methods(Access = protected)
         function setupImpl(obj)
-            obj.robot = Robot.soccerbot();
-            obj.robot.initialize([-0.5, 0, obj.hip_height], obj.foot_center_to_floor);
+%             obj.robot = Robot.soccerbot();
+%             obj.robot.initialize([-0.5, 0, obj.hip_height], obj.foot_center_to_floor);
 %             obj.start_position = obj.robot.pose.position();
 %             obj.end_position = Geometry.transform([0 0 0]);
 %             obj.robot_path = obj.robot.getPath(end_position);
