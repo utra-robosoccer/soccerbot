@@ -52,18 +52,6 @@ target_link_libraries(ball_detector
     ${OpenCV_LIBRARIES}
 )
 
-add_executable(
-    ball_position
-    src/ball_position.cpp
-
-)
-add_dependencies(ball_position ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(ball_position
-    ${catkin_LIBRARIES}
-    ${OpenCV_LIBRARIES}
-)
-
-
 #############
 ## Testing ##
 #############

@@ -3,19 +3,13 @@
 MODEL_NAME=$1
 XPOS=$2
 YPOS=$3
-ROBOT_NAMESPACE=/
+ROBOT_NAMESPACE=$MODEL_NAME
 REFERENCE_FRAME="world"
 
-SERVICE_UNAVAILABLE=1
-while [ $SERVICE_UNAVAILABLE -eq 1 ]; do
-    rosservice info /gazebo/spawn_urdf_model
-    SERVICE_UNAVAILABLE=$?
-done
-
-rosservice call /gazebo/spawn_urdf_model "{
+rosservice call --wait /gazebo/spawn_urdf_model "{
   model_name: '$MODEL_NAME',
   model_xml: $(rosparam get robot_description),
-  robot_namespace: '$ROBOT_NAMESPACE',
+  robot_namespace: '/$ROBOT_NAMESPACE',
   initial_pose: {
     position: {
       x: $XPOS,
@@ -32,13 +26,7 @@ rosservice call /gazebo/spawn_urdf_model "{
   reference_frame: '$REFERENCE_FRAME'
 }"
 
-SERVICE_UNAVAILABLE=1
-while [ $SERVICE_UNAVAILABLE -eq 1 ]; do
-    rosservice info /gazebo/set_model_configuration
-    SERVICE_UNAVAILABLE=$?
-done
-
-rosservice call /gazebo/set_model_configuration "{
+rosservice call --wait /gazebo/set_model_configuration "{
   model_name: '$MODEL_NAME',
   urdf_param_name: $(rosparam get robot_description),
   joint_names: [

@@ -1,6 +1,4 @@
 <launch>
 <!--     <include file="$(find soccerbot)/launch/modules/localization_filter.launch" /> -->
 
-    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
-
 </launch>
