@@ -89,7 +89,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
 
 ##### Pycharm Professional
-- Open Jetbains installer and install CLion
+- Open Jetbains installer and install Pycharm
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
 gedit ~/.local/share/applications/jetbrains-pycharm.desktop
