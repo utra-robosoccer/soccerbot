@@ -25,7 +25,7 @@ Next, install these Debian packages
 sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
 ```
 
-[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?arget_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)  
+[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)  
 (This is only for people with NVidia enabled GPUs for simulation and not on VM)
 ```
 Operating System - Linux  
