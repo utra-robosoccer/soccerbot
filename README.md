@@ -6,13 +6,33 @@
 
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
+#### Prerequisites
+First you need Ubuntu 18.04. Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
+
+The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu 18.04 because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
+
+For Dual Boot - https://opensource.com/article/18/5/dual-boot-linux  
+For Virtual Machine
+- VM Emulator https://www.virtualbox.org/wiki/Downloads
+- Ubuntu Desktop https://ubuntu.com/download/desktop
+- Make sure when you setup the Virtual Machine, move the .iso into the virtual machine files and also enable more CPU for the virtual machine. 50% of your CPU is good
+
+Next, install ROS Melodic (for Ubuntu 18.04)
 http://wiki.ros.org/ROS/Installation
 
-#### Prerequisites
-
-Debian packages needed for robots (sudo apt-get install)
+Next, install these Debian packages
 ```
-sudo apt-get install git git-lfs python-catkin-tools net-tools 
+sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
+```
+
+[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?arget_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)  
+(This is only for people with NVidia enabled GPUs for simulation and not on VM)
+```
+Operating System - Linux  
+Architecture - x86  
+Distribution - Ubuntu  
+Version - 18.06  
+Installer type - deb [network]  
 ```
 
 On Nvidia CUDA involved computers. Follow the instructions carefully here to install CUDA
@@ -43,11 +63,14 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To inst
 
 #### Setting up your IDE
 - Get the Jetbrains student membership (https://www.jetbrains.com/student/)
-- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion and Pycharm Professional
+- Download Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
+
+##### CLion
+- Open Jetbains installer and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
 gedit ~/.local/share/applications/jetbrains-clion.desktop
-Change the Exec line to this 
+# Add the bash -i -c to the beginning of this line (rest of the line remain the same)
 Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Add a CMakelist file
@@ -60,14 +83,41 @@ catkin_init_workspace
 ```bash
 ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
+- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
-  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds```
+  - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds (you might need to rebuild```
+  - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
+
+##### Pycharm Professional
+- Open Jetbains installer and install CLion
+- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
+```bash
+gedit ~/.local/share/applications/jetbrains-pycharm.desktop
+# Add the bash -i -c to the beginning of this line (rest of the line remain the same)
+Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+```
+- Open Pycharm, go to File > Open and open the repository name (soccer_ws)
+- Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
+- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
+- Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
+- Debugging
+  - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
+
+##### Matlab
+- Create a Mathworks account
+- Download Matlab (https://www.mathworks.com/downloads/)
+  - sudo run the install.run script (Might need to chmod +x the script)
+  - Matlab license information can be found here (https://github.com/utra-robosoccer/soccer_ws/wiki/Onboarding)
+  - Install all toolboxes if possible
+- In matlab navigate to the the folder soccer_ws/soccer_control
+- Execute any script (NOTE: Do not double click a folder to enter it, instead click on + to expand the folder when you are navigating). A starter script can be found in /test/walking
 
 #### Building the code
 ```bash
+cd ~/catkin_ws # As long as your current path is in a subdirectory of this folder
 catkin build soccerbot # Use catkin clean to start with a clean build
 source devel/setup.bash # Needs to be done everytime you finish building a new package
 ```
@@ -83,4 +133,5 @@ You should be ready to go now. Before running, setup your CLion IDE (above),  To
 ```bash
 roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
 ```
-Note that the arguments := are optional and the default ones are set in the launch files
+- This file launches a soccerbot.lauunch which is a single robot. Each of these have multiple modules (localization, navigation) which are launch files for certain components of a robot
+- Note that the arguments := are optional and the default ones are set in the launch files
