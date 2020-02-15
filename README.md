@@ -61,7 +61,7 @@ rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
-#### Setting up your IDE
+#### Setting up your IDE (CLion)
 - Get the Jetbrains student membership (https://www.jetbrains.com/student/)
 - Download Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
 
@@ -115,6 +115,18 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 - In matlab navigate to the the folder soccer_ws/soccer_control
 - Execute any script (NOTE: Do not double click a folder to enter it, instead click on + to expand the folder when you are navigating). A starter script can be found in /test/walking
 
+#### Setting up your IDE (Pycharm)
+- Get the Jetbrains student membership (https://www.jetbrains.com/student/)
+- Use Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion and Pycharm Professional
+- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
+```bash
+gedit ~/.local/share/applications/jetbrains-pycharm.desktop
+Change the Exec line to this 
+Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+```
+- Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
+- Debugging
+  - Simply go to Attach to Process and lookup the node. You can find the node by identifying the PID using rosnode info
 #### Building the code
 ```bash
 cd ~/catkin_ws # As long as your current path is in a subdirectory of this folder
