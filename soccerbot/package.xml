@@ -27,6 +27,7 @@
   <depend>imu_complementary_filter</depend>
 
   <!-- Navigation-->
+  <depend>soccer_control</depend>
   <depend>soccer_trajectories</depend>
 
   <!-- Communication-->
