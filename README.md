@@ -25,7 +25,7 @@ Next, install these Debian packages
 sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
 ```
 
-[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?arget_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)  
+[Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)  
 (This is only for people with NVidia enabled GPUs for simulation and not on VM)
 ```
 Operating System - Linux  
@@ -92,7 +92,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
 
 ##### Pycharm Professional
-- Open Jetbains installer and install CLion
+- Open Jetbains installer and install Pycharm
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
 gedit ~/.local/share/applications/jetbrains-pycharm.desktop
