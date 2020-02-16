@@ -1,6 +1,6 @@
-classdef soccerbot < handle
+classdef soccerbot < Robot.soccerbot_base
     properties
-        robot = importrobot('../soccer_description/models/soccerbot_stl.urdf');
+        robot;
         robot_right_leg_subtree;
         robot_left_leg_subtree;
         configuration;
@@ -14,6 +14,8 @@ classdef soccerbot < handle
     
     methods
         function obj = soccerbot(position, foot_center_to_floor)
+            obj.robot = importrobot('../soccer_description/models/soccerbot_stl.urdf');
+            
             obj.configuration = obj.robot.homeConfiguration;
             obj.robot_right_leg_subtree = obj.robot.subtree('right_hip_side');
             obj.robot_left_leg_subtree = obj.robot.subtree('left_hip_side');
