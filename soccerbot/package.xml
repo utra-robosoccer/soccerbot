@@ -31,4 +31,6 @@
 
   <!-- Communication-->
 
+  <!-- strategy-->
+  <depend>soccer_strategy</depend>
 </package>
