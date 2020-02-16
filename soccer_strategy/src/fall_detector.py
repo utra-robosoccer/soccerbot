@@ -47,7 +47,7 @@ def imu_callback(msg, pub):
 def main():
     rospy.init_node('fall_detector')
     pub = rospy.Publisher('fall_state', String, queue_size=10, latch=True)
-    rospy.Subscriber('/robot1/imu', Imu, imu_callback, pub)
+    rospy.Subscriber('imu', Imu, imu_callback, pub)
     rospy.spin()
 
 if __name__ == '__main__':
