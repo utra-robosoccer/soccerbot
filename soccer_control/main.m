@@ -34,13 +34,10 @@ while 1
     goal = goal_sub.receive();
     pose = pose_sub.receive();
     disp("Recieved Goal, executing walk");
-    ypr = quat2eul([pose.Pose.Pose.Orientation.W pose.Pose.Pose.Orientation.X pose.Pose.Pose.Orientation.Y pose.Pose.Pose.Orientation.Z]);
-    robot.pose = Geometry.transform([pose.Pose.Pose.Position.X pose.Pose.Pose.Position.Y ypr(1)]);
-    ypr = quat2eul([goal.Pose.Orientation.W goal.Pose.Orientation.X goal.Pose.Orientation.Y goal.Pose.Orientation.Z]);
-    % end_position = Geometry.transform([goal.Pose.Position.X goal.Pose.Position.Y ypr(1)]);
-    
-    robot.pose = Geometry.transform([0 0 0]);
-    end_position = Geometry.transform([0.5 0.0 0]);
+    robot.updatePosition([pose.Pose.Pose.Position.X pose.Pose.Pose.Position.Y hip_height], ...
+        [pose.Pose.Pose.Orientation.W pose.Pose.Pose.Orientation.X pose.Pose.Pose.Orientation.Y pose.Pose.Pose.Orientation.Z]);
+    end_position = Geometry.transform([goal.Pose.Position.X goal.Pose.Position.Y hip_height], ...
+        [goal.Pose.Orientation.W goal.Pose.Orientation.X goal.Pose.Orientation.Y goal.Pose.Orientation.Z]);
     
     % Create path of the robot
     robot_path = robot.getPath(end_position);

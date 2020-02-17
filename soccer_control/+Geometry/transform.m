@@ -43,7 +43,7 @@ classdef transform < handle
         end
         
         function setOrientation(obj, rot)
-            obj.H(1:3,1:3) = quat2rotm(rot);
+            obj.H(1:3,1:3) = real(quat2rotm(rot));
         end
         
         function pos = position(obj)
