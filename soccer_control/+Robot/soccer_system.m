@@ -1,35 +1,50 @@
-classdef soccer_system < matlab.System
+classdef soccer_system < matlab.System & matlab.system.mixin.SampleTime & matlab.system.mixin.Propagates
 
     properties
     end
 
     properties(DiscreteState)
-
+        t;
+        has_goal;
     end
 
     properties(Access = private)
         foot_center_to_floor = 0.0221; % Generated from robotParameters
         hip_height = 0.18;             % TODO: move into soccerbot
         robot;
+        
+        start_position;
+        end_position;
+        robot_path;
     end
 
     methods(Access = protected)
         function setupImpl(obj)
-            obj.robot = Robot.soccerbot();
-            obj.robot.initialize([-0.5, 0, obj.hip_height], obj.foot_center_to_floor);
-%             obj.start_position = obj.robot.pose.position();
-%             obj.end_position = Geometry.transform([0 0 0]);
-%             obj.robot_path = obj.robot.getPath(end_position);
+             obj.robot = Robot.soccerbot_base();
+             obj.robot_path = obj.robot.getPath(Geometry.transform([0.5 0.0 0]));
         end
 
-        function y = stepImpl(obj,u)
-            % Implement algorithm. Calculate y as a function of input u and
-            % discrete states.
-            y = zeros(18,1);
+        function configuration = stepImpl(obj, has_new_goal, new_goal, ~, new_pose)
+            
+            if (has_new_goal)
+                % TODO wait for final step to finish before moving on
+                obj.robot.start_position = new_pose.Pose;
+                obj.robot.end_position = Geometry.transform(cell2mat(struct2cell(new_goal))');
+                obj.robot_path = obj.robot.getPath(obj.robot.end_position);
+                obj.t = 0;
+                obj.has_goal = 1;
+            end
+            
+            if (obj.has_goal)
+                obj.robot.stepPath(obj.t, obj.robot_path);
+            end
+            
+            configuration = obj.robot.configuration;
         end
 
         function resetImpl(obj)
-            % Initialize / reset discrete-state properties
+            obj.t = 0;
+            obj.has_goal = 0;
         end
         
         function num = getNumOutputsImpl(~)
@@ -44,6 +59,19 @@ classdef soccer_system < matlab.System
             fz1 = true;
         end
 
+        function [sz,dt,cp] = getDiscreteStateSpecificationImpl(obj,name)
+            % Return size, data type, and complexity of discrete-state
+            % specified in name
+            sz = [1 1];
+            dt = "double";
+            cp = false;
+        end
+
+        function sts = getSampleTimeImpl(obj)
+            % Define sample time type and parameters
+            sts = obj.createSampleTime("Type", "Inherited");
+        end
+
         function [dt1] = getOutputDataTypeImpl(obj)
             dt1 = 'double';
         end
@@ -51,5 +79,6 @@ classdef soccer_system < matlab.System
         function [cp1] = isOutputComplexImpl(obj)
             cp1 = false;
         end
+        
     end
 end
