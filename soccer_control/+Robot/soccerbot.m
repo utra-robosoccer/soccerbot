@@ -1,4 +1,4 @@
-classdef soccerbot < Robot.soccerbot_base
+classdef soccerbot < handle
     properties
         robot;
         robot_right_leg_subtree;
