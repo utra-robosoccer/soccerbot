@@ -760,9 +760,9 @@
       <inertia ixx="2.06e-4" ixy="1.06e-6" ixz="-5.73e-5" iyy="2.057e-4" iyz="2.534e-6" izz="1.603e-4"/>
     </inertial>
     <collision name="collision">
-      <origin rpy="0  0  0" xyz="0.01735 0 0.01995"/>
+      <origin rpy="0  0  0" xyz="-0.013 0 0.025"/>
       <geometry>
-        <box size="0.0712 0.094 0.0839"/>
+        <box size="0.0712 0.094 0.0779"/>
       </geometry>
     </collision>
     <visual name="visual">
@@ -836,7 +836,7 @@
       <visualize>true</visualize>
       <topic>__default_topic__</topic>
       <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-        <topicName>imu</topicName>
+        <topicName>imu_raw</topicName>
         <bodyName>imu_link</bodyName>
         <updateRateHZ>50.0</updateRateHZ>
         <gaussianNoise>0.0</gaussianNoise>
@@ -857,7 +857,7 @@
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
-    <origin rpy="0 0 0" xyz="0.05295 0.00145 0.04740"/>
+    <origin rpy="0 0 0" xyz="0.015 0.00145 0.04740"/>
     <axis xyz="0  0  0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>

@@ -1,10 +1,50 @@
 classdef soccerbot_base < handle
-    properties
+    properties(Access = private)
+        robot_data = coder.load('generated/robot.mat');
+        pose = Geometry.transform;              % Pose of the center between the two legs position
+        end_position;
     end
     
     methods
         function obj = soccerbot_base()
-            robot = coder.load('generated/robot.mat');
+        end
+        
+        function footpath = getPath(obj, finishPosition)
+            crotch = obj.pose.position;
+            finishPositionCoordinate = finishPosition.position;
+            finishPositionCoordinate(3) = crotch(3);
+            finishPosition.setPosition(finishPositionCoordinate);
+            
+            footpath = Geometry.robotpath(obj.pose, finishPosition, ...
+                obj.robot_data.robot.foot_center_to_floor);
+        end
+        
+        function ik_right_foot(obj, torso_to_right_foot)
+            
+        end
+        
+        function ik_left_foot(obj, torso_to_left_foot)
+            
+        end
+        
+        function stepPath(obj, t, robot_path)
+            crotch_position = robot_path.crotchPosition(t) * obj.torso_offset;
+            [right_foot_position, left_foot_position] = robot_path.footPosition(t);
+                        
+            torso_to_left_foot = crotch_position \ left_foot_position;
+            torso_to_right_foot = crotch_position \ right_foot_position;
+            
+            configSolR = obj.ik_right_foot(torso_to_right_foot);
+            configSolL = obj.ik_left_foot(torso_to_left_foot);
+            
+            obj.configuration(5:10) = configSolL;
+            obj.configuration(13:18) = configSolR;
+            
+            obj.pose = Geometry.transform(crotch_position);
+        end
+        
+        function config = configuration(obj)
+            config = zeros(18,1);
         end
     end
     
