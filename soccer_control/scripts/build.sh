@@ -2,6 +2,18 @@
 
 # Jason: Super hack, build the simulink diagram and export into C code
 
+if [[ -f ../soccer_control_generated ]]
+then
+    echo "Soccer Control generated, not regenerating"
+    exit 0
+fi
+
+if ! command -v matlab > /dev/null
+then
+    echo "Matlab not installed, exiting"
+    exit 0;
+fi
+
 roscore &
 ROSCORE_PID=$!
 
