@@ -9,6 +9,8 @@ __pycache__/
 
 # Matlab Build Files
 soccer_description/models/soccerbot.urdf
+soccer_control/generated
+soccer_control_generated
 .idea/
 
 # Windows and Mac files
