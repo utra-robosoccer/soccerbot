@@ -1,6 +1,6 @@
 classdef soccerbot_base < handle
     properties(Access = private)
-        robot_data = coder.load('generated/robot.mat');
+        % robot_data = coder.load('generated/robot.mat');
         pose = Geometry.transform;              % Pose of the center between the two legs position
         end_position;
     end
@@ -20,11 +20,11 @@ classdef soccerbot_base < handle
         end
         
         function ik_right_foot(obj, torso_to_right_foot)
-            
+            % TODO work on this
         end
         
         function ik_left_foot(obj, torso_to_left_foot)
-            
+            % TODO work on this
         end
         
         function stepPath(obj, t, robot_path)
