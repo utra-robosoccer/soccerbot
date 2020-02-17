@@ -2,8 +2,9 @@
 
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="robot_name" default="/" />
-    <xacro:arg name="MODEL_TYPE" default="dae" />
-    <xacro:arg name="FILE_PATH" default="package://soccer_description" />
+    <xacro:arg name="MODEL_TYPE" default="stl" />
+    <xacro:arg name="FILE_PATH" default="../soccer_description" />
+    <xacro:arg name="has_base_footprint" default="false" />
 
     <xacro:property name="FILE_PATH" value="$(arg FILE_PATH)"/>
     <xacro:property name="MODEL_TYPE" value="$(arg MODEL_TYPE)"/>
@@ -15,8 +16,6 @@
     <xacro:include filename="$(find soccer_description)/models/head.xacro" />
     <xacro:include filename="$(find soccer_description)/models/front_camera.xacro" />
     <xacro:include filename="$(find soccer_description)/models/imu.xacro" />
-
-    <link name="base_footprint" />
 
     <link name="torso">
         <inertial>
@@ -48,12 +47,21 @@
     <imu origin="torso" />
     <front_camera origin="head" />
 
-    <joint name="base_footprint_torso" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="torso"/>
-        <origin rpy="0 0 0" xyz="0 0 0.3536"/>
-        <axis xyz="1 0 0"/>
-    </joint>
+    <xacro:if value="$(arg has_base_footprint)">
+        <link name="base_footprint" />
+        <joint name="base_footprint_torso" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="torso"/>
+            <origin rpy="0 0 0" xyz="0 0 0.3536"/>
+            <axis xyz="1 0 0"/>
+        </joint>
+        <gazebo reference="base_footprint">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+    </xacro:if>
 
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
@@ -69,10 +77,4 @@
         <mu2>${JOINT_MU2}</mu2>
     </gazebo>
 
-    <gazebo reference="base_footprint">
-        <kp>${JOINT_KP}</kp>
-        <kd>${JOINT_KD}</kd>
-        <mu1>${JOINT_MU1}</mu1>
-        <mu2>${JOINT_MU2}</mu2>
-    </gazebo>
 </robot>

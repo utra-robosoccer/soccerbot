@@ -5,8 +5,8 @@ find_package(catkin REQUIRED)
 
 catkin_package()
 
-add_custom_target(
-    soccer_control ALL
-    COMMAND ./scripts/build.sh
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
+#add_custom_target(
+#    soccer_control ALL
+#    COMMAND ./scripts/build.sh
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#)
