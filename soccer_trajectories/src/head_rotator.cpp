@@ -34,7 +34,7 @@ public:
 
         std_msgs::Float64 angle;
         angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
-        //head_rotator_0.publish(angle);
+        head_rotator_0.publish(angle);
 
         angle.data = 0.6f;
         head_rotator_1.publish(angle);

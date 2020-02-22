@@ -73,7 +73,7 @@ private:
 
         for (const darknet_ros_msgs::BoundingBox &box: msg->bounding_boxes) {
             std::string objectClass = box.Class;
-            if (objectClass != "bird") {//sports ball
+            if (objectClass != "sports ball") {//sports ball bird for testing
 
                 continue;
             }
