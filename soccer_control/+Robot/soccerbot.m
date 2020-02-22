@@ -1,6 +1,6 @@
 classdef soccerbot < handle
     properties
-        robot = importrobot('../soccer_description/models/soccerbot_stl.urdf');
+        robot;
         robot_right_leg_subtree;
         robot_left_leg_subtree;
         configuration;
@@ -14,6 +14,8 @@ classdef soccerbot < handle
     
     methods
         function obj = soccerbot(position, foot_center_to_floor)
+            obj.robot = importrobot('../soccer_description/models/soccerbot_stl.urdf');
+            
             obj.configuration = obj.robot.homeConfiguration;
             obj.robot_right_leg_subtree = obj.robot.subtree('right_hip_side');
             obj.robot_left_leg_subtree = obj.robot.subtree('left_hip_side');
@@ -31,7 +33,8 @@ classdef soccerbot < handle
             % Calculating hip and feet location
             hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'right_hip_front');
             position(3) = position(3) + hip_to_torso(3,4);
-            obj.pose.setPosition(position);
+            
+            obj.updatePosition(position, [1 0 0 0])
             
             obj.foot_center_to_floor = foot_center_to_floor; % Using foot box height and foot to thing parameter
             
@@ -47,6 +50,15 @@ classdef soccerbot < handle
             obj.configuration(13:18) = configSolR;
             
             showdetails(obj.robot)
+        end
+        
+        function updatePosition(obj, position, quaternion)
+             % Calculating hip and feet location
+            hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'right_hip_front');
+            position(3) = position(3) + hip_to_torso(3,4);
+            obj.pose.setPosition(position);
+            
+            obj.pose.setOrientation(quaternion);
         end
         
         function footpath = getPath(obj, finishPosition)
