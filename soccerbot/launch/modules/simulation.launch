@@ -4,7 +4,7 @@
     <arg name="x_pos" default="0.0" />
     <arg name="y_pos" default="0.0" />
 
-    <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot_stand.xacro'
+    <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         MODEL_TYPE:=dae
         FILE_PATH:=package://soccer_description

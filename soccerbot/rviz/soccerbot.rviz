@@ -10,6 +10,7 @@ Panels:
         - /TF1/Frames1
         - /Localization1
         - /Localization1/AMCL Pose1
+        - /Planning1
       Splitter Ratio: 0.4962962865829468
     Tree Height: 410
   - Class: rviz/Selection
@@ -417,6 +418,22 @@ Visualization Manager:
           Namespaces:
             {}
           Queue Size: 100
+          Value: true
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz/PoseArray
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: PoseArray
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Arrow (Flat)
+          Topic: /robot1/successor_states
+          Unreliable: false
           Value: true
       Enabled: true
       Name: Planning
