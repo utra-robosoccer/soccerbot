@@ -31,10 +31,10 @@ classdef soccerbot < handle
             obj.configuration(12).JointPosition = 0.8*pi;
            
             % Calculating hip and feet location
+            obj.updatePosition(position, [1 0 0 0])
             hip_to_torso = obj.robot.getTransform(obj.robot.homeConfiguration, 'torso', 'right_hip_front');
             position(3) = position(3) + hip_to_torso(3,4);
-            
-            obj.updatePosition(position, [1 0 0 0])
+
             
             obj.foot_center_to_floor = foot_center_to_floor; % Using foot box height and foot to thing parameter
             
