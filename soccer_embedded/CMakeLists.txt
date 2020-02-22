@@ -7,13 +7,13 @@ catkin_package()
 
 add_custom_target(
     soccer_embedded ALL
-    COMMAND make clean && make
+    COMMAND make clean 2> /dev/null && make 2> /dev/null
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Robot
 )
 
 add_custom_target(
     upload ALL
     DEPENDS soccer_embedded
-    COMMAND openocd -f interface/stlink-v2-1.cfg -f target/stm32f4x.cfg -c "program ./Build/F4/Robot_F4.elf verify reset exit"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Robot
+    COMMAND ./scripts/flash.sh
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )

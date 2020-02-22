@@ -214,7 +214,7 @@ endif
 
 
 # All Target
-all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
+all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf # $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
