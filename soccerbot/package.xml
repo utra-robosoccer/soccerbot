@@ -14,7 +14,7 @@
 
   <!-- Sensors -->
   <depend>soccer_hardware</depend>
-<!--  <depend>soccer_embedded</depend>-->
+  <depend>soccer_embedded</depend>
   <depend>usb_cam</depend>
 
   <!-- Localization -->
