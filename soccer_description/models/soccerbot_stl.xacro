@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-
-<robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:include filename="$(find soccer_description)/models/parameters.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/robot.xacro" />
-    <soccerbot FILE_PATH="../soccer_description" MODEL_TYPE="stl" />
-</robot>

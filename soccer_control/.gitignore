@@ -30,7 +30,6 @@ octave-workspace
 *.slxc
 *.original
 
-*.sh
 *.tgz
 *_ert_rtw/
 soccer-utility/soccer_msgs/matlab_gen/

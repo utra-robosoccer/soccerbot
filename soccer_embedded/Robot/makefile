@@ -214,7 +214,7 @@ endif
 
 
 # All Target
-all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe 
+all: $(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf # $(BUILD_DIR)/$(TARGET)/Test/RobotTest.exe
 
 # Tool invocations
 $(BUILD_DIR)/F4/Robot_F4.elf: $(C_OBJECTS) $(CPP_OBJECTS) $(S_OBJECTS)
@@ -252,10 +252,10 @@ clean:
 	-@echo ' '
 
 post-build:
-	-@echo 'Generating hex and Printing size information:'
-	arm-none-eabi-objcopy -O ihex "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf" "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).hex"
-	arm-none-eabi-size "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf"
-	-@echo ' '
+# 	-@echo 'Generating hex and Printing size information:'
+# 	arm-none-eabi-objcopy -O ihex "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf" "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).hex"
+# 	arm-none-eabi-size "$(BUILD_DIR)/$(TARGET)/Robot_$(TARGET).elf"
+# 	-@echo ' '
 
 .PHONY: all clean dependents
 .SECONDARY: post-build

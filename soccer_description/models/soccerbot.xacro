@@ -1,23 +1,80 @@
 <?xml version="1.0" ?>
 
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="robot_name" default="/" />
+    <xacro:arg name="MODEL_TYPE" default="stl" />
+    <xacro:arg name="FILE_PATH" default="../soccer_description" />
+    <xacro:arg name="has_base_footprint" default="false" />
+
+    <xacro:property name="FILE_PATH" value="$(arg FILE_PATH)"/>
+    <xacro:property name="MODEL_TYPE" value="$(arg MODEL_TYPE)"/>
+
     <xacro:include filename="$(find soccer_description)/models/parameters.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/robot.xacro" />
-    <soccerbot />
 
-    <link name="base_footprint" />
+    <xacro:include filename="$(find soccer_description)/models/arm.xacro" />
+    <xacro:include filename="$(find soccer_description)/models/leg.xacro" />
+    <xacro:include filename="$(find soccer_description)/models/head.xacro" />
+    <xacro:include filename="$(find soccer_description)/models/front_camera.xacro" />
+    <xacro:include filename="$(find soccer_description)/models/imu.xacro" />
 
-    <joint name="base_footprint_torso" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="torso"/>
-        <origin rpy="0 0 0" xyz="0 0 0.3536"/>
-        <axis xyz="1 0 0"/>
-    </joint>
+    <link name="torso">
+        <inertial>
+            <mass value="1.529"/>
+            <origin rpy="0 0 0" xyz="0.0082498 -0.0017440 -0.0522479"/>
+            <inertia ixx="4.323e-3" ixy="5.549e-6" ixz="3.960e-5"
+                     iyy="5.198e-3" iyz="-1.509e-5"
+                     izz="3.567e-3"/>
+        </inertial>
+        <collision name="collision">
+            <origin rpy="0 0 0" xyz="0 0 -0.052"/>
+            <geometry>
+                <box size="0.130 0.145 0.152"/>
+            </geometry>
+        </collision>
+        <visual name="visual">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="${FILE_PATH}/meshes/torso.${MODEL_TYPE}" scale="1 1 1"/>
+            </geometry>
+        </visual>
+    </link>
 
-    <gazebo reference="base_footprint">
+    <arm name="left" origin="torso" direction="1" />
+    <arm name="right" origin="torso" direction="-1" />
+    <leg name="left" origin="torso" direction="1" />
+    <leg name="right" origin="torso" direction="-1" />
+    <head origin="torso" />
+    <imu origin="torso" />
+    <front_camera origin="head" />
+
+    <xacro:if value="$(arg has_base_footprint)">
+        <link name="base_footprint" />
+        <joint name="base_footprint_torso" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="torso"/>
+            <origin rpy="0 0 0" xyz="0 0 0.3536"/>
+            <axis xyz="1 0 0"/>
+        </joint>
+        <gazebo reference="base_footprint">
+            <kp>${JOINT_KP}</kp>
+            <kd>${JOINT_KD}</kd>
+            <mu1>${JOINT_MU1}</mu1>
+            <mu2>${JOINT_MU2}</mu2>
+        </gazebo>
+    </xacro:if>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>$(arg robot_name)</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="torso">
         <kp>${JOINT_KP}</kp>
         <kd>${JOINT_KD}</kd>
         <mu1>${JOINT_MU1}</mu1>
         <mu2>${JOINT_MU2}</mu2>
     </gazebo>
+
 </robot>
