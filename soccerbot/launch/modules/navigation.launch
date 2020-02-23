@@ -12,8 +12,9 @@
     <!--  rotate head if can't see a soccer ball  -->
     <node pkg="soccer_trajectories" type="head_rotator" name="head_rotator" output="screen" />
 
-    <!-- Walking Program -->
-
-<!--    <node machine="utra_main" name="soccer_walker" pkg="soccer_control" type="run.sh" output="screen" cwd="node"/>-->
+    <!-- Walking Program (For actual robot, need to be connected to the main soccer robot -->
+    <machine name="utra_main" address="192.168.0.128" user="robosoccer" password="utra2016" />
+    <node machine="utra_main" name="soccer_walker" pkg="soccer_control" type="run.sh" output="screen" cwd="node" unless="$(arg simulation)"/>
+    <node name="soccer_walker" pkg="soccer_control" type="run.sh" output="screen" cwd="node" if="$(arg simulation)"/>
 
 </launch>

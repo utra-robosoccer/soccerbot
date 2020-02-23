@@ -2,8 +2,6 @@
     <arg name="simulation" default="true" />
     <arg name="single" default="true" />
 
-    <machine name="utra_main" address="192.168.0.128" user="robosoccer" password="utra2016" />
-
     <include file="$(find soccerbot)/launch/modules/simulator.launch" />
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
