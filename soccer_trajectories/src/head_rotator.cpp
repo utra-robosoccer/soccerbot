@@ -31,14 +31,18 @@ public:
         if (has_pose && last_pose < ros::Duration(1)) {
             return;
         }
+        if (!has_pose){
+            std_msgs::Float64 angle;
+            angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
+            head_rotator_0.publish(angle);
 
-        std_msgs::Float64 angle;
-        angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
-        head_rotator_0.publish(angle);
+            angle.data = 0.6f;
+            head_rotator_1.publish(angle);
+            last_t += 1;
 
-        angle.data = 0.6f;
-        head_rotator_1.publish(angle);
-        last_t += 1;
+        }
+
+
     }
 
 };
