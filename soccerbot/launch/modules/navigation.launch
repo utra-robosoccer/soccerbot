@@ -14,6 +14,6 @@
 
     <!-- Walking Program -->
 
-    <node machine="utra_main" name="soccer_walker" pkg="soccer_control" type="run.sh" output="screen" cwd="node"/>
+    <node name="soccer_walker" pkg="soccer_control" type="run.sh" output="screen" cwd="node"/>
 
 </launch>
