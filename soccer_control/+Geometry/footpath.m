@@ -3,7 +3,7 @@ classdef footpath < Geometry.path
         half_to_full_step_time_ratio = 0.7; % Duration difference between half and full step
         
         foot_separation = 0.04;     % seperation between feet and center
-        step_height = 0.03;        % height of step
+        step_height = 0.025;        % height of step
         step_outwardness = 0.015;
         step_rotation = 0.05;
         

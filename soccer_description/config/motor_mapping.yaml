@@ -4,7 +4,7 @@ motor_mapping:
     id: 5
     joint_state_id: 1
     direction: -1 #leg turns inwards
-    offset: 153
+    offset: 150
     initial_state: 0.0
   right_leg_motor_1:
     id: 4
@@ -14,7 +14,7 @@ motor_mapping:
   right_leg_motor_2:
     id: 3
     direction: -1 #leg goes forwards
-    offset: 153
+    offset: 152
     initial_state: 0.25
   right_leg_motor_3:
     id: 2
@@ -24,7 +24,7 @@ motor_mapping:
   right_leg_motor_4:
     id: 1
     direction: 1 #foot points upwards
-    offset: 150
+    offset: 151.5
     initial_state: 0.2
   right_leg_motor_5:
     id: 0
@@ -44,17 +44,17 @@ motor_mapping:
   left_leg_motor_2:
     id: 8
     direction: 1 # leg goes forwards
-    offset: 150
+    offset: 151
     initial_state: 0.25
   left_leg_motor_3:
     id: 9
     direction: -1 # calve goes forwards
-    offset: 145
+    offset: 150
     initial_state: -0.4
   left_leg_motor_4:
     id: 10
     direction: -1 # foot points upwards
-    offset: 151
+    offset: 150
     initial_state: 0.2
   left_leg_motor_5:
     id: 11

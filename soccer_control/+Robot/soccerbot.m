@@ -191,8 +191,10 @@ classdef soccerbot < handle
         end
         
         function applyRPYFeedback(obj, rpy)
-            f_off = -sin(rpy(2)) * 0.02;
-            obj.torso_offset = [1,0,0,f_off; 0,1,0,0; 0,0,1,0; 0,0,0,1];
+            f_off = rpy(2) * 0.1;
+            fb_off = f_off * 0.15
+            obj.torso_offset = eul2tform([0 f_off 0]);
+            obj.torso_offset(1,4) = -fb_off;
         end
         
         function angles = getAngles(obj)
