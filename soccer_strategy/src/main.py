@@ -87,7 +87,37 @@ class Action:
 
 
 class State:
+    def update_2(self):
+        has_ball = False
+        ball_pose = geometry_msgs.msg.TransformStamped()
+        ball_pose.header.stamp = rospy.Time.now()
+        act = Action()
 
+        try:
+            ball_pose = tfBuffer.lookup_transform('ball', 'base_footprint', rospy.Time(0))
+            has_ball = True
+            self.has_ball_once = True
+
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
+            print(e)
+            pass
+        if has_ball:
+            tmp = geometry_msgs.msg.Pose()
+            tmp.position.x = ball_pose.transform.translation.x
+            tmp.position.y = ball_pose.transform.translation.y
+            tmp.position.z = ball_pose.transform.translation.z
+            tmp.orientation.x = 0.0
+            tmp.orientation.y = 0.0
+            tmp.orientation.z = 0.0
+            tmp.orientation.w = 1.0
+
+            best_state = {'state': tmp, 'status': Status.standing}
+
+            act.execute(best_state, self.robots)
+            pass
+
+
+        pass
     def update(self):  # finished but not scalable
         # Reads all tf transformations and updates the information and the status from nam
         # robot[1]["position"] = (2,3) # geometry_msgs::Pose2D

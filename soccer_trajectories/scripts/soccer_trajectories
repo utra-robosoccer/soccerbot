@@ -3,14 +3,15 @@ import rospy
 import soccer_trajectories
 import os
 from std_msgs.msg import String
-import  std_msgs.msg._Bool
+import std_msgs.msg._Bool
 
 trajectory_path = ""
 simulation = False
 
+
 def run_trajectory(command):
     try:
-        get_up = rospy.Publisher('get_up',  std_msgs.msg.Bool, queue_size=1)
+        get_up = rospy.Publisher('get_up', std_msgs.msg.Bool, queue_size=1)
         finish_walking = rospy.Publisher('walking', std_msgs.msg.Bool, queue_size=1)
 
         if simulation:
@@ -20,7 +21,6 @@ def run_trajectory(command):
 
         if not os.path.exists(path):
             return
-
 
         print "Now publishing: " + command.data
         trajectory = soccer_trajectories.Trajectory(path)
