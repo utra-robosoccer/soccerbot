@@ -1,7 +1,7 @@
 % Setup the publishers and subscribers
 close all; clear; clc;
 rosshutdown;
-rosinit('localhost', 'NodeName', 'robot1/soccer_control');
+rosinit('192.168.0.120', 'NodeName', 'robot1/soccer_control');
 motor_list = rosparam("get", "robot1/motor_mapping");
 
 motors = fieldnames(motor_list);
@@ -35,7 +35,7 @@ robot_path = robot.getPath(end_position);
 
 imu = imu_sub.receive();
 rate = rateControl(1/robot_path.step_size);
-for t = 0:robot_path.step_size:robot_path.duration
+for t = 0:robot_path.step_size:robot_path.duration+0.1
     for i = 1:numel(robot.configuration)
         msg = pubs(robot.configuration(i).JointName).rosmessage;
         msg.Data = robot.configuration(i).JointPosition;
@@ -45,6 +45,12 @@ for t = 0:robot_path.step_size:robot_path.duration
         
         p = pubs(robot.configuration(i).JointName);
         p.send(msg);
+    end
+    
+    try
+        angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
+        robot.applyRPYFeedback(quat2eul(angle));
+    catch ex
     end
     
     % Publish odom
