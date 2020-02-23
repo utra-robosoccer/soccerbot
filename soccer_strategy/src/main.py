@@ -7,6 +7,7 @@ from tf.transformations import quaternion_from_euler
 import math
 from enum import Enum
 from std_msgs.msg import String
+import std_msgs.msg._Bool
 
 
 class Status(Enum):
@@ -18,7 +19,7 @@ class Status(Enum):
 
 
 # Define the publisher and subscribers here
-
+getting_up = False
 
 tfBuffer = None
 listener = None
@@ -26,21 +27,37 @@ listener = None
 
 class Action:
     def __init__(self):
+
         self.get_up = rospy.Publisher('command', String, queue_size=1, latch=True)
-        self.move = rospy.Publisher('goal', geometry_msgs.msg.Pose, queue_size=1, latch=True)
+        self.move = rospy.Publisher("goal", geometry_msgs.msg.PoseStamped, queue_size=1, latch=True)
+        self.up = rospy.Subscriber("get_up", std_msgs.msg.Bool, self.get_up_callback)
+        self.walking = rospy.Subscriber("walking", std_msgs.msg.Bool, self.walk_callback)
+        self.ran = False
+        self.walk = False
         pass
+
+    def get_up_callback(self, data):
+        self.ran = True
+
+    def walk_callback(self, data):
+        self.walk = True
 
     def execute(self, state, robots):
         # ros.publish geometry,Pose2D where to go
         # ros.publish rviz debug pose 2D
 
         # ros,publish soccer_trajectories string for getupfront getupback
-
+        global getting_up
         if state["status"] == Status.fallen_forward:
+            self.ran = False
             msg = String()
             msg.data = "getupfront"
             self.get_up.publish(msg)
+
             while robots[1]['status'] != Status.standing:
+                if self.ran:
+                    self.get_up.publish(msg)
+                    self.ran = False
                 rospy.sleep(0.1)
             pass
         elif state["status"] == Status.fallen_back:
@@ -48,17 +65,23 @@ class Action:
             msg.data = "getupfront"
             self.get_up.publish(msg)
             while robots[1]['status'] != Status.standing:
+                if self.ran:
+                    self.get_up.publish(msg)
+                    self.ran = False
                 rospy.sleep(0.1)
             pass
-        elif state["status"] == Status.standing:
-            msg = geometry_msgs.msg.Pose()
-            msg.position = state["state"].position
-            msg.orientation = state["state"].orientation
+        # elif state["status"] == Status.standing:
+        else:
+            self.walk = False
+            msg = geometry_msgs.msg.PoseStamped()
+            msg.header.stamp = rospy.Time.now()
+            msg.header.frame_id = 'world'
+            msg.pose.position = state["state"].position
+            msg.pose.orientation = state["state"].orientation
             self.move.publish(msg)
-            robots[1]['status'] = Status.walking
-            while robots[1]['status'] != Status.standing:
+            while not self.walk:
                 rospy.sleep(0.1)
-            pass
+
 
         pass
 
@@ -77,8 +100,11 @@ class State:
         ball_pose = geometry_msgs.msg.TransformStamped()
         ball_pose.header.stamp = rospy.Time.now()
 
+        ball_pose_world = geometry_msgs.msg.TransformStamped()
+        ball_pose_world.header.stamp = rospy.Time.now()
         try:
             ball_pose = tfBuffer.lookup_transform('ball', 'base_footprint', rospy.Time(0))
+            ball_pose_world = tfBuffer.lookup_transform('ball', 'world', rospy.Time(0))
             has_ball = True
             self.has_ball_once = True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
@@ -100,6 +126,18 @@ class State:
             position.pose.pose.orientation.w = 1.0
 
             self.ball["position"] = position
+
+            position = geometry_msgs.msg.PoseWithCovarianceStamped()
+
+            position.pose.pose.position.x = ball_pose_world.transform.translation.x
+            position.pose.pose.position.y = ball_pose_world.transform.translation.y
+            position.pose.pose.position.z = 0
+
+            position.pose.pose.orientation.x = 0.0
+            position.pose.pose.orientation.y = 0.0
+            position.pose.pose.orientation.z = 0.0
+            position.pose.pose.orientation.w = 1.0
+            self.ball["pos_world"] = position
             self.successors()
 
         pass
@@ -167,8 +205,8 @@ class State:
                 future_state.position.z = 0.0
 
                 self.successor['pose_array'].poses.append(future_state)
-                self.value(future_state.position.x, future_state.position.y)
-                self.successor['cost'].append(0)
+                h = self.value(future_state.position.x, future_state.position.y)
+                self.successor['cost'].append(h)
                 self.successor['status'].append(Status.walking)
 
             self.future_pose.publish(self.successor['pose_array'])
@@ -182,9 +220,9 @@ class State:
         # if standing h = 100
         # distance to ball
         h = 100
-        # ball position in robot frame + current robot frame = ball in world  => ball in world - robot new position
-        x_2 = self.ball["position"].pose.pose.position.x + self.robots[1]['position'].pose.pose.position.x - x
-        y_2 = self.ball["position"].pose.pose.position.y + self.robots[1]['position'].pose.pose.position.y - y
+        # ball position in robot frame + current robot frame = ball in world  => ball in world - robot new position    self.robots[1]['position'].pose.pose.position.y
+        x_2 = 100 * abs(self.ball["pos_world"].pose.pose.position.x - x)
+        y_2 = 100 * abs(self.ball["pos_world"].pose.pose.position.y - y)
         h += self.distance(x_2, y_2)
         return h
 
@@ -193,16 +231,20 @@ class State:
         pass
 
     def robot_state_callback(self, data):
+        global getting_up
         if data.data == 'fell_front':
             self.robots[1]["status"] = Status.fallen_forward
+            getting_up = True
         elif data.data == 'fell_back':
             self.robots[1]["status"] = Status.fallen_back
+            getting_up = True
         elif data.data == 'standing':
             self.robots[1]["status"] = Status.standing
+            getting_up = False
         pass
 
     def distance(self, x, y):
-        dist = (x ** 2 + y ** 2) ** (1 / 2)
+        dist = (x ** 2 + y ** 2) ** (1.0 / 2)
         return dist
         pass
 
