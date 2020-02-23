@@ -1,5 +1,5 @@
 <launch>
-    <arg name="trajectory" default="rightkick" />
+    <arg name="trajectory" default="sidekick" />
     <include file="$(find soccerbot)/launch/modules/navigation.launch">
         <arg name="simulation" value="false" />
     </include>
