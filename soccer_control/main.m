@@ -68,7 +68,7 @@ while 1
             angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
             robot.applyRPYFeedback(quat2eul(angle));
         catch ex
-            disp "test";
+            disp ex;
         end
 
         % Publish odom
