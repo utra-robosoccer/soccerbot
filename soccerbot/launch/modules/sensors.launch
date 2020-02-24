@@ -2,9 +2,6 @@
 <launch>
     <arg name="robot_name" default="robot1"/>
 
-    <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-
     <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen">
         <param name="video_device" value="/dev/video0" />
         <param name="image_width" value="640" />

@@ -4,15 +4,6 @@
     <arg name="x_pos" default="0.0" />
     <arg name="y_pos" default="0.0" />
 
-    <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro'
-        robot_name:=$(arg robot_name)
-        MODEL_TYPE:=dae
-        FILE_PATH:=package://soccer_description
-        has_base_footprint:=true"
-    />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-
-    <!-- TODO load this automatically from the motor_mapping.yaml (https://answers.ros.org/question/213145/use-rosparam-get-in-launch-file/) -->
     <rosparam file="$(find soccer_trajectories)/poses/$(arg pose_name).yaml" command="load" ns="initial_state" />
     <node pkg="soccerbot" type="spawn_model.sh" name="spawn_soccerbot" args="$(arg robot_name) $(arg x_pos) $(arg y_pos)" />
 
