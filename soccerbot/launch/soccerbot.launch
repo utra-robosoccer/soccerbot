@@ -30,6 +30,7 @@
             <arg name="map_name" value="robocup" if="$(arg simulation)" />
             <arg name="map_name" value="test" unless="$(arg simulation)" />
         </include>
+
         <include file="$(find soccerbot)/launch/modules/navigation.launch">
             <arg name="simulation" value="$(arg simulation)" />
         </include>

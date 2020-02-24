@@ -1,8 +1,8 @@
 % Setup the publishers and subscribers
 close all; clear; clc;
 rosshutdown;
-rosinit('192.168.0.120', 'NodeName', 'robot1/soccer_control');
-motor_list = rosparam("get", "robot1/soccer_hardware/motor_mapping");
+rosinit('localhost', 'NodeName', 'robot1/soccer_control_');
+motor_list = rosparam("get", "robot1/motor_mapping");
 
 motors = fieldnames(motor_list);
 pubs = containers.Map;
@@ -20,7 +20,7 @@ foot_center_to_floor = -right_collision_center(3) + foot_box(3);
 robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
-end_position = Geometry.transform([0.5 0.0 0]);
+end_position = Geometry.transform([0.5 0.0 hip_height]);
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
@@ -35,7 +35,7 @@ robot_path = robot.getPath(end_position);
 
 imu = imu_sub.receive();
 rate = rateControl(1/robot_path.step_size);
-for t = 0:robot_path.step_size:robot_path.duration
+for t = 0:robot_path.step_size:robot_path.duration+0.1
     for i = 1:numel(robot.configuration)
         msg = pubs(robot.configuration(i).JointName).rosmessage;
         msg.Data = robot.configuration(i).JointPosition;
@@ -51,7 +51,6 @@ for t = 0:robot_path.step_size:robot_path.duration
         angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
         robot.applyRPYFeedback(quat2eul(angle));
     catch ex
-        disp "test";
     end
     
     % Publish odom

@@ -18,9 +18,10 @@ for i = 1:numel(motors)
 end
 
 global imu
+global pose
 
 goal_sub = rossubscriber(strcat(robot_name, "goal"), "geometry_msgs/PoseStamped");
-pose_sub = rossubscriber(strcat(robot_name, "amcl_pose"), "geometry_msgs/PoseWithCovarianceStamped");
+pose_sub = rossubscriber(strcat(robot_name, "amcl_pose"), "geometry_msgs/PoseWithCovarianceStamped", @pose_callback);
 imu_sub = rossubscriber(strcat(robot_name, "imu"), "sensor_msgs/Imu", @imu_callback);
 odom_pub = rospublisher(strcat(robot_name, "odom"), "nav_msgs/Odometry");
 
@@ -32,23 +33,14 @@ robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 while 1
     disp("Waiting for Goal");
     goal = goal_sub.receive();
-    pose = pose_sub.receive();
     disp("Recieved Goal, executing walk");
-    robot.updatePosition([pose.Pose.Pose.Position.X pose.Pose.Pose.Position.Y hip_height], ...
-        [pose.Pose.Pose.Orientation.W pose.Pose.Pose.Orientation.X pose.Pose.Pose.Orientation.Y pose.Pose.Pose.Orientation.Z]);
-    end_position = Geometry.transform([goal.Pose.Position.X goal.Pose.Position.Y hip_height], ...
-        [goal.Pose.Orientation.W goal.Pose.Orientation.X goal.Pose.Orientation.Y goal.Pose.Orientation.Z]);
+    angle = quat2eul([pose.Pose.Pose.Orientation.W pose.Pose.Pose.Orientation.X pose.Pose.Pose.Orientation.Y pose.Pose.Pose.Orientation.Z]);
+    robot.updatePosition([pose.Pose.Pose.Position.X pose.Pose.Pose.Position.Y hip_height], eul2quat([0, 0, angle(3)]));
+    angle = quat2eul([goal.Pose.Orientation.W goal.Pose.Orientation.X goal.Pose.Orientation.Y goal.Pose.Orientation.Z]);
+    end_position = Geometry.transform([goal.Pose.Position.X goal.Pose.Position.Y hip_height], eul2quat([0, 0, angle(3)]));
     
     % Create path of the robot
     robot_path = robot.getPath(end_position);
-    % robot.show();
-    % hold on;
-    % robot_path.show();
-    % figure;
-    % robot_path.showTimingDiagram();
-    % 
-    % figure;
-    % Create the path of the robot into a timeseries
 
     imu = imu_sub.receive();
     rate = rateControl(1/robot_path.step_size);
@@ -68,7 +60,6 @@ while 1
             angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
             robot.applyRPYFeedback(quat2eul(angle));
         catch ex
-            disp "test";
         end
 
         % Publish odom
@@ -100,14 +91,13 @@ while 1
 
         % Wait
         waitfor(rate);
-
-        % Debug
-    %     robot.show();
-    %     view(-90,0);
-    %     campos([-6,0,0]);
     end
 end
 
+function pose_callback(~, pose_data)
+    global pose
+    pose = pose_data;
+end
 
 function imu_callback(~, imu_data)
     global imu
