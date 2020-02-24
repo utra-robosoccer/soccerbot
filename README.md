@@ -85,7 +85,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
 - Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, add the system intepretor /usr/bin/python 2.7
+- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python2.7
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
   - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds (you might need to rebuild```

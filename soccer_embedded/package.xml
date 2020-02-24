@@ -8,6 +8,8 @@
   <author email="todo@todo.com">Cameron Alizadeh</author>
 
   <depend>openocd</depend>
+  <depend>gcc-arm-none-eabi</depend>
   <buildtool_depend>catkin</buildtool_depend>
+
   <!-- TODO add other dependencies -->
 </package>

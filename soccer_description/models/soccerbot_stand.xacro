@@ -4,43 +4,86 @@
     <xacro:include filename="$(find soccer_description)/models/soccerbot.xacro" />
 
     <!-- Base Link -->
-    <link name="body_support">
-        <collision>
-            <origin xyz="0 0 0.1" rpy="0 0 0"/>
-            <geometry>
-                <box size="1 1 0.14"/>
-            </geometry>
-        </collision>
+    <xacro:macro name="foot_support" params="name">
+        <link name="${name}_foot_support">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.2" length="0.05" />
+                </geometry>
+            </collision>
 
-        <visual>
-            <origin xyz="0 0 0.1" rpy="0 0 0"/>
-            <geometry>
-                <box size="1 1 0.14"/>
-            </geometry>
-            <material name="orange"/>
-        </visual>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.2" length="0.05" />
+<!--                    <box size="0.20 0.20 0.05"/>-->
+                </geometry>
+                <material name="orange"/>
+            </visual>
 
-        <inertial>
-            <origin xyz="0 0 0.1" rpy="0 0 0"/>
-            <mass value="1e-3"/>
-            <inertia
-                    ixx="1e-6" ixy="0.0" ixz="0.0"
-                    iyy="1e-6" iyz="0.0"
-                    izz="1e-6"/>
-        </inertial>
-    </link>
+            <inertial>
+                <origin xyz="0 0 0.1" rpy="0 0 0"/>
+                <mass value="0.2"/>
+                <inertia
+                        ixx="1e-4" ixy="0.0" ixz="0.0"
+                        iyy="1e-4" iyz="0.0"
+                        izz="1e-4"/>
+            </inertial>
+        </link>
 
-    <joint name="body_support_footprint" type="fixed">
-        <parent link="body_support"/>
-        <child link="base_footprint"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <axis xyz="1 0 0"/>
-    </joint>
+        <gazebo reference="${name}_foot">
+            <material>Gazebo/GreyTransparent</material>
+        </gazebo>
 
-    <gazebo reference="body_support">
-        <material>Gazebo/GreyTransparent</material>
-        <mu1>0.0</mu1>
-        <mu2>0.0</mu2>
-    </gazebo>
+        <joint name="${name}_foot_support_link" type="fixed">
+            <parent link="${name}_foot"/>
+            <child link="${name}_foot_support"/>
+            <origin rpy="0 0 0" xyz="0 0 ${-0.01474 + 0.025}"/>
+            <axis xyz="1 0 0"/>
+        </joint>
+    </xacro:macro>
+
+    <foot_support name="left" />
+    <foot_support name="right" />
+
+<!--    <link name="body_support">-->
+<!--        <collision>-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry>-->
+<!--                <box size="0.20 0.20 0.1"/>-->
+<!--            </geometry>-->
+<!--        </collision>-->
+
+<!--        <visual>-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry>-->
+<!--                <box size="0.420 0.40 0.1"/>-->
+<!--            </geometry>-->
+<!--            <material name="orange"/>-->
+<!--        </visual>-->
+
+<!--        <inertial>-->
+<!--            <origin xyz="0 0 0.1" rpy="0 0 0"/>-->
+<!--            <mass value="1e-3"/>-->
+<!--            <inertia-->
+<!--                    ixx="1e-6" ixy="0.0" ixz="0.0"-->
+<!--                    iyy="1e-6" iyz="0.0"-->
+<!--                    izz="1e-6"/>-->
+<!--        </inertial>-->
+<!--    </link>-->
+
+<!--    <joint name="body_support_footprint" type="fixed">-->
+<!--        <parent link="base_footprint"/>-->
+<!--        <child link="body_support"/>-->
+<!--        <origin rpy="0 0 0" xyz="0 0 0.09"/>-->
+<!--        <axis xyz="1 0 0"/>-->
+<!--    </joint>-->
+
+<!--    <gazebo reference="body_support">-->
+<!--        <material>Gazebo/GreyTransparent</material>-->
+<!--        <mu1>0.0</mu1>-->
+<!--        <mu2>0.0</mu2>-->
+<!--    </gazebo>-->
 
 </robot>
