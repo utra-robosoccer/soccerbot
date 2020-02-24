@@ -27,11 +27,8 @@ public:
             has_pose = true;
         } catch (tf2::TransformException &ex) {}
 
-        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
-        if (has_pose && last_pose < ros::Duration(1)) {
-            return;
-        }
-        if (!has_pose){
+
+        if (!has_pose) {
             std_msgs::Float64 angle;
             angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
             head_rotator_0.publish(angle);
@@ -41,10 +38,12 @@ public:
             last_t += 1;
 
         }
-
+        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
+        if (has_pose && last_pose < ros::Duration(1)) {
+            return;
+        }
 
     }
-
 };
 
 int main(int argc, char **argv) {
