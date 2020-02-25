@@ -2,12 +2,12 @@
 
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="robot_name" default="/" />
-    <xacro:arg name="MODEL_TYPE" default="stl" />
-    <xacro:arg name="FILE_PATH" default="../soccer_description" />
+    <xacro:arg name="model_type" default="stl" />
+    <xacro:arg name="file_path" default="../soccer_description" />
     <xacro:arg name="has_base_footprint" default="false" />
 
-    <xacro:property name="FILE_PATH" value="$(arg FILE_PATH)"/>
-    <xacro:property name="MODEL_TYPE" value="$(arg MODEL_TYPE)"/>
+    <xacro:property name="FILE_PATH" value="$(arg file_path)"/>
+    <xacro:property name="MODEL_TYPE" value="$(arg model_type)"/>
 
     <xacro:include filename="$(find soccer_description)/models/parameters.xacro" />
 

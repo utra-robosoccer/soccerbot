@@ -1,20 +1,29 @@
 <!-- Launches the sensors and darknet for the robot -->
 <launch>
     <arg name="robot_name" default="robot1"/>
+    <arg name="play_rosbag" default="false" />
+    <arg name="record_rosbag" default="false" />
+    <arg name="rosbag_file" default="$(find soccer_common)/bags/localization_1.bag" />
 
-    <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro' robot_name:=$(arg robot_name)" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+    <node pkg="rosbag" if="$(arg record_rosbag)" name="rosbag_record" type="record" args="-O $(arg rosbag_file) /robot1/imu_raw /robot1/joint_states /robot1/camera/image_raw /robot1/camera/camera_info" />
 
-    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen">
-        <param name="video_device" value="/dev/video0" />
-        <param name="image_width" value="640" />
-        <param name="image_height" value="480" />
-        <param name="pixel_format" value="yuyv" />
-        <param name="camera_frame_id" value="camera" />
-        <param name="io_method" value="mmap"/>
-    </node>
+    <group if="$(arg play_rosbag)">
+        <node pkg="rosbag" name="rosbag_player" type="play" args="$(arg rosbag_file)" />
+        <include file="$(find soccerbot)/launch/modules/gui.launch" />
+    </group>s
 
-    <!-- Motor Drivers -->
-    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
+    <group unless="$(arg play_rosbag)">
+        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen">
+            <param name="video_device" value="/dev/video0" />
+            <param name="image_width" value="640" />
+            <param name="image_height" value="480" />
+            <param name="pixel_format" value="yuyv" />
+            <param name="camera_frame_id" value="camera" />
+            <param name="io_method" value="mmap"/>
+        </node>
 
+        <!-- Motor Drivers -->
+        <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
+    </group>
+    
 </launch>

@@ -123,7 +123,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
         }
 
-        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
         //if(image_publisher.getNumSubscribers() > 1){
         image_publisher.publish(message);
         //}
@@ -168,8 +168,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         ++iter_y;
         ++iter_z;
     }
+    if (point_cloud_publisher.getNumSubscribers() > 0){
+        point_cloud_publisher.publish(point_cloud_msg);
 
-    point_cloud_publisher.publish(point_cloud_msg);
+    }
     pts.clear();
     points3d.clear();
 

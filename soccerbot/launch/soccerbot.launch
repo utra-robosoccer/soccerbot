@@ -10,6 +10,15 @@
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <group ns="$(arg robot_name)">
+        <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/soccerbot.xacro'
+            robot_name:=$(arg robot_name)
+            model_type:=dae
+            file_path:=package://soccer_description
+            has_base_footprint:=true"
+        />
+
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
         <include file="$(find soccerbot)/launch/modules/boss.launch" if="$(arg is_boss)" />
 
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
