@@ -24,9 +24,15 @@ public:
         bool has_pose = false;
         try {
             ball_pose = tfBuffer.lookupTransform("ball", "torso",ros::Time(0));
+            //has_pose = true;
+        } catch (tf2::TransformException &ex) {
+            has_pose = false;
+        }
+        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
+        if (last_pose < ros::Duration(1)) {
             has_pose = true;
-        } catch (tf2::TransformException &ex) {}
-
+            return;
+        }
 
         if (!has_pose) {
             std_msgs::Float64 angle;
@@ -38,10 +44,10 @@ public:
             last_t += 1;
 
         }
-        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
-        if (has_pose && last_pose < ros::Duration(1)) {
-            return;
+        else {
+            has_pose = false;
         }
+
 
     }
 };

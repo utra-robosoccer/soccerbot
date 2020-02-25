@@ -319,9 +319,9 @@ def main():
     state = State()
     act = Action()
     while not rospy.is_shutdown():
-        state.update()
+        state.update_2()
 
-        value = 2 ** 16
+        '''value = 2 ** 16
         best_state = {'state': geometry_msgs.msg.Pose, 'status': Status.standing}
 
         state.successors()
@@ -331,7 +331,7 @@ def main():
                     value = state.successor['cost'][i]
                     best_state['state'] = state.successor['pose_array'].poses[i]
                     best_state['status'] = state.successor['status'][i]
-            act.execute(best_state, state.robots)
+            act.execute(best_state, state.robots)'''
 
         rate.sleep()
 
