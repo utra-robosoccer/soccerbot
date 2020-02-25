@@ -36,7 +36,7 @@ Installer type - deb [network]
 ```
 
 On Nvidia CUDA involved computers. Follow the instructions carefully here to install CUDA
-https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal
+https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork
 
 #### Initialization of the code
 ```bash
