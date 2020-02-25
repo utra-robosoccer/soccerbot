@@ -1,7 +1,7 @@
 <!-- Launches the sensors and darknet for the robot -->
 <launch>
     <arg name="robot_name" default="robot1"/>
-    <arg name="play_rosbag" default="true" />
+    <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="false" />
     <arg name="rosbag_file" default="$(find soccer_common)/bags/localization_1.bag" />
 
