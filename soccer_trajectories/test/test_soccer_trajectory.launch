@@ -1,8 +1,9 @@
 <launch>
-    <arg name="trajectory" default="getupfront" />
-    <include file="$(find soccerbot)/launch/modules/navigation.launch" />
+    <arg name="trajectory" default="sidekick" />
+    <include file="$(find soccerbot)/launch/modules/navigation.launch">
+        <arg name="simulation" value="false" />
+    </include>
     <include file="$(find soccerbot)/launch/modules/sensors.launch" />
 
     <node pkg="rostopic" type="rostopic" name="rostopic" args="pub command std_msgs/String 'data: $(arg trajectory)'"/>
-
 </launch>
