@@ -104,8 +104,17 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         tf2::Matrix3x3 m(q);
         m.getRPY(roll, pitch, yaw);
         //Draw black box on screen based on the pitch of the camera
-        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) -400*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
 
+        // Rectangle only for simulation
+        cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
+
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
+        //if(image_publisher.getNumSubscribers() > 1){
+
+        image_publisher.publish(message);
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
@@ -116,16 +125,13 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i += 3) {
+            for (size_t i = l[0]; i < l[2];i += 1) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
             }
         }
 
-        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
-        //if(image_publisher.getNumSubscribers() > 1){
-        image_publisher.publish(message);
         //}
 
     } catch (const cv_bridge::Exception &e) {
