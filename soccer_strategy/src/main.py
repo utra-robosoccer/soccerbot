@@ -71,7 +71,7 @@ class Action:
                 rospy.sleep(0.1)
             pass
         # elif state["status"] == Status.standing:
-        else:
+        '''else:
             self.walk = False
             msg = geometry_msgs.msg.PoseStamped()
             msg.header.stamp = rospy.Time.now()
@@ -80,7 +80,7 @@ class Action:
             msg.pose.orientation = state["state"].orientation
             self.move.publish(msg)
             while not self.walk:
-                rospy.sleep(0.1)
+                rospy.sleep(0.1)'''
 
 
         pass
