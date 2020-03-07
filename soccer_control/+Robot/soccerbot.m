@@ -10,6 +10,7 @@ classdef soccerbot < handle
         ik_left
         ik_right
         dh
+        rpy_current
     end
     
     methods
@@ -191,7 +192,7 @@ classdef soccerbot < handle
         end
         
         function applyRPYFeedback(obj, rpy)
-            f_off = rpy(2) * 0.1;
+            f_off = (rpy(2)-rpy_current(2)) * 0.1;
             fb_off = f_off * 0.15;
             obj.torso_offset = eul2tform([0 f_off 0]);
             obj.torso_offset(1,4) = -fb_off;

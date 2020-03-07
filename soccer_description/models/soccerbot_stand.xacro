@@ -47,43 +47,43 @@
     <foot_support name="left" />
     <foot_support name="right" />
 
-<!--    <link name="body_support">-->
-<!--        <collision>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <box size="0.20 0.20 0.1"/>-->
-<!--            </geometry>-->
-<!--        </collision>-->
+    <link name="body_support">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.20 0.20 0.1"/>
+            </geometry>
+        </collision>
 
-<!--        <visual>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <box size="0.420 0.40 0.1"/>-->
-<!--            </geometry>-->
-<!--            <material name="orange"/>-->
-<!--        </visual>-->
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.420 0.40 0.1"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
 
-<!--        <inertial>-->
-<!--            <origin xyz="0 0 0.1" rpy="0 0 0"/>-->
-<!--            <mass value="1e-3"/>-->
-<!--            <inertia-->
-<!--                    ixx="1e-6" ixy="0.0" ixz="0.0"-->
-<!--                    iyy="1e-6" iyz="0.0"-->
-<!--                    izz="1e-6"/>-->
-<!--        </inertial>-->
-<!--    </link>-->
+        <inertial>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <mass value="1e-3"/>
+            <inertia
+                    ixx="1e-6" ixy="0.0" ixz="0.0"
+                    iyy="1e-6" iyz="0.0"
+                    izz="1e-6"/>
+        </inertial>
+    </link>
 
-<!--    <joint name="body_support_footprint" type="fixed">-->
-<!--        <parent link="base_footprint"/>-->
-<!--        <child link="body_support"/>-->
-<!--        <origin rpy="0 0 0" xyz="0 0 0.09"/>-->
-<!--        <axis xyz="1 0 0"/>-->
-<!--    </joint>-->
+    <joint name="body_support_footprint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="body_support"/>
+        <origin rpy="0 0 0" xyz="0 0 0.09"/>
+        <axis xyz="1 0 0"/>
+    </joint>
 
-<!--    <gazebo reference="body_support">-->
-<!--        <material>Gazebo/GreyTransparent</material>-->
-<!--        <mu1>0.0</mu1>-->
-<!--        <mu2>0.0</mu2>-->
-<!--    </gazebo>-->
+    <gazebo reference="body_support">
+        <material>Gazebo/GreyTransparent</material>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
 
 </robot>
