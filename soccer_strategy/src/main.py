@@ -8,6 +8,9 @@ import math
 from enum import Enum
 from std_msgs.msg import String
 import std_msgs.msg._Bool
+from gazebo_msgs.msg import ModelState
+from gazebo_msgs.srv import SetModelState
+import nav_msgs.msg
 
 
 class Status(Enum):
@@ -24,6 +27,8 @@ getting_up = False
 tfBuffer = None
 listener = None
 
+has_ball_tmp = False
+
 
 class Action:
     def __init__(self):
@@ -32,6 +37,7 @@ class Action:
         self.move = rospy.Publisher("goal", geometry_msgs.msg.PoseStamped, queue_size=1, latch=True)
         self.up = rospy.Subscriber("get_up", std_msgs.msg.Bool, self.get_up_callback)
         self.walking = rospy.Subscriber("walking", std_msgs.msg.Bool, self.walk_callback)
+        self.odom = rospy.Publisher('odom', nav_msgs.msg.Odometry, queue_size=1)
         self.ran = False
         self.walk = False
         pass
@@ -47,6 +53,7 @@ class Action:
         # ros.publish rviz debug pose 2D
 
         # ros,publish soccer_trajectories string for getupfront getupback
+        global has_ball_tmp
         global getting_up
         if state["status"] == Status.fallen_forward:
             self.ran = False
@@ -71,9 +78,10 @@ class Action:
                 rospy.sleep(0.1)
             pass
         # elif state["status"] == Status.standing:
-        '''else:
+        elif has_ball_tmp:
             self.walk = False
-            msg = geometry_msgs.msg.PoseStamped()
+            # The real walking method
+            '''msg = geometry_msgs.msg.PoseStamped()
             msg.header.stamp = rospy.Time.now()
             msg.header.frame_id = 'world'
             msg.pose.position = state["state"].position
@@ -81,8 +89,40 @@ class Action:
             self.move.publish(msg)
             while not self.walk:
                 rospy.sleep(0.1)'''
+            # Fake walking method
+            msg = ModelState()
+            msg.model_name = 'robot1'
+            msg.pose.position = state["state"].position
+            msg.pose.orientation = state["state"].orientation
+            msg.reference_frame = 'world'
 
+            rospy.wait_for_service('/gazebo/set_model_state')
+            try:
+                set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+                resp = set_state(msg)
+                odometry = nav_msgs.msg.Odometry()
+                odometry.header.frame_id = 'odom'
+                odometry.child_frame_id = 'base_footprint'
+                odometry.header.stamp = rospy.Time.now()
+                odometry.pose.pose.position.x = state["state"].position.x - robots[1]['position'].pose.pose.position.x
+                odometry.pose.pose.position.y = state["state"].position.y - robots[1]['position'].pose.pose.position.y
+                odometry.pose.pose.position.z = 0.0
+                odometry.pose.pose.orientation.x = 0.0
+                odometry.pose.pose.orientation.y = 0.0
+                odometry.pose.pose.orientation.z = 0.0
+                odometry.pose.pose.orientation.w = 1.0
+                odometry.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                self.odom.publish(odometry)
 
+            except rospy.ServiceException, e:
+                print "Service call failed: %s" % e
+
+            rospy.sleep(1)
         pass
 
 
@@ -116,8 +156,8 @@ class State:
             act.execute(best_state, self.robots)
             pass
 
-
         pass
+
     def update(self):  # finished but not scalable
         # Reads all tf transformations and updates the information and the status from nam
         # robot[1]["position"] = (2,3) # geometry_msgs::Pose2D
@@ -125,7 +165,7 @@ class State:
 
         # Update the location of the ball
         # ball["position"] = (2,3)
-
+        global has_ball_tmp
         has_ball = False
         ball_pose = geometry_msgs.msg.TransformStamped()
         ball_pose.header.stamp = rospy.Time.now()
@@ -137,8 +177,10 @@ class State:
             ball_pose_world = tfBuffer.lookup_transform('ball', 'world', rospy.Time(0))
             has_ball = True
             self.has_ball_once = True
+            has_ball_tmp = True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
             print(e)
+            has_ball_tmp = False
             pass
 
         last_pose = rospy.Time.now() - ball_pose.header.stamp;
@@ -168,7 +210,10 @@ class State:
             position.pose.pose.orientation.z = 0.0
             position.pose.pose.orientation.w = 1.0
             self.ball["pos_world"] = position
+
             self.successors()
+        else:
+            has_ball_tmp = False
 
         pass
 
@@ -296,7 +341,7 @@ class State:
         position.pose.pose.orientation.w = 1.0
 
         self.robots = {1: {'position': position, 'status': Status.standing}}
-        self.ball = {'position': position}
+        self.ball = {'position': position, 'pos_world': position}
 
         pose_array = PoseArray()
         cost = []
@@ -319,9 +364,9 @@ def main():
     state = State()
     act = Action()
     while not rospy.is_shutdown():
-        state.update_2()
+        state.update()
 
-        '''value = 2 ** 16
+        value = 2 ** 16
         best_state = {'state': geometry_msgs.msg.Pose, 'status': Status.standing}
 
         state.successors()
@@ -331,7 +376,7 @@ def main():
                     value = state.successor['cost'][i]
                     best_state['state'] = state.successor['pose_array'].poses[i]
                     best_state['status'] = state.successor['status'][i]
-            act.execute(best_state, state.robots)'''
+            act.execute(best_state, state.robots)
 
         rate.sleep()
 
