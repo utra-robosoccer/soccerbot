@@ -1,7 +1,7 @@
 % Setup the publishers and subscribers
 close all; clear; clc;
 rosshutdown;
-rosinit('localhost', 'NodeName', 'robot1/soccer_control_');
+rosinit('192.168.0.120', 'NodeName', 'robot1/soccer_control_');
 motor_list = rosparam("get", "robot1/motor_mapping");
 
 motors = fieldnames(motor_list);
@@ -20,10 +20,11 @@ foot_center_to_floor = -right_collision_center(3) + foot_box(3);
 robot = Robot.soccerbot([0.0, 0, hip_height], foot_center_to_floor);
 
 start_position = robot.pose.position();
-end_position = Geometry.transform([0.5 0.0 hip_height]);
+end_position = Geometry.transform([0.25 0.0 hip_height], eul2quat([0 0 0]));
 
 % Create path of the robot
 robot_path = robot.getPath(end_position);
+
 % robot.show();
 % hold on;
 % robot_path.show();
@@ -33,9 +34,28 @@ robot_path = robot.getPath(end_position);
 % figure;
 % Create the path of the robot into a timeseries
 
-imu = imu_sub.receive();
+% Prewalk Preparation
 rate = rateControl(1/robot_path.step_size);
-for t = 0:robot_path.step_size:robot_path.duration+0.1
+
+for t = 0:robot_path.step_size:3
+    for i = 1:numel(robot.configuration)
+        msg = pubs(robot.configuration(i).JointName).rosmessage;
+        msg.Data = robot.configuration(i).JointPosition;
+        if contains(robot.configuration(i).JointName, "head")
+            continue
+        end
+
+        p = pubs(robot.configuration(i).JointName);
+        p.send(msg);
+    end
+    waitfor(rate);
+end
+imu = imu_sub.receive();
+angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
+robot.rpy_current = quat2eul(angle);
+
+
+for t = 0:robot_path.step_size:robot_path.duration
     for i = 1:numel(robot.configuration)
         msg = pubs(robot.configuration(i).JointName).rosmessage;
         msg.Data = robot.configuration(i).JointPosition;
@@ -47,11 +67,11 @@ for t = 0:robot_path.step_size:robot_path.duration+0.1
         p.send(msg);
     end
     
-    try
-        angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
-        robot.applyRPYFeedback(quat2eul(angle));
-    catch ex
-    end
+%     try
+%         angle = [imu.Orientation.W imu.Orientation.X imu.Orientation.Y imu.Orientation.Z];
+%         robot.applyRPYFeedback(quat2eul(angle));
+%     catch ex
+%     end
     
     % Publish odom
     robot_position = robot.pose.position;

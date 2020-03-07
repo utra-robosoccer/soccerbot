@@ -30,7 +30,7 @@ left_foot_to_corner_3 = left_collision_center + [-foot_box(1)/2 -foot_box(2)/2 -
 left_foot_to_corner_4 = left_collision_center + [-foot_box(1)/2 foot_box(2)/2 -foot_box(3)];
 
 % Motion Parameters
-hip_height = 0.18;
+hip_height = 0.165;
 
 % Motor Parameters
 % http://emanual.robotis.com/docs/en/dxl/mx/mx-28/
