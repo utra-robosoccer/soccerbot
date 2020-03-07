@@ -1,4 +1,4 @@
 <launch>
 <!--     <include file="$(find soccerbot)/launch/modules/localization_filter.launch" /> -->
-
+<!-- need to launch the ai here -->
 </launch>
