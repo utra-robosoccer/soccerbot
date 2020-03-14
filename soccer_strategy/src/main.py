@@ -183,7 +183,7 @@ class State:
             has_ball_tmp = False
             pass
 
-        last_pose = rospy.Time.now() - ball_pose.header.stamp;
+        last_pose = rospy.Time.now() - ball_pose.header.stamp
 
         if has_ball and (last_pose < rospy.Duration(1)):
             position = geometry_msgs.msg.PoseWithCovarianceStamped()
