@@ -8,6 +8,7 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <depend>xterm</depend>
 
   <!-- Simulation -->
   <depend>soccer_description</depend>
@@ -25,6 +26,7 @@
   <depend>soccer_fieldline_detection</depend>
   <depend>robot_pose_ekf</depend>
   <depend>imu_complementary_filter</depend>
+  <depend>fake_localization</depend>
 
   <!-- Navigation-->
   <depend>soccer_control</depend>
