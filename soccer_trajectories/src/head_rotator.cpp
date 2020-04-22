@@ -28,11 +28,11 @@ public:
         } catch (tf2::TransformException &ex) {
             has_pose = false;
         }
-        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
+        /*ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
         if (last_pose < ros::Duration(1)) {
             has_pose = true;
             return;
-        }
+        }*/
 
         if (!has_pose) {
             std_msgs::Float64 angle;
