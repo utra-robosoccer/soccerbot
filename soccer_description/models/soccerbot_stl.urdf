@@ -19,7 +19,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/torso.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/torso.dae" scale="1 1 1"/>
       </geometry>
     </visual>
   </link>
@@ -38,7 +38,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_bicep.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_bicep.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -58,7 +58,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_forearm.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_forearm.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -130,7 +130,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_bicep.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_bicep.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -150,7 +150,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_forearm.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_forearm.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -222,7 +222,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_hip_side.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_hip_side.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -242,7 +242,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_hip_front.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_hip_front.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -262,7 +262,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_thigh.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_thigh.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -282,7 +282,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_calve.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_calve.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -302,7 +302,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_ankle.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_ankle.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -323,7 +323,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_foot.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_foot.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -485,7 +485,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_hip_side.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_hip_side.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -505,7 +505,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_hip_front.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_hip_front.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -525,7 +525,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_thigh.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_thigh.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -545,7 +545,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_calve.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_calve.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -565,7 +565,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_ankle.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_ankle.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -586,7 +586,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_foot.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_foot.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -748,7 +748,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/neck.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/neck.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -768,7 +768,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/head.stl" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/head.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -910,6 +910,16 @@
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotNamespace>/</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+    <plugin filename="libgazebo_ros_p3d.so" name="p3d_base_controller">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>50.0</updateRate>
+      <bodyName>base_footprint</bodyName>
+      <topicName>odom_ground_truth</topicName>
+      <gaussianNoise>0.01</gaussianNoise>
+      <frameName>world</frameName>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
     </plugin>
   </gazebo>
   <gazebo reference="torso">
