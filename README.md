@@ -66,7 +66,7 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To inst
 - Download Jetbrains installer (https://www.jetbrains.com/toolbox/app/) and install CLion
 
 ##### CLion
-- Open Jetbains installer and install CLion
+- Open Jetbrains installer and install CLion
 - Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
 ```bash
 gedit ~/.local/share/applications/jetbrains-clion.desktop
