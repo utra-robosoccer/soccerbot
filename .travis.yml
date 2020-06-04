@@ -6,12 +6,9 @@ cache:
 language: generic
 matrix:
   include:
-    - name: "Trusty indigo"
-      dist: trusty
-      env: ROS_DISTRO=indigo
-    - name: "Xenial kinetic"
-      dist: xenial
-      env: ROS_DISTRO=kinetic
+    - name: "Bionic melodic"
+      dist: bionic
+      env: ROS_DISTRO=bionic
 
 # Configuration variables. All variables are global now, but this can be used to
 # trigger a build matrix for different ROS distributions if desired.
