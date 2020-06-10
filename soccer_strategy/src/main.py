@@ -347,7 +347,7 @@ class State:
         self.ball = {'position': position, 'pos_world': position}
 
         pose_array = PoseArray()
-        cost =
+        cost = []
         status = []
         self.has_ball_once = False
         self.successor = {'pose_array': pose_array, 'cost': cost, 'status': status}
