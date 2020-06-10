@@ -222,6 +222,9 @@ class State:
         # Retrieve list of actions in future (robot can move in radius 1m, and front half circle (slices) 10 degrees
         # If ball is within 1m. robot can also move directly to the ball, slightly to the left and the right because of foot
         # If robot.Status = Fallen, then the only thing you can do is get back up (front and back)
+
+        # add dfs until reach goal state
+        # add spacing when teleport to ball
         if not self.has_ball_once:
             return
         self.successor['pose_array'] = PoseArray()
@@ -344,7 +347,7 @@ class State:
         self.ball = {'position': position, 'pos_world': position}
 
         pose_array = PoseArray()
-        cost = []
+        cost =
         status = []
         self.has_ball_once = False
         self.successor = {'pose_array': pose_array, 'cost': cost, 'status': status}
