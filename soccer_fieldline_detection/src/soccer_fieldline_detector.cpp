@@ -114,7 +114,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
-            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
 
             Point2 pt1(l[0],l[1]);
             Point2 pt2(l[2],l[3]);
