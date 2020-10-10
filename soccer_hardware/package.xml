@@ -17,8 +17,8 @@
   <depend>geometry_msgs</depend>
   <depend>control_msgs</depend>
   <depend>rospy</depend>
-  <depend>python-numpy</depend>
+  <depend>python3-numpy</depend>
   <depend>python-prettytable</depend>
-  <depend>python-serial</depend>
+  <depend>python3-serial</depend>
 
 </package>
