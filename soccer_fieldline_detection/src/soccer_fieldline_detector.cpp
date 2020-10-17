@@ -6,7 +6,6 @@
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <tf/transform_listener.h>
 
 SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_transport::ImageTransport it(nh);
