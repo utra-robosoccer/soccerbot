@@ -7,14 +7,16 @@
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
 #### Prerequisites
-First you need Ubuntu 18.04. Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
+First you need Ubuntu **18.04.5 LTS** Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
 
-The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu 18.04 because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
+The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu **18.04.5 LTS** because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
+
+**Make sure its Ubuntu 18.04.5 LTS and not 20.04**
 
 For Dual Boot - https://opensource.com/article/18/5/dual-boot-linux  
 For Virtual Machine
 - VM Emulator https://www.virtualbox.org/wiki/Downloads
-- Ubuntu Desktop https://ubuntu.com/download/desktop
+- Ubuntu Desktop https://ubuntu.com/download/alternative-downloads
 - Make sure when you setup the Virtual Machine, move the .iso into the virtual machine files and also enable more CPU for the virtual machine. 50% of your CPU is good
 
 Next, install ROS Melodic (for Ubuntu 18.04)
