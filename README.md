@@ -11,8 +11,11 @@ First you need Ubuntu **18.04.5 LTS** Either obtain it using a Virtual Machine o
 
 The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu **18.04.5 LTS** because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
 
-**Make sure its Ubuntu 18.04.5 LTS and not 20.04**
-**Make sure the Ubuntu storage size is at least 50GB**
+**Make sure its Ubuntu 18.04.5 LTS and not 20.04.** 
+
+**Make sure the Ubuntu storage size is at least 50GB.**
+
+
 For Dual Boot - https://opensource.com/article/18/5/dual-boot-linux  
 For Virtual Machine
 - VM Emulator https://www.virtualbox.org/wiki/Downloads
