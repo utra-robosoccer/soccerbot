@@ -88,7 +88,6 @@ catkin_init_workspace
 ```bash
 ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
-- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python2.7
 - Debugging
@@ -106,7 +105,6 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 ```
 - Open Pycharm, go to File > Open and open the repository name (soccer_ws)
 - Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
-- Change you IDE to light mode. Go to File > Settings > Appearance and change Theme to IntellJ
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
