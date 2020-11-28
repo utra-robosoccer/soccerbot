@@ -111,6 +111,10 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 - Debugging
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
 
+##### Clion & Pycharm plugins
+- Open Clion or Pycharm, go to File > Settings > Plugins > marketplace and search for Hatchery and install
+- You can go to https://plugins.jetbrains.com/plugin/10290-hatchery and install from there
+
 ##### Matlab
 - Create a Mathworks account
 - Download Matlab (https://www.mathworks.com/downloads/)
