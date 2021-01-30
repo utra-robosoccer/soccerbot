@@ -39,13 +39,13 @@
         </visual>
     </link>
 
-    <arm name="left" origin="torso" direction="1" />
-    <arm name="right" origin="torso" direction="-1" />
-    <leg name="left" origin="torso" direction="1" />
-    <leg name="right" origin="torso" direction="-1" />
-    <head origin="torso" />
-    <imu origin="torso" />
-    <front_camera origin="head" />
+    <xacro:arm name="left" origin="torso" direction="1" />
+    <xacro:arm name="right" origin="torso" direction="-1" />
+    <xacro:leg name="left" origin="torso" direction="1" />
+    <xacro:leg name="right" origin="torso" direction="-1" />
+    <xacro:head origin="torso" />
+    <xacro:imu origin="torso" />
+    <xacro:front_camera origin="head" />
 
     <xacro:if value="$(arg has_base_footprint)">
         <link name="base_footprint" />
