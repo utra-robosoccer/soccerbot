@@ -68,6 +68,38 @@ classdef soccerbot_runner < Robot.soccerbot
                 obj.stepPath(t, obj.robot_path);
                 obj.angles = obj.angles.addsample('Time',t, 'Data',obj.getAngles);
             end
+            figure();
+            subplot(3,1,1);
+            plot(obj.angles.Time, obj.angles.Data(:,5:10));
+            title('One Foot Motor Angles');
+            xlabel('time (t)');
+            ylabel('Angles');
+            grid off;
+            grid minor;
+            legend('M1', 'M2', 'M3', 'M4', 'M5', 'M6');
+            
+            subplot(3,1,2);
+            plot(obj.angles.Time, obj.angles.Data(:,13:18));
+            title('Another Foot Motor Angles');
+            xlabel('time (t)');
+            ylabel('Angles');
+            grid off;
+            grid minor;
+            legend('M1', 'M2', 'M3', 'M4', 'M5', 'M6');
+            
+            subplot(3,1,3);
+            plot(obj.angles.Time, obj.angles.Data(:,1:4));
+            hold on;
+            plot(obj.angles.Time, obj.angles.Data(:,11:12));
+            hold off;
+            title('Head & Arms Motor Angles');
+            xlabel('time (t)');
+            ylabel('Angles');
+            grid off;
+            grid minor;
+            legend('M1', 'M2', 'M3', 'M4', 'M5', 'M6');
+            % legend('Left1 (Hip)', 'Left2', 'Left3');
+            
         end
         
         function loop(obj)
