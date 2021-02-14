@@ -110,7 +110,7 @@ classdef robotpath < Geometry.crotchpath
             ylabel('Torso to feet (y)');
             grid off;
             grid minor;
-            legend('Left','Right');
+            legend('Left','Right'); % replace
 
             subplot(3,2,6);
             plot(times, squeeze(crp(3,4,:)));

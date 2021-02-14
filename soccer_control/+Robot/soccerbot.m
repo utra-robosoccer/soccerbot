@@ -62,6 +62,8 @@ classdef soccerbot < handle
             obj.pose.setOrientation(quaternion);
         end
         
+        % Now write this function and then call robot.getPath() in the
+        % python code
         function footpath = getPath(obj, finishPosition)
             crotch = obj.pose.position;
             finishPositionCoordinate = finishPosition.position;
@@ -115,6 +117,7 @@ classdef soccerbot < handle
             D = (tmp1^2 + tmp2^2 - d3^2 - d4^2) / 2 / d3 / d4;
             tmp3 = atan2(D, -sqrt(1-D^2));
             theta4 = -wrapTo2Pi(tmp3 - pi/2);
+            % disp('theta4: ' + string((tmp3 - pi/2)) + ' -> ' + string(theta4));
             
             alp = atan2(tmp1, tmp2);
             beta = atan2(-d3 * cos(tmp3), d4 + d3 * sin(tmp3));
@@ -172,10 +175,12 @@ classdef soccerbot < handle
                         
             torso_to_left_foot = crotch_position \ left_foot_position;
             torso_to_right_foot = crotch_position \ right_foot_position;
-            
+            format short;
+            disp("------------------")
             configSolR = obj.ik_right_foot(torso_to_right_foot);
+            disp("Right: " + string([configSolR.JointPosition]))
             configSolL = obj.ik_left_foot(torso_to_left_foot);
-            
+            disp("Left: " + string([configSolL.JointPosition]))
 %             weights_left = [0.25 0.25 0.25 1 1 1];
 %             [configSolL1,err] = obj.ik_left('right_foot',torso_to_right_foot,weights_left,obj.robot_right_leg_subtree.homeConfiguration);
 %             weights_right = [0.25 0.25 0.25 1 1 1];
