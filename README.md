@@ -63,7 +63,7 @@ git submodule update --recursive --init
 cd ~/catkin_ws/
 sudo rosdep init # Only need to do this once
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
+rosdep install --from-paths src --ignore-src -r -y --rosdistro noetic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
 #### Setting up your IDE (CLion)
