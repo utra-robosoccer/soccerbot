@@ -63,7 +63,7 @@ git submodule update --recursive --init
 cd ~/catkin_ws/
 sudo rosdep init # Only need to do this once
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
+rosdep install --from-paths src --ignore-src -r -y --rosdistro noetic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
 ```
 
 #### Setting up your IDE (CLion)
@@ -89,7 +89,6 @@ catkin_init_workspace
 ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
-- Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python2.7
 - Add the python3.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python3.7
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
@@ -105,7 +104,6 @@ gedit ~/.local/share/applications/jetbrains-pycharm.desktop
 Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Open Pycharm, go to File > Open and open the repository name (soccer_ws)
-- Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
 - Change the Intepreter to python 3.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
