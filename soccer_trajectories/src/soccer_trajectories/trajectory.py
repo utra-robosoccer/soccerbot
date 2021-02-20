@@ -22,11 +22,11 @@ class Trajectory:
                 if joint_name == 'comment':
                     continue
                 if joint_name == 'time':
-                    self.times = map(float, row[1:])
+                    self.times = list(map(float, row[1:]))
                     self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
-                    joint_values = map(float, row[1:])
+                    joint_values = list(map(float, row[1:]))
                     param = '~motor_mapping/{}/initial_state'.format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -36,7 +36,7 @@ class Trajectory:
         """Get the position of each joint at timestamp.
         If timestamp < 0 or timestamp > self.total_time this will throw a ValueError.
         """
-        return {joint: spline(timestamp) for joint, spline in self.splines.iteritems()}
+        return {joint: spline(timestamp) for joint, spline in self.splines.items()}
 
     def joints(self):
         """Returns a list of joints in this trajectory."""
@@ -49,7 +49,7 @@ class Trajectory:
         rate = rospy.Rate(100)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
-            for joint, setpoint in self.get_setpoint(t).iteritems():
+            for joint, setpoint in self.get_setpoint(t).items():
                 publishers[joint].publish(setpoint)
             t = t + 0.01
             rate.sleep()
