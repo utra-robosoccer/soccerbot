@@ -7,11 +7,11 @@
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
 #### Prerequisites
-First you need Ubuntu **18.04.5 LTS** Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
+First you need Ubuntu **20.04** Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
 
 The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu **18.04.5 LTS** because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
 
-**Make sure its Ubuntu 18.04.5 LTS and not 20.04.** 
+**Make sure its Ubuntu 20.04 LTS and not 18.04.5 LTS** 
 
 **Make sure the Ubuntu storage size is at least 50GB.**
 
@@ -22,12 +22,12 @@ For Virtual Machine
 - Ubuntu Desktop https://ubuntu.com/download/alternative-downloads
 - Make sure when you setup the Virtual Machine, move the .iso into the virtual machine files and also enable more CPU for the virtual machine. 50% of your CPU is good
 
-Next, install ROS Melodic (for Ubuntu 18.04)
+Next, install ROS Noetic (for Ubuntu 20.04)
 http://wiki.ros.org/ROS/Installation
 
 Next, install these Debian packages
 ```
-sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
+sudo apt-get install git git-lfs python3-catkin-tools net-tools vim htop meshlab
 ```
 
 [Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)  
@@ -36,7 +36,7 @@ sudo apt-get install git git-lfs python-catkin-tools net-tools vim htop meshlab
 Operating System - Linux  
 Architecture - x86  
 Distribution - Ubuntu  
-Version - 18.06  
+Version - 20.04  
 Installer type - deb [network]  
 ```
 
@@ -90,6 +90,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python2.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python2.7
+- Add the python3.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python3.7
 - Debugging
   - Follow the steps here to setup your debugging https://www.jetbrains.com/help/clion/attaching-to-local-process.html
   - ```cd catkin_ws && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds (you might need to rebuild```
@@ -105,6 +106,7 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 ```
 - Open Pycharm, go to File > Open and open the repository name (soccer_ws)
 - Change the Intepreter to python 2.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python2
+- Change the Intepreter to python 3.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
