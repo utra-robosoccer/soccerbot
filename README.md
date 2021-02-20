@@ -9,7 +9,7 @@ Welcome to the software repository, to start working on the robot, follow the in
 #### Prerequisites
 First you need Ubuntu **20.04** Either obtain it using a Virtual Machine or Dual Boot your PC to Ubuntu and Windows  
 
-The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu **18.04.5 LTS** because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
+The recommendation is to Dual Boot or have an entire computer dedicated to Ubuntu **20.04 LTS** because Robot Software is quite CPU/GPU heavy and you need a lot of system resources to run them.
 
 **Make sure its Ubuntu 20.04 LTS and not 18.04.5 LTS** 
 
