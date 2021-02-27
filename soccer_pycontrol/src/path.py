@@ -36,7 +36,7 @@ class Path:
 
         # Round to nearest step
         s_count = self.bodyStepCount()
-        if math.remainder(self.distance, self.bodystep_size) < (self.bodystep_size / 2):
+        if self.distance % self.bodystep_size < (self.bodystep_size / 2):
             self.bodystep_size = self.distance / s_count
         else:
             self.bodystep_size = self.distance / (s_count + 1)

@@ -247,7 +247,7 @@ class Soccerbot:
 
     def stepPath(self, t):
 
-        # timers missing
+        assert(t <= self.robot_path.duration())
         crotch_position = self.robot_path.crotchPosition(t) @ self.torso_offset
 
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)

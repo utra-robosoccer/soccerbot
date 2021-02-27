@@ -214,19 +214,12 @@ class Footpath(Path):
 
     def parabolicPath(self, startTransform, endTransform, zdiff, sidediff, rotdiff, ratio):
         """
-        Simple Parabolic trajectory
         http://mathworld.wolfram.com/ParabolicSegment.html
-        :param startTransform:
-        :param endTransform:
-        :param zdiff:
-        :param sidediff:
-        :param rotdiff:
-        :param ratio:
-        :return:
         """
 
         step_time = self.bodyStepTime()
         distance_between_step = tr.get_distance(startTransform, endTransform)
+        assert (distance_between_step != 0.0)
         height_per_step = np.linalg.norm([zdiff, sidediff])
 
         h = height_per_step
