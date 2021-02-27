@@ -25,7 +25,7 @@ class Crotchpath(Footpath):
         theta1 = axang_angle
         diff_transform = np.matmul(end_transform, np.linalg.inv(start_transform))
         theta2 = np.arctan2(diff_transform[1, 3], diff_transform[0, 3])
-        if math.remainder((theta2 - theta1), (2 * np.pi)) > np.pi:
+        if (theta2 - theta1) % (2 * np.pi) > np.pi:
             self.first_step_left = 0
         else:
             self.first_step_left = 1
