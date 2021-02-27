@@ -16,7 +16,9 @@ The recommendation is to Dual Boot or have an entire computer dedicated to Ubunt
 **Make sure the Ubuntu storage size is at least 50GB.**
 
 
-For Dual Boot - https://opensource.com/article/18/5/dual-boot-linux  
+For Dual Boot
+- https://opensource.com/article/18/5/dual-boot-linux  
+
 For Virtual Machine
 - VM Emulator https://www.virtualbox.org/wiki/Downloads
 - Ubuntu Desktop https://ubuntu.com/download/alternative-downloads
@@ -28,6 +30,12 @@ http://wiki.ros.org/ROS/Installation
 Next, install these Debian packages
 ```
 sudo apt-get install git git-lfs python3-catkin-tools net-tools vim htop meshlab
+```
+
+Install these ROS noetic dependancies
+```
+sudo apt install python3-catkin-lint python3-pip
+pip3 install osrf-pycommon
 ```
 
 [Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)  
