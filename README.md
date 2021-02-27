@@ -76,7 +76,7 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro noetic # To insta
 ```bash
 gedit ~/.local/share/applications/jetbrains-clion.desktop
 # Add the bash -i -c to the beginning of this line (rest of the line remain the same)
-Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Add a CMakelist file
 ```bash
@@ -86,7 +86,7 @@ catkin_init_workspace
 - Open CLion,navigate to ~/catkin_ws/src/CMakelists.txt and click open as project
 - On the bottom CMake bar, go to Cmake settings and add this line to Environment
 ```bash
-ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
+ROS_PACKAGE_PATH=/home/<Insert Username>/catkin_ws/src
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python3.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python3.7
@@ -101,7 +101,7 @@ ROS_PACKAGE_PATH=/home/vuwij/catkin_ws/src
 ```bash
 gedit ~/.local/share/applications/jetbrains-pycharm.desktop
 # Add the bash -i -c to the beginning of this line (rest of the line remain the same)
-Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Open Pycharm, go to File > Open and open the repository name (soccer_ws)
 - Change the Intepreter to python 3.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3
@@ -129,7 +129,7 @@ Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.
 ```bash
 gedit ~/.local/share/applications/jetbrains-pycharm.desktop
 Change the Exec line to this 
-Exec=bash -i -c "/home/vuwij/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
+Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
