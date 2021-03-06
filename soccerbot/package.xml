@@ -14,18 +14,16 @@
   <depend>soccer_description</depend>
 
   <!-- Sensors -->
-  <depend>soccer_hardware</depend>
-  <depend>soccer_embedded</depend>
   <depend>usb_cam</depend>
 
   <!-- Localization -->
   <depend>amcl</depend>
-  <depend>darknet_ros</depend>
+  <!-- depend>darknet_ros</depend --> <!-- We will switch to new object detection -->
   <depend>map_server</depend>
   <depend>soccer_common</depend>
   <depend>soccer_fieldline_detection</depend>
-  <depend>robot_pose_ekf</depend>
   <depend>imu_complementary_filter</depend>
+  <depend>robot_localization</depend>
   <depend>fake_localization</depend>
 
   <!-- Navigation-->
