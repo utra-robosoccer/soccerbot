@@ -109,8 +109,8 @@ class Soccerbot:
         self.torso_offset = tr()
         self.rpy_current = [0, 0, 0] #TODO: is this the right init?
         self.robot_path = None
-
-        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.PD_CONTROL, jointIndices=[0] * 18, targetPositions=[0] * 18)
+        # This should stand
+        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(18)), targetPositions=[0] * 18)
 
 
     def stand(self):
