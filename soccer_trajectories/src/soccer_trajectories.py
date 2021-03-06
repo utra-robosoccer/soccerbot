@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import rospy
 import soccer_trajectories
 import os
@@ -22,10 +22,10 @@ def run_trajectory(command):
         if not os.path.exists(path):
             return
 
-        print "Now publishing: " + command.data
+        print("Now publishing: ", command.data)
         trajectory = soccer_trajectories.Trajectory(path)
         trajectory.publish()
-        print "Finished publishing: " + command.data
+        print("Finished publishing:", command.data)
 
         if command.data == "getupfront":
             msg = std_msgs.msg.Bool()

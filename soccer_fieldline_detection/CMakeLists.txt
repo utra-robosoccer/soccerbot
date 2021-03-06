@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(soccer_fieldline_detection)
 
 set(CMAKE_CXX_FLAGS "-std=c++17")
@@ -15,7 +15,7 @@ set(PKG_DEPS
     )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
-find_package(OpenCV 3 REQUIRED)
+find_package(OpenCV 4 REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS include
