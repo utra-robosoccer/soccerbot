@@ -10,12 +10,14 @@ import matplotlib as plt
 
 PYBULLET_STEP = 0.004
 
+
 def wait(steps):
     for i in range(steps):
         sleep(PYBULLET_STEP)
         pb.stepSimulation()
 
-def main():
+
+if __name__ == '__main__':
     plt.use('tkagg')
 
     pb.connect(pb.GUI)
@@ -44,6 +46,3 @@ def main():
         pb.stepSimulation()
         t = t + PYBULLET_STEP
         sleep(PYBULLET_STEP)
-
-if __name__ == '__main__':
-    main()
