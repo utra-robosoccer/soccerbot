@@ -25,7 +25,7 @@ if __name__ == '__main__':
     pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
     pb.setGravity(0, 0, -9.81)
 
-    soccerbot = Soccerbot([0, 0, 0], useFixedBase=False)
+    soccerbot = Soccerbot([0, 0, 0], useFixedBase=True)
     ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0))
 
     # Move to the standing position
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # Start walking
     wait(1000)
-    soccerbot.getPath(Transformation([0.3, 0, 0]), show=False)
+    soccerbot.getPath(Transformation([0.3, 0, 0]), show=True)
     # soccerbot.calculate_angles(show=True)
     t = 0
     while True:

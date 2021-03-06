@@ -15,7 +15,7 @@ class Robotpath(Crotchpath):
         Path.show(self, fig)
         Footpath.show(self, fig)
         Crotchpath.show(self, fig)
-        #plt.show()
+        plt.show() # to interact with the path graph uncomment this
 
     def showTimingDiagram(self):
         times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size) + 1)
