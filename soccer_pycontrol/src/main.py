@@ -8,6 +8,13 @@ from ramp import Ramp
 import time
 import matplotlib as plt
 
+PYBULLET_STEP = 0.004
+
+def wait(steps):
+    for i in range(steps):
+        sleep(PYBULLET_STEP)
+        pb.stepSimulation()
+
 def main():
     plt.use('tkagg')
 
@@ -16,38 +23,34 @@ def main():
     pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.1])
     pb.setGravity(0, 0, -9.81)
 
-    soccerbot = Soccerbot([0, 0, 0], useFixedBase=True)
+    soccerbot = Soccerbot([0, 0, 0], useFixedBase=False)
     ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0))
-    t1 = time.perf_counter()
+    wait(1000)
+
+
+
+
+    # Move to the standing position
+
     soccerbot.stand()
+    wait(1000)
+
+
     soccerbot.getPath(Transformation([0.3, 0, 0]), show=False)
-    t2 = time.perf_counter()
-    print("duration: " + str(t2 - t1))
-    # soccerbot.calculate_angles(show=False)
+    # soccerbot.calculate_angles(show=True)
 
-    pb_step = 0.004
-
-    for i in range(100):
-        sleep(pb_step)
-        pb.stepSimulation()
-    print("Robot Stabilized")
-
-
-    for i in range(100):
-        sleep(pb_step)
-        pb.stepSimulation()
-    print("Robot ready for movement")
+    wait(100)
 
     t = 0
     while True:
-        if t >= soccerbot.current_step_time and t <= soccerbot.robot_path.duration():
+        if soccerbot.current_step_time <= t <= soccerbot.robot_path.duration():
             soccerbot.stepPath(t)
-            pb.setJointMotorControlArray(bodyIndex=soccerbot.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0, 18, 1)), targetPositions=soccerbot.configuration, targetVelocities= [1] * 18)
+            pb.setJointMotorControlArray(bodyIndex=soccerbot.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0, 18, 1)), targetPositions=soccerbot.configuration)
             soccerbot.current_step_time = soccerbot.current_step_time + soccerbot.robot_path.step_size
 
         pb.stepSimulation()
-        t = t + pb_step
-        sleep(pb_step)
+        t = t + PYBULLET_STEP
+        sleep(PYBULLET_STEP)
 
 if __name__ == '__main__':
     main()
