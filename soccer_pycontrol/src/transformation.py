@@ -86,7 +86,7 @@ class Transformation(np.ndarray):
         return t
 
     @staticmethod
-    def get_euler_from_rotation_matrix(r, orientation):
+    def get_euler_from_rotation_matrix(r, orientation='ZYX'):
         """
         Gives euler angles rotation form of rotation matrix
         :param r: 3x3 rotation matrix

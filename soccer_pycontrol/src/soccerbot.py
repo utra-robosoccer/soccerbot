@@ -55,6 +55,13 @@ class Soccerbot:
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
 
 
+    def get_angles(self):
+        """
+        Function for getting all the feet angles (for now?) #TODO
+        :return: All 12 angles in the dictionary form??? #TODO
+        """
+        return self.configuration
+
     def get_link_transformation(self, link1, link2):
         """
         Gives the H-trasnform between two links
@@ -86,11 +93,11 @@ class Soccerbot:
         :param position: [x y yaw]
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
-        self.body = pb.loadURDF("../../soccer_description/models/soccerbot_stl.urdf", useFixedBase=useFixedBase, flags=pb.URDF_USE_INERTIA_FROM_FILE,  basePosition=[position[0],position[0],0.36], baseOrientation=[0.,0.,0.,1.]) #|pb.URDF_USE_SELF_COLLISION|pb.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT)
+        STANDING_HEIGHT=0.36 # Hardcoded for now, todo calculate this
+        self.body = pb.loadURDF("../../soccer_description/models/soccerbot_stl.urdf", useFixedBase=useFixedBase, flags=pb.URDF_USE_INERTIA_FROM_FILE,  basePosition=[position[0],position[0],STANDING_HEIGHT], baseOrientation=[0.,0.,0.,1.]) #|pb.URDF_USE_SELF_COLLISION|pb.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT)
         self.foot_center_to_floor = -self.right_collision_center[2] + self.foot_box[2]
 
-        # DH table
-        #pb.resetBasePositionAndOrientation(self.body, (0,0,0.5), (0,0,0,1))
+        # Calculate Constants
         H34 = self.get_link_transformation(Links.RIGHT_LEG_4, Links.RIGHT_LEG_3)
         H45 = self.get_link_transformation(Links.RIGHT_LEG_5, Links.RIGHT_LEG_4)
         self.DH = np.array([[0, -np.pi / 2, 0, 0],
@@ -99,38 +106,36 @@ class Soccerbot:
                             [H45[2,3], 0, 0, 0],
                             [0, np.pi / 2, 0, 0],
                             [0, 0, 0, 0]])
+        self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
 
-        self.configuration = [0] * 18
 
-        hip_position = [position[0], position[1], 0.5] # Hardcoded z for now
+        hip_position = [position[0], position[1], STANDING_HEIGHT]
         self.pose = tr.get_transform_from_euler([0, 0, position[2]])
         self.pose.set_position(hip_position)
 
         self.torso_offset = tr()
-        self.rpy_current = [0, 0, 0] #TODO: is this the right init?
         self.robot_path = None
 
-        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.PD_CONTROL, jointIndices=[0] * 18, targetPositions=[0] * 18)
+        self.configuration = [0,0,0,0,0,0,0,0,-0.02 * np.pi,0,0,0,0,0,-0.02 * np.pi,0,0,0]
+        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0, 18, 1)), targetPositions=self.get_angles())
 
 
-    def stand(self):
+    def ready(self):
         """
         Sets the robot's joint angles for the robot to standing pose.
         :return: None
         """
         # Used later to calculate inverse kinematics
-        self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
+        hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
+        hip_position = [self.pose.get_position()[0], self.pose.get_position()[1], hip_to_torso[2, 3] + self.hip_height]
+        self.pose = tr.get_transform_from_euler([0, 0, tr.get_axis_angle_from_quaternion(self.pose.get_orientation())[0]])
+        self.pose.set_position(hip_position)
 
         # hands
-        self.configuration[Joints.RIGHT_ARM_1] = 1.0 * np.pi
-        self.configuration[Joints.LEFT_ARM_1] = 1.0 * np.pi
-
-        # Robot Position
-        hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
-        hip_position = [position[0], position[1], hip_to_torso[2, 3] + self.hip_height]
-        self.pose = tr.get_transform_from_euler([0, 0, position[2]])
-        self.pose.set_position(hip_position)
-        self.update_pose(position)
+        self.configuration[Joints.RIGHT_ARM_1] = -0.5 * np.pi
+        self.configuration[Joints.LEFT_ARM_1] = -0.5 * np.pi
+        self.configuration[Joints.RIGHT_ARM_2] = 1.0 * np.pi
+        self.configuration[Joints.LEFT_ARM_2] = 1.0 * np.pi
 
         # right leg
         right_foot_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
@@ -150,17 +155,10 @@ class Soccerbot:
         pb.resetBasePositionAndOrientation(self.body, final_pose.get_position(), final_pose.get_orientation())
         positions = self.configuration
 
-        links = list(range(0,18,1))
-        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL, jointIndices=links, targetPositions=positions)
-
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-    def get_angles(self):
-        """
-        Function for getting all the feet angles (for now?) #TODO
-        :return: All 12 angles in the dictionary form??? #TODO
-        """
-        return self.configuration
+        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0,18,1)), targetPositions=self.get_angles())
+
 
     def inverseKinematicsRightFoot(self, transformation):
         """
@@ -265,12 +263,6 @@ class Soccerbot:
         print("Left foot: " + str([format(theta, '.3f') for theta in thetas ]).replace("'", ""))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6+1] = thetas[0:6]
         self.pose = crotch_position
-
-    def applyRPYFeedback(self, rpy):
-        f_off = (rpy[1] - self.rpy_current[1]) * 0.1 #TODO: where's rpy_current???
-        fb_off = f_off * 0.15
-        self.torso_offset = tr.get_transform_from_euler([0, f_off, 0]) # eul2tform([0, f_off, 0])
-        self.torso_offset[0, 3] = -fb_off
 
     def calculate_angles(self, show=True):
         self.angles = []

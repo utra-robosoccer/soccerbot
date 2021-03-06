@@ -20,27 +20,20 @@ def main():
 
     pb.connect(pb.GUI)
     pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-    pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.1])
+    pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
     pb.setGravity(0, 0, -9.81)
 
     soccerbot = Soccerbot([0, 0, 0], useFixedBase=False)
     ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0))
-    wait(1000)
-
-
-
 
     # Move to the standing position
+    wait(100)
+    soccerbot.ready()
 
-    soccerbot.stand()
+    # Start walking
     wait(1000)
-
-
     soccerbot.getPath(Transformation([0.3, 0, 0]), show=False)
     # soccerbot.calculate_angles(show=True)
-
-    wait(100)
-
     t = 0
     while True:
         if soccerbot.current_step_time <= t <= soccerbot.robot_path.duration():
