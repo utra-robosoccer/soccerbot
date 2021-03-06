@@ -16,6 +16,13 @@ class Transformation(np.ndarray):
         cls.set_orientation(quaternion)
         return cls
 
+    def get_transform(self):
+        """
+        Returns the np array for this
+        :return: a vector 3x1
+        """
+        return np.array(self)
+
     def get_position(self):
         """
         Gives the translational component of H-transform
