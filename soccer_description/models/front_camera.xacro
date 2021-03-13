@@ -10,7 +10,8 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="0" lower="0" upper="0" velocity="0"/>
         </joint>
-
+        rotation 0.707105 -0.000001 0.707108 3.141591
+        rotation 1.0 0.0 0.0 3.141591
         <gazebo reference="camera">
             <sensor type="camera" name="main_camera" >
                 <always_on>1</always_on>
