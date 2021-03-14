@@ -115,8 +115,6 @@ class Transformation(np.ndarray):
         :param angle: angle by which is rotated around the vector
         :return: quaternion in the form of [x y z w]
         """
-        if angle < 0:
-            vector = np.negative(vector)
         r = R.from_rotvec(np.array(vector).reshape((1,3)) * (angle / np.linalg.norm(vector)))
         return r.as_quat()
 
