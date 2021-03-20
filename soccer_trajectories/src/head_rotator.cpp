@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #define TIME_STEP 32
+
 class BallDetector {
     ros::Publisher head_rotator_0;
     ros::Publisher head_rotator_1;
@@ -84,7 +85,8 @@ webots_ros::set_float rightWheelSrv;
 ros::ServiceClient timeStepClient;
 webots_ros::set_int timeStepSrv;
 
-
+ros::ServiceClient enableKeyboardClient;
+webots_ros::set_int enableKeyboardSrv;
 // catch names of the controllers availables on ROS network
 void controllerNameCallback(const std_msgs::String::ConstPtr &name) {
     controllerCount++;
@@ -93,24 +95,74 @@ void controllerNameCallback(const std_msgs::String::ConstPtr &name) {
 }
 
 void quit(int sig) {
-
+    enableKeyboardSrv.request.value = 0;
+    enableKeyboardClient.call(enableKeyboardSrv);
     timeStepSrv.request.value = 0;
     timeStepClient.call(timeStepSrv);
     ROS_INFO("User stopped the 'keyboard_teleop' node.");
     ros::shutdown();
     exit(0);
 }
+void keyboardCallback(const webots_ros::Int32Stamped::ConstPtr &value) {
+    int key = value->data;
+    int send = 0;
+
+    switch (key) {
+        case 314:
+            lposition += -0.2;
+            rposition += 0.2;
+            send = 1;
+            break;
+        case 316:
+            lposition += 0.2;
+            rposition += -0.2;
+            send = 1;
+            break;
+        case 315:
+            lposition += 0.2;
+            rposition += 0.2;
+            send = 1;
+            break;
+        case 317:
+            lposition += -0.2;
+            rposition += -0.2;
+            send = 1;
+            break;
+        case 312:
+            ROS_INFO("END.");
+            quit(-1);
+            break;
+        default:
+            send = 0;
+            break;
+    }
+
+    leftWheelSrv.request.value = lposition;
+    rightWheelSrv.request.value = rposition;
+    if (send) {
+        if (!leftWheelClient.call(leftWheelSrv) || !rightWheelClient.call(rightWheelSrv) || !leftWheelSrv.response.success ||
+            !rightWheelSrv.response.success)
+            ROS_ERROR("Failed to send new position commands to the robot.");
+
+    }
+    return;
+}
+
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "ball_detector");
+    ros::init(argc, argv, "ball_detector", ros::init_options::AnonymousName);
     ros::NodeHandle n;
 
     signal(SIGINT, quit);
 
     // subscribe to the topic model_name to get the list of availables controllers
-    ros::Subscriber nameSub = n.subscribe("model_name", 100, controllerNameCallback);
+    ros::Subscriber nameSub = n.subscribe("/model_name", 100, controllerNameCallback);
+
     while (controllerCount == 0 || controllerCount < nameSub.getNumPublishers()) {
+
         ros::spinOnce();
         ros::Duration(0.5).sleep();
+
+
     }
     ros::spinOnce();
 
@@ -132,21 +184,21 @@ int main(int argc, char **argv) {
             return 1;
         }
     }
+
     // leave topic once it's not necessary anymore
     nameSub.shutdown();
-    leftWheelClient = n.serviceClient<webots_ros::set_float>(controllerName + "/head_motor_0/command");
-    rightWheelClient = n.serviceClient<webots_ros::set_float>(controllerName + "/head_motor_1/command");
+    leftWheelClient = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_0/set_position");
+    rightWheelClient = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_1/set_position");
 
-    timeStepClient = n.serviceClient<webots_ros::set_int>(controllerName + "/robot/time_step");
+    timeStepClient = n.serviceClient<webots_ros::set_int>("/" + controllerName + "/robot/time_step");
     timeStepSrv.request.value = TIME_STEP;
-
-
-
 
         // main loop
         while (ros::ok()) {
-            ros::spinOnce();
-            ROS_ERROR("fesfs");
+
+
+            if (!timeStepClient.call(timeStepSrv) || !timeStepSrv.response.success)
+                ROS_ERROR("Failed to call service time_step for next step.");
             lposition = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
             rposition = 0.6f;
             last_t += 1;
@@ -154,9 +206,11 @@ int main(int argc, char **argv) {
             rightWheelSrv.request.value = rposition;
 
             if (!leftWheelClient.call(leftWheelSrv) || !rightWheelClient.call(rightWheelSrv) || !leftWheelSrv.response.success || !rightWheelSrv.response.success)
-                    ROS_ERROR("Failed to send new position commands to the robot.");
-            if (!timeStepClient.call(timeStepSrv) || !timeStepSrv.response.success)
-                ROS_ERROR("Failed to call service time_step for next step.");
+                   ROS_ERROR("Failed to send new position commands to the robot.");
+
+            ros::spinOnce();
+
+
         }
 
     timeStepSrv.request.value = 0;
