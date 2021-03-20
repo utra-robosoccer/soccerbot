@@ -17,32 +17,32 @@ Floor {
   tileSize 2 2
 }
 Soccerbot {
-  hidden position_0_0 1.7753700731566863e-08
-  hidden position_0_1 1.7578828665574313e-08
-  hidden position_0_2 -1.0983400855479886e-08
-  hidden position_0_3 7.233357119524266e-09
-  hidden position_0_4 1.0662605317359922e-07
-  hidden position_4_0 -1.780638481108099e-08
-  hidden position_6_0 -1.7806398951376774e-08
-  hidden position_8_0 -1.0761075586174229e-08
-  hidden position_9_0 -3.813239679573144e-08
-  hidden rotation_10 0 1 0 4.2146848510894035e-08
-  hidden position_10_0 -3.806572568265665e-08
-  hidden rotation_11 0 1 0 4.2146848510894035e-08
-  hidden position_11_0 -3.843637230716013e-08
-  hidden rotation_12 0 1 0 4.2146848510894035e-08
-  hidden position_12_0 -7.742381778203705e-09
-  hidden position_14_0 -7.037748162019852e-09
-  hidden position_15_0 -3.5856769109443576e-08
-  hidden rotation_16 0 0.9999999999999999 0 2.9802322387695313e-08
-  hidden position_16_0 -3.684254856750613e-08
-  hidden rotation_17 0 1 0 4.2146848510894035e-08
-  hidden position_17_0 -3.8150207437581685e-08
-  hidden rotation_18 0 1 0 4.2146848510894035e-08
-  hidden position_18_0 7.742388831599432e-09
-  hidden rotation_20 0 0 1 1.0745380149674385e-07
-  hidden position_20_0 6.555065103827353e-08
-  hidden rotation_21 0 1 0 6.664001874625056e-08
-  translation -0.0003112408518258173 0.0007297200015290749 0.3562510108691562
-  rotation 0.7270475125452409 0.6865861376613258 0.0011790136050779053 -0.001227452648387052
+  hidden position_0_0 1
+  hidden position_0_1 0
+  hidden position_0_2 0
+  hidden position_0_3 0
+  hidden position_0_4 0
+  hidden position_4_0 0
+  hidden position_6_0 0
+  hidden position_8_0 0
+  hidden position_9_0 0
+  hidden rotation_10 0 1 0 0
+  hidden position_10_0 0
+  hidden rotation_11 0 1 0 0
+  hidden position_11_0 0
+  hidden rotation_12 0 1 0 0
+  hidden position_12_0 0
+  hidden position_14_0 0
+  hidden position_15_0 0
+  hidden rotation_16 0 1 0 0
+  hidden position_16_0 0
+  hidden rotation_17 0 1 0 0
+  hidden position_17_0 0
+  hidden rotation_18 0 1 0 0
+  hidden position_18_0 0
+  hidden rotation_20 0 0 1 0
+  hidden position_20_0 0
+  hidden rotation_21 0 1 0 0
+  translation 0 0 0
+  rotation 0 0 0 0
 }
