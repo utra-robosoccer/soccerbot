@@ -1,0 +1,4 @@
+uint64 node
+bool includeDescendants
+---
+int32 numberOfContactPoints
