@@ -25,7 +25,7 @@
   <depend>imu_complementary_filter</depend>
   <depend>robot_localization</depend>
   <depend>fake_localization</depend>
-
+  <depend>webots_ros</depend>
   <!-- Navigation-->
   <depend>soccer_control</depend>
   <depend>soccer_trajectories</depend>
