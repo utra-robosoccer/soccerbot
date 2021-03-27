@@ -5,7 +5,7 @@
   <include file="$(find soccerbot)/launch/modules/webots.launch">
     <arg name="mode" value="realtime"/>
     <arg name="no_gui" value="$(arg no_gui)"/>
-    <arg name="world" value="$(find soccer_description)/worlds/flat_world.wbt"/>
+    <arg name="world" value="$(find soccer_webots)/worlds/flat_world.wbt"/>
   </include>
 
   <arg name="duration" default="20" doc="Duration in seconds"/>

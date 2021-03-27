@@ -8,7 +8,7 @@ PROTO Soccerbot [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 1 0 0
   field  SFString    name            "Soccerbot"  # Is `Robot.name`.
-  field  SFString    controller      "Soccer_ros"       # Is `Robot.controller`.
+  field  SFString    controller      "void"       # Is `Robot.controller`.
   field  MFString    controllerArgs  []           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
@@ -117,8 +117,14 @@ PROTO Soccerbot [
                   }
                 ]
                 name "left_forearm"
-                boundingObject Box {
-                   size 0.035000 0.049000 0.144000
+                boundingObject Transform {
+                  translation -0.01 0.025 -0.06
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144000
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -133,8 +139,14 @@ PROTO Soccerbot [
             }
           ]
           name "left_bicep"
-          boundingObject Box {
-             size 0.040000 0.047760 0.123000
+          boundingObject Transform {
+            translation 0.00 0.025 -0.05
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -214,8 +226,14 @@ PROTO Soccerbot [
                   }
                 ]
                 name "right_forearm"
-                boundingObject Box {
-                   size 0.035000 0.049000 0.144000
+                boundingObject Transform {
+                  translation -0.01 -0.025 -0.06
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144000
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -230,8 +248,14 @@ PROTO Soccerbot [
             }
           ]
           name "right_bicep"
-          boundingObject Box {
-             size 0.040000 0.047760 0.123000
+          boundingObject Transform {
+            translation 0.00 -0.025 -0.05
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -542,7 +566,6 @@ PROTO Soccerbot [
                                     }
                                     Soccerbot_left_ankle_22Mesh {
                                     }
-
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
                                         axis 1.000000 0.000000 0.000000
@@ -570,8 +593,14 @@ PROTO Soccerbot [
                                           }
                                         ]
                                         name "left_foot"
-                                        boundingObject Box {
-                                           size 0.090000 0.070000 0.036740
+                                        boundingObject Transform {
+                                          translation 0.003 0.00 -0.02
+                                          rotation 0.000000 1.000000 0.000000 0.000000
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.01
+                                            }
+                                          ]
                                         }
                                         physics Physics {
                                           density -1
@@ -586,8 +615,14 @@ PROTO Soccerbot [
                                     }
                                   ]
                                   name "left_ankle"
-                                  boundingObject Box {
-                                     size 0.090769 0.042000 0.050600
+                                  boundingObject Transform {
+                                    translation -0.02 0.00 0.013
+                                    rotation 0.000000 1.000000 0.000000 0.000000
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
                                   }
                                   physics Physics {
                                     density -1
@@ -602,8 +637,14 @@ PROTO Soccerbot [
                               }
                             ]
                             name "left_calve"
-                            boundingObject Box {
-                               size 0.031883 0.048000 0.105683
+                            boundingObject Transform {
+                              translation 0.00 0.00 -0.035
+                              rotation 0.000000 1.000000 0.000000 0.000000
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
                             }
                             physics Physics {
                               density -1
@@ -618,8 +659,14 @@ PROTO Soccerbot [
                         }
                       ]
                       name "left_thigh"
-                      boundingObject Box {
-                         size 0.022000 0.048000 0.111000
+                      boundingObject Transform {
+                        translation 0.00 0.00 -0.045
+                        rotation 0.000000 1.000000 0.000000 0.000000
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
                       }
                       physics Physics {
                         density -1
@@ -634,8 +681,14 @@ PROTO Soccerbot [
                   }
                 ]
                 name "left_hip_front"
-                boundingObject Box {
-                   size 0.083747 0.048850 0.050600
+                boundingObject Transform {
+                  translation -0.02 0.00 -0.012
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -650,8 +703,14 @@ PROTO Soccerbot [
             }
           ]
           name "left_hip_side"
-          boundingObject Box {
-             size 0.048500 0.022000 0.003900
+          boundingObject Transform {
+            translation 0.0 0.00 0.01
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.048500 0.022000 0.03900
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -991,8 +1050,14 @@ PROTO Soccerbot [
                                           }
                                         ]
                                         name "right_foot"
-                                        boundingObject Box {
-                                           size 0.090000 0.070000 0.036740
+                                         boundingObject Transform {
+                                          translation 0.003 0.00 -0.02
+                                          rotation 0.000000 1.000000 0.000000 0.000000
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.01
+                                            }
+                                          ]
                                         }
                                         physics Physics {
                                           density -1
@@ -1007,8 +1072,14 @@ PROTO Soccerbot [
                                     }
                                   ]
                                   name "right_ankle"
-                                  boundingObject Box {
-                                     size 0.090769 0.042000 0.050600
+                                  boundingObject Transform {
+                                    translation -0.02 0.00 0.013
+                                    rotation 0.000000 1.000000 0.000000 0.000000
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
                                   }
                                   physics Physics {
                                     density -1
@@ -1023,8 +1094,14 @@ PROTO Soccerbot [
                               }
                             ]
                             name "right_calve"
-                            boundingObject Box {
-                               size 0.031883 0.048000 0.105683
+                            boundingObject Transform {
+                              translation 0.00 0.00 -0.035
+                              rotation 0.000000 1.000000 0.000000 0.000000
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
                             }
                             physics Physics {
                               density -1
@@ -1039,8 +1116,14 @@ PROTO Soccerbot [
                         }
                       ]
                       name "right_thigh"
-                      boundingObject Box {
-                         size 0.022000 0.048000 0.111000
+                      boundingObject Transform {
+                        translation 0.00 0.00 -0.045
+                        rotation 0.000000 1.000000 0.000000 0.000000
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
                       }
                       physics Physics {
                         density -1
@@ -1055,8 +1138,14 @@ PROTO Soccerbot [
                   }
                 ]
                 name "right_hip_front"
-                boundingObject Box {
-                   size 0.083747 0.048850 0.050600
+                boundingObject Transform {
+                  translation -0.02 0.00 -0.012
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -1071,8 +1160,14 @@ PROTO Soccerbot [
             }
           ]
           name "right_hip_side"
-          boundingObject Box {
-             size 0.048500 0.022000 0.003900
+          boundingObject Transform {
+            translation 0.0 0.00 0.01
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.048500 0.022000 0.03900
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -1156,7 +1251,7 @@ PROTO Soccerbot [
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
                       Camera {
-                        rotation 1.0 0.0 0.0 1.5708
+                      rotation 1.0 0.0 0.0 1.5708
                         name "camera"
                         fieldOfView 1.396260
                         width 640
@@ -1170,8 +1265,14 @@ PROTO Soccerbot [
                       }
                 ]
                 name "head"
-                boundingObject Box {
-                   size 0.071200 0.094000 0.077900
+                boundingObject Transform {
+                  translation -0.01 0.0 0.025
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.071200 0.094000 0.077900
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -1186,8 +1287,14 @@ PROTO Soccerbot [
             }
           ]
           name "neck"
-          boundingObject Box {
-             size 0.022000 0.052300 0.033000
+          boundingObject Transform {
+            translation 0.00 0.0 0.017
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.022000 0.052300 0.033000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -1207,8 +1314,14 @@ PROTO Soccerbot [
       }
     ]
     name IS name 
-    boundingObject Box {
-       size 0.130000 0.145000 0.152000
+    boundingObject Transform {
+      translation 0.012 0.0 -0.05
+      rotation 0.000000 1.000000 0.000000 0.000000
+      children [
+        Box {
+           size 0.105000 0.145000 0.152000
+        }
+      ]
     }
     physics Physics {
       density -1
