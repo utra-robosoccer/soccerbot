@@ -542,6 +542,7 @@ PROTO Soccerbot [
                                     }
                                     Soccerbot_left_ankle_22Mesh {
                                     }
+
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
                                         axis 1.000000 0.000000 0.000000
@@ -1155,7 +1156,7 @@ PROTO Soccerbot [
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
                       Camera {
-                      rotation 1.0 0.0 0.0 1.5708
+                        rotation 1.0 0.0 0.0 1.5708
                         name "camera"
                         fieldOfView 1.396260
                         width 640
