@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/String.h>
 #include <tf2_ros/transform_listener.h>
 #include <webots_ros/Int32Stamped.h>
 
@@ -25,6 +26,8 @@ class BallDetector {
     ros::ServiceClient head_rotator_1_Client;
     webots_ros::set_float head_rotator_1_Srv;
 
+
+
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
     int last_t = 0;
@@ -36,59 +39,35 @@ class BallDetector {
 public:
     ros::ServiceClient timeStepClient;
     webots_ros::set_int timeStepSrv;
+
     BallDetector() : tfListener(tfBuffer) {
         //signal(SIGINT, BallDetector::quit);
 
-        // subscribe to the topic model_name to get the list of availables controllers
-        ros::Subscriber nameSub = n.subscribe("/model_name", 100, &BallDetector::controllerNameCallback, this);
 
-        while (controllerCount == 0 || controllerCount < nameSub.getNumPublishers()) {
+        while (n.hasParam("controller_name") == false) {
 
             ros::spinOnce();
             ros::Duration(0.5).sleep();
 
         }
+
         ros::spinOnce();
+        n.getParam("controller_name",controllerName);
 
-        // if there is more than one controller available, let the user choose
-        if (controllerCount == 1)
-            controllerName = controllerList[0];
-        else {
-            int wantedController = 0;
-            std::cout << "Choose the # of the controller you want to use:\n";
-            std::cin >> wantedController;
-            if (1 <= wantedController && wantedController <= controllerCount)
-                controllerName = controllerList[wantedController - 1];
-            else {
-                ROS_ERROR("Invalid number for controller choice.");
 
-            }
-        }
 
-        // leave topic once it's not necessary anymore
-        nameSub.shutdown();
+
         head_rotator_0_Client = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_0/set_position");
         head_rotator_1_Client = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_1/set_position");
+
+
 
         timeStepClient = n.serviceClient<webots_ros::set_int>("/" + controllerName + "/robot/time_step");
         timeStepSrv.request.value = TIME_STEP;
 
     }
     // catch names of the controllers availables on ROS network
-    void controllerNameCallback(const std_msgs::String::ConstPtr &name) {
-        controllerCount++;
-        controllerList.push_back(name->data);
-        ROS_INFO("Controller #%d: %s.", controllerCount, controllerList.back().c_str());
-    }
 
-    void quit(int sig) {
-
-        timeStepSrv.request.value = 0;
-        timeStepClient.call(timeStepSrv);
-        ROS_INFO("User stopped the 'keyboard_teleop' node.");
-        ros::shutdown();
-        exit(0);
-    }
     void move_head(){
         geometry_msgs::TransformStamped ball_pose;
 
@@ -124,6 +103,8 @@ public:
 
 
 int main(int argc, char **argv) {
+    ros::ServiceClient timeStepClient;
+    webots_ros::set_int timeStepSrv;
     ros::init(argc, argv, "ball_detector", ros::init_options::AnonymousName);
     BallDetector ballDetector;
 
@@ -134,7 +115,9 @@ int main(int argc, char **argv) {
             ROS_ERROR("Failed to call service time_step for next step.");
         r.sleep();
     }
-    ros::spin();
+    timeStepSrv.request.value = 0;
+    timeStepClient.call(timeStepSrv);
+    ros::shutdown();
     return 0;
 }
 /*static int controllerCount;

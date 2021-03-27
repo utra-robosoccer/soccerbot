@@ -29,6 +29,7 @@
   <!-- Navigation-->
   <depend>soccer_control</depend>
   <depend>soccer_trajectories</depend>
+  <depend>soccer_webots</depend>
 
   <!-- Communication-->
 
