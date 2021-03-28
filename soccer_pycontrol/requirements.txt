@@ -1,6 +1,7 @@
-pip
+pip>=21.0.1
 pybullet
-matplotlib
-numpy
+matplotlib>=3.4.0
+numpy>=1.20.2
 roslibpy
-scipy
+scipy>=1.6.2
+rospy
