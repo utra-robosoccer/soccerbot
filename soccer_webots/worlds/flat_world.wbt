@@ -2,8 +2,8 @@
 DEF world_info WorldInfo {
 }
 Viewpoint {
-  orientation 0.4795211679042207 0.4929008649633698 0.7260221669137479 1.9134231808694502
-  position 1.0291901080387296 -0.04160151817062308 0.714860845937081
+  orientation 1 0 0 1.5707963267948966
+  position 3.815760786470701e-16 -2.29128784747792 3.1798006553922506e-16
 }
 TexturedBackground {
   texture "stadium"
@@ -17,40 +17,12 @@ Floor {
   tileSize 2 2
 }
 Soccerbot {
-  hidden position_0_0 1
-  hidden position_0_1 0
-  hidden position_0_2 0
-  hidden position_0_3 0
-  hidden position_0_4 0
-  hidden position_4_0 0
-  hidden position_6_0 0
-  hidden position_8_0 0
-  hidden position_9_0 0
-  hidden rotation_10 0 1 0 0
-  hidden position_10_0 0
-  hidden rotation_11 0 1 0 0
-  hidden position_11_0 0
-  hidden rotation_12 0 1 0 0
-  hidden position_12_0 0
-  hidden position_14_0 0
-  hidden position_15_0 0
-  hidden rotation_16 0 1 0 0
-  hidden position_16_0 0
-  hidden rotation_17 0 1 0 0
-  hidden position_17_0 0
-  hidden rotation_18 0 1 0 0
-  hidden position_18_0 0
-  hidden rotation_20 0 0 1 0
-  hidden position_20_0 0
-  hidden rotation_21 0 1 0 0
-  translation 0 0 0
-  rotation 0 0 0 0
+  translation 0 0 0.5
   controller "ros"
   controllerArgs [
       "--name=robot1"
       "--clock"
       "--use-sim-time"
       "--synchronize"
-
     ]
 }
