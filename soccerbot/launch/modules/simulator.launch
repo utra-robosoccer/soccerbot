@@ -1,16 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- start Webots -->
-  <arg name="no_gui" default="false," doc="Start Webots with minimal GUI"/>
-  <include file="$(find soccerbot)/launch/modules/webots.launch">
-    <arg name="mode" value="realtime"/>
-    <arg name="no_gui" value="$(arg no_gui)"/>
-    <arg name="world" value="$(find soccer_webots)/worlds/flat_world.wbt"/>
-  </include>
-  <param name="/simulation_active" value="true"/>
-  <param name="/use_sim_time" value="true"/>
-  <arg name="duration" default="20" doc="Duration in seconds"/>
-  <arg name="auto_close" default="false" doc="Startup mode"/>
-  <!--<node name="epuck_line" pkg="soccerbot" type="e_puck_line" args="$(arg duration)" required="$(arg auto_close)"/>-->
-</launch>
+<!--  <param name="/use_sim_time" value="true"/>-->
 
+  <include file="$(find webots_ros)/launch/webots.launch">
+    <arg name="world" value="$(find soccer_webots)/worlds/flat_world.wbt"/>
+    <arg name="mode" value="realtime"/>
+    <arg name="no_gui" value="false"/>
+  </include>
+
+</launch>
