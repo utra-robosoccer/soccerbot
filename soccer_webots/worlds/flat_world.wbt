@@ -46,4 +46,11 @@ Soccerbot {
   translation 0 0 0
   rotation 0 0 0 0
   controller "ros"
+  controllerArgs [
+      "--name=robot1"
+      "--clock"
+      "--use-sim-time"
+      "--synchronize"
+
+    ]
 }

@@ -108,12 +108,12 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "ball_detector", ros::init_options::AnonymousName);
     BallDetector ballDetector;
 
-    ros::Rate r(100);
+    //ros::Rate r(100);
     while (ros::ok()) {
         ballDetector.move_head();
         if (!ballDetector.timeStepClient.call(ballDetector.timeStepSrv) || !ballDetector.timeStepSrv.response.success)
             ROS_ERROR("Failed to call service time_step for next step.");
-        r.sleep();
+        ros::spinOnce();
     }
     timeStepSrv.request.value = 0;
     timeStepClient.call(timeStepSrv);
