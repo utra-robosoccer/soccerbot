@@ -1,20 +1,16 @@
+import os
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
 import pybullet as pb
 import pybullet_data
 from transformation import Transformation
 from time import sleep
-
 from soccerbot import Soccerbot
 from ramp import Ramp
-import time
 import matplotlib as plt
+import rospy
 
 PYBULLET_STEP = 0.004
-
-
-# Set the destination!
-GOAL_X = 0.
-GOAL_Y = 1.
-
 
 def wait(steps):
     for i in range(steps):
@@ -23,6 +19,8 @@ def wait(steps):
 
 
 if __name__ == '__main__':
+    rospy.init_node("soccer_control")
+    rospy.get_namespace()
     plt.use('tkagg')
 
     pb.connect(pb.GUI)
@@ -36,13 +34,15 @@ if __name__ == '__main__':
     # Move to the standing position
     wait(100)
     soccerbot.ready()
+    soccerbot.publishAngles()
 
     # Start walking
     wait(1000)
-    soccerbot.getPath(Transformation([GOAL_X, GOAL_Y, 0]), show=False)
+    soccerbot.getPath(Transformation([1, 0, 0]), show=False)
     # soccerbot.calculate_angles(show=True)
     t = 0
-    while True:
+
+    while not rospy.is_shutdown():
         if soccerbot.current_step_time <= t <= soccerbot.robot_path.duration():
             soccerbot.stepPath(t, verbose=True)
             pb.setJointMotorControlArray(bodyIndex=soccerbot.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0, 18, 1)), targetPositions=soccerbot.configuration)
@@ -51,5 +51,8 @@ if __name__ == '__main__':
         pb.stepSimulation()
         soccerbot.get_imu(verbose=True)
         print(f'right foot: {soccerbot.get_feet(ramp.plane)[:4]} \t left foot: {soccerbot.get_feet(ramp.plane)[4:]}')
+        soccerbot.publishAngles()
         t = t + PYBULLET_STEP
         sleep(PYBULLET_STEP)
+
+

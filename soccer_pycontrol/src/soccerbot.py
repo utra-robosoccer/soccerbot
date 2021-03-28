@@ -5,8 +5,8 @@ from transformation import Transformation as tr
 import matplotlib.pyplot as plt
 from robotpath import Robotpath
 import math
-from scipy.spatial.transform import Rotation as R
-
+import rospy
+from std_msgs.msg import Float64
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
     LEFT_ARM_2 = 1
@@ -133,6 +133,26 @@ class Soccerbot:
         self.configuration = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL, jointIndices=list(range(0, 18, 1)), targetPositions=self.get_angles())
 
+        # ROS connection
+        self.motor_publishers = {}
+        self.motor_publishers[Joints.LEFT_ARM_1] = rospy.Publisher("left_arm_motor_0/command", Float64)
+        self.motor_publishers[Joints.LEFT_ARM_2] = rospy.Publisher("left_arm_motor_1/command", Float64)
+        self.motor_publishers[Joints.RIGHT_ARM_1] = rospy.Publisher("right_arm_motor_0/command", Float64)
+        self.motor_publishers[Joints.RIGHT_ARM_2] = rospy.Publisher("right_arm_motor_1/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_1] = rospy.Publisher("left_leg_motor_0/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_2] = rospy.Publisher("left_leg_motor_1/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_3] = rospy.Publisher("left_leg_motor_2/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_4] = rospy.Publisher("left_leg_motor_3/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_5] = rospy.Publisher("left_leg_motor_4/command", Float64)
+        self.motor_publishers[Joints.LEFT_LEG_6] = rospy.Publisher("left_leg_motor_5/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_1] = rospy.Publisher("right_leg_motor_0/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_2] = rospy.Publisher("right_leg_motor_1/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_3] = rospy.Publisher("right_leg_motor_2/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_4] = rospy.Publisher("right_leg_motor_3/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_5] = rospy.Publisher("right_leg_motor_4/command", Float64)
+        self.motor_publishers[Joints.RIGHT_LEG_6] = rospy.Publisher("right_leg_motor_5/command", Float64)
+        self.motor_publishers[Joints.HEAD_1] = rospy.Publisher("head_motor_0/command", Float64)
+        self.motor_publishers[Joints.HEAD_2] = rospy.Publisher("head_motor_1/command", Float64)
 
     def ready(self):
         """
@@ -278,6 +298,10 @@ class Soccerbot:
             print("--------------------------------------------------")
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6+1] = thetas[0:6]
         self.pose = crotch_position
+
+    def publishAngles(self):
+        for m in self.motor_publishers:
+            self.motor_publishers[m].publish(self.configuration[m])
 
     def calculate_angles(self, show=True):
         self.angles = []
