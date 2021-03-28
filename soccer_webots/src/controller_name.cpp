@@ -47,7 +47,7 @@ void quit(int sig) {
 }
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "controller_name" );
+    ros::init(argc, argv , "controller_name" );
     ros::NodeHandle n;
 
     signal(SIGINT, quit);
