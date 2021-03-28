@@ -20,8 +20,9 @@ Soccerbot {
   translation 0 0 0.5
   controller "ros"
   controllerArgs [
-    "--name=my_robot"
-    "--clock"
-    "--synchronize"
-  ]
+      "--name=robot1"
+      "--clock"
+      "--use-sim-time"
+      "--synchronize"
+    ]
 }
