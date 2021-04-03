@@ -1053,6 +1053,25 @@ PROTO Soccerbot [
                                         children [
                                           Soccerbot_right_foot_0Mesh {
                                           }
+
+					  TouchSensor {
+					  	name "right_leg_motor_5_foot_sensor"
+						type "force-3d"
+						
+						resolution -1
+						  
+                          			boundingObject Transform {
+                                        	  translation 0.003 0.000 -0.02
+                                        	  rotation 0.000000 1.000000 0.000000 0.000000
+                                        	  children [ Box { size 0.01125 0.00875 0.001 } ]
+                                        	}
+                                  		physics Physics {
+                                    		  density -1
+                                    		  mass 0.001
+                                    	          centerOfMass []
+                                    		  inertiaMatrix [  ]
+                                  		}
+					  }
                                         ]
                                         name "right_foot"
                                          boundingObject Transform {
@@ -1072,8 +1091,8 @@ PROTO Soccerbot [
                                             6.000000e-06 1.800000e-05 2.200000e-05
                                             0.000000e+00 0.000000e+00 0.000000e+00
                                           ]
-                                        }
-                                      }
+					}
+				     } 
                                     }
                                   ]
                                   name "right_ankle"
