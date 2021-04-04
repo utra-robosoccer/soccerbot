@@ -1053,25 +1053,70 @@ PROTO Soccerbot [
                                         children [
                                           Soccerbot_right_foot_0Mesh {
                                           }
-
-					  TouchSensor {
-					  	name "right_leg_motor_5_foot_sensor"
-						type "force-3d"
-						
-						resolution -1
-						  
-                          			boundingObject Transform {
-                                        	  translation 0.003 0.000 -0.02
-                                        	  rotation 0.000000 1.000000 0.000000 0.000000
-                                        	  children [ Box { size 0.01125 0.00875 0.001 } ]
-                                        	}
-                                  		physics Physics {
-                                    		  density -1
-                                    		  mass 0.001
-                                    	          centerOfMass []
-                                    		  inertiaMatrix [  ]
-                                  		}
-					  }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_1"
+                                            type "force-3d"
+                                            resolution -1
+                          			            boundingObject Transform {
+                                              translation 0.041 0.029 -0.0225
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                            }
+                                  		      physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                  		      }
+					                                }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_2"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation 0.041 -0.02 -0.0225
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_3"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.037 -0.02 -0.0225
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_4"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.037 0.029 -0.0225
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
                                         ]
                                         name "right_foot"
                                          boundingObject Transform {
