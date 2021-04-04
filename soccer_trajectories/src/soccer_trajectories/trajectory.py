@@ -2,6 +2,7 @@ from scipy.interpolate import interp1d
 import numpy as np
 import csv
 import rospy
+from webots_ros.srv import set_float, set_floatRequest
 from std_msgs.msg import Float64
 
 class Trajectory:
@@ -13,7 +14,7 @@ class Trajectory:
         expects rectangular shape for csv table"""
         self.splines = {}
         self.step_map = {}
-        self.time_to_last_pose = 5.0  # seconds
+        self.time_to_last_pose = 0.0  # seconds
 
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
@@ -23,13 +24,14 @@ class Trajectory:
                     continue
                 if joint_name == 'time':
                     self.times = list(map(float, row[1:]))
-                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
+                    self.times = [0] + self.times #+ [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
-                    param = '~motor_mapping/{}/initial_state'.format(joint_name)
-                    last_pose_value = float(rospy.get_param(param))
-                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
+                    #param = '~motor_mapping/{}/initial_state'.format(joint_name)
+                    #last_pose_value = float(rospy.get_param(param))
+                    last_pose_value = 0.0
+                    joint_values = [last_pose_value] + joint_values #+ [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
@@ -45,11 +47,23 @@ class Trajectory:
     def publish(self):
         publishers = {
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
+        #r = rospy.Rate(10)
+        '''while rospy.has_param("/robot1/controller_name") == False:
+            r.sleep()
 
+        print(rospy.has_param("/robot1/controller_name"))
+        controllerName = rospy.get_param("/robot1/controller_name")
+        publishers_2 = {
+            joint: rospy.ServiceProxy("/" + controllerName + "/{}/set_position".format(joint), set_float) for joint in self.joints()}
+
+        print(publishers_2)'''
         rate = rospy.Rate(100)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
             for joint, setpoint in self.get_setpoint(t).items():
+                #request = set_floatRequest()
+                #request.value = setpoint
                 publishers[joint].publish(setpoint)
+                #publishers_2[joint](request)
             t = t + 0.01
             rate.sleep()

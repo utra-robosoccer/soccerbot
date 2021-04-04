@@ -8,11 +8,12 @@ find_package(catkin REQUIRED COMPONENTS
         gazebo_ros
         gazebo_ros_control
         tf2_ros
+        roscpp
+        rospy
 
-        )
+)
 
-
-
+catkin_python_setup()
 catkin_package()
 
 include_directories(
