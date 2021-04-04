@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(Soccerbot)
 set(CMAKE_PREFIX_PATH $ENV{HOME}/catkin_ws/devel;/opt/ros/noetic)
+set(PYTHON_EXECUTABLE /usr/bin/python3)
 set(CATKIN_TOPLEVEL TRUE)
 set(_cmd "catkin_find_pkg" "catkin" "${CMAKE_SOURCE_DIR}")
 
