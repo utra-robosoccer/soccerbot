@@ -45,12 +45,10 @@ Soccerbot {
   hidden rotation_21 0 1 0 0
   translation 0 0 0
   rotation 0 0 0 0
-  controller "ros"
-  controllerArgs [
-      "--name=robot1"
-      "--clock"
-      "--use-sim-time"
-      "--synchronize"
-
-    ]
+  controller "<extern>"
+    name "robot1"
+}
+DEF supervisor_robot hl_supervisor {
+  name "supervisor_robot"
+  controller "<extern>"
 }

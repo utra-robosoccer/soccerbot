@@ -10,10 +10,9 @@ PROTO Soccerbot [
   field  SFString    name            "Soccerbot"  # Is `Robot.name`.
   field  SFString    controller      "void"       # Is `Robot.controller`.
   field  MFString    controllerArgs  [
-    "--name=my_robot"
-    "--clock"
-    "--synchronize"
-"--use-sim-time"
+
+
+
     ]           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.

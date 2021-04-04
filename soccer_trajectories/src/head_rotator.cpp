@@ -90,8 +90,8 @@ public:
             head_rotator_0_Srv.request.value = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);;
             head_rotator_1_Srv.request.value = 0.6f;
             last_t += 1;
-            if (!head_rotator_0_Client.call(head_rotator_0_Srv) || !head_rotator_1_Client.call(head_rotator_1_Srv) || !head_rotator_0_Srv.response.success || !head_rotator_1_Srv.response.success)
-                ROS_ERROR("Failed to send new position commands to the robot.");
+            //if (!head_rotator_0_Client.call(head_rotator_0_Srv) || !head_rotator_1_Client.call(head_rotator_1_Srv) || !head_rotator_0_Srv.response.success || !head_rotator_1_Srv.response.success)
+                //ROS_ERROR("Failed to send new position commands to the robot.");
         }
         else {
             has_pose = false;

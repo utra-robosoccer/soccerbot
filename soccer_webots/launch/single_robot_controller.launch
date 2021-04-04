@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot_name" default="robot1" doc="The name of the robot" />
+
+
+  <node pkg="soccer_webots" type="start_single.sh" name="webots_ros_interface"
+        args="--robot_name $(arg robot_name) ">
+
+  </node>
+</launch>

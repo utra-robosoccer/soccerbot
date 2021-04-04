@@ -3,6 +3,8 @@
   <arg name="world" default="" doc="Path to the world to load"/>
   <arg name="mode" default="realtime" doc="Startup mode"/>
   <arg name="no_gui" default="false" doc="Start Webots with minimal GUI"/>
-  <param name="/use_sim_time" value="true"/>
-  <node name="webots" pkg="soccerbot" type="webots_launcher.py" args="--world=$(arg world) --mode=$(arg mode) --no-gui=$(arg no_gui)" required="true"/>
+  <include file="$(find soccer_webots)/launch/simulation_webot.launch" ns="robot1">
+
+  </include>
+
 </launch>

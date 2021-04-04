@@ -22,8 +22,8 @@
   <depend>ros_control</depend>
   <depend>python3-scipy</depend>
   <depend>tf2_ros</depend>
-
-
+  <depend>rospy</depend>
+  <depend>soccer_trajectories</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
