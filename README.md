@@ -1,8 +1,8 @@
 ## Soccerbot Repository - For software running on the robot
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![Travis build](https://travis-ci.org/utra-robosoccer/soccer_ws.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccer_ws)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccer_ws.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccer_ws/alerts/)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/utra-robosoccer-soccer_ws/badge.svg)](https://scan.coverity.com/projects/utra-robosoccer-soccer_ws)
+[![Travis build](https://travis-ci.org/utra-robosoccer/soccerbot.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccerbot)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccerbot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccerbot/alerts/)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/utra-robosoccer-soccerbot/badge.svg)](https://scan.coverity.com/projects/utra-robosoccer-soccerbot)
 
 Welcome to the software repository, to start working on the robot, follow the instructions to install ros
 
@@ -29,13 +29,7 @@ http://wiki.ros.org/ROS/Installation
 
 Next, install these Debian packages
 ```
-sudo apt-get install git git-lfs python3-catkin-tools net-tools vim htop meshlab
-```
-
-Install these ROS noetic dependancies
-```
-sudo apt install python3-catkin-lint python3-pip
-pip3 install osrf-pycommon
+sudo apt-get install git git-lfs python3-catkin-tools net-tools vim htop meshlab python3-catkin-lint python3-pip
 ```
 
 [Install Nvidia CUDA Toolkit following the instructions here](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)  
@@ -55,23 +49,30 @@ https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&t
 ```bash
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
-git clone --recurse-submodules https://github.com/utra-robosoccer/soccer_ws #  To clone the repository
-cd soccer_ws # To get into the local repository and perform git lfs commands
+git clone --recurse-submodules https://github.com/utra-robosoccer/soccerbot #  To clone the repository
+cd soccerbot # To get into the local repository and perform git lfs commands
 git lfs pull
 git checkout branch_name  # TO create a new branch, use git checkout -b initials_branchname
 catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
 ```
 #### Updating submodules and dependencies
 ```bash
+# Installing Webots
+wget -qO- https://cyberbotics.com/Cyberbotics.asc | sudo apt-key add -
+sudo apt-add-repository 'deb https://cyberbotics.com/debian/ binary-amd64/'
+sudo apt-get update
+
 # Updating Submodules
-cd ~/catkin_ws/src/soccer_ws
+cd ~/catkin_ws/src/soccerbot
 git submodule update --recursive --init
+sudo apt-get install webots
 
 # Updating Dependencies
-cd ~/catkin_ws/
+cd ~/catkin_ws/src/soccerbot/
 sudo rosdep init # Only need to do this once
 rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro noetic # To install all dependencies (use correct ROS distro version), add --os ubuntu:xenial if your linux is based on it but has different distro name and version. Ubuntu 16.04 uses kinetic instead of melodic. For Jetson TX2 use kinetic.
+pip3 install -r requirements.txt
 ```
 
 #### Setting up your IDE (CLion)
@@ -96,7 +97,7 @@ gedit ~/.local/share/applications/jetbrains-pycharm.desktop
 # Add the bash -i -c to the beginning of this line (rest of the line remain the same)
 Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
-- Open Pycharm, go to File > Open and open the repository name (soccer_ws)
+- Open Pycharm, go to File > Open and open the repository name (soccerbot)
 - Change the Intepreter to python 3.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
@@ -110,9 +111,9 @@ Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLi
 - Create a Mathworks account
 - Download Matlab (https://www.mathworks.com/downloads/)
   - sudo run the install.run script (Might need to chmod +x the script)
-  - Matlab license information can be found here (https://github.com/utra-robosoccer/soccer_ws/wiki/Onboarding)
+  - Matlab license information can be found here (https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding)
   - Install all toolboxes if possible
-- In matlab navigate to the the folder soccer_ws/soccer_control
+- In matlab navigate to the the folder soccerbot/soccer_control
 - Execute any script (NOTE: Do not double click a folder to enter it, instead click on + to expand the folder when you are navigating). A starter script can be found in /test/walking
 
 #### Setting up your IDE (Pycharm)
