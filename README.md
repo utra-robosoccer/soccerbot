@@ -51,8 +51,8 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 git clone --recurse-submodules https://github.com/utra-robosoccer/soccerbot #  To clone the repository
 cd soccerbot # To get into the local repository and perform git lfs commands
-git lfs pull
 git checkout branch_name  # TO create a new branch, use git checkout -b initials_branchname
+git lfs pull
 catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
 ```
 #### Updating submodules and dependencies
@@ -98,7 +98,8 @@ gedit ~/.local/share/applications/jetbrains-pycharm.desktop
 Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
 ```
 - Open Pycharm, go to File > Open and open the repository name (soccerbot)
-- Change the Intepreter to python 3.7. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3
+- Change the Intepreter to python 3.8. Go to Project Interpreter > Add > System Intepreter and choose /usr/bin/python3.8
+- Click on the gear > show all > Select python 3.8 > Show paths for the selected intepreter > Add the Intepreter Path ```/opt/ros/noetic/lib/python3/dist-packages``` 
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Debugging
   - Run > Attach to Process > Select the Process you want to attach to, you might want to rosnode info <node> to identify it's PID. Add a breakpoint
