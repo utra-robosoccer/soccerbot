@@ -80,22 +80,7 @@ rosdep install --from-paths src --ignore-src -r -y --rosdistro noetic # To insta
 
 ##### CLion
 - Open Jetbrains installer and install CLion
-- Add shell run from IDE (This process might need to be redone everytime Jetbrain updates your Clion so come back to this step
-```bash
-gedit ~/.local/share/applications/jetbrains-clion.desktop
-# Add the bash -i -c to the beginning of this line (rest of the line remain the same)
-Exec=bash -i -c "/home/<Insert Username>/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/bin/clion.sh" %f
-```
-- Add a CMakelist file
-```bash
-cd ~/catkin_ws/src
-catkin_init_workspace
-```
-- Open CLion,navigate to ~/catkin_ws/src/CMakelists.txt and click open as project
-- On the bottom CMake bar, go to Cmake settings and add this line to Environment
-```bash
-ROS_PACKAGE_PATH=/home/<Insert Username>/catkin_ws/src
-```
+- Open CLion, set the default CMakelists to ~/catkin_ws/src/soccerbot/CMakelists.txt and click open as project
 - Install the *.launch file plugins. Look up duckietown/hatchery from the third party repositories in Preferences/Plugins
 - Add the python3.7 intepretor to CLion to get Clion code hinting. In Settings/Build,Execution,Deployment/Python Intepretor, Click the gear and add the "System Intepreter" /usr/bin/python3.7
 - Debugging
