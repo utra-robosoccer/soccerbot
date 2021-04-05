@@ -40,11 +40,11 @@ classdef soccerbot < handle
             obj.foot_center_to_floor = foot_center_to_floor; % Using foot box height and foot to thing parameter
             
             right_foot_position = obj.robot_right_leg_subtree.getTransform(obj.robot_right_leg_subtree.homeConfiguration, 'right_foot', 'torso');
-            right_foot_position(3,4) = - position(3) + foot_center_to_floor;
+            right_foot_position(3,4) = -position(3) + foot_center_to_floor;
             configSolR = obj.ik_right_foot(right_foot_position);
 
             left_foot_position = obj.robot_left_leg_subtree.getTransform(obj.robot_left_leg_subtree.homeConfiguration, 'left_foot', 'torso');
-            left_foot_position(3,4) = - position(3) + foot_center_to_floor;
+            left_foot_position(3,4) = -position(3) + foot_center_to_floor;
             configSolL = obj.ik_left_foot(left_foot_position);
             
             obj.configuration(5:10) = configSolL;
@@ -192,7 +192,7 @@ classdef soccerbot < handle
         end
         
         function applyRPYFeedback(obj, rpy)
-            f_off = (rpy(2)-rpy_current(2)) * 0.1;
+            f_off = (rpy(2)-obj.rpy_current(2)) * 0.1;
             fb_off = f_off * 0.15;
             obj.torso_offset = eul2tform([0 f_off 0]);
             obj.torso_offset(1,4) = -fb_off;
