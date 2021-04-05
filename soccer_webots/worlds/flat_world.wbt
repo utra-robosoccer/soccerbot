@@ -17,7 +17,7 @@ Floor {
   tileSize 2 2
 }
 Soccerbot {
-  hidden position_0_0 1
+  hidden position_0_0 0
   hidden position_0_1 0
   hidden position_0_2 0
   hidden position_0_3 0
