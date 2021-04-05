@@ -29,7 +29,7 @@ In a terminal with the activated virtualenv,
 ```shell script
 . venv/bin/activate
 ```
-Use one of the yaml config files in the `rllib_configs` to start the training:
+Use one of the yaml config files (preferably one of the non-server ones to avoid the risk of crashing your computer/VM) in the `rllib_configs` directory to start the training:
 ```shell script
 rllib train -f rllib_configs/your_config.yaml
 ```

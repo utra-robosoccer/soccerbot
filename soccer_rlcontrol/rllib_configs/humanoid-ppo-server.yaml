@@ -6,15 +6,15 @@ humanoid-ppo:
     checkpoint_at_end: true
     local_dir: ./results/
     stop:
-        timesteps_total: 10000000
+        timesteps_total: 1000000000
     config:
         # Works for both torch and tf.
         framework: torch
-        num_workers: 4
+        num_workers: 32
         num_cpus_per_worker: 0
-        num_envs_per_worker: 1
+        num_envs_per_worker: 4
         horizon: 4096
-        num_gpus: 0 # Set to 1 for gpu acceleration
+        num_gpus: 1
 
         # Should use a critic as a baseline (otherwise don't use value baseline;
         # required for using GAE).
@@ -30,15 +30,15 @@ humanoid-ppo:
         rollout_fragment_length: 4096
         # Number of timesteps collected for each SGD round. This defines the size
         # of each SGD epoch.
-        train_batch_size: 16384 #4096*4 # 4000
+        train_batch_size: 524288 #4096*32*4 # 4000
         # Total SGD batch size across all devices for SGD. This defines the
         # minibatch size within each epoch.
-        sgd_minibatch_size: 8192 #4096*2 # 128
+        sgd_minibatch_size: 524288 #4096*32*4 # 128
         # Whether to shuffle sequences in the batch when training (recommended).
         shuffle_sequences: True
         # Number of SGD iterations in each outer loop (i.e. number of epochs to
         # execute per train batch).
-        num_sgd_iter: 10
+        num_sgd_iter: 30
         # Stepsize of SGD.
         lr: !!float 5e-5
         # Learning rate schedule.
