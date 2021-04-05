@@ -29,7 +29,6 @@ googleapis-common-protos==1.53.0
 gpustat==0.6.0
 grpcio==1.32.0
 gym==0.18.0
--e git+git@github.com:Shah-Rajab/gym-soccerbot.git@a60e82492cd8fc118263b60cdaa780d4c1cf046f#egg=gym_soccerbot
 h5py==2.10.0
 hiredis==2.0.0
 idna==2.10
