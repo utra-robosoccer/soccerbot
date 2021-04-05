@@ -6,7 +6,6 @@
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <tf/transform_listener.h>
 
 SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_transport::ImageTransport it(nh);
@@ -104,29 +103,34 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         tf2::Matrix3x3 m(q);
         m.getRPY(roll, pitch, yaw);
         //Draw black box on screen based on the pitch of the camera
-        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) -400*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+
+        // Rectangle only for simulation
+        cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
+        cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
 
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
         for (const auto& l : lines) {
-            cv::line(dst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
 
             Point2 pt1(l[0],l[1]);
             Point2 pt2(l[2],l[3]);
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i += 3) {
+            for (size_t i = l[0]; i < l[2];i += 1) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
             }
         }
 
-        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
         //if(image_publisher.getNumSubscribers() > 1){
+
         image_publisher.publish(message);
-        //}
 
     } catch (const cv_bridge::Exception &e) {
         ROS_ERROR_STREAM("CV Exception" << e.what());

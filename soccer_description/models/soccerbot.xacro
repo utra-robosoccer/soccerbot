@@ -39,13 +39,13 @@
         </visual>
     </link>
 
-    <arm name="left" origin="torso" direction="1" />
-    <arm name="right" origin="torso" direction="-1" />
-    <leg name="left" origin="torso" direction="1" />
-    <leg name="right" origin="torso" direction="-1" />
-    <head origin="torso" />
-    <imu origin="torso" />
-    <front_camera origin="head" />
+    <xacro:arm name="left" origin="torso" direction="1" />
+    <xacro:arm name="right" origin="torso" direction="-1" />
+    <xacro:leg name="left" origin="torso" direction="1" />
+    <xacro:leg name="right" origin="torso" direction="-1" />
+    <xacro:head origin="torso" />
+    <xacro:imu origin="torso" />
+    <xacro:front_camera origin="head" />
 
     <xacro:if value="$(arg has_base_footprint)">
         <link name="base_footprint" />
@@ -67,6 +67,17 @@
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>$(arg robot_name)</robotNamespace>
             <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <bodyName>base_footprint</bodyName>
+            <topicName>odom_ground_truth</topicName>
+            <gaussianNoise>0.01</gaussianNoise>
+            <frameName>world</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
         </plugin>
     </gazebo>
 

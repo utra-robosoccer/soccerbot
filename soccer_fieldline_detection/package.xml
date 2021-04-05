@@ -15,7 +15,6 @@
     <depend>image_transport</depend>
     <depend>video_stream_opencv</depend>
     <depend>sensor_msgs</depend>
-    <depend>tf</depend>
     <depend>pointcloud_to_laserscan</depend>
     <depend>darknet_ros_msgs</depend>
     <depend>geometry_msgs</depend>

@@ -6,8 +6,8 @@ angle_min: -1.5708
 angle_max: 1.5708
 angle_increment: 0.0087
 scan_time: 0.3333
-range_min: 0.45
-range_max: 4.0
+range_min: 0.30
+range_max: 10.0
 use_inf: true
 
 #concurrency_level affects number of pc queued for processing and the number of threadsused

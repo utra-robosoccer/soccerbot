@@ -1,1 +1,1 @@
-from trajectory import Trajectory
+from .trajectory import Trajectory
