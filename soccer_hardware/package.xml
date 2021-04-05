@@ -18,7 +18,7 @@
   <depend>control_msgs</depend>
   <depend>rospy</depend>
   <depend>python3-numpy</depend>
-  <depend>python-prettytable</depend>
+  <depend>python3-prettytable</depend>
   <depend>python3-serial</depend>
 
 </package>
