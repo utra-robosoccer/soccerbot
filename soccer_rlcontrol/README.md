@@ -1,8 +1,4 @@
-#### Control Code
-Here are the yaml config files for training in one line of code.
-
-
-## Installation
+# Installation
 Make sure you are in the same directory as the README
 ```shell script
 sudo apt-get install python3-tk
@@ -17,7 +13,7 @@ cd gym-soccerbot
 pip install -e .
 ```
 
-## IDE Setup (Optional)
+# IDE Setup (Optional)
 Change your project python intepretor to the virtual environment that you just created.
 
 Mark the folder soccer_rlcontrol/src as a root directory.
@@ -28,7 +24,7 @@ In Pycharm IDE change the intepretor to the virtual environment that has been cr
 ```
 Mark the `soccer_rlcontrol/` as a source root directory by right clicking the `soccer_rlcontrol/` > mark as > sources root
 
-## Training
+# Training
 In a terminal with the activated virtualenv,
 ```shell script
 . venv/bin/activate
@@ -37,7 +33,7 @@ Use one of the yaml config files in the `rllib_configs` to start the training:
 ```shell script
 rllib train -f rllib_configs/your_config.yaml
 ```
-# Notes on some Yaml file parameters:
+## Notes on some Yaml file parameters:
 - `timesteps_total` How many simulation steps the training will end after.
 - `num_gpus` If you have no compatible nVidia nor Radeon, set this to 0. For Radeon GPUs, look into ROCm-based Tensorflow and PyTorch.
 - `num_workers` Roughly corresponds to the number of processes you'd like to simultaneously run.
@@ -45,7 +41,7 @@ rllib train -f rllib_configs/your_config.yaml
 - `num_envs_per_worker` Each worker process can spawn more than just 1 simulation environment. Ultimately having too many environments per worker will hurt the over performance and/or the computer will run out of RAM (although at a lower rate compared to adding workers).
 - `*batch*` If you are using a GPU, your VRAM might limit your batch sizes. If you are running out try reducing the parameters involving the `*batch*` keyword, especially `sgd_minibatch_size`.
 
-## Viewing Results
+# Viewing Results
 To visually observer the trained agent, consider one of the checkpoints of your desire in the following directory format:
 ```shell script
 ./results/name-of-the-yaml-file/RLalgorithm_UsedGymEnironment_ID_DateOfTraining/checkpoint_n/checkpoint-n
@@ -62,15 +58,15 @@ Where:
 - `<checkpoint_path>` Is the path mentioned. Replace it with the path discussed above.
 
 
-## Refrences
-# Open AI Gym
+# Refrences
+## Open AI Gym
 The framework used to develop custom environments for our reinforcement learning tasks.
 Visit Open AI Gym Github repository [here](https://github.com/openai/gym).
 
-# RLLib
+## RLLib
 We use RLLib as a scalable set of reinforcement learning.
 Visit RLLib Github repository [here](https://github.com/ray-project/ray).
 
-# PyBullet
+## PyBullet
 Free physics simulation of our choice for reinforcement learning tasks.
 Visit PyBullet Github repository [here](https://github.com/bulletphysics/bullet3).
