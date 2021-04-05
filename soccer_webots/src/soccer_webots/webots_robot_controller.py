@@ -53,7 +53,7 @@ class RobotController:
         self.camera.enable(self.timestep)
 
         clock_topic = base_ns + "/clock"
-
+        rospy.Subscriber(base_ns + '/all_motor', JointState, self.all_motor_callback)
         self.pub_imu = rospy.Publisher(base_ns + "/imu/data_raw", Imu, queue_size=1)
 
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_proc", Image, queue_size=1)
@@ -93,6 +93,12 @@ class RobotController:
 
     def publish_ros(self):
         self.publish_camera()
+
+    def all_motor_callback(self, msg):
+        for i, name in enumerate(msg.name):
+            motor_index = self.external_motor_names.index(name)
+            self.motors[motor_index].setPosition(msg.position[i])
+        pass
 
     '''def command_cb(self, command: JointCommand):
         for i, name in enumerate(command.joint_names):

@@ -56,7 +56,7 @@ PROTO Soccerbot [
 
       HingeJoint {
         jointParameters HingeJointParameters {
-          axis 0.000000 -1.000000 0.000000
+          axis 0.000000 -1.00000 0.000000
           anchor -0.015700 0.072500 0.000000
           dampingConstant 0.01
           staticFriction 0.1
@@ -75,7 +75,7 @@ PROTO Soccerbot [
         ]
         endPoint Solid {
           translation -0.015700 0.072500 0.000000
-          rotation 0.000000 1.000000 0.000000 0.000000
+          rotation 0.000000 -1.00000 0.000000 0.000000
           children [
             Soccerbot_left_bicep_0Mesh {
             }

@@ -10,6 +10,9 @@ find_package(catkin REQUIRED COMPONENTS
         tf2_ros
         roscpp
         rospy
+        sensor_msgs
+        rosgraph_msgs
+        std_msgs
 
 )
 
