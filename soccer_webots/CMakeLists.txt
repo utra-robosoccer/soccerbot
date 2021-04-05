@@ -23,19 +23,3 @@ include_directories(
         ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(
-        controller_name
-        src/controller_name.cpp
-)
-add_dependencies(controller_name ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(controller_name
-        ${catkin_LIBRARIES}
-        )
-add_executable(
-        motor_mapping
-        src/motor_mapping.cpp
-)
-add_dependencies(motor_mapping ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(motor_mapping
-        ${catkin_LIBRARIES}
-        )

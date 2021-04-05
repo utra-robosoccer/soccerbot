@@ -8,7 +8,7 @@ orthographicViewHeight: 1
 textFiles: 0 "protos/Soccerbot.proto"
 robotWindow: robot1
 consoles: Console:All:All
-renderingDevicePerspectives: robot1:camera;1;0.74375;0;0
+renderingDevicePerspectives: robot1:camera;1;0.915625;0;0
 x3dExport-shadowBias: 0
 x3dExport-shadowMapSize: 2048
 x3dExport-shadowRadius: 0
