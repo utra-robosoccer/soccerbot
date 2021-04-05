@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import math
 import time
@@ -56,13 +57,13 @@ class RobotController:
         rospy.Subscriber(base_ns + '/all_motor', JointState, self.all_motor_callback)
         self.pub_imu = rospy.Publisher(base_ns + "/imu/data_raw", Imu, queue_size=1)
 
-        self.pub_cam = rospy.Publisher(base_ns + "/camera/image_proc", Image, queue_size=1)
+        self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
         self.pub_cam_info = rospy.Publisher(base_ns + "/camera/camera_info", CameraInfo, queue_size=1, latch=True)
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
         self.cam_info.header.stamp = rospy.Time.from_seconds(self.time)
-        self.cam_info.header.frame_id = "camera_base"
+        self.cam_info.header.frame_id = "camera"
         self.cam_info.height = self.camera.getHeight()
         self.cam_info.width = self.camera.getWidth()
         f_y = self.mat_from_fov_and_resolution(

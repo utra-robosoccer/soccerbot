@@ -17,10 +17,10 @@ PROTO WhiteGrass [
     metalness 0
     IBLStrength 1.5
     normalMap ImageTexture {
-      url "../../../../appearances/protos/textures/grass/grass_artificial_normal.jpg"
+      url "textures/grass_artificial_normal.jpg"
     }
     occlusionMap ImageTexture {
-      url "../../../../appearances/protos/textures/grass/grass_artificial_occlusion.jpg"
+      url "textures/grass_artificial_occlusion.jpg"
     }
     textureTransform IS textureTransform
   }

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from controller import Robot, Node, Supervisor
 import os
 import rospy

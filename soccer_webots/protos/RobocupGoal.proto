@@ -9,7 +9,6 @@ PROTO RobocupGoal [
   field SFVec3f    translation        0 0 0
   field SFRotation rotation           0 1 0 0
   field SFString   name               "robotstadium goal"
-  field SFColor    frameColor         1 1 1               # Defines the color of the goal frame.
   field SFColor    netColor           0.3 0.3 0.3         # Defines the color of the net.
   field SFString{"adult", "kid"} size "kid"               # Defines the size of the field.
 ]
@@ -39,6 +38,7 @@ PROTO RobocupGoal [
   Solid {
     translation IS translation
     rotation IS rotation
+    locked TRUE
     children [
       DEF HORIZONTAL_POST_TRANS Transform {
         translation 0 0 %{= post_height }%
@@ -46,7 +46,7 @@ PROTO RobocupGoal [
         children [
           Shape {
             appearance DEF POST_APP PBRAppearance {
-              baseColor IS frameColor
+              baseColor 1 1 1
               metalness 0
               roughness 0.2
             }
@@ -91,7 +91,7 @@ PROTO RobocupGoal [
         appearance DEF NET_APP PBRAppearance {
           baseColor IS netColor
           baseColorMap ImageTexture {
-            url "../../../../objects/robotstadium/protos/textures/net.png"
+            url "textures/net.png"
             filtering 0
           }
           metalness 0
@@ -260,6 +260,5 @@ PROTO RobocupGoal [
         }
       ]
     }
-    locked TRUE
   }
 }

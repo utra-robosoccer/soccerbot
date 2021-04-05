@@ -17,9 +17,10 @@ path = rospack.get_path("soccer_webots")
 mode = "normal"
 batch = ""
 no_rendering = ""
-
-world_name = "flat_world.wbt"
-arguments = ["webots",
+print(os.path.join(os.environ['WEBOTS_HOME'], 'webots'))
+print(os.environ['PYTHONPATH'])
+world_name = "kid.wbt"
+arguments = [os.path.join(os.environ['WEBOTS_HOME'], 'webots'),
              batch,
              no_rendering,
              path + "/worlds/" + world_name]

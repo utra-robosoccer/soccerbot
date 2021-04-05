@@ -1,10 +1,10 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 1d8cd664bc4b76d0c28f390af26e6f03
+protoFileHash: 7082db6ce2722124012cbc7acf2fce45
 needsRobotAncestor: 0
 baseType: Solid
 slotType: 
 parameters: translation,rotation,name,size,turfPhysics
-tags: static
+tags: 
 license:  Apache License 2.0
 licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
 documentationUrl: 
