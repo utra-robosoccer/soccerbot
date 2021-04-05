@@ -37,6 +37,8 @@ before_install:
   - sudo apt-get install -y python3-rosdep
   - sudo rosdep init
   - rosdep update --include-eol-distros  # Support EOL distros.
+  - sudo apt-get install -y python3-catkin-lint python3-pip
+  - pip3 install osrf-pycommon
 
 # Create a catkin workspace with the package under integration.
 install:
