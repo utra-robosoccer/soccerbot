@@ -4,6 +4,9 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="soccerbot">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
   <link name="torso">
     <inertial>
       <mass value="1.529"/>
@@ -821,13 +824,7 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="imu_link">
-    <inertial>
-      <mass value="0.01"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="6.6e-7" ixy="0" ixz="0" iyy="6.6e-7" iyz="0" izz="6.6e-7"/>
-    </inertial>
-  </link>
+  <link name="imu_link"/>
   <joint name="torso_imu" type="fixed">
     <parent link="torso"/>
     <child link="imu_link"/>
@@ -859,13 +856,7 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="camera">
-    <inertial>
-      <mass value="0"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
-    </inertial>
-  </link>  
+  <link name="camera"/>
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
