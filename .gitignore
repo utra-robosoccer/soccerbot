@@ -15,3 +15,5 @@ soccer_control_generated
 
 # Windows and Mac files
 .DS_Store
+
+cmake-build-debug

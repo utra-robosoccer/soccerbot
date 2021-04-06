@@ -1,7 +1,9 @@
+osrf-pycommon
 pip>=21.0.1
 pybullet
 matplotlib>=3.4.0
 numpy>=1.20.2
 roslibpy
 scipy>=1.6.2
-rospy
+prettytable
+serial
