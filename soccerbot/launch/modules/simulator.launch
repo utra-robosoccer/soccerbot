@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-<!--  <param name="/use_sim_time" value="true"/>-->
-
+  <env name="WEBOTS_HOME" value="/usr/local/webots" />
   <include file="$(find webots_ros)/launch/webots.launch">
     <arg name="world" value="$(find soccer_webots)/worlds/flat_world.wbt"/>
     <arg name="mode" value="realtime"/>
