@@ -7,7 +7,5 @@
         args="--robot_name $(arg robot_name) ">
 
   </node>
-  <node  pkg="soccer_webots" type="odom_broadcaster.py" name="odom_broadcaster" output="screen"
-         args="--robot_name $(arg robot_name) ">
-  </node>
+
 </launch>

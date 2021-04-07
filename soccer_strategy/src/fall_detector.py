@@ -30,7 +30,7 @@ def imu_callback(msg, pub):
         pub.publish(ROBOT_STATE.value)
         msg = String()
         msg.data = "getupfront"
-        get_up.publish(msg)
+        #get_up.publish(msg)
 
     if pitch < -ANGLE_THRESHOLD and ROBOT_STATE == State.STANDING:
         ROBOT_STATE = State.FALL_BACK
