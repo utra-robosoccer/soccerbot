@@ -8,6 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   gazebo_ros_control
   tf2_ros
+        rospy
+        sensor_msgs
+        rosgraph_msgs
+        std_msgs
 )
 
 catkin_python_setup()

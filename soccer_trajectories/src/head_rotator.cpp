@@ -1,13 +1,10 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
+#include <sensor_msgs/JointState.h>
 #include <tf2_ros/transform_listener.h>
-#include <webots_ros/Int32Stamped.h>
 
-#include <webots_ros/set_float.h>
-#include <webots_ros/set_int.h>
-#include <webots_ros/Float64Stamped.h>
-#include <webots_ros/robot_get_device_list.h>
+
 
 #include <std_msgs/String.h>
 
@@ -20,50 +17,23 @@ class BallDetector {
     ros::NodeHandle n;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
-    ros::ServiceClient head_rotator_0_Client;
-    webots_ros::set_float head_rotator_0_Srv;
 
-    ros::ServiceClient head_rotator_1_Client;
-    webots_ros::set_float head_rotator_1_Srv;
-
+    ros::Publisher head_rotator;
 
 
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
     int last_t = 0;
-    int controllerCount;
-    std::vector<std::string> controllerList;
-    std::string controllerName;
+
 
 
 public:
-    ros::ServiceClient timeStepClient;
-    webots_ros::set_int timeStepSrv;
+
 
     BallDetector() : tfListener(tfBuffer) {
         //signal(SIGINT, BallDetector::quit);
+        head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
 
-
-        while (n.hasParam("controller_name") == false) {
-
-            ros::spinOnce();
-            ros::Duration(0.5).sleep();
-
-        }
-
-        ros::spinOnce();
-        n.getParam("controller_name",controllerName);
-
-
-
-
-        head_rotator_0_Client = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_0/set_position");
-        head_rotator_1_Client = n.serviceClient<webots_ros::set_float>("/" + controllerName + "/head_motor_1/set_position");
-
-
-
-        timeStepClient = n.serviceClient<webots_ros::set_int>("/" + controllerName + "/robot/time_step");
-        timeStepSrv.request.value = TIME_STEP;
 
     }
     // catch names of the controllers availables on ROS network
@@ -85,13 +55,14 @@ public:
         }*/
 
         if (!has_pose) {
-
-
-            head_rotator_0_Srv.request.value = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);;
-            head_rotator_1_Srv.request.value = 0.6f;
+            sensor_msgs::JointState js;
+            js.name.push_back("head_motor_0");
+            js.name.push_back("head_motor_1");
+            js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
+            js.position.push_back(0.6f);
+            head_rotator.publish(js);
             last_t += 1;
-            if (!head_rotator_0_Client.call(head_rotator_0_Srv) || !head_rotator_1_Client.call(head_rotator_1_Srv) || !head_rotator_0_Srv.response.success || !head_rotator_1_Srv.response.success)
-                ROS_ERROR("Failed to send new position commands to the robot.");
+
         }
         else {
             has_pose = false;
@@ -103,21 +74,17 @@ public:
 
 
 int main(int argc, char **argv) {
-    ros::ServiceClient timeStepClient;
-    webots_ros::set_int timeStepSrv;
-    ros::init(argc, argv, "ball_detector", ros::init_options::AnonymousName);
+    ros::init(argc, argv, "ball_detector");
     BallDetector ballDetector;
 
-    //ros::Rate r(100);
+    ros::Rate r(100);
     while (ros::ok()) {
         ballDetector.move_head();
-        if (!ballDetector.timeStepClient.call(ballDetector.timeStepSrv) || !ballDetector.timeStepSrv.response.success)
-            ROS_ERROR("Failed to call service time_step for next step.");
-        ros::spinOnce();
+        r.sleep();
     }
-    timeStepSrv.request.value = 0;
-    timeStepClient.call(timeStepSrv);
-    ros::shutdown();
+    ros::spin();
+
+
     return 0;
 }
 /*static int controllerCount;
