@@ -1,0 +1,19 @@
+<launch>
+<node pkg="rostopic" type="rostopic" name="odom_broadcaster"
+      args="pub /robot1/odom nav_msgs/Odometry
+        '{header: {seq: 0, stamp: { secs: 0, nsecs: 0}, frame_id: 'odom'},child_frame_id: 'base_footprint',
+        pose:
+          {pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}},
+          covariance:      [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]},
+        twist:
+          {twist: {linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}
+          ,covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}' --once"
+      output="screen"/>
+</launch>

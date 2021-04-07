@@ -23,10 +23,14 @@ def imu_callback(msg, pub):
 
     # We want to publish once on state transition
     if pitch > ANGLE_THRESHOLD and ROBOT_STATE == State.STANDING:
+        get_up = rospy.Publisher('command', String, queue_size=1, latch=True)
         ROBOT_STATE = State.FALL_FRONT
         PUBLISHED_STANDING = False
         FIRST_STANDING = None
         pub.publish(ROBOT_STATE.value)
+        msg = String()
+        msg.data = "getupfront"
+        get_up.publish(msg)
 
     if pitch < -ANGLE_THRESHOLD and ROBOT_STATE == State.STANDING:
         ROBOT_STATE = State.FALL_BACK
@@ -47,7 +51,7 @@ def imu_callback(msg, pub):
 def main():
     rospy.init_node('fall_detector')
     pub = rospy.Publisher('fall_state', String, queue_size=10, latch=True)
-    rospy.Subscriber('imu', Imu, imu_callback, pub)
+    rospy.Subscriber('imu_data', Imu, imu_callback, pub)
     rospy.spin()
 
 if __name__ == '__main__':

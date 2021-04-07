@@ -43,13 +43,13 @@ PROTO Soccerbot [
       Soccerbot_torso_5Mesh {
       }
       Accelerometer {
-        name "imu_raw accelerometer"
+        name "imu accelerometer"
       }
       Gyro {
-        name "imu_raw gyro"
+        name "imu gyro"
       }
       Compass {
-        name "imu_raw compass"
+        name "imu compass"
       }
 
 
