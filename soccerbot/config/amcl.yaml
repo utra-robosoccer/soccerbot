@@ -10,4 +10,4 @@ initial_cov_yy: 1.0
 odom_frame_id: "odom"
 base_frame_id: "base_camera"
 global_frame_id: "world"
-transform_tolerance: 0.1//
+transform_tolerance: 0.1

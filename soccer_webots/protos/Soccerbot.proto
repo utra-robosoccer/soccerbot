@@ -10,10 +10,9 @@ PROTO Soccerbot [
   field  SFString    name            "Soccerbot"  # Is `Robot.name`.
   field  SFString    controller      "void"       # Is `Robot.controller`.
   field  MFString    controllerArgs  [
-    "--name=my_robot"
-    "--clock"
-    "--synchronize"
-"--use-sim-time"
+
+
+
     ]           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
@@ -44,20 +43,20 @@ PROTO Soccerbot [
       Soccerbot_torso_5Mesh {
       }
       Accelerometer {
-        name "imu_raw accelerometer"
+        name "imu accelerometer"
       }
       Gyro {
-        name "imu_raw gyro"
+        name "imu gyro"
       }
       Compass {
-        name "imu_raw compass"
+        name "imu compass"
       }
 
 
 
       HingeJoint {
         jointParameters HingeJointParameters {
-          axis 0.000000 -1.000000 0.000000
+          axis 0.000000 -1.00000 0.000000
           anchor -0.015700 0.072500 0.000000
           dampingConstant 0.01
           staticFriction 0.1
@@ -76,7 +75,7 @@ PROTO Soccerbot [
         ]
         endPoint Solid {
           translation -0.015700 0.072500 0.000000
-          rotation 0.000000 1.000000 0.000000 0.000000
+          rotation 0.000000 -1.00000 0.000000 0.000000
           children [
             Soccerbot_left_bicep_0Mesh {
             }

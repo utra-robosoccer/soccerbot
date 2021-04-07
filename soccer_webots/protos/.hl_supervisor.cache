@@ -1,6 +1,6 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 2db74a5b06c5cbd2905cc12bc237c172
-needsRobotAncestor: 1
+protoFileHash: 72ddc52a1f14f5e1f99afcf67507dd63
+needsRobotAncestor: 0
 baseType: Robot
 slotType: 
 parameters: translation,rotation,name,controller,controllerArgs,customData,supervisor,synchronization,selfCollision
@@ -8,4 +8,4 @@ tags:
 license:  Apache License 2.0
 licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
 documentationUrl: 
-info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\sSoccerbot\nExtracted\sfrom:\ssoccerbot.urdf\n
+info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\sWolfgang\nExtracted\sfrom:\swolfgang_new.urdf\n
