@@ -50,13 +50,17 @@ class RobotController:
             self.sensors.append(self.robot_node.getDevice(motor_name + sensor_postfix))
             self.sensors[-1].enable(self.timestep)
 
+        self.accel = self.robot_node.getDevice(accel_name)
+        self.accel.enable(self.timestep)
+        self.gyro = self.robot_node.getDevice(gyro_name)
+        self.gyro.enable(self.timestep)
         self.camera = self.robot_node.getDevice(camera_name)
         self.camera.enable(self.timestep)
 
         clock_topic = base_ns + "/clock"
         rospy.Subscriber(base_ns + '/all_motor', JointState, self.all_motor_callback)
-        self.pub_imu = rospy.Publisher(base_ns + "/imu/data_raw", Imu, queue_size=1)
-
+        self.pub_imu = rospy.Publisher(base_ns + "/imu_raw", Imu, queue_size=1)
+        self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
         self.pub_cam_info = rospy.Publisher(base_ns + "/camera/camera_info", CameraInfo, queue_size=1, latch=True)
 
@@ -94,40 +98,14 @@ class RobotController:
 
     def publish_ros(self):
         self.publish_camera()
+        self.publish_joint_states()
+        self.publish_imu()
 
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
             motor_index = self.external_motor_names.index(name)
             self.motors[motor_index].setPosition(msg.position[i])
         pass
-
-    '''def command_cb(self, command: JointCommand):
-        for i, name in enumerate(command.joint_names):
-            try:
-                motor_index = self.external_motor_names.index(name)
-                self.motors[motor_index].setPosition(command.positions[i])
-                if len(command.velocities) == 0 or command.velocities[i] == -1:
-                    self.motors[motor_index].setVelocity(self.motors[motor_index].getMaxVelocity())
-                else:
-                    self.motors[motor_index].setVelocity(command.velocities[i])
-                if not len(command.accelerations) == 0:
-                    self.motors[motor_index].setAcceleration(command.accelerations[i])
-
-            except ValueError:
-                print(f"invalid motor specified ({name})")
-
-    def get_joint_state_msg(self):
-        js = JointState()
-        js.name = []
-        js.header.stamp = rospy.Time.from_seconds(self.time)
-        js.position = []
-        js.effort = []
-        for i in range(len(self.sensors)):
-            js.name.append(self.external_motor_names[i])
-            value = self.sensors[i].getValue()
-            js.position.append(value)
-            js.effort.append(self.motors[i].getTorqueFeedback())
-        return js'''
 
     def publish_camera(self):
         img_msg = Image()
@@ -141,5 +119,43 @@ class RobotController:
         img_msg.data = img
         self.pub_cam.publish(img_msg)
 
+    def publish_imu(self):
+        self.pub_imu.publish(self.get_imu_msg(head=False))
+
+    def get_imu_msg(self, head=False):
+        msg = Imu()
+        msg.header.stamp = rospy.Time.from_seconds(self.time)
+
+        msg.header.frame_id = "imu_link"
+
+        # change order because webots has different axis
+
+        accel_vels = self.accel.getValues()
+        msg.linear_acceleration.x = accel_vels[0]
+        msg.linear_acceleration.y = accel_vels[1]
+        msg.linear_acceleration.z = accel_vels[2]
+        gyro_vels = self.gyro.getValues()
+        msg.angular_velocity.x = gyro_vels[0]
+        msg.angular_velocity.y = gyro_vels[1]
+        msg.angular_velocity.z = gyro_vels[2]
+
+        return msg
+
     def get_image(self):
         return self.camera.getImage()
+
+    def get_joint_state_msg(self):
+        js = JointState()
+        js.name = []
+        js.header.stamp = rospy.Time.from_seconds(self.time)
+        js.position = []
+        js.effort = []
+        for i in range(len(self.sensors)):
+            js.name.append(self.external_motor_names[i])
+            value = self.sensors[i].getValue()
+            js.position.append(value)
+            js.effort.append(self.motors[i].getTorqueFeedback())
+        return js
+
+    def publish_joint_states(self):
+        self.pub_js.publish(self.get_joint_state_msg())

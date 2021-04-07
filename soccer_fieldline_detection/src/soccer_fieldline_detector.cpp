@@ -103,12 +103,12 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         tf2::Matrix3x3 m(q);
         m.getRPY(roll, pitch, yaw);
         //Draw black box on screen based on the pitch of the camera
-        cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
-        cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        //cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
+        //cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
 
         // Rectangle only for simulation
-        cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
-        cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
+        //cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
+        //cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
 
         HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 

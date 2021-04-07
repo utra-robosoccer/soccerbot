@@ -12,6 +12,7 @@
     <node  pkg="soccer_webots" type="start.sh" name="webots_sim" output="screen"  />
 
 
+
     <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns="robot1">
         <arg name="robot_name" value="robot1"/>
 
