@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <launch>
-  <env name="WEBOTS_HOME" value="/usr/local/webots" />
-  <include file="$(find webots_ros)/launch/webots.launch">
-    <arg name="world" value="$(find soccer_webots)/worlds/flat_world.wbt"/>
-    <arg name="mode" value="realtime"/>
-    <arg name="no_gui" value="false"/>
+  <!-- start Webots -->
+  <arg name="no_gui" default="false," doc="Start Webots with minimal GUI"/>
+  <arg name="world" default="" doc="Path to the world to load"/>
+  <arg name="mode" default="realtime" doc="Startup mode"/>
+
+  <include file="$(find soccer_webots)/launch/simulation_webot.launch" ns="robot1">
+
   </include>
+  <param name="/simulation_active" value="true"/>
+  <param name="/use_sim_time" value="true"/>
+
+  <arg name="duration" default="20" doc="Duration in seconds"/>
+  <arg name="auto_close" default="false" doc="Startup mode"/>
 
 </launch>
