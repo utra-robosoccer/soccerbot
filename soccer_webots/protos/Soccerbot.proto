@@ -596,7 +596,72 @@ PROTO Soccerbot [
                                         children [
                                           Soccerbot_left_foot_0Mesh {
                                           }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_1"
+                                            type "force-3d"
+                                            resolution -1
+                          			            boundingObject Transform {
+                                              translation 0.03975 0.025 -0.0285
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
+                                            }
+                                  		      physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                  		      }
+					                                }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_2"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation 0.03975 -0.025 -0.0285
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_3"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 -0.025 -0.0285
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_4"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 0.025 -0.0285
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
                                         ]
+
                                         name "left_foot"
                                         boundingObject Transform {
                                           translation 0.003 0.00 -0.02
@@ -1058,9 +1123,9 @@ PROTO Soccerbot [
                                             type "force-3d"
                                             resolution -1
                           			            boundingObject Transform {
-                                              translation 0.041 0.029 -0.0225
+                                              translation 0.03975 0.025 -0.0285
                                               rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
                                             }
                                   		      physics Physics {
                                               density -1
@@ -1074,9 +1139,9 @@ PROTO Soccerbot [
                                             type "force-3d"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation 0.041 -0.02 -0.0225
+                                              translation 0.03975 -0.025 -0.0285
                                               rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1090,9 +1155,9 @@ PROTO Soccerbot [
                                             type "force-3d"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.037 -0.02 -0.0225
+                                              translation -0.03375 -0.025 -0.0285
                                               rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1106,9 +1171,9 @@ PROTO Soccerbot [
                                             type "force-3d"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.037 0.029 -0.0225
+                                              translation -0.03375 0.025 -0.0285
                                               rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0057 } ]
+                                              children [ Box { size 0.01125 0.01125 0.0114 } ]
                                             }
                                             physics Physics {
                                               density -1
