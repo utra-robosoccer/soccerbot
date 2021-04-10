@@ -1216,7 +1216,7 @@ PROTO Soccerbot [
             maxVelocity 1.0
             minPosition -1.57079632679
             maxPosition 1.57079632679
-            maxTorque 1.5
+            maxTorque 2.5
           }
           PositionSensor {
             name "head_motor_0_sensor"
@@ -1241,7 +1241,7 @@ PROTO Soccerbot [
                   maxVelocity 1.0
                   minPosition -2.35619449019
                   maxPosition 2.35619449019
-                  maxTorque 1.5
+                  maxTorque 2.5
                 }
                 PositionSensor {
                   name "head_motor_1_sensor"
