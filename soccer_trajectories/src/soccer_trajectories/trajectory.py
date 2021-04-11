@@ -51,6 +51,8 @@ class Trajectory:
         publishers = {
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
         # r = rospy.Rate(10)
+
+
         '''while rospy.has_param("/robot1/controller_name") == False:
             r.sleep()
 
