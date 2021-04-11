@@ -2,11 +2,11 @@
 import os
 import math
 import time
-
+from visualization_msgs.msg import Marker
 from controller import Robot, Node, Field
 
 import rospy
-from geometry_msgs.msg import PointStamped
+from geometry_msgs.msg import PoseArray, Pose, Point
 from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 
@@ -43,6 +43,17 @@ class RobotController:
         gyro_name = "imu gyro"
         camera_name = "camera"
 
+        self.pressure_sensor_names = ["right_leg_foot_sensor_1", "right_leg_foot_sensor_2", "right_leg_foot_sensor_3",
+                                      "right_leg_foot_sensor_4",
+                                      "left_leg_foot_sensor_1", "left_leg_foot_sensor_2", "left_leg_foot_sensor_3",
+                                      "left_leg_foot_sensor_4"]
+        self.pressure_sensors = []
+        self.external_pressure_names = self.pressure_sensor_names
+        for name in self.pressure_sensor_names:
+            sensor = self.robot_node.getDevice(name)
+            sensor.enable(self.timestep)
+            self.pressure_sensors.append(sensor)
+
         # self.robot_node = self.supervisor.getFromDef(self.robot_node_name)
         for motor_name in self.motor_names:
             self.motors.append(self.robot_node.getDevice(motor_name))
@@ -63,6 +74,10 @@ class RobotController:
         self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
         self.pub_cam_info = rospy.Publisher(base_ns + "/camera/camera_info", CameraInfo, queue_size=1, latch=True)
+
+        self.pressure_sensors_pub = {
+            i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
+
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
@@ -95,17 +110,18 @@ class RobotController:
     def step(self):
         self.step_sim()
         self.publish_ros()
+        # rospy.loginfo("fgdg%f", self.pressure_sensors[0].getValues()[0])
 
     def publish_ros(self):
         self.publish_camera()
         self.publish_joint_states()
         self.publish_imu()
+        self.get_pressure_message()
 
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
             motor_index = self.external_motor_names.index(name)
             self.motors[motor_index].setPosition(msg.position[i])
-        pass
 
     def publish_camera(self):
         img_msg = Image()
@@ -159,3 +175,77 @@ class RobotController:
 
     def publish_joint_states(self):
         self.pub_js.publish(self.get_joint_state_msg())
+
+    def get_pressure_message(self):
+
+        for i in range(8):
+            current_time = rospy.Time.from_sec(self.time)
+
+            marker_object = Marker()
+            if i < 4:
+                marker_object.header.frame_id = "left_foot"
+            else:
+                marker_object.header.frame_id = "right_foot"
+
+            marker_object.header.stamp = current_time
+            marker_object.ns = "Soccer_bot"
+            marker_object.id = 3
+            marker_object.type = Marker.ARROW
+            marker_object.action = Marker.ADD
+            if i == 0 or i == 4:
+                tip = Point()
+                tip.x = 0.05
+                tip.y = 0.05
+                tip.z = 0
+                tail = Point()
+                tail.x = 0.05
+                tail.y = 0.05
+                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
+            elif i == 1 or i == 5:
+                tip = Point()
+                tip.x = -0.05
+                tip.y = 0.05
+                tip.z = 0
+                tail = Point()
+                tail.x = -0.05
+                tail.y = 0.05
+                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
+            elif i == 2 or i == 6:
+                tip = Point()
+                tip.x = 0.05
+                tip.y = -0.05
+                tip.z = 0
+                tail = Point()
+                tail.x = 0.05
+                tail.y = -0.05
+                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
+            elif i == 3 or i == 7:
+                tip = Point()
+                tip.x = -0.05
+                tip.y = -0.05
+                tip.z = 0
+                tail = Point()
+                tail.x = -0.05
+                tail.y = -0.05
+                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
+
+            marker_object.points = [tail, tip]
+
+            marker_object.color.r = 0
+            marker_object.color.g = 0
+            marker_object.color.b = 1
+            marker_object.color.a = 1.0
+
+            marker_object.scale.x = 0.01
+            marker_object.scale.y = 0.01
+            marker_object.scale.z = 0.01
+
+            marker_object.pose.orientation.x = 0
+            marker_object.pose.orientation.y = 0
+            marker_object.pose.orientation.z = 0
+            marker_object.pose.orientation.w = 1
+
+            self.pressure_sensors_pub[i].publish(marker_object)
+
+
+
