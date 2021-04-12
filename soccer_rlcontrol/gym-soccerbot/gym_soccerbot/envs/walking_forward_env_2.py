@@ -15,6 +15,41 @@ import gym_soccerbot
 
 logger = logging.getLogger(__name__)
 
+class RollingAvg:
+    def __init__(self, window, threshold, angvel_coeff):
+        self.window = window
+        self.threshold = threshold
+        self.angvel_coeff = angvel_coeff
+        self.x_buffer = np.zeros((self.window,))
+        self.y_buffer = np.zeros((self.window,))
+        self.za_buffer = np.zeros((self.window,))
+        self.count_down = self.window
+
+    def update(self, new_x, new_y, new_za):
+        self.x_buffer = np.roll(self.x_buffer, 1)
+        self.y_buffer = np.roll(self.y_buffer, 1)
+        self.za_buffer = np.roll(self.y_buffer, 1)
+        self.x_buffer[0] = new_x ** 2
+        self.y_buffer[0] = new_y ** 2
+        self.za_buffer[0] = new_za ** 2
+        if self.count_down != 0:
+            self.count_down -= 1
+
+    def get_stats(self):
+        return np.average(self.x_buffer), np.average(self.y_buffer), np.average(self.za_buffer)
+
+    def is_moving(self):
+        if self.count_down > 0:
+            return True
+
+        stats = self.get_stats()
+        if (stats[0] + stats[1] + (stats[2] * self.angvel_coeff)) < self.threshold:
+            #  logger.info(f'x_agg: {stats[0]:.3f}, y_agg:{stats[1]:.3f}, za_agg: {stats[2]:.3f}')
+            # print(f'x_agg: {stats[0]:.3f}, y_agg:{stats[1]:.3f}, za_agg: {stats[2]:.3f}')
+            return False
+        else:
+            return True
+
 
 class Links(enum.IntEnum):
     TORSO = -1
@@ -62,11 +97,14 @@ class Joints(enum.IntEnum):
     IMU = 19
 
 
-class WalkingForward(gym.Env):
+class WalkingForwardV2(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array'], 'video.frames_per_second': 50}
 
 
-    def __init__(self, renders=False):
+    def __init__(self, renders=False, dtype=np.float64, warm_up=True, reward_scale=1e2, goal=[1, 0]):
+        self.dtype = dtype
+        self.reward_scale = reward_scale
+
         # start the bullet physics server
         self._renders = renders
         self._render_height = 200
@@ -75,17 +113,17 @@ class WalkingForward(gym.Env):
 
         self.prev_lin_vel = np.array([0, 0, 0])
         self.gravity = [0, 0, -9.81]
-        self.STANDING_HEIGHT = 0.32
-        self.goal_xy = [1, 0]
+        self.STANDING_HEIGHT = 0.27 #0.35 #0.32
+        self.goal_xy = goal
 
-        self.WARM_UP_STEPS = 0
+        self.WARM_UP = warm_up
 
         # TODO Change action space
         self.JOINT_DIM = 16
-        joint_limit_high = self._joint_limit_high()
-        joint_limit_low = self._joint_limit_low()
+        self.joint_limit_high = self._joint_limit_high()
+        self.joint_limit_low = self._joint_limit_low()
 
-        self.action_space = spaces.Box(low=joint_limit_low, high=joint_limit_high, dtype=np.float32) #, shape=(1, self.JOINT_DIM)
+        self.action_space = spaces.Box(low=self.joint_limit_low, high=self.joint_limit_high, dtype=self.dtype) #, shape=(1, self.JOINT_DIM)
 
         # TODO Change observation space
 
@@ -101,12 +139,13 @@ class WalkingForward(gym.Env):
 
         self.observation_limit_high = np.concatenate((self.joint_limit, self.imu_limit, self.pose_limit, self.feet_limit))
         self.observation_limit_low = np.concatenate((-self.joint_limit, -self.imu_limit, -self.pose_limit, -self.feet_limit))
-        self.observation_space = spaces.Box(low=self.observation_limit_low, high=self.observation_limit_high, dtype=np.float32) #shape=(1, observation_dim),
+        self.observation_space = spaces.Box(low=self.observation_limit_low, high=self.observation_limit_high, dtype=self.dtype) #shape=(1, observation_dim),
 
         self.seed()
-        #    self.reset()
+        self.reset()
         self.viewer = None
         self._configure()
+        # self.st = RollingAvg(256, 0.01, 0.01)
 
     def do_render(self, rend):
         self._renders = bool(rend)
@@ -126,13 +165,14 @@ class WalkingForward(gym.Env):
         # lin_vel = [0, 0, 0]
         # ang_vel = [0, 0, 0]
         #p.getBaseVelocity(self.soccerbotUid)
+        # self.st.update(lin_vel[0], lin_vel[1], ang_vel[2])
         lin_vel = np.array(lin_vel, dtype = np.float32)
 
         lin_acc = (lin_vel - self.prev_lin_vel) / self.timeStep
         lin_acc -= self.gravity
-        rot_mat = np.array(pb.getMatrixFromQuaternion(quart_link), dtype=np.float32).reshape((3,3))
+        rot_mat = np.array(pb.getMatrixFromQuaternion(quart_link), dtype=self.dtype).reshape((3,3))
         lin_acc = np.matmul(rot_mat, lin_acc)
-        ang_vel = np.array(ang_vel, dtype=np.float32)
+        ang_vel = np.array(ang_vel, dtype=self.dtype)
         self.prev_lin_vel = lin_vel
         #print(f'lin_acc = {lin_acc}', end="\t\t")
         #print(f'lin_acc = {lin_acc}')
@@ -142,7 +182,7 @@ class WalkingForward(gym.Env):
     def _global_pos(self):
         p = self._p
         pos, _ = p.getBasePositionAndOrientation(self.soccerbotUid)
-        return np.array(pos, dtype=np.float32)
+        return np.array(pos, dtype=self.dtype)
 
     def _feet(self):
         """
@@ -165,10 +205,10 @@ class WalkingForward(gym.Env):
         left_center = np.array(pb.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.LEFT_LEG_6)[4])
         right_tr = np.array(pb.getMatrixFromQuaternion(
             pb.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.RIGHT_LEG_6)[5])
-                                , dtype=np.float32).reshape((3,3))
+                                , dtype=self.dtype).reshape((3,3))
         left_tr = np.array(pb.getMatrixFromQuaternion(
             pb.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.LEFT_LEG_6)[5])
-                                , dtype=np.float32).reshape((3,3))
+                                , dtype=self.dtype).reshape((3,3))
         for point in right_pts:
             index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
             locations[index[1] + index[0] * 2] = 1.
@@ -176,32 +216,6 @@ class WalkingForward(gym.Env):
             index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
             locations[index[1] + (index[0] * 2) + 4] = 1.
         return np.array(locations)
-
-    def _standing_poses(self):
-        standing_poses = [None] * (self.JOINT_DIM + 2)
-        standing_poses[Joints.RIGHT_LEG_1] = 0.0
-        standing_poses[Joints.RIGHT_LEG_2] = 0.05
-        standing_poses[Joints.RIGHT_LEG_3] = 0.0
-        standing_poses[Joints.RIGHT_LEG_4] = 0.0
-        standing_poses[Joints.RIGHT_LEG_5] = 0.0
-        standing_poses[Joints.RIGHT_LEG_6] = -0.05
-
-        standing_poses[Joints.LEFT_LEG_1] = 0.0
-        standing_poses[Joints.LEFT_LEG_2] = 0.05
-        standing_poses[Joints.LEFT_LEG_3] = 0.0
-        standing_poses[Joints.LEFT_LEG_4] = 0.0
-        standing_poses[Joints.LEFT_LEG_5] = 0.0
-        standing_poses[Joints.LEFT_LEG_6] = -0.05
-
-        standing_poses[Joints.HEAD_1] = 0.0
-        standing_poses[Joints.HEAD_2] = 0.0
-
-        standing_poses[Joints.LEFT_ARM_1] = -0.5
-        standing_poses[Joints.LEFT_ARM_2] = 2.8
-        standing_poses[Joints.RIGHT_ARM_1] = -0.5
-        standing_poses[Joints.RIGHT_ARM_2] = 2.8
-
-        return standing_poses
 
     def _joint_limit_high(self):
         joint_limit_high = np.array([0] * self.JOINT_DIM)
@@ -253,27 +267,72 @@ class WalkingForward(gym.Env):
 
         return joint_limit_low * (-np.pi)
 
+
+    def _standing_poses(self, random=False):
+        standing_poses = [None] * (self.JOINT_DIM + 2)
+        standing_poses[Joints.RIGHT_LEG_1] = 0.0
+        standing_poses[Joints.RIGHT_LEG_2] = 0.05
+        standing_poses[Joints.RIGHT_LEG_3] = 0.0
+        standing_poses[Joints.RIGHT_LEG_4] = 0.0
+        standing_poses[Joints.RIGHT_LEG_5] = 0.0
+        standing_poses[Joints.RIGHT_LEG_6] = -0.05
+
+        standing_poses[Joints.LEFT_LEG_1] = 0.0
+        standing_poses[Joints.LEFT_LEG_2] = 0.05
+        standing_poses[Joints.LEFT_LEG_3] = 0.0
+        standing_poses[Joints.LEFT_LEG_4] = 0.0
+        standing_poses[Joints.LEFT_LEG_5] = 0.0
+        standing_poses[Joints.LEFT_LEG_6] = -0.05
+
+        standing_poses[Joints.HEAD_1] = 0.0
+        standing_poses[Joints.HEAD_2] = 0.0
+
+        standing_poses[Joints.LEFT_ARM_1] = -0.5
+        standing_poses[Joints.LEFT_ARM_2] = 2.8
+        standing_poses[Joints.RIGHT_ARM_1] = -0.5
+        standing_poses[Joints.RIGHT_ARM_2] = 2.8
+
+        if random:
+            standing_poses[0:self.JOINT_DIM] = standing_poses[0:self.JOINT_DIM] + \
+                    0.6 * self.np_random.uniform(-0., 1., np.size(standing_poses[0:self.JOINT_DIM])) * (self._joint_limit_high() - standing_poses[0:self.JOINT_DIM]) + \
+                    0.6 * self.np_random.uniform(-0., 1., np.size(standing_poses[0:self.JOINT_DIM])) * (self._joint_limit_low() - standing_poses[0:self.JOINT_DIM])
+            standing_poses[0:self.JOINT_DIM] = np.clip(standing_poses[0:self.JOINT_DIM], self.joint_limit_low, self.joint_limit_high)
+        return standing_poses
+
+    @staticmethod
+    def _standing_poses2():
+        hardcoded_angles = \
+            [2.827433388230814, 0, 2.827433388230814, 0, 0.0016725139646804887, 0.0960802594363035,
+             0.5793527147847758, -1.2298418591359193, 0.6509027637698601, -0.06231839374272367,
+             0.00030337575088856816, -0.10382957319901398, 0.578543334661491, -1.2276210689082445,
+             0.6495736803093827, 0.06684757628616049, 0, 0]
+        return hardcoded_angles
+
+
     def step(self, action):
         p = self._p
-        #if self._renders:
-            #p.configureDebugVisualizer(p.COV_ENABLE_SINGLE_STEP_RENDERING)
-        p.setJointMotorControlArray(bodyIndex=self.soccerbotUid, controlMode=pb.POSITION_CONTROL,
-                                    jointIndices=list(range(0, self.JOINT_DIM, 1)), targetPositions=action,
-                                    targetVelocities=[5.23]*self.JOINT_DIM, forces=[2.3]*self.JOINT_DIM)
-        p.stepSimulation()
+
         feet = self._feet()
         imu = self._imu()
-        joint_states = p.getJointStates(self.soccerbotUid, list(range(0, self.JOINT_DIM, 1)))
-        joints_pos = np.array([state[0] for state in joint_states], dtype=np.float32)
 
-        """
-        From core.py in gym:
-        Returns:
-            observation (object): agent's observation of the current environment
-            reward (float) : amount of reward returned after previous action
-            done (bool): whether the episode has ended, in which case further step() calls will return undefined results
-            info (dict): contains auxiliary diagnostic information (helpful for debugging, and sometimes learning)
-        """
+        # CLIP ACTIONS
+        action = np.clip(action, self.joint_limit_low, self.joint_limit_high)
+
+        p.setJointMotorControlArray(bodyIndex=self.soccerbotUid,
+                                    controlMode=pb.POSITION_CONTROL,
+                                    jointIndices=list(range(0, self.JOINT_DIM, 1)),
+                                    targetPositions=action,
+                                    # targetVelocities=[2*(5/6)*np.pi]*self.JOINT_DIM,
+                                    # positionGains=[4]*self.JOINT_DIM,
+                                    # velocityGains=[0]*self.JOINT_DIM,
+                                    forces=[2.3]*self.JOINT_DIM)
+        # 120Hz
+        p.stepSimulation()
+        p.stepSimulation()
+
+        joint_states = p.getJointStates(self.soccerbotUid, list(range(0, self.JOINT_DIM, 1)))
+        joints_pos = np.array([state[0] for state in joint_states], dtype=self.dtype)
+
         # TODO Observation
         observation = np.concatenate((joints_pos, imu, self._global_pos(), feet))
 
@@ -281,32 +340,36 @@ class WalkingForward(gym.Env):
         # TODO calculate reward
 
         [lin_vel, _] = p.getBaseVelocity(self.soccerbotUid)
-        lin_vel = np.array(lin_vel, dtype=np.float32)[0:2]
+        lin_vel = np.array(lin_vel, dtype=self.dtype)[0:2]
         distance_unit_vec = (self.goal_xy - self._global_pos()[0:2]) \
                             / np.linalg.norm(self.goal_xy - self._global_pos()[0:2])
-        velocity_reward = 10 * np.linalg.norm(np.dot(distance_unit_vec, lin_vel))
-
-        time_penalty = -1
+        velocity_reward = 1000 * np.dot(distance_unit_vec, lin_vel)
+        velocity_reward = np.max(velocity_reward, 0)
+        #time_penalty = -1
         info = dict(end_cond="None")
+        # Fall
         if self._global_pos()[2] < 0.22: #HARDCODE (self.STANDING_HEIGHT / 2): # check z component
             done = True
             reward = -1e4
             info['end_cond'] = "Robot Fell"
         else:
+            # Close to the Goal
             if np.linalg.norm(self._global_pos()[0:2] - self.goal_xy) < 0.05:
                 done = True
-                #reward = 1 / np.linalg.norm(self._global_pos()[0:2] - self.goal_xy)
                 reward = 1e3
                 info['end_cond'] = "Goal Reached"
+            # Out of Bound
             elif np.linalg.norm(self._global_pos()[0:2] - self.goal_xy) > (2 *np.linalg.norm(self.goal_xy)): # out of bound
                 done = True
-                reward = -1e4
+                reward = 0
                 info['end_cond'] = "Robot Out"
+            # Normal case
             else:
                 done = False
-                reward = time_penalty + velocity_reward
+                reward = velocity_reward
+                # reward = time_penalty + velocity_reward
                 #print(f'x = {self._global_pos()[0]}, y = {self._global_pos()[1]}')
-
+        reward /= self.reward_scale
         return observation, reward, done, info
 
     def reset(self):
@@ -323,10 +386,6 @@ class WalkingForward(gym.Env):
             p.resetSimulation()
             # load ramp
 
-            # load soccerbot
-            # p.loadURDF("/home/shahryar/catkin_ws/src/soccer_ws/soccer_description/models/soccerbot_stl.urdf",
-            # p.loadURDF("/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/soccer_description/models/soccerbot_stl.urdf",
-            # "/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/soccer_description/models/soccerbot_stl.urdf",
             urdfBotPath = gym_soccerbot.getModelPath()
             self.soccerbotUid = p.loadURDF(urdfBotPath,
                                            useFixedBase=False,
@@ -338,7 +397,6 @@ class WalkingForward(gym.Env):
                                                  | pb.URDF_USE_SELF_COLLISION
                                                  | pb.URDF_USE_SELF_COLLISION_EXCLUDE_ALL_PARENTS
                                            )
-                            # |p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT)
 
             urdfRootPath = pybullet_data.getDataPath()
             self.planeUid = p.loadURDF(os.path.join(urdfRootPath, "plane_implicit.urdf"),
@@ -376,31 +434,30 @@ class WalkingForward(gym.Env):
         #p.resetJointStates(self.soccerbotUid, list(range(0, 18, 1)), 0)
         #pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         #standing_poses = [0] * (self.JOINT_DIM + 2)
-        standing_poses = self._standing_poses()
+        standing_poses = self._standing_poses(random=True)
         for i in range(self.JOINT_DIM + 2):
-                p.resetJointState(self.soccerbotUid, i, standing_poses[i])
+            p.resetJointState(self.soccerbotUid, i, standing_poses[i])
 
         # WARM UP SIMULATION
-        for _ in range(self.WARM_UP_STEPS):
+        if self.WARM_UP:
+            warm_up = self.np_random.randint(0, 11)
+        for _ in range(warm_up):
+            p.stepSimulation()
             p.stepSimulation()
 
         # TODO set state???
 
         # TODO get observation
+        # self.st = RollingAvg(256, 0.01, 0.01)
         feet = self._feet()
         imu = self._imu()
         joint_states = p.getJointStates(self.soccerbotUid, list(range(0, self.JOINT_DIM, 1)))
-        joints_pos = np.array([state[0] for state in joint_states], dtype=np.float32)
-        start_pos = np.array([0, 0, self.STANDING_HEIGHT], dtype=np.float32)
+        joints_pos = np.array([state[0] for state in joint_states], dtype=self.dtype)
+        start_pos = np.array([0, 0, self.STANDING_HEIGHT], dtype=self.dtype)
         observation = np.concatenate((joints_pos, imu, start_pos, feet))
 
-        #pb.resetSimulation()
+        # Roll Stats
 
-        """
-        From core.py in gym:
-        Returns: 
-            observation (object): the initial observation.
-        """
         if self._renders:
             pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         return observation
@@ -439,12 +496,14 @@ class WalkingForward(gym.Env):
                 renderer=self._p.ER_BULLET_HARDWARE_OPENGL,
                 viewMatrix=view_matrix,
                 projectionMatrix=proj_matrix)
-            # self._p.resetDebugVisualizerCamera(
-            #   cameraDistance=2 * self._cam_dist,
-            #   cameraYaw=self._cam_yaw,
-            #   cameraPitch=self._cam_pitch,
-            #   cameraTargetPosition=base_pos
-            # )
+            '''
+            self._p.resetDebugVisualizerCamera(
+              cameraDistance=2 * self._cam_dist,
+              cameraYaw=self._cam_yaw,
+              cameraPitch=self._cam_pitch,
+              cameraTargetPosition=base_pos
+            )
+            '''
             pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         else:
             px = np.array([[[255, 255, 255, 255]] * self._render_width] * self._render_height, dtype=np.uint8)

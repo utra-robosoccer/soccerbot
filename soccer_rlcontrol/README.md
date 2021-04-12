@@ -57,6 +57,13 @@ Where:
 - `<num_steps>` Defines how many simulation steps the simulation will be running for.
 - `<checkpoint_path>` Is the path mentioned. Replace it with the path discussed above.
 
+## View a (somewhat) trained agent out of the box!
+Simply run the following with virtualenv activated inside the `soccer_rlcontrol` directory!
+```shell script
+rllib rollout --run PPO --env gym_soccerbot:walk-forward-norm-v1 --steps 1000 --config '{"num_gpus": 0, "num_envs_per_worker": 0, "num_workers": 0, "env_config": {"renders": true, "env_name": "gym_soccerbot:walk-forward-v3", "slow": true}}' ./demos/ppo-april11/checkpoint_840/checkpoint-840
+```
+You should see something similar to [this](https://youtu.be/VV2-pMmjHFw).
+The agent was trained using `humanoid-ppo-server.yaml` on AMD Threadripper 1950X with 64GB RAM and RTX 2080Ti with +800M samples (~1 day).
 
 # Refrences
 ## Open AI Gym

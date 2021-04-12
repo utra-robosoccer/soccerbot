@@ -1,0 +1,33 @@
+humanoid-apex-ddpg:
+    env: gym_soccerbot:walk-forward-norm-v1
+    run: APEX_DDPG
+    checkpoint_freq: 20
+    max_failures: 10
+    checkpoint_at_end: true
+    local_dir: ./results/
+    # restore: /home/shahryar/PycharmProjects/DeepRL/results/humanoid-apex-ddpg/APEX_DDPG_gym_soccerbot:walk-forward-norm-v1_f57cd_00000_0_2021-04-11_03-46-00/checkpoint_100/checkpoint-100
+    # restore: /home/shahryar/PycharmProjects/DeepRL/PPO-walk-forward-v22/humanoid-ppo-test/PPO_gym_soccerbot:walk-forward-norm-v0_85884_00000_0_2021-04-07_16-33-33/checkpoint_17420/checkpoint-17420
+    stop:
+        timesteps_total: 100000000
+    config:
+        # Works for both torch and tf.
+        framework: tf
+        eager_tracing: true
+        num_workers: 10
+        # num_cpus_per_worker: 0
+        # num_envs_per_worker: 2
+        horizon: 2048
+        num_gpus: 1
+        gamma: 0.95
+        extra_python_environs_for_driver:
+            OMP_NUM_THREADS: 12
+        env_config:
+            env_name: gym_soccerbot:walk-forward-v3
+        clip_rewards: False
+        exploration_config:
+            ou_base_scale: 1.0
+        n_step: 3
+        target_network_update_freq: 50000
+        tau: 1.0
+        evaluation_interval: 5
+        evaluation_num_episodes: 10

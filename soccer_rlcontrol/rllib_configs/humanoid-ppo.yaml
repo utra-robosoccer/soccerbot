@@ -1,5 +1,5 @@
 humanoid-ppo:
-    env: gym_soccerbot:walk-forward-v1
+    env: gym_soccerbot:walk-forward-norm-v1
     run: PPO
     checkpoint_freq: 20
     max_failures: 10
@@ -9,12 +9,16 @@ humanoid-ppo:
         timesteps_total: 10000000
     config:
         # Works for both torch and tf.
-        framework: torch
-        num_workers: 4
+        framework: tfe
+        # eager: true
+        # eager_tracing: true
+        num_workers: 12
         num_cpus_per_worker: 0
         num_envs_per_worker: 1
-        horizon: 4096
-        num_gpus: 0 # Set to 1 for gpu acceleration
+        horizon: 2048
+        num_gpus: 1 # Set to 1 for gpu acceleration
+        env_config:
+            env_name: gym_soccerbot:walk-forward-v3
 
         # Should use a critic as a baseline (otherwise don't use value baseline;
         # required for using GAE).
@@ -27,13 +31,13 @@ humanoid-ppo:
         # Initial coefficient for KL divergence.
         kl_coeff: 0.2
         # Size of batches collected from each worker.
-        rollout_fragment_length: 4096
+        rollout_fragment_length: 2048
         # Number of timesteps collected for each SGD round. This defines the size
         # of each SGD epoch.
-        train_batch_size: 16384 #4096*4 # 4000
+        train_batch_size: 24576 #8192 #4096*4 # 4000
         # Total SGD batch size across all devices for SGD. This defines the
         # minibatch size within each epoch.
-        sgd_minibatch_size: 8192 #4096*2 # 128
+        sgd_minibatch_size: 2048 #4096*2 # 128
         # Whether to shuffle sequences in the batch when training (recommended).
         shuffle_sequences: True
         # Number of SGD iterations in each outer loop (i.e. number of epochs to
@@ -47,14 +51,14 @@ humanoid-ppo:
         # you set vf_share_layers=True inside your model's config.
         vf_loss_coeff: 1.0
         model:
-            fcnet_hiddens: [256, 256]
-            fcnet_activation: relu
+            fcnet_hiddens: [64, 64]
+            fcnet_activation: tanh
             free_log_std: true
             # Share layers for value function. If you set this to True it's
             # important to tune vf_loss_coeff.
             vf_share_layers: False
         # Coefficient of the entropy regularizer.
-        entropy_coeff: 0.0
+        entropy_coeff: 0.001
         # Decay schedule for the entropy regularizer.
         entropy_coeff_schedule: null
         # PPO clip parameter.
@@ -67,6 +71,6 @@ humanoid-ppo:
         # Target value for KL divergence.
         kl_target: 0.01
         # Whether to rollout complete_episodes or truncate_episodes.
-        batch_mode: truncate_episodes
+        batch_mode: complete_episodes
         # Which observation filter to apply to the observation.
         observation_filter: NoFilter
