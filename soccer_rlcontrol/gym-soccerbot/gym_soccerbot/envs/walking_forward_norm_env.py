@@ -2,9 +2,10 @@ import numpy as np
 from gym import spaces
 from gym_soccerbot.envs.walking_forward_env import WalkingForward
 from gym_soccerbot.envs.walking_forward_env_1 import WalkingForwardV1
+from gym_soccerbot.envs.walking_forward_env_2 import WalkingForwardV2
 
 
-class WalkingForwardNorm(WalkingForwardV1):
+class WalkingForwardNorm(WalkingForwardV2):
     def __init__(self, renders=False, reward_normal_factor=1e4):
         super().__init__(renders)
         self.joint_limit_high = self._joint_limit_high()
