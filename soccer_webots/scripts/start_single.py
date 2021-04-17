@@ -46,6 +46,7 @@ x = 0.0
 y = 0.0
 th = 0.0
 
+
 while not rospy.is_shutdown():
     r.step()
     if temp_bool:
