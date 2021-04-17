@@ -1,7 +1,15 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro name="front_camera" params="origin">
-        <link name="camera" />
+        <link name="camera" >
+            <inertial>
+                <mass value="0.01"/>
+                <origin rpy="0  0  0" xyz="0 0 0"/>
+                <inertia ixx="1e-9" ixy="0" ixz="0"
+                         iyy="1e-9" iyz="0"
+                         izz="1e-9"/>
+            </inertial>
+        </link>
         <joint name="${origin}_camera" type="fixed">
             <parent link="head"/>
             <child link="camera"/>
@@ -10,8 +18,6 @@
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="0" lower="0" upper="0" velocity="0"/>
         </joint>
-        rotation 0.707105 -0.000001 0.707108 3.141591
-        rotation 1.0 0.0 0.0 3.141591
         <gazebo reference="camera">
             <sensor type="camera" name="main_camera" >
                 <always_on>1</always_on>
