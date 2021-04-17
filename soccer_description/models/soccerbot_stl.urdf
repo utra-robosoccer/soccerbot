@@ -824,7 +824,13 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="imu_link"/>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="torso_imu" type="fixed">
     <parent link="torso"/>
     <child link="imu_link"/>
@@ -856,7 +862,13 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="camera"/>
+  <link name="camera">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="head_camera" type="fixed">
     <parent link="head"/>
     <child link="camera"/>
@@ -865,10 +877,6 @@
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
-  
-        rotation 0.707105 -0.000001 0.707108 3.141591
-        rotation 1.0 0.0 0.0 3.141591
-        
   <gazebo reference="camera">
     <sensor name="main_camera" type="camera">
       <always_on>1</always_on>
