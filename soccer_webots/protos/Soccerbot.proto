@@ -11,15 +11,24 @@ PROTO Soccerbot [
   field  SFString    controller      "void"       # Is `Robot.controller`.
   field  MFString    controllerArgs  [
 
-
-
-    ]           # Is `Robot.controllerArgs`.
+  ]           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE         # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE        # Is `Robot.selfCollision`.
 ]
 {
+  %{
+    local backlash = 0.01
+
+    -- TODO: Eric verify motor parameters, we are assuming all motors are mx28
+    local mx28_max_torque = 2.3        -- StallTorque at 11.1V [N.m]
+    local mx28_max_velocity = 5.24     -- [rad/s] ~= 50 rpm
+    local mx28_damping_constant = 0.27 -- [N.m/(rad/s)] (1.30-0.14)/(5.03-0.73) ~= 0.27
+    local mx28_static_friction = 0.80  -- [N.m] ~= 2.3 - (1.3 + 0.27*0.73)
+    local mx28_resolution = 0.00153    -- [rad] ~= 2pi/4096
+  }%
+
   Robot {
     translation IS translation
     rotation IS rotation
@@ -71,6 +80,7 @@ PROTO Soccerbot [
           }
           PositionSensor {
             name "left_arm_motor_0_sensor"
+            resolution %{= mx28_resolution }%
           }
         ]
         endPoint Solid {
@@ -111,6 +121,7 @@ PROTO Soccerbot [
                 }
                 PositionSensor {
                   name "left_arm_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
                 }
               ]
               endPoint Solid {
@@ -180,6 +191,7 @@ PROTO Soccerbot [
           }
           PositionSensor {
             name "right_arm_motor_0_sensor"
+            resolution %{= mx28_resolution }%
           }
         ]
         endPoint Solid {
@@ -220,6 +232,7 @@ PROTO Soccerbot [
                 }
                 PositionSensor {
                   name "right_arm_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
                 }
               ]
               endPoint Solid {
@@ -289,6 +302,7 @@ PROTO Soccerbot [
           }
           PositionSensor {
             name "left_leg_motor_0_sensor"
+            resolution %{= mx28_resolution }%
           }
         ]
         endPoint Solid {
@@ -314,6 +328,7 @@ PROTO Soccerbot [
                 }
                 PositionSensor {
                   name "left_leg_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
                 }
               ]
               endPoint Solid {
@@ -383,6 +398,7 @@ PROTO Soccerbot [
                       }
                       PositionSensor {
                         name "left_leg_motor_2_sensor"
+                        resolution %{= mx28_resolution }%
                       }
                     ]
                     endPoint Solid {
@@ -407,6 +423,7 @@ PROTO Soccerbot [
                             }
                             PositionSensor {
                               name "left_leg_motor_3_sensor"
+                              resolution %{= mx28_resolution }%
                             }
                           ]
                           endPoint Solid {
@@ -518,6 +535,7 @@ PROTO Soccerbot [
                                   }
                                   PositionSensor {
                                     name "left_leg_motor_4_sensor"
+                                    resolution %{= mx28_resolution }%
                                   }
                                 ]
                                 endPoint Solid {
@@ -587,6 +605,7 @@ PROTO Soccerbot [
                                         }
                                         PositionSensor {
                                           name "left_leg_motor_5_sensor"
+                                          resolution %{= mx28_resolution }%
                                         }
                                       ]
                                       endPoint Solid {
@@ -809,6 +828,7 @@ PROTO Soccerbot [
           }
           PositionSensor {
             name "right_leg_motor_0_sensor"
+            resolution %{= mx28_resolution }%
           }
         ]
         endPoint Solid {
@@ -834,6 +854,7 @@ PROTO Soccerbot [
                 }
                 PositionSensor {
                   name "right_leg_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
                 }
               ]
               endPoint Solid {
@@ -903,6 +924,7 @@ PROTO Soccerbot [
                       }
                       PositionSensor {
                         name "right_leg_motor_2_sensor"
+                        resolution %{= mx28_resolution }%
                       }
                     ]
                     endPoint Solid {
@@ -929,6 +951,7 @@ PROTO Soccerbot [
                             }
                             PositionSensor {
                               name "right_leg_motor_3_sensor"
+                              resolution %{= mx28_resolution }%
                             }
                           ]
                           endPoint Solid {
@@ -1040,6 +1063,7 @@ PROTO Soccerbot [
                                   }
                                   PositionSensor {
                                     name "right_leg_motor_4_sensor"
+                                    resolution %{= mx28_resolution }%
                                   }
                                 ]
                                 endPoint Solid {
@@ -1109,6 +1133,7 @@ PROTO Soccerbot [
                                         }
                                         PositionSensor {
                                           name "right_leg_motor_5_sensor"
+                                          resolution %{= mx28_resolution }%
                                         }
                                       ]
                                       endPoint Solid {
@@ -1330,6 +1355,7 @@ PROTO Soccerbot [
           }
           PositionSensor {
             name "head_motor_0_sensor"
+            resolution %{= mx28_resolution }%
           }
         ]
         endPoint Solid {
@@ -1355,6 +1381,7 @@ PROTO Soccerbot [
                 }
                 PositionSensor {
                   name "head_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
                 }
               ]
               endPoint Solid {
