@@ -17,7 +17,7 @@ PROTO Soccerbot [
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE         # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE        # Is `Robot.selfCollision`.
+  field  SFBool      selfCollision   TRUE        # Is `Robot.selfCollision`.
 ]
 {
   Robot {
@@ -126,7 +126,7 @@ PROTO Soccerbot [
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.035000 0.049000 0.16
+                       size 0.035000 0.049000 0.144
                     }
                   ]
                 }
@@ -235,7 +235,7 @@ PROTO Soccerbot [
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.035000 0.049000 0.16000
+                       size 0.035000 0.049000 0.144000
                     }
                   ]
                 }
