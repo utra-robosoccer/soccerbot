@@ -46,7 +46,7 @@ TexturedBackgroundLight {
 RobocupSoccerField {
   size "kid"
 }
-Soccerbot {
+Bez {
   hidden position_0_0 -4.317710651510485e-09
   hidden position_0_1 4.244533904070954e-09
   hidden position_0_2 9.810646215868617e-09
