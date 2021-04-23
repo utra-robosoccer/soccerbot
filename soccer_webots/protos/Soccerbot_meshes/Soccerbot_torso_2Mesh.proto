@@ -5,15 +5,18 @@
 # Extracted from: soccerbot.urdf
 
 PROTO Soccerbot_torso_2Mesh [
+field MFString jerseyTexture "textures/robotis-op2_4_red.png"
+  field SFColor  jerseyColor   1 1 1
 ]
 {
   Shape {
     appearance PBRAppearance {
-      baseColor 0.098039 0.098039 0.098039
-      transparency 0.000000
-      roughness 0.000000
-      metalness 0
-      emissiveColor 0.000000 0.000000 0.000000
+      baseColor IS jerseyColor
+              baseColorMap ImageTexture {
+                url IS jerseyTexture
+              }
+              metalness 0
+              roughness 1
     }
     geometry DEF torso_2 IndexedFaceSet {
       coord Coordinate {

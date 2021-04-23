@@ -13,8 +13,8 @@
 
 
 
-    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns="robot1">
-        <arg name="robot_name" value="robot1"/>
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" >
+        <arg name="robot_name" value="red_player_2"/>
 
     </include>
 
