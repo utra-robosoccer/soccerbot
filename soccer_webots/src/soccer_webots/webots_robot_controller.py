@@ -23,10 +23,12 @@ class RobotController:
         :param external_controller: Whether an external controller is used, necessary for RobotSupervisorController
         :param base_ns: The namespace of this node, can normally be left empty
         """
-        base_ns = "/robot1"
+
         self.walkready = [0] * 20
         self.time = 0
         self.robot_node = Robot()
+        base_ns = "/robot1"
+        # base_ns = "/" + self.robot_node.getName()
         self.motors = []
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
@@ -77,7 +79,6 @@ class RobotController:
 
         self.pressure_sensors_pub = {
             i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
-
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
@@ -246,6 +247,3 @@ class RobotController:
             marker_object.pose.orientation.w = 1
 
             self.pressure_sensors_pub[i].publish(marker_object)
-
-
-
