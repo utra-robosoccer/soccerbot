@@ -7,20 +7,18 @@
 PROTO Soccerbot [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 1 0 0
-  field  SFString    name            "Soccerbot"  # Is `Robot.name`.
-  field  SFString    controller      "void"       # Is `Robot.controller`.
-  field  MFString    controllerArgs  [
-
-
-
-    ]           # Is `Robot.controllerArgs`.
+  field  SFString    name            ""  # Is `Robot.name`.
+  field  SFString    controller      ""       # Is `Robot.controller`.
+  field  MFString    controllerArgs  []           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE         # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE        # Is `Robot.selfCollision`.
+  field  SFBool      selfCollision   TRUE        # Is `Robot.selfCollision`.
+
 ]
 {
   Robot {
+
     translation IS translation
     rotation IS rotation
     controller IS controller
@@ -29,12 +27,41 @@ PROTO Soccerbot [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
+    %{
+        local color = "blue"
+        local number = "3"
+        if fields.name.value ~= '' then
+                -- name is supposed to be something like "red player 2" or "blue player 1"
+                local words = {}
+                for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+                local color = words[1]
+                local number = words[3]
+
+
+
+
+    }%
+
+
+
     children [
+
+
       Soccerbot_torso_0Mesh {
+      jerseyTexture [
+                      %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                    ]
       }
       Soccerbot_torso_1Mesh {
+        jerseyTexture [
+                %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+              ]
+
       }
       Soccerbot_torso_2Mesh {
+      jerseyTexture [
+                      %{='"textures/bez_back_' .. number .. '_' .. color .. '.png"'}%
+                    ]
       }
       Soccerbot_torso_3Mesh {
       }
@@ -42,6 +69,9 @@ PROTO Soccerbot [
       }
       Soccerbot_torso_5Mesh {
       }
+      %{
+            end
+          }%
       Accelerometer {
         name "imu accelerometer"
       }
