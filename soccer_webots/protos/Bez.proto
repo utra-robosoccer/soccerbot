@@ -4,10 +4,10 @@
 # This is a proto file for Webots for the Soccerbot
 # Extracted from: soccerbot.urdf
 
-PROTO Soccerbot [
+PROTO Bez [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 1 0 0
-  field  SFString    name            "bez"  # Is `Robot.name`.
+  field  SFString    name            ""  # Is `Robot.name`.
   field  SFString    controller      ""       # Is `Robot.controller`.
   field  MFString    controllerArgs  []           # Is `Robot.controllerArgs`.
   field  SFString    customData      ""           # Is `Robot.customData`.
@@ -36,8 +36,7 @@ PROTO Soccerbot [
     synchronization IS synchronization
     selfCollision IS selfCollision
     %{
-        local color = "blue"
-        local number = "3"
+
         if fields.name.value ~= '' then
                 -- name is supposed to be something like "red player 2" or "blue player 1"
                 local words = {}
