@@ -8,3 +8,4 @@ orthographicViewHeight: 1
 textFiles: -1
 robotWindow: red_player_2
 consoles: Console:All:All
+renderingDevicePerspectives: robot1:camera;1;1;0;0
