@@ -42,15 +42,8 @@ PROTO Soccerbot [
       }
       Soccerbot_torso_5Mesh {
       }
-      Accelerometer {
-        name "imu accelerometer"
-      }
-      Gyro {
-        name "imu gyro"
-      }
-      Compass {
-        name "imu compass"
-      }
+
+
 
 
 
@@ -1379,24 +1372,32 @@ PROTO Soccerbot [
                   }
 
                   Solid {
-                  translation 0.015000 0.001450 0.047400
-
+                      translation 0.015000 0.001450 0.047400
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
-                      Camera {
-                      rotation 1.0 0.0 0.0 1.5708
-                        name "camera"
-                        fieldOfView 1.396260
-                        width 640
-                        height 480
-                        noise 0.007000
-                        near 0.2
-                        far 10
+                        Camera {
+                            rotation 1.0 0.0 0.0 1.5708
+                            name "camera"
+                            fieldOfView 1.396260
+                            width 640
+                            height 480
+                            noise 0.007000
+                            near 0.2
+                            far 10
 
-                      }
-                  ]
+                        }
+                      ]
                       name "camera"
+                      physics Physics {
+                        density -1
+                        mass 0.010000
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
+                        inertiaMatrix [
+                          1.000000e-09 1.000000e-09 1.000000e-09
+                          0.000000e+00 0.000000e+00 0.000000e+00
+                        ]
                       }
+                  }
                 ]
                 name "head"
                 boundingObject Transform {
@@ -1442,10 +1443,28 @@ PROTO Soccerbot [
         }
       }
       Solid {
-        translation 0.100000 0.000000 0.007500
-        rotation 0.000000 1.000000 0.000000 0.000000
-        name "imu_link"
-      }
+          translation 0.100000 0.000000 0.007500
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+
+            Accelerometer {
+                name "imu accelerometer"
+              }
+              Gyro {
+                name "imu gyro"
+              }
+          ]
+          name "imu_link"
+          physics Physics {
+            density -1
+            mass 0.010000
+            centerOfMass [ 0.000000 0.000000 0.000000 ]
+            inertiaMatrix [
+              1.000000e-09 1.000000e-09 1.000000e-09
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
     ]
     name IS name 
     boundingObject Transform {

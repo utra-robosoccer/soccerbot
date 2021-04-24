@@ -1,5 +1,5 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 33ccfad1b7ecbb2fbcf89eec811f8297
+protoFileHash: e5962b6080d1a2010cca21949e368d13
 needsRobotAncestor: 1
 baseType: Robot
 slotType: 
@@ -8,4 +8,4 @@ tags:
 license:  Apache License 2.0
 licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
 documentationUrl: 
-info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\sSoccerbot\nExtracted\sfrom:\ssoccerbot.urdf
+info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\ssoccer_bot\nExtracted\sfrom:\ssoccerbot_stl.urdf
