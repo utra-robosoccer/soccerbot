@@ -101,8 +101,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         cv::inRange(hsv,cv::Scalar (0,0,200), cv::Scalar(179, 77, 255), mask);
 
-//        cvtColor(mask, dst , cv::COLOR_HSV2BGR);
-
 
         cv::bitwise_and(image,image,out,mask);
         sensor_msgs::ImagePtr message1 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", out).toImageMsg();
@@ -123,12 +121,12 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 //        cv::Mat dst, cdst;
 //        cv::Canny(image, dst,cannythreshold1,cannythreshold2);
 //        cvtColor(dst, cdst, CV_GRAY2BGR);
-
+        //HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
         // Cover Horizon
-        double roll, pitch, yaw;
-        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
-        tf2::Matrix3x3 m(q);
-        m.getRPY(roll, pitch, yaw);
+//        double roll, pitch, yaw;
+//        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
+//        tf2::Matrix3x3 m(q);
+//        m.getRPY(roll, pitch, yaw);
         //Draw black box on screen based on the pitch of the camera
         //cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
         //cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
@@ -137,7 +135,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         //cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
         //cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
 
-        //HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
+
 
         HoughLinesP(cdst, lines, rho, theta,threshold,minLineLength,maxLineGap);
         cvtColor(cdst, dst, CV_GRAY2BGR);

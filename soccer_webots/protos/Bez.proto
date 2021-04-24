@@ -1450,7 +1450,7 @@ PROTO Bez [
                         Camera {
                             rotation 1.0 0.0 0.0 1.5708
                             name "camera"
-                            fieldOfView 1.2290609
+                            fieldOfView 1.39626
                             width 640
                             height 480
                             noise 0.007000
