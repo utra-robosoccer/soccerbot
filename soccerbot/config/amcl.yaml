@@ -1,4 +1,4 @@
-min_particles: 100
+min_particles: 1000
 max_particles: 5000
 kld_err: 0.00001
 update_min_d: 0.2

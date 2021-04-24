@@ -22,12 +22,16 @@ void Camera::cameraInfoCallback(const sensor_msgs::CameraInfo::ConstPtr &camera_
 
 float Camera::VerticalFOV() {
     float f = std::sqrt(std::pow(resolution_x,2.f) + std::pow(resolution_y,2.f)) / 2.f * (1 / std::tan(diagonal_fov/2));
-    return 2 * std::atan2(resolution_y / 2, f);
+    //return 2 * std::atan2(resolution_y / 2, f);
+    float fov = 2 * std::atan(std::tan(1.39626 / 2.0) * (resolution_y /resolution_x ));
+    return  1.13390;//2 * std::atan2(resolution_x / 2, f);
+
 }
 
-float Camera::HorizontalFOV() { // 1.39626
+float Camera::HorizontalFOV() { // 1.39626 calc 1.34
     float f = std::sqrt(std::pow(resolution_x,2.f) + std::pow(resolution_y,2.f)) / 2.f * (1 / std::tan(diagonal_fov/2));
-    return 2 * std::atan2(resolution_x / 2, f);
+    float fov = 2 * std::atan(std::tan(1.39626 / 2.0) * (resolution_y /resolution_x ));
+    return  1.39626;//2 * std::atan2(resolution_x / 2, f);
 }
 
 float Camera::ImageSensorHeight() {
