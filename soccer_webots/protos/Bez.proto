@@ -1,0 +1,1561 @@
+#VRML_SIM R2020b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the Soccerbot
+# Extracted from: soccerbot.urdf
+
+PROTO Bez [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 1 0 0
+  field  SFString    name            ""  # Is `Robot.name`.
+  field  SFString    controller      ""       # Is `Robot.controller`.
+  field  MFString    controllerArgs  []           # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""           # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE         # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   TRUE        # Is `Robot.selfCollision`.
+
+]
+{
+  %{
+    local mx28_backlash = 0.00581776
+    local mx28_max_torque = 3.10
+    local mx28_max_velocity = 7.02
+    local mx28_damping_constant = 0.3086
+    local mx28_static_friction = 1.03
+    local mx28_resolution = 0.00153
+  }%
+
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    %{
+
+        if fields.name.value ~= '' then
+                -- name is supposed to be something like "red player 2" or "blue player 1"
+                local words = {}
+                for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+                local color = words[1]
+                local number = words[3]
+
+
+
+
+    }%
+
+
+
+    children [
+      Soccerbot_torso_0Mesh {
+      jerseyTexture [
+                      %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                    ]
+      }
+      Soccerbot_torso_1Mesh {
+        jerseyTexture [
+                %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+              ]
+
+      }
+      Soccerbot_torso_2Mesh {
+      jerseyTexture [
+                      %{='"textures/bez_back_' .. number .. '_' .. color .. '.png"'}%
+                    ]
+      }
+      Soccerbot_torso_3Mesh {
+      }
+      Soccerbot_torso_4Mesh {
+      }
+      Soccerbot_torso_5Mesh {
+      }
+      %{
+         end
+       }%
+
+
+
+
+
+
+      HingeJointWithBacklash {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -1.00000 0.000000
+          anchor -0.015700 0.072500 0.000000
+          dampingConstant %{= mx28_damping_constant }%
+          staticFriction %{= mx28_static_friction }%
+        }
+        backlash %{= mx28_backlash }%
+        device [
+          RotationalMotor {
+            name "left_arm_motor_0 [shoulder]"
+            maxVelocity %{= mx28_max_velocity }%
+            minPosition -1.57079632679
+            maxPosition 3.92699081699
+            maxTorque %{= mx28_max_torque }%
+          }
+          PositionSensor {
+            name "left_arm_motor_0_sensor"
+            resolution %{= mx28_resolution }%
+          }
+        ]
+        endPoint Solid {
+          translation -0.015700 0.072500 0.000000
+          rotation 0.000000 -1.00000 0.000000 0.000000
+          children [
+            Soccerbot_left_bicep_0Mesh {
+            }
+            Soccerbot_left_bicep_1Mesh {
+            }
+            Soccerbot_left_bicep_2Mesh {
+            }
+            Soccerbot_left_bicep_3Mesh {
+            }
+            Soccerbot_left_bicep_4Mesh {
+            }
+            Soccerbot_left_bicep_5Mesh {
+            }
+            Soccerbot_left_bicep_6Mesh {
+            }
+            Soccerbot_left_bicep_7Mesh {
+            }
+            Soccerbot_left_bicep_8Mesh {
+            }
+            HingeJointWithBacklash {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.000000
+                anchor 0.000000 0.000000 -0.100000
+                dampingConstant %{= mx28_damping_constant }%
+                staticFriction %{= mx28_static_friction }%
+              }
+              backlash %{= mx28_backlash }%
+              device [
+                RotationalMotor {
+                  name "left_arm_motor_1"
+                  maxVelocity %{= mx28_max_velocity }%
+                  maxPosition 3.14159265359
+                  maxTorque %{= mx28_max_torque }%
+                }
+                PositionSensor {
+                  name "left_arm_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 -0.100000
+                rotation 0.000000 1.000000 0.000000 0.000000
+                children [
+                  Soccerbot_left_forearm_0Mesh {
+                  }
+                ]
+                name "left_forearm [arm]"
+                boundingObject Transform {
+                  translation -0.01 0.025 -0.06
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.045700
+                  centerOfMass [ 0.000000 0.024500 -0.054610 ]
+                  inertiaMatrix [
+                    1.130000e-04 1.070000e-04 1.200000e-05
+                    0.000000e+00 1.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "left_bicep [arm]"
+          boundingObject Transform {
+            translation 0.00 0.025 -0.05
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.000213
+            centerOfMass [ 0.000000 0.025790 -0.049550 ]
+            inertiaMatrix [
+              2.824000e-04 2.744000e-04 2.433000e-05
+              0.000000e+00 0.000000e+00 1.165000e-05
+            ]
+          }
+        }
+      }
+      HingeJointWithBacklash {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -1.000000 0.000000
+          anchor -0.015700 -0.072500 0.000000
+          dampingConstant %{= mx28_damping_constant }%
+          staticFriction %{= mx28_static_friction }%
+        }
+        backlash %{= mx28_backlash }%
+        device [
+          RotationalMotor {
+            name "right_arm_motor_0 [shoulder]"
+            maxVelocity %{= mx28_max_velocity }%
+            minPosition -1.57079632679
+            maxPosition 3.92699081699
+            maxTorque %{= mx28_max_torque }%
+          }
+          PositionSensor {
+            name "right_arm_motor_0_sensor"
+            resolution %{= mx28_resolution }%
+          }
+        ]
+        endPoint Solid {
+          translation -0.015700 -0.072500 0.000000
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+            Soccerbot_right_bicep_0Mesh {
+            }
+            Soccerbot_right_bicep_1Mesh {
+            }
+            Soccerbot_right_bicep_2Mesh {
+            }
+            Soccerbot_right_bicep_3Mesh {
+            }
+            Soccerbot_right_bicep_4Mesh {
+            }
+            Soccerbot_right_bicep_5Mesh {
+            }
+            Soccerbot_right_bicep_6Mesh {
+            }
+            Soccerbot_right_bicep_7Mesh {
+            }
+            Soccerbot_right_bicep_8Mesh {
+            }
+            HingeJointWithBacklash {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.000000
+                anchor 0.000000 0.000000 -0.100000
+                dampingConstant %{= mx28_damping_constant }%
+                staticFriction %{= mx28_static_friction }%
+              }
+              backlash %{= mx28_backlash }%
+              device [
+                RotationalMotor {
+                  name "right_arm_motor_1"
+                  maxVelocity %{= mx28_max_velocity }%
+                  maxPosition 3.14159265359
+                  maxTorque %{= mx28_max_torque }%
+                }
+                PositionSensor {
+                  name "right_arm_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 -0.100000
+                rotation 0.000000 1.000000 0.000000 0.000000
+                children [
+                  Soccerbot_right_forearm_0Mesh {
+                  }
+                ]
+                name "right_forearm [arm]"
+                boundingObject Transform {
+                  translation -0.01 -0.025 -0.06
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144000
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.045700
+                  centerOfMass [ 0.000000 0.024500 -0.054610 ]
+                  inertiaMatrix [
+                    1.130000e-04 1.070000e-04 1.200000e-05
+                    0.000000e+00 -1.000000e-06 -0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "right_bicep [arm]"
+          boundingObject Transform {
+            translation 0.00 -0.025 -0.05
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.000213
+            centerOfMass [ 0.000000 -0.025790 -0.049550 ]
+            inertiaMatrix [
+              2.824000e-04 2.744000e-04 2.433000e-05
+              0.000000e+00 -0.000000e+00 -1.165000e-05
+            ]
+          }
+        }
+      }
+      HingeJointWithBacklash {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.013500 0.035000 -0.156000
+          dampingConstant %{= mx28_damping_constant }%
+          staticFriction %{= mx28_static_friction }%
+        }
+        backlash %{= mx28_backlash }%
+        device [
+          RotationalMotor {
+            name "left_leg_motor_0"
+            maxVelocity %{= mx28_max_velocity }%
+            minPosition -1.309
+            maxPosition 0.524
+            maxTorque %{= mx28_max_torque }%
+          }
+          PositionSensor {
+            name "left_leg_motor_0_sensor"
+            resolution %{= mx28_resolution }%
+          }
+        ]
+        endPoint Solid {
+          translation 0.013500 0.035000 -0.156000
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+            Soccerbot_left_hip_side_0Mesh {
+            }
+            HingeJointWithBacklash {
+              jointParameters HingeJointParameters {
+                axis 1.000000 0.000000 0.000000
+                anchor 0.000000 0.000000 0.000000
+                dampingConstant %{= mx28_damping_constant }%
+                staticFriction %{= mx28_static_friction }%
+              }
+              backlash %{= mx28_backlash }%
+              device [
+                RotationalMotor {
+                  name "left_leg_motor_1 [hip]"
+                  maxVelocity %{= mx28_max_velocity }%
+                  minPosition -0.785398163397
+                  maxPosition 1.57079632679
+                  maxTorque %{= mx28_max_torque }%
+                }
+                PositionSensor {
+                  name "left_leg_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 0.000000
+                rotation 0.000000 1.000000 0.000000 0.000000
+                children [
+                  Soccerbot_left_hip_front_0Mesh {
+                  }
+                  Soccerbot_left_hip_front_1Mesh {
+                  }
+                  Soccerbot_left_hip_front_2Mesh {
+                  }
+                  Soccerbot_left_hip_front_3Mesh {
+                  }
+                  Soccerbot_left_hip_front_4Mesh {
+                  }
+                  Soccerbot_left_hip_front_5Mesh {
+                  }
+                  Soccerbot_left_hip_front_6Mesh {
+                  }
+                  Soccerbot_left_hip_front_7Mesh {
+                  }
+                  Soccerbot_left_hip_front_8Mesh {
+                  }
+                  Soccerbot_left_hip_front_9Mesh {
+                  }
+                  Soccerbot_left_hip_front_10Mesh {
+                  }
+                  Soccerbot_left_hip_front_11Mesh {
+                  }
+                  Soccerbot_left_hip_front_12Mesh {
+                  }
+                  Soccerbot_left_hip_front_13Mesh {
+                  }
+                  Soccerbot_left_hip_front_14Mesh {
+                  }
+                  Soccerbot_left_hip_front_15Mesh {
+                  }
+                  Soccerbot_left_hip_front_16Mesh {
+                  }
+                  Soccerbot_left_hip_front_17Mesh {
+                  }
+                  Soccerbot_left_hip_front_18Mesh {
+                  }
+                  Soccerbot_left_hip_front_19Mesh {
+                  }
+                  Soccerbot_left_hip_front_20Mesh {
+                  }
+                  Soccerbot_left_hip_front_21Mesh {
+                  }
+                  Soccerbot_left_hip_front_22Mesh {
+                  }
+                  HingeJointWithBacklash {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                      anchor 0.000000 0.000000 0.000000
+                      dampingConstant %{= mx28_damping_constant }%
+                      staticFriction %{= mx28_static_friction }%
+                    }
+                    backlash %{= mx28_backlash }%
+                    device [
+                      RotationalMotor {
+                        name "left_leg_motor_2"
+                        maxVelocity %{= mx28_max_velocity }%
+                        minPosition -0.785398163397
+                        maxPosition 2.35619449019
+                        maxTorque %{= mx28_max_torque }%
+                      }
+                      PositionSensor {
+                        name "left_leg_motor_2_sensor"
+                        resolution %{= mx28_resolution }%
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.000000 0.000000 0.000000
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Soccerbot_left_thigh_0Mesh {
+                        }
+                        HingeJointWithBacklash {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 -1.000000 0.000000
+                            anchor 0.000000 0.000000 -0.0890
+                            dampingConstant %{= mx28_damping_constant }%
+                            staticFriction %{= mx28_static_friction }%
+                          }
+                          backlash %{= mx28_backlash }%
+                          device [
+                            RotationalMotor {
+                              name "left_leg_motor_3"
+                              maxVelocity %{= mx28_max_velocity }%
+                              minPosition -2.793
+                              maxTorque %{= mx28_max_torque }%
+                            }
+                            PositionSensor {
+                              name "left_leg_motor_3_sensor"
+                              resolution %{= mx28_resolution }%
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.000000 0.000000 -0.092900
+                            rotation 0.000000 1.000000 0.000000 0.000000
+                            children [
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_0Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_1Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_2Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_3Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_4Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_5Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_6Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_7Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_8Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_9Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_left_calve_10Mesh {
+                                  }
+                                ]
+                              }
+                              HingeJointWithBacklash {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 -1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.082700
+                                  dampingConstant %{= mx28_damping_constant }%
+                                  staticFriction %{= mx28_static_friction }%
+                                }
+                                backlash %{= mx28_backlash }%
+                                device [
+                                  RotationalMotor {
+                                    name "left_leg_motor_4"
+                                    maxVelocity %{= mx28_max_velocity }%
+                                    minPosition -0.785398163397
+                                    maxPosition 1.57079632679
+                                    maxTorque %{= mx28_max_torque }%
+                                  }
+                                  PositionSensor {
+                                    name "left_leg_motor_4_sensor"
+                                    resolution %{= mx28_resolution }%
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.082700
+                                  rotation 0.000000 1.000000 0.000000 0.000000
+                                  children [
+                                    Soccerbot_left_ankle_0Mesh {
+                                    }
+                                    Soccerbot_left_ankle_1Mesh {
+                                    }
+                                    Soccerbot_left_ankle_2Mesh {
+                                    }
+                                    Soccerbot_left_ankle_3Mesh {
+                                    }
+                                    Soccerbot_left_ankle_4Mesh {
+                                    }
+                                    Soccerbot_left_ankle_5Mesh {
+                                    }
+                                    Soccerbot_left_ankle_6Mesh {
+                                    }
+                                    Soccerbot_left_ankle_7Mesh {
+                                    }
+                                    Soccerbot_left_ankle_8Mesh {
+                                    }
+                                    Soccerbot_left_ankle_9Mesh {
+                                    }
+                                    Soccerbot_left_ankle_10Mesh {
+                                    }
+                                    Soccerbot_left_ankle_11Mesh {
+                                    }
+                                    Soccerbot_left_ankle_12Mesh {
+                                    }
+                                    Soccerbot_left_ankle_13Mesh {
+                                    }
+                                    Soccerbot_left_ankle_14Mesh {
+                                    }
+                                    Soccerbot_left_ankle_15Mesh {
+                                    }
+                                    Soccerbot_left_ankle_16Mesh {
+                                    }
+                                    Soccerbot_left_ankle_17Mesh {
+                                    }
+                                    Soccerbot_left_ankle_18Mesh {
+                                    }
+                                    Soccerbot_left_ankle_19Mesh {
+                                    }
+                                    Soccerbot_left_ankle_20Mesh {
+                                    }
+                                    Soccerbot_left_ankle_21Mesh {
+                                    }
+                                    Soccerbot_left_ankle_22Mesh {
+                                    }
+                                    HingeJointWithBacklash {
+                                      jointParameters HingeJointParameters {
+                                        axis 1.000000 0.000000 0.000000
+                                        anchor 0.000000 0.000000 0.000000
+                                        dampingConstant %{= mx28_damping_constant }%
+                                        staticFriction %{= mx28_static_friction }%
+                                      }
+                                      backlash %{= mx28_backlash }%
+                                      device [
+                                        RotationalMotor {
+                                          name "left_leg_motor_5"
+                                          maxVelocity %{= mx28_max_velocity }%
+                                          minPosition -0.785398163397
+                                          maxPosition 0.785398163397
+                                          maxTorque %{= mx28_max_torque }%
+                                        }
+                                        PositionSensor {
+                                          name "left_leg_motor_5_sensor"
+                                          resolution %{= mx28_resolution }%
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        translation 0.000000 0.000000 0.000000
+                                        rotation 0.000000 1.000000 0.000000 0.000000
+                                        children [
+                                          Soccerbot_left_foot_0Mesh {
+                                          }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_1"
+                                            type "force-3d"
+                                            resolution -1
+                          			            boundingObject Transform {
+                                              translation 0.03975 0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                  		      physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                  		      }
+					                                }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_2"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation 0.03975 -0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_3"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 -0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "left_leg_foot_sensor_4"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                        ]
+
+                                        name "left_foot [foot]"
+                                        boundingObject Transform {
+                                          translation 0.003 0.00 -0.02
+                                          rotation 0.000000 1.000000 0.000000 0.000000
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.01
+                                            }
+                                          ]
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.023216
+                                          centerOfMass [ -0.020939 0.000000 0.011313 ]
+                                          inertiaMatrix [
+                                            6.000000e-06 1.800000e-05 2.200000e-05
+                                            0.000000e+00 0.000000e+00 0.000000e+00
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "left_ankle"
+                                  boundingObject Transform {
+                                    translation -0.02 0.00 0.013
+                                    rotation 0.000000 1.000000 0.000000 0.000000
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.153186
+                                    centerOfMass [ -0.000021 0.000000 0.000011 ]
+                                    inertiaMatrix [
+                                      4.100000e-05 1.180000e-04 1.060000e-04
+                                      0.000000e+00 2.000000e-06 0.000000e+00
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "left_calve"
+                            boundingObject Transform {
+                              translation 0.00 0.00 -0.035
+                              rotation 0.000000 1.000000 0.000000 0.000000
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.086547
+                              centerOfMass [ 0.000000 -0.000000 -0.000015 ]
+                              inertiaMatrix [
+                                5.400000e-05 4.600000e-05 1.900000e-05
+                                0.000000e+00 0.000000e+00 -1.000000e-06
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "left_thigh"
+                      boundingObject Transform {
+                        translation 0.00 0.00 -0.045
+                        rotation 0.000000 1.000000 0.000000 0.000000
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.021438
+                        centerOfMass [ 0.001942 0.000142 -0.046941 ]
+                        inertiaMatrix [
+                          2.500000e-05 1.600000e-05 1.000000e-05
+                          2.000000e-06 0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "left_hip_front"
+                boundingObject Transform {
+                  translation -0.02 0.00 -0.012
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.153186
+                  centerOfMass [ -0.020930 0.000000 -0.011313 ]
+                  inertiaMatrix [
+                    4.100000e-05 1.180000e-04 1.060000e-04
+                    0.000000e+00 -2.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "left_hip_side"
+          boundingObject Transform {
+            translation 0.0 0.00 0.01
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.048500 0.022000 0.03900
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.009364
+            centerOfMass [ 0.000369 0.000000 0.016890 ]
+            inertiaMatrix [
+              2.000000e-06 5.000000e-06 4.000000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJointWithBacklash {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 1.000000
+          anchor 0.013500 -0.035000 -0.156000
+          dampingConstant %{= mx28_damping_constant }%
+          staticFriction %{= mx28_static_friction }%
+        }
+        backlash %{= mx28_backlash }%
+        device [
+          RotationalMotor {
+            name "right_leg_motor_0"
+            maxVelocity %{= mx28_max_velocity }%
+            minPosition -1.309
+            maxPosition 0.524
+            maxTorque %{= mx28_max_torque }%
+          }
+          PositionSensor {
+            name "right_leg_motor_0_sensor"
+            resolution %{= mx28_resolution }%
+          }
+        ]
+        endPoint Solid {
+          translation 0.013500 -0.035000 -0.156000
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+            Soccerbot_right_hip_side_0Mesh {
+            }
+            HingeJointWithBacklash {
+              jointParameters HingeJointParameters {
+                axis -1.000000 0.000000 0.000000
+                anchor 0.000000 0.000000 0.000000
+                dampingConstant %{= mx28_damping_constant }%
+                staticFriction %{= mx28_static_friction }%
+              }
+              backlash %{= mx28_backlash }%
+              device [
+                RotationalMotor {
+                  name "right_leg_motor_1 [hip]"
+                  maxVelocity %{= mx28_max_velocity }%
+                  minPosition -0.785398163397
+                  maxPosition 1.57079632679
+                  maxTorque %{= mx28_max_torque }%
+                }
+                PositionSensor {
+                  name "right_leg_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 0.000000
+                rotation 0.000000 1.000000 0.000000 0.000000
+                children [
+                  Soccerbot_right_hip_front_0Mesh {
+                  }
+                  Soccerbot_right_hip_front_1Mesh {
+                  }
+                  Soccerbot_right_hip_front_2Mesh {
+                  }
+                  Soccerbot_right_hip_front_3Mesh {
+                  }
+                  Soccerbot_right_hip_front_4Mesh {
+                  }
+                  Soccerbot_right_hip_front_5Mesh {
+                  }
+                  Soccerbot_right_hip_front_6Mesh {
+                  }
+                  Soccerbot_right_hip_front_7Mesh {
+                  }
+                  Soccerbot_right_hip_front_8Mesh {
+                  }
+                  Soccerbot_right_hip_front_9Mesh {
+                  }
+                  Soccerbot_right_hip_front_10Mesh {
+                  }
+                  Soccerbot_right_hip_front_11Mesh {
+                  }
+                  Soccerbot_right_hip_front_12Mesh {
+                  }
+                  Soccerbot_right_hip_front_13Mesh {
+                  }
+                  Soccerbot_right_hip_front_14Mesh {
+                  }
+                  Soccerbot_right_hip_front_15Mesh {
+                  }
+                  Soccerbot_right_hip_front_16Mesh {
+                  }
+                  Soccerbot_right_hip_front_17Mesh {
+                  }
+                  Soccerbot_right_hip_front_18Mesh {
+                  }
+                  Soccerbot_right_hip_front_19Mesh {
+                  }
+                  Soccerbot_right_hip_front_20Mesh {
+                  }
+                  Soccerbot_right_hip_front_21Mesh {
+                  }
+                  Soccerbot_right_hip_front_22Mesh {
+                  }
+                  HingeJointWithBacklash {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                      anchor 0.000000 0.000000 0.000000
+                      dampingConstant %{= mx28_damping_constant }%
+                      staticFriction %{= mx28_static_friction }%
+                    }
+                    backlash %{= mx28_backlash }%
+                    device [
+                      RotationalMotor {
+                        name "right_leg_motor_2"
+                        maxVelocity %{= mx28_max_velocity }%
+                        minPosition -0.785398163397
+                        maxPosition 2.35619449019
+                        maxTorque %{= mx28_max_torque }%
+                      }
+                      PositionSensor {
+                        name "right_leg_motor_2_sensor"
+                        resolution %{= mx28_resolution }%
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.000000 0.000000 0.000000
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Soccerbot_right_thigh_0Mesh {
+                        }
+                        Soccerbot_right_thigh_1Mesh {
+                        }
+                        HingeJointWithBacklash {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 -1.000000 0.000000
+                            anchor 0.000000 0.000000 -0.0890
+                            dampingConstant %{= mx28_damping_constant }%
+                            staticFriction %{= mx28_static_friction }%
+                          }
+                          backlash %{= mx28_backlash }%
+                          device [
+                            RotationalMotor {
+                              name "right_leg_motor_3"
+                              maxVelocity %{= mx28_max_velocity }%
+                              minPosition -2.793
+                              maxTorque %{= mx28_max_torque }%
+                            }
+                            PositionSensor {
+                              name "right_leg_motor_3_sensor"
+                              resolution %{= mx28_resolution }%
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.000000 0.000000 -0.092900
+                            rotation 0.000000 1.000000 0.000000 0.000000
+                            children [
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_0Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_1Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_2Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_3Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_4Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_5Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_6Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_7Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_8Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_9Mesh {
+                                  }
+                                ]
+                              }
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                rotation 0.000000 1.000000 0.000000 0.000000
+                                children [
+                                  Soccerbot_right_calve_10Mesh {
+                                  }
+                                ]
+                              }
+                              HingeJointWithBacklash {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 -1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.082700
+                                  dampingConstant %{= mx28_damping_constant }%
+                                  staticFriction %{= mx28_static_friction }%
+                                }
+                                backlash %{= mx28_backlash }%
+                                device [
+                                  RotationalMotor {
+                                    name "right_leg_motor_4"
+                                    maxVelocity %{= mx28_max_velocity }%
+                                    minPosition -0.785398163397
+                                    maxPosition 1.57079632679
+                                    maxTorque %{= mx28_max_torque }%
+                                  }
+                                  PositionSensor {
+                                    name "right_leg_motor_4_sensor"
+                                    resolution %{= mx28_resolution }%
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.082700
+                                  rotation 0.000000 1.000000 0.000000 0.000000
+                                  children [
+                                    Soccerbot_right_ankle_0Mesh {
+                                    }
+                                    Soccerbot_right_ankle_1Mesh {
+                                    }
+                                    Soccerbot_right_ankle_2Mesh {
+                                    }
+                                    Soccerbot_right_ankle_3Mesh {
+                                    }
+                                    Soccerbot_right_ankle_4Mesh {
+                                    }
+                                    Soccerbot_right_ankle_5Mesh {
+                                    }
+                                    Soccerbot_right_ankle_6Mesh {
+                                    }
+                                    Soccerbot_right_ankle_7Mesh {
+                                    }
+                                    Soccerbot_right_ankle_8Mesh {
+                                    }
+                                    Soccerbot_right_ankle_9Mesh {
+                                    }
+                                    Soccerbot_right_ankle_10Mesh {
+                                    }
+                                    Soccerbot_right_ankle_11Mesh {
+                                    }
+                                    Soccerbot_right_ankle_12Mesh {
+                                    }
+                                    Soccerbot_right_ankle_13Mesh {
+                                    }
+                                    Soccerbot_right_ankle_14Mesh {
+                                    }
+                                    Soccerbot_right_ankle_15Mesh {
+                                    }
+                                    Soccerbot_right_ankle_16Mesh {
+                                    }
+                                    Soccerbot_right_ankle_17Mesh {
+                                    }
+                                    Soccerbot_right_ankle_18Mesh {
+                                    }
+                                    Soccerbot_right_ankle_19Mesh {
+                                    }
+                                    Soccerbot_right_ankle_20Mesh {
+                                    }
+                                    Soccerbot_right_ankle_21Mesh {
+                                    }
+                                    Soccerbot_right_ankle_22Mesh {
+                                    }
+                                    HingeJointWithBacklash {
+                                      jointParameters HingeJointParameters {
+                                        axis -1.000000 0.000000 0.000000
+                                        anchor 0.000000 0.000000 0.000000
+                                        dampingConstant %{= mx28_damping_constant }%
+                                        staticFriction %{= mx28_static_friction }%
+                                      }
+                                      backlash %{= mx28_backlash }%
+                                      device [
+                                        RotationalMotor {
+                                          name "right_leg_motor_5"
+                                          maxVelocity %{= mx28_max_velocity }%
+                                          minPosition -0.785398163397
+                                          maxPosition 0.785398163397
+                                          maxTorque %{= mx28_max_torque }%
+                                        }
+                                        PositionSensor {
+                                          name "right_leg_motor_5_sensor"
+                                          resolution %{= mx28_resolution }%
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        translation 0.000000 0.000000 0.000000
+                                        rotation 0.000000 1.000000 0.000000 0.000000
+                                        children [
+                                          Soccerbot_right_foot_0Mesh {
+                                          }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_1"
+                                            type "force-3d"
+                                            resolution -1
+                          			            boundingObject Transform {
+                                              translation 0.03975 0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                  		      physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                  		      }
+					                                }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_2"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation 0.03975 -0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_3"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 -0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            name "right_leg_foot_sensor_4"
+                                            type "force-3d"
+                                            resolution -1
+                                            boundingObject Transform {
+                                              translation -0.03375 0.025 -0.0250
+                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                        ]
+                                        name "right_foot [foot]"
+                                         boundingObject Transform {
+                                          translation 0.003 0.00 -0.02
+                                          rotation 0.000000 1.000000 0.000000 0.000000
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.01
+                                            }
+                                          ]
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.023216
+                                          centerOfMass [ -0.020939 0.000000 0.011313 ]
+                                          inertiaMatrix [
+                                            6.000000e-06 1.800000e-05 2.200000e-05
+                                            0.000000e+00 0.000000e+00 0.000000e+00
+                                          ]
+					}
+				     } 
+                                    }
+                                  ]
+                                  name "right_ankle"
+                                  boundingObject Transform {
+                                    translation -0.02 0.00 0.013
+                                    rotation 0.000000 1.000000 0.000000 0.000000
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.153186
+                                    centerOfMass [ -0.000021 0.000000 0.000011 ]
+                                    inertiaMatrix [
+                                      4.100000e-05 1.180000e-04 1.060000e-04
+                                      0.000000e+00 2.000000e-06 0.000000e+00
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "right_calve"
+                            boundingObject Transform {
+                              translation 0.00 0.00 -0.035
+                              rotation 0.000000 1.000000 0.000000 0.000000
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.086547
+                              centerOfMass [ 0.000000 0.000000 -0.000015 ]
+                              inertiaMatrix [
+                                5.400000e-05 4.600000e-05 1.900000e-05
+                                0.000000e+00 0.000000e+00 -1.000000e-06
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "right_thigh"
+                      boundingObject Transform {
+                        translation 0.00 0.00 -0.045
+                        rotation 0.000000 1.000000 0.000000 0.000000
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.021438
+                        centerOfMass [ 0.001942 -0.000142 -0.046941 ]
+                        inertiaMatrix [
+                          2.500000e-05 1.600000e-05 1.000000e-05
+                          -2.000000e-06 0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "right_hip_front"
+                boundingObject Transform {
+                  translation -0.02 0.00 -0.012
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.153186
+                  centerOfMass [ -0.020930 0.000000 -0.011313 ]
+                  inertiaMatrix [
+                    4.100000e-05 1.180000e-04 1.060000e-04
+                    0.000000e+00 -2.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "right_hip_side"
+          boundingObject Transform {
+            translation 0.0 0.00 0.01
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.048500 0.022000 0.03900
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.009364
+            centerOfMass [ 0.000369 0.000000 0.016890 ]
+            inertiaMatrix [
+              2.000000e-06 5.000000e-06 4.000000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJointWithBacklash {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 1.000000
+          anchor 0.024000 0.000000 0.058750
+          dampingConstant %{= mx28_damping_constant }%
+          staticFriction %{= mx28_static_friction }%
+        }
+        backlash %{= mx28_backlash }%
+        device [
+          RotationalMotor {
+            name "head_motor_0"
+            maxVelocity %{= mx28_max_velocity }%
+            minPosition -1.57079632679
+            maxPosition 1.57079632679
+            maxTorque %{= mx28_max_torque }%
+          }
+          PositionSensor {
+            name "head_motor_0_sensor"
+            resolution %{= mx28_resolution }%
+          }
+        ]
+        endPoint Solid {
+          translation 0.024000 0.000000 0.058750
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+            Soccerbot_neck_0Mesh {
+            }
+            HingeJointWithBacklash {
+              jointParameters HingeJointParameters {
+                axis 0.000000 1.000000 0.000000
+                anchor 0.000000 0.000000 0.024000
+                dampingConstant %{= mx28_damping_constant }%
+                staticFriction %{= mx28_static_friction }%
+              }
+              backlash %{= mx28_backlash }%
+              device [
+                RotationalMotor {
+                  name "head_motor_1"
+                  maxVelocity %{= mx28_max_velocity }%
+                  minPosition -2.35619449019
+                  maxPosition 2.35619449019
+                  maxTorque %{= mx28_max_torque }%
+                }
+                PositionSensor {
+                  name "head_motor_1_sensor"
+                  resolution %{= mx28_resolution }%
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 0.024000
+                rotation 0.000000 1.000000 0.000000 0.000000
+                children [
+                  Soccerbot_head_0Mesh {
+                  }
+                  Soccerbot_head_1Mesh {
+                  }
+                  Soccerbot_head_2Mesh {
+                  }
+                  Soccerbot_head_3Mesh {
+                  }
+                  Soccerbot_head_4Mesh {
+                  }
+                  Soccerbot_head_5Mesh {
+                  }
+                  Soccerbot_head_6Mesh {
+                  }
+                  Soccerbot_head_7Mesh {
+                  }
+
+                  Solid {
+                      translation 0.015000 0.001450 0.047400
+                      rotation 0.0 0.0 -1.0 1.5708
+                      children [
+                        Camera {
+                            rotation 1.0 0.0 0.0 1.5708
+                            name "camera"
+                            fieldOfView 1.396260
+                            width 640
+                            height 480
+                            noise 0.007000
+                            near 0.2
+                            far 10
+
+                        }
+                      ]
+                      name "camera"
+                      physics Physics {
+                        density -1
+                        mass 0.010000
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
+                        inertiaMatrix [
+                          1.000000e-09 1.000000e-09 1.000000e-09
+                          0.000000e+00 0.000000e+00 0.000000e+00
+                        ]
+                      }
+                  }
+                ]
+                name "head"
+                boundingObject Transform {
+                  translation -0.01 0.0 0.025
+                  rotation 0.000000 1.000000 0.000000 0.000000
+                  children [
+                    Box {
+                       size 0.071200 0.094000 0.077900
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.282000
+                  centerOfMass [ 0.023717 0.001810 0.025597 ]
+                  inertiaMatrix [
+                    2.060000e-04 2.057000e-04 1.603000e-04
+                    1.060000e-06 -5.730000e-05 2.534000e-06
+                  ]
+                }
+              }
+            }
+          ]
+          name "neck"
+          boundingObject Transform {
+            translation 0.00 0.0 0.017
+            rotation 0.000000 1.000000 0.000000 0.000000
+            children [
+              Box {
+                 size 0.022000 0.052300 0.033000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.011294
+            centerOfMass [ 0.000000 -0.000648 0.009245 ]
+            inertiaMatrix [
+              5.489000e-06 1.433000e-06 4.955000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      Solid {
+          translation 0.100000 0.000000 0.007500
+          rotation 0.000000 1.000000 0.000000 0.000000
+          children [
+
+            Accelerometer {
+                name "imu accelerometer"
+              }
+              Gyro {
+                name "imu gyro"
+              }
+          ]
+          name "imu_link"
+          physics Physics {
+            density -1
+            mass 0.010000
+            centerOfMass [ 0.000000 0.000000 0.000000 ]
+            inertiaMatrix [
+              1.000000e-09 1.000000e-09 1.000000e-09
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+    ]
+    name IS name 
+    boundingObject Transform {
+      translation 0.012 0.0 -0.05
+      rotation 0.000000 1.000000 0.000000 0.000000
+      children [
+        Box {
+           size 0.105000 0.145000 0.152000
+        }
+      ]
+    }
+    physics Physics {
+      density -1
+      mass 1.529000
+      centerOfMass [ 0.008250 -0.001744 -0.052248 ]
+      inertiaMatrix [
+        4.323000e-03 5.198000e-03 3.567000e-03
+        5.549000e-06 3.960000e-05 -1.509000e-05
+      ]
+    }
+  }
+}
