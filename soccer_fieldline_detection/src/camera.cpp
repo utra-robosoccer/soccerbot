@@ -25,7 +25,7 @@ float Camera::VerticalFOV() {
     return 2 * std::atan2(resolution_y / 2, f);
 }
 
-float Camera::HorizontalFOV() {
+float Camera::HorizontalFOV() { // 1.39626
     float f = std::sqrt(std::pow(resolution_x,2.f) + std::pow(resolution_y,2.f)) / 2.f * (1 / std::tan(diagonal_fov/2));
     return 2 * std::atan2(resolution_x / 2, f);}
 
