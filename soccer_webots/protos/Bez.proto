@@ -83,9 +83,7 @@ PROTO Bez [
       Gyro {
         name "imu gyro"
       }
-      Compass {
-        name "imu compass"
-      }
+
 
 
 
@@ -165,7 +163,7 @@ PROTO Bez [
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.035000 0.049000 0.16
+                       size 0.035000 0.049000 0.144
                     }
                   ]
                 }
@@ -278,7 +276,7 @@ PROTO Bez [
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.035000 0.049000 0.16000
+                       size 0.035000 0.049000 0.144000
                     }
                   ]
                 }
@@ -443,7 +441,7 @@ PROTO Bez [
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
-                            anchor 0.000000 0.000000 -0.092900
+                            anchor 0.000000 0.000000 -0.0890
                             dampingConstant %{= mx28_damping_constant }%
                             staticFriction %{= mx28_static_friction }%
                           }
@@ -977,7 +975,7 @@ PROTO Bez [
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
-                            anchor 0.000000 0.000000 -0.092900
+                            anchor 0.000000 0.000000 -0.0890
                             dampingConstant %{= mx28_damping_constant }%
                             staticFriction %{= mx28_static_friction }%
                           }
