@@ -16,4 +16,8 @@ soccer_control_generated
 # Windows and Mac files
 .DS_Store
 
+# webots cache files
+soccer_webots/protos/*.cache
+soccer_webots/protos/Soccerbot_meshes/*.cache
+
 cmake-build-debug

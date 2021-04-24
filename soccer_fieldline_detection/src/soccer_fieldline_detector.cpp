@@ -13,7 +13,9 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
 
     image_publisher = it.advertise("camera/line_image",1);
-
+    image_publisher2 = it.advertise("camera/base",1);
+    image_publisher3 = it.advertise("camera/canny",1);
+    image_publisher4 = it.advertise("camera/binary",1);
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
     nh.getParam("soccer_fieldline_detector/cannythreshold2", cannythreshold2);
@@ -94,8 +96,33 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
-        cv::Canny(image, dst,cannythreshold1,cannythreshold2);
-        cvtColor(dst, cdst, CV_GRAY2BGR);
+        cv::Mat hsv, mask,out;
+        cvtColor(image, hsv , cv::COLOR_BGR2HSV);
+
+        cv::inRange(hsv,cv::Scalar (0,0,200), cv::Scalar(179, 77, 255), mask);
+
+//        cvtColor(mask, dst , cv::COLOR_HSV2BGR);
+
+
+        cv::bitwise_and(image,image,out,mask);
+        sensor_msgs::ImagePtr message1 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", out).toImageMsg();
+        //image_publisher2.publish(message1);
+        cvtColor(out, cdst, CV_BGR2GRAY);
+
+        cv::threshold(cdst,dst, 127, 255,cv::THRESH_BINARY);
+        //cv::adaptiveThreshold(cdst,dst, 255,cv::ADAPTIVE_THRESH_GAUSSIAN_C,cv::THRESH_BINARY,11,2);
+        sensor_msgs::ImagePtr message4 = cv_bridge::CvImage(std_msgs::Header(), "mono8", dst).toImageMsg();
+        //image_publisher4.publish(message4);
+
+        cv::Canny(dst, cdst,50,150);
+
+
+        sensor_msgs::ImagePtr message2 = cv_bridge::CvImage(std_msgs::Header(), "mono8", cdst).toImageMsg();
+        //image_publisher3.publish(message2);
+        // Detect Field Lines (Copy from simulink)
+//        cv::Mat dst, cdst;
+//        cv::Canny(image, dst,cannythreshold1,cannythreshold2);
+//        cvtColor(dst, cdst, CV_GRAY2BGR);
 
         // Cover Horizon
         double roll, pitch, yaw;
@@ -110,10 +137,12 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         //cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
         //cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
 
-        HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
+        //HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
 
+        HoughLinesP(cdst, lines, rho, theta,threshold,minLineLength,maxLineGap);
+        cvtColor(cdst, dst, CV_GRAY2BGR);
         for (const auto& l : lines) {
-            cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
+            cv::line(dst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
 
             Point2 pt1(l[0],l[1]);
             Point2 pt2(l[2],l[3]);
@@ -127,7 +156,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
         }
 
-        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst).toImageMsg();
+        sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
         //if(image_publisher.getNumSubscribers() > 1){
 
         image_publisher.publish(message);
