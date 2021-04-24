@@ -1,5 +1,5 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 030010af4390a040f9428d63b16f4e69
+protoFileHash: 7082db6ce2722124012cbc7acf2fce45
 needsRobotAncestor: 0
 baseType: Solid
 slotType: 
@@ -8,4 +8,4 @@ tags:
 license:  Apache License 2.0
 licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
 documentationUrl: 
-info: Official\ssoccer\sfield\sfor\sthe\sRobocup\sHumanoid\sLeague\s2021.\n
+info: Official\ssoccer\sfield\sfor\sthe\sRobocup\sHumanoid\sLeague\s2021.

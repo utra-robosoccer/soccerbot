@@ -358,7 +358,7 @@
   <joint name="left_leg_motor_3" type="revolute">
     <parent link="left_thigh"/>
     <child link="left_calve"/>
-    <origin rpy="0 0 0" xyz="0 0 -0.09290"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-2.793" upper="0" velocity="1"/>
@@ -621,7 +621,7 @@
   <joint name="right_leg_motor_3" type="revolute">
     <parent link="right_thigh"/>
     <child link="right_calve"/>
-    <origin rpy="0 0 0" xyz="0 0 -0.09290"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-2.793" upper="0" velocity="1"/>
