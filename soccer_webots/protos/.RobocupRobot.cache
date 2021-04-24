@@ -1,5 +1,5 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 050cfb8ed581611bfbf64c6a6b9a2539
+protoFileHash: 83e680872d13e5503e22a7483053f80b
 needsRobotAncestor: 0
 baseType: Robot
 slotType: 
@@ -8,4 +8,4 @@ tags:
 license:  Copyright Cyberbotics Ltd. Licensed for use only with Webots.
 licenseUrl:  https://cyberbotics.com/webots_assets_license
 documentationUrl: https://www.cyberbotics.com/doc/guide/robotis-op2
-info: This\sis\san\sexample\sof\srobot\smodel\sfor\sthe\sRobocup\sVirtual\sHumanoid\sLeague\nIt\sis\sderived\sfrom\sthe\sDarwin-opHinge2.proto\sincluded\sin\sWebots\nYou\sshoud\simplement\sthe\ssame\sinterface\sin\syour\sown\srobots,\sincluding\sthe\ntranslation,\srotation,\sname\sand\scontrollerArgs\sfields,\sso\sthat\sthey\scan\nbe\sproperly\sinserted\sinto\sRobocup\sgames.\n
+info: This\sis\san\sexample\sof\srobot\smodel\sfor\sthe\sRobocup\sVirtual\sHumanoid\sLeague\nIt\sis\sderived\sfrom\sthe\sDarwin-opHinge2.proto\sincluded\sin\sWebots\nYou\sshoud\simplement\sthe\ssame\sinterface\sin\syour\sown\srobots,\sincluding\sthe\ntranslation,\srotation,\sname\sand\scontrollerArgs\sfields,\sso\sthat\sthey\scan\nbe\sproperly\sinserted\sinto\sRobocup\sgames.
