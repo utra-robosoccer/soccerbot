@@ -1,12 +1,12 @@
-transform_tolerance: 0.05
-min_height: 0.0
+transform_tolerance: 0.01
+min_height: -1.0
 max_height: 1.0
 
-angle_min: -1.5708
-angle_max: 1.5708
-angle_increment: 0.0087
+angle_min: -3.16
+angle_max: 3.16
+angle_increment: 0.005
 scan_time: 0.3333
-range_min: 0.30
+range_min: 0.0
 range_max: 10.0
 use_inf: true
 
@@ -14,4 +14,4 @@ use_inf: true
 # 0: Detect number of cores
 # 1: Single threaded
 # 2: inf : Parallelism level
-concurrency_level: 1
+concurrency_level: 0
