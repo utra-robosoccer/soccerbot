@@ -161,7 +161,7 @@
         <joint name="${name}_leg_motor_3" type="revolute">
             <parent link="${name}_thigh"/>
             <child link="${name}_calve"/>
-            <origin rpy="0 0 0" xyz="0 0 -0.09290"/>
+            <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
             <axis xyz="0 -1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-2.793" upper="0" velocity="${MX28_VELOCITY}"/>

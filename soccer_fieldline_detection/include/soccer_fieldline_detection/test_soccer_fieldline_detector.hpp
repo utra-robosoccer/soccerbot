@@ -14,6 +14,9 @@ class SoccerFieldlineDetector {
 
     image_transport::Subscriber image_subscriber;
     image_transport::Publisher image_publisher;
+    image_transport::Publisher image_publisher2;
+    image_transport::Publisher image_publisher3;
+    image_transport::Publisher image_publisher4;
     ros::Publisher point_cloud_publisher;
     std::unique_ptr<Camera> camera;
 
