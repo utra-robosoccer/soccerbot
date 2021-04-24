@@ -1,5 +1,5 @@
-cannythreshold1: 300
-cannythreshold2: 411
+cannythreshold1: 400
+cannythreshold2: 1000
 houghRho: 1
 houghTheta: rad(pi/180)
 houghThreshold: 50

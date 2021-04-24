@@ -1,6 +1,14 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:macro name="imu" params="origin">
-        <link name="imu_link" />
+        <link name="imu_link" >
+            <inertial>
+                <mass value="0.01"/>
+                <origin rpy="0  0  0" xyz="0 0 0"/>
+                <inertia ixx="1e-9" ixy="0" ixz="0"
+                         iyy="1e-9" iyz="0"
+                         izz="1e-9"/>
+            </inertial>
+        </link>
         <joint name="${origin}_imu" type="fixed">
             <parent link="${origin}"/>
             <child link="imu_link"/>

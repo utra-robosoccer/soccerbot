@@ -1,0 +1,28 @@
+#VRML_SIM R2021a utf8
+DEF world_info WorldInfo {
+}
+Viewpoint {
+  orientation 1 0 0 1.5707963267948966
+  position 3.815760786470701e-16 -2.29128784747792 3.1798006553922506e-16
+}
+TexturedBackground {
+  texture "stadium"
+}
+TexturedBackgroundLight {
+  texture "stadium"
+}
+Floor {
+  rotation 1 0 0 1.57
+  size 100 100
+  tileSize 2 2
+}
+Soccerbot {
+  translation 0 0 0.5
+  controller "ros"
+  controllerArgs [
+      "--name=robot1"
+      "--clock"
+      "--use-sim-time"
+      "--synchronize"
+    ]
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>soccer_pycontrol</name>
+    <version>0.0.0</version>
+    <description>Package for walking the robot</description>
+    <maintainer email="namnam.nguyen@mail.utoronto.ca">Nam</maintainer>
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>rospy</depend>
+
+</package>
