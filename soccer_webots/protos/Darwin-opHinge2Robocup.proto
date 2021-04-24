@@ -196,7 +196,8 @@ PROTO Darwin-opHinge2Robocup [
         rotation 0 0 1.0 -3.1416
         name "Gyro"
         lookupTable [
-          -27.925 0 0 27.925 1024 0
+          -27.925 0 0
+          27.925 1024 0
         ]
       }
       DEF RECEIVER Receiver {

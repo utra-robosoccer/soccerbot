@@ -1521,9 +1521,19 @@ PROTO Bez [
 
             Accelerometer {
                 name "imu accelerometer"
+                lookupTable [
+                -19.62 -32768 0.00203
+                19.62 32767 0.00203
+                ]
+                resolution 1
               }
               Gyro {
                 name "imu gyro"
+                lookupTable [
+                -500.0 -32768 0.00804
+                500.0 32767 0.00804
+                ]
+                resolution 1
               }
           ]
           name "imu_link"
