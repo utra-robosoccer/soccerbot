@@ -155,16 +155,14 @@ class Soccerbot:
         self.motor_publishers[Joints.RIGHT_LEG_4] = rospy.Publisher("right_leg_motor_3/command", Float64, queue_size=1)
         self.motor_publishers[Joints.RIGHT_LEG_5] = rospy.Publisher("right_leg_motor_4/command", Float64, queue_size=1)
         self.motor_publishers[Joints.RIGHT_LEG_6] = rospy.Publisher("right_leg_motor_5/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.HEAD_1] = rospy.Publisher("head_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.HEAD_2] = rospy.Publisher("head_motor_1/command", Float64, queue_size=1)
+
 
         self.pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
         self.motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
                             "left_leg_motor_0", "left_leg_motor_1",
                             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
                             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
+                            "right_leg_motor_4", "right_leg_motor_5"
                             ]
 
     def ready(self):
