@@ -11,7 +11,7 @@ from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 
 class RobotController:
-    def __init__(self, ):
+    def __init__(self, base_ns="/robot1"):
         """
         The RobotController, a Webots controller that controls a single robot.
         The environment variable WEBOTS_ROBOT_NAME should be set to "amy", "rory", "jack" or "donna" if used with
@@ -27,32 +27,37 @@ class RobotController:
         self.walkready = [0] * 20
         self.time = 0
         self.robot_node = Robot()
-        base_ns = "/robot1"
-        # base_ns = "/" + self.robot_node.getName()
+        self.base_frame = base_ns + "/"
+        base_ns = "/" + base_ns
         self.motors = []
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
 
-        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]", "right_arm_motor_1",
+        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
+                            "right_arm_motor_1",
                             "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
                             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
                             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
                             "head_motor_0", "head_motor_1"
                             ]
-        self.sensor_names = ["left_arm_motor_0_sensor", "left_arm_motor_1_sensor", "right_arm_motor_0_sensor", "right_arm_motor_1_sensor",
-                            "right_leg_motor_0_sensor", "right_leg_motor_1_sensor", "right_leg_motor_2_sensor", "right_leg_motor_3_sensor",
-                            "right_leg_motor_4_sensor", "right_leg_motor_5_sensor", "left_leg_motor_0_sensor", "left_leg_motor_1_sensor",
-                            "left_leg_motor_2_sensor", "left_leg_motor_3_sensor", "left_leg_motor_4_sensor", "left_leg_motor_5_sensor",
-                            "head_motor_0_sensor", "head_motor_1_sensor"
-                            ]
+        self.sensor_names = ["left_arm_motor_0_sensor", "left_arm_motor_1_sensor", "right_arm_motor_0_sensor",
+                             "right_arm_motor_1_sensor",
+                             "right_leg_motor_0_sensor", "right_leg_motor_1_sensor", "right_leg_motor_2_sensor",
+                             "right_leg_motor_3_sensor",
+                             "right_leg_motor_4_sensor", "right_leg_motor_5_sensor", "left_leg_motor_0_sensor",
+                             "left_leg_motor_1_sensor",
+                             "left_leg_motor_2_sensor", "left_leg_motor_3_sensor", "left_leg_motor_4_sensor",
+                             "left_leg_motor_5_sensor",
+                             "head_motor_0_sensor", "head_motor_1_sensor"
+                             ]
         self.motor_count = len(self.motor_names)
         self.external_motor_names = \
-                            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-                            "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
-                            ]
+            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
+             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
+             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
+             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
+             "head_motor_0", "head_motor_1"
+             ]
         accel_name = "imu accelerometer"
         gyro_name = "imu gyro"
         camera_name = "camera"
@@ -69,7 +74,7 @@ class RobotController:
             self.pressure_sensors.append(sensor)
 
         # self.robot_node = self.supervisor.getFromDef(self.robot_node_name)
-        for i in range (0,self.motor_count):
+        for i in range(0, self.motor_count):
             self.motors.append(self.robot_node.getDevice(self.motor_names[i]))
             self.motors[-1].enableTorqueFeedback(self.timestep)
             self.sensors.append(self.robot_node.getDevice(self.sensor_names[i]))
@@ -95,7 +100,7 @@ class RobotController:
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
         self.cam_info.header.stamp = rospy.Time.from_seconds(self.time)
-        self.cam_info.header.frame_id = "camera"
+        self.cam_info.header.frame_id = self.base_frame + "camera"
         self.cam_info.height = self.camera.getHeight()
         self.cam_info.width = self.camera.getWidth()
         f_y = self.mat_from_fov_and_resolution(
@@ -139,7 +144,7 @@ class RobotController:
     def publish_camera(self):
         img_msg = Image()
         img_msg.header.stamp = rospy.Time.from_seconds(self.time)
-        img_msg.header.frame_id = "camera_base"
+        img_msg.header.frame_id = self.base_frame + "camera_base"
         img_msg.height = self.camera.getHeight()
         img_msg.width = self.camera.getWidth()
         img_msg.encoding = "bgra8"
@@ -155,7 +160,7 @@ class RobotController:
         msg = Imu()
         msg.header.stamp = rospy.Time.from_seconds(self.time)
 
-        msg.header.frame_id = "imu_link"
+        msg.header.frame_id = self.base_frame + "imu_link"
 
         # change order because webots has different axis
 
@@ -196,9 +201,9 @@ class RobotController:
 
             marker_object = Marker()
             if i < 4:
-                marker_object.header.frame_id = "left_foot"
+                marker_object.header.frame_id = self.base_frame + "left_foot"
             else:
-                marker_object.header.frame_id = "right_foot"
+                marker_object.header.frame_id = self.base_frame + "right_foot"
 
             marker_object.header.stamp = current_time
             marker_object.ns = "Soccer_bot"

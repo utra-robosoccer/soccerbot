@@ -5,7 +5,7 @@
   <arg name="world" default="" doc="Path to the world to load"/>
   <arg name="mode" default="realtime" doc="Startup mode"/>
 
-  <include file="$(find soccer_webots)/launch/simulation_webot.launch" ns="robot1">
+  <include file="$(find soccer_webots)/launch/simulation_webot.launch" >
 
   </include>
   <param name="/simulation_active" value="true"/>

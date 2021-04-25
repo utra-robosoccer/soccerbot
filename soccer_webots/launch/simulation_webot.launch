@@ -13,10 +13,26 @@
 
 
 
-    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" >
-        <arg name="robot_name" value="red_player_2"/>
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot1">
+        <arg name="robot_name" value="red_player_1"/>
+        <arg name="robot_tag" value="robot1"/>
 
     </include>
+
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot2" >
+        <arg name="robot_name" value="red_player_2"/>
+        <arg name="robot_tag" value="robot2"/>
+    </include>
+
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot3" >
+        <arg name="robot_name" value="red_player_3"/>
+        <arg name="robot_tag" value="robot3"/>
+    </include>
+
+<!--    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot4" >-->
+<!--        <arg name="robot_name" value="red_player_4"/>-->
+<!--        <arg name="robot_tag" value="robot4"/>-->
+<!--    </include>-->
 
 
 

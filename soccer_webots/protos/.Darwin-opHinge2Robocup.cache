@@ -1,5 +1,5 @@
 Webots Proto Cache File version 1.5
-protoFileHash: 76f499f181fc0f862b78852b2bbee177
+protoFileHash: 098185a3646eba573ce0b0e783835889
 needsRobotAncestor: 1
 baseType: Robot
 slotType: 
@@ -8,4 +8,4 @@ tags:
 license:  Copyright Cyberbotics Ltd. Licensed for use only with Webots.
 licenseUrl:  https://cyberbotics.com/webots_assets_license
 documentationUrl: https://www.cyberbotics.com/doc/guide/robotis-op2
-info: Robotis'\sDARwIn-OP\sis\san\sopen\splatform,\sminiature\shumanoid\srobot\sused\sfor\sresearch,\seducation\sand\soutreach.\nThe\sDARwIn-OP\smodel\scontains\sprincipally:\n-\sthe\s20\sDOF\n-\sLEDs\n-\saccelerometer\n-\sgyro\n-\scamera\n-\srealistic\sphysics\n
+info: Robotis'\sDARwIn-OP\sis\san\sopen\splatform,\sminiature\shumanoid\srobot\sused\sfor\sresearch,\seducation\sand\soutreach.\nThe\sDARwIn-OP\smodel\scontains\sprincipally:\n-\sthe\s20\sDOF\n-\sLEDs\n-\saccelerometer\n-\sgyro\n-\scamera\n-\srealistic\sphysics

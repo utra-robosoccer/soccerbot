@@ -26,12 +26,17 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghMinLineLength", minLineLength);
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
 
+    while(!nh.hasParam("name")) {
+        ros::Duration(1.0).sleep();
+    }
+    nh.getParam("name", name);
+
     // Initialize Camera
     geometry_msgs::TransformStamped camera_pose;
 
     while(ros::ok()) {
         try{
-            camera_pose = tfBuffer.lookupTransform("camera", "base_footprint",
+            camera_pose = tfBuffer.lookupTransform(name + "/camera", name + "/base_footprint",
                                                    ros::Time(0), ros::Duration(1.0));
             break;
         }
@@ -64,7 +69,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Get transformation
     geometry_msgs::TransformStamped camera_pose;
     try{
-        camera_pose = tfBuffer.lookupTransform("base_footprint", "camera",
+
+        camera_pose = tfBuffer.lookupTransform(name + "/base_footprint", name + "/camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
@@ -147,7 +153,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i += 1) {
+            for (size_t i = l[0]; i < l[2];i += 13) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
@@ -174,7 +180,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     sensor_msgs::PointCloud2 point_cloud_msg;
     //Setting up PointCloud2 msg
     point_cloud_msg.header.stamp = ros::Time::now();
-    point_cloud_msg.header.frame_id = "base_camera";
+    point_cloud_msg.header.frame_id = name + "/base_camera";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
     point_cloud_msg.is_bigendian = false;
@@ -207,8 +213,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     points3d.clear();
 
     geometry_msgs::TransformStamped camera_footprint = camera_pose;
-    camera_footprint.header.frame_id = "base_footprint";
-    camera_footprint.child_frame_id = "base_camera";
+    camera_footprint.header.frame_id = name + "/base_footprint";
+    camera_footprint.child_frame_id = name + "/base_camera";
     camera_footprint.header.stamp = msg->header.stamp;
     camera_footprint.header.seq = msg->header.seq;
 

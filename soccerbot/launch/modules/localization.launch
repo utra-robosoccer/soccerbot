@@ -26,32 +26,35 @@
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
-    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>
-    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>
-    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>
-    <rosparam ns="darknet_ros" param="publishers/object_detector/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/found_object</rosparam>
-    <rosparam ns="darknet_ros" param="publishers/bounding_boxes/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/bounding_boxes</rosparam>
-    <rosparam ns="darknet_ros" param="publishers/detection_image/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/detection_image</rosparam>
-    <node pkg="darknet_ros" type="darknet_ros" name="darknet_ros" output="log">
-        <param name="weights_path"          value="$(find darknet_ros)/yolo_network_config/weights" />
-        <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />
-    </node>
+<!--    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>-->
+<!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>-->
+<!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>-->
+<!--    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>-->
+<!--    <rosparam ns="darknet_ros" param="publishers/object_detector/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/found_object</rosparam>-->
+<!--    <rosparam ns="darknet_ros" param="publishers/bounding_boxes/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/bounding_boxes</rosparam>-->
+<!--    <rosparam ns="darknet_ros" param="publishers/detection_image/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/detection_image</rosparam>-->
+<!--    <node pkg="darknet_ros" type="darknet_ros" name="darknet_ros" output="log">-->
+<!--        <param name="weights_path"          value="$(find darknet_ros)/yolo_network_config/weights" />-->
+<!--        <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />-->
+<!--    </node>-->
 
     <node pkg="soccer_strategy" type="fall_detector.py" name="fall_detector"/>
-    <node pkg="soccer_strategy" type="main.py" name="main"/>
+<!--    <node pkg="soccer_strategy" type="main.py" name="main"/>-->
     <!-- Complementary filter -->
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
         <remap from="imu/data_raw" to="imu_raw" />
         <remap from="imu/data" to="imu_data" />
+
+<!--        <param name="publish_tf" value="true" />-->
     </node>
 
     <!-- IMU location -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
-
+        <param name="output_frame" value="$(arg robot_name)/odom" />
+        <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
 <!--    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node" >-->
 <!--        <rosparam file="$(find soccerbot)/config/robot_localization_ekf.yaml" command="load" />-->
@@ -62,6 +65,8 @@
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
         <param name="initial_pose_x" value="$(arg x_pos)" />
         <param name="initial_pose_y" value="$(arg y_pos)" />
+        <param name="odom_frame_id" value="$(arg robot_name)/odom" />
+        <param name="base_frame_id" value="$(arg robot_name)/base_camera" />
     </node>
 <!--    <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 odom base_footprint 100" />-->
     <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)">
