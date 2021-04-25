@@ -1,0 +1,14 @@
+<package format="2">
+    <name>soccer_object_detection</name>
+    <version>0.0.0</version>
+    <description>The soccer_object_detection package</description>
+
+    <maintainer email="namnam.nguyen@mail.utoronto.ca">nam</maintainer>
+
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>rospy</depend>
+    <depend>std_msgs</depend>
+
+</package>
