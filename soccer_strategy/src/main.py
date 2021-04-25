@@ -121,8 +121,12 @@ if __name__ == '__main__':
     strategy = DummyStrategy()
 
     game_period_steps = int(2 * 10 * 60 / PHYSICS_UPDATE_INTERVAL) # 2 Periods of 10 minutes each
+
+    friendly_points = 0
+    opponent_points = 0
+
     for step in range(game_period_steps):
-        if step > game_period_steps / 2:
+        if step == int(game_period_steps / 2):
             print("Second Half Started: ")
             robots = robots_init
             ball = ball_init
@@ -132,8 +136,21 @@ if __name__ == '__main__':
 
         updateEstimatedPhysics(robots, ball)
 
+        # Check victory condition
+        if ball.get_position()[1] > 4.5:
+            print("Friendly Scores!")
+            friendly_points += 1
+            robots = robots_init
+            ball = ball_init
+        elif ball.get_position()[1] < -4.5:
+            print("Opponent Scores!")
+            opponent_points += 1
+            robots = robots_init
+            ball = ball_init
+
         if step % DISPLAY_UPDATE_INTERVAL == 0:
             displayGameState(robots, ball, step * PHYSICS_UPDATE_INTERVAL)
 
+    print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
     plt.show()
 
