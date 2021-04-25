@@ -37,14 +37,23 @@ PROTO Bez [
     selfCollision IS selfCollision
     %{
 
+            print (fields.name.value)
         if fields.name.value ~= '' then
+
                 -- name is supposed to be something like "red player 2" or "blue player 1"
                 local words = {}
                 for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
-                local color = words[1]
-                local number = words[3]
 
+                color = words[1]
+                number = words[3]
+        else
+                color = "blue"
+                number = 3
+        end
 
+        local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+        local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+      
 
 
     }%
@@ -54,18 +63,18 @@ PROTO Bez [
     children [
       Soccerbot_torso_0Mesh {
       jerseyTexture [
-                      %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_1Mesh {
         jerseyTexture [
-                %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                %{=text1}%
               ]
 
       }
       Soccerbot_torso_2Mesh {
       jerseyTexture [
-                      %{='"textures/bez_back_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_3Mesh {
@@ -74,10 +83,7 @@ PROTO Bez [
       }
       Soccerbot_torso_5Mesh {
       }
-      %{
-         end
-       }%
-
+   
 
 
 

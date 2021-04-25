@@ -1,6 +1,6 @@
     <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
         <xacro:macro name="arm" params="name origin direction">
-            <link name="${name}_bicep">
+            <link name="$(arg tf_prefix)/${name}_bicep">
                 <inertial>
                     <mass value="0.213e-3"/>
                     <origin rpy="0  0  0" xyz="0.000 ${direction * 0.02579} -0.04955"/>
@@ -22,7 +22,7 @@
                     <material name="black" />
                 </visual>
             </link>
-            <link name="${name}_forearm">
+            <link name="$(arg tf_prefix)/${name}_forearm">
                 <inertial>
                     <mass value="45.7e-3"/>
                     <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097" />
@@ -47,22 +47,22 @@
 
             <joint name="${name}_arm_motor_0" type="revolute">
                 <parent link="${origin}"/>
-                <child link="${name}_bicep"/>
+                <child link="$(arg tf_prefix)/${name}_bicep"/>
                 <origin rpy="0 0 0" xyz="-0.0157 ${direction * 0.0725} 0"/>
                 <axis xyz="0 -1 0"/>
                 <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
                 <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${AX12_VELOCITY}"/>
             </joint>
             <joint name="${name}_arm_motor_1" type="revolute">
-                <parent link="${name}_bicep"/>
-                <child link="${name}_forearm"/>
+                <parent link="$(arg tf_prefix)/${name}_bicep"/>
+                <child link="$(arg tf_prefix)/${name}_forearm"/>
                 <origin rpy="0 0 0" xyz="0 0 -0.10"/>
                 <axis xyz="0 -1 0"/>
                 <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
                 <limit effort="${AX12_TORQUE}" lower="0" upper="${PI}" velocity="${AX12_VELOCITY}"/>
             </joint>
 
-            <gazebo reference="${name}_forearm">
+            <gazebo reference="$(arg tf_prefix)/${name}_forearm">
                 <mu1>${FOREARM_MU1}</mu1>
                 <mu2>${FOREARM_MU2}</mu2>
             </gazebo>
@@ -88,13 +88,13 @@
                 </actuator>
             </transmission>
 
-            <gazebo reference="${name}_bicep">
+            <gazebo reference="$(arg tf_prefix)/${name}_bicep">
                 <kp>${JOINT_KP}</kp>
                 <kd>${JOINT_KD}</kd>
                 <mu1>${JOINT_MU1}</mu1>
                 <mu2>${JOINT_MU2}</mu2>
             </gazebo>
-            <gazebo reference="${name}_forearm">
+            <gazebo reference="$(arg tf_prefix)/${name}_forearm">
                 <kp>${JOINT_KP}</kp>
                 <kd>${JOINT_KD}</kd>
                 <mu1>${JOINT_MU1}</mu1>

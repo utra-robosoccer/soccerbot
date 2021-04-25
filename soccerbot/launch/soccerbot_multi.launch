@@ -1,6 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="single" default="true" />
+    <arg name="single" default="false" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch" />
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
@@ -27,11 +27,11 @@
         <arg name="x_pos" value="-2.00" />
         <arg name="y_pos" value="-2.00" />
     </include>
-    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
-        <arg name="simulation" value="true" />
-        <arg name="robot_name" value="robot4" />
-        <arg name="ip_address" value="$(optenv ROBOT4_IP localhost)" />
-        <arg name="x_pos" value="-3.00" />
-        <arg name="y_pos" value="0.00" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="true" />-->
+<!--        <arg name="robot_name" value="robot4" />-->
+<!--        <arg name="ip_address" value="$(optenv ROBOT4_IP localhost)" />-->
+<!--        <arg name="x_pos" value="-3.00" />-->
+<!--        <arg name="y_pos" value="0.00" />-->
+<!--    </include>-->
 </launch>

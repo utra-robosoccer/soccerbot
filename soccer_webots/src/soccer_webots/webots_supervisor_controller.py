@@ -50,7 +50,7 @@ class SupervisorController:
                 self.translation_fields[name] = node.getField("translation")
                 self.rotation_fields[name] = node.getField("rotation")
 
-        clock_topic = base_ns + "/clock"
+        clock_topic = "/clock"
 
         self.clock_publisher = rospy.Publisher(clock_topic, Clock, queue_size=1)
 
