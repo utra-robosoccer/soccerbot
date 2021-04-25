@@ -9,8 +9,8 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
 import util
 
-train_path = '../bit-bots-ball-dataset-2018/train'
-test_path = '../bit-bots-ball-dataset-2018/test'
+train_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/train'
+test_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/test'
 
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=True):

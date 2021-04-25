@@ -73,8 +73,8 @@ def train_model():
 
 
 def display_dataset():
-    model = CNN(kernel=3, num_features=16)
-    model.load_state_dict(torch.load('outputs/model'))
+    model = CNN(kernel=3, num_features=8)
+    model.load_state_dict(torch.load('outputs/model_ker3_feat8'))
     model.eval()
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
     testd.visualize_images(delay=10, model=model, start=0)
@@ -117,4 +117,4 @@ def webcam():
 
 
 if __name__ == '__main__':
-    train_model()
+    display_dataset()
