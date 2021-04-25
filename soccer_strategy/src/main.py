@@ -1,391 +1,139 @@
 #!/usr/bin/env python3
-import rospy
-import tf2_ros
-import geometry_msgs.msg
-from geometry_msgs.msg import PoseArray
-from tf.transformations import quaternion_from_euler
+import copy
 import math
-from enum import Enum
-from std_msgs.msg import String
-import std_msgs.msg._Bool
-from gazebo_msgs.msg import ModelState
-from gazebo_msgs.srv import SetModelState
-import nav_msgs.msg
 
+# TODO change to pyqt5 for faster plotting
+import numpy as np
+from matplotlib.ticker import MultipleLocator
+from robot import Robot
+from ball import Ball
+from strategy import DummyStrategy
+import matplotlib.pyplot as plt
 
-class Status(Enum):
-    standing = 0
-    walking = 1
-    fallen_back = 2
-    fallen_forward = 3
-    kicking = 4
+PHYSICS_UPDATE_INTERVAL = 0.1
+STRATEGY_UPDATE_INTERVAL = 5 # Every 5 physics steps
+DISPLAY_UPDATE_INTERVAL = 5 # Every 5 physics steps
 
+def displayGameState(robots, ball, t=0.0):
+    foreground = plt.gcf().axes[1]
+    foreground.clear()
+    foreground.axis('equal')
+    foreground.set_xlim([-3.5, 3.5])
+    foreground.set_ylim([-5, 5])
 
-# Define the publisher and subscribers here
-getting_up = False
+    # Display Robots
+    for robot in robots:
+        x = robot.get_position()[0]
+        y = robot.get_position()[1]
+        theta = robot.get_position()[2]
 
-tfBuffer = None
-listener = None
-
-has_ball_tmp = False
-
-
-class Action:
-    def __init__(self):
-
-        self.get_up = rospy.Publisher('command', String, queue_size=1, latch=True)
-        self.move = rospy.Publisher("goal", geometry_msgs.msg.PoseStamped, queue_size=1, latch=True)
-        self.up = rospy.Subscriber("get_up", std_msgs.msg.Bool, self.get_up_callback)
-        self.walking = rospy.Subscriber("walking", std_msgs.msg.Bool, self.walk_callback)
-        self.odom = rospy.Publisher('odom', nav_msgs.msg.Odometry, queue_size=1)
-        self.ran = False
-        self.walk = False
-        pass
-
-    def get_up_callback(self, data):
-        self.ran = True
-
-    def walk_callback(self, data):
-        self.walk = True
-
-    def execute(self, state, robots):
-        # ros.publish geometry,Pose2D where to go
-        # ros.publish rviz debug pose 2D
-
-        # ros,publish soccer_trajectories string for getupfront getupback
-        global has_ball_tmp
-        global getting_up
-        if state["status"] == Status.fallen_forward:
-            self.ran = False
-            msg = String()
-            msg.data = "getupfront"
-            self.get_up.publish(msg)
-
-            while robots[1]['status'] != Status.standing:
-                if self.ran:
-                    self.get_up.publish(msg)
-                    self.ran = False
-                rospy.sleep(0.1)
-            pass
-        elif state["status"] == Status.fallen_back:
-            msg = String()
-            msg.data = "getupfront"
-            self.get_up.publish(msg)
-            while robots[1]['status'] != Status.standing:
-                if self.ran:
-                    self.get_up.publish(msg)
-                    self.ran = False
-                rospy.sleep(0.1)
-            pass
-        # elif state["status"] == Status.standing:
-        elif has_ball_tmp:
-            self.walk = False
-            # The real walking method
-            '''msg = geometry_msgs.msg.PoseStamped()
-            msg.header.stamp = rospy.Time.now()
-            msg.header.frame_id = 'world'
-            msg.pose.position = state["state"].position
-            msg.pose.orientation = state["state"].orientation
-            self.move.publish(msg)
-            while not self.walk:
-                rospy.sleep(0.1)'''
-            # Fake walking method
-            msg = ModelState()
-            msg.model_name = 'robot1'
-            msg.pose.position = state["state"].position
-            msg.pose.orientation = state["state"].orientation
-            msg.reference_frame = 'world'
-
-            rospy.wait_for_service('/gazebo/set_model_state')
-            try:
-                set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
-                resp = set_state(msg)
-                odometry = nav_msgs.msg.Odometry()
-                odometry.header.frame_id = 'odom'
-                odometry.child_frame_id = 'base_footprint'
-                odometry.header.stamp = rospy.Time.now()
-                odometry.pose.pose.position.x = state["state"].position.x - robots[1]['position'].pose.pose.position.x
-                odometry.pose.pose.position.y = state["state"].position.y - robots[1]['position'].pose.pose.position.y
-                odometry.pose.pose.position.z = 0.0
-                odometry.pose.pose.orientation.x = 0.0
-                odometry.pose.pose.orientation.y = 0.0
-                odometry.pose.pose.orientation.z = 0.0
-                odometry.pose.pose.orientation.w = 1.0
-                odometry.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                self.odom.publish(odometry)
-
-            except rospy.ServiceException, e:
-                print "Service call failed: %s" % e
-
-            rospy.sleep(1)
-        pass
-
-
-class State:
-    def update_2(self):
-        has_ball = False
-        ball_pose = geometry_msgs.msg.TransformStamped()
-        ball_pose.header.stamp = rospy.Time.now()
-        act = Action()
-
-        try:
-            ball_pose = tfBuffer.lookup_transform('ball', 'base_footprint', rospy.Time(0))
-            has_ball = True
-            self.has_ball_once = True
-
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
-            print(e)
-            pass
-        if has_ball:
-            tmp = geometry_msgs.msg.Pose()
-            tmp.position.x = ball_pose.transform.translation.x
-            tmp.position.y = ball_pose.transform.translation.y
-            tmp.position.z = ball_pose.transform.translation.z
-            tmp.orientation.x = 0.0
-            tmp.orientation.y = 0.0
-            tmp.orientation.z = 0.0
-            tmp.orientation.w = 1.0
-
-            best_state = {'state': tmp, 'status': Status.standing}
-
-            act.execute(best_state, self.robots)
-            pass
-
-        pass
-
-    def update(self):  # finished but not scalable
-        # Reads all tf transformations and updates the information and the status from nam
-        # robot[1]["position"] = (2,3) # geometry_msgs::Pose2D
-        # robot[1]["status"] = Status.FallenBack
-
-        # Update the location of the ball
-        # ball["position"] = (2,3)
-        global has_ball_tmp
-        has_ball = False
-        ball_pose = geometry_msgs.msg.TransformStamped()
-        ball_pose.header.stamp = rospy.Time.now()
-
-        ball_pose_world = geometry_msgs.msg.TransformStamped()
-        ball_pose_world.header.stamp = rospy.Time.now()
-        try:
-            ball_pose = tfBuffer.lookup_transform('ball', 'base_footprint', rospy.Time(0))
-            ball_pose_world = tfBuffer.lookup_transform('ball', 'world', rospy.Time(0))
-            has_ball = True
-            self.has_ball_once = True
-            has_ball_tmp = True
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
-            print(e)
-            has_ball_tmp = False
-            pass
-
-        last_pose = rospy.Time.now() - ball_pose.header.stamp
-
-        if has_ball and (last_pose < rospy.Duration(1)):
-            position = geometry_msgs.msg.PoseWithCovarianceStamped()
-
-            position.pose.pose.position.x = ball_pose.transform.translation.x
-            position.pose.pose.position.y = ball_pose.transform.translation.y
-            position.pose.pose.position.z = 0
-
-            position.pose.pose.orientation.x = 0.0
-            position.pose.pose.orientation.y = 0.0
-            position.pose.pose.orientation.z = 0.0
-            position.pose.pose.orientation.w = 1.0
-
-            self.ball["position"] = position
-
-            position = geometry_msgs.msg.PoseWithCovarianceStamped()
-
-            position.pose.pose.position.x = ball_pose_world.transform.translation.x
-            position.pose.pose.position.y = ball_pose_world.transform.translation.y
-            position.pose.pose.position.z = 0
-
-            position.pose.pose.orientation.x = 0.0
-            position.pose.pose.orientation.y = 0.0
-            position.pose.pose.orientation.z = 0.0
-            position.pose.pose.orientation.w = 1.0
-            self.ball["pos_world"] = position
-
-            self.successors()
+        if robot.team == Robot.Team.OPPONENT:
+            color = 'red'
         else:
-            has_ball_tmp = False
+            color = 'green'
+        foreground.add_patch(plt.Circle((x, y), 0.08, color=color))
 
-        pass
+        arrow_len = 0.3
+        arrow_end_x = math.cos(theta) * arrow_len
+        arrow_end_y = math.sin(theta) * arrow_len
+        foreground.arrow(x, y, arrow_end_x, arrow_end_y, head_width=0.05, head_length=0.1, color=color)
 
-    def successors(self):  # using pose array for all states
-        # only 180 deg front of robot at 10 degree interval in direction of ball
-        # Retrieve list of actions in future (robot can move in radius 1m, and front half circle (slices) 10 degrees
-        # If ball is within 1m. robot can also move directly to the ball, slightly to the left and the right because of foot
-        # If robot.Status = Fallen, then the only thing you can do is get back up (front and back)
+    # Draw ball
+    x = ball.get_position()[0]
+    y = ball.get_position()[1]
+    dx = ball.get_velocity()[0]
+    dy = ball.get_velocity()[1]
+    foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
+    foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
 
-        # add dfs until reach goal state
-        # add spacing when teleport to ball
-        if not self.has_ball_once:
-            return
-        self.successor['pose_array'] = PoseArray()
-        self.successor['pose_array'].header.frame_id = 'world'
-        self.successor['pose_array'].header.stamp = rospy.Time.now()
-        self.successor['cost'] = []
-        self.successor['status'] = []
+    # GUI text
+    foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
 
-        dist = self.distance(self.ball["position"].pose.pose.position.x, self.ball["position"].pose.pose.position.y)
-        tmp = geometry_msgs.msg.Pose()
-        tmp.orientation = (0, 0, 0, 1)
-        tmp.position = (0, 0, 0, 0)
+    plt.pause(0.001)
 
-        if self.robots[1]["status"] == Status.walking:
-            return
-        elif self.robots[1]["status"] == Status.fallen_back:
-            self.successor['pose_array'].poses.append(tmp)
-            self.successor['status'].append(Status.fallen_back)
-            self.successor['cost'].append(0)
+def updateEstimatedPhysics(robots, ball):
+    # Robot
+    for robot in robots:
+        # TODO use the same trajectory as in soccer_pycontrol
+        if robot.status == Robot.Status.WALKING:
+            delta = (robot.goal_position - robot.get_position())[0:2]
+            if np.linalg.norm(delta) == 0:
+                continue
 
-            pass
+            unit = delta / np.linalg.norm(delta)
+            robot.position[0:2] = robot.get_position()[0:2] + unit * robot.speed * PHYSICS_UPDATE_INTERVAL
+        elif robot.status == Robot.Status.KICKING:
+            if ball.kick_timeout == 0:
+                ball.velocity = robot.kick_velocity
+            robot.status = Robot.Status.READY
 
-        elif self.robots[1]["status"] == Status.fallen_forward:
-            self.successor['pose_array'].poses.append(tmp)
-            self.successor['status'].append(Status.fallen_forward)
-            self.successor['cost'].append(0)
-
-            pass
-        elif self.robots[1]["status"] == Status.standing:
-            if abs((self.ball["position"].pose.pose.position.y - self.robots[1][
-                "position"].pose.pose.position.y)) <= 0.0:  # arbitray distance 0.0 so that the point array is generated
-                self.successor['status'].append(Status.kicking)
-                self.successor['cost'].append(10)
-
-            if dist >= 1.0:
-                dist = 1.0
-
-            for i in range(0, 190, 10):
-                future_state = geometry_msgs.msg.Pose()
-                q = [0, 0, 0, 1]
-                future_state.orientation.x = q[0]  # maybe add a real orientation based off of quaternions
-                future_state.orientation.y = q[1]
-                future_state.orientation.z = q[2]
-                future_state.orientation.w = q[3]
-
-                if i > 90:
-                    future_state.position.y = (self.robots[1]["position"].pose.pose.position.y - (
-                            math.cos(math.radians(i - 90)) / dist))
-                    future_state.position.x = (self.robots[1]["position"].pose.pose.position.x + (
-                            math.sin(math.radians(i - 90)) / dist))
-                else:
-                    future_state.position.y = (
-                            self.robots[1]["position"].pose.pose.position.y + (math.cos(math.radians(i)) / dist))
-                    future_state.position.x = (
-                            self.robots[1]["position"].pose.pose.position.x + (math.sin(math.radians(i)) / dist))
-                future_state.position.z = 0.0
-
-                self.successor['pose_array'].poses.append(future_state)
-                h = self.value(future_state.position.x, future_state.position.y)
-                self.successor['cost'].append(h)
-                self.successor['status'].append(Status.walking)
-
-            self.future_pose.publish(self.successor['pose_array'])
-
-        pass
-
-    def value(self, x, y):
-        # for every robot. Add them up
-        # Return the heuristic value of the state
-        # if fallen, h = 0
-        # if standing h = 100
-        # distance to ball
-        h = 100
-        # ball position in robot frame + current robot frame = ball in world  => ball in world - robot new position    self.robots[1]['position'].pose.pose.position.y
-        x_2 = 100 * abs(self.ball["pos_world"].pose.pose.position.x - x)
-        y_2 = 100 * abs(self.ball["pos_world"].pose.pose.position.y - y)
-        h += self.distance(x_2, y_2)
-        return h
-
-    def robot_pose_callback(self, data):
-        self.robots[1]["position"] = data
-        pass
-
-    def robot_state_callback(self, data):
-        global getting_up
-        if data.data == 'fell_front':
-            self.robots[1]["status"] = Status.fallen_forward
-            getting_up = True
-        elif data.data == 'fell_back':
-            self.robots[1]["status"] = Status.fallen_back
-            getting_up = True
-        elif data.data == 'standing':
-            self.robots[1]["status"] = Status.standing
-            getting_up = False
-        pass
-
-    def distance(self, x, y):
-        dist = (x ** 2 + y ** 2) ** (1.0 / 2)
-        return dist
-        pass
-
-    def __init__(self):
-        self.robot_pose = rospy.Subscriber("amcl_pose", geometry_msgs.msg.PoseWithCovarianceStamped,
-                                           self.robot_pose_callback)
-        self.future_pose = rospy.Publisher("successor_states", geometry_msgs.msg.PoseArray, queue_size=1)
-        self.robot_state = rospy.Subscriber("fall_state", String, self.robot_state_callback)
-
-        position = geometry_msgs.msg.PoseWithCovarianceStamped()
-
-        position.pose.pose.position.x = 0.0
-        position.pose.pose.position.y = 0.0
-        position.pose.pose.position.z = 0.0
-
-        position.pose.pose.orientation.x = 0.0
-        position.pose.pose.orientation.y = 0.0
-        position.pose.pose.orientation.z = 0.0
-        position.pose.pose.orientation.w = 1.0
-
-        self.robots = {1: {'position': position, 'status': Status.standing}}
-        self.ball = {'position': position, 'pos_world': position}
-
-        pose_array = PoseArray()
-        cost = []
-        status = []
-        self.has_ball_once = False
-        self.successor = {'pose_array': pose_array, 'cost': cost, 'status': status}
-        pass
-
-
-def main():
-    global tfBuffer
-    global listener
-
-    rospy.init_node('soccer_strategy', anonymous=True)
-    tfBuffer = tf2_ros.Buffer()
-    listener = tf2_ros.TransformListener(tfBuffer)
-
-    rate = rospy.Rate(10.0)  # 0.05 hz
-
-    state = State()
-    act = Action()
-    while not rospy.is_shutdown():
-        state.update()
-
-        value = 2 ** 16
-        best_state = {'state': geometry_msgs.msg.Pose, 'status': Status.standing}
-
-        state.successors()
-        if len(state.successor['status']) >= 1:
-            for i in range(0, len(state.successor['status'])):
-                if state.successor['cost'][i] < value:
-                    value = state.successor['cost'][i]
-                    best_state['state'] = state.successor['pose_array'].poses[i]
-                    best_state['status'] = state.successor['status'][i]
-            act.execute(best_state, state.robots)
-
-        rate.sleep()
-
+    # Ball
+    if ball.kick_timeout > 0:
+        ball.kick_timeout = ball.kick_timeout - 1
+    ball.position = ball.get_position() + ball.get_velocity() * PHYSICS_UPDATE_INTERVAL
+    ball.velocity = ball.velocity * Ball.FRICTION_COEFF
 
 if __name__ == '__main__':
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        pass
+    # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
+    robots = [
+        Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+              position=np.array([0.0, -3.5, math.pi / 2])),
+        Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+              position=np.array([-1.5, -1.5, math.pi / 2])),
+        Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+              position=np.array([1.5, -1.5, math.pi / 2])),
+        Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+              position=np.array([0.0, -0.8, math.pi / 2])),
+        Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+              position=np.array([0.0, 3.5, -math.pi / 2])),
+        Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+              position=np.array([-1.5, 1.5, -math.pi / 2])),
+        Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+              position=np.array([1.5, 1.5, -math.pi / 2])),
+        Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+              position=np.array([0.0, 0.8, -math.pi / 2]))
+    ]
+    ball = Ball(position=np.array([0, 0]))
+
+    robots_init = copy.deepcopy(robots)
+    ball_init = copy.deepcopy(ball)
+
+    fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
+    background = fig.add_axes([0, 0, 1, 1])
+    background.axis('equal')
+    background.set_xlim([-3.5, 3.5])
+    background.set_ylim([-5, 5])
+    background.xaxis.set_major_locator(MultipleLocator(1))
+    background.yaxis.set_major_locator(MultipleLocator(1))
+    background.xaxis.set_minor_locator(MultipleLocator(0.1))
+    background.yaxis.set_minor_locator(MultipleLocator(0.1))
+    background.grid(which='minor', alpha=0.2)
+    background.grid(which='major', alpha=0.5)
+    background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
+    background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
+    background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
+    background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
+    background.add_patch(plt.Circle((-0, 0), 1.3/2, fill=None, color='blue'))
+    foreground = fig.add_axes([0, 0, 1, 1])
+    foreground.set_facecolor((0,0,0,0))
+
+    # Setup the strategy
+    strategy = DummyStrategy()
+
+    game_period_steps = int(2 * 10 * 60 / PHYSICS_UPDATE_INTERVAL) # 2 Periods of 10 minutes each
+    for step in range(game_period_steps):
+        if step > game_period_steps / 2:
+            print("Second Half Started: ")
+            robots = robots_init
+            ball = ball_init
+
+        if step % STRATEGY_UPDATE_INTERVAL == 0:
+            strategy.update_both_team_strategy(robots, ball)
+
+        updateEstimatedPhysics(robots, ball)
+
+        if step % DISPLAY_UPDATE_INTERVAL == 0:
+            displayGameState(robots, ball, step * PHYSICS_UPDATE_INTERVAL)
+
+    plt.show()
+
