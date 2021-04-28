@@ -31,7 +31,7 @@ humanoid-es:
         eval_prob: 0.003
         return_proc_mode: centered_rank
         # num_workers: 10
-        stepsize: 0.02
+        stepsize: 0.01
         observation_filter: MeanStdFilter
         noise_size: 250000000
         report_length: 10
