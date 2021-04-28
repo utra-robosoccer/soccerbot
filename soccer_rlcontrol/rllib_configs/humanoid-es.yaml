@@ -17,11 +17,11 @@ humanoid-es:
                     - 0
         extra_python_environs_for_driver:
             OMP_NUM_THREADS: 12
-        num_workers: 3
+        num_workers: 10
         # num_cpus_per_worker: 0.001
         num_envs_per_worker: 2
         horizon: 1024
-        num_gpus: 0
+        num_gpus: 1
 
         action_noise_std: 0.01
         l2_coeff: 0.005
