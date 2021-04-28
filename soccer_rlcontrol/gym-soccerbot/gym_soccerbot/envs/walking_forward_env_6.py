@@ -459,22 +459,20 @@ class WalkingForwardV6(gym.Env):
     def step(self, action):
         p = self._p
 
-        # Collect Sensor Data
+        # Construct Observation - Pipeline Structure
         feet = self._feet()
         imu = self._imu()
+        joints_pos = self._joints_pos()
+        joints_vel = self._joints_vel()
+        height = np.array([self._global_pos()[2]], dtype=self.DTYPE)
+        orn = self._global_orn()
+        observation = np.concatenate((joints_pos, joints_vel, imu, orn, height, feet))
 
         self.motor_control(action)
 
         # 120Hz - Step Simulation
         p.stepSimulation()
         p.stepSimulation()
-
-        # Construct Observation
-        joints_pos = self._joints_pos()
-        joints_vel = self._joints_vel()
-        height = np.array([self._global_pos()[2]], dtype=self.DTYPE)
-        orn = self._global_orn()
-        observation = np.concatenate((joints_pos, joints_vel, imu, orn, height, feet))
 
         ## Calculate Reward, Done, Info
         # Calculate Velocity direction field
@@ -605,13 +603,16 @@ class WalkingForwardV6(gym.Env):
         # Construct Observation
         imu = self._imu()
         feet = self._feet()
-        # np.array([0, 0, self._STANDING_HEIGHT], dtype=self.DTYPE)[2]
-
         joints_pos = self._joints_pos()
         joints_vel = self._joints_vel()
         height = np.array([self._global_pos()[2]], dtype=self.DTYPE)
         orn = self._global_orn()
         observation = np.concatenate((joints_pos, joints_vel, imu, orn, height, feet))
+        
+        # To keep up with the pipeline - 120Hz
+        p.stepSimulation()
+        p.stepSimulation()
+        
         if self._renders:
             pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         return observation
