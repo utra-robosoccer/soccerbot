@@ -9,29 +9,29 @@ humanoid-es:
         timesteps_total: 200000000
     config:
         # Works for both torch and tf.
-        framework: torch
+        framework: tf
         env_config:
-            env_name: gym_soccerbot:walk-forward-velocity-v1
+            env_name: gym_soccerbot:walk-forward-velocity-v2
             goal:
                     - 2
                     - 0
         extra_python_environs_for_driver:
             OMP_NUM_THREADS: 12
-        num_workers: 10
+        num_workers: 3
         # num_cpus_per_worker: 0.001
         num_envs_per_worker: 2
         horizon: 1024
-        num_gpus: 1
+        num_gpus: 0
 
         action_noise_std: 0.01
         l2_coeff: 0.005
         noise_stdev: 0.02
-        episodes_per_batch: 1000
-        train_batch_size: 10000
+        episodes_per_batch: 500
+        train_batch_size: 5000
         eval_prob: 0.003
         return_proc_mode: centered_rank
         # num_workers: 10
-        stepsize: 0.01
+        stepsize: 0.02
         observation_filter: MeanStdFilter
         noise_size: 250000000
         report_length: 10
