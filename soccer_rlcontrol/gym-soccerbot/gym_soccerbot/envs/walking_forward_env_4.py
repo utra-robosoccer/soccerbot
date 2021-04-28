@@ -97,7 +97,7 @@ class Joints(enum.IntEnum):
     IMU = 19
 
 
-class WalkingForwardV3(gym.Env):
+class WalkingForwardV4(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array'], 'video.frames_per_second': 50}
 
     DTYPE = np.float32
@@ -152,7 +152,9 @@ class WalkingForwardV3(gym.Env):
     _joint_limit_low *= (-np.pi)
 
     _AX_12_force = 1.5
-    _MX_28_force = 2.5
+    _MX_28_force = 6.0 # 2.5
+    _AX_12_velocity = (59 / 60) * 2 * np.pi
+    _MX_28_velocity = 2 * np.pi # (55 / 60) * 2 * np.pi
     #### End of Joint Limits HARD CODE
     @classmethod
     def joint_limit_high_val(cls):
@@ -165,13 +167,15 @@ class WalkingForwardV3(gym.Env):
     _STANDING_HEIGHT = 0.29 # 0.32
     _GRAVITY_VECTOR = [0, 0, -9.81]
     _CLOSENESS = 0.05 # in meters presumably
+    _MAX_ANG_VEL = 250.  # MPU6050
+    _MAX_LIN_ACC = 2.  # MPU6050
 
     # Action Space
     action_space = spaces.Box(low=_joint_limit_low, high=_joint_limit_high, dtype=DTYPE)
 
     # Observation Space
     _OBSERVATION_DIM = _JOINT_DIM + _IMU_DIM + _POSE_DIM + _FEET_DIM
-    imu_limit = np.array([100.] * _IMU_DIM)
+    imu_limit = np.concatenate((np.array([_MAX_LIN_ACC] * int((_IMU_DIM) / 2)), np.array([_MAX_ANG_VEL] * int((_IMU_DIM) / 2))))
     pose_limit = np.array([3.] * _POSE_DIM)
     feet_limit = np.array([1.6] * _FEET_DIM)
     joint_limit = np.array([np.pi] * _JOINT_DIM)
@@ -188,6 +192,19 @@ class WalkingForwardV3(gym.Env):
     # MISC
     _render_height = 200
     _render_width = 320
+
+    # IMU NOISE
+    _IMU_LIN_STDDEV_BIAS = 0.02 * _MAX_LIN_ACC
+    _IMU_ANG_STDDEV_BIAS = 0.02 * _MAX_ANG_VEL
+    _IMU_LIN_STDDEV = 0.03 * _MAX_LIN_ACC
+    _IMU_ANG_STDDEV = 0.03 * _MAX_ANG_VEL
+
+    # FEET
+    _FEET_FALSE_CHANCE = 0.05
+
+    # Joint angle noise
+    _JOIN_ANGLE_STDDEV = np.pi / 2048
+
     def __init__(self, renders=False, warm_up=False, goal=[1, 0], seed=42):
         # start the bullet physics server
         self._renders = renders
@@ -214,7 +231,11 @@ class WalkingForwardV3(gym.Env):
         lin_acc = np.matmul(rot_mat, lin_acc)
         ang_vel = np.array(ang_vel, dtype=self.DTYPE)
         self.prev_lin_vel = lin_vel
-        return np.clip(np.concatenate((lin_acc, ang_vel)), -self.imu_limit, self.imu_limit)
+        imu_noise = np.concatenate((self.np_random.normal(0, self._IMU_LIN_STDDEV, int(self._IMU_DIM / 2)),
+                                   self.np_random.normal(0, self._IMU_ANG_STDDEV, int(self._IMU_DIM / 2))))
+        imu_val = np.concatenate((lin_acc, ang_vel)) + imu_noise + self.imu_bias
+        imu_val = np.clip(imu_val, -self.imu_limit, self.imu_limit)
+        return imu_val
 
     def _global_pos(self):
         p = self._p
@@ -252,6 +273,10 @@ class WalkingForwardV3(gym.Env):
         for point in left_pts:
             index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
             locations[index[1] + (index[0] * 2) + 4] = 1.
+
+        for i in range(len(locations)): # 5% chance of incorrect reading
+            locations[i] *= np.sign(self.np_random.uniform(low= - self._FEET_FALSE_CHANCE,
+                                                           high=1. - (self._FEET_FALSE_CHANCE)), dtype=self.DTYPE)
         return np.array(locations)
 
     @classmethod
@@ -320,31 +345,40 @@ class WalkingForwardV3(gym.Env):
 
         # CLIP ACTIONS
         # action = np.clip(action, self._joint_limit_low, self._joint_limit_high)
-        # MX-28s
-        p.setJointMotorControlArray(bodyIndex=self.soccerbotUid,
-                                    controlMode=pb.POSITION_CONTROL,
-                                    jointIndices=list(range(Joints.LEFT_LEG_1, Joints.HEAD_1, 1)),
-                                    targetPositions=action[Joints.LEFT_LEG_1:Joints.HEAD_1],
-                                    # targetVelocities=[2*(5/6)*np.pi]*self._JOINT_DIM,
-                                    # positionGains=[4]*self._JOINT_DIM,
-                                    # velocityGains=[0]*self._JOINT_DIM,
-                                    forces=[self._MX_28_force] * (Joints.HEAD_1 - Joints.LEFT_LEG_1))
-        # AX-12s
-        p.setJointMotorControlArray(bodyIndex=self.soccerbotUid,
-                                    controlMode=pb.POSITION_CONTROL,
-                                    jointIndices=list(range(Joints.LEFT_ARM_1, Joints.LEFT_LEG_1, 1)),
-                                    targetPositions=action[Joints.LEFT_ARM_1:Joints.LEFT_LEG_1],
-                                    # targetVelocities=[2*(5/6)*np.pi]*self._JOINT_DIM,
-                                    # positionGains=[4]*self._JOINT_DIM,
-                                    # velocityGains=[0]*self._JOINT_DIM,
-                                    forces=[self._AX_12_force] * (Joints.LEFT_LEG_1 - Joints.LEFT_ARM_1))
 
+        # MX-28s
+        for i in range(Joints.LEFT_LEG_1, Joints.HEAD_1, 1):
+            p.setJointMotorControl2(bodyIndex=self.soccerbotUid,
+                                    controlMode=pb.POSITION_CONTROL,
+                                    jointIndex=i,
+                                    targetPosition=action[i],
+                                    # targetVelocity=self._MX_28_velocity,
+                                    positionGain=6.64,
+                                    velocityGain=0.,
+                                    maxVelocity=self._MX_28_velocity,
+                                    force=self._MX_28_force,
+                                    )
+        # AX-12s
+        for i in range(Joints.LEFT_ARM_1, Joints.LEFT_LEG_1, 1):
+            p.setJointMotorControl2(bodyIndex=self.soccerbotUid,
+                                    controlMode=pb.POSITION_CONTROL,
+                                    jointIndex=i,
+                                    targetPosition=action[i],
+                                    # targetVelocity=self._AX_12_velocity,
+                                    positionGain=4.,
+                                    velocityGain=0.,
+                                    maxVelocity=self._AX_12_velocity,
+                                    force=self._AX_12_force,
+                                    )
         # 120Hz - Step Simulation
         p.stepSimulation()
         p.stepSimulation()
 
         joint_states = p.getJointStates(self.soccerbotUid, list(range(0, self._JOINT_DIM, 1)))
         joints_pos = np.array([state[0] for state in joint_states], dtype=self.DTYPE)
+        joints_pos = np.unwrap(joints_pos + np.pi) - np.pi
+        joints_pos = joints_pos + self.np_random.normal(0, self._JOIN_ANGLE_STDDEV, joints_pos.size)
+        joints_pos = np.clip(joints_pos, -self.joint_limit, self.joint_limit)
 
         # Construct Observation
         observation = np.concatenate((joints_pos, imu, self._global_pos(), feet))
@@ -352,10 +386,11 @@ class WalkingForwardV3(gym.Env):
         ## Calculate Reward, Done, Info
         # Calculate Velocity direction field
         [lin_vel, _] = p.getBaseVelocity(self.soccerbotUid)
-        lin_vel = np.array(lin_vel, dtype=self.DTYPE)[0:2]
+        lin_vel_xy = np.array(lin_vel, dtype=self.DTYPE)[0:2]
         distance_unit_vec = (self.goal_xy - self._global_pos()[0:2]) \
                             / np.linalg.norm(self.goal_xy - self._global_pos()[0:2])
-        velocity_reward = np.dot(distance_unit_vec, lin_vel)
+        velocity_forward_reward = np.dot(distance_unit_vec, lin_vel_xy)
+        # velocity_downward_penalty = np.min(lin_vel[2], 0) # Only consider the negative component
         info = dict(end_cond="None")
         # Fall
         if self._global_pos()[2] < 0.22: #HARDCODE (self._STANDING_HEIGHT / 2): # check z component
@@ -375,7 +410,7 @@ class WalkingForwardV3(gym.Env):
         # Normal case
         else:
             done = False
-            reward = velocity_reward
+            reward = velocity_forward_reward # + velocity_downward_penalty
         return observation, reward, done, info
 
     def reset(self):
@@ -442,23 +477,31 @@ class WalkingForwardV3(gym.Env):
 
         # MX-28s:
         for i in range(Joints.LEFT_LEG_1, Joints.HEAD_1):
+            '''
             p.changeDynamics(self.soccerbotUid, i,
                                jointLowerLimit=-self.joint_limit[i], jointUpperLimit=self.joint_limit[i],
                                jointLimitForce=self._MX_28_force)
+            '''
             p.resetJointState(self.soccerbotUid, i, standing_poses[i])
         # AX-12s:
         for i in range(Joints.LEFT_ARM_1, Joints.LEFT_LEG_1):
+            '''
             p.changeDynamics(self.soccerbotUid, i,
                                jointLowerLimit=-self.joint_limit[i], jointUpperLimit=self.joint_limit[i],
                                jointLimitForce=self._AX_12_force)
+            '''
             p.resetJointState(self.soccerbotUid, i, standing_poses[i])
+        '''
         p.changeDynamics(self.soccerbotUid, Joints.HEAD_1,
                            jointLowerLimit=-np.pi, jointUpperLimit=np.pi,
                            jointLimitForce=self._AX_12_force)
+        '''
         p.resetJointState(self.soccerbotUid, Joints.HEAD_1, standing_poses[Joints.HEAD_1])
+        '''
         p.changeDynamics(self.soccerbotUid, Joints.HEAD_2,
                            jointLowerLimit=-np.pi, jointUpperLimit=np.pi,
                            jointLimitForce=self._AX_12_force)
+        '''
         p.resetJointState(self.soccerbotUid, Joints.HEAD_2, standing_poses[Joints.HEAD_2])
 
 
@@ -472,10 +515,17 @@ class WalkingForwardV3(gym.Env):
         # Get Observation
         # self.st = RollingAvg(256, 0.01, 0.01)
         self.prev_lin_vel = np.array([0, 0, 0])
-        feet = self._feet()
+        self.imu_bias = np.concatenate((self.np_random.normal(0, self._IMU_LIN_STDDEV_BIAS, int(self._IMU_DIM / 2)),
+                                        self.np_random.normal(0, self._IMU_ANG_STDDEV_BIAS, int(self._IMU_DIM / 2))))
         imu = self._imu()
+
+        feet = self._feet()
+
         joint_states = p.getJointStates(self.soccerbotUid, list(range(0, self._JOINT_DIM, 1)))
         joints_pos = np.array([state[0] for state in joint_states], dtype=self.DTYPE)
+        joints_pos += self.np_random.normal(0, self._JOIN_ANGLE_STDDEV, joints_pos.size)
+        joints_pos = np.clip(joints_pos, -self.joint_limit, self.joint_limit)
+
         start_pos = np.array([0, 0, self._STANDING_HEIGHT], dtype=self.DTYPE)
         observation = np.concatenate((joints_pos, imu, start_pos, feet))
 
