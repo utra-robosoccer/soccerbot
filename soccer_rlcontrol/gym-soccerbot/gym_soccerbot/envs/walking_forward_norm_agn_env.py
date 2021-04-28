@@ -6,7 +6,7 @@ from time import sleep
 
 class WalkingForwardNormAgn(Env):
     def __init__(self, reward_plus_range=1e1,
-                 action_plus_range=1e1, observation_plus_range=1e1, env_name=None, slow=False,**kwargs):
+                 action_plus_range=1e1, observation_plus_range=1e1, env_name=None, **kwargs):
         if type(env_name).__name__ == 'str':
             env_spec = spec(env_name)
         elif env_name is None:
@@ -16,27 +16,25 @@ class WalkingForwardNormAgn(Env):
 
 
         if "dtype" in kwargs.keys():
-            self.dtype = kwargs["dtype"]
+            self.dtype = eval(kwargs["dtype"])
         else:
             self.dtype = np.float32
-
-        self.slow = slow
 
         # Observation Space
         self.observation_plus_range = observation_plus_range
         self.observation_space = spaces.Box(low=-self.observation_plus_range, high=self.observation_plus_range,
-                                            shape=(self.env._OBSERVATION_DIM, ) , dtype=self.dtype)
+                                            shape=self.env.observation_space.shape , dtype=self.dtype)
         # Action Space
         self.action_plus_range = action_plus_range
         self.action_space = spaces.Box(low=-self.action_plus_range, high=self.action_plus_range,
-                                       shape=(self.env._JOINT_DIM, ), dtype=self.dtype)
+                                       shape=self.env.action_space.shape, dtype=self.dtype)
         # Reward
         self.reward_plus_range = self.dtype(reward_plus_range)
         self.reward_range = [-reward_plus_range, reward_plus_range]
 
     def step(self, action):
         action = self.denormalize(action,
-                                  self.env._joint_limit_low, self.env._joint_limit_high,
+                                  self.env.action_space.low, self.env.action_space.high,
                                   self.action_plus_range)
         # assert np.logical_and.reduce(np.less_equal(action, self.joint_limit_high)), "Joint action max limit exceeded"
         # assert np.logical_and.reduce(np.greater_equal(action, self.joint_limit_low)), "Joint action min limit exceeded"
@@ -45,25 +43,25 @@ class WalkingForwardNormAgn(Env):
         observation = self.normalize(observation,
                                      self.env.observation_limit_low, self.env.observation_limit_high,
                                      self.observation_plus_range)
+        observation = np.clip(observation, -self.observation_plus_range, self.observation_plus_range)
         # reward = reward / float(self.reward_normal_factor)
         reward = self.normalize(reward,
                                 self.env.reward_limit_low, self.env.reward_limit_high,
                                 self.reward_plus_range)
+        reward = np.clip(reward, -self.reward_plus_range, self.reward_plus_range)
         return observation, reward, done, info
 
     def reset(self):
         observation = self.env.reset()
         observation = self.normalize(observation,
                                      self.env.observation_limit_low, self.env.observation_limit_high,
-                                     self.observation_plus_range) * 0
+                                     self.observation_plus_range)
+        observation = np.clip(observation, -self.observation_plus_range, self.observation_plus_range)
         return observation
 
-    def render(self, mode='human'):
-        if self.slow:
-            sleep(0.041)
-        else:
-            sleep(0.0041)
-        return self.env.render(mode)
+    def render(self, **kwargs):
+        sleep(0.0041)
+        return self.env.render(**kwargs)
 
     def normalize(self, actual, low_end, high_end, scale):
         """
