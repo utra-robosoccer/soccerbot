@@ -2,7 +2,11 @@ from scipy.interpolate import interp1d
 import numpy as np
 import csv
 import rospy
+from webots_ros.srv import set_float, set_floatRequest
 from std_msgs.msg import Float64
+from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
+import time
+
 
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints."""
@@ -29,6 +33,7 @@ class Trajectory:
                     joint_values = list(map(float, row[1:]))
                     param = '~motor_mapping/{}/initial_state'.format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
+                    # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
@@ -45,11 +50,35 @@ class Trajectory:
     def publish(self):
         publishers = {
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
+        # r = rospy.Rate(10)
+
+
+        '''while rospy.has_param("/robot1/controller_name") == False:
+            r.sleep()
+
+        print(rospy.has_param("/robot1/controller_name"))
+        controllerName = rospy.get_param("/robot1/controller_name")
+        publishers_2 = {
+            joint: rospy.ServiceProxy("/" + controllerName + "/{}/set_position".format(joint), set_float) for joint in self.joints()}
+
+        print(publishers_2)'''
+        pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
 
         rate = rospy.Rate(100)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
+            js = JointState()
+            js.name = []
+            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+            js.position = []
+            js.effort = []
             for joint, setpoint in self.get_setpoint(t).items():
-                publishers[joint].publish(setpoint)
+                js.name.append(joint)
+                js.position.append(setpoint)
+                # request = set_floatRequest()
+                # request.value = setpoint
+                # publishers[joint].publish(setpoint)
+                # publishers_2[joint](request)
+            pub_all_motor.publish(js)
             t = t + 0.01
             rate.sleep()

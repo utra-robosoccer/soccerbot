@@ -1,15 +1,17 @@
+<?xml version="1.0"?>
 <launch>
-    <arg name="field" default="robocup" />
+  <!-- start Webots -->
+  <arg name="no_gui" default="false," doc="Start Webots with minimal GUI"/>
+  <arg name="world" default="" doc="Path to the world to load"/>
+  <arg name="mode" default="realtime" doc="Startup mode"/>
 
-    <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name"      value="$(find soccer_description)/worlds/$(arg field).world"/>
-        <arg name="debug"           value="false" />
-        <arg name="gui"             value="true" />
-        <arg name="paused"          value="true"/>
-        <arg name="use_sim_time"    value="true"/>
-        <arg name="verbose"         value="true" />
-    </include>
-    <node name="kill_gazebo" pkg="soccer_description" type="kill_gazebo.sh" />
+  <include file="$(find soccer_webots)/launch/simulation_webot.launch" ns="robot1">
+
+  </include>
+  <param name="/simulation_active" value="true"/>
+  <param name="/use_sim_time" value="true"/>
+
+  <arg name="duration" default="20" doc="Duration in seconds"/>
+  <arg name="auto_close" default="false" doc="Startup mode"/>
 
 </launch>

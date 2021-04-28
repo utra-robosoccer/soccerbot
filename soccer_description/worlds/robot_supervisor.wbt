@@ -1,0 +1,29 @@
+#VRML_SIM R2021a utf8
+DEF world_info WorldInfo {
+}
+Viewpoint {
+  orientation 0.2635181128215983 -0.36420919162686427 -0.8932580080522365 1.9916995318039916
+  position -9.204890354327318 3.450845837104254 7.847404655784381
+}
+TexturedBackground {
+  texture "stadium"
+}
+TexturedBackgroundLight {
+  texture "stadium"
+}
+DEF amy Wolfgang {
+  translation -0.9968797400586715 2.9921102788692946 0.4274542359577024
+  rotation 0.12198099937775954 0.12935172908461096 -0.9840674600725422 1.5869763401625028
+  name "amy"
+  controller "<extern>"
+  supervisor TRUE
+}
+DEF ball SoccerBall {
+  translation 0 -2.5441208454912995e-05 0.07718607870638904
+  rotation 1 0 0 0.0003279304237773247
+  radius 0.0775
+  mass 0.2
+  roll_damping 0.5
+}
+RobotstadiumSoccerFieldHumanoid {
+}

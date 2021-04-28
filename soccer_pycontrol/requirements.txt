@@ -1,6 +1,0 @@
-pip
-pybullet
-matplotlib
-numpy
-roslibpy
-scipy

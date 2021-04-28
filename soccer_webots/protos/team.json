@@ -1,0 +1,73 @@
+{
+  "name": "UTRA",
+  "players": {
+    "1": {
+      "robotModelName": "Bez",
+      "dockerImg": "UTRA_Bez",
+      "dockerCmd": "launchRobot.sh --goalie",
+      "halfTimeStartingPose": {
+        "translation": [-3.5, -3.06, 0.24],
+        "rotation": [0, 0, 1, 1.57]
+      },
+      "reentryStartingPose": {
+        "translation": [-3, -3.11, 0.24],
+        "rotation": [0.0, 0.707, 0.707, 3.14]
+      },
+      "shootoutStartingPose": {
+        "translation": [2, 0, 0.24],
+        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+      }
+    },
+    "2": {
+      "robotModelName": "bez",
+      "dockerImg": "UTRA_Bez",
+      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "halfTimeStartingPose": {
+        "translation": [-3.5, 3.06, 0.24],
+        "rotation": [0, 0, 1, -1.57]
+      },
+      "reentryStartingPose": {
+        "translation": [-3, -3.11, 0.24],
+        "rotation": [0.0, 0.707, 0.707, 3.14]
+      },
+      "shootoutStartingPose": {
+        "translation": [2, 0, 0.24],
+        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+      }
+    },
+    "3": {
+      "robotModelName": "robotB",
+      "dockerImg": "UTRA_Bez",
+      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "halfTimeStartingPose": {
+        "translation": [-0.75, -3.06, 0.24],
+        "rotation": [0, 0, 1, 1.57]
+      },
+      "reentryStartingPose": {
+        "translation": [-3, -3.11, 0.24],
+        "rotation": [0.0, 0.707, 0.707, 3.14]
+      },
+      "shootoutStartingPose": {
+        "translation": [2, 0, 0.24],
+        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+      }
+    },
+    "4": {
+      "robotModelName": "robotB",
+      "dockerImg": "UTRA_Bez",
+      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "halfTimeStartingPose": {
+        "translation": [-0.75, 3.06, 0.24],
+        "rotation": [0, 0, 1, -1.57]
+      },
+      "reentryStartingPose": {
+        "translation": [-3, -3.11, 0.24],
+        "rotation": [0.0, 0.707, 0.707, 3.14]
+      },
+      "shootoutStartingPose": {
+        "translation": [2, 0, 0.24],
+        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+      }
+    }
+  }
+}

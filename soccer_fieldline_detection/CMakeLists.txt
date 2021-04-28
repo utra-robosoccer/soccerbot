@@ -15,7 +15,7 @@ set(PKG_DEPS
     )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
-find_package(OpenCV 4 REQUIRED)
+find_package(OpenCV REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS include
