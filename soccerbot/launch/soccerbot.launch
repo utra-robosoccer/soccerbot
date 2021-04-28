@@ -6,7 +6,7 @@
     <arg name="x_pos" default="0.00" />
     <arg name="y_pos" default="0.00" />
     <arg name="is_boss" default="false" />
-    <arg name="easy_walking" default="true" />
+    <arg name="easy_walking" default="false" />
 
     <arg name="model_name" value="soccerbot" unless="$(arg easy_walking)" />
     <arg name="model_name" value="soccerbot_stand" if="$(arg easy_walking)" />

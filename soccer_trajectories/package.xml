@@ -15,4 +15,8 @@
     <depend>ros_control</depend>
     <depend>python3-scipy</depend>
     <depend>tf2_ros</depend>
+    <depend>sensor_msgs</depend>
+    <depend>rosgraph_msgs</depend>
+    <depend>std_msgs</depend>
+    <depend>rospy</depend>
 </package>

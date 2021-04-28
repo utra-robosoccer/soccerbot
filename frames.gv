@@ -1,0 +1,28 @@
+digraph G {
+"base_footprint" -> "torso"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 267.816 sec old)\nBuffer length: 0.000 sec\n"];
+"head" -> "camera"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 267.816 sec old)\nBuffer length: 0.000 sec\n"];
+"neck" -> "head"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"torso" -> "imu_link"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 267.816 sec old)\nBuffer length: 0.000 sec\n"];
+"torso" -> "neck"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"torso" -> "left_bicep"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_bicep" -> "left_forearm"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"torso" -> "left_hip_side"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_hip_side" -> "left_hip_front"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_hip_front" -> "left_thigh"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_thigh" -> "left_calve"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_calve" -> "left_ankle"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"left_ankle" -> "left_foot"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"torso" -> "right_bicep"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_bicep" -> "right_forearm"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"torso" -> "right_hip_side"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_hip_side" -> "right_hip_front"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_hip_front" -> "right_thigh"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_thigh" -> "right_calve"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_calve" -> "right_ankle"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"right_ankle" -> "right_foot"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 38.428 Hz\nMost recent transform: 267.792 ( 0.024 sec old)\nBuffer length: 4.632 sec\n"];
+"base_footprint" -> "base_camera"[label="Broadcaster: /robot1/soccer_fieldline_detector\nAverage rate: 15.598 Hz\nMost recent transform: 267.704 ( 0.112 sec old)\nBuffer length: 4.616 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 267.816"[ shape=plaintext ] ;
+ }->"base_footprint";
+}
