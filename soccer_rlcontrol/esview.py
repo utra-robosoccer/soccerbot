@@ -3,6 +3,8 @@ from time import sleep
 import gym
 import ray
 from ray import tune
+from ray.rllib.utils.framework import try_import_tf
+tf1, tf, tfv = try_import_tf()
 
 
 checkpoint_path = "./demos/es-april26/checkpoint-1180"
