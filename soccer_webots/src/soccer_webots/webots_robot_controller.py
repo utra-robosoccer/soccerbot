@@ -80,6 +80,7 @@ class RobotController:
             self.sensors.append(self.robot_node.getDevice(self.sensor_names[i]))
             self.sensors[-1].enable(self.timestep)
 
+
         self.accel = self.robot_node.getDevice(accel_name)
         self.accel.enable(self.timestep)
         self.gyro = self.robot_node.getDevice(gyro_name)
@@ -139,9 +140,13 @@ class RobotController:
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
             motor_index = self.external_motor_names.index(name)
+            #self.motors[motor_index].setPosition(msg.position[i])
             if len(msg.velocity) > 0:
+                self.motors[motor_index].setPosition(float('inf'))  # turn on velocity control for both motors
                 self.motors[motor_index].setVelocity(msg.velocity[i])
+
             else:
+                self.motors[motor_index].setPosition(0)
                 self.motors[motor_index].setPosition(msg.position[i])
 
     def publish_camera(self):
@@ -187,6 +192,7 @@ class RobotController:
         js.header.stamp = rospy.Time.from_seconds(self.time)
         js.position = []
         js.effort = []
+        js.velocity = []
         for i in range(len(self.sensors)):
             js.name.append(self.external_motor_names[i])
             value = self.sensors[i].getValue()
