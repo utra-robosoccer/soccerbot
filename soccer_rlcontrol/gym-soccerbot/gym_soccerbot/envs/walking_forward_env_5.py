@@ -13,6 +13,10 @@ import logging
 
 import gym_soccerbot
 
+import rospy
+from std_msgs.msg import Float64
+from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
+
 logger = logging.getLogger(__name__)
 
 class RollingAvg:

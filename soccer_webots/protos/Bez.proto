@@ -646,7 +646,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_1"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
                                               translation 0.03975 0.025 -0.0250
@@ -662,7 +662,7 @@ PROTO Bez [
 					                                }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_2"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation 0.03975 -0.025 -0.0250
@@ -678,7 +678,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_3"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation -0.03375 -0.025 -0.0250
@@ -694,7 +694,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_4"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation -0.03375 0.025 -0.0250
@@ -1180,7 +1180,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_1"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
                                               translation 0.03975 0.025 -0.0250
@@ -1196,7 +1196,7 @@ PROTO Bez [
 					                                }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_2"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation 0.03975 -0.025 -0.0250
@@ -1212,7 +1212,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_3"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation -0.03375 -0.025 -0.0250
@@ -1228,7 +1228,7 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_4"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
                                               translation -0.03375 0.025 -0.0250
