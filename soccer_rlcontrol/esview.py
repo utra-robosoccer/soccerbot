@@ -35,6 +35,7 @@ if __name__ == '__main__':
             action = agent.compute_action(obs)
             obs, reward, done, info = env.step(action)
             episode_reward += reward
+            
             i += 1
         print(f'episode_reward: {episode_reward:.3f}, episode_len: {i}, info: {info}')
 
