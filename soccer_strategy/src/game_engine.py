@@ -1,3 +1,5 @@
+import random
+
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
@@ -135,8 +137,8 @@ class GameEngine:
         plt.pause(0.001)
 
     def updateEstimatedPhysics(self, robots, ball):
-        # Robot
-        for robot in robots:
+        # Robot do action in a random priority order
+        for robot in sorted(robots,key=lambda _: random.random()):
             # TODO use the same trajectory as in soccer_pycontrol
             if robot.status == Robot.Status.WALKING:
                 delta = (robot.goal_position - robot.get_position())[0:2]
@@ -151,6 +153,7 @@ class GameEngine:
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
                     ball.velocity = robot.kick_velocity
+                    ball.kick_timeout = 5
                 robot.status = Robot.Status.READY
 
         # Ball
