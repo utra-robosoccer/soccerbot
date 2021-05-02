@@ -7,3 +7,4 @@ roslibpy
 scipy>=1.6.2
 prettytable
 serial
+rospy>=1.15.9
