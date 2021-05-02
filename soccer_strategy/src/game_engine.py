@@ -162,5 +162,5 @@ class GameEngine:
         ball.velocity = ball.velocity * Ball.FRICTION_COEFF
 
     def resetRobots(self):
-        self.robots = self.robots_init
-        self.ball = self.ball_init
+        self.robots = copy.deepcopy(self.robots_init)
+        self.ball = copy.deepcopy(self.ball_init)

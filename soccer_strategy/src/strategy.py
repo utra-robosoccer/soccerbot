@@ -38,9 +38,9 @@ class DummyStrategy(Strategy):
             current_closest.set_navigation_position(current_closest.get_position())
 
             if current_closest.team == Robot.Team.FRIENDLY:
-                opponent_goal = np.array([0, 3.5])
+                opponent_goal = np.array([0, 4.5])
             else:
-                opponent_goal = np.array([0, -3.5])
+                opponent_goal = np.array([0, -4.5])
 
             # Kick the ball towards the goal
             delta = opponent_goal - ball.get_position()
