@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # Start walking
     wait(1000)
-    soccerbot.getPath(Transformation([1, 0, 0]), show=False)
+    soccerbot.getPath(Transformation([0, 1, 0]), show=False)
     # soccerbot.calculate_angles(show=True)
     t = 0
 
