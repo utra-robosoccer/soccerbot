@@ -12,6 +12,51 @@ from visualization_msgs.msg import Marker
 
 checkpoint_path = "./demos/es-april26/checkpoint-1180"
 
+_MX_28_velocity = 2 * np.pi
+#### Joint Limits HARD CODE
+_joint_limit_high = np.zeros(_JOINT_DIM)
+
+_joint_limit_high[Joints.RIGHT_LEG_1] = 0.2
+_joint_limit_high[Joints.RIGHT_LEG_2] = 0.2
+_joint_limit_high[Joints.RIGHT_LEG_3] = 0.67
+_joint_limit_high[Joints.RIGHT_LEG_4] = 0.05
+_joint_limit_high[Joints.RIGHT_LEG_5] = 0.5
+_joint_limit_high[Joints.RIGHT_LEG_6] = 0.15
+_joint_limit_high[Joints.LEFT_LEG_1] = 0.2
+_joint_limit_high[Joints.LEFT_LEG_2] = 0.2
+_joint_limit_high[Joints.LEFT_LEG_3] = 0.67
+_joint_limit_high[Joints.LEFT_LEG_4] = 0.05
+_joint_limit_high[Joints.LEFT_LEG_5] = 0.5
+_joint_limit_high[Joints.LEFT_LEG_6] = 0.15
+_joint_limit_high[Joints.RIGHT_ARM_1] = 0.95
+_joint_limit_high[Joints.RIGHT_ARM_2] = 0.8
+_joint_limit_high[Joints.LEFT_ARM_1] = 0.95
+_joint_limit_high[Joints.LEFT_ARM_2] = 0.8
+
+_joint_limit_high *= (np.pi)
+
+_joint_limit_low = np.zeros(_JOINT_DIM)
+
+_joint_limit_low[Joints.RIGHT_LEG_1] = 0.3
+_joint_limit_low[Joints.RIGHT_LEG_2] = 0.1
+_joint_limit_low[Joints.RIGHT_LEG_3] = 0.2
+_joint_limit_low[Joints.RIGHT_LEG_4] = 0.45
+_joint_limit_low[Joints.RIGHT_LEG_5] = 0.12
+_joint_limit_low[Joints.RIGHT_LEG_6] = 0.1
+_joint_limit_low[Joints.LEFT_LEG_1] = 0.3
+_joint_limit_low[Joints.LEFT_LEG_2] = 0.1
+_joint_limit_low[Joints.LEFT_LEG_3] = 0.2
+_joint_limit_low[Joints.LEFT_LEG_4] = 0.45
+_joint_limit_low[Joints.LEFT_LEG_5] = 0.12
+_joint_limit_low[Joints.LEFT_LEG_6] = 0.1
+_joint_limit_low[Joints.RIGHT_ARM_1] = 0.4
+_joint_limit_low[Joints.RIGHT_ARM_2] = 0.0
+_joint_limit_low[Joints.LEFT_ARM_1] = 0.4
+_joint_limit_low[Joints.LEFT_ARM_2] = 0.0
+
+_joint_limit_low *= (-np.pi)
+
+
 js_position = np.zeros((16,))
 imu_values = np.zeros((6,))
 robot_pose = np.zeros((3,))
@@ -157,7 +202,15 @@ if __name__ == '__main__':
         ### action vector:
         #   16 angular velocities, refer to Joints Enum in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_5.py
         #   AX12 and MX28 max velocities can be applied
-
+        
+        for i in range(16):
+            joint_cur_pos = js_position[i]
+            velocity = action[i]
+            velocity = velocity if joint_cur_pos < self._joint_limit_high[i] else -self._MX_28_velocity
+            velocity = velocity if joint_cur_pos > self._joint_limit_low[i] else self._MX_28_velocity
+            action[i] = velocity
+        
+        
         pub_all_motor = rospy.Publisher("/robot1/all_motor", JointState, queue_size=10)
         motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
                        "left_leg_motor_0", "left_leg_motor_1",
