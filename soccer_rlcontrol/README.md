@@ -74,6 +74,20 @@ rllib rollout --run PPO --env gym_soccerbot:walk-forward-norm-v1 --steps 1000 --
 You should see something similar to [this](https://youtu.be/VV2-pMmjHFw).
 The agent was trained using `humanoid-ppo-server.yaml` on AMD Threadripper 1950X with 64GB RAM and RTX 2080Ti with +800M samples (~1 day).
 
+## Running in webots
+Run the following commands to start webots
+```
+roslaunch soccerbot soccerbot_multi.launch
+```
+Wait for webots to load then run to get in proper position
+```
+rostopic pub robot1/command std_msgs/String 'data: test'
+```
+Then run the following command to start the walking engine
+```
+python walking_engine.py
+```
+
 # Refrences
 ## Open AI Gym
 The framework used to develop custom environments for our reinforcement learning tasks.
