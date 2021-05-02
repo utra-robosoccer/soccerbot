@@ -10,11 +10,11 @@ from std_msgs.msg import Int32
 import numpy as np
 from visualization_msgs.msg import Marker
 
-checkpoint_path = "./demos/es-april26/checkpoint-1180"
+checkpoint_path = "./demos/checkpoint-14450"
 
 _MX_28_velocity = 2 * np.pi
 #### Joint Limits HARD CODE
-_joint_limit_high = np.zeros(_JOINT_DIM)
+_joint_limit_high = np.zeros(16)
 
 _joint_limit_high[Joints.RIGHT_LEG_1] = 0.2
 _joint_limit_high[Joints.RIGHT_LEG_2] = 0.2
@@ -35,7 +35,7 @@ _joint_limit_high[Joints.LEFT_ARM_2] = 0.8
 
 _joint_limit_high *= (np.pi)
 
-_joint_limit_low = np.zeros(_JOINT_DIM)
+_joint_limit_low = np.zeros(16)
 
 _joint_limit_low[Joints.RIGHT_LEG_1] = 0.3
 _joint_limit_low[Joints.RIGHT_LEG_2] = 0.1
@@ -58,6 +58,8 @@ _joint_limit_low *= (-np.pi)
 
 
 js_position = np.zeros((16,))
+js_position_old = np.zeros((16,))
+js_velocity = np.zeros((16,))
 imu_values = np.zeros((6,))
 robot_pose = np.zeros((3,))
 feet_values = np.zeros((8,))
@@ -129,12 +131,16 @@ def feet_callback_8(msg):
 
 def js_callback(msg):
     global js_position
+    gloabl js_position_old
+    global js_velocities
     js_position[:] = msg.position[:-2]
     for i in range(len(js_position)):
         if js_position[i] < -3.14:
             js_position[i] = -3.14
         elif js_position[i] > 3.14:
             js_position[i] = 3.14
+    js_velocity = (js_position - js_position_old) / _TIME_STEP
+    js_position_old = js_position
 
 
 
@@ -160,13 +166,13 @@ if __name__ == '__main__':
     ray.init(local_mode=False)
     trainer, trainer_class = es.ESTrainer, es
     config = trainer_class.DEFAULT_CONFIG.copy()
-    config["framework"] = "torch"
-    config["env_config"] = {"env_name": "gym_soccerbot:walk-forward-velocity-v1"}
+    config["framework"] = "tf"
+    config["env_config"] = {"env_name": "gym_soccerbot:walk-forward-velocity-v2"}
     config["num_workers"] = 1
     agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
     agent.load_checkpoint(checkpoint_path)
     env_id = "walk-forward-norm-v1"
-    env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-forward-velocity-v1", goal=(2, 0))
+    env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-forward-velocity-v2", goal=(2, 0))
     sub_js = rospy.Subscriber("/robot1/joint_states", JointState, js_callback)
     sub_imu = rospy.Subscriber("/robot1/imu_data", Imu, imu_callback)
     sub_pose = rospy.Subscriber("/robot1/amcl_pose", PoseWithCovarianceStamped, pose_callback)
@@ -185,13 +191,15 @@ if __name__ == '__main__':
 
         # run until episode ends
         ### observation vector:
-        #   16 joint angles (legs and arms) in range (-pi, pi), refer to Joints Enum in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_5.py
+        #   16 joint angles (legs and arms) in range (-pi, pi), refer to Joints Enum in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_6.py
+        #   16 joint velocities (legs and arms) in range (-MAX_VELOCITY * 2, MAX_VELOCITY * 2), refer to Joints Enum in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_6.py
         #   3 accelerometer x,y,z in range (-2 * 9.81, 2 * 9.81)
         #   3 gyro x,y,z in range (-500, 500)
-        #   3 global position of torso x,y,z - start walking from 0,0 - range (-3, 3)
-        #   8 feet bumper sensors, refer to _feet() in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_5.py
+        #   4 global orientation quaternion - x y z w - torso link
+        #   1 height of the torso - range (0.1, 0.4)
+        #   8 feet bumper sensors, refer to _feet() in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_6.py
 
-        observation = np.concatenate((js_position, imu_values, robot_pose, feet_values))  # Expect 18 +
+        observation = np.concatenate((js_position, js_velocity, imu_values, robot_orn, height, feet_values))  # Expect 18 +
         #print(observation)
         ### normalize & unnormalize the vectors for the model - make use of the model
         observation = env.normalize(observation, env.env.observation_limit_low, env.env.observation_limit_high,
@@ -206,8 +214,8 @@ if __name__ == '__main__':
         for i in range(16):
             joint_cur_pos = js_position[i]
             velocity = action[i]
-            velocity = velocity if joint_cur_pos < self._joint_limit_high[i] else -self._MX_28_velocity
-            velocity = velocity if joint_cur_pos > self._joint_limit_low[i] else self._MX_28_velocity
+            velocity = velocity if joint_cur_pos < self._joint_limit_high[i] else -_MX_28_velocity
+            velocity = velocity if joint_cur_pos > self._joint_limit_low[i] else _MX_28_velocity
             action[i] = velocity
         
         
