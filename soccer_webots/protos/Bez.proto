@@ -97,6 +97,7 @@ PROTO Bez [
             maxVelocity %{= mx28_max_velocity }%
             minPosition -1.57079632679
             maxPosition 3.92699081699
+            controlPID 0.78 0 0
             maxTorque %{= mx28_max_torque }%
           }
           PositionSensor {
@@ -139,6 +140,7 @@ PROTO Bez [
                   name "left_arm_motor_1"
                   maxVelocity %{= mx28_max_velocity }%
                   maxPosition 3.14159265359
+                  controlPID 0.78 0 0
                   maxTorque %{= mx28_max_torque }%
                 }
                 PositionSensor {
@@ -210,6 +212,7 @@ PROTO Bez [
             maxVelocity %{= mx28_max_velocity }%
             minPosition -1.57079632679
             maxPosition 3.92699081699
+            controlPID 0.78 0 0
             maxTorque %{= mx28_max_torque }%
           }
           PositionSensor {
@@ -252,6 +255,7 @@ PROTO Bez [
                   name "right_arm_motor_1"
                   maxVelocity %{= mx28_max_velocity }%
                   maxPosition 3.14159265359
+                  controlPID 0.78 0 0
                   maxTorque %{= mx28_max_torque }%
                 }
                 PositionSensor {
@@ -323,6 +327,7 @@ PROTO Bez [
             maxVelocity %{= mx28_max_velocity }%
             minPosition -1.309
             maxPosition 0.524
+            controlPID 0.78 0 0
             maxTorque %{= mx28_max_torque }%
           }
           PositionSensor {
@@ -350,6 +355,7 @@ PROTO Bez [
                   maxVelocity %{= mx28_max_velocity }%
                   minPosition -0.785398163397
                   maxPosition 1.57079632679
+                  controlPID 0.78 0 0
                   maxTorque %{= mx28_max_torque }%
                 }
                 PositionSensor {
@@ -421,6 +427,7 @@ PROTO Bez [
                         maxVelocity %{= mx28_max_velocity }%
                         minPosition -0.785398163397
                         maxPosition 2.35619449019
+                        controlPID 0.78 0 0
                         maxTorque %{= mx28_max_torque }%
                       }
                       PositionSensor {
@@ -447,6 +454,7 @@ PROTO Bez [
                               name "left_leg_motor_3"
                               maxVelocity %{= mx28_max_velocity }%
                               minPosition -2.793
+                              controlPID 0.78 0 0
                               maxTorque %{= mx28_max_torque }%
                             }
                             PositionSensor {
@@ -560,6 +568,7 @@ PROTO Bez [
                                     maxVelocity %{= mx28_max_velocity }%
                                     minPosition -0.785398163397
                                     maxPosition 1.57079632679
+                                    controlPID 0.78 0 0
                                     maxTorque %{= mx28_max_torque }%
                                   }
                                   PositionSensor {
@@ -631,6 +640,7 @@ PROTO Bez [
                                           maxVelocity %{= mx28_max_velocity }%
                                           minPosition -0.785398163397
                                           maxPosition 0.785398163397
+    controlPID 0.78 0 0
                                           maxTorque %{= mx28_max_torque }%
                                         }
                                         PositionSensor {
@@ -855,6 +865,7 @@ PROTO Bez [
             maxVelocity %{= mx28_max_velocity }%
             minPosition -1.309
             maxPosition 0.524
+    controlPID 0.78 0 0
             maxTorque %{= mx28_max_torque }%
           }
           PositionSensor {
@@ -882,6 +893,7 @@ PROTO Bez [
                   maxVelocity %{= mx28_max_velocity }%
                   minPosition -0.785398163397
                   maxPosition 1.57079632679
+    controlPID 0.78 0 0
                   maxTorque %{= mx28_max_torque }%
                 }
                 PositionSensor {
@@ -953,6 +965,7 @@ PROTO Bez [
                         maxVelocity %{= mx28_max_velocity }%
                         minPosition -0.785398163397
                         maxPosition 2.35619449019
+    controlPID 0.78 0 0
                         maxTorque %{= mx28_max_torque }%
                       }
                       PositionSensor {
@@ -981,6 +994,7 @@ PROTO Bez [
                               name "right_leg_motor_3"
                               maxVelocity %{= mx28_max_velocity }%
                               minPosition -2.793
+    controlPID 0.78 0 0
                               maxTorque %{= mx28_max_torque }%
                             }
                             PositionSensor {
@@ -1094,6 +1108,7 @@ PROTO Bez [
                                     maxVelocity %{= mx28_max_velocity }%
                                     minPosition -0.785398163397
                                     maxPosition 1.57079632679
+    controlPID 0.78 0 0
                                     maxTorque %{= mx28_max_torque }%
                                   }
                                   PositionSensor {
@@ -1165,6 +1180,7 @@ PROTO Bez [
                                           maxVelocity %{= mx28_max_velocity }%
                                           minPosition -0.785398163397
                                           maxPosition 0.785398163397
+    controlPID 0.78 0 0
                                           maxTorque %{= mx28_max_torque }%
                                         }
                                         PositionSensor {
@@ -1388,6 +1404,7 @@ PROTO Bez [
             maxVelocity %{= mx28_max_velocity }%
             minPosition -1.57079632679
             maxPosition 1.57079632679
+    controlPID 0.78 0 0
             maxTorque %{= mx28_max_torque }%
           }
           PositionSensor {
@@ -1415,6 +1432,8 @@ PROTO Bez [
                   maxVelocity %{= mx28_max_velocity }%
                   minPosition -2.35619449019
                   maxPosition 2.35619449019
+    controlPID 0.78 0 0
+
                   maxTorque %{= mx28_max_torque }%
                 }
                 PositionSensor {
