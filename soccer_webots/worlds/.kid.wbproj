@@ -6,6 +6,5 @@ maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
 textFiles: -1
-robotWindow: red_player_2
 consoles: Console:All:All
 renderingDevicePerspectives: red_player_2:camera;1;1;0;0

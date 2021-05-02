@@ -11,6 +11,32 @@ import numpy as np
 from visualization_msgs.msg import Marker
 
 checkpoint_path = "./demos/checkpoint-14450"
+import enum
+
+
+
+class Joints(enum.IntEnum):
+    LEFT_ARM_1 = 0
+    LEFT_ARM_2 = 1
+    RIGHT_ARM_1 = 2
+    RIGHT_ARM_2 = 3
+    LEFT_LEG_1 = 4
+    LEFT_LEG_2 = 5
+    LEFT_LEG_3 = 6
+    LEFT_LEG_4 = 7
+    LEFT_LEG_5 = 8
+    LEFT_LEG_6 = 9
+    RIGHT_LEG_1 = 10
+    RIGHT_LEG_2 = 11
+    RIGHT_LEG_3 = 12
+    RIGHT_LEG_4 = 13
+    RIGHT_LEG_5 = 14
+    RIGHT_LEG_6 = 15
+    HEAD_1 = 16
+    HEAD_2 = 17
+    HEAD_CAMERA = 18
+    IMU = 19
+
 
 _MX_28_velocity = 2 * np.pi
 #### Joint Limits HARD CODE
@@ -61,7 +87,7 @@ js_position = np.zeros((16,))
 js_position_old = np.zeros((16,))
 js_velocity = np.zeros((16,))
 imu_values = np.zeros((6,))
-robot_pose = np.zeros((3,))
+robot_orn = np.zeros((4,))
 feet_values = np.zeros((8,))
 
 
@@ -131,17 +157,16 @@ def feet_callback_8(msg):
 
 def js_callback(msg):
     global js_position
-    gloabl js_position_old
-    global js_velocities
+    global js_position_old
+    global js_velocity
     js_position[:] = msg.position[:-2]
     for i in range(len(js_position)):
         if js_position[i] < -3.14:
             js_position[i] = -3.14
         elif js_position[i] > 3.14:
             js_position[i] = 3.14
-    js_velocity = (js_position - js_position_old) / _TIME_STEP
+    js_velocity = (js_position - js_position_old) / 0.0082
     js_position_old = js_position
-
 
 
 def imu_callback(msg):
@@ -155,10 +180,11 @@ def imu_callback(msg):
 
 
 def pose_callback(msg):
-    global robot_pose
-    robot_pose[0] = msg.pose.pose.position.x + 0.9736
-    robot_pose[1] = msg.pose.pose.position.y + 0.0045
-    robot_pose[2] = 0.3
+    global robot_orn
+    robot_orn[0] = msg.pose.pose.orientation.x
+    robot_orn[1] = msg.pose.pose.orientation.y
+    robot_orn[2] = msg.pose.pose.orientation.z
+    robot_orn[3] = msg.pose.pose.orientation.w
 
 
 if __name__ == '__main__':
@@ -198,7 +224,8 @@ if __name__ == '__main__':
         #   4 global orientation quaternion - x y z w - torso link
         #   1 height of the torso - range (0.1, 0.4)
         #   8 feet bumper sensors, refer to _feet() in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_6.py
-
+        height = np.zeros((1,))
+        height[0] = 0.28
         observation = np.concatenate((js_position, js_velocity, imu_values, robot_orn, height, feet_values))  # Expect 18 +
         #print(observation)
         ### normalize & unnormalize the vectors for the model - make use of the model
@@ -210,15 +237,14 @@ if __name__ == '__main__':
         ### action vector:
         #   16 angular velocities, refer to Joints Enum in ./gym-soccerbot/gym_soccerbot/envs/walking_forward_env_5.py
         #   AX12 and MX28 max velocities can be applied
-        
+
         for i in range(16):
             joint_cur_pos = js_position[i]
             velocity = action[i]
-            velocity = velocity if joint_cur_pos < self._joint_limit_high[i] else -_MX_28_velocity
-            velocity = velocity if joint_cur_pos > self._joint_limit_low[i] else _MX_28_velocity
+            velocity = velocity if joint_cur_pos < _joint_limit_high[i] else -_MX_28_velocity
+            velocity = velocity if joint_cur_pos > _joint_limit_low[i] else _MX_28_velocity
             action[i] = velocity
-        
-        
+
         pub_all_motor = rospy.Publisher("/robot1/all_motor", JointState, queue_size=10)
         motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
                        "left_leg_motor_0", "left_leg_motor_1",
