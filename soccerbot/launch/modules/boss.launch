@@ -1,4 +1,0 @@
-<launch>
-<!--     <include file="$(find soccerbot)/launch/modules/localization_filter.launch" /> -->
-
-</launch>
