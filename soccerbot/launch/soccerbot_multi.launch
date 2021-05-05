@@ -1,6 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="single" default="true" />
+    <arg name="single" default="false" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch" >
         <arg name="single" value="$(arg single)" />
