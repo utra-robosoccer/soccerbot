@@ -11,7 +11,7 @@ from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 
 class RobotController:
-    def __init__(self, ):
+    def __init__(self, base_ns="/robot1"):
         """
         The RobotController, a Webots controller that controls a single robot.
         The environment variable WEBOTS_ROBOT_NAME should be set to "amy", "rory", "jack" or "donna" if used with
@@ -27,8 +27,8 @@ class RobotController:
         self.walkready = [0] * 20
         self.time = 0
         self.robot_node = Robot()
-        base_ns = "/robot1"
-        # base_ns = "/" + self.robot_node.getName()
+        self.base_frame = base_ns + "/"
+        base_ns = "/" + base_ns
         self.motors = []
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
@@ -101,7 +101,7 @@ class RobotController:
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
         self.cam_info.header.stamp = rospy.Time.from_seconds(self.time)
-        self.cam_info.header.frame_id = "camera"
+        self.cam_info.header.frame_id = self.base_frame + "camera"
         self.cam_info.height = self.camera.getHeight()
         self.cam_info.width = self.camera.getWidth()
         f_y = self.mat_from_fov_and_resolution(
@@ -152,7 +152,7 @@ class RobotController:
     def publish_camera(self):
         img_msg = Image()
         img_msg.header.stamp = rospy.Time.from_seconds(self.time)
-        img_msg.header.frame_id = "camera_base"
+        img_msg.header.frame_id = self.base_frame + "camera_base"
         img_msg.height = self.camera.getHeight()
         img_msg.width = self.camera.getWidth()
         img_msg.encoding = "bgra8"
@@ -168,7 +168,7 @@ class RobotController:
         msg = Imu()
         msg.header.stamp = rospy.Time.from_seconds(self.time)
 
-        msg.header.frame_id = "imu_link"
+        msg.header.frame_id = self.base_frame + "imu_link"
 
         # change order because webots has different axis
 

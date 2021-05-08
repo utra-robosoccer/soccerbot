@@ -11,7 +11,7 @@
 class BallDetector {
     int ballPxlX;
     int ballPxlY;
-
+    std::string name;
     tf::StampedTransform cameraTF;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
