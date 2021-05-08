@@ -11,7 +11,6 @@ import numpy as np
 import copy
 
 
-
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
     STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
