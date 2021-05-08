@@ -80,6 +80,7 @@ class RobotController:
             self.sensors.append(self.robot_node.getDevice(self.sensor_names[i]))
             self.sensors[-1].enable(self.timestep)
 
+
         self.accel = self.robot_node.getDevice(accel_name)
         self.accel.enable(self.timestep)
         self.gyro = self.robot_node.getDevice(gyro_name)
@@ -139,7 +140,14 @@ class RobotController:
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
             motor_index = self.external_motor_names.index(name)
-            self.motors[motor_index].setPosition(msg.position[i])
+            #self.motors[motor_index].setPosition(msg.position[i])
+            if len(msg.velocity) > 0:
+                self.motors[motor_index].setPosition(float('inf'))  # turn on velocity control for both motors
+                self.motors[motor_index].setVelocity(msg.velocity[i])
+
+            else:
+                self.motors[motor_index].setPosition(0)
+                self.motors[motor_index].setPosition(msg.position[i])
 
     def publish_camera(self):
         img_msg = Image()
@@ -184,6 +192,7 @@ class RobotController:
         js.header.stamp = rospy.Time.from_seconds(self.time)
         js.position = []
         js.effort = []
+        js.velocity = []
         for i in range(len(self.sensors)):
             js.name.append(self.external_motor_names[i])
             value = self.sensors[i].getValue()
@@ -201,16 +210,16 @@ class RobotController:
 
             marker_object = Marker()
             if i < 4:
-                marker_object.header.frame_id = self.base_frame + "left_foot"
+                marker_object.header.frame_id = "right_foot"
             else:
-                marker_object.header.frame_id = self.base_frame + "right_foot"
+                marker_object.header.frame_id = "left_foot"
 
             marker_object.header.stamp = current_time
             marker_object.ns = "Soccer_bot"
             marker_object.id = 3
             marker_object.type = Marker.ARROW
             marker_object.action = Marker.ADD
-            if i == 0 or i == 4:
+            if i == 0 or i == 4:  # Top_Left: Sensor 1
                 tip = Point()
                 tip.x = 0.05
                 tip.y = 0.05
@@ -218,17 +227,8 @@ class RobotController:
                 tail = Point()
                 tail.x = 0.05
                 tail.y = 0.05
-                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
-            elif i == 1 or i == 5:
-                tip = Point()
-                tip.x = -0.05
-                tip.y = 0.05
-                tip.z = 0
-                tail = Point()
-                tail.x = -0.05
-                tail.y = 0.05
-                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
-            elif i == 2 or i == 6:
+                tail.z = 0.1 * self.pressure_sensors[i].getValue()
+            elif i == 1 or i == 5:  # Top_Right: Sensor 2
                 tip = Point()
                 tip.x = 0.05
                 tip.y = -0.05
@@ -236,8 +236,8 @@ class RobotController:
                 tail = Point()
                 tail.x = 0.05
                 tail.y = -0.05
-                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
-            elif i == 3 or i == 7:
+                tail.z = 0.1 * self.pressure_sensors[i].getValue()
+            elif i == 2 or i == 6:  # Bottom_Right: Sensor 3
                 tip = Point()
                 tip.x = -0.05
                 tip.y = -0.05
@@ -245,7 +245,16 @@ class RobotController:
                 tail = Point()
                 tail.x = -0.05
                 tail.y = -0.05
-                tail.z = 0.01 * self.pressure_sensors[i].getValues()[2]
+                tail.z = 0.1 * self.pressure_sensors[i].getValue()
+            elif i == 3 or i == 7:  # Bottom_Left: Sensor 4
+                tip = Point()
+                tip.x = -0.05
+                tip.y = 0.05
+                tip.z = 0
+                tail = Point()
+                tail.x = -0.05
+                tail.y = 0.05
+                tail.z = 0.1 * self.pressure_sensors[i].getValue()
 
             marker_object.points = [tail, tip]
 
