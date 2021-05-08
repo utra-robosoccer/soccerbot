@@ -53,20 +53,7 @@ DEF red_player_1 Bez {
   name "red_player_1"
   controller "<extern>"
 }
-DEF red_player_2 Bez {
 
-  translation 1.57591 1.0591238 0.353973
-  rotation 0.013112120098936277 -0.0010124286711541313 0.9999135199079452 3.0815388935627
-  name "red_player_2"
-  controller "<extern>"
-}
-DEF red_player_3 Bez {
-
-  translation 1.57591 -1.0591238 0.353973
-  rotation 0.013112120098936277 -0.0010124286711541313 0.9999135199079452 3.0815388935627
-  name "red_player_3"
-  controller "<extern>"
-}
 
 
 DEF supervisor_robot hl_supervisor {
