@@ -1,4 +1,4 @@
-output_frame: "odom"
+
 freq: 30.0
 sensor_timeout: 1.0
 odom_used: true

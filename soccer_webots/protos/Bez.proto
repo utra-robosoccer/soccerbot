@@ -37,14 +37,23 @@ PROTO Bez [
     selfCollision IS selfCollision
     %{
 
+            print (fields.name.value)
         if fields.name.value ~= '' then
+
                 -- name is supposed to be something like "red player 2" or "blue player 1"
                 local words = {}
                 for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
-                local color = words[1]
-                local number = words[3]
 
+                color = words[1]
+                number = words[3]
+        else
+                color = "blue"
+                number = 3
+        end
 
+        local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+        local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+      
 
 
     }%
@@ -54,18 +63,18 @@ PROTO Bez [
     children [
       Soccerbot_torso_0Mesh {
       jerseyTexture [
-                      %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_1Mesh {
         jerseyTexture [
-                %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                %{=text1}%
               ]
 
       }
       Soccerbot_torso_2Mesh {
       jerseyTexture [
-                      %{='"textures/bez_back_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_3Mesh {
@@ -74,10 +83,7 @@ PROTO Bez [
       }
       Soccerbot_torso_5Mesh {
       }
-      %{
-         end
-       }%
-
+   
 
 
 
@@ -663,12 +669,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                  		      physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                  		      }
+
 					                                }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_2"
@@ -679,12 +680,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_3"
@@ -695,12 +691,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_4"
@@ -711,12 +702,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                         ]
 
@@ -1203,12 +1189,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                  		      physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                  		      }
+
 					                                }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_2"
@@ -1219,12 +1200,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_3"
@@ -1235,12 +1211,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_4"
@@ -1251,12 +1222,7 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+
                                           }
                                         ]
                                         name "right_foot [foot]"
@@ -1469,7 +1435,7 @@ PROTO Bez [
                         Camera {
                             rotation 1.0 0.0 0.0 1.5708
                             name "camera"
-                            fieldOfView 1.396260
+                            fieldOfView 1.39626
                             width 640
                             height 480
                             noise 0.007000
