@@ -80,7 +80,7 @@ DEF supervisor_robot hl_supervisor {
   name "supervisor_robot"
   controller "<extern>"
 }
-RobocupSoccerBall {
+DEF ball RobocupSoccerBall {
 
   translation -0.02998031889934516 -3.44317031264112e-06 0.07844901170347482
   rotation 0.01248415146509264 0.999922064871212 -0.00010072679967360634 0.0037732639456801494
