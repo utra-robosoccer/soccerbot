@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: dd3d3a888d5c52a94e081a5fe7d9a9c2
+needsRobotAncestor: 1
+baseType: Robot
+slotType: 
+parameters: translation,rotation,name,controller,controllerArgs,customData,supervisor,synchronization,selfCollision,cameraFOV
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
+documentationUrl: 
+info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\sWolfgang\nExtracted\sfrom:\swolfgang.urdf

@@ -5,7 +5,7 @@
     <xacro:arg name="model_type" default="dae" />
     <xacro:arg name="file_path" default="../soccer_description" />
     <xacro:arg name="has_base_footprint" default="false" />
-
+    <xacro:arg name="tf_prefix" default="" />
     <xacro:property name="FILE_PATH" value="$(arg file_path)"/>
     <xacro:property name="MODEL_TYPE" value="$(arg model_type)"/>
 
@@ -17,7 +17,7 @@
     <xacro:include filename="$(find soccer_description)/models/front_camera.xacro" />
     <xacro:include filename="$(find soccer_description)/models/imu.xacro" />
 
-    <link name="torso">
+    <link name="$(arg tf_prefix)/torso">
         <inertial>
             <mass value="1.529"/>
             <origin rpy="0 0 0" xyz="0.0082498 -0.0017440 -0.0522479"/>
@@ -39,23 +39,23 @@
         </visual>
     </link>
 
-    <xacro:arm name="left" origin="torso" direction="1" />
-    <xacro:arm name="right" origin="torso" direction="-1" />
-    <xacro:leg name="left" origin="torso" direction="1" />
-    <xacro:leg name="right" origin="torso" direction="-1" />
-    <xacro:head origin="torso" />
-    <xacro:imu origin="torso" />
-    <xacro:front_camera origin="head" />
+    <xacro:arm name="left" origin="$(arg tf_prefix)/torso" direction="1" />
+    <xacro:arm name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
+    <xacro:leg name="left" origin="$(arg tf_prefix)/torso" direction="1" />
+    <xacro:leg name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
+    <xacro:head origin="$(arg tf_prefix)/torso" />
+    <xacro:imu origin="$(arg tf_prefix)/torso" />
+    <xacro:front_camera origin="$(arg tf_prefix)/head" />
 
     <xacro:if value="$(arg has_base_footprint)">
-        <link name="base_footprint" />
+        <link name="$(arg tf_prefix)/base_footprint" />
         <joint name="base_footprint_torso" type="fixed">
-            <parent link="base_footprint"/>
-            <child link="torso"/>
+            <parent link="$(arg tf_prefix)/base_footprint"/>
+            <child link="$(arg tf_prefix)/torso"/>
             <origin rpy="0 0 0" xyz="0 0 0.3536"/>
             <axis xyz="1 0 0"/>
         </joint>
-        <gazebo reference="base_footprint">
+        <gazebo reference="$(arg tf_prefix)/base_footprint">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
@@ -81,7 +81,7 @@
         </plugin>
     </gazebo>
 
-    <gazebo reference="torso">
+    <gazebo reference="$(arg tf_prefix)/torso">
         <kp>${JOINT_KP}</kp>
         <kd>${JOINT_KD}</kd>
         <mu1>${JOINT_MU1}</mu1>

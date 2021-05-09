@@ -18,7 +18,7 @@ PROTO Bez [
 ]
 {
   %{
-    local mx28_backlash = 0.01
+    local mx28_backlash = 0.00581776
     local mx28_max_torque = 3.10
     local mx28_max_velocity = 7.02
     local mx28_damping_constant = 0.3086
@@ -35,37 +35,48 @@ PROTO Bez [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
-    %{
 
-        if fields.name.value ~= '' then
-                -- name is supposed to be something like "red player 2" or "blue player 1"
-                local words = {}
-                for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
-                local color = words[1]
-                local number = words[3]
-
-
-
-
-    }%
 
 
 
     children [
+
+    %{
+
+      print (fields.name.value)
+          if fields.name.value ~= '' then
+
+          -- name is supposed to be something like "red player 2" or "blue player 1"
+      local words = {}
+      for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+
+          color = words[1]
+          number = words[3]
+          else
+          color = "blue"
+          number = 3
+          end
+
+          local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+          local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+
+
+
+    }%
       Soccerbot_torso_0Mesh {
       jerseyTexture [
-                      %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_1Mesh {
         jerseyTexture [
-                %{='"textures/bez_' .. number .. '_' .. color .. '.png"'}%
+                %{=text1}%
               ]
 
       }
       Soccerbot_torso_2Mesh {
       jerseyTexture [
-                      %{='"textures/bez_back_' .. number .. '_' .. color .. '.png"'}%
+                      %{=text1}%
                     ]
       }
       Soccerbot_torso_3Mesh {
@@ -74,9 +85,6 @@ PROTO Bez [
       }
       Soccerbot_torso_5Mesh {
       }
-      %{
-         end
-       }%
 
 
 
@@ -155,7 +163,7 @@ PROTO Bez [
                 ]
                 name "left_forearm [arm]"
                 boundingObject Transform {
-                  translation -0.01 0.025 -0.06
+                  translation -0.0055 0.025 -0.09
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
@@ -268,11 +276,11 @@ PROTO Bez [
                 ]
                 name "right_forearm [arm]"
                 boundingObject Transform {
-                  translation -0.01 -0.025 -0.06
+                  translation -0.0055 -0.025 -0.09
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.035000 0.049000 0.144000
+                       size 0.035000 0.049000 0.144
                     }
                   ]
                 }
@@ -646,77 +654,77 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_1"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0250
+                                              translation 0.03975 0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                  		      physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                  		      }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
 					                                }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_2"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0250
+                                              translation 0.03975 -0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_3"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0250
+                                              translation -0.03375 -0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_4"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0250
+                                              translation -0.03375 0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                         ]
 
                                         name "left_foot [foot]"
                                         boundingObject Transform {
-                                          translation 0.003 0.00 -0.02
+                                          translation 0.002 0.00 -0.02
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
-                                               size 0.090000 0.070000 0.01
+                                               size 0.090000 0.070000 0.004
                                             }
                                           ]
                                         }
@@ -738,7 +746,7 @@ PROTO Bez [
                                     rotation 0.000000 1.000000 0.000000 0.000000
                                     children [
                                       Box {
-                                         size 0.090769 0.042000 0.050600
+                                         size 0.090769 0.042000 0.04
                                       }
                                     ]
                                   }
@@ -800,11 +808,11 @@ PROTO Bez [
                 ]
                 name "left_hip_front"
                 boundingObject Transform {
-                  translation -0.02 0.00 -0.012
+                  translation -0.023 0.00 -0.012
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.083747 0.048850 0.050600
+                       size 0.0800 0.048850 0.050600
                     }
                   ]
                 }
@@ -1180,67 +1188,67 @@ PROTO Bez [
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_1"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0250
+                                              translation 0.03975 0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                  		      physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                  		      }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
 					                                }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_2"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0250
+                                              translation 0.03975 -0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_3"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0250
+                                              translation -0.03375 -0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_4"
-                                            type "force-3d"
+                                            type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0250
+                                              translation -0.03375 0.025 -0.0221
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-                                            physics Physics {
-                                              density -1
-                                              mass 0.001
-                                              centerOfMass []
-                                              inertiaMatrix []
-                                            }
+physics Physics {
+density -1
+    mass 0.001
+    centerOfMass []
+    inertiaMatrix []
+    }
                                           }
                                         ]
                                         name "right_foot [foot]"
@@ -1249,7 +1257,7 @@ PROTO Bez [
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
-                                               size 0.090000 0.070000 0.01
+                                               size 0.090000 0.070000 0.004
                                             }
                                           ]
                                         }
@@ -1262,7 +1270,7 @@ PROTO Bez [
                                             0.000000e+00 0.000000e+00 0.000000e+00
                                           ]
 					}
-				     } 
+				     }
                                     }
                                   ]
                                   name "right_ankle"
@@ -1271,7 +1279,7 @@ PROTO Bez [
                                     rotation 0.000000 1.000000 0.000000 0.000000
                                     children [
                                       Box {
-                                         size 0.090769 0.042000 0.050600
+                                         size 0.090769 0.042000 0.04
                                       }
                                     ]
                                   }
@@ -1333,11 +1341,11 @@ PROTO Bez [
                 ]
                 name "right_hip_front"
                 boundingObject Transform {
-                  translation -0.02 0.00 -0.012
+                  translation -0.023 0.00 -0.012
                   rotation 0.000000 1.000000 0.000000 0.000000
                   children [
                     Box {
-                       size 0.083747 0.048850 0.050600
+                       size 0.080 0.048850 0.050600
                     }
                   ]
                 }
@@ -1450,7 +1458,7 @@ PROTO Bez [
                         Camera {
                             rotation 1.0 0.0 0.0 1.5708
                             name "camera"
-                            fieldOfView 1.396260
+                            fieldOfView 1.39626
                             width 640
                             height 480
                             noise 0.007000
