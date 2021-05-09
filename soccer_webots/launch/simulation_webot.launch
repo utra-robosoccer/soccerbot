@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="gui" default="true" doc="Whether or not to launch webots with rendering"/>
+    <arg name="single" default="false" />
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <!-- delete ros parameter "/webots_pid" + sim_id since its used to communicate the process id of the simulation -->
@@ -9,13 +10,29 @@
 
 
     <!-- start simulation and supervisor either with or without gui -->
-    <node  pkg="soccer_webots" type="start.sh" name="webots_sim" output="screen"  />
+    <node  pkg="soccer_webots" type="start.sh" name="webots_sim" output="screen"  args="--single $(arg single) "/>
 
 
 
-    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" >
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot1">
+        <arg name="robot_name" value="red_player_1"/>
+        <arg name="robot_tag" value="robot1"/>
+
+    </include>
+
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot2" unless="$(arg single)">
         <arg name="robot_name" value="red_player_2"/>
+        <arg name="robot_tag" value="robot2"/>
+    </include>
 
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot3" unless="$(arg single)">
+        <arg name="robot_name" value="red_player_3"/>
+        <arg name="robot_tag" value="robot3"/>
+    </include>
+
+    <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot4" unless="$(arg single)">
+        <arg name="robot_name" value="red_player_4"/>
+        <arg name="robot_tag" value="robot4"/>
     </include>
 
 

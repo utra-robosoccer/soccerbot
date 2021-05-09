@@ -1,0 +1,61 @@
+#VRML_SIM R2021b utf8
+# Soccer jersey specifically designed for the Robotis robots.
+# The appearance can be modified changing the value of the 'jerseyTexture' field,
+# otherwise if no texture is available the model will use the color specified in 'jerseyColor' field.
+# A default set of red and blue textures with player number from 1 to 5 is provided.
+
+
+PROTO THMOSJersey [
+  field MFString jerseyTexture "textures/THMOS_blue_1.png"
+  field SFColor  jerseyColor   1 1 1
+]
+{
+  Slot {
+    type "thmos jersey"
+    endPoint Solid{    
+		  children [
+				Group {
+					children [
+						Transform {
+							translation 0 0 0.004
+							rotation 0 1 0 0
+							children [
+								Shape {
+									appearance PBRAppearance {
+									  baseColor IS jerseyColor
+									  baseColorMap ImageTexture {
+									    url IS jerseyTexture
+									  }
+									  roughness 1
+									  metalness 0
+									}
+									geometry Box {
+									  size 0.1 0.1 0.01
+									}
+								}
+							]
+						}
+						Transform {
+							translation 0 0.02 0.105
+							rotation 0 1 0 0
+							children [
+								Shape {
+									appearance PBRAppearance {
+									  baseColorMap ImageTexture {
+									    url IS jerseyTexture
+									  }
+									  roughness 1
+									  metalness 0
+									}
+									geometry Box {
+									  size 0.1 0.1 0.01
+									}
+								}
+							]
+						}
+					]
+				}
+		  ]
+		}
+  }
+}

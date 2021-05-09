@@ -1,6 +1,6 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:macro name="head" params="origin">
-        <link name="neck">
+        <link name="$(arg tf_prefix)/neck">
             <inertial>
                 <mass value="0.011294"/>
                 <origin rpy="0  0  0" xyz="0 -0.0006476 0.0092453"/>
@@ -22,7 +22,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="head">
+        <link name="$(arg tf_prefix)/head">
             <inertial>
                 <mass value="0.282"/>
                 <origin rpy="0  0  0" xyz="0.0237166 0.0018096 0.0255966"/>
@@ -47,15 +47,15 @@
 
         <joint name="head_motor_0" type="revolute">
             <parent link="${origin}"/>
-            <child link="neck"/>
+            <child link="$(arg tf_prefix)/neck"/>
             <origin rpy="0 0 0" xyz="0.024 0 0.05875"/>
             <axis xyz="0 0 1"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${AX12_VELOCITY}"/>
         </joint>
         <joint name="head_motor_1" type="revolute">
-            <parent link="neck"/>
-            <child link="head"/>
+            <parent link="$(arg tf_prefix)/neck"/>
+            <child link="$(arg tf_prefix)/head"/>
             <origin rpy="0 0 0" xyz="0 0 0.024"/>
             <axis xyz="0 1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
@@ -83,13 +83,13 @@
             </actuator>
         </transmission>
 
-        <gazebo reference="neck">
+        <gazebo reference="$(arg tf_prefix)/neck">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="head">
+        <gazebo reference="$(arg tf_prefix)/head">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>

@@ -46,20 +46,22 @@ TexturedBackgroundLight {
 RobocupSoccerField {
   size "kid"
 }
-Bez {
+DEF red_player_1 Bez {
 
   translation 1.57591 -0.0591238 0.353973
   rotation 0.013112120098936277 -0.0010124286711541313 0.9999135199079452 3.0815388935627
-  name "red_player_2"
+  name "red_player_1"
   controller "<extern>"
 }
+
+
+
 DEF supervisor_robot hl_supervisor {
   name "supervisor_robot"
   controller "<extern>"
 }
 RobocupSoccerBall {
-  hidden linearVelocity_0 6.441874850041612e-07 -5.608049284344719e-07 -2.759616399433013e-05
-  hidden angularVelocity_0 8.004400196026706e-06 9.193424173205576e-06 -2.6824811524794667e-15
+
   translation -0.02998031889934516 -3.44317031264112e-06 0.07844901170347482
   rotation 0.01248415146509264 0.999922064871212 -0.00010072679967360634 0.0037732639456801494
 }

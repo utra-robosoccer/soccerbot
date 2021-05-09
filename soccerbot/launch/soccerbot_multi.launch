@@ -2,7 +2,9 @@
     <arg name="simulation" default="true" />
     <arg name="single" default="true" />
 
-    <include file="$(find soccerbot)/launch/modules/simulator.launch" />
+    <include file="$(find soccerbot)/launch/modules/simulator.launch" >
+        <arg name="single" value="$(arg single)" />
+    </include>
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 <!--    <include file="$(find soccerbot)/launch/modules/strategy.launch" />-->
 
