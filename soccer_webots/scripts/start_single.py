@@ -10,11 +10,13 @@ from math import sin, cos, pi
 import tf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
+from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 
 def callback(data):
     global temp_bool
     temp_bool = False
+    rospy.set_param("send_odom", "false")
 
 
 parser = argparse.ArgumentParser()
@@ -52,13 +54,15 @@ th = 0.0
 
 while not rospy.is_shutdown():
     r.step()
+    if rospy.has_param("send_odom"):
+        if rospy.get_param("send_odom") == "true":
+            temp_bool = True
 
     if temp_bool:
         current_time = rospy.Time.from_seconds(r.time)
 
         # since all odometry is 6DOF we'll need a quaternion created from yaw
         odom_quat = tf.transformations.quaternion_from_euler(0, 0, th)
-
 
         # next, we'll publish the odometry message over ROS
         odom = Odometry()
