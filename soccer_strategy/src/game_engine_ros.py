@@ -6,7 +6,9 @@ from ball import Ball
 import game_engine
 import copy
 import geometry_msgs.msg
-
+from matplotlib import pyplot as plt
+from matplotlib.ticker import MultipleLocator
+from strategy import DummyStrategyROS
 
 class GameEngineRos(game_engine.GameEngine):
     KICK_TIMEOUT = 5
@@ -35,18 +37,42 @@ class GameEngineRos(game_engine.GameEngine):
                      robot_name="robot8"),
         ]
 
-        self.ball = Ball(position=self.update_average_ball_position())
+        self.ball = Ball(position=np.array([0, 0]))
 
-        self.robots_init = copy.deepcopy(self.robots)
-        self.ball_init = copy.deepcopy(self.ball)
+        #self.robots_init = copy.deepcopy(self.robots)
+        #self.ball_init = copy.deepcopy(self.ball)
+
+        fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
+        background = fig.add_axes([0, 0, 1, 1])
+        background.axis('equal')
+        background.set_xlim([-3.5, 3.5])
+        background.set_ylim([-5, 5])
+        background.xaxis.set_major_locator(MultipleLocator(1))
+        background.yaxis.set_major_locator(MultipleLocator(1))
+        background.xaxis.set_minor_locator(MultipleLocator(0.1))
+        background.yaxis.set_minor_locator(MultipleLocator(0.1))
+        background.grid(which='minor', alpha=0.2)
+        background.grid(which='major', alpha=0.5)
+        background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
+        background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
+        background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
+        background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
+        background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
+        foreground = fig.add_axes([0, 0, 1, 1])
+        foreground.set_facecolor((0, 0, 0, 0))
+
+        # Setup the strategy
+        self.strategy = DummyStrategyROS()
 
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
         # this needs to be team-dependent in the future
         ball_positions = np.array([])
         for robot in self.robots:
-            np.append(ball_positions, robot.ball_position, axis=0)
-        self.ball.position = ball_positions.mean(axis=0)
+            if not np.isnan(robot.ball_position.any()):
+                np.append(ball_positions, robot.ball_position, axis=0)
+        if ball_positions.size != 0:
+            self.ball.position = ball_positions.mean(axis=0)
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngineRos.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each

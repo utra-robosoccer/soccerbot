@@ -24,8 +24,11 @@ class RobotRos(Robot):
         self.team = team
         self.role = role
         self.status = status
-        self.goal_position = self.position
+        self.position = np.array([0.0, 0.0, 0])
+        self.goal_position = np.array([0.0, 0.0, 0])
+        self.ball_position = np.array([0.0, 0.0, 0])
         self.robot_name = robot_name
+        self.max_kick_speed = 2
 
         # for static trajectories
         self.last_kick = 0
@@ -35,16 +38,14 @@ class RobotRos(Robot):
 
     def robot_pose_callback(self, data):
         quaternion = (
-            data.pose.orientation.x,
-            data.pose.orientation.y,
-            data.pose.orientation.z,
-            data.pose.orientation.w
+            data.pose.pose.orientation.w,
+            data.pose.pose.orientation.x,
+            data.pose.pose.orientation.y,
+            data.pose.pose.orientation.z
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
-        x_vector = np.cos(euler[2]) * np.cos(euler[0])
-        y_vector = np.sin(euler[2]) * np.cos(euler[0])
-        angle = math.atan2(y_vector, x_vector)
-        self.position = np.array([data.pose.pose.position.x, data.pose.pose.position.y, angle])
+        self.position = np.array([data.pose.pose.position.y, data.pose.pose.position.x, euler[2] + math.pi/2])
+        print(self.position)
         pass
 
     def ball_pose_callback(self, data):
