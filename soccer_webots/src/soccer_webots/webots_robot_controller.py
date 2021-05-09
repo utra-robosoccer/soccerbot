@@ -210,9 +210,9 @@ class RobotController:
 
             marker_object = Marker()
             if i < 4:
-                marker_object.header.frame_id = "right_foot"
+                marker_object.header.frame_id = self.base_frame + "right_foot"
             else:
-                marker_object.header.frame_id = "left_foot"
+                marker_object.header.frame_id = self.base_frame + "left_foot"
 
             marker_object.header.stamp = current_time
             marker_object.ns = "Soccer_bot"

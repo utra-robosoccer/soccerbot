@@ -13,13 +13,22 @@ from soccer_webots.webots_supervisor_controller import SupervisorController
 
 rospack = rospkg.RosPack()
 path = rospack.get_path("soccer_webots")
+parser = argparse.ArgumentParser()
+parser.add_argument('--single', help="which robot should be started")
+
+
+args, unknown = parser.parse_known_args()
 
 mode = "normal"
 batch = ""
 no_rendering = ""
-print(os.path.join(os.environ['WEBOTS_HOME'], 'webots'))
-print(os.environ['PYTHONPATH'])
-world_name = "kid.wbt"
+
+if args.single == "true":
+    world_name = "kid.wbt"
+else:
+    world_name = "kid_4.wbt"
+print(world_name)
+print(args.single)
 arguments = [os.path.join(os.environ['WEBOTS_HOME'], 'webots'),
              batch,
              no_rendering,

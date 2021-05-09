@@ -40,6 +40,7 @@ rospy.logdebug("Starting ros interface for " + args.robot_name)
 
 r = RobotController(base_ns=args.robot_tag)
 odom_pub = rospy.Publisher("/" + args.robot_tag + "/odom", Odometry, queue_size=50)
+init_pub = rospy.Publisher("/" + args.robot_tag + "/initialpose", PoseWithCovarianceStamped, queue_size=50)
 odom_broadcaster = tf.TransformBroadcaster()
 rospy.Subscriber("/" + args.robot_tag + '/amcl_pose', PoseWithCovarianceStamped, callback)
 
@@ -58,39 +59,55 @@ while not rospy.is_shutdown():
         # since all odometry is 6DOF we'll need a quaternion created from yaw
         odom_quat = tf.transformations.quaternion_from_euler(0, 0, th)
 
-        # first, we'll publish the transform over tf
-        odom_broadcaster.sendTransform(
-            (0, 0, 0),
-            odom_quat,
-            current_time,
-            args.robot_tag + "/base_footprint",
-            args.robot_tag + "/odom"
-        )
-
-
-        # next, we'll publish the odometry message over ROS
-        odom = Odometry()
-        odom.header.stamp = current_time
-        odom.header.frame_id = args.robot_tag + "/odom"
+        # # first, we'll publish the transform over tf
+        # odom_broadcaster.sendTransform(
+        #     (0, 0, 0),
+        #     odom_quat,
+        #     current_time,
+        #     args.robot_tag + "/base_footprint",
+        #     args.robot_tag + "/odom"
+        # )
+        #
+        #
+        # # next, we'll publish the odometry message over ROS
+        # odom = Odometry()
+        # odom.header.stamp = current_time
+        # odom.header.frame_id = args.robot_tag + "/odom"
+        #
+        # # set the position
+        # odom.pose.pose = Pose(Point(x, y, 0), Quaternion(*odom_quat))
+        # odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+        #                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+        #                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+        #                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+        #                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+        # # set the velocity
+        # odom.child_frame_id = args.robot_tag + "/base_footprint"
+        # odom.twist.twist = Twist(Vector3(x, y, 0), Vector3(0, 0, th))
+        # odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #                          0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+        #                          0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+        #                          0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+        #                          0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+        #                          0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+        # # publish the message
+        # odom_pub.publish(odom)
+        last_time = current_time
+        # temp_bool = False
+        pose_1 = PoseWithCovarianceStamped()
+        pose_1.header.stamp = current_time
+        pose_1.header.frame_id = "world"
 
         # set the position
-        odom.pose.pose = Pose(Point(x, y, 0), Quaternion(*odom_quat))
-        odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+        pose_1.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
+        pose_1.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
                                 0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
                                 0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
                                 0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                 0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-        # set the velocity
-        odom.child_frame_id = args.robot_tag + "/base_footprint"
-        odom.twist.twist = Twist(Vector3(x, y, 0), Vector3(0, 0, th))
-        odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+
         # publish the message
-        odom_pub.publish(odom)
-        last_time = current_time
-        # temp_bool = False
+        init_pub.publish(pose_1)
+        temp_bool = False
