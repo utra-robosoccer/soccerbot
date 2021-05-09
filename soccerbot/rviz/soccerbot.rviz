@@ -10,6 +10,7 @@ Panels:
         - /TF1/Frames1
         - /Localization1
         - /RobotModel3
+        - /RobotModel4
       Splitter Ratio: 0.4962962865829468
     Tree Height: 437
   - Class: rviz/Selection
@@ -29,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Image
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -60,200 +61,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        robot1/base_camera:
-          Value: true
-        robot1/base_footprint:
-          Value: true
-        robot1/camera:
-          Value: true
-        robot1/head:
-          Value: true
-        robot1/imu_link:
-          Value: true
-        robot1/left_ankle:
-          Value: true
-        robot1/left_bicep:
-          Value: true
-        robot1/left_calve:
-          Value: true
-        robot1/left_foot:
-          Value: true
-        robot1/left_forearm:
-          Value: true
-        robot1/left_hip_front:
-          Value: true
-        robot1/left_hip_side:
-          Value: true
-        robot1/left_thigh:
-          Value: true
-        robot1/neck:
-          Value: true
-        robot1/odom:
-          Value: true
-        robot1/right_ankle:
-          Value: true
-        robot1/right_bicep:
-          Value: true
-        robot1/right_calve:
-          Value: true
-        robot1/right_foot:
-          Value: true
-        robot1/right_forearm:
-          Value: true
-        robot1/right_hip_front:
-          Value: true
-        robot1/right_hip_side:
-          Value: true
-        robot1/right_thigh:
-          Value: true
-        robot1/torso:
-          Value: true
-        robot2/base_camera:
-          Value: true
-        robot2/base_footprint:
-          Value: true
-        robot2/camera:
-          Value: true
-        robot2/head:
-          Value: true
-        robot2/imu_link:
-          Value: true
-        robot2/left_ankle:
-          Value: true
-        robot2/left_bicep:
-          Value: true
-        robot2/left_calve:
-          Value: true
-        robot2/left_foot:
-          Value: true
-        robot2/left_forearm:
-          Value: true
-        robot2/left_hip_front:
-          Value: true
-        robot2/left_hip_side:
-          Value: true
-        robot2/left_thigh:
-          Value: true
-        robot2/neck:
-          Value: true
-        robot2/odom:
-          Value: true
-        robot2/right_ankle:
-          Value: true
-        robot2/right_bicep:
-          Value: true
-        robot2/right_calve:
-          Value: true
-        robot2/right_foot:
-          Value: true
-        robot2/right_forearm:
-          Value: true
-        robot2/right_hip_front:
-          Value: true
-        robot2/right_hip_side:
-          Value: true
-        robot2/right_thigh:
-          Value: true
-        robot2/torso:
-          Value: true
-        robot3/base_camera:
-          Value: true
-        robot3/base_footprint:
-          Value: true
-        robot3/camera:
-          Value: true
-        robot3/head:
-          Value: true
-        robot3/imu_link:
-          Value: true
-        robot3/left_ankle:
-          Value: true
-        robot3/left_bicep:
-          Value: true
-        robot3/left_calve:
-          Value: true
-        robot3/left_foot:
-          Value: true
-        robot3/left_forearm:
-          Value: true
-        robot3/left_hip_front:
-          Value: true
-        robot3/left_hip_side:
-          Value: true
-        robot3/left_thigh:
-          Value: true
-        robot3/neck:
-          Value: true
-        robot3/odom:
-          Value: true
-        robot3/right_ankle:
-          Value: true
-        robot3/right_bicep:
-          Value: true
-        robot3/right_calve:
-          Value: true
-        robot3/right_foot:
-          Value: true
-        robot3/right_forearm:
-          Value: true
-        robot3/right_hip_front:
-          Value: true
-        robot3/right_hip_side:
-          Value: true
-        robot3/right_thigh:
-          Value: true
-        robot3/torso:
-          Value: true
-        robot4/base_camera:
-          Value: true
-        robot4/base_footprint:
-          Value: true
-        robot4/camera:
-          Value: true
-        robot4/head:
-          Value: true
-        robot4/imu_link:
-          Value: true
-        robot4/left_ankle:
-          Value: true
-        robot4/left_bicep:
-          Value: true
-        robot4/left_calve:
-          Value: true
-        robot4/left_foot:
-          Value: true
-        robot4/left_forearm:
-          Value: true
-        robot4/left_hip_front:
-          Value: true
-        robot4/left_hip_side:
-          Value: true
-        robot4/left_thigh:
-          Value: true
-        robot4/neck:
-          Value: true
-        robot4/odom:
-          Value: true
-        robot4/right_ankle:
-          Value: true
-        robot4/right_bicep:
-          Value: true
-        robot4/right_calve:
-          Value: true
-        robot4/right_foot:
-          Value: true
-        robot4/right_forearm:
-          Value: true
-        robot4/right_hip_front:
-          Value: true
-        robot4/right_hip_side:
-          Value: true
-        robot4/right_thigh:
-          Value: true
-        robot4/torso:
-          Value: true
-        world:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF
@@ -261,131 +68,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          robot1/odom:
-            robot1/base_footprint:
-              robot1/base_camera:
-                {}
-              robot1/torso:
-                robot1/imu_link:
-                  {}
-                robot1/left_bicep:
-                  robot1/left_forearm:
-                    {}
-                robot1/left_hip_side:
-                  robot1/left_hip_front:
-                    robot1/left_thigh:
-                      robot1/left_calve:
-                        robot1/left_ankle:
-                          robot1/left_foot:
-                            {}
-                robot1/neck:
-                  robot1/head:
-                    robot1/camera:
-                      {}
-                robot1/right_bicep:
-                  robot1/right_forearm:
-                    {}
-                robot1/right_hip_side:
-                  robot1/right_hip_front:
-                    robot1/right_thigh:
-                      robot1/right_calve:
-                        robot1/right_ankle:
-                          robot1/right_foot:
-                            {}
-          robot2/odom:
-            robot2/base_footprint:
-              robot2/base_camera:
-                {}
-              robot2/torso:
-                robot2/imu_link:
-                  {}
-                robot2/left_bicep:
-                  robot2/left_forearm:
-                    {}
-                robot2/left_hip_side:
-                  robot2/left_hip_front:
-                    robot2/left_thigh:
-                      robot2/left_calve:
-                        robot2/left_ankle:
-                          robot2/left_foot:
-                            {}
-                robot2/neck:
-                  robot2/head:
-                    robot2/camera:
-                      {}
-                robot2/right_bicep:
-                  robot2/right_forearm:
-                    {}
-                robot2/right_hip_side:
-                  robot2/right_hip_front:
-                    robot2/right_thigh:
-                      robot2/right_calve:
-                        robot2/right_ankle:
-                          robot2/right_foot:
-                            {}
-          robot3/odom:
-            robot3/base_footprint:
-              robot3/base_camera:
-                {}
-              robot3/torso:
-                robot3/imu_link:
-                  {}
-                robot3/left_bicep:
-                  robot3/left_forearm:
-                    {}
-                robot3/left_hip_side:
-                  robot3/left_hip_front:
-                    robot3/left_thigh:
-                      robot3/left_calve:
-                        robot3/left_ankle:
-                          robot3/left_foot:
-                            {}
-                robot3/neck:
-                  robot3/head:
-                    robot3/camera:
-                      {}
-                robot3/right_bicep:
-                  robot3/right_forearm:
-                    {}
-                robot3/right_hip_side:
-                  robot3/right_hip_front:
-                    robot3/right_thigh:
-                      robot3/right_calve:
-                        robot3/right_ankle:
-                          robot3/right_foot:
-                            {}
-          robot4/odom:
-            robot4/base_footprint:
-              robot4/base_camera:
-                {}
-              robot4/torso:
-                robot4/imu_link:
-                  {}
-                robot4/left_bicep:
-                  robot4/left_forearm:
-                    {}
-                robot4/left_hip_side:
-                  robot4/left_hip_front:
-                    robot4/left_thigh:
-                      robot4/left_calve:
-                        robot4/left_ankle:
-                          robot4/left_foot:
-                            {}
-                robot4/neck:
-                  robot4/head:
-                    robot4/camera:
-                      {}
-                robot4/right_bicep:
-                  robot4/right_forearm:
-                    {}
-                robot4/right_hip_side:
-                  robot4/right_hip_front:
-                    robot4/right_thigh:
-                      robot4/right_calve:
-                        robot4/right_ankle:
-                          robot4/right_foot:
-                            {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -787,7 +470,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_0
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -795,7 +478,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_1
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -803,7 +486,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_2
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -811,7 +494,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_4
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -819,7 +502,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_3
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -827,7 +510,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_5
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -835,7 +518,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_6
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -843,7 +526,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_7
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -1088,6 +771,129 @@ Visualization Manager:
           Value: true
       Name: RobotModel
       Robot Description: robot3/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        robot4/base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/left_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/neck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot4/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
