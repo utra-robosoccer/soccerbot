@@ -5,10 +5,6 @@ from transformation import Transformation as tr
 import matplotlib.pyplot as plt
 from robotpath import Robotpath
 import math
-import rospy
-from std_msgs.msg import Float64
-from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
-
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -137,32 +133,7 @@ class Soccerbot:
         pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL,
                                      jointIndices=list(range(0, 18, 1)), targetPositions=self.get_angles())
 
-        # ROS connection
-        self.motor_publishers = {}
-        self.motor_publishers[Joints.LEFT_ARM_1] = rospy.Publisher("left_arm_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_ARM_2] = rospy.Publisher("left_arm_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_ARM_1] = rospy.Publisher("right_arm_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_ARM_2] = rospy.Publisher("right_arm_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_1] = rospy.Publisher("left_leg_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_2] = rospy.Publisher("left_leg_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_3] = rospy.Publisher("left_leg_motor_2/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_4] = rospy.Publisher("left_leg_motor_3/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_5] = rospy.Publisher("left_leg_motor_4/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_6] = rospy.Publisher("left_leg_motor_5/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_1] = rospy.Publisher("right_leg_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_2] = rospy.Publisher("right_leg_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_3] = rospy.Publisher("right_leg_motor_2/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_4] = rospy.Publisher("right_leg_motor_3/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_5] = rospy.Publisher("right_leg_motor_4/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_6] = rospy.Publisher("right_leg_motor_5/command", Float64, queue_size=1)
-
-        self.pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
-        self.motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-                            "left_leg_motor_0", "left_leg_motor_1",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5"
-                            ]
+        self.current_step_time = 0
 
     def ready(self):
         """
@@ -266,7 +237,7 @@ class Soccerbot:
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.inverseKinematicsRightFoot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
-    def getPath(self, finishPosition, show=True):
+    def setGoal(self, finishPosition, show=True):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
@@ -311,19 +282,6 @@ class Soccerbot:
             print("--------------------------------------------------")
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
         self.pose = crotch_position
-
-    def publishAngles(self):
-        # for m in self.motor_publishers:
-        # self.motor_publishers[m].publish(self.configuration[m])
-        js = JointState()
-        js.name = []
-        js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-        js.position = []
-        js.effort = []
-        for i, n in enumerate(self.motor_names):
-            js.name.append(n)
-            js.position.append(self.configuration[i])
-        self.pub_all_motor.publish(js)
 
     def calculate_angles(self, show=True):
         self.angles = []
