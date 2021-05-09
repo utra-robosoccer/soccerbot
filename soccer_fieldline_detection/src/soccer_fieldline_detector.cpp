@@ -179,7 +179,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Publish fieldlines in a LaserScan data format
     sensor_msgs::PointCloud2 point_cloud_msg;
     //Setting up PointCloud2 msg
-    point_cloud_msg.header.stamp = ros::Time::now();
+    point_cloud_msg.header.stamp = msg->header.stamp;
     point_cloud_msg.header.frame_id = name + "/base_camera";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
