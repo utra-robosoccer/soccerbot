@@ -26,8 +26,6 @@
 <!--        <param name="tf_prefix" value = "/robot1"/>-->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-        <include file="$(find soccerbot)/launch/modules/boss.launch" if="$(arg is_boss)" />
-
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>
