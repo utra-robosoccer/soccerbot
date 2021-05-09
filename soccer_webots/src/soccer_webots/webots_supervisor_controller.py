@@ -7,6 +7,7 @@ from gazebo_msgs.msg import ModelStates
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
+
 G = 9.81
 import transforms3d
 import numpy as np
@@ -121,6 +122,19 @@ class SupervisorController:
     def reset(self, msg):
         self.supervisor.simulationReset()
         self.supervisor.simulationResetPhysics()
+        for name in self.robot_names:
+            if name == "red_player_1":
+                base = "robot1"
+            elif name == "red_player_2":
+                base = "robot2"
+            elif name == "red_player_3":
+                base = "robot3"
+            elif name == "red_player_4":
+                base = "robot4"
+            temp_node = self.supervisor.getFromDef(name)
+            if temp_node is not None:
+                # rospy.set_param(base + "/send_odom", "true")
+                pass
 
     def get_robot_position(self, name="red_player_1"):
         if name in self.translation_fields:
