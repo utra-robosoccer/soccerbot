@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="gui" default="true" doc="Whether or not to launch webots with rendering"/>
-    <arg name="single" default="false" />
+    <arg name="single" default="true" />
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <!-- delete ros parameter "/webots_pid" + sim_id since its used to communicate the process id of the simulation -->
