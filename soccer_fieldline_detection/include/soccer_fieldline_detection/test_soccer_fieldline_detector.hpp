@@ -29,6 +29,8 @@ class SoccerFieldlineDetector {
     int minLineLength = 50;
     int maxLineGap = 50;
 
+    std::string name;
+
     // Camera Pose subscriber
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;

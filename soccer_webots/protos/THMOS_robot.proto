@@ -1,0 +1,51 @@
+#VRML_SIM R2021b utf8
+# This is the player robot of THMOS
+# It is derived from the THMOS.proto included in the proto folder
+# This proto may fail to open in a new webots world. Try reload the world and then it'll work normally.
+PROTO THMOS_robot [
+  field  SFVec3f     translation        0 0.415141 0
+  field  SFRotation  rotation           0 1 0 1.5708
+  field  SFString    name               "THMOS"                      # Is `Robot.name`.
+  field  SFString    controller         "thmos_motion"      # Is `Robot.controller`.
+  field  MFString    controllerArgs     []                           # Is `Robot.controllerArgs`.
+  field  SFString    customData         ""                           # Is `Robot.customData`.
+  field  SFBool      supervisor         FALSE                        # Is `Robot.supervisor`.
+  field  SFBool      synchronization    TRUE                         # Is `Robot.synchronization`.
+  field  SFBool      selfCollision      TRUE                         # Is `Robot.selfCollision`.
+  field  SFBool      backlash           FALSE                        # Enables backlash on all joints.
+  field  SFInt32     cameraWidth        640                          # Is `Camera.width`.
+  field  SFInt32     cameraHeight       480                          # Is `Camera.height`.  
+  field  MFNode      bodySlot           []                           # Extends the robot with new nodes in the body slot.
+]
+{
+  THMOS {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    backlash IS backlash
+    cameraWidth IS cameraWidth
+    cameraHeight IS cameraHeight
+    %{
+      if fields.name.value ~= "THMOS" then
+        -- name is supposed to be something like "red player 2" or "blue player 1"
+        local words = {}
+        for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+        local color = words[1]
+        local number = words[3]
+    }%
+    jersey THMOSJersey {
+      jerseyTexture [
+        %{='"textures/THMOS_' .. color .. '_' .. number .. '.png"'}%
+      ]
+    }
+    %{
+      end
+    }%
+  }
+}

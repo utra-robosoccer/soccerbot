@@ -1,6 +1,6 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:macro name="leg" params="name origin direction">
-        <link name="${name}_hip_side">
+        <link name="$(arg tf_prefix)/${name}_hip_side">
             <inertial>
                 <mass value="9.364e-3"/>
                 <origin rpy="0  0  0" xyz="0.0003695 0.0000 0.01689"/>
@@ -22,7 +22,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="${name}_hip_front">
+        <link name="$(arg tf_prefix)/${name}_hip_front">
             <inertial>
                 <mass value="153.186e-3"/>
                 <origin rpy="0 0 0" xyz="-0.02093 0 -0.011313"/>
@@ -44,7 +44,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="${name}_thigh">
+        <link name="$(arg tf_prefix)/${name}_thigh">
             <inertial>
                 <mass value="21.438e-3"/>
                 <origin rpy="0 0 0" xyz="0.0019422 ${direction * 0.0001419} -0.0469409"/>
@@ -66,7 +66,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="${name}_calve">
+        <link name="$(arg tf_prefix)/${name}_calve">
             <inertial>
                 <mass value="86.547e-3"/>
                 <origin rpy="0  0  0" xyz="0 ${direction * -0.0003259e-3} -0.0150123e-3"/>
@@ -88,7 +88,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="${name}_ankle">
+        <link name="$(arg tf_prefix)/${name}_ankle">
             <inertial>
                 <mass value="153.186e-3"/>
                 <origin rpy="0 0 0" xyz="-0.020939e-3 0.000 0.011313e-3"/>
@@ -110,7 +110,7 @@
                 <material name="black" />
             </visual>
         </link>
-        <link name="${name}_foot">
+        <link name="$(arg tf_prefix)/${name}_foot">
             <inertial>
                 <mass value="23.216e-3"/>
                 <origin rpy="0 0 0" xyz="-0.020939 0.0 0.011313"/>
@@ -135,48 +135,48 @@
         </link>
 
         <joint name="${name}_leg_motor_0" type="revolute">
-            <parent link="torso"/>
-            <child link="${name}_hip_side"/>
+            <parent link="$(arg tf_prefix)/torso"/>
+            <child link="$(arg tf_prefix)/${name}_hip_side"/>
             <origin rpy="0 0 0" xyz="0.0135 ${direction * 0.035} -0.156"/>
             <axis xyz="0 0 ${direction * -1}"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-1.309" upper="0.524" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_1" type="revolute">
-            <parent link="${name}_hip_side"/>
-            <child link="${name}_hip_front"/>
+            <parent link="$(arg tf_prefix)/${name}_hip_side"/>
+            <child link="$(arg tf_prefix)/${name}_hip_front"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <axis xyz="${direction} 0 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_2" type="revolute">
-            <parent link="${name}_hip_front"/>
-            <child link="${name}_thigh"/>
+            <parent link="$(arg tf_prefix)/${name}_hip_front"/>
+            <child link="$(arg tf_prefix)/${name}_thigh"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <axis xyz="0 -1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_3" type="revolute">
-            <parent link="${name}_thigh"/>
-            <child link="${name}_calve"/>
+            <parent link="$(arg tf_prefix)/${name}_thigh"/>
+            <child link="$(arg tf_prefix)/${name}_calve"/>
             <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
             <axis xyz="0 -1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-2.793" upper="0" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_4" type="revolute">
-            <parent link="${name}_calve"/>
-            <child link="${name}_ankle"/>
+            <parent link="$(arg tf_prefix)/${name}_calve"/>
+            <child link="$(arg tf_prefix)/${name}_ankle"/>
             <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
             <axis xyz="0 -1 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
             <limit effort="${MX28_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
         </joint>
         <joint name="${name}_leg_motor_5" type="revolute">
-            <parent link="${name}_ankle"/>
-            <child link="${name}_foot"/>
+            <parent link="$(arg tf_prefix)/${name}_ankle"/>
+            <child link="$(arg tf_prefix)/${name}_foot"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <axis xyz="${direction} 0 0"/>
             <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
@@ -244,37 +244,37 @@
             </actuator>
         </transmission>
 
-        <gazebo reference="${name}_hip_side">
+        <gazebo reference="$(arg tf_prefix)/${name}_hip_side">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="${name}_hip_front">
+        <gazebo reference="$(arg tf_prefix)/${name}_hip_front">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="${name}_thigh">
+        <gazebo reference="$(arg tf_prefix)/${name}_thigh">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="${name}_calve">
+        <gazebo reference="$(arg tf_prefix)/${name}_calve">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="${name}_ankle">
+        <gazebo reference="$(arg tf_prefix)/${name}_ankle">
             <kp>${JOINT_KP}</kp>
             <kd>${JOINT_KD}</kd>
             <mu1>${JOINT_MU1}</mu1>
             <mu2>${JOINT_MU2}</mu2>
         </gazebo>
-        <gazebo reference="${name}_foot">
+        <gazebo reference="$(arg tf_prefix)/${name}_foot">
             <mu1>${FOREARM_MU1}</mu1>
             <mu2>${FOREARM_MU2}</mu2>
         </gazebo>

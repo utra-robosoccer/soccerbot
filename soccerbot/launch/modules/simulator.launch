@@ -4,9 +4,9 @@
   <arg name="no_gui" default="false," doc="Start Webots with minimal GUI"/>
   <arg name="world" default="" doc="Path to the world to load"/>
   <arg name="mode" default="realtime" doc="Startup mode"/>
-
-  <include file="$(find soccer_webots)/launch/simulation_webot.launch" ns="robot1">
-
+  <arg name="single" default="true" />
+  <include file="$(find soccer_webots)/launch/simulation_webot.launch" >
+    <arg name="single" value="$(arg single)" />
   </include>
   <param name="/simulation_active" value="true"/>
   <param name="/use_sim_time" value="true"/>
