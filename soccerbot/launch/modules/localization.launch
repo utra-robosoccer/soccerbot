@@ -40,7 +40,7 @@
 
 <!--    <node pkg="soccer_strategy" type="main.py" name="main"/>-->
     <!-- Complementary filter -->
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" unless="$(arg fake_localization)">
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
         <remap from="imu/data_raw" to="imu_raw" />
         <remap from="imu/data" to="imu_filtered" />

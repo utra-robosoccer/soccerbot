@@ -17,8 +17,8 @@ class RobotRos(Robot):
         self.ball_pose_sub = rospy.Subscriber('/' + robot_name + "/ball_pose",
                                               geometry_msgs.msg.PoseWithCovarianceStamped,
                                               self.ball_pose_callback)
-        self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_data", Imu, self.imu_callback)
-        self.pub_goal = rospy.Publisher('/' + robot_name + "/imu_raw", geometry_msgs.msg.Pose2D, queue_size=1)
+        self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
+        self.pub_goal = rospy.Publisher('/' + robot_name + "/goal", geometry_msgs.msg.Pose2D, queue_size=1)
         self.pub_trajectory = rospy.Publisher('/' + robot_name + "/command", std_msgs.msg.String, queue_size=1)
 
         self.team = team
@@ -44,8 +44,7 @@ class RobotRos(Robot):
             data.pose.pose.orientation.z
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
-        self.position = np.array([data.pose.pose.position.y, data.pose.pose.position.x, euler[2] + math.pi/2])
-        print(self.position)
+        self.position = np.array([data.pose.pose.position.y, -data.pose.pose.position.x, -euler[0] + math.pi/2])
         pass
 
     def ball_pose_callback(self, data):
@@ -55,11 +54,11 @@ class RobotRos(Robot):
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian
         q = msg.orientation
-        roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
+        roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
 
         # We want to publish once on state transition
-        if pitch > angle_threshold and self.status != self.Status.FALLEN_FRONT:
-            self.status = self.Status.FALLEN_FRONT
+        if pitch > angle_threshold and self.status != self.Status.FALLEN_BACK:
+            self.status = self.Status.FALLEN_BACK
 
-        if pitch < -angle_threshold and self.status != self.Status.FALLEN_BACK:
-            self.status = self.Status.FALL_BACK
+        if pitch < -angle_threshold and self.status != self.Status.FALLEN_FRONT:
+            self.status = self.Status.FALLEN_FRONT
