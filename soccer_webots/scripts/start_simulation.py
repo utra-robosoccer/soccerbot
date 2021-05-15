@@ -15,7 +15,7 @@ rospack = rospkg.RosPack()
 path = rospack.get_path("soccer_webots")
 parser = argparse.ArgumentParser()
 parser.add_argument('--single', help="which robot should be started")
-
+parser.add_argument('--fake_localization', help="which robot should be started")
 args, unknown = parser.parse_known_args()
 
 mode = "normal"
@@ -40,8 +40,12 @@ rospy.set_param("send_odom", "true")
 
 os.environ["WEBOTS_PID"] = str(sim_proc.pid)
 os.environ["WEBOTS_ROBOT_NAME"] = "supervisor_robot"
-
-supervisor_controller = SupervisorController()
+print(args.fake_localization)
+if args.fake_localization == "true":
+    fake_arg = True
+else:
+    fake_arg = False
+supervisor_controller = SupervisorController(fake=fake_arg)
 
 while not rospy.is_shutdown():
     supervisor_controller.step()
