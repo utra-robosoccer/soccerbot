@@ -2,7 +2,7 @@
 
 <launch>
     <!--arg name="darknet"         default="true" /-->
-    <arg name="fake_localization" default="true" />
+    <arg name="fake_localization" default="false" />
     <arg name="robot_name" />
     <arg name="map_name" />
     <arg name="x_pos" />

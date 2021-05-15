@@ -17,7 +17,7 @@ import nav_msgs.msg
 
 
 class SupervisorController:
-    def __init__(self):
+    def __init__(self, fake=False):
         """
         The SupervisorController, a Webots controller that can control the world.
         Set the environment variable WEBOTS_ROBOT_NAME to "supervisor_robot" if used with 1_bot.wbt or 4_bots.wbt.
@@ -32,7 +32,7 @@ class SupervisorController:
         self.time = 0
         self.clock_msg = Clock()
         self.supervisor = Supervisor()
-
+        self.localization = fake
         self.supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_REAL_TIME)
 
         self.motors = []
@@ -75,7 +75,8 @@ class SupervisorController:
         for name in self.robot_names:
             temp_node = self.supervisor.getFromDef(name)
             if temp_node is not None:
-                self.publish_odom(name)
+                if self.localization:
+                    self.publish_odom(name)
 
     def publish_clock(self):
         self.clock_msg.clock = rospy.Time.from_seconds(self.time)
