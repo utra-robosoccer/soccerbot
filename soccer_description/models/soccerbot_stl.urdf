@@ -7,7 +7,7 @@
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
   </material>
-  <link name="torso">
+  <link name="/torso">
     <inertial>
       <mass value="1.529"/>
       <origin rpy="0 0 0" xyz="0.0082498 -0.0017440 -0.0522479"/>
@@ -26,7 +26,7 @@
       </geometry>
     </visual>
   </link>
-  <link name="left_bicep">
+  <link name="/left_bicep">
     <inertial>
       <mass value="0.213e-3"/>
       <origin rpy="0  0  0" xyz="0.000 0.02579 -0.04955"/>
@@ -46,7 +46,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_forearm">
+  <link name="/left_forearm">
     <inertial>
       <mass value="45.7e-3"/>
       <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097"/>
@@ -67,22 +67,22 @@
     </visual>
   </link>
   <joint name="left_arm_motor_0" type="revolute">
-    <parent link="torso"/>
-    <child link="left_bicep"/>
+    <parent link="/torso"/>
+    <child link="/left_bicep"/>
     <origin rpy="0 0 0" xyz="-0.0157 0.0725 0"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="1"/>
   </joint>
   <joint name="left_arm_motor_1" type="revolute">
-    <parent link="left_bicep"/>
-    <child link="left_forearm"/>
+    <parent link="/left_bicep"/>
+    <child link="/left_forearm"/>
     <origin rpy="0 0 0" xyz="0 0 -0.10"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="1.5" lower="0" upper="3.141592653589793" velocity="1"/>
   </joint>
-  <gazebo reference="left_forearm">
+  <gazebo reference="/left_forearm">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
@@ -106,19 +106,19 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo reference="left_bicep">
+  <gazebo reference="/left_bicep">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_forearm">
+  <gazebo reference="/left_forearm">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="right_bicep">
+  <link name="/right_bicep">
     <inertial>
       <mass value="0.213e-3"/>
       <origin rpy="0  0  0" xyz="0.000 -0.02579 -0.04955"/>
@@ -138,7 +138,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_forearm">
+  <link name="/right_forearm">
     <inertial>
       <mass value="45.7e-3"/>
       <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097"/>
@@ -159,22 +159,22 @@
     </visual>
   </link>
   <joint name="right_arm_motor_0" type="revolute">
-    <parent link="torso"/>
-    <child link="right_bicep"/>
+    <parent link="/torso"/>
+    <child link="/right_bicep"/>
     <origin rpy="0 0 0" xyz="-0.0157 -0.0725 0"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="1"/>
   </joint>
   <joint name="right_arm_motor_1" type="revolute">
-    <parent link="right_bicep"/>
-    <child link="right_forearm"/>
+    <parent link="/right_bicep"/>
+    <child link="/right_forearm"/>
     <origin rpy="0 0 0" xyz="0 0 -0.10"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="1.5" lower="0" upper="3.141592653589793" velocity="1"/>
   </joint>
-  <gazebo reference="right_forearm">
+  <gazebo reference="/right_forearm">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
@@ -198,19 +198,19 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo reference="right_bicep">
+  <gazebo reference="/right_bicep">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_forearm">
+  <gazebo reference="/right_forearm">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="left_hip_side">
+  <link name="/left_hip_side">
     <inertial>
       <mass value="9.364e-3"/>
       <origin rpy="0  0  0" xyz="0.0003695 0.0000 0.01689"/>
@@ -230,7 +230,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_hip_front">
+  <link name="/left_hip_front">
     <inertial>
       <mass value="153.186e-3"/>
       <origin rpy="0 0 0" xyz="-0.02093 0 -0.011313"/>
@@ -250,7 +250,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_thigh">
+  <link name="/left_thigh">
     <inertial>
       <mass value="21.438e-3"/>
       <origin rpy="0 0 0" xyz="0.0019422 0.0001419 -0.0469409"/>
@@ -270,7 +270,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_calve">
+  <link name="/left_calve">
     <inertial>
       <mass value="86.547e-3"/>
       <origin rpy="0  0  0" xyz="0 -3.259e-07 -0.0150123e-3"/>
@@ -290,7 +290,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_ankle">
+  <link name="/left_ankle">
     <inertial>
       <mass value="153.186e-3"/>
       <origin rpy="0 0 0" xyz="-0.020939e-3 0.000 0.011313e-3"/>
@@ -310,7 +310,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="left_foot">
+  <link name="/left_foot">
     <inertial>
       <mass value="23.216e-3"/>
       <origin rpy="0 0 0" xyz="-0.020939 0.0 0.011313"/>
@@ -332,48 +332,48 @@
     </visual>
   </link>
   <joint name="left_leg_motor_0" type="revolute">
-    <parent link="torso"/>
-    <child link="left_hip_side"/>
+    <parent link="/torso"/>
+    <child link="/left_hip_side"/>
     <origin rpy="0 0 0" xyz="0.0135 0.035 -0.156"/>
     <axis xyz="0 0 -1"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-1.309" upper="0.524" velocity="1"/>
   </joint>
   <joint name="left_leg_motor_1" type="revolute">
-    <parent link="left_hip_side"/>
-    <child link="left_hip_front"/>
+    <parent link="/left_hip_side"/>
+    <child link="/left_hip_front"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1"/>
   </joint>
   <joint name="left_leg_motor_2" type="revolute">
-    <parent link="left_hip_front"/>
-    <child link="left_thigh"/>
+    <parent link="/left_hip_front"/>
+    <child link="/left_thigh"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="1"/>
   </joint>
   <joint name="left_leg_motor_3" type="revolute">
-    <parent link="left_thigh"/>
-    <child link="left_calve"/>
+    <parent link="/left_thigh"/>
+    <child link="/left_calve"/>
     <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-2.793" upper="0" velocity="1"/>
   </joint>
   <joint name="left_leg_motor_4" type="revolute">
-    <parent link="left_calve"/>
-    <child link="left_ankle"/>
+    <parent link="/left_calve"/>
+    <child link="/left_ankle"/>
     <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1"/>
   </joint>
   <joint name="left_leg_motor_5" type="revolute">
-    <parent link="left_ankle"/>
-    <child link="left_foot"/>
+    <parent link="/left_ankle"/>
+    <child link="/left_foot"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
@@ -439,41 +439,41 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo reference="left_hip_side">
+  <gazebo reference="/left_hip_side">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_hip_front">
+  <gazebo reference="/left_hip_front">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_thigh">
+  <gazebo reference="/left_thigh">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_calve">
+  <gazebo reference="/left_calve">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_ankle">
+  <gazebo reference="/left_ankle">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="left_foot">
+  <gazebo reference="/left_foot">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="right_hip_side">
+  <link name="/right_hip_side">
     <inertial>
       <mass value="9.364e-3"/>
       <origin rpy="0  0  0" xyz="0.0003695 0.0000 0.01689"/>
@@ -493,7 +493,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_hip_front">
+  <link name="/right_hip_front">
     <inertial>
       <mass value="153.186e-3"/>
       <origin rpy="0 0 0" xyz="-0.02093 0 -0.011313"/>
@@ -513,7 +513,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_thigh">
+  <link name="/right_thigh">
     <inertial>
       <mass value="21.438e-3"/>
       <origin rpy="0 0 0" xyz="0.0019422 -0.0001419 -0.0469409"/>
@@ -533,7 +533,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_calve">
+  <link name="/right_calve">
     <inertial>
       <mass value="86.547e-3"/>
       <origin rpy="0  0  0" xyz="0 3.259e-07 -0.0150123e-3"/>
@@ -553,7 +553,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_ankle">
+  <link name="/right_ankle">
     <inertial>
       <mass value="153.186e-3"/>
       <origin rpy="0 0 0" xyz="-0.020939e-3 0.000 0.011313e-3"/>
@@ -573,7 +573,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="right_foot">
+  <link name="/right_foot">
     <inertial>
       <mass value="23.216e-3"/>
       <origin rpy="0 0 0" xyz="-0.020939 0.0 0.011313"/>
@@ -595,48 +595,48 @@
     </visual>
   </link>
   <joint name="right_leg_motor_0" type="revolute">
-    <parent link="torso"/>
-    <child link="right_hip_side"/>
+    <parent link="/torso"/>
+    <child link="/right_hip_side"/>
     <origin rpy="0 0 0" xyz="0.0135 -0.035 -0.156"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-1.309" upper="0.524" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_1" type="revolute">
-    <parent link="right_hip_side"/>
-    <child link="right_hip_front"/>
+    <parent link="/right_hip_side"/>
+    <child link="/right_hip_front"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_2" type="revolute">
-    <parent link="right_hip_front"/>
-    <child link="right_thigh"/>
+    <parent link="/right_hip_front"/>
+    <child link="/right_thigh"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_3" type="revolute">
-    <parent link="right_thigh"/>
-    <child link="right_calve"/>
+    <parent link="/right_thigh"/>
+    <child link="/right_calve"/>
     <origin rpy="0 0 0" xyz="0 0 -0.0890"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-2.793" upper="0" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_4" type="revolute">
-    <parent link="right_calve"/>
-    <child link="right_ankle"/>
+    <parent link="/right_calve"/>
+    <child link="/right_ankle"/>
     <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
     <axis xyz="0 -1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1"/>
   </joint>
   <joint name="right_leg_motor_5" type="revolute">
-    <parent link="right_ankle"/>
-    <child link="right_foot"/>
+    <parent link="/right_ankle"/>
+    <child link="/right_foot"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <dynamics damping="0.01" friction="0.1"/>
@@ -702,41 +702,41 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo reference="right_hip_side">
+  <gazebo reference="/right_hip_side">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_hip_front">
+  <gazebo reference="/right_hip_front">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_thigh">
+  <gazebo reference="/right_thigh">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_calve">
+  <gazebo reference="/right_calve">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_ankle">
+  <gazebo reference="/right_ankle">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="right_foot">
+  <gazebo reference="/right_foot">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="neck">
+  <link name="/neck">
     <inertial>
       <mass value="0.011294"/>
       <origin rpy="0  0  0" xyz="0 -0.0006476 0.0092453"/>
@@ -756,7 +756,7 @@
       <material name="black"/>
     </visual>
   </link>
-  <link name="head">
+  <link name="/head">
     <inertial>
       <mass value="0.282"/>
       <origin rpy="0  0  0" xyz="0.0237166 0.0018096 0.0255966"/>
@@ -777,16 +777,16 @@
     </visual>
   </link>
   <joint name="head_motor_0" type="revolute">
-    <parent link="torso"/>
-    <child link="neck"/>
+    <parent link="/torso"/>
+    <child link="/neck"/>
     <origin rpy="0 0 0" xyz="0.024 0 0.05875"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="1"/>
   </joint>
   <joint name="head_motor_1" type="revolute">
-    <parent link="neck"/>
-    <child link="head"/>
+    <parent link="/neck"/>
+    <child link="/head"/>
     <origin rpy="0 0 0" xyz="0 0 0.024"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.01" friction="0.1"/>
@@ -812,32 +812,32 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo reference="neck">
+  <gazebo reference="/neck">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <gazebo reference="head">
+  <gazebo reference="/head">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="imu_link">
+  <link name="/imu_link">
     <inertial>
       <mass value="0.01"/>
       <origin rpy="0  0  0" xyz="0 0 0"/>
       <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
     </inertial>
   </link>
-  <joint name="torso_imu" type="fixed">
-    <parent link="torso"/>
-    <child link="imu_link"/>
+  <joint name="/torso_imu" type="fixed">
+    <parent link="/torso"/>
+    <child link="/imu_link"/>
     <origin rpy="0 0 0" xyz="0.1 0 0.0075"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <gazebo reference="imu_link">
+  <gazebo reference="/imu_link">
     <gravity>true</gravity>
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
@@ -856,28 +856,28 @@
       <pose>0 0 0 0 0 0</pose>
     </sensor>
   </gazebo>
-  <gazebo reference="imu_link">
+  <gazebo reference="/imu_link">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-  <link name="camera">
+  <link name="/camera">
     <inertial>
       <mass value="0.01"/>
       <origin rpy="0  0  0" xyz="0 0 0"/>
       <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
     </inertial>
   </link>
-  <joint name="head_camera" type="fixed">
-    <parent link="head"/>
-    <child link="camera"/>
+  <joint name="/head_camera" type="fixed">
+    <parent link="/head"/>
+    <child link="/camera"/>
     <origin rpy="0 0 0" xyz="0.015 0.00145 0.04740"/>
     <axis xyz="0  0  0"/>
     <dynamics damping="0.01" friction="0.1"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
-  <gazebo reference="camera">
+  <gazebo reference="/camera">
     <sensor name="main_camera" type="camera">
       <always_on>1</always_on>
       <visualize>1</visualize>
@@ -915,7 +915,7 @@
       </plugin>
     </sensor>
   </gazebo>
-  <gazebo reference="camera">
+  <gazebo reference="/camera">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>
@@ -937,7 +937,7 @@
       <rpyOffsets>0 0 0</rpyOffsets>
     </plugin>
   </gazebo>
-  <gazebo reference="torso">
+  <gazebo reference="/torso">
     <kp>1000000000000000.0</kp>
     <kd>10000000000000.0</kd>
     <mu1>0.2</mu1>

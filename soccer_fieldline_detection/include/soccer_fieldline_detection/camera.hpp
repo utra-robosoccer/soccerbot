@@ -19,7 +19,7 @@ class Camera {
 private:
 
 
-    float diagonal_fov = 1.57; // radians (field of view)
+    float diagonal_fov = 1.6185;//1.57; // radians (field of view)
     float focal_length = 3.67; // mm
 
     //For creating the points

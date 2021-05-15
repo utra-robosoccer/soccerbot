@@ -26,12 +26,17 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghMinLineLength", minLineLength);
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
 
+    while(!nh.hasParam("name")) {
+        ros::Duration(1.0).sleep();
+    }
+    nh.getParam("name", name);
+
     // Initialize Camera
     geometry_msgs::TransformStamped camera_pose;
 
     while(ros::ok()) {
         try{
-            camera_pose = tfBuffer.lookupTransform("camera", "base_footprint",
+            camera_pose = tfBuffer.lookupTransform(name + "/camera", name + "/base_footprint",
                                                    ros::Time(0), ros::Duration(1.0));
             break;
         }
@@ -64,7 +69,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Get transformation
     geometry_msgs::TransformStamped camera_pose;
     try{
-        camera_pose = tfBuffer.lookupTransform("base_footprint", "camera",
+
+        camera_pose = tfBuffer.lookupTransform(name + "/base_footprint", name + "/camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
@@ -101,8 +107,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
         cv::inRange(hsv,cv::Scalar (0,0,200), cv::Scalar(179, 77, 255), mask);
 
-//        cvtColor(mask, dst , cv::COLOR_HSV2BGR);
-
 
         cv::bitwise_and(image,image,out,mask);
         sensor_msgs::ImagePtr message1 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", out).toImageMsg();
@@ -123,12 +127,12 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 //        cv::Mat dst, cdst;
 //        cv::Canny(image, dst,cannythreshold1,cannythreshold2);
 //        cvtColor(dst, cdst, CV_GRAY2BGR);
-
+        //HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
         // Cover Horizon
-        double roll, pitch, yaw;
-        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
-        tf2::Matrix3x3 m(q);
-        m.getRPY(roll, pitch, yaw);
+//        double roll, pitch, yaw;
+//        tf2::Quaternion q(camera->getPose().orientation.x,camera->getPose().orientation.y,camera->getPose().orientation.z,camera->getPose().orientation.w);
+//        tf2::Matrix3x3 m(q);
+//        m.getRPY(roll, pitch, yaw);
         //Draw black box on screen based on the pitch of the camera
         //cv::rectangle(dst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
         //cv::rectangle(cdst, cv::Point(0,(camera->getResolutionY()/2) - 350*pitch), cv::Point( camera->getResolutionX(),0), cv::Scalar(0, 0, 0), -1, 8);
@@ -137,7 +141,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         //cv::rectangle(dst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
         //cv::rectangle(cdst, cv::Point(0,360), cv::Point( camera->getResolutionX(),camera->getResolutionY()), cv::Scalar(0, 0, 0), -1, 8);
 
-        //HoughLinesP(dst, lines, rho, theta,threshold,minLineLength,maxLineGap);
+
 
         HoughLinesP(cdst, lines, rho, theta,threshold,minLineLength,maxLineGap);
         cvtColor(cdst, dst, CV_GRAY2BGR);
@@ -149,7 +153,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i += 1) {
+            for (size_t i = l[0]; i < l[2];i += 13) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
@@ -175,8 +179,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     // Publish fieldlines in a LaserScan data format
     sensor_msgs::PointCloud2 point_cloud_msg;
     //Setting up PointCloud2 msg
-    point_cloud_msg.header.stamp = ros::Time::now();
-    point_cloud_msg.header.frame_id = "base_camera";
+    point_cloud_msg.header.stamp = msg->header.stamp;
+    point_cloud_msg.header.frame_id = name + "/base_camera";
     point_cloud_msg.height = 1;
     point_cloud_msg.width = points3d.size();
     point_cloud_msg.is_bigendian = false;
@@ -209,8 +213,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     points3d.clear();
 
     geometry_msgs::TransformStamped camera_footprint = camera_pose;
-    camera_footprint.header.frame_id = "base_footprint";
-    camera_footprint.child_frame_id = "base_camera";
+    camera_footprint.header.frame_id = name + "/base_footprint";
+    camera_footprint.child_frame_id = name + "/base_camera";
     camera_footprint.header.stamp = msg->header.stamp;
     camera_footprint.header.seq = msg->header.seq;
 

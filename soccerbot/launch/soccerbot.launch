@@ -1,5 +1,5 @@
 <launch>
-    <arg name="simulation" default="false" />
+    <arg name="simulation" default="true" />
     <arg name="robot_name" default="robot1" />
     <arg name="pose_name" default="standing" />
     <arg name="ip_address" default="localhost" />
@@ -14,16 +14,17 @@
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <group ns="$(arg robot_name)">
-        <param name="robot_description" command="xacro --inorder '$(find soccer_description)/models/$(arg model_name).xacro'
+        <param name="robot_description" command="xacro '$(find soccer_description)/models/$(arg model_name).xacro'
             robot_name:=$(arg robot_name)
             model_type:=dae
             file_path:=package://soccer_description
-            has_base_footprint:=true"
+            has_base_footprint:=true
+            tf_prefix:=$(arg robot_name)
+            "
+
         />
-
+<!--        <param name="tf_prefix" value = "/robot1"/>-->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-
-        <include file="$(find soccerbot)/launch/modules/boss.launch" if="$(arg is_boss)" />
 
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
