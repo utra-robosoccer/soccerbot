@@ -7,6 +7,7 @@ from gazebo_msgs.msg import ModelStates
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
+import tf
 
 G = 9.81
 import transforms3d
@@ -62,6 +63,7 @@ class SupervisorController:
         self.reset_ball_service = rospy.Service("/reset_ball", Empty, self.reset_ball)
         self.world_info = self.supervisor.getFromDef("world_info")
         self.ball = self.supervisor.getFromDef("ball")
+        self.ball_broadcaster = tf.TransformBroadcaster()
 
     def step_sim(self):
         self.time += self.timestep / 1000
@@ -107,6 +109,19 @@ class SupervisorController:
                                     0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         odom.publish(odometry)
+        pos = self.ball.getField("translation").getSFVec3f()
+        orient = self.ball.getField("rotation").getSFRotation()
+
+        quat_scalar_first = transforms3d.quaternions.axangle2quat(orient[:3], orient[3])
+        quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
+        orient = list(quat_scalar_last)
+        self.ball_broadcaster.sendTransform(
+            (pos[0], pos[1], pos[2]),
+            (orient[0], orient[1], orient[2], orient[3]),
+            rospy.Time.from_sec(self.time),
+            base + "/ball",
+            "world"
+        )
 
     def reset_ball(self, req=None):
         self.ball.getField("translation").setSFVec3f([0, 0, 0.0772])
@@ -122,19 +137,6 @@ class SupervisorController:
     def reset(self, msg):
         self.supervisor.simulationReset()
         self.supervisor.simulationResetPhysics()
-        for name in self.robot_names:
-            if name == "red_player_1":
-                base = "robot1"
-            elif name == "red_player_2":
-                base = "robot2"
-            elif name == "red_player_3":
-                base = "robot3"
-            elif name == "red_player_4":
-                base = "robot4"
-            temp_node = self.supervisor.getFromDef(name)
-            if temp_node is not None:
-                # rospy.set_param(base + "/send_odom", "true")
-                pass
 
     def get_robot_position(self, name="red_player_1"):
         if name in self.translation_fields:

@@ -1,6 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="single" default="false" />
+    <arg name="single" default="true" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch" >
