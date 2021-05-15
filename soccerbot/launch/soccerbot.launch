@@ -7,6 +7,7 @@
     <arg name="y_pos" default="0.00" />
     <arg name="is_boss" default="false" />
     <arg name="easy_walking" default="false" />
+    <arg name="fake_localization" default="false" />
 
     <arg name="model_name" value="soccerbot" unless="$(arg easy_walking)" />
     <arg name="model_name" value="soccerbot_stand" if="$(arg easy_walking)" />
@@ -38,6 +39,7 @@
         </include>
 
         <include file="$(find soccerbot)/launch/modules/localization.launch">
+            <arg name="fake_localization" value="$(arg fake_localization)" />
             <arg name="robot_name" value="$(arg robot_name)"/>
                 <arg name="x_pos" value="$(arg x_pos)" />
                 <arg name="y_pos" value="$(arg y_pos)" />
