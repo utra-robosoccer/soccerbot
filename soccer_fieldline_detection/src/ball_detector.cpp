@@ -100,6 +100,7 @@ private:
             ball_pose.transform.rotation.w = 1;
 
             BallDetector::br.sendTransform(ball_pose);
+            break;
         }
     }
 };
