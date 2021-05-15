@@ -73,8 +73,8 @@ class ObjectDetectionNode(object):
                     continue
 
                 bbs_msg = BoundingBoxes()
+                bb_msg = BoundingBox()
                 for ball_bb in bbxs[Label.BALL.value]:
-                    bb_msg = BoundingBox()
                     bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
                     bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
                     bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
