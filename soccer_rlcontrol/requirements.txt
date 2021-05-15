@@ -91,7 +91,7 @@ opt-einsum==3.3.0
 packaging==20.9
 pandas==1.2.3
 pep517==0.8.2
-Pillow==7.2.0
+Pillow==8.1.1
 pluggy==0.13.1
 progress==1.5
 progressbar2==3.53.1
@@ -203,7 +203,7 @@ topic-tools==1.15.9
 torch==1.8.0
 tqdm==4.56.2
 typing-extensions==3.7.4.3
-urllib3==1.26.3
+urllib3==1.26.4
 webencodings==0.5.1
 Werkzeug==1.0.1
 wrapt==1.12.1
