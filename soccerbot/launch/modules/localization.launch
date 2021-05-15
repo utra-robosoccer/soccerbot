@@ -26,7 +26,7 @@
     </node>
 
     <!-- Ball Detection -->
-<!--    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>-->
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>-->
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>-->
 <!--    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>-->
@@ -49,7 +49,7 @@
     </node>
 
     <!-- IMU location -->
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" >
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
         <remap from="imu_data" to="imu_filtered" />
