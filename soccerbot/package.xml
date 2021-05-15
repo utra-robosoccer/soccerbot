@@ -18,6 +18,7 @@
 
   <!-- Localization -->
   <depend>amcl</depend>
+  <depend>soccer_object_detection</depend>
 <!--  <depend>darknet_ros</depend>-->
   <depend>map_server</depend>
   <depend>soccer_common</depend>
@@ -31,6 +32,7 @@
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_webots</depend>
+
 
   <!-- Communication-->
 

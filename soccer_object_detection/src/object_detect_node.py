@@ -1,8 +1,10 @@
+#!/usr/bin/python3
 import os
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
 from sensor_msgs.msg import Image
+import std_msgs
 from cv_bridge import CvBridge
 import cv2
 import torch
@@ -13,6 +15,7 @@ from train import Trainer
 import util
 import torchvision
 from model import find_batch_bounding_boxes, Label
+from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
 class ObjectDetectionNode(object):
     '''
@@ -24,9 +27,11 @@ class ObjectDetectionNode(object):
     def __init__(self):
         # Params
         self.image = None
+        self.image_header = None
         self.br = CvBridge()
         self.loop_rate = rospy.Rate(10) # Hz
-        self.pub = rospy.Publisher('detection_image', Image, queue_size=10)
+        self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=10)
+        self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
         self.model = CNN(kernel=3, num_features=8)
@@ -35,6 +40,7 @@ class ObjectDetectionNode(object):
 
     def callback(self, msg):
         # width x height x channels (bgra8)
+        self.image_header = msg.header
         self.image = self.br.imgmsg_to_cv2(msg)
 
     def start(self):
@@ -51,10 +57,10 @@ class ObjectDetectionNode(object):
 
                 w, h = 200, 150
                 y, x, _ = img.shape # 160, 213
-                x = x/2 - w/2
-                y = y/2 - h/2
+                x_offset = x/2 - w/2
+                y_offset = y/2 - h/2
 
-                crop_img = img[int(y):int(y+h), int(x):int(x+w)]
+                crop_img = img[int(y_offset):int(y_offset+h), int(x_offset):int(x_offset+w)]
                 rospy.loginfo(crop_img.shape)
 
                 img_torch = util.cv_to_torch(crop_img)
@@ -66,7 +72,28 @@ class ObjectDetectionNode(object):
 
                 img = util.torch_to_cv(img_torch)
 
-                self.pub.publish(br.cv2_to_imgmsg(img))
+                if bbxs is None:
+                    continue
+
+                bbs_msg = BoundingBoxes()
+                for ball_bb in bbxs[Label.BALL.value]:
+                    bb_msg = BoundingBox()
+                    bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
+                    bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
+                    bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
+                    bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
+                    bb_msg.id = Label.BALL.value
+                    bb_msg.Class = 'ball'
+
+                header = std_msgs.msg.Header()
+                header.stamp = rospy.Time.now()
+                bbs_msg.header = header
+                bbs_msg.image_header = self.image_header
+                bbs_msg.bounding_boxes = [bb_msg]
+                print(bb_msg)
+
+                self.pub_boundingbox.publish(bbs_msg)
+                self.pub_detection.publish(br.cv2_to_imgmsg(img))
             self.loop_rate.sleep()
 
 
