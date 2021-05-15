@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import sys
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
@@ -24,7 +25,7 @@ class ObjectDetectionNode(object):
     input: 480x640x4 bgra8 -> output: 3x200x150
     '''
 
-    def __init__(self):
+    def __init__(self, model_path):
         # Params
         self.image = None
         self.image_header = None
@@ -35,7 +36,7 @@ class ObjectDetectionNode(object):
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
         self.model = CNN(kernel=3, num_features=8)
-        self.model.load_state_dict(torch.load('outputs/model_ker3_feat8'))
+        self.model.load_state_dict(torch.load(model_path))
         self.model.eval()
 
     def callback(self, msg):
@@ -45,15 +46,12 @@ class ObjectDetectionNode(object):
 
     def start(self):
         while not rospy.is_shutdown():
-            rospy.loginfo('publishing image')
             br = CvBridge()
             if self.image is not None:
                 img = self.image[:,:,:3] # get rid of alpha channel
-                rospy.loginfo(img.shape)
 
                 dim = (640//3, 480//3) # (213, 160)
                 img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_CUBIC)
-                rospy.loginfo(img.shape)
 
                 w, h = 200, 150
                 y, x, _ = img.shape # 160, 213
@@ -61,7 +59,6 @@ class ObjectDetectionNode(object):
                 y_offset = y/2 - h/2
 
                 crop_img = img[int(y_offset):int(y_offset+h), int(x_offset):int(x_offset+w)]
-                rospy.loginfo(crop_img.shape)
 
                 img_torch = util.cv_to_torch(crop_img)
 
@@ -90,7 +87,6 @@ class ObjectDetectionNode(object):
                 bbs_msg.header = header
                 bbs_msg.image_header = self.image_header
                 bbs_msg.bounding_boxes = [bb_msg]
-                print(bb_msg)
 
                 self.pub_boundingbox.publish(bbs_msg)
                 self.pub_detection.publish(br.cv2_to_imgmsg(img))
@@ -98,6 +94,10 @@ class ObjectDetectionNode(object):
 
 
 if __name__ == '__main__':
-    rospy.init_node("object_detector")
-    my_node = ObjectDetectionNode()
-    my_node.start()
+    if len(sys.argv) < 2:
+        print("usage: my_node.py <path_to_pytorch_model>")
+    else:
+        myargv = rospy.myargv(argv=sys.argv)
+        rospy.init_node("object_detector")
+        my_node = ObjectDetectionNode(sys.argv[1])
+        my_node.start()
