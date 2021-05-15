@@ -9,11 +9,10 @@ Panels:
         - /Grid1/Offset1
         - /TF1/Frames1
         - /Localization1
-        - /Localization1/Image1
         - /RobotModel3
         - /RobotModel4
       Splitter Ratio: 0.4962962865829468
-    Tree Height: 255
+    Tree Height: 437
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -31,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Image
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -62,58 +61,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        robot1/ball:
-          Value: true
-        robot1/base_camera:
-          Value: true
-        robot1/base_footprint:
-          Value: true
-        robot1/camera:
-          Value: true
-        robot1/head:
-          Value: true
-        robot1/imu_link:
-          Value: true
-        robot1/left_ankle:
-          Value: true
-        robot1/left_bicep:
-          Value: true
-        robot1/left_calve:
-          Value: true
-        robot1/left_foot:
-          Value: true
-        robot1/left_forearm:
-          Value: true
-        robot1/left_hip_front:
-          Value: true
-        robot1/left_hip_side:
-          Value: true
-        robot1/left_thigh:
-          Value: true
-        robot1/neck:
-          Value: true
-        robot1/odom:
-          Value: true
-        robot1/right_ankle:
-          Value: true
-        robot1/right_bicep:
-          Value: true
-        robot1/right_calve:
-          Value: true
-        robot1/right_foot:
-          Value: true
-        robot1/right_forearm:
-          Value: true
-        robot1/right_hip_front:
-          Value: true
-        robot1/right_hip_side:
-          Value: true
-        robot1/right_thigh:
-          Value: true
-        robot1/torso:
-          Value: true
-        world:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF
@@ -121,40 +68,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          robot1/odom:
-            robot1/base_footprint:
-              robot1/ball:
-                {}
-              robot1/base_camera:
-                {}
-              robot1/torso:
-                robot1/imu_link:
-                  {}
-                robot1/left_bicep:
-                  robot1/left_forearm:
-                    {}
-                robot1/left_hip_side:
-                  robot1/left_hip_front:
-                    robot1/left_thigh:
-                      robot1/left_calve:
-                        robot1/left_ankle:
-                          robot1/left_foot:
-                            {}
-                robot1/neck:
-                  robot1/head:
-                    robot1/camera:
-                      {}
-                robot1/right_bicep:
-                  robot1/right_forearm:
-                    {}
-                robot1/right_hip_side:
-                  robot1/right_hip_front:
-                    robot1/right_thigh:
-                      robot1/right_calve:
-                        robot1/right_ankle:
-                          robot1/right_foot:
-                            {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -283,8 +197,8 @@ Visualization Manager:
     - Class: rviz/Group
       Displays:
         - Class: rviz/Image
-          Enabled: true
-          Image Topic: /robot1/detection_image
+          Enabled: false
+          Image Topic: /robot1/darknet_ros/detection_image
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -293,7 +207,7 @@ Visualization Manager:
           Queue Size: 2
           Transport Hint: raw
           Unreliable: false
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -556,7 +470,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_0
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -564,7 +478,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_1
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -572,7 +486,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_2
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -580,7 +494,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_4
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -588,7 +502,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_3
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -596,7 +510,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_5
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -604,7 +518,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_6
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -612,7 +526,7 @@ Visualization Manager:
       Marker Topic: /robot1/foot_pressure_7
       Name: Marker
       Namespaces:
-        Soccer_bot: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -625,6 +539,113 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        robot2/base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot2/camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot2/head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot2/left_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/left_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/neck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/right_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot2/torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: /robot2/robot_description
       TF Prefix: ""
@@ -641,6 +662,113 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        robot3/base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot3/camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot3/head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot3/left_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/left_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/neck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/right_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot3/torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot3/robot_description
       TF Prefix: ""
@@ -657,6 +785,113 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        robot4/base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot4/left_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/left_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/neck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_ankle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_bicep:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_calve:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_foot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_hip_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_hip_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/right_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot4/torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot4/robot_description
       TF Prefix: ""
@@ -691,7 +926,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.297250986099243
+      Distance: 7.223235607147217
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -707,19 +942,19 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3403986096382141
+      Pitch: 0.4653984606266022
       Target Frame: <Fixed Frame>
-      Yaw: 6.050487518310547
+      Yaw: 3.4254491329193115
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1016
+  Height: 1043
   Hide Left Dock: false
   Hide Right Dock: true
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001e20000035afc020000000ffb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003d0000013c000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d006100670065010000017f000001210000001600fffffffb0000000a0049006d00610067006501000002a6000000f10000001600fffffffb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d006100670065000000011d000001560000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007380000003efc0100000002fb0000000800540069006d0065010000000000000738000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000005500000035a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001e200000375fc020000000ffb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003d000001f2000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d006100670065000000018e000001210000001600fffffffb0000000a0049006d00610067006501000002350000017d0000001600fffffffb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d006100670065000000011d000001560000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d0065010000000000000780000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000005980000037500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -728,6 +963,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 1848
-  X: 72
-  Y: 27
+  Width: 1920
+  X: 2405
+  Y: 0
