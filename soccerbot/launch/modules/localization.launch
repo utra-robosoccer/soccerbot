@@ -26,9 +26,9 @@
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" unless="$(arg fake_localization)"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
-        args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8"/>
+        args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8" unless="$(arg fake_localization)"/>
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>-->
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>-->
 <!--    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>-->
