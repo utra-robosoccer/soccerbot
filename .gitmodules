@@ -1,6 +1,3 @@
-[submodule "external/darknet_ros"]
-	path = external/darknet_ros
-	url = https://github.com/utra-robosoccer/darknet_ros
 [submodule "external/webots"]
 	path = external/webots
 	shallow = true

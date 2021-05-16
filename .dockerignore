@@ -1,0 +1,8 @@
+.*
+!/.dockerignore
+cmake-build-debug
+CMakeLists.txt
+*.md
+external
+LICENSE
+Dockerfile
