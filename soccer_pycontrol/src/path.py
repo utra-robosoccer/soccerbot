@@ -97,4 +97,6 @@ class Path:
             fig = plt.figure()
         ax = fig.gca(projection='3d')
         ax.set_autoscale_on(True)
-        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1], orientation[:, 2])#, AutoScaleFactor=0.1)
+        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1], orientation[:, 2])
+        ax.set_xlim(-0.2,1)
+        ax.set_ylim(-0.3,0.3)

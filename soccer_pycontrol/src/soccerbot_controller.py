@@ -17,16 +17,8 @@ class SoccerbotController:
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
 
-        self.soccerbot = Soccerbot([0, 0, 0], useFixedBase=False)
+        self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
-
-    def test_goal(self):
-        # Move to the standing position
-        self.wait(100)
-        self.soccerbot.ready()
-        self.wait(1000)
-        self.soccerbot.setGoal(Transformation([1, 0, 0]), show=False)
-        # soccerbot.calculate_angles(show=True)
 
     def wait(self, steps):
         for i in range(steps):
