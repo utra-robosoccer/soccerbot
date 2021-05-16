@@ -1,0 +1,81 @@
+version: "3.3"
+
+x-soccerbot: &soccerbot
+  image: utrarobosoccer/soccerbot
+  build:
+    context: .
+  network_mode: host
+  deploy:
+    resources:
+      limits:
+        cpus: '4'
+        memory: 16384MB
+  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch || sleep infinity"
+
+services:
+  friendly1: # Goalie
+    <<: *soccerbot
+    environment:
+      X_POS: 0.0
+      Y_POS: -3.5
+      ANGLE: 1.57
+      GOALIE: "true"
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "red"
+  friendly2: # Left midfield
+    <<: *soccerbot
+    environment:
+      X_POS: -1.5
+      Y_POS: -1.5
+      ANGLE: 1.57
+      ROBOCUP_ROBOT_ID: 2
+      ROBOCUP_TEAM_COLOR: "red"
+  friendly3: # Right midfield
+    <<: *soccerbot
+    environment:
+      X_POS: 1.5
+      Y_POS: -1.5
+      ANGLE: 1.57
+      ROBOCUP_ROBOT_ID: 3
+      ROBOCUP_TEAM_COLOR: "red"
+  friendly4: # Striker
+    <<: *soccerbot
+    environment:
+      X_POS: 0.0
+      Y_POS: -0.8
+      ANGLE: 1.57
+      ROBOCUP_ROBOT_ID: 4
+      ROBOCUP_TEAM_COLOR: "red"
+  oppponent1: # Goalie
+    <<: *soccerbot
+    environment:
+      X_POS: 0.0
+      Y_POS: 3.5
+      ANGLE: -1.57
+      GOALIE: "true"
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "blue"
+  oppponent2: # Left midfield
+    <<: *soccerbot
+    environment:
+      X_POS: -1.5
+      Y_POS: 1.5
+      ANGLE: -1.57
+      ROBOCUP_ROBOT_ID: 2
+      ROBOCUP_TEAM_COLOR: "blue"
+  oppponent3: # Right midfield
+    <<: *soccerbot
+    environment:
+      X_POS: 1.5
+      Y_POS: 1.5
+      ANGLE: -1.57
+      ROBOCUP_ROBOT_ID: 3
+      ROBOCUP_TEAM_COLOR: "blue"
+  oppponent4: # striker
+    <<: *soccerbot
+    environment:
+      X_POS: 0.0
+      Y_POS: 0.8
+      ANGLE: -1.57
+      ROBOCUP_ROBOT_ID: 4
+      ROBOCUP_TEAM_COLOR: "blue"

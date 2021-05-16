@@ -20,5 +20,5 @@ soccer_control_generated
 # webots cache files
 soccer_webots/protos/*.cache
 soccer_webots/protos/Soccerbot_meshes/*.cache
-
+soccer_webots/protos/.*
 cmake-build-debug
