@@ -10,7 +10,7 @@ from ramp import Ramp
 import matplotlib as plt
 import rospy
 
-PYBULLET_STEP = 0.004
+PYBULLET_STEP = 0.008
 
 def wait(steps):
     for i in range(steps):
