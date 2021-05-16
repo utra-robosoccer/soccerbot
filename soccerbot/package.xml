@@ -18,7 +18,6 @@
 
   <!-- Localization -->
   <depend>amcl</depend>
-  <depend>darknet_ros</depend>
   <depend>map_server</depend>
   <depend>soccer_common</depend>
   <depend>soccer_fieldline_detection</depend>
