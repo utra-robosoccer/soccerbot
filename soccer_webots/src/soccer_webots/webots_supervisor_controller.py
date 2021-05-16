@@ -7,6 +7,8 @@ from gazebo_msgs.msg import ModelStates
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
+import tf
+
 G = 9.81
 import transforms3d
 import numpy as np
@@ -15,7 +17,7 @@ import nav_msgs.msg
 
 
 class SupervisorController:
-    def __init__(self):
+    def __init__(self, fake=False):
         """
         The SupervisorController, a Webots controller that can control the world.
         Set the environment variable WEBOTS_ROBOT_NAME to "supervisor_robot" if used with 1_bot.wbt or 4_bots.wbt.
@@ -30,7 +32,7 @@ class SupervisorController:
         self.time = 0
         self.clock_msg = Clock()
         self.supervisor = Supervisor()
-
+        self.localization = fake
         self.supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_REAL_TIME)
 
         self.motors = []
@@ -61,6 +63,7 @@ class SupervisorController:
         self.reset_ball_service = rospy.Service("/reset_ball", Empty, self.reset_ball)
         self.world_info = self.supervisor.getFromDef("world_info")
         self.ball = self.supervisor.getFromDef("ball")
+        self.ball_broadcaster = tf.TransformBroadcaster()
 
     def step_sim(self):
         self.time += self.timestep / 1000
@@ -72,7 +75,8 @@ class SupervisorController:
         for name in self.robot_names:
             temp_node = self.supervisor.getFromDef(name)
             if temp_node is not None:
-                self.publish_odom(name)
+                if self.localization:
+                    self.publish_odom(name)
 
     def publish_clock(self):
         self.clock_msg.clock = rospy.Time.from_seconds(self.time)
@@ -106,6 +110,19 @@ class SupervisorController:
                                     0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         odom.publish(odometry)
+        pos = self.ball.getField("translation").getSFVec3f()
+        orient = self.ball.getField("rotation").getSFRotation()
+
+        quat_scalar_first = transforms3d.quaternions.axangle2quat(orient[:3], orient[3])
+        quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
+        orient = list(quat_scalar_last)
+        self.ball_broadcaster.sendTransform(
+            (pos[0], pos[1], pos[2]),
+            (orient[0], orient[1], orient[2], orient[3]),
+            rospy.Time.from_sec(self.time),
+            base + "/ball",
+            "world"
+        )
 
     def reset_ball(self, req=None):
         self.ball.getField("translation").setSFVec3f([0, 0, 0.0772])

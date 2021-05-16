@@ -26,7 +26,9 @@
     </node>
 
     <!-- Ball Detection -->
-<!--    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>-->
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
+        args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8"/>
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>-->
 <!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>-->
 <!--    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>-->
@@ -38,20 +40,22 @@
 <!--        <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />-->
 <!--    </node>-->
 
+    <node pkg="soccer_strategy" type="fall_detector.py" name="fall_detector"/>
 <!--    <node pkg="soccer_strategy" type="main.py" name="main"/>-->
     <!-- Complementary filter -->
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
         <remap from="imu/data_raw" to="imu_raw" />
-        <remap from="imu/data" to="imu_data" />
+        <remap from="imu/data" to="imu_filtered" />
 
 <!--        <param name="publish_tf" value="true" />-->
     </node>
 
     <!-- IMU location -->
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" >
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
+        <remap from="imu_data" to="imu_filtered" />
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
 
@@ -68,6 +72,7 @@
     </node>
 
     <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
+
     <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)" >
         <remap from="base_pose_ground_truth" to="base_pose_ground_truth" />
         <param name="global_frame_id" value="world" />
