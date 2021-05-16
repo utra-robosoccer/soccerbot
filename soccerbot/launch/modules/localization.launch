@@ -1,7 +1,6 @@
 <!-- Launches the localization using for amcl the robot -->
 
 <launch>
-    <!--arg name="darknet"         default="true" /-->
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" />
     <arg name="map_name" />
@@ -29,16 +28,7 @@
     <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
         args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8"/>
-<!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/darknet_ros.yaml"/>-->
-<!--    <rosparam command="load" ns="darknet_ros" file="$(find soccerbot)/config/yolov2-tiny.yaml"/>-->
-<!--    <rosparam ns="darknet_ros" param="subscribers/camera_reading/topic" subst_value="true" >/$(arg robot_name)/camera/image_raw</rosparam>-->
-<!--    <rosparam ns="darknet_ros" param="publishers/object_detector/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/found_object</rosparam>-->
-<!--    <rosparam ns="darknet_ros" param="publishers/bounding_boxes/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/bounding_boxes</rosparam>-->
-<!--    <rosparam ns="darknet_ros" param="publishers/detection_image/topic" subst_value="true" >/$(arg robot_name)/darknet_ros/detection_image</rosparam>-->
-<!--    <node pkg="darknet_ros" type="darknet_ros" name="darknet_ros" output="log">-->
-<!--        <param name="weights_path"          value="$(find darknet_ros)/yolo_network_config/weights" />-->
-<!--        <param name="config_path"           value="$(find darknet_ros)/yolo_network_config/cfg" />-->
-<!--    </node>-->
+
 
     <node pkg="soccer_strategy" type="fall_detector.py" name="fall_detector"/>
 <!--    <node pkg="soccer_strategy" type="main.py" name="main"/>-->

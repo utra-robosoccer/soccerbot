@@ -1,3 +1,5 @@
-[submodule "external/darknet_ros"]
-	path = external/darknet_ros
-	url = https://github.com/utra-robosoccer/darknet_ros
+[submodule "external/webots"]
+	path = external/webots
+	shallow = true
+	url = https://github.com/cyberbotics/webots.git
+	branch = feature-robocup-controllers
