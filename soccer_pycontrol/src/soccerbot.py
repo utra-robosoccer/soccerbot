@@ -103,7 +103,6 @@ class Soccerbot:
                                 flags=pb.URDF_USE_INERTIA_FROM_FILE,
                                 basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
                                 baseOrientation=pose.get_orientation())
-        self.setPose(pose)
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
@@ -120,7 +119,6 @@ class Soccerbot:
                             [H45[2, 3], 0, 0, 0],
                             [0, np.pi / 2, 0, 0],
                             [0, 0, 0, 0]])
-
         self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
@@ -131,6 +129,7 @@ class Soccerbot:
         self.left_foot_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
         self.left_foot_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
+        self.setPose(pose)
         self.torso_offset = tr()
         self.robot_path = None
 
@@ -245,9 +244,8 @@ class Soccerbot:
         :param finishPosition: #TODO
         :return: #TODO
         """
-        crotch = self.pose.get_position()
         finishPositionCoordinate = finishPosition.get_position()
-        finishPositionCoordinate[2] = crotch[2]
+        finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         finishPosition.set_position(finishPositionCoordinate)
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
