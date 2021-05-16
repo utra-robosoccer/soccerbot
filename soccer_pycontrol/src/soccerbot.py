@@ -236,7 +236,7 @@ class Soccerbot:
 
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
         self.pose.set_orientation([0, 0, 0, 1])
-        pb.resetBasePositionAndOrientation(self.body, pose.get_position(), pose.get_orientation())
+        pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
     def setGoal(self, finishPosition, show=True):
         """
@@ -247,6 +247,7 @@ class Soccerbot:
         finishPositionCoordinate = finishPosition.get_position()
         finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         finishPosition.set_position(finishPositionCoordinate)
+        finishPosition.set_orientation([0, 0, 0, 1])
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
         if show:
