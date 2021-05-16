@@ -47,6 +47,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
                 # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose), show=False)
+                t = 0
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
@@ -56,7 +57,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
 
             pb.stepSimulation()
-            self.soccerbot.get_imu()
+            # self.soccerbot.get_imu()
             self.soccerbot.publishAngles()
 
             t = t + SoccerbotController.PYBULLET_STEP
