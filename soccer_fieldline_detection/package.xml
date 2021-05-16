@@ -17,6 +17,7 @@
     <depend>sensor_msgs</depend>
     <depend>pointcloud_to_laserscan</depend>
     <depend>darknet_ros_msgs</depend>
+    <depend>soccer_object_detection</depend>
     <depend>geometry_msgs</depend>
     <depend>tf2_ros</depend>
 
