@@ -4,7 +4,7 @@ kld_err: 0.00001
 update_min_d: 0.2
 #update_min_a: 0.1
 #gui_publish_rate: 1
-transform_tolerance: 1
+transform_tolerance: 0.01
 laser_model_type: "likelihood_field_prob"
 laser_max_beams: 100
 
