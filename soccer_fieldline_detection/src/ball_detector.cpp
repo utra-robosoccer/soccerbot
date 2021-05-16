@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <darknet_ros_msgs/BoundingBoxes.h>
-#include <darknet_ros_msgs/BoundingBox.h>
+#include <soccer_object_detection/BoundingBoxes.h>
+#include <soccer_object_detection/BoundingBox.h>
 #include <string>
 #include <soccer_geometry/pose3.hpp>
 #include <soccer_fieldline_detection/camera.hpp>
@@ -10,7 +10,7 @@
 class BallDetector {
 public:
     ros::NodeHandle n;
-    ros::Subscriber darknet_pose_sub;
+    ros::Subscriber boundingBoxesSub;
     ros::Publisher head_motor_0;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
@@ -19,7 +19,7 @@ public:
     std::string name;
 
     BallDetector() : tfListener(tfBuffer) {
-        darknet_pose_sub = n.subscribe("darknet_ros/bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
+      boundingBoxesSub = n.subscribe("object_bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
 
         geometry_msgs::TransformStamped camera_pose;
         while(!n.hasParam("name")) {
@@ -51,7 +51,7 @@ public:
     }
 
 private:
-    void ballDetectorCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &msg) {
+    void ballDetectorCallback(const soccer_object_detection::BoundingBoxes::ConstPtr &msg) {
         // Get transformation
         geometry_msgs::TransformStamped camera_pose;
         try {
@@ -76,10 +76,9 @@ private:
             return;
         }
 
-        for (const darknet_ros_msgs::BoundingBox &box: msg->bounding_boxes) {
+        for (const soccer_object_detection::BoundingBox &box: msg->bounding_boxes) {
             std::string objectClass = box.Class;
-            if (objectClass != "sports ball") {//sports ball bird for testing
-
+            if (objectClass != "ball") {
                 continue;
             }
             // For now take the center of the box
@@ -101,6 +100,7 @@ private:
             ball_pose.transform.rotation.w = 1;
 
             BallDetector::br.sendTransform(ball_pose);
+            break;
         }
     }
 };

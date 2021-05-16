@@ -9,3 +9,9 @@ prettytable
 serial
 rospy>=1.15.9
 transforms3d
+
+# object detection
+Pillow==8.2.0
+torch==1.8.1
+torchvision==0.9.1
+
