@@ -6,14 +6,15 @@ from ball import Ball
 import game_engine
 import copy
 import geometry_msgs.msg
+import std_msgs.msg
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from strategy import DummyStrategyROS
+from strategy import DummyStrategy
 
 class GameEngineRos(game_engine.GameEngine):
     KICK_TIMEOUT = 5
-    GETUPFRONT_TIMEOUT = 10
-    GETUPBACK_TIMEOUT = 10
+    GETUPFRONT_TIMEOUT = 20
+    GETUPBACK_TIMEOUT = 15
 
     def __init__(self):
         # Listen to rostopics and get robots in field
@@ -39,9 +40,6 @@ class GameEngineRos(game_engine.GameEngine):
 
         self.ball = Ball(position=np.array([0, 0]))
 
-        #self.robots_init = copy.deepcopy(self.robots)
-        #self.ball_init = copy.deepcopy(self.ball)
-
         fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
         background = fig.add_axes([0, 0, 1, 1])
         background.axis('equal')
@@ -61,12 +59,23 @@ class GameEngineRos(game_engine.GameEngine):
         foreground = fig.add_axes([0, 0, 1, 1])
         foreground.set_facecolor((0, 0, 0, 0))
 
+        self.reset_pub = rospy.Publisher('/reset', std_msgs.msg.String, queue_size=1)
+
         # Setup the strategy
-        self.strategy = DummyStrategyROS()
+        self.strategy = DummyStrategy(RobotRos)
 
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
         # this needs to be team-dependent in the future
+        import tf
+        """listener = tf.TransformListener()
+        name = "/robot1"
+        try:
+            ball_pose = listener.lookupTransform(name + "/ball", name + "/base_footprint", rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            pass"""
+
+
         ball_positions = np.array([])
         for robot in self.robots:
             if not np.isnan(robot.ball_position.any()):
@@ -83,10 +92,11 @@ class GameEngineRos(game_engine.GameEngine):
         half_time_started = False
 
         rostime_previous = 0
+        rostime_initial = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
         while not rospy.is_shutdown():
             rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
-            if rostime > 10 and not half_time_started:
+            if rostime > rostime_initial + 10 and not half_time_started:
                 half_time_started = True
                 print("Second Half Started: ")
                 self.resetRobots()
@@ -137,7 +147,7 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("data: rightkick")
+                        robot.pub_trajectory.publish("rightkick")
                         robot.last_kick = rostime
                         robot.publishing_static_trajectory = True
 
@@ -150,7 +160,7 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("data: getupback")
+                        robot.pub_trajectory.publish("getupback")
                         robot.last_getupback = rostime
                         robot.publishing_static_trajectory = True
 
@@ -163,7 +173,7 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("data: getupfront")
+                        robot.pub_trajectory.publish("getupfront")
                         robot.last_getupfront = rostime
                         robot.publishing_static_trajectory = True
 
@@ -171,4 +181,5 @@ class GameEngineRos(game_engine.GameEngine):
 
     def resetRobots(self):
         # Call the webots simulator to reset robot positions
+        self.reset_pub.publish("reset")
         pass

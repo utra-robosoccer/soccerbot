@@ -1,6 +1,7 @@
 *.swp
 *.log
 *.stat
+*.cache
 .DS_Store/
 
 # Python compiled files
