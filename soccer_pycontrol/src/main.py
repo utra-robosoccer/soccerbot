@@ -7,7 +7,7 @@ if "ROS_NAMESPACE" not in os.environ:
 import matplotlib as plt
 plt.use('tkagg')
 
-USE_ROS = True
+USE_ROS = False
 
 if __name__ == '__main__':
 
@@ -24,4 +24,5 @@ if __name__ == '__main__':
         walker.soccerbot.ready()
         walker.wait(1000)
         walker.soccerbot.setGoal(Transformation([1, 0, 0]), show=False)
+        walker.soccerbot.calculate_angles(show=True)
         walker.run()
