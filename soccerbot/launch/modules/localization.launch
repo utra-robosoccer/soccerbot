@@ -25,14 +25,14 @@
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector"/>
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" unless="$(arg fake_localization)"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
-        args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8"/>
+        args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8" unless="$(arg fake_localization)"/>
 
 
 <!--    <node pkg="soccer_strategy" type="main.py" name="main"/>-->
     <!-- Complementary filter -->
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter">
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" >
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
         <remap from="imu/data_raw" to="imu_raw" />
         <remap from="imu/data" to="imu_filtered" />
@@ -41,7 +41,7 @@
     </node>
 
     <!-- IMU location -->
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" >
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
         <remap from="imu_data" to="imu_filtered" />
