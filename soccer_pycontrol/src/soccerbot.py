@@ -54,7 +54,8 @@ class Links(enum.IntEnum):
 
 
 class Soccerbot:
-    hip_height = 0.165  # 0.165
+    standing_hip_height = 0.36  # Hardcoded for now, todo calculate this
+    walking_hip_height = 0.165
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
@@ -91,22 +92,21 @@ class Soccerbot:
         final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0], link1worldrev[1])
         return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
 
-    def __init__(self, position, useFixedBase=False):
+    def __init__(self, pose, useFixedBase=False):
         """
         Contsructor for the soccerbot. Loads the robot into the pybullet simulation.
-        :param position: [x y yaw]
+        :param position: transformation
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
-        STANDING_HEIGHT = 0.36  # Hardcoded for now, todo calculate this
         self.body = pb.loadURDF("../../soccer_description/models/soccerbot_stl.urdf",
                                 useFixedBase=useFixedBase,
                                 flags=pb.URDF_USE_INERTIA_FROM_FILE,
-                                basePosition=[position[0], position[0], STANDING_HEIGHT],
-                                baseOrientation=[0., 0., 0.,
-                                                 1.])  # |pb.URDF_USE_SELF_COLLISION|pb.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT)
+                                basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
+                                baseOrientation=pose.get_orientation())
 
-        self.prev_lin_vel = [0, 0, 0]  # IMU init
-        self.time_step_sim = 1. / 240  # IMU init
+        # IMU Stuff
+        self.prev_lin_vel = [0, 0, 0]
+        self.time_step_sim = 1. / 240
 
         self.foot_center_to_floor = -self.right_collision_center[2] + self.foot_box[2]
 
@@ -121,11 +121,15 @@ class Soccerbot:
                             [0, 0, 0, 0]])
         self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
+        self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
-        hip_position = [position[0], position[1], STANDING_HEIGHT]
-        self.pose = tr.get_transform_from_euler([0, 0, position[2]])
-        self.pose.set_position(hip_position)
+        self.right_foot_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
+        self.right_foot_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
+        self.left_foot_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
+        self.left_foot_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+
+        self.setPose(pose)
         self.torso_offset = tr()
         self.robot_path = None
 
@@ -141,34 +145,20 @@ class Soccerbot:
         :return: None
         """
         # Used later to calculate inverse kinematics
-        hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
-        hip_position = [self.pose.get_position()[0], self.pose.get_position()[1], hip_to_torso[2, 3] + self.hip_height]
-        self.pose = tr.get_transform_from_euler(
-            [0, 0, tr.get_axis_angle_from_quaternion(self.pose.get_orientation())[0]])
-        self.pose.set_position(hip_position)
+        position = self.pose.get_position()
+        position[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
+        self.pose.set_position(position)
 
         # hands
         self.configuration[Joints.RIGHT_ARM_1] = 0.9 * np.pi
         self.configuration[Joints.LEFT_ARM_1] = 0.9 * np.pi
 
         # right leg
-        right_foot_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        right_foot_position[2, 3] = -self.pose.get_position()[2] + self.foot_center_to_floor
-        thetas = self.inverseKinematicsRightFoot(right_foot_position)
-
+        thetas = self.inverseKinematicsRightFoot(self.right_foot_position)
         self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
 
         # left leg
-        left_foot_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
-        left_foot_position[2, 3] = -self.pose.get_position()[2] + self.foot_center_to_floor
-        thetas = self.inverseKinematicsLeftFoot(left_foot_position)
-
-        pb_offset = tr.get_transform_from_euler([0, -0.06, 0])
-        pb_offset.set_position([0, 0, - self.foot_box[2]])
-        final_pose = pb_offset @ self.pose
-        pb.resetBasePositionAndOrientation(self.body, final_pose.get_position(), final_pose.get_orientation())
-        positions = self.configuration
-
+        thetas = self.inverseKinematicsLeftFoot(self.left_foot_position)
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL,
@@ -237,16 +227,27 @@ class Soccerbot:
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.inverseKinematicsRightFoot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
+    def setPose(self, pose):
+        try:
+            last_hip_height = self.pose.get_position()[2]
+        except:
+            self.pose = pose
+            last_hip_height = Soccerbot.standing_hip_height
+
+        self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
+        self.pose.set_orientation([0, 0, 0, 1])
+        pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+
     def setGoal(self, finishPosition, show=True):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
         :return: #TODO
         """
-        crotch = self.pose.get_position()
         finishPositionCoordinate = finishPosition.get_position()
-        finishPositionCoordinate[2] = crotch[2]
+        finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         finishPosition.set_position(finishPositionCoordinate)
+        finishPosition.set_orientation([0, 0, 0, 1])
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
         if show:
