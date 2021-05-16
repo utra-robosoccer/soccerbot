@@ -153,7 +153,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             Segment2 s(pt1,pt2);
             float b = l[1] - s.slope()*l[0];
 
-            for (size_t i = l[0]; i < l[2];i += 13) {
+            for (size_t i = l[0]; i < l[2];i += 15) {
                 float y = s.slope()*i + b;
                 Point2 pt(i,y);
                 pts.push_back(pt);
