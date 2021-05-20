@@ -18,7 +18,7 @@ PROTO Bez [
 ]
 {
   %{
-    local mx28_backlash = 0.00581776
+    local mx28_backlash = 0.01
     local mx28_max_torque = 3.10
     local mx28_max_velocity = 7.02
     local mx28_damping_constant = 0.3086
