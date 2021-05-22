@@ -9,9 +9,9 @@ PROTO Soccerbot_right_bicep_7Mesh [
 {
   Shape {
     appearance PBRAppearance {
-      baseColor 0.909804 0.678431 0.137255
+      baseColor 0.000000 0.000000 0.000000
       transparency 0.000000
-      roughness 0.000000
+      roughness 1.000000
       metalness 0
       emissiveColor 0.000000 0.000000 0.000000
     }

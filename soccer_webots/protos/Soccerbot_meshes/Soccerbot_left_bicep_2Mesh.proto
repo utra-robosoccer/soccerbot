@@ -9,9 +9,9 @@ PROTO Soccerbot_left_bicep_2Mesh [
 {
   Shape {
     appearance PBRAppearance {
-      baseColor 0.960784 0.960784 0.964706
+      baseColor 0.000000 0.000000 0.000000
       transparency 0.000000
-      roughness 0.000000
+      roughness 1.000000
       metalness 0
       emissiveColor 0.000000 0.000000 0.000000
     }
