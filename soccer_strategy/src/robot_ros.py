@@ -14,7 +14,7 @@ class RobotRos(Robot):
         self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose",
                                                geometry_msgs.msg.PoseWithCovarianceStamped,
                                                self.robot_pose_callback)
-        self.ball_pose_sub = rospy.Subscriber('/' + robot_name + "/ball_pose",
+        self.ball_pose_sub = rospy.Subscriber('/' + robot_name + "/ball",
                                               geometry_msgs.msg.PoseWithCovarianceStamped,
                                               self.ball_pose_callback)
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
@@ -26,7 +26,7 @@ class RobotRos(Robot):
         self.status = status
         self.position = np.array([0.0, 0.0, 0])
         self.goal_position = np.array([0.0, 0.0, 0])
-        self.ball_position = np.array([0.0, 0.0, 0])
+        self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name
         self.max_kick_speed = 2
 
@@ -48,7 +48,7 @@ class RobotRos(Robot):
         pass
 
     def ball_pose_callback(self, data):
-        self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
+        self.ball_position = np.array([data.pose.pose.position.y, -data.pose.pose.position.x])
         pass
 
     def imu_callback(self, msg):
@@ -62,3 +62,5 @@ class RobotRos(Robot):
 
         if pitch < -angle_threshold and self.status != self.Status.FALLEN_FRONT:
             self.status = self.Status.FALLEN_FRONT
+
+

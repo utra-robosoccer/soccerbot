@@ -1,15 +1,19 @@
 import numpy as np
-import rospy
 from matplotlib import pyplot as plt
-from robot_ros import RobotRos
-from ball import Ball
-import game_engine
 import copy
+
+import rospy
+import tf
 import geometry_msgs.msg
 import std_msgs.msg
+
+import game_engine
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 from strategy import DummyStrategy
+from robot_ros import RobotRos
+from ball import Ball
+
 
 class GameEngineRos(game_engine.GameEngine):
     KICK_TIMEOUT = 5
@@ -19,7 +23,7 @@ class GameEngineRos(game_engine.GameEngine):
     def __init__(self):
         # Listen to rostopics and get robots in field
         # setup subscribers to robot and ball positions in ros
-        self.robots = [
+        '''self.robots = [
             RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
                      robot_name="robot1"),
             RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.LEFT_MIDFIELD, status=RobotRos.Status.READY,
@@ -36,9 +40,20 @@ class GameEngineRos(game_engine.GameEngine):
                      robot_name="robot7"),
             RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.STRIKER, status=RobotRos.Status.READY,
                      robot_name="robot8"),
-        ]
+        ]'''
 
+        self.robots = [
+            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
+                     robot_name="robot1"),
+            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.LEFT_MIDFIELD, status=RobotRos.Status.READY,
+                     robot_name="robot2"),
+            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.RIGHT_MIDFIELD, status=RobotRos.Status.READY,
+                     robot_name="robot3"),
+            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.STRIKER, status=RobotRos.Status.READY,
+                     robot_name="robot4")
+        ]
         self.ball = Ball(position=np.array([0, 0]))
+        self.last_ball_pose = self.ball.get_position()
 
         fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
         background = fig.add_axes([0, 0, 1, 1])
@@ -67,21 +82,13 @@ class GameEngineRos(game_engine.GameEngine):
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
         # this needs to be team-dependent in the future
-        import tf
-        """listener = tf.TransformListener()
-        name = "/robot1"
-        try:
-            ball_pose = listener.lookupTransform(name + "/ball", name + "/base_footprint", rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            pass"""
-
-
-        ball_positions = np.array([])
+        ball_positions = []
         for robot in self.robots:
-            if not np.isnan(robot.ball_position.any()):
-                np.append(ball_positions, robot.ball_position, axis=0)
-        if ball_positions.size != 0:
-            self.ball.position = ball_positions.mean(axis=0)
+            if robot.ball_position.all():
+                ball_positions.append(robot.ball_position)
+
+        if ball_positions:
+            self.ball.position = np.array(ball_positions).mean(axis=0)
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngineRos.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -130,6 +137,7 @@ class GameEngineRos(game_engine.GameEngine):
 
     def updateEstimatedPhysics(self, robots, ball):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
+        print(str(robots[0].status) + " " + str(robots[1].status) + " " + str(robots[2].status) + " " + str(robots[3].status))
         for robot in robots:
             if robot.status == RobotRos.Status.WALKING:
                 # publish a goal robot.goal_position geometry_msgs/Pose2D to /robot_name/goal
