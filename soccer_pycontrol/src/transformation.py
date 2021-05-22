@@ -5,7 +5,7 @@ from scipy.spatial.transform import Slerp
 
 class Transformation(np.ndarray):
 
-    def __new__(cls, position=(0., 0., 0.), quaternion=(0., 0., 0., 1.)):
+    def __new__(cls, position=(0., 0., 0.), quaternion=(0., 0., 0., 1.), *args, **kwargs):
         """
         Constructor for the H-transform object, inherits from numpy array
         :param position: translation component of the transform, defaults to zero
@@ -71,6 +71,12 @@ class Transformation(np.ndarray):
         t[2, 2] = np.cos(alpha)
         t[2, 3] = d
 
+        return t
+
+    @staticmethod
+    def get_transform_from_pose_stamped(x, y, theta):
+        t = Transformation.get_transform_from_euler([0, 0, theta])
+        t.set_position([x, y, 0])
         return t
 
     @staticmethod
