@@ -36,7 +36,7 @@ class ObjectDetectionNode(object):
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
         self.model = CNN(kernel=3, num_features=8)
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.model.eval()
 
     def callback(self, msg):
@@ -63,30 +63,40 @@ class ObjectDetectionNode(object):
                 img_torch = util.cv_to_torch(crop_img)
 
                 outputs, _ = self.model(torch.tensor(np.expand_dims(img_torch, axis=0)).float())
-                bbxs = find_batch_bounding_boxes(outputs)[0]
-                # img = util.draw_bounding_boxes(img, bbxs[Label.ROBOT.value], (0, 0, 255))
-                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
+                bounding_boxes = find_batch_bounding_boxes(outputs)[0]
+
+                img_torch = util.draw_bounding_boxes(img_torch, bounding_boxes[Label.BALL.value], (255, 0, 0))
+                img_torch = util.draw_bounding_boxes(img_torch, bounding_boxes[Label.ROBOT.value], (0, 0, 255))
 
                 img = util.torch_to_cv(img_torch)
 
-                if bbxs is None:
+                if bounding_boxes is None:
                     continue
 
                 bbs_msg = BoundingBoxes()
-                bb_msg = BoundingBox()
-                for ball_bb in bbxs[Label.BALL.value]:
-                    bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
-                    bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
-                    bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
-                    bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
-                    bb_msg.id = Label.BALL.value
-                    bb_msg.Class = 'ball'
+                ball_box_msg = BoundingBox()
+                robot_box_msg = BoundingBox()
+                for ball_box in bounding_boxes[Label.BALL.value]:
+                    ball_box_msg.xmin = int((ball_box[0] + x_offset) * 3)
+                    ball_box_msg.ymin = int((ball_box[1] + y_offset) * 3)
+                    ball_box_msg.xmax = int((ball_box[2] + x_offset) * 3)
+                    ball_box_msg.ymax = int((ball_box[3] + y_offset) * 3)
+                    ball_box_msg.id = Label.BALL.value
+                    ball_box_msg.Class = 'ball'
+
+                for robot_box in bounding_boxes[Label.ROBOT.value]:
+                    robot_box_msg.xmin = int((robot_box[0]+x_offset) * 3)
+                    ball_box_msg.ymin = int((robot_box[1] + y_offset) * 3)
+                    ball_box_msg.xmax = int((robot_box[2] + x_offset) * 3)
+                    ball_box_msg.ymax = int((robot_box[3] + y_offset) * 3)
+                    ball_box_msg.id = Label.ROBOT.value
+                    ball_box_msg.Class = 'robot'
 
                 header = std_msgs.msg.Header()
                 header.stamp = rospy.Time.now()
                 bbs_msg.header = header
                 bbs_msg.image_header = self.image_header
-                bbs_msg.bounding_boxes = [bb_msg]
+                bbs_msg.bounding_boxes = [ball_box_msg, robot_box_msg]
 
                 self.pub_boundingbox.publish(bbs_msg)
                 self.pub_detection.publish(br.cv2_to_imgmsg(img))
