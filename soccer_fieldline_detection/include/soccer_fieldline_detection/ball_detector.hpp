@@ -18,5 +18,5 @@ class BallDetector {
     tf2_ros::TransformBroadcaster br;
 
 public:
-    void ballDetectorCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &msg);
+    void ballDetectorCallback(const soccer_object_detection::BoundingBoxes::ConstPtr &msg);
 };

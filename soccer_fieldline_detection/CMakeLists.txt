@@ -9,7 +9,7 @@ set(PKG_DEPS
     image_transport
     cv_bridge
     sensor_msgs
-    darknet_ros_msgs
+    soccer_object_detection
     geometry_msgs
     tf2_ros
     )

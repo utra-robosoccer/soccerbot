@@ -54,9 +54,6 @@ th = 0.0
 
 while not rospy.is_shutdown():
     r.step()
-    if rospy.has_param("send_odom"):
-        if rospy.get_param("send_odom") == "true":
-            temp_bool = True
 
     if temp_bool:
         current_time = rospy.Time.from_seconds(r.time)
