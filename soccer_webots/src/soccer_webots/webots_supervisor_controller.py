@@ -2,7 +2,7 @@
 from controller import Robot, Node, Supervisor
 import os
 import rospy
-from geometry_msgs.msg import Quaternion, PointStamped, Pose, Point, Twist
+from geometry_msgs.msg import Quaternion, PointStamped, PoseWithCovarianceStamped, Point, Twist
 from gazebo_msgs.msg import ModelStates
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
@@ -123,6 +123,24 @@ class SupervisorController:
             base + "/ball",
             "world"
         )
+        ball = rospy.Publisher('/' + base + '/ball', PoseWithCovarianceStamped, queue_size=1)
+        ball_pose = PoseWithCovarianceStamped()
+        ball_pose.header.frame_id = base + '/ball'
+        ball_pose.header.stamp = rospy.Time.from_seconds(self.time)
+        ball_pose.pose.pose.position.x = pos[0]
+        ball_pose.pose.pose.position.y = pos[1]
+        ball_pose.pose.pose.position.z = pos[2]
+        ball_pose.pose.pose.orientation.x = 0
+        ball_pose.pose.pose.orientation.y = 0
+        ball_pose.pose.pose.orientation.z = 0
+        ball_pose.pose.pose.orientation.w = 1
+        ball_pose.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                     0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                     0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                     0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                     0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+        ball.publish(ball_pose)
 
     def reset_ball(self, req=None):
         self.ball.getField("translation").setSFVec3f([0, 0, 0.0772])
