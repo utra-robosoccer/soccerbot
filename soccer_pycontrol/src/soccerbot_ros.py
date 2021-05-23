@@ -1,7 +1,7 @@
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped
 from soccerbot import *
 import rospy
 import os
@@ -64,19 +64,21 @@ class SoccerbotRos(Soccerbot):
         p = Path()
         p.header.frame_id = "world"
         p.header.stamp = rospy.Time.now()
-        for i in range(0, self.robot_path.bodyStepCout() + 1, 1):
+        for i in range(0, self.robot_path.bodyStepCount() + 1, 1):
             step = self.robot_path.getBodyStep(i)
             position = step.get_position()
             orientation = step.get_orientation()
-            pose = Pose()
-            pose.position.x = position[0]
-            pose.position.y = position[1]
-            pose.position.z = position[2]
+            pose = PoseStamped()
+            pose.header.seq = i
+            pose.header.frame_id = "world"
+            pose.pose.position.x = position[0]
+            pose.pose.position.y = position[1]
+            pose.pose.position.z = position[2]
 
-            pose.orientation.x = orientation[0]
-            pose.orientation.y = orientation[1]
-            pose.orientation.z = orientation[2]
-            pose.orientation.w = orientation[3]
+            pose.pose.orientation.x = orientation[0]
+            pose.pose.orientation.y = orientation[1]
+            pose.pose.orientation.z = orientation[2]
+            pose.pose.orientation.w = orientation[3]
             p.poses.append(pose)
         self.path_publisher.publish(p)
 
