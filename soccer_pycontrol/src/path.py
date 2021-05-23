@@ -92,7 +92,7 @@ class Path:
         for i in range(0,self.bodyStepCount()+1,1):                   # i = 0:1: obj.bodyStepCount
             step = self.getBodyStep(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.005, 0., 0.]), (3, 1)))[:,0]
+            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:,0]
         if fig is None:
             fig = plt.figure()
         ax = fig.gca(projection='3d')
