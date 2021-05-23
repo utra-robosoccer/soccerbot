@@ -18,7 +18,7 @@ class SoccerbotControllerRos(SoccerbotController):
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
         self.robot_position_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
         self.terminate_walk_subscriber = rospy.Subscriber("terminate_walking", Empty, self.terminate_walk_callback)
-        self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty)
+        self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty, queue_size=1)
         self.goal = PoseStamped()
         self.new_goal = self.goal
         self.terminate_walk = False
