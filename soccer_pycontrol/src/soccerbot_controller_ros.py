@@ -46,7 +46,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.wait(150)
 
                 # Reset robot position and goal
-                self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose), show=False)
+                self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 t = 0
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
