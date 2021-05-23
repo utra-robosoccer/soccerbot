@@ -64,7 +64,7 @@ class GameEngine:
         foreground.set_facecolor((0, 0, 0, 0))
 
         # Setup the strategy
-        self.strategy = DummyStrategy(Robot)
+        self.strategy = DummyStrategy()
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each

@@ -32,7 +32,7 @@
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_webots</depend>
-
+  <depend>python3-protobuf</depend>
   <!-- Communication-->
 
   <!-- strategy-->

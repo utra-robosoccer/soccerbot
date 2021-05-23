@@ -1,5 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
+    <arg name="competition" default="false" />
     <arg name="robot_name" default="robot1" />
     <arg name="pose_name" default="standing" />
     <arg name="ip_address" default="localhost" />
