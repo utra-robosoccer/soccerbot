@@ -5,10 +5,9 @@
     <arg name="fake_localization" default="false" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
-    <include file="$(find soccerbot)/launch/modules/simulator.launch" >
+    <include file="$(find soccerbot)/launch/modules/simulator.launch" unless="$(arg competition)">
         <arg name="single" value="$(arg single)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="competition" value="$(arg competition)" />
     </include>
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 <!--    <include file="$(find soccerbot)/launch/modules/strategy.launch" />-->
