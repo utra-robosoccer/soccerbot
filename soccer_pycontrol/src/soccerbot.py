@@ -238,7 +238,7 @@ class Soccerbot:
         self.pose.set_orientation([0, 0, 0, 1])
         pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
-    def setGoal(self, finishPosition, show=True):
+    def setGoal(self, finishPosition):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
@@ -250,9 +250,7 @@ class Soccerbot:
         finishPosition.set_orientation([0, 0, 0, 1])
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
-        if show:
-            self.robot_path.show()
-            self.robot_path.showTimingDiagram()
+
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_size
         self.period = self.robot_path.step_size
