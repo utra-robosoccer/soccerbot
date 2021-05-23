@@ -79,7 +79,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if  self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() and  t + SoccerbotController.PYBULLET_STEP > self.soccerbot.robot_path.duration():
                 print("Completed Walk")
-                self.completed_walk_publisher.publish()
+                e = Empty()
+                self.completed_walk_publisher.publish(e)
 
             pb.stepSimulation()
             # self.soccerbot.get_imu()
