@@ -67,18 +67,18 @@ class Trajectory:
         rate = rospy.Rate(100)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
-            js = JointState()
-            js.name = []
-            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = []
-            js.effort = []
+            # js = JointState()
+            # js.name = []
+            # js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+            # js.position = []
+            # js.effort = []
+            # for joint, setpoint in self.get_setpoint(t).items():
+            #     js.name.append(joint)
+            #     js.position.append(setpoint)
+            #
+            # pub_all_motor.publish(js)
             for joint, setpoint in self.get_setpoint(t).items():
-                js.name.append(joint)
-                js.position.append(setpoint)
-                # request = set_floatRequest()
-                # request.value = setpoint
-                # publishers[joint].publish(setpoint)
-                # publishers_2[joint](request)
-            pub_all_motor.publish(js)
+                publishers[joint].publish(setpoint)
+            t = t + 0.01
             t = t + 0.01
             rate.sleep()
