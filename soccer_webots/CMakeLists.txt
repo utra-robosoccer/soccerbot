@@ -5,8 +5,6 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
         dynamic_reconfigure
-        gazebo_ros
-        gazebo_ros_control
         tf2_ros
         roscpp
         rospy
