@@ -11,5 +11,6 @@ class Test(TestCase):
         walker.wait(100)
         walker.soccerbot.ready()
         walker.wait(1000)
-        walker.soccerbot.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]), show=False)
+        walker.soccerbot.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
+        # walker.soccerbot.robot_path.show()
         walker.run()
