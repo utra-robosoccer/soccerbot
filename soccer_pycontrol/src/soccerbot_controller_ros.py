@@ -35,6 +35,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def run(self):
         t = 0
+        r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
@@ -61,4 +62,4 @@ class SoccerbotControllerRos(SoccerbotController):
             self.soccerbot.publishAngles()
 
             t = t + SoccerbotController.PYBULLET_STEP
-            sleep(SoccerbotController.PYBULLET_STEP)
+            r.sleep()
