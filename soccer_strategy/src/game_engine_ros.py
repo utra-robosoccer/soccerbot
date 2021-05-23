@@ -45,12 +45,8 @@ class GameEngineRos(game_engine.GameEngine):
         self.robots = [
             RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
                      robot_name="robot1"),
-            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.LEFT_MIDFIELD, status=RobotRos.Status.READY,
-                     robot_name="robot2"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.RIGHT_MIDFIELD, status=RobotRos.Status.READY,
-                     robot_name="robot3"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.STRIKER, status=RobotRos.Status.READY,
-                     robot_name="robot4")
+            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
+                     robot_name="robot2")
         ]
         self.ball = Ball(position=np.array([0, 0]))
         self.last_ball_pose = self.ball.get_position()
@@ -137,15 +133,11 @@ class GameEngineRos(game_engine.GameEngine):
 
     def updateEstimatedPhysics(self, robots, ball):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
-        print(str(robots[0].status) + " " + str(robots[1].status) + " " + str(robots[2].status) + " " + str(robots[3].status))
+        #print(str(robots[0].status) + " " + str(robots[1].status) + " " + str(robots[2].status) + " " + str(robots[3].status))
         for robot in robots:
             if robot.status == RobotRos.Status.WALKING:
                 # publish a goal robot.goal_position geometry_msgs/Pose2D to /robot_name/goal
-                goal_msg = geometry_msgs.msg.Pose2D()
-                goal_msg.x = robot.goal_position[0]
-                goal_msg.y = robot.goal_position[1]
-                goal_msg.theta = robot.goal_position[2]
-                robot.pub_goal.publish(goal_msg)
+                pass
             elif robot.status == RobotRos.Status.KICKING:
                 # if kick timout is not active
                 if rostime - robot.last_kick > self.KICK_TIMEOUT:
@@ -155,9 +147,10 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("rightkick")
+                        robot.trajectory_publisher.publish("rightkick")
                         robot.last_kick = rostime
                         robot.publishing_static_trajectory = True
+                        print("kicking")
 
             elif robot.status == RobotRos.Status.FALLEN_BACK:
                 # if timout is not active
@@ -168,9 +161,11 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("getupback")
+                        robot.terminate_walking_publisher.publish(True)
+                        robot.trajectory_publisher.publish("getupback")
                         robot.last_getupback = rostime
                         robot.publishing_static_trajectory = True
+                        print("getupback")
 
             elif robot.status == RobotRos.Status.FALLEN_FRONT:
                 # if timout is not active
@@ -181,9 +176,15 @@ class GameEngineRos(game_engine.GameEngine):
                         robot.status = RobotRos.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("getupfront")
+                        robot.terminate_walking_publisher.publish(True)
+                        robot.trajectory_publisher.publish("getupfront")
                         robot.last_getupfront = rostime
                         robot.publishing_static_trajectory = True
+                        print("getupfront")
+
+            if robot.status != robot.previous_status:
+                print(robot.robot_name + " status changes to " + str(robot.status))
+                robot.previous_status = robot.status
 
         self.update_average_ball_position()
 
