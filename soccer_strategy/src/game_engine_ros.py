@@ -89,7 +89,7 @@ class GameEngineRos(game_engine.GameEngine):
         friendly_points = 0
         opponent_points = 0
 
-        half_time_started = False
+        half_time_started = True
 
         rostime_previous = 0
         rostime_initial = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
