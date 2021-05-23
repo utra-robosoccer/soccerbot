@@ -7,8 +7,6 @@ find_package(Protobuf REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
         dynamic_reconfigure
-        gazebo_ros
-        gazebo_ros_control
         tf2_ros
         roscpp
         rospy

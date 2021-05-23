@@ -17,12 +17,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>dynamic_reconfigure</depend>
-  <depend>gazebo_ros</depend>
-  <depend>gazebo_ros_control</depend>
   <depend>ros_control</depend>
   <depend>python3-scipy</depend>
   <depend>tf2_ros</depend>
-  <depend>webots_ros</depend>
   <depend>rospy</depend>
   <depend>sensor_msgs</depend>
   <depend>rosgraph_msgs</depend>
