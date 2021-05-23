@@ -7,3 +7,4 @@ external
 LICENSE
 Dockerfile
 docker-compose.yaml
+external/webots
