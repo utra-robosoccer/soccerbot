@@ -28,5 +28,5 @@ protobuf_generate_python(PROTO_PY protos/messages.proto)
 add_custom_target(robocup_api_proto ALL DEPENDS ${PROTO_PY})
 add_custom_command(
         TARGET robocup_api_proto POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/bez_robocup_api
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/soccer_webots
 )

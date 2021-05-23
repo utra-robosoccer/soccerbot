@@ -39,17 +39,17 @@ class SoccerbotRos(Soccerbot):
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
 
     def publishAngles(self):
-        # for m in self.motor_publishers:
-        # self.motor_publishers[m].publish(self.configuration[m])
-        js = JointState()
-        js.name = []
-        js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-        js.position = []
-        js.effort = []
-        for i, n in enumerate(self.motor_names):
-            js.name.append(n)
-            js.position.append(self.configuration[i])
-        self.pub_all_motor.publish(js)
+        for m in self.motor_publishers:
+            self.motor_publishers[m].publish(self.configuration[m])
+        # js = JointState()
+        # js.name = []
+        # js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+        # js.position = []
+        # js.effort = []
+        # for i, n in enumerate(self.motor_names):
+        #     js.name.append(n)
+        #     js.position.append(self.configuration[i])
+        # self.pub_all_motor.publish(js)
 
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)

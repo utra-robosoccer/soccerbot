@@ -20,6 +20,8 @@ class BallDetector {
 
     ros::Publisher head_rotator;
 
+    ros::Publisher head_rotator_0;
+    ros::Publisher head_rotator_1;
 
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
@@ -32,8 +34,9 @@ public:
 
     BallDetector() : tfListener(tfBuffer) {
         //signal(SIGINT, BallDetector::quit);
-        head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
-
+//        head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
+        head_rotator_0 = n.advertise<std_msgs::Float64>("head_motor_0/command", 1);
+        head_rotator_1 = n.advertise<std_msgs::Float64>("head_motor_1/command", 1);
 
     }
     // catch names of the controllers availables on ROS network
@@ -42,12 +45,12 @@ public:
         geometry_msgs::TransformStamped ball_pose;
 
         bool has_pose = false;
-        try {
-            ball_pose = tfBuffer.lookupTransform("ball", "torso",ros::Time(0));
-            //has_pose = true;
-        } catch (tf2::TransformException &ex) {
-            has_pose = false;
-        }
+//        try {
+//            ball_pose = tfBuffer.lookupTransform("ball", "torso",ros::Time(0));
+//            //has_pose = true;
+//        } catch (tf2::TransformException &ex) {
+//            has_pose = false;
+//        }
         /*ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
         if (last_pose < ros::Duration(1)) {
             has_pose = true;
@@ -55,14 +58,20 @@ public:
         }*/
 
         if (!has_pose) {
-            sensor_msgs::JointState js;
-            js.name.push_back("head_motor_0");
-            js.name.push_back("head_motor_1");
-            js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
-            js.position.push_back(0.6f);
-            head_rotator.publish(js);
-            last_t += 1;
+//            sensor_msgs::JointState js;
+//            js.name.push_back("head_motor_0");
+//            js.name.push_back("head_motor_1");
+//            js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
+//            js.position.push_back(0.6f);
+//            head_rotator.publish(js);
+//            last_t += 1;
+            std_msgs::Float64 angle;
+            angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
+            head_rotator_0.publish(angle);
 
+            angle.data = 0.6f;
+            head_rotator_1.publish(angle);
+            last_t += 1;
         }
         else {
             has_pose = false;
