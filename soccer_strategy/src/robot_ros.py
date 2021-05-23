@@ -54,7 +54,7 @@ class RobotRos(Robot):
         self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
         pass
 
-    def completed_walking_callback(self):
+    def completed_walking_callback(self, data):
         self.status = Robot.Status.READY
         print("Completed Walking")
         pass
