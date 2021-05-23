@@ -28,7 +28,7 @@ class BezRobocupApi():
         parser.add_argument('--robot_name', help="which robot should be started")
 
         args, unknown = parser.parse_known_args()
-
+        rospy.set_param("competition", "True")
         rospy.set_param("name", args.robot_name)
         self.base_frame = args.robot_name
         self.MIN_FRAME_STEP = 16  # ms
@@ -74,7 +74,7 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.environ.get('ROBOCUP_ROBOT_ID')
+        addr = os.environ.get('ROBOCUP_SIMULATOR_ADDR')
         self.socket = self.get_connection(addr)
 
         self.first_run = True
@@ -249,9 +249,9 @@ class BezRobocupApi():
         self.joint_command[17] = msg.data
 
     def get_connection(self, addr):
-        # host, port = addr.split(':')
-        host = "127.0.0.1"
-        port = int(10022)
+        host, port = addr.split(':')
+        # host = "127.0.0.1"
+        # port = int(10022)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))

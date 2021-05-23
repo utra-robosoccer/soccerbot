@@ -22,7 +22,7 @@ class BallDetector {
 
     ros::Publisher head_rotator_0;
     ros::Publisher head_rotator_1;
-
+    std::string competition;
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
     int last_t = 0;
@@ -34,10 +34,13 @@ public:
 
     BallDetector() : tfListener(tfBuffer) {
         //signal(SIGINT, BallDetector::quit);
-//        head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
+        head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
         head_rotator_0 = n.advertise<std_msgs::Float64>("head_motor_0/command", 1);
         head_rotator_1 = n.advertise<std_msgs::Float64>("head_motor_1/command", 1);
-
+        while(!n.hasParam("competition")) {
+            ros::Duration(1.0).sleep();
+        }
+        n.getParam("competition", competition);
     }
     // catch names of the controllers availables on ROS network
 
@@ -58,20 +61,24 @@ public:
         }*/
 
         if (!has_pose) {
-//            sensor_msgs::JointState js;
-//            js.name.push_back("head_motor_0");
-//            js.name.push_back("head_motor_1");
-//            js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
-//            js.position.push_back(0.6f);
-//            head_rotator.publish(js);
-//            last_t += 1;
-            std_msgs::Float64 angle;
-            angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
-            head_rotator_0.publish(angle);
+            if (competition == "False") {
+                sensor_msgs::JointState js;
+                js.name.push_back("head_motor_0");
+                js.name.push_back("head_motor_1");
+                js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
+                js.position.push_back(0.6f);
+                head_rotator.publish(js);
+                last_t += 1;
+            }
+            else if (competition == "True") {
+                std_msgs::Float64 angle;
+                angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
+                head_rotator_0.publish(angle);
 
-            angle.data = 0.6f;
-            head_rotator_1.publish(angle);
-            last_t += 1;
+                angle.data = 0.6f;
+                head_rotator_1.publish(angle);
+                last_t += 1;
+             }
         }
         else {
             has_pose = false;
