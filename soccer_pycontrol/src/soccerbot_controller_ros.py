@@ -37,15 +37,17 @@ class SoccerbotControllerRos(SoccerbotController):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
         while not rospy.is_shutdown():
-            if self.new_goal != self.goal:
-                rospy.loginfo("Recieved New Goal")
+            if self.new_goal.pose != self.goal.pose:
+                print("Recieved New Goal")
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.wait(500)
 
                 self.goal = self.new_goal
                 self.soccerbot.ready() # TODO Cancel walking
                 self.soccerbot.publishAngles()
+                print("Geting read")
                 self.wait(150)
+
 
                 # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
