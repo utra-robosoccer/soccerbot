@@ -38,6 +38,7 @@ class SoccerbotControllerRos(SoccerbotController):
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
+                rospy.loginfo("Recieved New Goal")
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.wait(500)
 
@@ -56,6 +57,7 @@ class SoccerbotControllerRos(SoccerbotController):
                                              jointIndices=list(range(0, 18, 1)),
                                              targetPositions=self.soccerbot.configuration)
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
+                self.soccerbot.publishOdometry()
 
             pb.stepSimulation()
             # self.soccerbot.get_imu()
