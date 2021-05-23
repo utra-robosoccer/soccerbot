@@ -35,8 +35,6 @@ class DummyStrategy(Strategy):
             if dist < closest_dist:
                 closest_dist = dist
                 current_closest = robot
-        if current_closest is None:
-            print("you bad")
         return current_closest
 
     def update_next_strategy(self, robots, ball):
@@ -45,7 +43,7 @@ class DummyStrategy(Strategy):
 
         a = current_closest.get_position()
         b = ball.get_position()
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.1:
+        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
             current_closest.set_navigation_position(current_closest.get_position())
 
