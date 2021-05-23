@@ -204,6 +204,7 @@ class Footpath(Path):
             assert (len(left_foot_action) == 2)
         # assert ((len(right_foot_action) == 2) == (right_foot_step_ratio != 0 and right_foot_step_ratio != 1))
 
+
         # Left foot
         if len(right_foot_action) == 1:
             right_foot_position = self.right_foot_position_at_step(right_foot_action[0])
