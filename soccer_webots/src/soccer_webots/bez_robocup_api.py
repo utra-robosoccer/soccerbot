@@ -9,13 +9,14 @@ import rospy
 import rospkg
 import struct
 from urdf_parser_py.urdf import URDF
-
+import tf
 from rosgraph_msgs.msg import Clock
-from geometry_msgs.msg import PointStamped
+
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool, Float64
 import messages_pb2
-
+from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
@@ -78,7 +79,8 @@ class BezRobocupApi():
 
         self.first_run = True
         self.published_camera_info = False
-
+        self.temp_bool = True
+        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.callback)
         self.run()
 
     def receive_msg(self):
@@ -104,7 +106,44 @@ class BezRobocupApi():
                 sensor_time_steps = self.get_sensor_time_steps(active=True)
             self.send_actuator_requests(sensor_time_steps)
             self.first_run = False
+            if self.temp_bool:
+                odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
+
+                # since all odometry is 6DOF we'll need a quaternion created from yaw
+                odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
+
+                # next, we'll publish the odometry message over ROS
+                odom = Odometry()
+                odom.header.stamp = self.stamp
+                odom.header.frame_id = self.base_frame + "/odom"
+
+                # set the position
+                odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
+                odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                        0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                        0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                        0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                        0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                # set the velocity
+                odom.child_frame_id = self.base_frame + "/base_footprint"
+                odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+                odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                # publish the message
+                odom_pub.publish(odom)
+
+
+
         self.close_connection()
+
+    def callback(self,data):
+        self.temp_bool = False
+
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
@@ -212,7 +251,7 @@ class BezRobocupApi():
     def get_connection(self, addr):
         # host, port = addr.split(':')
         host = "127.0.0.1"
-        port = int(10003)
+        port = int(10022)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
@@ -276,7 +315,7 @@ class BezRobocupApi():
         # IMU
         imu_msg = Imu()
         imu_msg.header.stamp = self.stamp
-        imu_msg.header.frame_id = self.base_frame + "imu_link"
+        imu_msg.header.frame_id = self.base_frame + "/imu_link"
         imu_msg.orientation.w = 1
         imu_accel = imu_gyro = False
 
@@ -372,6 +411,7 @@ class BezRobocupApi():
     def handle_position_sensor_measurements(self, position_sensors):
         state_msg = JointState()
         state_msg.header.stamp = self.stamp
+
         for position_sensor in position_sensors:
             state_msg.name.append(position_sensor.name[:len(position_sensor.name) - 7])
             state_msg.position.append(position_sensor.value)
