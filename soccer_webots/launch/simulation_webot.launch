@@ -17,20 +17,24 @@
     <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot1">
         <arg name="robot_name" value="red_player_1"/>
         <arg name="robot_tag" value="robot1"/>
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot2" unless="$(arg single)">
         <arg name="robot_name" value="red_player_2"/>
         <arg name="robot_tag" value="robot2"/>
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot3" unless="$(arg single)">
         <arg name="robot_name" value="red_player_3"/>
         <arg name="robot_tag" value="robot3"/>
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccer_webots)/launch/single_robot_controller.launch" ns = "robot4" unless="$(arg single)">
         <arg name="robot_name" value="red_player_4"/>
         <arg name="robot_tag" value="robot4"/>
+        <arg name="competition" value="$(arg competition)" />
     </include>
 </launch>
