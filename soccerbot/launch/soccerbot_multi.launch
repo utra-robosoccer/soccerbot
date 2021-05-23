@@ -9,6 +9,7 @@
         <arg name="single" value="$(arg single)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
     </include>
+
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 <!--    <include file="$(find soccerbot)/launch/modules/strategy.launch" />-->
 
