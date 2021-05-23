@@ -22,7 +22,7 @@ class SoccerbotController:
 
     def wait(self, steps):
         for i in range(steps):
-            sleep(SoccerbotController.PYBULLET_STEP)
+            rospy.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
     def run(self):

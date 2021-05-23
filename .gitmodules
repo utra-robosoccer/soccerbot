@@ -1,5 +1,5 @@
 [submodule "external/webots"]
 	path = external/webots
 	shallow = true
-	url = https://github.com/cyberbotics/webots.git
-	branch = feature-robocup-controllers
+	url = https://github.com/RoboCup-Humanoid-TC/webots.git
+	branch = release
