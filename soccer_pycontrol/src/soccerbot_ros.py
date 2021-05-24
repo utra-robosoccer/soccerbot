@@ -38,20 +38,26 @@ class SoccerbotRos(Soccerbot):
                             "right_leg_motor_4", "right_leg_motor_5"
                             ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
+        r = rospy.Rate(10)
+        while not rospy.has_param("competition"):
+            r.sleep()
+        self.competition = rospy.get_param("competition")
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
 
     def publishAngles(self):
-        # for m in self.motor_publishers:
-        # self.motor_publishers[m].publish(self.configuration[m])
-        js = JointState()
-        js.name = []
-        js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-        js.position = []
-        js.effort = []
-        for i, n in enumerate(self.motor_names):
-            js.name.append(n)
-            js.position.append(self.configuration[i])
-        self.pub_all_motor.publish(js)
+        if self.competition == "True":
+            for m in self.motor_publishers:
+                self.motor_publishers[m].publish(self.configuration[m])
+        elif self.competition == "False":
+            js = JointState()
+            js.name = []
+            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+            js.position = []
+            js.effort = []
+            for i, n in enumerate(self.motor_names):
+                js.name.append(n)
+                js.position.append(self.configuration[i])
+            self.pub_all_motor.publish(js)
 
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)

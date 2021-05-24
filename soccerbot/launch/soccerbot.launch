@@ -13,7 +13,8 @@
 
     <arg name="model_name" value="soccerbot" unless="$(arg easy_walking)" />
     <arg name="model_name" value="soccerbot_stand" if="$(arg easy_walking)" />
-
+    <param name="/simulation_active" value="true"/>
+    <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
     <group ns="$(arg robot_name)">
@@ -28,7 +29,11 @@
         />
 <!--        <param name="tf_prefix" value = "/robot1"/>-->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+        <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" respawn="true" respawn_delay="1" output="screen"
+              args="--robot_name $(arg robot_name)"
+              if ="$(arg competition)" >
 
+        </node>
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>

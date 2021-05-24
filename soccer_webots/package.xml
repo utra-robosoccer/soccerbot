@@ -24,7 +24,7 @@
   <depend>sensor_msgs</depend>
   <depend>rosgraph_msgs</depend>
   <depend>std_msgs</depend>
-
+  <depend>python3-protobuf</depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
