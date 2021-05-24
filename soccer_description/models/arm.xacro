@@ -39,7 +39,7 @@
                 <visual name="visual">
                     <origin rpy="0  0  0" xyz="0  0  0"/>
                     <geometry>
-                        <mesh filename="${FILE_PATH}/meshes/${name}_forearm.${MODEL_TYPE}" scale="1 1 1"/>
+                        <mesh filename="${FILE_PATH}/meshes/${name}_forearm.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
                     </geometry>
                     <material name="black" />
                 </visual>
