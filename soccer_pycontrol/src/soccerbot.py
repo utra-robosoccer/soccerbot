@@ -123,11 +123,11 @@ class Soccerbot:
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
-        self.right_foot_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        self.right_foot_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
+        self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
-        self.left_foot_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
-        self.left_foot_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
+        self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
         self.setPose(pose)
         self.torso_offset = tr()
@@ -154,11 +154,11 @@ class Soccerbot:
         self.configuration[Joints.LEFT_ARM_1] = 0.9 * np.pi
 
         # right leg
-        thetas = self.inverseKinematicsRightFoot(self.right_foot_position)
+        thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
         self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
 
         # left leg
-        thetas = self.inverseKinematicsLeftFoot(self.left_foot_position)
+        thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL,
@@ -238,7 +238,7 @@ class Soccerbot:
         self.pose.set_orientation([0, 0, 0, 1])
         pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
-    def setGoal(self, finishPosition, show=True):
+    def setGoal(self, finishPosition):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
@@ -250,9 +250,7 @@ class Soccerbot:
         finishPosition.set_orientation([0, 0, 0, 1])
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
-        if show:
-            self.robot_path.show()
-            self.robot_path.showTimingDiagram()
+
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_size
         self.period = self.robot_path.step_size

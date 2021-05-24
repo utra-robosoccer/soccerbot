@@ -35,6 +35,7 @@ while not rospy.has_param(pid_param_name):
 webots_pid = rospy.get_param(pid_param_name)
 
 rospy.set_param("name", args.robot_tag)
+rospy.set_param("competition", "False")
 os.environ["WEBOTS_PID"] = webots_pid
 os.environ["WEBOTS_ROBOT_NAME"] = args.robot_name
 
