@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import argparse
 import os
 import sys
 import math
@@ -9,22 +9,28 @@ import rospy
 import rospkg
 import struct
 from urdf_parser_py.urdf import URDF
-
+import tf
 from rosgraph_msgs.msg import Clock
-from geometry_msgs.msg import PointStamped
+
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool, Float64
 import messages_pb2
-
+from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
-        rospack = rospkg.RosPack()
-        self._package_path = rospack.get_path("bez_robocup_api")
+        # rospack = rospkg.RosPack()
+        # self._package_path = rospack.get_path("bez_robocup_api")
 
         rospy.init_node("bez_robocup_api")
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--robot_name', help="which robot should be started")
 
-        self.base_frame = base_ns
+        args, unknown = parser.parse_known_args()
+        rospy.set_param("competition", "True")
+        rospy.set_param("name", args.robot_name)
+        self.base_frame = args.robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
         self.joint_command = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -55,14 +61,15 @@ class BezRobocupApi():
                              "left_leg_motor_5_sensor",
                              "head_motor_0_sensor", "head_motor_1_sensor"
                              ]
-        self.sensors_names.extend("imu accelerometer")
-        self.sensors_names.extend("imu gyro")
-        self.sensors_names.extend("camera")
+        self.regular_sensor_names = ["imu accelerometer", "imu gyro", "imu accelerometer", "camera"
+
+                                     ]
+        self.sensor_names.extend(self.regular_sensor_names)
         self.pressure_sensor_names = ["right_leg_foot_sensor_1", "right_leg_foot_sensor_2", "right_leg_foot_sensor_3",
                                       "right_leg_foot_sensor_4",
                                       "left_leg_foot_sensor_1", "left_leg_foot_sensor_2", "left_leg_foot_sensor_3",
                                       "left_leg_foot_sensor_4"]
-        self.sensors_names.extend(self.pressure_sensor_names)
+        self.sensor_names.extend(self.pressure_sensor_names)
 
         self.create_publishers()
         self.create_subscribers()
@@ -72,7 +79,8 @@ class BezRobocupApi():
 
         self.first_run = True
         self.published_camera_info = False
-
+        self.temp_bool = True
+        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.callback)
         self.run()
 
     def receive_msg(self):
@@ -98,7 +106,44 @@ class BezRobocupApi():
                 sensor_time_steps = self.get_sensor_time_steps(active=True)
             self.send_actuator_requests(sensor_time_steps)
             self.first_run = False
+            if self.temp_bool:
+                odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
+
+                # since all odometry is 6DOF we'll need a quaternion created from yaw
+                odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
+
+                # next, we'll publish the odometry message over ROS
+                odom = Odometry()
+                odom.header.stamp = self.stamp
+                odom.header.frame_id = self.base_frame + "/odom"
+
+                # set the position
+                odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
+                odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                        0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                        0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                        0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                        0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                # set the velocity
+                odom.child_frame_id = self.base_frame + "/base_footprint"
+                odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+                odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                # publish the message
+                odom_pub.publish(odom)
+
+
+
         self.close_connection()
+
+    def callback(self,data):
+        self.temp_bool = False
+
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
@@ -144,7 +189,10 @@ class BezRobocupApi():
                                                       queue_size=1)
         self.motor_subscribers[15] = rospy.Subscriber("right_leg_motor_5/command", Float64, self.right_leg_motor_5,
                                                       queue_size=1)
-
+        self.motor_subscribers[16] = rospy.Subscriber("head_motor_0/command", Float64, self.head_motor_0,
+                                                      queue_size=1)
+        self.motor_subscribers[17] = rospy.Subscriber("head_motor_1/command", Float64, self.head_motor_1,
+                                                      queue_size=1)
 
     def left_arm_motor_0(self, msg):
         self.joint_command[0] = msg.data
@@ -202,7 +250,8 @@ class BezRobocupApi():
 
     def get_connection(self, addr):
         host, port = addr.split(':')
-        port = int(port)
+        # host = "127.0.0.1"
+        # port = int(10022)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
@@ -266,7 +315,7 @@ class BezRobocupApi():
         # IMU
         imu_msg = Imu()
         imu_msg.header.stamp = self.stamp
-        imu_msg.header.frame_id = self.base_frame + "imu_link"
+        imu_msg.header.frame_id = self.base_frame + "/imu_link"
         imu_msg.orientation.w = 1
         imu_accel = imu_gyro = False
 
@@ -317,7 +366,7 @@ class BezRobocupApi():
                 img_msg.height = height
                 img_msg.width = width
                 img_msg.encoding = "bgr8"
-                img_msg.step = 4 * width
+                img_msg.step = 3 * width
                 img_msg.data = image
                 self.pub_camera.publish(img_msg)
             else:
@@ -326,7 +375,7 @@ class BezRobocupApi():
     def publish_camera_info(self, height, width):
         camera_info_msg = CameraInfo()
         camera_info_msg.header.stamp = self.stamp
-        camera_info_msg.header.frame_id = self.camera_optical_frame
+        camera_info_msg.header.frame_id = self.base_frame + "camera"
         camera_info_msg.height = height
         camera_info_msg.width = width
         f_y = self.mat_from_fov_and_resolution(
@@ -362,6 +411,7 @@ class BezRobocupApi():
     def handle_position_sensor_measurements(self, position_sensors):
         state_msg = JointState()
         state_msg.header.stamp = self.stamp
+
         for position_sensor in position_sensors:
             state_msg.name.append(position_sensor.name[:len(position_sensor.name) - 7])
             state_msg.position.append(position_sensor.value)
@@ -369,7 +419,7 @@ class BezRobocupApi():
 
     def get_sensor_time_steps(self, active=True):
         sensor_time_steps = []
-        for sensor_name in self.sensors_names:
+        for sensor_name in self.sensor_names:
             time_step = self.MIN_CONTROL_STEP
             if sensor_name == "camera":
                 time_step = self.MIN_FRAME_STEP
@@ -399,3 +449,4 @@ class BezRobocupApi():
 
 if __name__ == '__main__':
     BezRobocupApi()
+
