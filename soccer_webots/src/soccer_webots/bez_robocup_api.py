@@ -249,9 +249,9 @@ class BezRobocupApi():
         self.joint_command[17] = msg.data
 
     def get_connection(self, addr):
-        host, port = addr.split(':')
-        # host = "127.0.0.1"
-        # port = int(10022)
+        # host, port = addr.split(':')
+        host = "127.0.0.1"
+        port = int(10022)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
