@@ -160,6 +160,38 @@ PROTO Bez [
                 children [
                   Soccerbot_left_forearm_0Mesh {
                   }
+                  Solid {
+                    translation -0.01 0.025 -0.16
+                    rotation 0.000000 1.000000 0.000000 0.000000
+                    name "left_hand [hand]"
+                    children [
+                      Shape {
+                        appearance PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1
+                          metalness 0
+                        }
+                        geometry Box {
+                          size 0.005 0.02 0.005
+                        }
+                      }
+                    ]
+                    boundingObject Transform {
+                      translation 0 0 0
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Box {
+                          size 0.005 0.02 0.005
+                        }
+                      ]
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.0001
+                      centerOfMass [ 0 0 0 ]
+                      inertiaMatrix []
+                    }
+                  }
                 ]
                 name "left_forearm [arm]"
                 boundingObject Transform {
@@ -272,6 +304,38 @@ PROTO Bez [
                 rotation 0.000000 1.000000 0.000000 0.000000
                 children [
                   Soccerbot_right_forearm_0Mesh {
+                  }
+                  Solid {
+                    translation -0.01 -0.025 -0.16
+                    rotation 0.000000 1.000000 0.000000 0.000000
+                    name "right_hand [hand]"
+                    children [
+                      Shape {
+                        appearance PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1
+                          metalness 0
+                        }
+                        geometry Box {
+                          size 0.005 0.02 0.005
+                        }
+                      }
+                    ]
+                    boundingObject Transform {
+                      translation 0 0 0
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Box {
+                          size 0.005 0.02 0.005
+                        }
+                      ]
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.0001
+                      centerOfMass [ 0 0 0 ]
+                      inertiaMatrix []
+                    }
                   }
                 ]
                 name "right_forearm [arm]"
@@ -661,12 +725,12 @@ PROTO Bez [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
 					                                }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_2"
@@ -677,12 +741,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_3"
@@ -693,12 +757,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                           TouchSensor {
                                             name "left_leg_foot_sensor_4"
@@ -709,12 +773,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                         ]
 
@@ -1195,12 +1259,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
 					                                }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_2"
@@ -1211,12 +1275,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_3"
@@ -1227,12 +1291,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                           TouchSensor {
                                             name "right_leg_foot_sensor_4"
@@ -1243,12 +1307,12 @@ density -1
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [ Box { size 0.01125 0.01125 0.0001 } ]
                                             }
-physics Physics {
-density -1
-    mass 0.001
-    centerOfMass []
-    inertiaMatrix []
-    }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.001
+                                              centerOfMass []
+                                              inertiaMatrix []
+                                            }
                                           }
                                         ]
                                         name "right_foot [foot]"
@@ -1269,8 +1333,8 @@ density -1
                                             6.000000e-06 1.800000e-05 2.200000e-05
                                             0.000000e+00 0.000000e+00 0.000000e+00
                                           ]
-					}
-				     }
+                                        }
+                                      }
                                     }
                                   ]
                                   name "right_ankle"
