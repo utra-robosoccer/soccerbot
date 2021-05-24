@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
