@@ -8,7 +8,7 @@ if __name__ == '__main__':
     if (len(sys.argv) > 2 and sys.argv[1] == '__name:=soccer_strategy') or RUN_IN_ROS:
         import rospy
         from game_engine_ros import GameEngineRos
-        rospy.init_node("soccer_control")
+        rospy.init_node("soccer_strategy")
         g = GameEngineRos()
         g.run()
     else:
