@@ -5,7 +5,7 @@
 # Extracted from: soccerbot.urdf
 
 PROTO Bez [
-  field  SFVec3f     translation     0 0 0
+  field  SFVec3f     translation     0 0 0.362568
   field  SFRotation  rotation        0 1 0 0
   field  SFString    name            ""  # Is `Robot.name`.
   field  SFString    controller      "player"       # Is `Robot.controller`.
