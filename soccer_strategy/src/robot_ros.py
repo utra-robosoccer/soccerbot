@@ -83,10 +83,11 @@ class RobotRos(Robot):
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
 
         # We want to publish once on state transition
-        if pitch > angle_threshold and self.status != Robot.Status.FALLEN_BACK:
+        if pitch > angle_threshold and self.status != Robot.Status.FALLEN_BACK and self.status != Robot.Status.FALLEN_FRONT:
             self.status = Robot.Status.FALLEN_BACK
 
-        if pitch < -angle_threshold and self.status != Robot.Status.FALLEN_FRONT:
+        if pitch < -angle_threshold and self.status != Robot.Status.FALLEN_BACK and self.status != Robot.Status.FALLEN_FRONT:
             self.status = Robot.Status.FALLEN_FRONT
 
+        pass
 
