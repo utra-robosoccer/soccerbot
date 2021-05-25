@@ -26,3 +26,4 @@ roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
 ```
 - This file launches a soccerbot.lauunch which is a single robot. Each of these have multiple modules (localization, navigation) which are launch files for certain components of a robot
 - Note that the arguments := are optional and the default ones are set in the launch files
+test
