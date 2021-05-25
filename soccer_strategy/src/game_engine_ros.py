@@ -17,7 +17,7 @@ class GameEngineRos(game_engine.GameEngine):
     GETUPFRONT_TIMEOUT = 7
     GETUPBACK_TIMEOUT = 10
 
-    def __init__(self):
+    def __init__(self, display=True):
         # Listen to rostopics and get robots in field
         # setup subscribers to robot and ball positions in ros
         '''self.robots = [
