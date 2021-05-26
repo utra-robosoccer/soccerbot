@@ -10,8 +10,6 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>urdf</depend>
   <depend>xacro</depend>
-  <depend>gazebo_ros</depend>
-  <depend>gazebo_ros_control</depend>
   <depend>dynamic_reconfigure</depend>
   <depend>ros_control</depend>
   <depend>effort_controllers</depend>

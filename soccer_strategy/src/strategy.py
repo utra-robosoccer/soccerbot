@@ -24,32 +24,34 @@ class Strategy:
 
 
 class DummyStrategy(Strategy):
-    def __init__(self, RobotClass):
-        self.RobotClass = RobotClass
 
     def who_has_the_ball(self, robots, ball):
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
+            if robot.status != Robot.Status.READY:
+                continue
+
             dist = np.linalg.norm(ball.get_position()[0:2] - robot.get_position()[0:2])
             if dist < closest_dist:
                 closest_dist = dist
                 current_closest = robot
-        if current_closest is None:
-            print("you bad")
         return current_closest
 
     def update_next_strategy(self, robots, ball):
         # Guess who has the ball
         current_closest = self.who_has_the_ball(robots, ball)
 
+        if current_closest == None:
+            return
+
         a = current_closest.get_position()
         b = ball.get_position()
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.1:
+        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
             current_closest.set_navigation_position(current_closest.get_position())
 
-            if current_closest.team == self.RobotClass.Team.FRIENDLY:
+            if current_closest.team == Robot.Team.FRIENDLY:
                 opponent_goal = np.array([0, 4.5])
             else:
                 opponent_goal = np.array([0, -4.5])
@@ -59,8 +61,8 @@ class DummyStrategy(Strategy):
             unit = delta / np.linalg.norm(delta)
 
             current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
-            current_closest.status = self.RobotClass.Status.KICKING
+            current_closest.status = Robot.Status.KICKING
         else:
             current_closest.set_navigation_position(np.append(ball.get_position(), 0))
-            current_closest.status = self.RobotClass.Status.WALKING
+            current_closest.status = Robot.Status.WALKING
 

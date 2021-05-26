@@ -1,44 +1,52 @@
 import numpy as np
+
 import rospy
-from matplotlib import pyplot as plt
-from robot_ros import RobotRos
-from ball import Ball
-import game_engine
-import copy
-import geometry_msgs.msg
 import std_msgs.msg
+
+import game_engine
+from robot import Robot
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 from strategy import DummyStrategy
+from robot_ros import RobotRos
+from ball import Ball
+
 
 class GameEngineRos(game_engine.GameEngine):
-    KICK_TIMEOUT = 5
-    GETUPFRONT_TIMEOUT = 20
-    GETUPBACK_TIMEOUT = 15
+    KICK_TIMEOUT = 3
+    GETUPFRONT_TIMEOUT = 7
+    GETUPBACK_TIMEOUT = 10
 
     def __init__(self):
         # Listen to rostopics and get robots in field
         # setup subscribers to robot and ball positions in ros
-        self.robots = [
-            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
+        '''self.robots = [
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                      robot_name="robot1"),
-            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.LEFT_MIDFIELD, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
                      robot_name="robot2"),
-            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.RIGHT_MIDFIELD, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                      robot_name="robot3"),
-            RobotRos(team=RobotRos.Team.FRIENDLY, role=RobotRos.Role.STRIKER, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                      robot_name="robot4"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.GOALIE, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                      robot_name="robot5"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.LEFT_MIDFIELD, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
                      robot_name="robot6"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.RIGHT_MIDFIELD, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                      robot_name="robot7"),
-            RobotRos(team=RobotRos.Team.OPPONENT, role=RobotRos.Role.STRIKER, status=RobotRos.Status.READY,
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                      robot_name="robot8"),
-        ]
+        ]'''
 
+        self.robots = [
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+                     robot_name="robot1"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+                     robot_name="robot2")
+        ]
         self.ball = Ball(position=np.array([0, 0]))
+        self.last_ball_pose = self.ball.get_position()
 
         fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
         background = fig.add_axes([0, 0, 1, 1])
@@ -62,26 +70,18 @@ class GameEngineRos(game_engine.GameEngine):
         self.reset_pub = rospy.Publisher('/reset', std_msgs.msg.String, queue_size=1)
 
         # Setup the strategy
-        self.strategy = DummyStrategy(RobotRos)
+        self.strategy = DummyStrategy()
 
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
         # this needs to be team-dependent in the future
-        import tf
-        """listener = tf.TransformListener()
-        name = "/robot1"
-        try:
-            ball_pose = listener.lookupTransform(name + "/ball", name + "/base_footprint", rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            pass"""
-
-
-        ball_positions = np.array([])
+        ball_positions = []
         for robot in self.robots:
-            if not np.isnan(robot.ball_position.any()):
-                np.append(ball_positions, robot.ball_position, axis=0)
-        if ball_positions.size != 0:
-            self.ball.position = ball_positions.mean(axis=0)
+            if robot.ball_position.all():
+                ball_positions.append(robot.ball_position)
+
+        if ball_positions:
+            self.ball.position = np.array(ball_positions).mean(axis=0)
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngineRos.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -89,7 +89,7 @@ class GameEngineRos(game_engine.GameEngine):
         friendly_points = 0
         opponent_points = 0
 
-        half_time_started = False
+        half_time_started = True
 
         rostime_previous = 0
         rostime_initial = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
@@ -130,52 +130,61 @@ class GameEngineRos(game_engine.GameEngine):
 
     def updateEstimatedPhysics(self, robots, ball):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
+        #print(str(robots[0].status) + " " + str(robots[1].status) + " " + str(robots[2].status) + " " + str(robots[3].status))
         for robot in robots:
-            if robot.status == RobotRos.Status.WALKING:
+            if robot.status == Robot.Status.WALKING:
                 # publish a goal robot.goal_position geometry_msgs/Pose2D to /robot_name/goal
-                goal_msg = geometry_msgs.msg.Pose2D()
-                goal_msg.x = robot.goal_position[0]
-                goal_msg.y = robot.goal_position[1]
-                goal_msg.theta = robot.goal_position[2]
-                robot.pub_goal.publish(goal_msg)
-            elif robot.status == RobotRos.Status.KICKING:
+                pass
+            elif robot.status == Robot.Status.KICKING:
                 # if kick timout is not active
                 if rostime - robot.last_kick > self.KICK_TIMEOUT:
                     # if finished publishing trajectory, reset status to READY
                     if robot.publishing_static_trajectory:
                         robot.publishing_static_trajectory = False
-                        robot.status = RobotRos.Status.READY
+                        robot.status = Robot.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("rightkick")
+                        robot.trajectory_publisher.publish("rightkick")
                         robot.last_kick = rostime
                         robot.publishing_static_trajectory = True
+                        if robot.robot_name == "robot1":
+                            print("kicking")
 
-            elif robot.status == RobotRos.Status.FALLEN_BACK:
+            elif robot.status == Robot.Status.FALLEN_BACK:
                 # if timout is not active
                 if rostime - robot.last_getupback > self.GETUPBACK_TIMEOUT:
                     # if finished publishing trajectory, reset status to READY
                     if robot.publishing_static_trajectory:
                         robot.publishing_static_trajectory = False
-                        robot.status = RobotRos.Status.READY
+                        robot.status = Robot.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("getupback")
+                        robot.terminate_walking_publisher.publish()
+                        robot.trajectory_publisher.publish("getupback")
                         robot.last_getupback = rostime
                         robot.publishing_static_trajectory = True
+                        if robot.robot_name == "robot1":
+                            print("getupback")
 
-            elif robot.status == RobotRos.Status.FALLEN_FRONT:
+            elif robot.status == Robot.Status.FALLEN_FRONT:
                 # if timout is not active
                 if rostime - robot.last_getupfront > self.GETUPFRONT_TIMEOUT:
                     # if finished publishing trajectory, reset status to READY
                     if robot.publishing_static_trajectory:
                         robot.publishing_static_trajectory = False
-                        robot.status = RobotRos.Status.READY
+                        robot.status = Robot.Status.READY
                     # else, publish trajectory, update timeout
                     else:
-                        robot.pub_trajectory.publish("getupfront")
+                        robot.terminate_walking_publisher.publish()
+                        robot.trajectory_publisher.publish("getupfront")
                         robot.last_getupfront = rostime
                         robot.publishing_static_trajectory = True
+                        if robot.robot_name == "robot1":
+                            print("getupfront")
+
+            if robot.status != robot.previous_status and robot.robot_name == "robot1":
+                print(robot.robot_name + " status changes to " + str(robot.status))
+                robot.previous_status = robot.status
 
         self.update_average_ball_position()
 

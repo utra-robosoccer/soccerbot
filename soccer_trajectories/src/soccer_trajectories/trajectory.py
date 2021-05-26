@@ -52,7 +52,10 @@ class Trajectory:
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
         # r = rospy.Rate(10)
 
-
+        r = rospy.Rate(10)
+        while not rospy.has_param("competition"):
+            r.sleep()
+        self.competition = rospy.get_param("competition")
         '''while rospy.has_param("/robot1/controller_name") == False:
             r.sleep()
 
@@ -67,18 +70,19 @@ class Trajectory:
         rate = rospy.Rate(100)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
-            js = JointState()
-            js.name = []
-            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = []
-            js.effort = []
-            for joint, setpoint in self.get_setpoint(t).items():
-                js.name.append(joint)
-                js.position.append(setpoint)
-                # request = set_floatRequest()
-                # request.value = setpoint
-                # publishers[joint].publish(setpoint)
-                # publishers_2[joint](request)
-            pub_all_motor.publish(js)
+            if self.competition == "False":
+                js = JointState()
+                js.name = []
+                js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+                js.position = []
+                js.effort = []
+                for joint, setpoint in self.get_setpoint(t).items():
+                    js.name.append(joint)
+                    js.position.append(setpoint)
+
+                pub_all_motor.publish(js)
+            elif self.competition == "True":
+                for joint, setpoint in self.get_setpoint(t).items():
+                    publishers[joint].publish(setpoint)
             t = t + 0.01
             rate.sleep()
