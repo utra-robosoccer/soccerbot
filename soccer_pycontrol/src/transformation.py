@@ -74,7 +74,7 @@ class Transformation(np.ndarray):
         return t
 
     @staticmethod
-    def get_transform_from_pose2d(x, y, theta):
+    def get_transform_from_pose_stamped(x, y, theta):
         t = Transformation.get_transform_from_euler([0, 0, theta])
         t.set_position([x, y, 0])
         return t

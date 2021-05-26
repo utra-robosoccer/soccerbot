@@ -92,9 +92,11 @@ class Path:
         for i in range(0,self.bodyStepCount()+1,1):                   # i = 0:1: obj.bodyStepCount
             step = self.getBodyStep(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.005, 0., 0.]), (3, 1)))[:,0]
+            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:,0]
         if fig is None:
             fig = plt.figure()
         ax = fig.gca(projection='3d')
         ax.set_autoscale_on(True)
-        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1], orientation[:, 2])#, AutoScaleFactor=0.1)
+        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1], orientation[:, 2])
+        ax.set_xlim(-0.2,1)
+        ax.set_ylim(-0.3,0.3)

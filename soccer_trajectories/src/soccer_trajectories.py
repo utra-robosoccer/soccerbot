@@ -51,5 +51,5 @@ if __name__ == '__main__':
     rospy.init_node("soccer_trajectories")
     trajectory_path = rospy.get_param("~trajectory_path")
     simulation = rospy.get_param("~simulation")
-    rospy.Subscriber("command", String, run_trajectory)
+    rospy.Subscriber("command", String, run_trajectory, queue_size=1)
     rospy.spin()
