@@ -76,7 +76,7 @@ PROTO Bez [
       }
       Soccerbot_torso_2Mesh {
       jerseyTexture [
-                      %{=text1}%
+                      %{=text2}%
                     ]
       }
       Soccerbot_torso_3Mesh {
@@ -1602,8 +1602,8 @@ PROTO Bez [
               Gyro {
                 name "imu gyro"
                 lookupTable [
-                  -8.7266 -32768 0.00804
-                    8.7266 32767 0.00804
+                  -8.7266 -32768 0.00698
+                    8.7266 32767 0.00698
                 ]
                 resolution 1
               }

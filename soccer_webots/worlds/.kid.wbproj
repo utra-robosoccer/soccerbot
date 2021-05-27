@@ -6,6 +6,5 @@ maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
 textFiles: 0 "protos/Bez.proto"
-robotWindow: red_player_1
 consoles: Console:All:All
 renderingDevicePerspectives: red_player_1:camera;1;0.389063;0.00083682;0

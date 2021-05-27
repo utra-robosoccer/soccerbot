@@ -3,69 +3,69 @@
   "players": {
     "1": {
       "robotModelName": "Bez",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --goalie",
+      "dockerTag": "latest",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot1",
       "halfTimeStartingPose": {
-        "translation": [-3.5, -3.06, 0.24],
+        "translation": [-3.5, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
+        "translation": [-3, -3.11, 0.362568],
         "rotation": [0.0, 0.707, 0.707, 3.14]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
+        "translation": [2, 0, 0.362568],
         "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
       }
     },
     "2": {
-      "robotModelName": "bez",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "robotModelName": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot2",
       "halfTimeStartingPose": {
-        "translation": [-3.5, 3.06, 0.24],
+        "translation": [-3.5, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
+        "translation": [-3, -3.11, 0.362568],
         "rotation": [0.0, 0.707, 0.707, 3.14]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
+        "translation": [2, 0, 0.362568],
         "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
       }
     },
     "3": {
-      "robotModelName": "robotB",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "robotModelName": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot3",
       "halfTimeStartingPose": {
-        "translation": [-0.75, -3.06, 0.24],
+        "translation": [-0.75, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
+        "translation": [-3, -3.11, 0.362568],
         "rotation": [0.0, 0.707, 0.707, 3.14]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
+        "translation": [2, 0, 0.362568],
         "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
       }
     },
     "4": {
-      "robotModelName": "robotB",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "robotModelName": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot4",
       "halfTimeStartingPose": {
-        "translation": [-0.75, 3.06, 0.24],
+        "translation": [-0.75, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
+        "translation": [-3, -3.11, 0.362568],
         "rotation": [0.0, 0.707, 0.707, 3.14]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
+        "translation": [2, 0, 0.362568],
         "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
       }
     }
