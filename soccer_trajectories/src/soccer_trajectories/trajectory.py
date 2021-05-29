@@ -17,7 +17,7 @@ class Trajectory:
         expects rectangular shape for csv table"""
         self.splines = {}
         self.step_map = {}
-        self.time_to_last_pose = 5.0  # seconds
+        self.time_to_last_pose = 2.0  # seconds
 
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)

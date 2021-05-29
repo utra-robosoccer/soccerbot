@@ -23,6 +23,7 @@ class Robot:
         FALLEN_BACK = 6
         PENALTY = 7
         OUT_OF_BOUNDS = 8
+        TRAJECTORY_IN_PROGRESS = 9
 
     def get_position(self):
         return self.position
