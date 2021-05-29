@@ -27,7 +27,9 @@
             "
 
         />
-<!--        <param name="tf_prefix" value = "/robot1"/>-->
+<!--        Dont run in competition   unless="$(arg competition)">-->
+        <env name="ROBOCUP_SIMULATOR_ADDR" value="127.0.0.1:10022" />
+
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
         <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" respawn="true" respawn_delay="1" output="screen"
               args="--robot_name $(arg robot_name)"
