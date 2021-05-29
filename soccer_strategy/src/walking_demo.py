@@ -12,10 +12,10 @@ current_stage = 0
 rospy.init_node("soccer_strategy")
 
 robot = RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")
-rospy.sleep(1)
 
+rospy.sleep(1)
 r = rospy.Rate(10)
-while not rospy.has_param("walking_engine_ready"):
+while not rospy.get_param("walking_engine_ready"):
     r.sleep()
 
 while not rospy.is_shutdown():

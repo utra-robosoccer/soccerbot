@@ -13,9 +13,6 @@ from ball import Ball
 
 
 class GameEngineRos(game_engine.GameEngine):
-    KICK_TIMEOUT = 3
-    GETUPFRONT_TIMEOUT = 7
-    GETUPBACK_TIMEOUT = 10
 
     def __init__(self):
         # Listen to rostopics and get robots in field
@@ -129,60 +126,37 @@ class GameEngineRos(game_engine.GameEngine):
         plt.show()
 
     def updateEstimatedPhysics(self, robots, ball):
-        rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
-        #print(str(robots[0].status) + " " + str(robots[1].status) + " " + str(robots[2].status) + " " + str(robots[3].status))
         for robot in robots:
             if robot.status == Robot.Status.WALKING:
                 # publish a goal robot.goal_position geometry_msgs/Pose2D to /robot_name/goal
                 pass
             elif robot.status == Robot.Status.KICKING:
-                # if kick timout is not active
-                if rostime - robot.last_kick > self.KICK_TIMEOUT:
-                    # if finished publishing trajectory, reset status to READY
-                    if robot.publishing_static_trajectory:
-                        robot.publishing_static_trajectory = False
-                        robot.status = Robot.Status.READY
-                    # else, publish trajectory, update timeout
-                    else:
-                        robot.trajectory_publisher.publish("rightkick")
-                        robot.last_kick = rostime
-                        robot.publishing_static_trajectory = True
-                        if robot.robot_name == "robot1":
-                            print("kicking")
+                robot.trajectory_publisher.publish("rightkick")
+                robot.trajectory_complete = False
+                robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                print("kicking")
 
             elif robot.status == Robot.Status.FALLEN_BACK:
-                # if timout is not active
-                if rostime - robot.last_getupback > self.GETUPBACK_TIMEOUT:
-                    # if finished publishing trajectory, reset status to READY
-                    if robot.publishing_static_trajectory:
-                        robot.publishing_static_trajectory = False
-                        robot.status = Robot.Status.READY
-                    # else, publish trajectory, update timeout
-                    else:
-                        robot.terminate_walking_publisher.publish()
-                        robot.trajectory_publisher.publish("getupback")
-                        robot.last_getupback = rostime
-                        robot.publishing_static_trajectory = True
-                        if robot.robot_name == "robot1":
-                            print("getupback")
+                robot.terminate_walking_publisher.publish()
+                robot.trajectory_publisher.publish("getupback")
+                robot.trajectory_complete = False
+                robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                print("getupback")
 
             elif robot.status == Robot.Status.FALLEN_FRONT:
-                # if timout is not active
-                if rostime - robot.last_getupfront > self.GETUPFRONT_TIMEOUT:
-                    # if finished publishing trajectory, reset status to READY
-                    if robot.publishing_static_trajectory:
-                        robot.publishing_static_trajectory = False
-                        robot.status = Robot.Status.READY
-                    # else, publish trajectory, update timeout
-                    else:
-                        robot.terminate_walking_publisher.publish()
-                        robot.trajectory_publisher.publish("getupfront")
-                        robot.last_getupfront = rostime
-                        robot.publishing_static_trajectory = True
-                        if robot.robot_name == "robot1":
-                            print("getupfront")
+                robot.terminate_walking_publisher.publish()
+                robot.trajectory_publisher.publish("getupfront")
+                robot.trajectory_complete = False
+                robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                print("getupback")
 
-            if robot.status != robot.previous_status and robot.robot_name == "robot1":
+            elif robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+                if robot.trajectory_complete:
+                    robot.status = Robot.Status.READY
+                else:
+                    pass
+
+            if robot.status != robot.previous_status:
                 print(robot.robot_name + " status changes to " + str(robot.status))
                 robot.previous_status = robot.status
 

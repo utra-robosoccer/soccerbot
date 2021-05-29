@@ -63,7 +63,7 @@
         </include>
 
         <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" />
-        <node pkg="soccer_strategy" type="walking_demo.py" name="soccer_strategy" />
+        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" />
 
 
     </group>
