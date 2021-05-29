@@ -18,6 +18,7 @@ import messages_pb2
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
+
 class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
         # rospack = rospkg.RosPack()
@@ -75,6 +76,7 @@ class BezRobocupApi():
         self.create_subscribers()
 
         addr = os.environ.get('ROBOCUP_SIMULATOR_ADDR')
+        # addr = "127.0.0.1:10022"
         self.socket = self.get_connection(addr)
 
         self.first_run = True
@@ -137,13 +139,10 @@ class BezRobocupApi():
                 # publish the message
                 odom_pub.publish(odom)
 
-
-
         self.close_connection()
 
-    def callback(self,data):
+    def callback(self, data):
         self.temp_bool = False
-
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
@@ -249,9 +248,8 @@ class BezRobocupApi():
         self.joint_command[17] = msg.data
 
     def get_connection(self, addr):
-        # host, port = addr.split(':')
-        host = "127.0.0.1"
-        port = int(10022)
+        host, port = addr.split(':')
+        port = int(port)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
@@ -449,4 +447,3 @@ class BezRobocupApi():
 
 if __name__ == '__main__':
     BezRobocupApi()
-
