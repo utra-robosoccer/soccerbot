@@ -49,3 +49,12 @@ class Robot:
                                   [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
 
         self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
+
+    def get_opponent_net_position(self):
+        if self.team == Robot.Team.FRIENDLY:
+            opponent_goal = np.array([0, 4.5])
+        else:
+            opponent_goal = np.array([0, -4.5])
+        return opponent_goal
+
+
