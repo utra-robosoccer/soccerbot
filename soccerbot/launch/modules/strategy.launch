@@ -1,3 +1,4 @@
 <launch>
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" />
+
 </launch>

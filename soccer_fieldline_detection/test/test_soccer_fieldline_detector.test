@@ -1,9 +1,15 @@
 <launch>
-    <include file="$(find soccer_fieldline_detection)/launch/soccer_fieldline_detector.launch"/>
+    <arg name="rvizconfig"  default="$(find soccerbot)/rviz/soccerbot_test.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"  />
     <include file="$(find video_stream_opencv)/launch/camera.launch">
         <arg name="camera_name" value="camera"/>
-        <arg name="video_stream_provider" value="$(find soccer_fieldline_detection)/media/videos/test2.mp4"/>
+        <arg name="video_stream_provider" value="$(find soccer_fieldline_detection)/media/videos/test4.mp4"/>
         <arg name="visualize" value="false"/>
     </include>
+    <node pkg="soccer_fieldline_detection" type="test_soccer_vision" name="test_soccer_vision"
+          output="screen">
+        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
+    </node>
+
     <test test-name="test_fieldline_detector" pkg="soccer_fieldline_detection" type="test_fieldline_detector"/>
 </launch>
