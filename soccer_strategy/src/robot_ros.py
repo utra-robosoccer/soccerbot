@@ -82,7 +82,7 @@ class RobotRos(Robot):
         q = msg.orientation
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
 
-        if self.status == Robot.Status.WALKING or self.status == Robot.Ready:
+        if self.status == Robot.Status.WALKING or self.status == Robot.Status.READY:
             # We want to publish once on state transition
             if pitch > angle_threshold:
                 print("fall back triggered")

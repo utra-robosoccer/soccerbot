@@ -15,7 +15,7 @@ robot = RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.
 
 rospy.sleep(1)
 r = rospy.Rate(10)
-while not rospy.get_param("walking_engine_ready"):
+while rospy.get_param("walking_engine_ready") == "false":
     r.sleep()
 
 while not rospy.is_shutdown():
@@ -25,39 +25,29 @@ while not rospy.is_shutdown():
         pass
 
     elif robot.status == Robot.Status.FALLEN_BACK:
-        # if timout is not active
-        if rostime - robot.last_getupback > GETUPBACK_TIMEOUT:
-            # if finished publishing trajectory, reset status to READY
-            if robot.publishing_static_trajectory:
-                robot.publishing_static_trajectory = False
-                robot.status = Robot.Status.READY
-            # else, publish trajectory, update timeout
-            else:
-                robot.terminate_walking_publisher.publish()
-                robot.trajectory_publisher.publish("getupback")
-                robot.last_getupback = rostime
-                robot.publishing_static_trajectory = True
-                print("getupback")
+        robot.terminate_walking_publisher.publish()
+        robot.trajectory_publisher.publish("getupback")
+        robot.trajectory_complete = False
+        robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+        print("getupback")
 
     elif robot.status == Robot.Status.FALLEN_FRONT:
-        # if timout is not active
-        if rostime - robot.last_getupfront > GETUPFRONT_TIMEOUT:
-            # if finished publishing trajectory, reset status to READY
-            if robot.publishing_static_trajectory:
-                robot.publishing_static_trajectory = False
-                robot.status = Robot.Status.READY
-            # else, publish trajectory, update timeout
-            else:
-                robot.terminate_walking_publisher.publish()
-                robot.trajectory_publisher.publish("getupfront")
-                robot.last_getupfront = rostime
-                robot.publishing_static_trajectory = True
-                print("getupfront")
+        robot.terminate_walking_publisher.publish()
+        robot.trajectory_publisher.publish("getupfront")
+        robot.trajectory_complete = False
+        robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+        print("getupback")
 
     elif robot.status == Robot.Status.READY:
         robot.set_navigation_position(goal_list[current_stage])
         robot.status = Robot.Status.WALKING
         current_stage = (current_stage + 1) % 4
+
+    elif robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+        if robot.trajectory_complete:
+            robot.status = Robot.Status.READY
+        else:
+            pass
 
     if robot.status != robot.previous_status:
         print(robot.robot_name + " status changes to " + str(robot.status))

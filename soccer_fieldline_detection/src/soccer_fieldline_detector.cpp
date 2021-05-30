@@ -1,7 +1,8 @@
 #include <ros/ros.h>
-#include <soccer_fieldline_detection/test_soccer_fieldline_detector.hpp>
+#include <soccer_fieldline_detection/soccer_fieldline_detector.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include<opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
