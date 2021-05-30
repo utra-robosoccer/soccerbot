@@ -44,25 +44,27 @@ class GameEngineRos(game_engine.GameEngine):
         ]
         self.ball = Ball(position=np.array([0, 0]))
         self.last_ball_pose = self.ball.get_position()
+        self.display = display
 
-        fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
-        background = fig.add_axes([0, 0, 1, 1])
-        background.axis('equal')
-        background.set_xlim([-3.5, 3.5])
-        background.set_ylim([-5, 5])
-        background.xaxis.set_major_locator(MultipleLocator(1))
-        background.yaxis.set_major_locator(MultipleLocator(1))
-        background.xaxis.set_minor_locator(MultipleLocator(0.1))
-        background.yaxis.set_minor_locator(MultipleLocator(0.1))
-        background.grid(which='minor', alpha=0.2)
-        background.grid(which='major', alpha=0.5)
-        background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
-        background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
-        background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
-        background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
-        background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
-        foreground = fig.add_axes([0, 0, 1, 1])
-        foreground.set_facecolor((0, 0, 0, 0))
+        if self.display:
+            fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
+            background = fig.add_axes([0, 0, 1, 1])
+            background.axis('equal')
+            background.set_xlim([-3.5, 3.5])
+            background.set_ylim([-5, 5])
+            background.xaxis.set_major_locator(MultipleLocator(1))
+            background.yaxis.set_major_locator(MultipleLocator(1))
+            background.xaxis.set_minor_locator(MultipleLocator(0.1))
+            background.yaxis.set_minor_locator(MultipleLocator(0.1))
+            background.grid(which='minor', alpha=0.2)
+            background.grid(which='major', alpha=0.5)
+            background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
+            background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
+            background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
+            background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
+            background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
+            foreground = fig.add_axes([0, 0, 1, 1])
+            foreground.set_facecolor((0, 0, 0, 0))
 
         self.reset_pub = rospy.Publisher('/reset', std_msgs.msg.String, queue_size=1)
 
@@ -116,7 +118,7 @@ class GameEngineRos(game_engine.GameEngine):
                 robots = self.robots_init
                 self.ball = self.ball_init
 
-            if rostime % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
+            if self.display and rostime % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
                     rostime_previous % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL):
                 self.displayGameState(self.robots, self.ball, rostime)
 
