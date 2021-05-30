@@ -15,7 +15,7 @@ robot = RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.
 
 rospy.sleep(1)
 r = rospy.Rate(10)
-while not rospy.get_param("walking_engine_ready"):
+while rospy.get_param("walking_engine_ready") == "false":
     r.sleep()
 
 while not rospy.is_shutdown():
