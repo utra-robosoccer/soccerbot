@@ -1,6 +1,7 @@
 <launch>
     <arg name="simulation" default="true" />
     <arg name="competition" default="false" />
+    <arg name="walking_demo" default="false" />
     <arg name="robot_name" default="robot1" />
     <arg name="pose_name" default="standing" />
     <arg name="ip_address" default="localhost" />
@@ -17,7 +18,10 @@
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
+
+
     <group ns="$(arg robot_name)">
+        <param name="walking_engine_ready" value="false" />
         <param name="robot_description" command="xacro '$(find soccer_description)/models/$(arg model_name).xacro'
             robot_name:=$(arg robot_name)
             model_type:=dae
@@ -57,5 +61,10 @@
         <include file="$(find soccerbot)/launch/modules/navigation.launch">
             <arg name="simulation" value="$(arg simulation)" />
         </include>
+
+        <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" />
+        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" />
+
+
     </group>
 </launch>
