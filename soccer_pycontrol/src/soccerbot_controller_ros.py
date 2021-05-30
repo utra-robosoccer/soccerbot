@@ -42,6 +42,9 @@ class SoccerbotControllerRos(SoccerbotController):
     def run(self):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
+
+        rospy.set_param("walking_engine_ready", True)
+
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
                 print("Recieved New Goal")

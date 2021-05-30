@@ -5,6 +5,7 @@ from transformation import Transformation as tr
 import matplotlib.pyplot as plt
 from robotpath import Robotpath
 import math
+from os.path import expanduser
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -98,7 +99,8 @@ class Soccerbot:
         :param position: transformation
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
-        self.body = pb.loadURDF("../../soccer_description/models/soccerbot_stl.urdf",
+        home = expanduser("~")
+        self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                 useFixedBase=useFixedBase,
                                 flags=pb.URDF_USE_INERTIA_FROM_FILE,
                                 basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
