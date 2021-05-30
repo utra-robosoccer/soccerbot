@@ -5,7 +5,7 @@ from matplotlib.ticker import MultipleLocator
 
 from robot import Robot
 from ball import Ball
-from strategy import DummyStrategy
+from strategy import StationaryStrategy, DummyStrategy, PassStrategy
 import math
 import numpy as np
 import copy
@@ -14,9 +14,10 @@ import copy
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
     STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
-    DISPLAY_UPDATE_INTERVAL = 5  # Every 5 physics steps
+    DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
 
-    def __init__(self):
+    def __init__(self, display=True):
+        self.display = display
         # Initialize robots
         self.robots = [
             Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
@@ -44,27 +45,29 @@ class GameEngine:
         # Initialize display
         # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 
-        fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
-        background = fig.add_axes([0, 0, 1, 1])
-        background.axis('equal')
-        background.set_xlim([-3.5, 3.5])
-        background.set_ylim([-5, 5])
-        background.xaxis.set_major_locator(MultipleLocator(1))
-        background.yaxis.set_major_locator(MultipleLocator(1))
-        background.xaxis.set_minor_locator(MultipleLocator(0.1))
-        background.yaxis.set_minor_locator(MultipleLocator(0.1))
-        background.grid(which='minor', alpha=0.2)
-        background.grid(which='major', alpha=0.5)
-        background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
-        background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
-        background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
-        background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
-        background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
-        foreground = fig.add_axes([0, 0, 1, 1])
-        foreground.set_facecolor((0, 0, 0, 0))
+        if self.display:
+            fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
+            background = fig.add_axes([0, 0, 1, 1])
+            background.axis('equal')
+            background.set_xlim([-3.5, 3.5])
+            background.set_ylim([-5, 5])
+            background.xaxis.set_major_locator(MultipleLocator(1))
+            background.yaxis.set_major_locator(MultipleLocator(1))
+            background.xaxis.set_minor_locator(MultipleLocator(0.1))
+            background.yaxis.set_minor_locator(MultipleLocator(0.1))
+            background.grid(which='minor', alpha=0.2)
+            background.grid(which='major', alpha=0.5)
+            background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
+            background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
+            background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
+            background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
+            background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
+            foreground = fig.add_axes([0, 0, 1, 1])
+            foreground.set_facecolor((0, 0, 0, 0))
 
         # Setup the strategy
-        self.strategy = DummyStrategy()
+        self.team1_strategy = DummyStrategy()
+        self.team2_strategy = PassStrategy()
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -78,7 +81,8 @@ class GameEngine:
                 self.resetRobots()
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.strategy.update_both_team_strategy(self.robots, self.ball)
+                self.team1_strategy.update_next_strategy(self.robots[0:4], self.robots[4:8], self.ball)
+                self.team2_strategy.update_next_strategy(self.robots[4:8], self.robots[0:4], self.ball)
 
             self.updateEstimatedPhysics(self.robots, self.ball)
 
@@ -92,11 +96,13 @@ class GameEngine:
                 opponent_points += 1
                 self.resetRobots()
 
-            if step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
+            if self.display and step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
                 self.displayGameState(self.robots, self.ball, step * GameEngine.PHYSICS_UPDATE_INTERVAL)
 
         print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
-        plt.show()
+        if self.display:
+            plt.show()
+        return friendly_points, opponent_points
 
     def displayGameState(self, robots, ball, t=0.0):
         foreground = plt.gcf().axes[1]

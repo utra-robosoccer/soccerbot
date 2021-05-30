@@ -14,7 +14,7 @@ from ball import Ball
 
 class GameEngineRos(game_engine.GameEngine):
 
-    def __init__(self):
+    def __init__(self, display=True):
         # Listen to rostopics and get robots in field
         # setup subscribers to robot and ball positions in ros
         '''self.robots = [
