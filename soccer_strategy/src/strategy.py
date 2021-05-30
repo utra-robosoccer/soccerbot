@@ -6,6 +6,17 @@ class Strategy:
     def __init__(self):
         pass
 
+    def update_both_team_strategy(self, robots, ball):
+        friendly = []
+        opponent = []
+        for robot in robots:
+            if robot.team == Robot.Team.FRIENDLY or robot.Team == Robot.Team.FRIENDLY:
+                friendly.append(robot)
+            else:
+                opponent.append(robot)
+
+        self.update_next_strategy(friendly, opponent, ball)
+
     def update_next_strategy(self, friendly, opponent, ball):
         raise NotImplementedError
 

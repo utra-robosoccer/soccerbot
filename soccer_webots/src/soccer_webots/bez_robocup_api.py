@@ -251,7 +251,7 @@ class BezRobocupApi():
     def get_connection(self, addr):
         # host, port = addr.split(':')
         host = "127.0.0.1"
-        port = int(10022)
+        port = int(10021)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))

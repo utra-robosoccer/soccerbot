@@ -8,9 +8,14 @@ scipy>=1.6.2
 prettytable
 serial
 transforms3d
-
-# object detection
-Pillow==8.2.0
-torch==1.8.1
-torchvision==0.9.1
-
+python3-protobuf
+protobuf
+#sudo pip install --upgrade protobuf
+#Docker stuff
+#sudo docker ps
+#sudo docker kill
+#sudo docker image ls
+#sudo docker commit 9ecdb00c3979 utra_bez:latest
+#sudo docker system prune
+#sudo docker build ~/catkin_ws/src/soccerbot/
+#sudo docker run -it

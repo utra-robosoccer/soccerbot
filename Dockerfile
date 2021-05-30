@@ -22,6 +22,10 @@ RUN apt update && apt-fast install -y \
     vim \
     python3-pip \
     python3-catkin-tools \
+    python3-protobuf \
+    protobuf-compiler \
+    libprotobuf-dev \
+    libjpeg9-dev \
     wget \
     ccache \
     dirmngr \
@@ -32,11 +36,13 @@ RUN apt update && apt-fast install -y \
     apt-utils \
     software-properties-common \
     sudo \
+    ros-noetic-robot-state-publisher \
     curl
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
 RUN pip install -r /tmp/requirements.txt
+
 
 # Build
 WORKDIR /root/catkin_ws
@@ -44,3 +50,4 @@ COPY --from=dependencies /root/src src
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build soccerbot
 RUN echo "source /root/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
