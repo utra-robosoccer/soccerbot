@@ -1,7 +1,7 @@
 from robot import Robot
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
-from std_msgs.msg import String, Empty
+from std_msgs.msg import String, Empty, Bool
 import numpy as np
 import math
 import tf.transformations
@@ -21,6 +21,7 @@ class RobotRos(Robot):
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
         self.terminate_walking_publisher = rospy.Publisher('/'+ robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_walking_subscriber = rospy.Subscriber('/'+ robot_name + "/completed_walking", Empty, self.completed_walking_callback)
+        self.completed_trajectory_subscriber = rospy.Subscriber('/'+ robot_name + "/trajectory_complete", Bool, self.completed_trajectory_subscriber)
 
         self.team = team
         self.role = role
@@ -33,11 +34,7 @@ class RobotRos(Robot):
         self.previous_status = Robot.Status.READY
 
         # for static trajectories
-        rostime_initial = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
-        self.last_kick = rostime_initial
-        self.last_getupfront = rostime_initial
-        self.last_getupback = rostime_initial
-        self.publishing_static_trajectory = False
+        self.trajectory_complete = True
 
     def robot_pose_callback(self, data):
         quaternion = (
@@ -59,6 +56,9 @@ class RobotRos(Robot):
         print("Completed Walking")
         pass
 
+    def completed_trajectory_subscriber(self, data):
+        self.trajectory_complete = data.data
+
     def set_navigation_position(self, position):
         super(RobotRos, self).set_navigation_position(position)
         print("Sending Robot " + self.robot_name + " to position" + str(position))
@@ -69,7 +69,7 @@ class RobotRos(Robot):
         p.pose.position.y = -position[0]
         p.pose.position.z = 0
         angle_fixed = position[2]
-        print(angle_fixed)
+        #print(angle_fixed)
         q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
         p.pose.orientation.x = q[0]
         p.pose.orientation.y = q[1]
@@ -82,12 +82,14 @@ class RobotRos(Robot):
         q = msg.orientation
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
 
-        # We want to publish once on state transition
-        if pitch > angle_threshold and self.status != Robot.Status.FALLEN_BACK and self.status != Robot.Status.FALLEN_FRONT:
-            self.status = Robot.Status.FALLEN_BACK
+        if self.status == Robot.Status.WALKING or self.status == Robot.Status.READY:
+            # We want to publish once on state transition
+            if pitch > angle_threshold:
+                print("fall back triggered")
+                self.status = Robot.Status.FALLEN_BACK
 
-        if pitch < -angle_threshold and self.status != Robot.Status.FALLEN_BACK and self.status != Robot.Status.FALLEN_FRONT:
-            self.status = Robot.Status.FALLEN_FRONT
-
+            if pitch < -angle_threshold:
+                print("fall front triggered")
+                self.status = Robot.Status.FALLEN_FRONT
         pass
 
