@@ -1,7 +1,8 @@
 FROM ros:noetic as dependencies
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
 ADD . .
-RUN rosdep update --rosdistro noetic && apt update && rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
+RUN apt update && rosdep update --rosdistro noetic && rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
 WORKDIR /root/dependencies
 
@@ -9,6 +10,7 @@ FROM ros:noetic as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt update && \
     apt install -q -y software-properties-common && \
     add-apt-repository ppa:apt-fast/stable -y && \

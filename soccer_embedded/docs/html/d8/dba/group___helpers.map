@@ -1,5 +1,0 @@
-<map id="Helpers" name="Helpers">
-<area shape="rect" id="node3" href="$dc/dfc/group___rx_helper_functions.html" title="Helper functions for StartRxTask() " alt="" coords="236,5,371,47"/>
-<area shape="rect" id="node4" href="$dc/d96/group___tx_helper_functions.html" title="Helper functions for StartTxTask() " alt="" coords="237,71,370,112"/>
-<area shape="rect" id="node2" href="$d0/d55/group___threads.html" title="These are functions run in the context of their own FreeRTOS threads. " alt="" coords="5,46,73,73"/>
-</map>

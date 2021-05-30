@@ -1,4 +1,0 @@
-<map id="IMUnamespace::MPU6050::Read_Data" name="IMUnamespace::MPU6050::Read_Data">
-<area shape="rect" id="node2" href="$dd/d03/group___m_p_u6050.html#ga760f74a6a7b763527873aa247bb11473" title="Reads the gyroscope with offsets without interrupts. " alt="" coords="231,5,425,47"/>
-<area shape="rect" id="node3" href="$dd/d03/group___m_p_u6050.html#ga4e643515ebca559151d00cfd5e6e56c7" title="Reads the accelerometer with offsets without interrupts. " alt="" coords="239,71,417,127"/>
-</map>

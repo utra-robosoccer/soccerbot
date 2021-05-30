@@ -1,7 +1,0 @@
-<map id="soccer&#45;embedded/Common/include/UdpInterface.h" name="soccer&#45;embedded/Common/include/UdpInterface.h">
-<area shape="rect" id="node2" href="$df/d29/_lwip_udp_interface_8h.html" title="Defines the interface through which UDP and required Lwip network stack data/functions will be access..." alt="" coords="43,95,224,136"/>
-<area shape="rect" id="node4" href="$dc/d98/_pc_interface_8h.html" title="Defines a interface through which the PC is accessed, independent of the underlying hardware communic..." alt="" coords="253,95,435,136"/>
-<area shape="rect" id="node6" href="$dd/d04/_pc_interface__test_8cpp.html" title="PcInterface testing/mocking data structures, tests and mocks. " alt="" coords="440,191,621,233"/>
-<area shape="rect" id="node3" href="$df/df8/_lwip_udp_interface_8cpp.html" title="Implements Lwip/UDP interface&#45;facing functions, and means to access network stack data..." alt="" coords="5,191,211,233"/>
-<area shape="rect" id="node5" href="$d7/def/_pc_interface_8cpp.html" title="Implements an interface to access the PC, through choice of hardware communication protocol..." alt="" coords="235,184,416,240"/>
-</map>

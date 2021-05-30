@@ -10,6 +10,10 @@ serial
 transforms3d
 python3-protobuf
 protobuf
+# object detection
+Pillow==8.2.0
+torch==1.8.1
+torchvision==0.9.1
 #sudo pip install --upgrade protobuf
 #Docker stuff
 #sudo docker ps
@@ -19,3 +23,12 @@ protobuf
 #sudo docker system prune
 #sudo docker build ~/catkin_ws/src/soccerbot/
 #sudo docker run -it
+#roslaunch soccerbot soccerbot_multi.launch single:=true fake_localization:=false competition:=true
+#10.0.0.207
+#172.17.0.1
+#196.168.0.1
+#vim src/soccer_webots/src/soccer_webots/bez_robocup_api.py
+#--net="host"
+#Pybullet problems path soccerbot,   direct in controller_ros
+#Remember object detector node cpu
+#gui

@@ -24,7 +24,7 @@
   <depend>soccer_fieldline_detection</depend>
   <depend>imu_complementary_filter</depend>
   <depend>robot_pose_ekf</depend>
-  <depend>robot_localization</depend>
+<!--  <depend>robot_localization</depend>-->
   <depend>soccer_pycontrol</depend>
   <depend>fake_localization</depend>
   <depend>webots_ros</depend>

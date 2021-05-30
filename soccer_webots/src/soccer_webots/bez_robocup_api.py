@@ -8,7 +8,7 @@ import socket
 import rospy
 import rospkg
 import struct
-from urdf_parser_py.urdf import URDF
+# from urdf_parser_py.urdf import URDF
 import tf
 from rosgraph_msgs.msg import Clock
 

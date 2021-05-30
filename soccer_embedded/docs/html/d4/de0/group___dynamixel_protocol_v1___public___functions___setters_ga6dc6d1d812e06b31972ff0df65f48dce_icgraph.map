@@ -1,5 +1,0 @@
-<map id="Dynamixel_SetCCWAngleLimit" name="Dynamixel_SetCCWAngleLimit">
-<area shape="rect" id="node2" href="$d8/d38/group___m_x28___interfaces.html#ga7af48559dbbf1774e6dbd04616720075" title="Activates multi&#45;turn mode, which allows the actuator to have a range of controllable position values ..." alt="" coords="263,5,440,32"/>
-<area shape="rect" id="node3" href="$d5/d08/group___dynamixel_protocol_v1_header.html#ga018df076095889475b42e8e21a26dc1e" title="Sets the control registers such that the rotational angle of the motor is not bounded. " alt="" coords="256,56,447,83"/>
-<area shape="rect" id="node4" href="$d5/d08/group___dynamixel_protocol_v1_header.html#ga2d16a19af6f00b284c750b524fa0079f" title="Sets the control registers such that the rotational angle of the motor is constrained between the def..." alt="" coords="261,107,441,133"/>
-</map>

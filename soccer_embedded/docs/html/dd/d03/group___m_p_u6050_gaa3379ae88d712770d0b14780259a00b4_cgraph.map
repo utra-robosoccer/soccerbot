@@ -1,5 +1,0 @@
-<map id="IMUnamespace::MPU6050::init" name="IMUnamespace::MPU6050::init">
-<area shape="rect" id="node2" href="$dd/d03/group___m_p_u6050.html#ga26da292b5f93de523fb59352dcd326a5" title="Writes to a register from the MPU6050. " alt="" coords="231,5,408,47"/>
-<area shape="rect" id="node3" href="$dd/d03/group___m_p_u6050.html#gae71a605484a9745e956f51a8b6a6e6ae" title="Sets the offsets of the sensor. " alt="" coords="231,71,408,112"/>
-<area shape="rect" id="node4" href="$dd/d03/group___m_p_u6050.html#gadc09a0647dddd5551a320c10f01627bf" title="Reads a byte from a register on the sensor, and stores it in the member variable received_byte. " alt="" coords="456,71,633,112"/>
-</map>
