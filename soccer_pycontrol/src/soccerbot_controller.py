@@ -26,18 +26,22 @@ class SoccerbotController:
             pb.stepSimulation()
 
     def run(self):
+        if self.soccerbot.robot_path.duration() == 0:
+            return
+
         t = 0
         while t <= self.soccerbot.robot_path.duration():
             if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
+                forces = self.soccerbot.get_motor_forces(self.ramp.plane)
+                self.soccerbot.get_imu(verbose=True)
                 pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
                                              jointIndices=list(range(0, 18, 1)),
-                                             targetPositions=self.soccerbot.configuration)
+                                             targetPositions=self.soccerbot.configuration,
+                                             forces=forces
+                                             )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
 
             pb.stepSimulation()
-            self.soccerbot.get_imu(verbose=True)
-            print(
-                f'right foot: {self.soccerbot.get_feet(self.ramp.plane)[:4]} \t left foot: {self.soccerbot.get_feet(self.ramp.plane)[4:]}')
             t = t + SoccerbotController.PYBULLET_STEP
             sleep(SoccerbotController.PYBULLET_STEP)

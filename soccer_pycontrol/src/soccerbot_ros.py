@@ -116,6 +116,6 @@ class SoccerbotRos(Soccerbot):
         # TODO get ROS IMU
         pass
 
-    def get_feet(self, floor):
+    def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass
