@@ -6,6 +6,7 @@ from soccerbot import *
 import rospy
 import os
 
+
 class SoccerbotRos(Soccerbot):
 
     def __init__(self, position, useFixedBase=False):
@@ -45,8 +46,14 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
 
     def publishAngles(self):
+        ban_list = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]
+        ban_list_2 = [0, 1, 2, 3]
         if self.competition == "True":
             for m in self.motor_publishers:
+                for j in ban_list_2:
+                    if m == j:
+                        self.configuration[m] = -1.57
+                        break
                 self.motor_publishers[m].publish(self.configuration[m])
         elif self.competition == "False":
             js = JointState()
@@ -55,6 +62,11 @@ class SoccerbotRos(Soccerbot):
             js.position = []
             js.effort = []
             for i, n in enumerate(self.motor_names):
+                for j in ban_list:
+                    if n == j:
+                        self.configuration[i] = -1.57
+                        break
+
                 js.name.append(n)
                 js.position.append(self.configuration[i])
             self.pub_all_motor.publish(js)
@@ -87,7 +99,6 @@ class SoccerbotRos(Soccerbot):
             pose.pose.orientation.w = orientation[3]
             p.poses.append(pose)
         self.path_publisher.publish(p)
-
 
     def publishOdometry(self):
         o = Odometry()
