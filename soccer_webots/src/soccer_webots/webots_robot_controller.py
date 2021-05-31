@@ -211,8 +211,17 @@ class RobotController:
             marker_object = Marker()
             if i < 4:
                 marker_object.header.frame_id = self.base_frame + "right_foot"
+                marker_object.color.r = 0
+                marker_object.color.g = 0
+                marker_object.color.b = 1
+                marker_object.color.a = 1.0
             else:
                 marker_object.header.frame_id = self.base_frame + "left_foot"
+                marker_object.color.r = 1
+                marker_object.color.g = 0
+                marker_object.color.b = 0
+                marker_object.color.a = 1.0
+
 
             marker_object.header.stamp = current_time
             marker_object.ns = "Soccer_bot"
@@ -258,10 +267,7 @@ class RobotController:
 
             marker_object.points = [tail, tip]
 
-            marker_object.color.r = 0
-            marker_object.color.g = 0
-            marker_object.color.b = 1
-            marker_object.color.a = 1.0
+
 
             marker_object.scale.x = 0.01
             marker_object.scale.y = 0.01

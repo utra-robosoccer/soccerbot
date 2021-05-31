@@ -721,9 +721,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation 0.03975 0.025 -0.0200
+                                                  rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -737,9 +742,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation 0.03975 -0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -753,9 +763,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation -0.03375 -0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -769,9 +784,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation -0.03375 0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -788,7 +808,7 @@ PROTO Bez [
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
-                                               size 0.090000 0.070000 0.004
+                                               size 0.090000 0.0650000 0.004
                                             }
                                           ]
                                         }
@@ -1255,9 +1275,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation 0.03975 0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1271,9 +1296,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation 0.03975 -0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1287,9 +1317,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation -0.03375 -0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1303,9 +1338,14 @@ PROTO Bez [
                                             type "bumper"
                                             resolution -1
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              translation -0.03375 0.025 -0.0200
+                                              rotation 1.000000 0.000000 0.000000 1.57
+                                              children [
+                                                 Capsule {
+                                                   height 0.0001
+                                                  radius 0.001
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
@@ -1321,7 +1361,7 @@ PROTO Bez [
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
-                                               size 0.090000 0.070000 0.004
+                                               size 0.090000 0.0650000 0.004
                                             }
                                           ]
                                         }
