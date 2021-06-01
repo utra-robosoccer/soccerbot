@@ -5,7 +5,7 @@ from matplotlib.ticker import MultipleLocator
 
 from robot import Robot
 from ball import Ball
-from strategy import StationaryStrategy, DummyStrategy, PassStrategy
+from strategy import StationaryStrategy, DummyStrategy, PassStrategy, TeamStrategy
 import math
 import numpy as np
 import copy
@@ -66,8 +66,12 @@ class GameEngine:
             foreground.set_facecolor((0, 0, 0, 0))
 
         # Setup the strategy
-        self.team1_strategy = DummyStrategy()
-        self.team2_strategy = PassStrategy()
+        self.team1_strategy = TeamStrategy()
+        self.team2_strategy = DummyStrategy()
+
+    def reset_strategies(self):
+        self.team1_strategy.reset()
+        self.team2_strategy.reset()
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -79,6 +83,7 @@ class GameEngine:
             if step == int(game_period_steps / 2):
                 print("Second Half Started: ")
                 self.resetRobots()
+                self.reset_strategies()
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
                 self.team1_strategy.update_next_strategy(self.robots[0:4], self.robots[4:8], self.ball)
@@ -91,10 +96,12 @@ class GameEngine:
                 print("Friendly Scores!")
                 friendly_points += 1
                 self.resetRobots()
+                self.reset_strategies()
             elif self.ball.get_position()[1] < -4.5:
                 print("Opponent Scores!")
                 opponent_points += 1
                 self.resetRobots()
+                self.reset_strategies()
 
             if self.display and step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
                 self.displayGameState(self.robots, self.ball, step * GameEngine.PHYSICS_UPDATE_INTERVAL)

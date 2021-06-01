@@ -1,5 +1,5 @@
+import copy
 import enum
-
 import numpy as np
 
 
@@ -25,7 +25,7 @@ class Robot:
         OUT_OF_BOUNDS = 8
 
     def get_position(self):
-        return self.position
+        return copy.deepcopy(self.position)
 
     def __init__(self, team, role, status, position):
         self.team = team
@@ -56,4 +56,32 @@ class Robot:
             opponent_goal = np.array([0, -4.5])
         return opponent_goal
 
+    def get_net_position(self):
+        if self.team == Robot.Team.FRIENDLY:
+            goal = np.array([0, -4.5])
+        else:
+            goal = np.array([0, 4.5])
+        return goal
+
+    def __key(self):
+        return (
+            self.team,
+            self.role,
+            self.status,
+            self.position,
+            self.goal_position,
+            self.speed,
+            self.max_kick_speed
+        )
+
+    def __eq__(self, other):
+        retval = (type(self) == type(other)) and \
+                 (str(self.__key()) == str(other.__key()))
+        return retval
+
+    def __hash__(self):
+        # Do NOT hash self.__key(). The reason being that some of the class
+        # members are expected to change during runtime, and we don't want
+        # those to change this object's usage as a key in a dict
+        return hash((self.team, self.role))
 

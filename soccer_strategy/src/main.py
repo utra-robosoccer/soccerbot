@@ -12,10 +12,12 @@ if __name__ == '__main__':
         g = GameEngineRos()
         g.run()
     else:
+        DISPLAY_GAME = True
+        NUM_GAMES = 1
         friendly_wins = 0
         opponent_wins = 0
-        for i in range(10):
-            g = GameEngine(display=False)
+        for i in range(NUM_GAMES):
+            g = GameEngine(display=DISPLAY_GAME)
             friendly_points, opponent_points = g.run()
             if friendly_points > opponent_points:
                 friendly_wins += 1

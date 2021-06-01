@@ -119,8 +119,8 @@ class GameEngineRos(game_engine.GameEngine):
                 robots = self.robots_init
                 self.ball = self.ball_init
 
-            if rostime % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
-                    rostime_previous % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL):
+            if rostime % (GameEngineRos.disp_update_interval * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
+                    rostime_previous % (GameEngineRos.disp_update_interval * GameEngineRos.PHYSICS_UPDATE_INTERVAL):
                 self.displayGameState(self.robots, self.ball, rostime)
 
             rostime_previous = rostime
