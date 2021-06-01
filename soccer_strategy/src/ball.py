@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 
 
@@ -10,7 +11,7 @@ class Ball:
         self.kick_timeout = 0
 
     def get_position(self):
-        return self.position
+        return copy.deepcopy(self.position)
 
     def get_velocity(self):
         return self.velocity

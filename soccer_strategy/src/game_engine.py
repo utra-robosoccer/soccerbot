@@ -14,7 +14,7 @@ import copy
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
     STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
-    DISPLAY_UPDATE_INTERVAL = 4  # Every 5 physics steps
+    DISPLAY_UPDATE_INTERVAL = 2  # Every 5 physics steps
 
     def __init__(self, display=True):
         self.display = display
