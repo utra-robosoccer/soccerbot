@@ -34,7 +34,7 @@ class BezRobocupApi():
         self.base_frame = args.robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
-        self.joint_command = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.joint_command = [0, 0, 0, 0,  0, 0, 0.564, -1.176, 0.613, 0,   0, 0, 0.564, -1.176, 0.613, 0,  0, 0]
         self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
                             "right_arm_motor_1",
                             "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",

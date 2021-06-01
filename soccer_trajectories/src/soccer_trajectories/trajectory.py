@@ -52,10 +52,7 @@ class Trajectory:
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
         # r = rospy.Rate(10)
 
-        r = rospy.Rate(10)
-        while not rospy.has_param("competition"):
-            r.sleep()
-        self.competition = rospy.get_param("competition")
+
         '''while rospy.has_param("/robot1/controller_name") == False:
             r.sleep()
 
@@ -65,6 +62,11 @@ class Trajectory:
             joint: rospy.ServiceProxy("/" + controllerName + "/{}/set_position".format(joint), set_float) for joint in self.joints()}
 
         print(publishers_2)'''
+
+        r = rospy.Rate(10)
+        while not rospy.has_param("competition"):
+            r.sleep()
+        self.competition = rospy.get_param("competition")
         pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
 
         rate = rospy.Rate(100)
