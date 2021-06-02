@@ -2,22 +2,10 @@
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Imu, JointState
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Empty
 from tf.transformations import euler_from_quaternion
 from enum import Enum
 
-
-class State(Enum):
-    FALL_FRONT = 'fell_front'
-    FALL_BACK = 'fell_back'
-    STANDING = 'standing'
-
-
-ANGLE_THRESHOLD = 1  # in radians
-ROBOT_STATE = State.STANDING
-FIRST_STANDING = None
-STANDING_THRESHOLD = 10
-PUBLISHED_STANDING = False
 Kp = 5
 Kd = 250
 Ki = 0.001
@@ -26,11 +14,12 @@ integral = 0
 derivative = 0
 lasterror = 0
 last_F = 0
+start = False
 
 
 def imu_callback(msg, pub):
-    global ROBOT_STATE, ANGLE_THRESHOLD, FIRST_STANDING, STANDING_THRESHOLD, PUBLISHED_STANDING
     global lasterror, integral, derivative, last_F
+    global start
     q = msg.orientation
     roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
 
@@ -59,32 +48,19 @@ def imu_callback(msg, pub):
     angle.data = F
     last_F = F
     lasterror = error
-    # print(" Error: ", round(error, 4), " F: ", round(angle.data, 4), " Integral: ", round(integral, 4), " Derivative: ",
-    #       round(derivative, 4))
+    # print(" Error: ", round(error, 4), " F: ", round(angle.data, 4), " Integral: ", round(integral, 4),
+    # " Derivative: ", round(derivative, 4))
     left_motor_publishers.publish(angle)
     right_motor_publishers.publish(angle)
     # We want to publish once on state transition
-    if pitch > ANGLE_THRESHOLD and ROBOT_STATE == State.STANDING:
-        ROBOT_STATE = State.FALL_FRONT
-        PUBLISHED_STANDING = False
-        FIRST_STANDING = None
-        pub.publish(ROBOT_STATE.value)
 
-    if pitch < -ANGLE_THRESHOLD and ROBOT_STATE == State.STANDING:
-        ROBOT_STATE = State.FALL_BACK
-        PUBLISHED_STANDING = False
-        FIRST_STANDING = None
-        pub.publish(ROBOT_STATE.value)
 
-    if abs(pitch) < ANGLE_THRESHOLD and not PUBLISHED_STANDING:
-        ROBOT_STATE = State.STANDING
-        if FIRST_STANDING == None:
-            print('Pose is vertical')
-            FIRST_STANDING = rospy.Time.now()
-        if rospy.Time.now() - FIRST_STANDING > rospy.Duration(STANDING_THRESHOLD):
-            pub.publish(ROBOT_STATE.value)
-            FIRST_STANDING = None
-            PUBLISHED_STANDING = True
+def start_walk():
+    pass
+
+
+def stop_walk():
+    pass
 
 
 def main():
@@ -93,8 +69,11 @@ def main():
     r = rospy.Rate(10)
     while not rospy.has_param("competition"):
         r.sleep()
-    pub = rospy.Publisher('fall_state', String, queue_size=10, latch=True)
-    rospy.Subscriber('imu_filtered', Imu, imu_callback, pub)
+
+    rospy.Subscriber('imu_filtered', Imu, imu_callback)
+    rospy.Subscriber('start_walking', Empty, start_walk)
+    rospy.Subscriber('terminate_walking', Empty, stop_walk)
+    rospy.Subscriber('completed_walking', Empty, stop_walk)
     rospy.spin()
 
 
