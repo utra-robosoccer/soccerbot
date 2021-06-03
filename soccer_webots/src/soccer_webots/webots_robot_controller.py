@@ -80,7 +80,6 @@ class RobotController:
             self.sensors.append(self.robot_node.getDevice(self.sensor_names[i]))
             self.sensors[-1].enable(self.timestep)
 
-
         self.accel = self.robot_node.getDevice(accel_name)
         self.accel.enable(self.timestep)
         self.gyro = self.robot_node.getDevice(gyro_name)
@@ -115,6 +114,9 @@ class RobotController:
                            0, f_y, self.cam_info.height / 2, 0,
                            0, 0, 1, 0]
         self.pub_cam_info.publish(self.cam_info)
+        self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
+        for i, name in enumerate(self.external_motor_names):
+            self.motors[i].setPosition(self.joint_command[i])
 
     def mat_from_fov_and_resolution(self, fov, res):
         return 0.5 * res * (math.cos((fov / 2)) / math.sin((fov / 2)))
@@ -140,7 +142,7 @@ class RobotController:
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
             motor_index = self.external_motor_names.index(name)
-            #self.motors[motor_index].setPosition(msg.position[i])
+            # self.motors[motor_index].setPosition(msg.position[i])
             if len(msg.velocity) > 0:
                 self.motors[motor_index].setPosition(float('inf'))  # turn on velocity control for both motors
                 self.motors[motor_index].setVelocity(msg.velocity[i])
@@ -222,7 +224,6 @@ class RobotController:
                 marker_object.color.b = 0
                 marker_object.color.a = 1.0
 
-
             marker_object.header.stamp = current_time
             marker_object.ns = "Soccer_bot"
             marker_object.id = 3
@@ -266,8 +267,6 @@ class RobotController:
                 tail.z = 0.1 * self.pressure_sensors[i].getValue()
 
             marker_object.points = [tail, tip]
-
-
 
             marker_object.scale.x = 0.01
             marker_object.scale.y = 0.01
