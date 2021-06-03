@@ -64,11 +64,11 @@ public:
             if (competition == "False") {
                 sensor_msgs::JointState js;
                 js.name.push_back("head_motor_0");
-                js.name.push_back("head_motor_1");
+//                js.name.push_back("head_motor_1");
                 js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
-                js.position.push_back(0.6f);
-//                head_rotator.publish(js);
-                last_t += 1;
+//                js.position.push_back(0.6f);
+                head_rotator.publish(js);
+                last_t += 3;
             }
             else if (competition == "True") {
                 std_msgs::Float64 angle;
