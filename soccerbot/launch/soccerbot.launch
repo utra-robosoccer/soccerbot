@@ -65,9 +65,9 @@
             <arg name="simulation" value="$(arg simulation)" />
         </include>
 
-        <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol"/>
-        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
-        <node pkg="soccer_strategy" type="balance.py" name="balance" output="screen"/>
+<!--        <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol"/>-->
+<!--        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>-->
+<!--        <node pkg="soccer_strategy" type="balance.py" name="balance" output="screen"/>-->
 
     </group>
 </launch>

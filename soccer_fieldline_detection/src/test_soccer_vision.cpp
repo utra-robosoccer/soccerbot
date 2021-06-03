@@ -43,12 +43,47 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
-        cv::Mat hsv, mask,out,mask2;
+        cv::Mat hsv, mask,out,mask2 , out2;
         cvtColor(image, hsv , cv::COLOR_BGR2HSV);
 
         cv::inRange(hsv,cv::Scalar (0,0,200), cv::Scalar(179, 77, 255), mask);
-        cv::inRange(hsv,cv::Scalar (40, 0,0), cv::Scalar(70, 255,255), mask2);
+        cv::inRange(hsv,cv::Scalar (45, 45,45), cv::Scalar(70, 255,255), mask2);
 
+        std::vector<std::vector<cv::Point> > contours;
+        cv::findContours( mask2, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
+        std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
+        std::vector<cv::Rect> boundRect( contours.size() );
+        std::vector<cv::Point2f>centers( contours.size() );
+        std::vector<float>radius( contours.size() );
+        std::vector<int> index;
+        double max = 0;
+        int count = 0;
+        cv::Mat drawing = cv::Mat::zeros( mask2.size(), CV_8UC3 );
+        cv::RNG rng(12345);
+        for( size_t i = 0; i < contours.size(); i++ )
+        {
+
+            if (cv::contourArea(contours[i]) > 200 and cv::contourArea(contours[i]) < 500000) {
+                cv::approxPolyDP(contours[i], contours_poly[i], 3, true);
+                boundRect[count] = boundingRect(contours_poly[i]);
+
+
+                cv::Scalar color = cv::Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+                cv::drawContours(drawing, contours_poly, (int) i, color);
+//                cv::rectangle(drawing, boundRect[count].tl(), boundRect[count].br(), color, 2);
+                count += 1;
+//                cv::rectangle(drawing, boundRect[i].tl(), boundRect[i].br(), color, 2);
+            }
+        }
+        // Merge all bounding boxes
+        cv::Rect final = boundRect[0];
+        for(const auto& r : boundRect) { final |= r; }
+        cv::Scalar color = cv::Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        cv::rectangle(image, final.tl(), final.br(), color, 2);
+        // Top Black rectangle
+        cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
+        // Bottom Black rectangle
+        cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(1920,1080), cv::Scalar(0, 0, 0), -1, 8);
 
 //        cv::Mat image1,image2;
 //        cv::String imageName( "/home/manx52/catkin_ws/src/soccerbot/soccer_fieldline_detection/media/pictures/2.jpeg" ); // by default
@@ -56,8 +91,9 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 //        std::cout << imageName << std::endl;
 //
 //        image1=cv::imread(imageName, cv::IMREAD_COLOR);
-
-        cv::imshow("Car",mask2);
+//        cv::bitwise_and(image,image,out,out2);
+//        cv::bitwise_and(image,image,out,mask2);
+        cv::imshow("Car",image);
         int k = cv::waitKey(0); // Wait for a keystroke in the window
 
         cv::bitwise_and(image,image,out,mask);
