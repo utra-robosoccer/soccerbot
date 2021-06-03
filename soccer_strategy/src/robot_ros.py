@@ -77,7 +77,8 @@ class RobotRos(Robot):
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
         self.goal_publisher.publish(p)
-        self.start_walking_publisher.publish()
+        if self.status == Robot.Status.WALKING:
+            self.start_walking_publisher.publish()
 
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian
