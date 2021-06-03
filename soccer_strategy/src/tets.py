@@ -17,7 +17,7 @@ last_F = 0
 start = False
 
 
-def imu_callback(msg, pub):
+def imu_callback(msg):
     global lasterror, integral, derivative, last_F
     global start
     q = msg.orientation
@@ -31,35 +31,69 @@ def imu_callback(msg, pub):
     left_motor_publishers = rospy.Publisher("left_arm_motor_0/command", Float64, queue_size=1)
     right_motor_publishers = rospy.Publisher("right_arm_motor_0/command", Float64, queue_size=1)
     # PID
-    error = desired - pitch
-    # if not (0.02 > error > -0.02):
-    #     integral += error
-    derivative = error - lasterror
-    # if not (0.00005 > derivative > -0.00005):
-    #     derivative = 0
-    angle = Float64()
-    F = (Kp * error) + (Ki * integral) + (Kd * derivative)
-    if F > 1.57:
-        F = 1.57
-    elif F < -1.57:
-        F = -1.57
-    # if 0.001 > derivative > -0.001:
-    #     F = F-0.1
-    angle.data = F
-    last_F = F
-    lasterror = error
-    # print(" Error: ", round(error, 4), " F: ", round(angle.data, 4), " Integral: ", round(integral, 4),
-    # " Derivative: ", round(derivative, 4))
-    left_motor_publishers.publish(angle)
-    right_motor_publishers.publish(angle)
+    if start:
+        error = desired - pitch
+        # if not (0.02 > error > -0.02):
+        #     integral += error
+        derivative = error - lasterror
+        # if not (0.00005 > derivative > -0.00005):
+        #     derivative = 0
+
+        F = (Kp * error) + (Ki * integral) + (Kd * derivative)
+        if F > 1.57:
+            F = 1.57
+        elif F < -1.57:
+            F = -1.57
+        # if 0.001 > derivative > -0.001:
+        #     F = F-0.1
+        right_angle = Float64()
+        right_angle.data = F
+
+        left_angle = Float64()
+        left_angle.data = F
+        last_F = F
+        lasterror = error
+        # print(" Error: ", round(error, 4), " F: ", round(angle.data, 4), " Integral: ", round(integral, 4),
+        # " Derivative: ", round(derivative, 4))
+        # if right_leg > 0.0:
+        #     right_angle.data = -F
+        # else:
+        #     left_angle.data = -F
+        #     pass
+        left_motor_publishers.publish(left_angle)
+
+        right_motor_publishers.publish(right_angle)
     # We want to publish once on state transition
 
 
-def start_walk():
+def start_walk(data):
+    global lasterror, integral, derivative, last_F, start
+    integral = 0
+    derivative = 0
+    lasterror = 0
+    last_F = 0
+    start = True
     pass
 
 
-def stop_walk():
+def stop_walk_complete(data):
+    global lasterror, integral, derivative, last_F, start
+    rospy.sleep(1.0)
+    integral = 0
+    derivative = 0
+    lasterror = 0
+    last_F = 0
+    start = False
+    pass
+
+
+def stop_walk_rushed(data):
+    global lasterror, integral, derivative, last_F, start
+    integral = 0
+    derivative = 0
+    lasterror = 0
+    last_F = 0
+    start = False
     pass
 
 
@@ -72,8 +106,9 @@ def main():
 
     rospy.Subscriber('imu_filtered', Imu, imu_callback)
     rospy.Subscriber('start_walking', Empty, start_walk)
-    rospy.Subscriber('terminate_walking', Empty, stop_walk)
-    rospy.Subscriber('completed_walking', Empty, stop_walk)
+    rospy.Subscriber('terminate_walking', Empty, stop_walk_rushed)
+    rospy.Subscriber('completed_walking', Empty, stop_walk_complete)
+
     rospy.spin()
 
 
