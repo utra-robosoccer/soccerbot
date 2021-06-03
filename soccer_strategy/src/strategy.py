@@ -200,6 +200,12 @@ class PlayerStrategy(Strategy):
         self._ball = ball
         self._ball_pos = ball.get_position()
         self._net = Field.NET[self._team]
+        if self._team == Robot.Team.FRIENDLY:
+            self._opponent_net = Field.NET[Robot.Team.OPPONENT]
+            self._opponent_net_line = Field.NET_LINE[Robot.Team.OPPONENT]
+        else:
+            self._opponent_net = Field.NET[Robot.Team.FRIENDLY]
+            self._opponent_net_line = Field.NET_LINE[Robot.Team.FRIENDLY]
         self._net_area = Field.NET_AREA[self._team]
         self._net_line = Field.NET_LINE[self._team]
         self._Y_SIGN = -1 if self._net.y < 0 else 1
@@ -210,12 +216,15 @@ class PlayerStrategy(Strategy):
     def _has_possession(self):
         return self._distance_to(self._ball_pos) <= Thresholds.POSSESSION
 
-    def _is_closest_to_ball(self, friendlies, opponents):
+    def _is_closest_to_pos(self, pos, friendlies, opponents):
+        """
+        Gets the player who is closest to the specified position
+        """
         min_dist = float('inf')
         closest_to_ball = None
         for robot in itertools.chain(friendlies, opponents):
             robot_pos = robot.get_position()[0:2]
-            dist = distance_between(self._ball_pos, robot_pos)
+            dist = distance_between(pos, robot_pos)
             if dist < min_dist:
                 if closest_to_ball == self._player:
                     # If we were previously the closest player but are no
@@ -225,6 +234,13 @@ class PlayerStrategy(Strategy):
                 min_dist = dist
                 closest_to_ball = robot
         return self._player == closest_to_ball
+
+    def _is_closest_to_ball_dest(self, friendlies, opponents):
+        ball_dest = self._est_ball_dest()
+        return self._is_closest_to_pos(ball_dest, friendlies, opponents)
+
+    def _is_closest_to_ball(self, friendlies, opponents):
+        return self._is_closest_to_pos(self._ball_pos, friendlies, opponents)
 
     def _get_closest_teammate(self, friendlies):
         """
@@ -318,7 +334,7 @@ class GoalieStrategy(PlayerStrategy):
         # TODO: take equations of motion of ball into account. For example, if
         # we're the closest to the ball but it's moving away from us, then
         # maybe we shouldn't be going for it after all
-        retval = self._is_closest_to_ball(friendlies, opponents)
+        retval = self._is_closest_to_ball_dest(friendlies, opponents)
         retval |= self._shot_on_net()
         return retval
 
@@ -336,7 +352,7 @@ class GoalieStrategy(PlayerStrategy):
 
     def _defend_net(self):
         # Compute how close we are to good defense position
-        net_pos = np.array([self._net.x, self._net.y])
+        net_pos = np.array(self._net)
         goalie_to_ball_vec = net_pos - self._ball_pos
         player_to_ball_vec = self._player_pos - self._ball_pos
         num = np.dot(goalie_to_ball_vec, player_to_ball_vec)
@@ -353,7 +369,9 @@ class GoalieStrategy(PlayerStrategy):
         else:
             # If we're not in a good angular position to defend, then we try to
             # accomplish that first
-            crit_pos, dist = closest_point_on_line(self._player_pos, self._ball_pos, net_pos)
+            crit_pos, dist = closest_point_on_line(
+                self._player_pos, self._ball_pos, net_pos
+            )
         self._move_player_to(crit_pos)
 
     def update_next_strategy(self, friendlies, opponents):
@@ -371,6 +389,24 @@ class GoalieStrategy(PlayerStrategy):
             # Position along ball-goal line...at a certain distance
             self._defend_net()
 
+
+class ScoreStrategy(PlayerStrategy):
+
+    def __init__(self, player, ball):
+        super().__init__(player, ball)
+
+    def update_next_strategy(self, friendlies, opponents):
+        if self._has_possession():
+            # Try kicking to nearest point on goal line
+            opp_net_line = np.array(self._opponent_net_line)
+            goal_pos, dist = closest_point_on_line(
+                self._player_pos, opp_net_line[Field.X_COORD],
+                opp_net_line[Field.Y_COORD]
+            )
+            self._kick_ball(goal_pos)
+        elif self._is_closest_to_ball_dest(friendlies, []):
+            ball_dest = self._est_ball_dest()
+            self._move_player_to(ball_dest)
 
 class TeamStrategy(Strategy):
 
@@ -390,42 +426,42 @@ class TeamStrategy(Strategy):
         self.friendly_net = None
         self.opponent_net = None
 
-    def _update_ball_info(self, friendly, opponent, ball):
-        """
-        Computes distance between each robot and the ball, and determines
-            (1) which team has possession of the ball
-            (2) which robot has possession of the ball
-        where possession is defined as "being closest to the ball"
-        """
-        ball_pos = ball.get_position()[0:2]
-        min_dist = float('inf')
-        min_friendly_dist = float('inf')
-        self.closest_friendly_to_ball = None
-        self.team_in_pos = None
-        for robot in itertools.chain(friendly, opponent):
-            dist = np.linalg.norm(
-                ball_pos - robot.get_position()[0:2]
-            )
-            self.dist_to_ball[robot] = dist
-            if dist < min_dist:
-                # Find overall closest player to determine which team has
-                # possession
-                min_dist = dist
-                if min_dist <= Thresholds.POSSESSION:
-                    self.team_in_pos = robot.team
-            if robot.team == self.friendly_team and dist < min_friendly_dist:
-                # Find friendly player closest to ball
-                min_friendly_dist = dist
-                self.closest_friendly_to_ball = robot
-
-    def _populate_team_map(self, friendly):
-        """
-        Populates a data structure that makes it convenient to access different
-        team members based on their function
-        """
-        for robot in friendly:
-            role = robot.role
-            self.team[role] = robot
+    # def _update_ball_info(self, friendly, opponent, ball):
+    #     """
+    #     Computes distance between each robot and the ball, and determines
+    #         (1) which team has possession of the ball
+    #         (2) which robot has possession of the ball
+    #     where possession is defined as "being closest to the ball"
+    #     """
+    #     ball_pos = ball.get_position()[0:2]
+    #     min_dist = float('inf')
+    #     min_friendly_dist = float('inf')
+    #     self.closest_friendly_to_ball = None
+    #     self.team_in_pos = None
+    #     for robot in itertools.chain(friendly, opponent):
+    #         dist = np.linalg.norm(
+    #             ball_pos - robot.get_position()[0:2]
+    #         )
+    #         self.dist_to_ball[robot] = dist
+    #         if dist < min_dist:
+    #             # Find overall closest player to determine which team has
+    #             # possession
+    #             min_dist = dist
+    #             if min_dist <= Thresholds.POSSESSION:
+    #                 self.team_in_pos = robot.team
+    #         if robot.team == self.friendly_team and dist < min_friendly_dist:
+    #             # Find friendly player closest to ball
+    #             min_friendly_dist = dist
+    #             self.closest_friendly_to_ball = robot
+    #
+    # def _populate_team_map(self, friendly):
+    #     """
+    #     Populates a data structure that makes it convenient to access different
+    #     team members based on their function
+    #     """
+    #     for robot in friendly:
+    #         role = robot.role
+    #         self.team[role] = robot
 
     # def get_closest_opponent(self, this_role, opponents):
     #     """
@@ -457,40 +493,15 @@ class TeamStrategy(Strategy):
     #     return robot, dists
 
     def update_next_strategy(self, friendlies, opponents, ball):
-        # 1. Setup
-        if not self._has_setup:
-            self._has_setup = True
-            self.friendly_team = friendlies[0].team
-            self.friendly_net = np.array(friendlies[0].get_net_position())
-            self.opponent_net = np.array(friendlies[0].get_opponent_net_position())
-
-        # 2. Measurements
-        self._update_ball_info(friendlies, opponents, ball)
-        self._populate_team_map(friendlies)
-
-        # 3. Update game state state
-        if self.team_in_pos != None:
-            # If any player has possession of the ball, we update state. If no
-            # player has possession, then we maintain the previous game state
-            # (e.g., could be due to a pass)
-            if self.team_in_pos == self.friendly_team:
-                self.game_state = GameState.FRIENDLY_POSSESSION
-            elif self.team_in_pos != self.friendly_team:
-                self.game_state = GameState.OPPONENT_POSSESSION
+        # Update substrategies
+        # TODO: maybe TeamStrategy could decide which strategy each player
+        # should use depending on game conditions. Could maybe also modify
+        # strategy parameters...hmm...
+        strats = []
+        for robot in friendlies:
+            if robot.role == Robot.Role.GOALIE:
+                strats.append(GoalieStrategy(robot, ball))
             else:
-                raise ValueError('Strategy state is invalid!')
-
-        # 4. Update substrategies
-        gs = GoalieStrategy(self.team[Robot.Role.GOALIE], ball)
-        gs.update_next_strategy(friendlies, opponents)
-
-        # 5. Take action based on current game state
-        print(self.game_state)
-        if self.game_state == GameState.INIT:
-            pass
-        elif self.game_state == GameState.FRIENDLY_POSSESSION:
-            pass
-        elif self.game_state == GameState.OPPONENT_POSSESSION:
-            pass
-        else:
-            raise ValueError('Game state is invalid!')
+                strats.append(ScoreStrategy(robot, ball))
+        for strat in strats:
+            strat.update_next_strategy(friendlies, opponents)

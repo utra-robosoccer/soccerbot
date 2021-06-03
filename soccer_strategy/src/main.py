@@ -13,14 +13,21 @@ if __name__ == '__main__':
         g.run()
     else:
         DISPLAY_GAME = True
-        NUM_GAMES = 1
-        friendly_wins = 0
-        opponent_wins = 0
+        NUM_GAMES = 100
+        num_friendly_wins = 0
+        tot_friendly_pts = 0
+        num_opponent_wins = 0
+        tot_opponent_pts = 0
         for i in range(NUM_GAMES):
             g = GameEngine(display=DISPLAY_GAME)
-            friendly_points, opponent_points = g.run()
-            if friendly_points > opponent_points:
-                friendly_wins += 1
-            elif friendly_points < opponent_points:
-                opponent_wins += 1
-        print(f'Friendly: {friendly_wins}, opponent: {opponent_wins}')
+            friendly_pts, opponent_pts = g.run()
+            tot_friendly_pts += friendly_pts
+            tot_opponent_pts += opponent_pts
+            if friendly_pts > opponent_pts:
+                num_friendly_wins += 1
+            elif friendly_pts < opponent_pts:
+                num_opponent_wins += 1
+        num_ties = NUM_GAMES - num_friendly_wins - num_opponent_wins
+        print('\nFINAL SCORES')
+        print(f'Friendly: {num_friendly_wins}, opponent: {num_opponent_wins}, ties: {num_ties}')
+        print(f'Friendly points: {tot_friendly_pts}, Opponent points: {tot_opponent_pts}')
