@@ -14,4 +14,7 @@ class Ball:
         return copy.deepcopy(self.position)
 
     def get_velocity(self):
-        return self.velocity
+        return copy.deepcopy(self.velocity)
+
+    def is_moving(self):
+        return np.linalg.norm(self.velocity) != 0

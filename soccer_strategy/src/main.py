@@ -12,8 +12,8 @@ if __name__ == '__main__':
         g = GameEngineRos()
         g.run()
     else:
-        DISPLAY_GAME = False
-        NUM_GAMES = 10
+        DISPLAY_GAME = True
+        NUM_GAMES = 1
         friendly_wins = 0
         opponent_wins = 0
         for i in range(NUM_GAMES):
