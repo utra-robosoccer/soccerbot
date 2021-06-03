@@ -203,7 +203,7 @@ topic-tools==1.15.9
 torch==1.8.0
 tqdm==4.56.2
 typing-extensions==3.7.4.3
-urllib3==1.26.4
+urllib3==1.26.5
 webencodings==0.5.1
 Werkzeug==1.0.1
 wrapt==1.12.1

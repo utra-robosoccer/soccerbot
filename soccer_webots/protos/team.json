@@ -4,7 +4,7 @@
     "1": {
       "robotModelName": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot1",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=true single:=true fake_localization:=false robot_name:=robot1",
       "halfTimeStartingPose": {
         "translation": [-3.5, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -21,7 +21,7 @@
     "2": {
       "robotModelName": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot2",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=true single:=true fake_localization:=false robot_name:=robot2",
       "halfTimeStartingPose": {
         "translation": [-3.5, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
@@ -38,7 +38,7 @@
     "3": {
       "robotModelName": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot3",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=true single:=true fake_localization:=false robot_name:=robot3",
       "halfTimeStartingPose": {
         "translation": [-0.75, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -55,7 +55,7 @@
     "4": {
       "robotModelName": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=True single:=True fake_localization:=False robot_name:=robot4",
+      "dockerCmd": "roslaunch soccerbot soccerbot_multi.launch competition:=true single:=true fake_localization:=false robot_name:=robot4",
       "halfTimeStartingPose": {
         "translation": [-0.75, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]

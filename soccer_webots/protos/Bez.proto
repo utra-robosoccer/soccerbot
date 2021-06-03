@@ -711,72 +711,148 @@ PROTO Bez [
                                         }
                                       ]
                                       endPoint Solid {
-                                        translation 0.000000 0.000000 0.000000
+                                        translation 0.00000 0.005000 0.000000
                                         rotation 0.000000 1.000000 0.000000 0.000000
                                         children [
                                           Soccerbot_left_foot_0Mesh {
                                           }
                                           TouchSensor {
+                                            translation 0.03975 0.025 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "left_leg_foot_sensor_1"
                                             type "bumper"
                                             resolution -1
+                                                children [
+                                                  Shape {
+                                                    appearance PBRAppearance {
+                                                        baseColor 0 0 0
+                                                        roughness 1
+                                                        metalness 0
+                                                        }
+                                                      geometry Capsule {
+                                                          height 0.005
+                                                          radius 0.005
+                                                      }
+                                                  }
+                                                ]
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              children [
+                                                  Capsule {
+                                                        height 0.005
+                                                        radius 0.005
+                                                    }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
+
 					                                }
                                           TouchSensor {
+                                            translation 0.03975 -0.033 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "left_leg_foot_sensor_2"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                                Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                                }
+                                            ]
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
                                           TouchSensor {
+                                            translation -0.03375 -0.033 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "left_leg_foot_sensor_3"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                    baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                }
+                                                geometry Capsule {
+                                                    height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
                                           TouchSensor {
+                                            translation -0.03375 0.025 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "left_leg_foot_sensor_4"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                  baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                    }
+                                                geometry Capsule {
+                                                  height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
@@ -784,11 +860,11 @@ PROTO Bez [
 
                                         name "left_foot [foot]"
                                         boundingObject Transform {
-                                          translation 0.002 0.00 -0.02
+                                          translation 0.002 -0.004 -0.02
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
-                                               size 0.090000 0.070000 0.004
+                                               size 0.090000 0.0700000 0.004
                                             }
                                           ]
                                         }
@@ -1245,79 +1321,156 @@ PROTO Bez [
                                         }
                                       ]
                                       endPoint Solid {
-                                        translation 0.000000 0.000000 0.000000
+                                        translation 0.000000 -0.0050000 0.000000
                                         rotation 0.000000 1.000000 0.000000 0.000000
                                         children [
                                           Soccerbot_right_foot_0Mesh {
+
                                           }
                                           TouchSensor {
+                                            translation 0.03975 0.033 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "right_leg_foot_sensor_1"
                                             type "bumper"
                                             resolution -1
+                                                children [
+                                                  Shape {
+                                                    appearance PBRAppearance {
+                                                        baseColor 0 0 0
+                                                        roughness 1
+                                                        metalness 0
+                                                    }
+                                                    geometry Capsule {
+                                                        height 0.005
+                                                        radius 0.005
+                                                    }
+                                                  }
+                                                ]
                           			            boundingObject Transform {
-                                              translation 0.03975 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
 					                                }
                                           TouchSensor {
+                                            translation 0.03975 -0.025 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "right_leg_foot_sensor_2"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                              Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                              }
+                                            ]
                                             boundingObject Transform {
-                                              translation 0.03975 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
                                           TouchSensor {
+                                            translation -0.03375 -0.025 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "right_leg_foot_sensor_3"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                                Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                                }
+                                            ]
                                             boundingObject Transform {
-                                              translation -0.03375 -0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
                                           TouchSensor {
+                                            translation -0.03375 0.033 -0.0221
+                                            rotation 1.000000 0.000000 0.000000 1.57
                                             name "right_leg_foot_sensor_4"
                                             type "bumper"
                                             resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                    baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                }
+                                                geometry Capsule {
+                                                    height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
                                             boundingObject Transform {
-                                              translation -0.03375 0.025 -0.0221
-                                              rotation 0.000000 1.000000 0.000000 0.000000
-                                              children [ Box { size 0.01125 0.01125 0.0001 } ]
+                                              
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
                                             }
                                             physics Physics {
                                               density -1
-                                              mass 0.001
-                                              centerOfMass []
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
                                               inertiaMatrix []
                                             }
                                           }
                                         ]
                                         name "right_foot [foot]"
                                          boundingObject Transform {
-                                          translation 0.003 0.00 -0.02
+                                          translation 0.002 0.004 -0.02
                                           rotation 0.000000 1.000000 0.000000 0.000000
                                           children [
                                             Box {
