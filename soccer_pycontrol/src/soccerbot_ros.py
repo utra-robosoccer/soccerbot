@@ -6,6 +6,7 @@ from soccerbot import *
 import rospy
 import os
 
+
 class SoccerbotRos(Soccerbot):
 
     def __init__(self, position, useFixedBase=False):
@@ -13,26 +14,37 @@ class SoccerbotRos(Soccerbot):
         super().__init__(position, useFixedBase)
 
         self.motor_publishers = {}
-        self.motor_publishers[Joints.LEFT_ARM_1] = rospy.Publisher("left_arm_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_ARM_2] = rospy.Publisher("left_arm_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_ARM_1] = rospy.Publisher("right_arm_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_ARM_2] = rospy.Publisher("right_arm_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_1] = rospy.Publisher("left_leg_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_2] = rospy.Publisher("left_leg_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_3] = rospy.Publisher("left_leg_motor_2/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_4] = rospy.Publisher("left_leg_motor_3/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_5] = rospy.Publisher("left_leg_motor_4/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_6] = rospy.Publisher("left_leg_motor_5/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_1] = rospy.Publisher("right_leg_motor_0/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_2] = rospy.Publisher("right_leg_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_3] = rospy.Publisher("right_leg_motor_2/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_4] = rospy.Publisher("right_leg_motor_3/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_5] = rospy.Publisher("right_leg_motor_4/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_6] = rospy.Publisher("right_leg_motor_5/command", Float64, queue_size=1)
+        # self.motor_publishers[Joints.LEFT_ARM_1] = rospy.Publisher("left_arm_motor_0/command", Float64, queue_size=1)
+        # self.motor_publishers[Joints.LEFT_ARM_2] = rospy.Publisher("left_arm_motor_1/command", Float64, queue_size=1)
+        # self.motor_publishers[Joints.RIGHT_ARM_1] = rospy.Publisher("right_arm_motor_0/command", Float64, queue_size=1)
+        # self.motor_publishers[Joints.RIGHT_ARM_2] = rospy.Publisher("right_arm_motor_1/command", Float64, queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_1 - 4] = rospy.Publisher("left_leg_motor_0/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_2 - 4] = rospy.Publisher("left_leg_motor_1/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_3 - 4] = rospy.Publisher("left_leg_motor_2/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_4 - 4] = rospy.Publisher("left_leg_motor_3/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_5 - 4] = rospy.Publisher("left_leg_motor_4/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.LEFT_LEG_6 - 4] = rospy.Publisher("left_leg_motor_5/command", Float64,
+                                                                       queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_1 - 4] = rospy.Publisher("right_leg_motor_0/command", Float64,
+                                                                        queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_2 - 4] = rospy.Publisher("right_leg_motor_1/command", Float64,
+                                                                        queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_3 - 4] = rospy.Publisher("right_leg_motor_2/command", Float64,
+                                                                        queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_4 - 4] = rospy.Publisher("right_leg_motor_3/command", Float64,
+                                                                        queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_5 - 4] = rospy.Publisher("right_leg_motor_4/command", Float64,
+                                                                        queue_size=1)
+        self.motor_publishers[Joints.RIGHT_LEG_6 - 4] = rospy.Publisher("right_leg_motor_5/command", Float64,
+                                                                        queue_size=1)
 
         self.pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
-        self.motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-                            "left_leg_motor_0", "left_leg_motor_1",
+        self.motor_names = ["left_leg_motor_0", "left_leg_motor_1",
                             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
                             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
                             "right_leg_motor_4", "right_leg_motor_5"
@@ -45,9 +57,10 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
 
     def publishAngles(self):
+        ban_list = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]
         if self.competition == "True":
             for m in self.motor_publishers:
-                self.motor_publishers[m].publish(self.configuration[m])
+                self.motor_publishers[m].publish(self.configuration[m + 4])  # Skips arms
         elif self.competition == "False":
             js = JointState()
             js.name = []
@@ -56,7 +69,7 @@ class SoccerbotRos(Soccerbot):
             js.effort = []
             for i, n in enumerate(self.motor_names):
                 js.name.append(n)
-                js.position.append(self.configuration[i])
+                js.position.append(self.configuration[i + 4])
             self.pub_all_motor.publish(js)
 
     def stepPath(self, t, verbose=False):
@@ -87,7 +100,6 @@ class SoccerbotRos(Soccerbot):
             pose.pose.orientation.w = orientation[3]
             p.poses.append(pose)
         self.path_publisher.publish(p)
-
 
     def publishOdometry(self):
         o = Odometry()

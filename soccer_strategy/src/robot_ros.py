@@ -22,6 +22,7 @@ class RobotRos(Robot):
         self.terminate_walking_publisher = rospy.Publisher('/'+ robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_walking_subscriber = rospy.Subscriber('/'+ robot_name + "/completed_walking", Empty, self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/'+ robot_name + "/trajectory_complete", Bool, self.completed_trajectory_subscriber)
+        self.start_walking_publisher = rospy.Publisher('/'+ robot_name + "/start_walking", Empty, queue_size=1)
 
         self.team = team
         self.role = role
@@ -76,6 +77,8 @@ class RobotRos(Robot):
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
         self.goal_publisher.publish(p)
+        if self.status == Robot.Status.WALKING:
+            self.start_walking_publisher.publish()
 
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian
