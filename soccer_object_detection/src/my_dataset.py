@@ -9,8 +9,8 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
 import util
 
-train_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/train'
-test_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/test'
+train_path = '/home/robosoccer/nams_small_dataset/train'
+test_path = '/home/robosoccer/nams_small_dataset/test'
 
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=True):
@@ -123,21 +123,22 @@ class MyDataSet(Dataset):
                     # ignore unknown format
                     continue
 
-                if label == 'label::ball':
-                    label = Label.BALL
-                    self.num_ball_labels += 1
-                elif label == 'label::robot':
-                    label = Label.ROBOT
-                    self.num_robot_labels += 1
-                else:
-                    print('Unexpected Label:', label)
+                if img in os.listdir(path):
+                    if label == 'label::ball':
+                        label = Label.BALL
+                        self.num_ball_labels += 1
+                    elif label == 'label::robot':
+                        label = Label.ROBOT
+                        self.num_robot_labels += 1
+                    else:
+                        print('Unexpected Label:', label)
 
-                img_path = os.path.join(path, img)
-                if img_path not in self.img_paths:
-                    self.bounding_boxes[img_path] = []
-                    self.img_paths.append(img_path)
+                    img_path = os.path.join(path, img)
+                    if img_path not in self.img_paths:
+                        self.bounding_boxes[img_path] = []
+                        self.img_paths.append(img_path)
 
-                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                    self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
 
     def __len__(self):
         return len(self.bounding_boxes)
@@ -153,7 +154,7 @@ class MyDataSet(Dataset):
         bounding_boxes = self.bounding_boxes[img_path]
         img = util.read_image(img_path)
 
-        height, width, _ = np.array(img).shape
+        height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
         mask = np.ones((height, width, 3)) * Label.OTHER.value
         for bb in bounding_boxes:
@@ -173,6 +174,9 @@ class MyDataSet(Dataset):
         # Apply transformations to get desired dimensions
         img = np.array(self.img_transform(img))
         mask = np.array(self.mask_transform(mask))
+        if depth == 4:
+            img = img[:,:,:3]
+        img = img/255
 
         # flip to channel*W*H - how Pytorch expects it
         img = np.moveaxis(img, -1, 0)
