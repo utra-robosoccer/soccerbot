@@ -14,6 +14,7 @@ protobuf
 Pillow==8.2.0
 torch==1.8.1
 torchvision==0.9.1
+construct
 #sudo pip install --upgrade protobuf
 #Docker stuff
 #sudo docker ps
@@ -22,7 +23,7 @@ torchvision==0.9.1
 #sudo docker commit 9ecdb00c3979 utra_bez:latest
 #sudo docker system prune
 #sudo docker build ~/catkin_ws/src/soccerbot/
-#sudo docker run -it
+#sudo docker run -it 0da5322b8034
 #roslaunch soccerbot soccerbot_multi.launch single:=true fake_localization:=false competition:=true
 #10.0.0.207
 #172.17.0.1
@@ -32,3 +33,4 @@ torchvision==0.9.1
 #Pybullet problems path soccerbot,   direct in controller_ros
 #Remember object detector node cpu
 #gui
+#vim src/soccer_pycontrol/src/soccerbot.py
