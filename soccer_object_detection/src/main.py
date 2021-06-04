@@ -13,16 +13,16 @@ from model import find_batch_bounding_boxes, Label
 
 def train_model():
     experiment = {
-        'seed': 1,
+        'seed': 5,
         'model_kernel': 3,
         'model_num_features': 8,
         'model_dropout_rate': 0.0,
-        'train_class_weight': [.2, .1, .7],  # BALL, ROBOT, OTHER
+        'train_class_weight': [.2, .07, .73],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-3,
-        'train_weight_decay': 0e-7,
-        'train_batch_size': 16,
-        'train_epochs': 10,
-        'colour_jitter': [0.3, 0.3, 0.3, 0],  # brightness, contrast, saturation, hue
+        'train_weight_decay': 0,
+        'train_batch_size': 20,
+        'train_epochs': 8,
+        'colour_jitter': [0.1, 0.1, 0.1, 0.1],  # brightness, contrast, saturation, hue
         'output_folder': 'outputs',
     }
 
