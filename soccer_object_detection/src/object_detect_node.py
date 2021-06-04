@@ -51,7 +51,7 @@ class ObjectDetectionNode(object):
                 img = self.image[:,:,:3] # get rid of alpha channel
 
                 dim = (640//3, 480//3) # (213, 160)
-                img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_CUBIC)
+                img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
 
                 w, h = 200, 150
                 y, x, _ = img.shape # 160, 213
@@ -62,9 +62,12 @@ class ObjectDetectionNode(object):
 
                 img_torch = util.cv_to_torch(crop_img)
 
-                outputs, _ = self.model(torch.tensor(np.expand_dims(img_torch, axis=0)).float())
+                img_norm = img_torch / 255  # model expects normalized img
+
+                outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
                 bbxs = find_batch_bounding_boxes(outputs)[0]
-                # img = util.draw_bounding_boxes(img, bbxs[Label.ROBOT.value], (0, 0, 255))
+
+                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.ROBOT.value], (0, 0, 255))
                 img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
 
                 img = util.torch_to_cv(img_torch)
