@@ -3,6 +3,7 @@
 #include <soccer_object_detection/BoundingBox.h>
 #include <string>
 #include <soccer_geometry/pose3.hpp>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -12,6 +13,7 @@ public:
     ros::NodeHandle n;
     ros::Subscriber boundingBoxesSub;
     ros::Publisher head_motor_0;
+    ros::Publisher ball_pub;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
@@ -20,7 +22,7 @@ public:
 
     BallDetector() : tfListener(tfBuffer) {
       boundingBoxesSub = n.subscribe("object_bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
-
+        ball_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("ball", 1);
         geometry_msgs::TransformStamped camera_pose;
         while(!n.hasParam("name")) {
             ros::Duration(1.0).sleep();
@@ -36,6 +38,7 @@ public:
                 std::string s = ex.what();
             }
         }
+
 
         // Initalize Camera
         Pose3 camera_position;
@@ -100,7 +103,19 @@ private:
             ball_pose.transform.rotation.w = 1;
 
             BallDetector::br.sendTransform(ball_pose);
-            break;
+
+            geometry_msgs::PoseWithCovarianceStamped ball;
+            ball.header.frame_id = name + "/ball";
+            ball.header.seq = msg->header.seq;
+            ball.header.stamp = msg->header.stamp;
+            ball.pose.pose.position.x = floor_coordinate.x;
+            ball.pose.pose.position.y = floor_coordinate.y;
+            ball.pose.pose.position.z = floor_coordinate.z;
+            ball.pose.pose.orientation.x = 0;
+            ball.pose.pose.orientation.y = 0;
+            ball.pose.pose.orientation.z = 0;
+            ball.pose.pose.orientation.w = 1;
+            ball_pub.publish(ball);
         }
     }
 };
