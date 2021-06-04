@@ -8,6 +8,7 @@
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
     <arg name="robot_name" default="robot1" />
+    <arg name="team_id" default="25" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch" unless="$(arg competition)">
@@ -28,6 +29,11 @@
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
+        <arg name="x_pos" value="-1.00" />
+        <arg name="y_pos" value="0.00" />
+        <arg name="team_id" value="$(arg team_id)" />
+        <arg name="robot_id" value="1" />
+        <arg name="is_goal_keeper" value="true" />
     </include>
 <!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
 <!--        <arg name="simulation" value="$(arg simulation)" />-->
@@ -37,6 +43,9 @@
 <!--        <arg name="ip_address" value="$(optenv ROBOT2_IP localhost)" />-->
 <!--        <arg name="x_pos" value="-2.00" />-->
 <!--        <arg name="y_pos" value="2.00" />-->
+<!--        <arg name="team_id" value="$(arg team_id)" />-->
+<!--        <arg name="robot_id" value="2" />-->
+<!--        <arg name="is_goal_keeper" value="false" />-->
 <!--    </include>-->
 <!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
 <!--        <arg name="simulation" value="$(arg simulation)" />-->
