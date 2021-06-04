@@ -26,7 +26,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghThreshold", threshold);
     nh.getParam("soccer_fieldline_detector/houghMinLineLength", minLineLength);
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
-
+//    ros::Duration(3.0).sleep();
     while(!nh.hasParam("name")) {
         ros::Duration(1.0).sleep();
     }

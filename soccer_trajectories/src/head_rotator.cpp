@@ -99,7 +99,7 @@ public:
 
                 }
                 last_angle = angle.data;
-                last_t += 4;
+                last_t += 1;
              }
         }
         else {

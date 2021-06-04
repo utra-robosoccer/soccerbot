@@ -6,8 +6,9 @@
     <arg name="robot_name" default="robot1" />
     <arg name="pose_name" default="standing" />
     <arg name="ip_address" default="localhost" />
-    <arg name="x_pos" default="$(optenv X_POS 0)" />
-    <arg name="y_pos" default="$(optenv Y_POS 0)" />
+    <arg name="x_pos" default="0" />
+    <arg name="y_pos" default="0" />
+    <arg name="a_pos" default="0" />
     <arg name="angle" default="$(optenv ANGLE 0)" />
     <arg name="goalie" default="$(optenv GOALIE false)" />
     <arg name="easy_walking" default="false" />
@@ -52,13 +53,15 @@
             <arg name="pose_name" default="$(arg pose_name)"/>
             <arg name="x_pos" value="$(arg x_pos)" />
             <arg name="y_pos" value="$(arg y_pos)" />
+            <arg name="a_pos" value="$(arg a_pos)" />
         </include>
 
         <include file="$(find soccerbot)/launch/modules/localization.launch">
             <arg name="fake_localization" value="$(arg fake_localization)" />
             <arg name="robot_name" value="$(arg robot_name)"/>
-                <arg name="x_pos" value="$(arg x_pos)" />
-                <arg name="y_pos" value="$(arg y_pos)" />
+            <arg name="x_pos" value="$(arg x_pos)" />
+            <arg name="y_pos" value="$(arg y_pos)" />
+            <arg name="a_pos" value="$(arg a_pos)" />
             <arg name="map_name" value="robocup" if="$(arg simulation)" />
             <arg name="map_name" value="test" unless="$(arg simulation)" />
         </include>
