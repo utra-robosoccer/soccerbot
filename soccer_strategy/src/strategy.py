@@ -1,3 +1,4 @@
+from abc import ABC
 from enum import IntEnum
 import itertools
 import math
@@ -156,9 +157,6 @@ Field.init_nets()
 
 class Thresholds:
     POSSESSION = 0.2  # How close player has to be to ball to have possession
-    OPEN = 0.6  # How far the closest opponent must be in order for a player to be considered "open"
-    PASS = 1.5  # How close you have to be to teammate before passing
-    SCORE = 2.25  # How close you have to be before trying to score
     GOALIE_ANGLE = 5 # How close goalie has to be to defense line
 
 
@@ -226,11 +224,6 @@ class PlayerStrategy(Strategy):
             robot_pos = robot.get_position()[0:2]
             dist = distance_between(pos, robot_pos)
             if dist < min_dist:
-                if closest_to_ball == self._player:
-                    # If we were previously the closest player but are no
-                    # no longer, then we can cease the search
-                    closest_to_ball = None
-                    break
                 min_dist = dist
                 closest_to_ball = robot
         return self._player == closest_to_ball
@@ -330,14 +323,6 @@ class GoalieStrategy(PlayerStrategy):
         ball_path = LineString([self._ball_pos, ball_dest])
         return ball_path.intersects(self._net_line)
 
-    def _should_intercept_ball(self, friendlies, opponents):
-        # TODO: take equations of motion of ball into account. For example, if
-        # we're the closest to the ball but it's moving away from us, then
-        # maybe we shouldn't be going for it after all
-        retval = self._is_closest_to_ball_dest(friendlies, opponents)
-        retval |= self._shot_on_net()
-        return retval
-
     def _defend_shot(self):
         """
         Moves the player near the point where the ball's velocity vector
@@ -378,15 +363,14 @@ class GoalieStrategy(PlayerStrategy):
         if self._has_possession():
             # Return ball to offensive players
             self._pass_to_offense(friendlies)
-        elif self._should_intercept_ball(friendlies, opponents):
-            # Intercept ball
-            # TODO: employ caching or state to avoid redundant computation
-            if self._shot_on_net():
-                self._defend_shot()
-            else:
-                self._pursue_ball()
+        elif self._shot_on_net():
+            # Intercept shot on net
+            self._defend_shot()
+        elif self._is_closest_to_ball_dest(friendlies, opponents):
+            # Intercept nearby ball
+            self._pursue_ball()
         else:
-            # Position along ball-goal line...at a certain distance
+            # Defend along ball-goal line
             self._defend_net()
 
 
@@ -408,89 +392,15 @@ class ScoreStrategy(PlayerStrategy):
             ball_dest = self._est_ball_dest()
             self._move_player_to(ball_dest)
 
+
 class TeamStrategy(Strategy):
 
     def __init__(self):
         super().__init__()
-        self.game_state = GameState.INIT
         self.reset()
 
     def reset(self):
-        self._has_setup = False
-        self.game_state = GameState.INIT
-        self.dist_to_ball = {}
-        self.team_in_pos = None
-        self.team = {}
-        self.closest_friendly_to_ball = None
-        self.friendly_team = None
-        self.friendly_net = None
-        self.opponent_net = None
-
-    # def _update_ball_info(self, friendly, opponent, ball):
-    #     """
-    #     Computes distance between each robot and the ball, and determines
-    #         (1) which team has possession of the ball
-    #         (2) which robot has possession of the ball
-    #     where possession is defined as "being closest to the ball"
-    #     """
-    #     ball_pos = ball.get_position()[0:2]
-    #     min_dist = float('inf')
-    #     min_friendly_dist = float('inf')
-    #     self.closest_friendly_to_ball = None
-    #     self.team_in_pos = None
-    #     for robot in itertools.chain(friendly, opponent):
-    #         dist = np.linalg.norm(
-    #             ball_pos - robot.get_position()[0:2]
-    #         )
-    #         self.dist_to_ball[robot] = dist
-    #         if dist < min_dist:
-    #             # Find overall closest player to determine which team has
-    #             # possession
-    #             min_dist = dist
-    #             if min_dist <= Thresholds.POSSESSION:
-    #                 self.team_in_pos = robot.team
-    #         if robot.team == self.friendly_team and dist < min_friendly_dist:
-    #             # Find friendly player closest to ball
-    #             min_friendly_dist = dist
-    #             self.closest_friendly_to_ball = robot
-    #
-    # def _populate_team_map(self, friendly):
-    #     """
-    #     Populates a data structure that makes it convenient to access different
-    #     team members based on their function
-    #     """
-    #     for robot in friendly:
-    #         role = robot.role
-    #         self.team[role] = robot
-
-    # def get_closest_opponent(self, this_role, opponents):
-    #     """
-    #     Return the oponnent closest to the given player, and the distance
-    #     between them
-    #     """
-    #     closest_opponent = None
-    #     min_dist = float('inf')
-    #     for robot in opponents:
-    #         dist = self.dist_to_player(this_role, robot.get_position()[0:2])
-    #         if dist < min_dist:
-    #             min_dist = dist
-    #             closest_opponent = robot
-    #     return closest_opponent, min_dist
-    #
-    # def get_teammates_in_ascending_order(self, this_role):
-    #     """
-    #     Return list of teammates closest to the given one in ascending order of
-    #     distance
-    #     """
-    #     info = []
-    #     for role, robot in self.team.items():
-    #         if role != this_role:
-    #             dist = self.dist_to_player(this_role, robot.get_position()[0:2])
-    #             info.append((robot, dist))
-    #     info.sort(key=itemgetter(1))
-    #     robot = [e[0] for e in info]
-    #     dists = [e[1] for e in info]
-    #     return robot, dists
+        pass
 
     def update_next_strategy(self, friendlies, opponents, ball):
         # Update substrategies

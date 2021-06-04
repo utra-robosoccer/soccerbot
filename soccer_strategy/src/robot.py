@@ -25,7 +25,7 @@ class Robot:
         OUT_OF_BOUNDS = 8
 
     def get_position(self):
-        return copy.deepcopy(self.position)
+        return copy.copy(self.position)
 
     def __init__(self, team, role, status, position):
         self.team = team
@@ -66,12 +66,7 @@ class Robot:
     def __key(self):
         return (
             self.team,
-            self.role,
-            self.status,
-            self.position,
-            self.goal_position,
-            self.speed,
-            self.max_kick_speed
+            self.role
         )
 
     def __eq__(self, other):

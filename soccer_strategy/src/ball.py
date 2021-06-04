@@ -11,10 +11,10 @@ class Ball:
         self.kick_timeout = 0
 
     def get_position(self):
-        return copy.deepcopy(self.position)
+        return copy.copy(self.position)
 
     def get_velocity(self):
-        return copy.deepcopy(self.velocity)
+        return copy.copy(self.velocity)
 
     def is_moving(self):
         return np.linalg.norm(self.velocity) != 0

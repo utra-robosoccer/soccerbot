@@ -153,15 +153,17 @@ class GameEngine:
         for robot in sorted(robots,key=lambda _: random.random()):
             # TODO use the same trajectory as in soccer_pycontrol
             if robot.status == Robot.Status.WALKING:
-                delta = (robot.goal_position - robot.get_position())[0:2]
-                if np.linalg.norm(delta) == 0:
+                robot_pos = robot.get_position()[0:2]
+                delta = robot.goal_position[0:2] - robot_pos
+                delta_norm = np.linalg.norm(delta)
+                if delta_norm == 0:
                     continue
 
-                unit = delta / np.linalg.norm(delta)
+                unit = delta / delta_norm
 
                 # TODO if walk into another robot, stop moving and fallback
 
-                robot.position[0:2] = robot.get_position()[0:2] + unit * robot.speed * GameEngine.PHYSICS_UPDATE_INTERVAL
+                robot.position[0:2] = robot_pos + unit * robot.speed * GameEngine.PHYSICS_UPDATE_INTERVAL
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
                     ball.velocity = robot.kick_velocity
