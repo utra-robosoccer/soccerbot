@@ -67,11 +67,6 @@ class ObjectDetectionNode(object):
                 outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
                 bbxs = find_batch_bounding_boxes(outputs)[0]
 
-                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.ROBOT.value], (0, 0, 255))
-                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
-
-                img = util.torch_to_cv(img_torch)
-
                 if bbxs is None:
                     continue
 
@@ -84,12 +79,30 @@ class ObjectDetectionNode(object):
                     bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
                     bb_msg.id = Label.BALL.value
                     bb_msg.Class = 'ball'
+                bbs_msg.bounding_boxes = [bb_msg]
+
+                big_enough_robot_bbxs = []
+                for robot_bb in bbxs[Label.ROBOT.value]:
+                    bb_msg = BoundingBox()
+                    bb_msg.xmin = int((robot_bb[0] + x_offset) * 3)
+                    bb_msg.ymin = int((robot_bb[1] + y_offset) * 3)
+                    bb_msg.xmax = int((robot_bb[2] + x_offset) * 3)
+                    bb_msg.ymax = int((robot_bb[3] + y_offset) * 3)
+                    bb_msg.id = Label.ROBOT.value
+                    bb_msg.Class = 'robot'
+                    # ignore small boxes
+                    if (bb_msg.xmax - bb_msg.xmin)*(bb_msg.ymax - bb_msg.ymin) > 1000:
+                        bbs_msg.bounding_boxes.append(bb_msg)
+                        big_enough_robot_bbxs.append(robot_bb)
 
                 header = std_msgs.msg.Header()
                 header.stamp = rospy.Time.now()
                 bbs_msg.header = header
                 bbs_msg.image_header = self.image_header
-                bbs_msg.bounding_boxes = [bb_msg]
+
+                img_torch = util.draw_bounding_boxes(img_torch, big_enough_robot_bbxs, (0, 0, 255))
+                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
+                img = util.torch_to_cv(img_torch)
 
                 self.pub_boundingbox.publish(bbs_msg)
                 self.pub_detection.publish(br.cv2_to_imgmsg(img))
