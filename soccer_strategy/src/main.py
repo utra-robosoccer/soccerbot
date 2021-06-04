@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from game_engine import GameEngine
+from game_engine_competition import GameStatus
 
 RUN_IN_ROS = True
 
@@ -15,8 +16,11 @@ if __name__ == '__main__':
         while rospy.get_param("walking_engine_ready") == "false":
             r.sleep()
 
-        g = GameEngineRos()
+        g = GameStatus()
         g.run()
+
+        #g = GameEngineRos()
+        #g.run()
     else:
         g = GameEngine()
         g.run()

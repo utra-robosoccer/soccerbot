@@ -7,4 +7,4 @@ centralWidgetVisible: 1
 orthographicViewHeight: 1
 textFiles: 0 "protos/Bez.proto"
 consoles: Console:All:All
-renderingDevicePerspectives: red_player_1:camera;1;0.09375;0;0
+renderingDevicePerspectives: red_player_1:camera;1;1;0;0

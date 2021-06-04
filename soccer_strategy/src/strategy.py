@@ -62,11 +62,11 @@ class DummyStrategy(Strategy):
             delta = opponent_goal - ball.get_position()
             unit = delta / np.linalg.norm(delta)
 
-            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
             current_closest.status = Robot.Status.KICKING
+            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
-            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
             current_closest.status = Robot.Status.WALKING
+            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
 
 class PassStrategy(DummyStrategy):
 
@@ -104,10 +104,12 @@ class PassStrategy(DummyStrategy):
             else:
                 unit = delta_goal / np.linalg.norm(delta_goal)
 
-            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
             current_closest.status = Robot.Status.KICKING
+            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+
         else:
             # if current_closest.status != Robot.Status.READY:
             #     return
-            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
             current_closest.status = Robot.Status.WALKING
+            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
+

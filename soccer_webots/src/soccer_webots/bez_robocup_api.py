@@ -8,7 +8,7 @@ import socket
 import rospy
 import rospkg
 import struct
-# from urdf_parser_py.urdf import URDF
+#from urdf_parser_py.urdf import URDF
 import tf
 from rosgraph_msgs.msg import Clock
 
@@ -17,6 +17,7 @@ from std_msgs.msg import Bool, Float64
 import messages_pb2
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
+
 
 class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
@@ -33,7 +34,7 @@ class BezRobocupApi():
         self.base_frame = args.robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
-        self.joint_command = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.joint_command = [0, 1.5, 0, 1.5,  0, 0, 0.564, -1.176, 0.613, 0,   0, 0, 0.564, -1.176, 0.613, 0,  0, 0]
         self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
                             "right_arm_motor_1",
                             "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
@@ -137,13 +138,10 @@ class BezRobocupApi():
                 # publish the message
                 odom_pub.publish(odom)
 
-
-
         self.close_connection()
 
-    def callback(self,data):
+    def callback(self, data):
         self.temp_bool = False
-
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
@@ -249,9 +247,9 @@ class BezRobocupApi():
         self.joint_command[17] = msg.data
 
     def get_connection(self, addr):
-        # host, port = addr.split(':')
-        host = "127.0.0.1"
-        port = int(10021)
+        print(addr)
+        host, port = addr.split(':')
+        port = int(port)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
@@ -449,4 +447,3 @@ class BezRobocupApi():
 
 if __name__ == '__main__':
     BezRobocupApi()
-

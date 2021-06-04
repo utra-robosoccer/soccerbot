@@ -27,14 +27,14 @@ class Trajectory:
                     continue
                 if joint_name == 'time':
                     self.times = list(map(float, row[1:]))
-                    self.times = [0] + self.times  + [self.times[-1] + self.time_to_last_pose]
+                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
                     param = '~motor_mapping/{}/initial_state'.format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
-                    #last_pose_value = 0.0
-                    joint_values = [last_pose_value] + joint_values  + [last_pose_value]
+                    # last_pose_value = 0.0
+                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
@@ -52,10 +52,7 @@ class Trajectory:
             joint: rospy.Publisher("{}/command".format(joint), Float64, queue_size=10) for joint in self.joints()}
         # r = rospy.Rate(10)
 
-        r = rospy.Rate(10)
-        while not rospy.has_param("competition"):
-            r.sleep()
-        self.competition = rospy.get_param("competition")
+
         '''while rospy.has_param("/robot1/controller_name") == False:
             r.sleep()
 
@@ -65,6 +62,11 @@ class Trajectory:
             joint: rospy.ServiceProxy("/" + controllerName + "/{}/set_position".format(joint), set_float) for joint in self.joints()}
 
         print(publishers_2)'''
+
+        r = rospy.Rate(10)
+        while not rospy.has_param("competition"):
+            r.sleep()
+        self.competition = rospy.get_param("competition")
         pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
 
         rate = rospy.Rate(100)

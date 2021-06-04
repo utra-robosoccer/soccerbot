@@ -4,6 +4,11 @@
     <arg name="walking_demo" default="true" />
     <arg name="single" default="true" />
     <arg name="fake_localization" default="false" />
+    <arg name="x_pos" default="0" />
+    <arg name="y_pos" default="0" />
+    <arg name="a_pos" default="0" />
+    <arg name="robot_name" default="robot1" />
+    <arg name="team_id" default="25" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 <!--    <node  pkg="soccerbot" type="competition_startup.sh" name="starting" output="screen"/>-->
     <include file="$(find soccerbot)/launch/modules/simulator.launch" unless="$(arg competition)">
@@ -19,37 +24,44 @@
         <arg name="competition" value="$(arg competition)" />
         <arg name="walking_demo" default="true" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="robot_name" value="robot1" />
+        <arg name="robot_name" value="$(arg robot_name)" />
         <arg name="ip_address" value="$(optenv ROBOT1_IP localhost)" />
-        <arg name="x_pos" value="-1.00" />
-        <arg name="y_pos" value="0.00" />
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="a_pos" value="$(arg a_pos)" />
+        <arg name="team_id" value="$(arg team_id)" />
+        <arg name="robot_id" value="1" />
+        <arg name="is_goal_keeper" value="true" />
     </include>
-    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="competition" value="$(arg competition)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="robot_name" value="robot2" />
-        <arg name="ip_address" value="$(optenv ROBOT2_IP localhost)" />
-        <arg name="x_pos" value="-2.00" />
-        <arg name="y_pos" value="2.00" />
-    </include>
-    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="competition" value="$(arg competition)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="robot_name" value="robot3" />
-        <arg name="ip_address" value="$(optenv ROBOT3_IP localhost)" />
-        <arg name="x_pos" value="-2.00" />
-        <arg name="y_pos" value="-2.00" />
-    </include>
-    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="competition" value="$(arg competition)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="robot_name" value="robot4" />
-        <arg name="ip_address" value="$(optenv ROBOT4_IP localhost)" />
-        <arg name="x_pos" value="-3.00" />
-        <arg name="y_pos" value="0.00" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="$(arg simulation)" />-->
+<!--        <arg name="competition" value="$(arg competition)" />-->
+<!--        <arg name="fake_localization" value="$(arg fake_localization)" />-->
+<!--        <arg name="robot_name" value="robot2" />-->
+<!--        <arg name="ip_address" value="$(optenv ROBOT2_IP localhost)" />-->
+<!--        <arg name="x_pos" value="-2.00" />-->
+<!--        <arg name="y_pos" value="2.00" />-->
+<!--        <arg name="team_id" value="$(arg team_id)" />-->
+<!--        <arg name="robot_id" value="2" />-->
+<!--        <arg name="is_goal_keeper" value="false" />-->
+<!--    </include>-->
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="$(arg simulation)" />-->
+<!--        <arg name="competition" value="$(arg competition)" />-->
+<!--        <arg name="fake_localization" value="$(arg fake_localization)" />-->
+<!--        <arg name="robot_name" value="robot3" />-->
+<!--        <arg name="ip_address" value="$(optenv ROBOT3_IP localhost)" />-->
+<!--        <arg name="x_pos" value="-2.00" />-->
+<!--        <arg name="y_pos" value="-2.00" />-->
+<!--    </include>-->
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="$(arg simulation)" />-->
+<!--        <arg name="competition" value="$(arg competition)" />-->
+<!--        <arg name="fake_localization" value="$(arg fake_localization)" />-->
+<!--        <arg name="robot_name" value="robot4" />-->
+<!--        <arg name="ip_address" value="$(optenv ROBOT4_IP localhost)" />-->
+<!--        <arg name="x_pos" value="-3.00" />-->
+<!--        <arg name="y_pos" value="0.00" />-->
+<!--    </include>-->
 
 </launch>
