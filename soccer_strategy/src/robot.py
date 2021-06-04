@@ -24,6 +24,8 @@ class Robot:
         PENALTY = 7
         OUT_OF_BOUNDS = 8
         TRAJECTORY_IN_PROGRESS = 9
+        STOP = 10  #stop current action and getup
+        TERMINATE = 11 #terminate all action
 
     def get_position(self):
         return self.position
