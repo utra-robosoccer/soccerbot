@@ -29,8 +29,6 @@
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
-        <arg name="x_pos" value="-1.00" />
-        <arg name="y_pos" value="0.00" />
         <arg name="team_id" value="$(arg team_id)" />
         <arg name="robot_id" value="1" />
         <arg name="is_goal_keeper" value="true" />
