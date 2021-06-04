@@ -1,5 +1,5 @@
-min_particles: 10000
-max_particles: 50000
+min_particles: 1000
+max_particles: 5000
 kld_err: 0.00001
 update_min_d: 0.2
 #update_min_a: 0.1
@@ -8,13 +8,13 @@ transform_tolerance: 1
 laser_model_type: "likelihood_field_prob"
 laser_max_beams: 100
 
-#odom_model_type: "omni-corrected"
+odom_model_type: "omni-corrected"
 
 
 use_map_topic: true
 first_map_only: true
 scan_topic: scan
-initial_pose_a: 0.0
+initial_pose_a: -1.57
 initial_cov_xx: 1.0
 initial_cov_yy: 1.0
 
