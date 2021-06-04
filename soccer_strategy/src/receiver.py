@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
+
 #-*- coding:utf-8 -*-
 
 from __future__ import unicode_literals, print_function
@@ -17,10 +18,9 @@ interface with the GC can utilize the new protocol.
 import socket
 import time
 import logging
-import argparse
-import sys
 import rospy
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int8
+import os
 
 # Requires construct==2.5.3
 from soccer_msgs.msg import GameState as GameStateMsg
@@ -34,15 +34,10 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
-DEFAULT_LISTENING_HOST = '0.0.0.0'
+#DEFAULT_LISTENING_HOST = '127.0.1.1'
+DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
 GAME_CONTROLLER_LISTEN_PORT = 3838
 GAME_CONTROLLER_ANSWER_PORT = 3939
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--team', type=int, default=1, help="team ID, default is 1")
-parser.add_argument('--player', type=int, default=1, help="player ID, default is 1")
-parser.add_argument('--goalkeeper', action="store_true", help="if this flag is present, the player takes the role of the goalkeeper")
-
 
 class GameStateReceiver(object):
     """ This class puts up a simple UDP Server which receives the
@@ -54,6 +49,7 @@ class GameStateReceiver(object):
     After this we send a package back to the GC """
 
     def __init__(self, team, player, is_goalkeeper, addr=(DEFAULT_LISTENING_HOST, GAME_CONTROLLER_LISTEN_PORT), answer_port=GAME_CONTROLLER_ANSWER_PORT):
+
         # Information that is used when sending the answer to the game controller
         self.team = team
         self.player = player
@@ -91,7 +87,7 @@ class GameStateReceiver(object):
 
     def receive_forever(self):
         """ Waits in a loop that is terminated by setting self.running = False """
-        while self.running:
+        while self.running and not rospy.is_shutdown():
             try:
                 self.receive_once()
             except IOError as e:
@@ -104,7 +100,7 @@ class GameStateReceiver(object):
         try:
             data, peer = self.socket.recvfrom(GameState.sizeof())
 
-            print(len(data))
+            #print(len(data))
             # Throws a ConstError if it doesn't work
             parsed_state = GameState.parse(data)
 
@@ -155,6 +151,7 @@ class GameStateReceiver(object):
             logger.log("Network Error: %s" % str(e))
 
     def on_new_gamestate(self, state):
+        #print(state.game_state)
         """ Is called with the new game state after receiving a package.
             The information is processed and published as a standard message to a ROS topic.
             :param state: Game State
@@ -235,6 +232,9 @@ class GameStateReceiver(object):
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
+        pub = rospy.Publisher("state", Int8, queue_size=1)  # black magic publisher
+        pub.publish(state.game_state.intvalue)
+        #print("publish state: "+ str(state.game_state) )
 
     def get_last_state(self):
         return self.state, self.time
@@ -248,14 +248,15 @@ class GameStateReceiver(object):
     def set_manual_penalty(self, flag):
         self.man_penalize = flag
 
-
-class SampleGameStateReceiver(GameStateReceiver):
-
-    def on_new_gamestate(self, state):
-        print(state)
-        print(state.secondary_state_info)
-
 if __name__ == '__main__':
-    args = parser.parse_args(sys.argv[1:])
-    rec = SampleGameStateReceiver(team=args.team, player=args.player, is_goalkeeper=args.goalkeeper)
+    rospy.init_node('game_controller')
+
+    team_id = rospy.get_param("team_id")
+    robot_id = rospy.get_param("robot_id")
+
+    is_goal_keeper = rospy.get_param("is_goal_keeper")
+    print(team_id)
+    print(robot_id)
+    print(is_goal_keeper)
+    rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
     rec.receive_forever()
