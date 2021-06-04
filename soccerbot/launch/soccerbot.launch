@@ -67,6 +67,7 @@
             <arg name="simulation" value="$(arg simulation)" />
         </include>
 
+
         <param name="team_id" value="$(arg team_id)" />
         <param name="robot_id" value="$(arg robot_id)" />
         <param name="is_goal_keeper" value="$(arg is_goal_keeper)" />
@@ -75,6 +76,7 @@
         <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
         <node pkg="soccer_strategy" type="balance.py" name="balance" output="screen"/>
         <node pkg="soccer_strategy" type="receiver.py" name="receiver" output="screen"/>
+
 
 
     </group>
