@@ -4,25 +4,31 @@
 #include <soccer_object_detection/BoundingBox.h>
 #include <string>
 #include <soccer_geometry/pose3.hpp>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
-
+#include <std_msgs/Float64.h>
 class BallDetector {
 public:
     ros::NodeHandle n;
     ros::Subscriber boundingBoxesSub;
+    ros::Subscriber head_motor_1;
+
+    ros::Publisher ball_pub;
     ros::Publisher robotPosePub;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
     tf2_ros::TransformBroadcaster br;
     std::string name;
-
+    float angle;
     BallDetector() : tfListener(tfBuffer) {
         boundingBoxesSub = n.subscribe("object_bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
+        ball_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("ball", 1);
+        boundingBoxesSub = n.subscribe("object_bounding_boxes", 1000, &BallDetector::ballDetectorCallback, this);
         robotPosePub = n.advertise<geometry_msgs::Pose>("detected_robot_pose", 1000);
-
+        head_motor_1 = n.subscribe("head_motor_1/command", 1, &BallDetector::headTilt, this);
         geometry_msgs::TransformStamped camera_pose;
         while(!n.hasParam("name")) {
             ros::Duration(1.0).sleep();
@@ -49,8 +55,12 @@ public:
         camera_position.orientation.y = camera_pose.transform.rotation.y;
         camera_position.orientation.z = camera_pose.transform.rotation.z;
         camera = std::make_unique<Camera>(camera_position);
-    }
 
+    }
+    void headTilt(const std_msgs::Float64 &msg) {
+        angle = msg.data;
+
+    }
 private:
     void ballDetectorCallback(const soccer_object_detection::BoundingBoxes::ConstPtr &msg) {
         // Get transformation
@@ -75,39 +85,61 @@ private:
         if (!camera->ready()) {
             return;
         }
+//        std::cout << angle <<(float(angle) == float(0.4)) << std::endl;
 
         for (const soccer_object_detection::BoundingBox &box: msg->bounding_boxes) {
-            std::string objectClass = box.Class;
-            if (objectClass != "ball" && objectClass != "robot") {
-                continue;
-            }
-            // For now take the center of the box
-            int xavg = (box.xmin + box.xmax) / 2;
-            int yavg = (box.ymin + box.ymax) / 2;
-            Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
+                std::string objectClass = box.Class;
+                if (objectClass != "ball" && objectClass != "robot") {
+                    continue;
+                }
+                // For now take the center of the box
+                int xavg = (box.xmin + box.xmax) / 2;
+                int yavg = (box.ymin + box.ymax) / 2;
+                Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
 
-            if(objectClass == "ball") {
-                geometry_msgs::TransformStamped ball_pose;
-                ball_pose.header.frame_id = name + "/base_footprint";
-                ball_pose.child_frame_id = name + "/ball";
-                ball_pose.header.stamp = msg->header.stamp;
-                ball_pose.header.seq = msg->header.seq;
-                ball_pose.transform.translation.x = floor_coordinate.x;
-                ball_pose.transform.translation.y = floor_coordinate.y;
-                ball_pose.transform.translation.z = floor_coordinate.z;
-                ball_pose.transform.rotation.x = 0;
-                ball_pose.transform.rotation.y = 0;
-                ball_pose.transform.rotation.z = 0;
-                ball_pose.transform.rotation.w = 1;
-                BallDetector::br.sendTransform(ball_pose);
-            } else {
-                geometry_msgs::Pose robot_pose;
-                robot_pose.position.x = floor_coordinate.x;
-                robot_pose.position.y = floor_coordinate.y;
-                robotPosePub.publish(robot_pose);
+                if (objectClass == "ball") {
+                    geometry_msgs::TransformStamped ball_pose;
+                    ball_pose.header.frame_id = name + "/base_footprint";
+                    ball_pose.child_frame_id = name + "/ball";
+                    ball_pose.header.stamp = msg->header.stamp;
+                    ball_pose.header.seq = msg->header.seq;
+                    ball_pose.transform.translation.x = floor_coordinate.x;
+                    ball_pose.transform.translation.y = floor_coordinate.y;
+                    ball_pose.transform.translation.z = floor_coordinate.z;
+                    ball_pose.transform.rotation.x = 0;
+                    ball_pose.transform.rotation.y = 0;
+                    ball_pose.transform.rotation.z = 0;
+                    ball_pose.transform.rotation.w = 1;
+
+                    BallDetector::br.sendTransform(ball_pose);
+                    geometry_msgs::PoseWithCovarianceStamped ball;
+                    ball.header.frame_id = name + "/ball";
+                    ball.header.seq = msg->header.seq;
+                    ball.header.stamp = msg->header.stamp;
+                    ball.pose.pose.position.x = floor_coordinate.x;
+                    ball.pose.pose.position.y = floor_coordinate.y;
+                    ball.pose.pose.position.z = floor_coordinate.z;
+                    ball.pose.pose.orientation.x = 0;
+                    ball.pose.pose.orientation.y = 0;
+                    ball.pose.pose.orientation.z = 0;
+                    ball.pose.pose.orientation.w = 1;
+                    ball_pub.publish(ball);
+                } else {
+                    if (float(angle) == float(0.6)) {
+                        geometry_msgs::Pose robot_pose;
+                        robot_pose.position.x = floor_coordinate.x;
+                        robot_pose.position.y = floor_coordinate.y;
+                        robotPosePub.publish(robot_pose);
+                    }
+                }
+
+
             }
-        }
+
+
     }
+
+
 };
 
 int main(int argc, char **argv) {
