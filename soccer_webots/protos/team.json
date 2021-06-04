@@ -46,7 +46,7 @@
     "3": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "sudo ./sudo ./start_competition.sh.sh robot3 -3.5 -3.6 1.57",
+      "dockerCmd": "sudo ./start_competition.sh robot3 -3.5 -3.6 1.57",
       "halfTimeStartingPose": {
         "translation": [-3.5, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]

@@ -23,7 +23,7 @@
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(arg ip_address)" />
 
-    <env name="ROBOCUP_SIMULATOR_ADDR" value="127.0.0.1:10022" />
+    <env name="ROBOCUP_SIMULATOR_ADDR" value="127.0.0.1:10021" />
 
     <group ns="$(arg robot_name)">
         <param name="walking_engine_ready" value="false" />
