@@ -25,7 +25,6 @@ class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
         # rospack = rospkg.RosPack()
         # self._package_path = rospack.get_path("bez_robocup_api")
-
         rospy.init_node("bez_robocup_api")
         parser = argparse.ArgumentParser()
         parser.add_argument('--robot_name', help="which robot should be started")
@@ -77,7 +76,7 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.1.1')
+        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
         while not rospy.is_shutdown():
             try:
                 self.socket = self.get_connection(addr)
@@ -279,8 +278,9 @@ class BezRobocupApi():
         s_m = messages_pb2.SensorMeasurements()
         s_m.ParseFromString(msg)
 
-        self.handle_time(s_m.time)
-        self.handle_real_time(s_m.real_time)
+        if self.base_frame == 'robot1':
+            self.handle_time(s_m.time)
+            self.handle_real_time(s_m.real_time)
         self.handle_messages(s_m.messages)
         self.handle_imu_data(s_m.accelerometers, s_m.gyros)
         self.handle_bumper_measurements(s_m.bumpers)

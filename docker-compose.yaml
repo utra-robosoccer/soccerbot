@@ -5,6 +5,9 @@ x-soccerbot: &soccerbot
   build:
     context: .
   network_mode: host
+  cap_add:
+    - SYS_PTRACE
+  pid: "host"
   deploy:
     resources:
       limits:
@@ -18,6 +21,9 @@ x-soccerbot: &soccerbot
     ROBOCUP_TEAM_PLAYER2_IP: localhost
     ROBOCUP_TEAM_PLAYER3_IP: localhost
     ROBOCUP_TEAM_PLAYER4_IP: localhost
+    PYTHONUNBUFFERED: 1
+  volumes:
+    - .:/root/catkin_ws/src/soccerbot
 
 services:
   friendly1: # Goalie
@@ -32,6 +38,8 @@ services:
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10001
       ROBOT_NAME: robot1
       COMPETITION: "true"
+      PYTHONUNBUFFERED: 1
+
 #  friendly2: # Left midfield
 #    <<: *soccerbot
 #    environment:
@@ -42,6 +50,8 @@ services:
 #      ROBOCUP_TEAM_COLOR: "red"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10002
 #      ROBOT_NAME: robot2
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  friendly3: # Right midfield
 #    <<: *soccerbot
@@ -53,6 +63,8 @@ services:
 #      ROBOCUP_TEAM_COLOR: "red"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10003
 #      ROBOT_NAME: robot3
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  friendly4: # Striker
 #    <<: *soccerbot
@@ -64,18 +76,22 @@ services:
 #      ROBOCUP_TEAM_COLOR: "red"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10004
 #      ROBOT_NAME: robot4
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
-  oppponent1: # Goalie
-    <<: *soccerbot
-    environment:
-      X_POS: 0.0
-      Y_POS: 3.5
-      ANGLE: -1.57
-      GOALIE: "true"
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: localhost:10021
-      ROBOT_NAME: opponent1
+#  oppponent1: # Goalie
+#    <<: *soccerbot
+#    environment:
+#      X_POS: 0.0
+#      Y_POS: 3.5
+#      ANGLE: -1.57
+#      GOALIE: "true"
+#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
+#      ROBOT_NAME: opponent1
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  oppponent2: # Left midfield
 #    <<: *soccerbot
@@ -85,8 +101,10 @@ services:
 #      ANGLE: -1.57
 #      ROBOCUP_ROBOT_ID: 2
 #      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: localhost:10022
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
 #      ROBOT_NAME: opponent2
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  oppponent3: # Right midfield
 #    <<: *soccerbot
@@ -96,8 +114,10 @@ services:
 #      ANGLE: -1.57
 #      ROBOCUP_ROBOT_ID: 3
 #      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: localhost:10023
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
 #      ROBOT_NAME: opponent3
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  oppponent4: # striker
 #    <<: *soccerbot
@@ -107,5 +127,7 @@ services:
 #      ANGLE: -1.57
 #      ROBOCUP_ROBOT_ID: 4
 #      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: localhost:10024
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
 #      ROBOT_NAME: opponent4
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1

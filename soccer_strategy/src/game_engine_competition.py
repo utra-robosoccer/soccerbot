@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import os
 
 import numpy as np
 
@@ -69,13 +70,14 @@ red_initial_position = [[-3, 0, 0], [-1.5, 1.5, 0], [-1.5, -1.5, 0], [-1, 0, 0]]
 
 class GameStatus:
     def __init__(self):
+        rospy.loginfo("Starting Soccer Strategy Competition")
         self.robot = RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.TERMINATE,
                               robot_name="robot1")
         self.ball = Ball(position=np.array([0, 0]))
         self.terminate = False #terminate all action
 
         self.teamColor = teamColor.BLUE
-        self.robot_id = rospy.get_param("robot_id")
+        self.robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
         self.gameState = gameState.GAMESTATE_INITIAL
         self.state_transition = False
         self.secondaryState = secondaryState.STATE_NORMAL
