@@ -18,6 +18,8 @@ torch==1.8.1
 torchvision==0.9.1
 
 #sudo pip install --upgrade protobuf
+#sudo pip3 install construct
+
 #Docker stuff
 #sudo docker ps
 #sudo docker kill

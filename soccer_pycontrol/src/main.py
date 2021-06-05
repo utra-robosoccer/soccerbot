@@ -12,5 +12,6 @@ import matplotlib as plt
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
+
     walker = soccerbot_controller_ros.SoccerbotControllerRos()
     walker.run()

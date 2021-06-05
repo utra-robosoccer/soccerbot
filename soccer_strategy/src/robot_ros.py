@@ -27,7 +27,7 @@ class RobotRos(Robot):
         self.team = team
         self.role = role
         self.status = status
-        self.position = np.array([0.0, 0.0, 0])
+        self.position = np.array([-3.5, -3, 0])
         self.goal_position = np.array([0.0, 0.0, 0])
         self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name

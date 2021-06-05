@@ -100,7 +100,7 @@ class Soccerbot:
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
         home = expanduser("~")
-        self.body = pb.loadURDF(home + "/catkin_ws/src/soccer_description/models/soccerbot_stl.urdf",
+        self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                 # /catkin_ws/src/soccer_description/models/soccerbot_stl.urdf
                                 # /catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf
                                 useFixedBase=useFixedBase,
