@@ -17,9 +17,6 @@
     <xacro:property name="AX12_TORQUE" value="1.5"/>
     <xacro:property name="AX12_VELOCITY" value="1"/>
 
-    <material name="black">
-        <color rgba="0.0 0.0 0.0 1.0"/>
-    </material>
     <material name="silver">
         <color rgba="0.7 0.7 0.7 1.0"/>
     </material>
