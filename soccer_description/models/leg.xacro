@@ -19,7 +19,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_hip_side.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="cyan" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/${name}_hip_front">
@@ -41,7 +41,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_hip_front.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="blue" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/${name}_thigh">
@@ -63,7 +63,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_thigh.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="red" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/${name}_calve">
@@ -85,7 +85,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_calve.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="yellow" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/${name}_ankle">
@@ -107,7 +107,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_ankle.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="purple" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/${name}_foot">
@@ -130,7 +130,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/${name}_foot.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="black" />
+                <material name="green" />
             </visual>
         </link>
 

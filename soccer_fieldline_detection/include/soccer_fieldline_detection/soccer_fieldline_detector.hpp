@@ -9,7 +9,8 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <opencv2/core/cvdef.h>
-
+#include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
 class SoccerFieldlineDetector {
 
     image_transport::Subscriber image_subscriber;
@@ -35,10 +36,12 @@ class SoccerFieldlineDetector {
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener;
     tf2_ros::TransformBroadcaster br;
+    ros::Subscriber fallen_sub;
+    bool fallen = true;
 public:
     ros::NodeHandle nh;
 
     SoccerFieldlineDetector();
-
+    void fallenCallBack(const std_msgs::Bool &msg);
     void imageCallback(const sensor_msgs::ImageConstPtr &msg);
 };
