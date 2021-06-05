@@ -247,8 +247,8 @@ class GameStateReceiver(object):
 if __name__ == '__main__':
     rospy.init_node('game_controller')
 
-    team_id = rospy.get_param("team_id")
-    robot_id = rospy.get_param("robot_id")
+    team_id = (os.getenv('ROBOCUP_TEAM_COLOR', 'red') == 'blue') + 1
+    robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
     is_goal_keeper = rospy.get_param("is_goal_keeper")
 
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)

@@ -8,11 +8,11 @@
     <arg name="goalie" default="$(optenv GOALIE false)" />
     <arg name="fake_localization" default="false" />
 
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
+
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
-
-    <env name="ROBOCUP_SIMULATOR_ADDR" value="127.0.0.1:10021" />
 
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
