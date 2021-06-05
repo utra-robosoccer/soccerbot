@@ -2,6 +2,7 @@
 import sys
 from game_engine import GameEngine
 from game_engine_competition import GameStatus
+from game_engine_comp import GameEngineComp
 
 RUN_IN_ROS = True
 
@@ -13,10 +14,10 @@ if __name__ == '__main__':
         rospy.init_node("soccer_strategy")
         rospy.sleep(1)
         r = rospy.Rate(10)
-        while rospy.get_param("walking_engine_ready") == "false":
-            r.sleep()
+        #while rospy.get_param("walking_engine_ready") == "false":
+        #    r.sleep()
 
-        g = GameStatus()
+        g = GameEngineComp()
         g.run()
 
         #g = GameEngineRos()
