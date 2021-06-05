@@ -106,9 +106,6 @@ class BalanceClass:
         self.start = False
 
     def run(self):
-
-
-
         rospy.spin()
 
 
@@ -126,17 +123,3 @@ if __name__ == '__main__':
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-#
-# import numpy as np
-# from vispy.plot import Fig
-#
-# fig = Fig()
-# ax_left = fig[0, 0]
-#
-# data = [[0,2],[1,4]]
-# ax_left.plot(data)
-# data = [[0,0],[1,3]]
-# ax_left.plot(data)
-# data = [[0,1],[1,5]]
-# ax_left.plot(data)
-# fig.show(run=True)

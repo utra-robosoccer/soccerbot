@@ -1,21 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- start Webots -->
-  <arg name="no_gui" default="false," doc="Start Webots with minimal GUI"/>
-  <arg name="world" default="" doc="Path to the world to load"/>
-  <arg name="mode" default="realtime" doc="Startup mode"/>
-
-  <arg name="single" default="true" />
-  <arg name="competition" default="false" />
   <arg name="fake_localization" default="false" />
+  <arg name="single" default="false" />
 
-  <include file="$(find soccer_webots)/launch/simulation_webot.launch" unless="$(arg competition)" >
-    <arg name="single" value="$(arg single)" />
-    <arg name="fake_localization" value="$(arg fake_localization)" />
-    <arg name="competition" value="$(arg competition)" />
-  </include>
-
-  <arg name="duration" default="20" doc="Duration in seconds"/>
-  <arg name="auto_close" default="false" doc="Startup mode"/>
-
+  <param name="/simulation_active" value="true"/>
+  <param name="/use_sim_time" value="true"/>
+  <node pkg="soccer_webots" type="start.sh" name="webots_sim" output="screen"  args="--single $(arg single) --fake_localization $(arg fake_localization) "/>
 </launch>

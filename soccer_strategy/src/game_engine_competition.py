@@ -3,7 +3,6 @@
 import numpy as np
 
 import rospy
-import os
 from soccer_msgs.msg import GameState as GameStateMsg
 import enum
 from robot_ros import RobotRos
