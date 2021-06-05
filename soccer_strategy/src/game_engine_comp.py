@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import numpy as np
-
+import math
 import rospy
 import os
 from std_msgs.msg import Bool
@@ -21,8 +21,8 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
-blue_initial_position = [[0, 3, 0], [1.5, 1.5, 0], [1.5, -1.5, 0], [1, 0, 0]]
-red_initial_position = [[-3, 0, 0], [-1.5, 1.5, 0], [-1.5, -1.5, 0], [-1, 0, 0]]
+blue_initial_position = [[0, 3, math.pi], [1.5, 1.5, math.pi], [-1.5, 1.5, math.pi], [0, 1, math.pi]]
+red_initial_position = [[0, -3, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
 robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 
