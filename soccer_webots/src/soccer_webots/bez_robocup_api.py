@@ -75,7 +75,7 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.environ.get('ROBOCUP_SIMULATOR_ADDR')
+        addr = rospy.get_param("sim_addr")
         self.socket = self.get_connection(addr)
 
         self.first_run = True

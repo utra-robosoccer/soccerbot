@@ -4,7 +4,7 @@
     "1": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "sudo ./start_competition.sh robot1 -4 -3.6 1.57",
+      "dockerCmd": "bash ./start_competition.sh robot1 -4 -3.6 1.57",
       "halfTimeStartingPose": {
         "translation": [-4, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -25,7 +25,7 @@
     "2": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "sudo ./start_competition.sh robot2 -4 3.06 -1.57",
+      "dockerCmd": "bash ./start_competition.sh robot2 -4 3.06 -1.57",
       "halfTimeStartingPose": {
         "translation": [-4, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
@@ -46,7 +46,7 @@
     "3": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "sudo ./start_competition.sh robot3 -3.5 -3.6 1.57",
+      "dockerCmd": "bash ./start_competition.sh robot3 -3.5 -3.6 1.57",
       "halfTimeStartingPose": {
         "translation": [-3.5, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -67,7 +67,7 @@
     "4": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "sudo ./start_competition.sh robot4 -3.5 3.06 -1.57",
+      "dockerCmd": "bash ./start_competition.sh robot4 -3.5 3.06 -1.57",
       "halfTimeStartingPose": {
         "translation": [-3.5, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]

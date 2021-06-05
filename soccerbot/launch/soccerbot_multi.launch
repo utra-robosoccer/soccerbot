@@ -8,9 +8,8 @@
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
     <arg name="robot_name" default="robot1" />
-    <arg name="team_id" default="25" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
-<!--    <node  pkg="soccerbot" type="competition_startup.sh" name="starting" output="screen"/>-->
+
     <include file="$(find soccerbot)/launch/modules/simulator.launch" unless="$(arg competition)">
         <arg name="single" value="$(arg single)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
@@ -29,10 +28,14 @@
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
-        <arg name="team_id" value="$(arg team_id)" />
-        <arg name="robot_id" value="1" />
-        <arg name="is_goal_keeper" value="true" />
     </include>
+
+
+
+
+
+
+
 <!--    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">-->
 <!--        <arg name="simulation" value="$(arg simulation)" />-->
 <!--        <arg name="competition" value="$(arg competition)" />-->

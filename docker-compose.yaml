@@ -10,7 +10,7 @@ x-soccerbot: &soccerbot
       limits:
         cpus: '4'
         memory: 16384MB
-  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch || sleep infinity"
+  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch || sleep infinity"
 
 services:
   friendly1: # Goalie

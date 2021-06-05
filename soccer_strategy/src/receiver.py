@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from __future__ import unicode_literals, print_function
 
@@ -13,7 +13,6 @@ interface with the GC can utilize the new protocol.
 .. moduleauthor:: Robert Kessler <8kessler@informatik.uni-hamburg.de>
 
 """
-
 
 import socket
 import time
@@ -34,10 +33,11 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
-DEFAULT_LISTENING_HOST = '127.0.1.1'
+# DEFAULT_LISTENING_HOST = '127.0.1.1'
 # DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
 GAME_CONTROLLER_LISTEN_PORT = 3838
 GAME_CONTROLLER_ANSWER_PORT = 3939
+
 
 class GameStateReceiver(object):
     """ This class puts up a simple UDP Server which receives the
@@ -48,7 +48,8 @@ class GameStateReceiver(object):
 
     After this we send a package back to the GC """
 
-    def __init__(self, team, player, is_goalkeeper, addr=(DEFAULT_LISTENING_HOST, GAME_CONTROLLER_LISTEN_PORT), answer_port=GAME_CONTROLLER_ANSWER_PORT):
+    def __init__(self, team, player, is_goalkeeper, addr,
+                 answer_port=GAME_CONTROLLER_ANSWER_PORT):
 
         # Information that is used when sending the answer to the game controller
         self.team = team
@@ -100,7 +101,7 @@ class GameStateReceiver(object):
         try:
             data, peer = self.socket.recvfrom(GameState.sizeof())
 
-            #print(len(data))
+            # print(len(data))
             # Throws a ConstError if it doesn't work
             parsed_state = GameState.parse(data)
 
@@ -151,7 +152,7 @@ class GameStateReceiver(object):
             logger.log("Network Error: %s" % str(e))
 
     def on_new_gamestate(self, state):
-        #print(state.game_state)
+        # print(state.game_state)
         """ Is called with the new game state after receiving a package.
             The information is processed and published as a standard message to a ROS topic.
             :param state: Game State
@@ -234,7 +235,7 @@ class GameStateReceiver(object):
         self.state_publisher.publish(msg)
         pub = rospy.Publisher("state", Int8, queue_size=1)  # black magic publisher
         pub.publish(state.game_state.intvalue)
-        #print("publish state: "+ str(state.game_state) )
+        # print("publish state: "+ str(state.game_state) )
 
     def get_last_state(self):
         return self.state, self.time
@@ -248,15 +249,16 @@ class GameStateReceiver(object):
     def set_manual_penalty(self, flag):
         self.man_penalize = flag
 
+
 if __name__ == '__main__':
     rospy.init_node('game_controller')
 
     team_id = rospy.get_param("team_id")
     robot_id = rospy.get_param("robot_id")
-
+    DEFAULT_LISTENING_HOST = rospy.get_param("game_controller")
     is_goal_keeper = rospy.get_param("is_goal_keeper")
     print(team_id)
     print(robot_id)
     print(is_goal_keeper)
-    rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
+    rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper, addr=(DEFAULT_LISTENING_HOST, GAME_CONTROLLER_LISTEN_PORT))
     rec.receive_forever()

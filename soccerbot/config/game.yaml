@@ -1,0 +1,6 @@
+team_id: 16
+team_color: blue
+robot_id: 1
+is_goal_keeper: true
+sim_addr: 127.0.0.1:10021
+game_controller: 127.0.1.1

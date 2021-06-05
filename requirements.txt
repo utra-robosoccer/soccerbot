@@ -34,3 +34,10 @@ construct
 #Remember object detector node cpu
 #gui
 #vim src/soccer_pycontrol/src/soccerbot.py
+#sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 --net="host" utra_bez:latest bash ./start_competition.sh robot1 -4 -3.6 1.57
+#team_id: 16
+#team_color: blue
+#robot_id: 1
+#is_goal_keeper: true
+#sim_addr: 127.0.0.1:10021
+#game_controller: 127.0.1.1
