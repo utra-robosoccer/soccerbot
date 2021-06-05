@@ -14,7 +14,7 @@ if __name__ == '__main__':
         g.run()
     else:
         DISPLAY_GAME = False
-        NUM_GAMES = 2
+        NUM_GAMES = 10
         num_friendly_wins = 0
         tot_friendly_pts = 0
         num_opponent_wins = 0

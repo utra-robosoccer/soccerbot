@@ -109,10 +109,11 @@ class GameState(IntEnum):
     FRIENDLY_POSSESSION = 3
 
 
-# TODO: sync this across Ball and GameEngine
+# TODO: sync this across Ball, Robot and GameEngine
 class PhysConsts:
     DELTA_T = 0.1
     BALL_FRIC_COEFF = 0.8
+    ROBOT_MAX_KICK_SPEED = 0.2
 
 
 class Field:
@@ -134,7 +135,7 @@ class Field:
     NET_LINE = {}
 
     @staticmethod
-    def init_nets():
+    def init():
         hw = Field.GOAL_WIDTH / 2
         # Friendly net
         bottom = Field.BOTTOM_EDGE
@@ -150,14 +151,19 @@ class Field:
         Field.NET[Robot.Team.OPPONENT] = Point(0, Field.TOP_EDGE)
         Field.NET_AREA[Robot.Team.OPPONENT] = Polygon(goal_coords)
         Field.NET_LINE[Robot.Team.OPPONENT] = LineString([(-hw, top), (hw, top)])
-
-
-Field.init_nets()
+Field.init()
 
 
 class Thresholds:
     POSSESSION = 0.2  # How close player has to be to ball to have possession
     GOALIE_ANGLE = 5 # How close goalie has to be to defense line
+    PASS = -1 # Maximum distance between players trying to pass to each other
+
+    @staticmethod
+    def init():
+        coeff = PhysConsts.DELTA_T / (1 - PhysConsts.BALL_FRIC_COEFF)
+        Thresholds.PASS = PhysConsts.ROBOT_MAX_KICK_SPEED * coeff
+Thresholds.init()
 
 
 def unit_vec(v):
@@ -188,6 +194,65 @@ def closest_point_on_line(pos, pt1, pt2):
     return crit_pos, dist
 
 
+def tangent_lines_to_circle_through_pt(c, r, pt):
+    """
+    Given a circle centered at c with radius r, this function computes the
+    points on the circle which lie on the tangent lines passing through the
+    point pt
+
+    First, we translate all points to the origin so that we only have to solve
+    this one instance of the problem. The idea is to then write the equation of
+    the circle, and substitute in y = k*x for some k. We then find the k-values
+    that result in a repeated root for the quadratic circle equation. We
+    substitute each of these k-values in to get the two different x coordinates
+    then finally substitute the x,k pairs into y = k*x to get both points of
+    interest.
+
+    Returns left point, right point
+
+    Source:
+    - https://math.stackexchange.com/questions/543496/how-to-find-the-equation-of-a-line-tangent-to-a-circle-that-passes-through-a-g
+    """
+    x_c, y_c = c - pt # Translate to origin and read out coordinates
+
+    # Find values of k that result in a tangent line
+    a_k = (3 * y_c**2 - 4 * x_c**2 + 4 * r**2)
+    b_k = 4 * x_c * y_c
+    c_k = 4 * (r**2 - y_c**2)
+    disc = b_k**2 - 4 * a_k * c_k
+    k1 = (-b_k - np.sqrt(disc)) / (2 * a_k)
+    k2 = (-b_k + np.sqrt(disc)) / (2 * a_k)
+
+    # Compute x values corresponding to each k
+    a_x1 = 1 + k1**2
+    b_x1 = 2 * x_c + k1 * y_c
+    a_x2 = 1 + k2 ** 2
+    b_x2 = 2 * x_c + k2 * y_c
+    c_x = x_c**2 + y_c**2 - r**2
+    disc_x1 = b_x1**2 - 4 * a_x1 * c_k
+    disc_x2 = b_x2 ** 2 - 4 * a_x2 * c_k
+    x1 = (-b_x1 - np.sqrt(disc_x1)) / (2 * a_x1)
+    x2 = (-b_x2 - np.sqrt(disc_x2)) / (2 * a_x2)
+
+    # Compute y values corresponding to each x value
+    y1 = k1 * x1
+    y2 = k2 * x2
+
+    # Compute final points + translate back to original coordinates
+    pt1 = np.array([x1, y1]) + pt
+    pt2 = np.array([x2, y2]) + pt
+
+    # Determine which point is "left" and which is "right". The "left" point
+    # always has the greater slope
+    if k1 > k2:
+        ptl = pt1
+        ptr = pt2
+    else:
+        ptl = pt2
+        ptr = pt1
+    return ptl, ptr
+
+
 class PlayerStrategy(Strategy):
 
     def __init__(self, player, ball):
@@ -211,7 +276,7 @@ class PlayerStrategy(Strategy):
     def _distance_to(self, pos):
         return np.linalg.norm(self._player_pos - pos)
 
-    def _has_possession(self):
+    def has_possession(self):
         return self._distance_to(self._ball_pos) <= Thresholds.POSSESSION
 
     def _is_closest_to_pos(self, pos, friendlies, opponents):
@@ -308,6 +373,9 @@ class PlayerStrategy(Strategy):
 
 
 class GoalieStrategy(PlayerStrategy):
+    """
+    Objective: defend the net against the opponent team
+    """
 
     def __init__(self, player, ball):
         super().__init__(player, ball)
@@ -360,14 +428,15 @@ class GoalieStrategy(PlayerStrategy):
         self._move_player_to(crit_pos)
 
     def update_next_strategy(self, friendlies, opponents):
-        if self._has_possession():
+        if self.has_possession():
             # Return ball to offensive players
             self._pass_to_offense(friendlies)
         elif self._shot_on_net():
             # Intercept shot on net
             self._defend_shot()
         elif self._is_closest_to_ball_dest(friendlies, opponents):
-            # Intercept nearby ball
+            # Intercept nearby ballb
+            # Assumes ALL robots have same speed
             self._pursue_ball()
         else:
             # Defend along ball-goal line
@@ -375,13 +444,17 @@ class GoalieStrategy(PlayerStrategy):
 
 
 class ScoreStrategy(PlayerStrategy):
+    """
+    Objective: score on the other team
+    """
 
     def __init__(self, player, ball):
         super().__init__(player, ball)
 
     def update_next_strategy(self, friendlies, opponents):
-        if self._has_possession():
+        if self.has_possession():
             # Try kicking to nearest point on goal line
+            # TODO: account for kick angle uncertainty; play it safe
             opp_net_line = np.array(self._opponent_net_line)
             goal_pos, dist = closest_point_on_line(
                 self._player_pos, opp_net_line[Field.X_COORD],
@@ -389,8 +462,147 @@ class ScoreStrategy(PlayerStrategy):
             )
             self._kick_ball(goal_pos)
         elif self._is_closest_to_ball_dest(friendlies, []):
+            # TODO: ^ not the best way. Should ideally have a function like
+            # _can_intercept_ball_quickest(). Figuring out how to compute
+            # that needs work though
             ball_dest = self._est_ball_dest()
             self._move_player_to(ball_dest)
+
+
+class OpenStrategy(PlayerStrategy):
+    """
+    Objective: find and move to an open position (to receive passes)
+    """
+
+    def __init__(self, player, ball):
+        super().__init__(player, ball)
+
+    def _get_feasible_region_angles(self, obstacles):
+        """
+        Returns a list of angles defining feasible regions for the purposes of
+        passing the ball. Each element of the list is a pair
+        (theta_left, theta_right).
+
+        Assumes that no obstacles overlap with the ball
+        """
+        # First, find the tangent points
+        r_obs = Thresholds.POSSESSION  # TODO: add robot_width / 2
+        regs = []
+        for obs in obstacles:
+            ptl, ptr = tangent_lines_to_circle_through_pt(obs, r_obs, self._ball_pos)
+            theta_l = np.arctan2(ptl[Field.Y_COORD], ptl[Field.X_COORD])
+            theta_r = np.arctan2(ptr[Field.Y_COORD], ptr[Field.X_COORD])
+            angles = (theta_l, theta_r)
+            for angle in angles:
+                if angle < 0:
+                    angle += 2 * np.pi
+            regs.append(angles)
+        # Now find the feasible regions
+        regs.sort()  # Sort by ascending theta_l
+        feas_regs = []
+        if len(regs) == 1:
+            theta_l, theta_r = regs[0]
+            feas_regs.append([(theta_r, theta_l)])
+        else:
+            i = 0
+            while i < len(regs) - 1:
+                theta_li, theta_ri = regs[i]
+                theta_lip1, theta_rip1 = regs[i + 1]
+                if theta_rip1 > theta_li:
+                    # Only feasible if non-overlapping
+                    feas_regs.append((theta_rip1, theta_li))
+                i += 1
+            # Handle edge case for first & last regions
+            theta_l1, theta_r1 = regs[0]
+            theta_lend, theta_rend = regs[-1]
+            if theta_lend < theta_r1:
+                feas_regs.append((theta_r1, theta_lend))
+        return feas_regs
+
+    def _compute_goal_pos(self, opponents):
+        """
+        Computes the "open" position to move towards. Should be within line of
+        sight of the ball, and away from opponents
+        """
+        # 1. Find obstacles (i.e., opponents) within passing radius of the ball
+        obstacles = []
+        is_infeasible = False
+        for robot in opponents:
+            pos = robot.get_position()[0:2]
+            dist = self._distance_to(pos)
+            if dist <= Thresholds.PASS:
+                obstacles.append(pos)
+            if dist <= Thresholds.POSSESSION:
+                # Ball is overlapping with an obstacle
+                is_infeasible = True
+                break
+        # Compute some stuff we'll reuse throughout
+        opp_net_line = np.array(self._opponent_net_line)
+        net_pos, dist = closest_point_on_line(
+            self._player_pos, opp_net_line[Field.X_COORD],
+            opp_net_line[Field.Y_COORD]
+        )
+        gb_unit_vec = unit_vec(net_pos - self._ball_pos)
+        # 2. If infeasible or no obstacles, set goal position to point on pass
+        # circle closest to the goal line. Otherwise, we have to account for
+        # obstacles
+        if is_infeasible or len(obstacles) == 0:
+            opp_net_line = np.array(self._opponent_net_line)
+            net_pos, dist = closest_point_on_line(
+                self._player_pos, opp_net_line[Field.X_COORD],
+                opp_net_line[Field.Y_COORD]
+            )
+            goal_pos = Thresholds.PASS * gb_unit_vec + self._ball_pos
+        else:
+            # 3. Compute feasible regions, each defined by a left and right
+            # point
+            feas_regs = self._get_feasible_region_angles(obstacles)
+
+            # 4. If no feasible regions, ensure the player is nearby even if
+            # there's no way to pass to them right now. Otherwise, need to
+            # search for best region
+            if len(feas_regs) == 0:
+                delta = self._ball_pos - self._player_pos
+                goal_pos = Thresholds.PASS * unit_vec(delta)
+                goal_pos += self._player_pos
+            else:
+                # 5. For each feasible region, compute the minimum distance
+                # between the net position and region, as well as the point
+                # that minimizes this distance
+                dists = []
+                gb_angle = np.arctan2(
+                    gb_unit_vec[Field.Y_COORD], gb_unit_vec[Field.X_COORD]
+                )
+                if gb_angle < 0:
+                    gb_angle += 2 * np.pi
+                for theta_l, theta_r in feas_regs:
+                    gb_angle_tmp = gb_angle
+                    if theta_l < theta_r:
+                        # Rotate coords if needed
+                        theta_l -= theta_r
+                        theta_r -= theta_r
+                        gb_angle_tmp -= theta_r
+                    if theta_l >= gb_angle_tmp >= theta_r:
+                        pt = Thresholds.PASS * gb_unit_vec + self._ball_pos
+                        dmin = distance_between(net_pos, pt)
+                    elif gb_angle>= theta_l:
+                        pt = Thresholds.PASS * np.array([np.cos(theta_l), np.sin(theta_l)]) + self._ball_pos
+                        dmin = distance_between(net_pos, pt)
+                    else:
+                        pt = Thresholds.PASS * np.array([np.cos(theta_r), np.sin(theta_r)]) + self._ball_pos
+                        dmin = distance_between(net_pos, pt)
+                    dists.append((dmin, pt))
+
+                # 6. From the previously-computed set of points, choose the one
+                # with minimum distance to the net
+                dists.sort()
+                dmin, pt = dists[0]
+                goal_pos = pt
+        return goal_pos
+
+    def update_next_strategy(self, friendlies, opponents):
+        x_g = self._compute_goal_pos(opponents)
+        # TODO: path planning with obstacle avoidance
 
 
 class TeamStrategy(Strategy):
