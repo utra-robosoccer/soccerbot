@@ -20,4 +20,25 @@
     <material name="black">
         <color rgba="0.0 0.0 0.0 1.0"/>
     </material>
+    <material name="silver">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+    <material name="yellow">
+        <color rgba="0.9 0.9 0.0 1.0"/>
+    </material>
+    <material name="red">
+        <color rgba="0.7 0.0 0.0 1.0"/>
+    </material>
+    <material name="green">
+        <color rgba="0.0 0.7 0.0 1.0"/>
+    </material>
+    <material name="blue">
+        <color rgba="0.0 0.0 0.7 1.0"/>
+    </material>
+    <material name="purple">
+        <color rgba="0.7 0.0 0.7 1.0"/>
+    </material>
+    <material name="cyan">
+        <color rgba="0.0 0.7 0.7 1.0"/>
+    </material>
 </robot>

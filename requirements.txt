@@ -10,11 +10,13 @@ serial
 transforms3d
 python3-protobuf
 protobuf
+construct==2.5.3
+
 # object detection
 Pillow==8.2.0
 torch==1.8.1
 torchvision==0.9.1
-construct
+
 #sudo pip install --upgrade protobuf
 #Docker stuff
 #sudo docker ps

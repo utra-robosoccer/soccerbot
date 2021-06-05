@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# -*- coding:utf-8 -*-
+#-*- coding:utf-8 -*-
 
 from __future__ import unicode_literals, print_function
 
@@ -13,6 +13,7 @@ interface with the GC can utilize the new protocol.
 .. moduleauthor:: Robert Kessler <8kessler@informatik.uni-hamburg.de>
 
 """
+
 
 import socket
 import time
@@ -37,7 +38,6 @@ logger.addHandler(console_handler)
 # DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
 GAME_CONTROLLER_LISTEN_PORT = 3838
 GAME_CONTROLLER_ANSWER_PORT = 3939
-
 
 class GameStateReceiver(object):
     """ This class puts up a simple UDP Server which receives the
