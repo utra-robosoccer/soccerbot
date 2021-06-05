@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import numpy as np
 
 import rospy
@@ -7,7 +9,6 @@ import enum
 from robot_ros import RobotRos
 from robot import Robot
 from ball import Ball
-from std_msgs.msg import  Int8
 
 import logging
 
@@ -19,7 +20,7 @@ console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
 class gameState(enum.IntEnum):
-    GAMESTATE_INITAL = 0
+    GAMESTATE_INITIAL = 0
     GAMESTATE_READY = 1
     GAMESTATE_SET = 2
     GAMESTATE_PLAYING = 3
@@ -63,8 +64,8 @@ class teamColor(enum.IntEnum):
     RED = 1
 
 
-red_inital_position = [[3, 0, 0], [1.5, 1.5, 0], [1.5, -1.5, 0], [1, 0, 0]]
-blue_inital_position = [[-3, 0, 0], [-1.5, 1.5, 0], [-1.5, -1.5, 0], [-1, 0, 0]]
+blue_initial_position = [[3, 0, 0], [1.5, 1.5, 0], [1.5, -1.5, 0], [1, 0, 0]]
+red_initial_position = [[-3, 0, 0], [-1.5, 1.5, 0], [-1.5, -1.5, 0], [-1, 0, 0]]
 
 
 class GameStatus:
@@ -76,7 +77,7 @@ class GameStatus:
 
         self.teamColor = teamColor.BLUE
         self.robot_id = rospy.get_param("robot_id")
-        self.gameState = gameState.GAMESTATE_INITAL
+        self.gameState = gameState.GAMESTATE_INITIAL
         self.state_transition = False
         self.secondaryState = secondaryState.STATE_NORMAL
         self.firstHalf = True
@@ -90,10 +91,7 @@ class GameStatus:
         self.allowedToMove = False
 
         self.gamecontroller_subscriber = rospy.Subscriber('gamestate', GameStateMsg, self.gamecontroller_callback)
-        self.g_subscriber = rospy.Subscriber('state', Int8, self.g_callback) # black magic publisher
 
-    def g_callback(self,data):
-        print(data)
 
     def gamecontroller_callback(self, data):
         new_gameState = gameState(data.gameState)
@@ -133,9 +131,9 @@ class GameStatus:
 
                 if self.gameState == gameState.GAMESTATE_READY:
                     if self.teamColor == teamColor.BLUE:
-                        self.robot.set_navigation_position(blue_inital_position[self.robot_id-1])
+                        self.robot.set_navigation_position(blue_initial_position[self.robot_id-1])
                     elif self.teamColor == teamColor.RED:
-                        self.robot.set_navigation_position(red_inital_position[self.robot_id-1])
+                        self.robot.set_navigation_position(red_initial_position[self.robot_id-1])
                     else:
                         print("failed to get team color")
 
