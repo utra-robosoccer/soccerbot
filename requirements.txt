@@ -8,6 +8,7 @@ scipy>=1.6.2
 prettytable
 serial
 transforms3d
+construct==2.5.3
 
 # object detection
 Pillow==8.2.0
