@@ -60,3 +60,34 @@ class Robot:
         return opponent_goal
 
 
+class gameState(enum.IntEnum):
+    GAMESTATE_INITIAL = 0
+    GAMESTATE_READY = 1
+    GAMESTATE_SET = 2
+    GAMESTATE_PLAYING = 3
+    GAMESTATE_FINISHED = 4
+
+
+class secondaryState(enum.IntEnum):
+    STATE_NORMAL = 0
+    STATE_PENALTYSHOOT = 1
+    STATE_OVERTIME = 2
+    STATE_TIMEOUT = 3
+    STATE_DIRECT_FREEKICK = 4
+    STATE_INDIRECT_FREEKICK = 5
+    STATE_PENALTYKICK = 6
+    STATE_CORNER_KICK = 7
+    STATE_GOAL_KICK = 8
+    STATE_THROW_IN = 9
+
+
+class secondaryStateMode(enum.IntEnum):
+    MODE_PREPARATION = 0
+    MODE_PLACING = 1
+    MODE_END = 2
+    # The secondary state contains a sub mode in which phase of execution the secondary state is
+
+
+class teamColor(enum.IntEnum):
+    BLUE = 0
+    RED = 1

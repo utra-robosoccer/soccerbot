@@ -102,7 +102,7 @@ class GameEngineRos(game_engine.GameEngine):
 
             if rostime % (GameEngineRos.STRATEGY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
                     rostime_previous % (GameEngineRos.STRATEGY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL):
-                self.strategy.update_both_team_strategy(self.robots, self.ball)
+                self.strategy.update_friendly_strategy(self.robots, self.ball)
 
             self.updateEstimatedPhysics(self.robots, self.ball)
 
