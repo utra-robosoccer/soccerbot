@@ -36,7 +36,6 @@
             <geometry>
                 <mesh filename="${FILE_PATH}/meshes/torso.${MODEL_TYPE}" scale="1 1 1"/>
             </geometry>
-            <material name="black" />
         </visual>
     </link>
 

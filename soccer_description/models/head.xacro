@@ -19,7 +19,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/neck.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="silver" />
+                <material name="black" />
             </visual>
         </link>
         <link name="$(arg tf_prefix)/head">
@@ -41,7 +41,7 @@
                 <geometry>
                     <mesh filename="${FILE_PATH}/meshes/head.${MODEL_TYPE}" scale="1 1 1"/>
                 </geometry>
-                <material name="silver" />
+                <material name="black" />
             </visual>
         </link>
 
