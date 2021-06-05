@@ -4,9 +4,6 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="soccerbot">
-  <material name="black">
-    <color rgba="0.0 0.0 0.0 1.0"/>
-  </material>
   <material name="silver">
     <color rgba="0.7 0.7 0.7 1.0"/>
   </material>

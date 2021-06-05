@@ -90,9 +90,3 @@ class WalkingForwardNormAgn(Env):
         val = (val / 2) * (high_end - low_end)
         val = val + low_end
         return self.dtype(val)
-
-
-
-
-
-

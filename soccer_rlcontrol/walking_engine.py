@@ -174,9 +174,9 @@ def imu_callback(msg):
     imu_values[0] = msg.linear_acceleration.x * (19.62 / 32768)
     imu_values[1] = msg.linear_acceleration.y * (19.62 / 32768)
     imu_values[2] = msg.linear_acceleration.z * (19.62 / 32768)
-    imu_values[3] = msg.angular_velocity.x * (500 / 32768)
-    imu_values[4] = msg.angular_velocity.y * (500 / 32768)
-    imu_values[5] = msg.angular_velocity.z * (500 / 32768)
+    imu_values[3] = msg.angular_velocity.x * (8.7266 / 32768)
+    imu_values[4] = msg.angular_velocity.y * (8.7266 / 32768)
+    imu_values[5] = msg.angular_velocity.z * (8.7266 / 32768)
 
 
 def pose_callback(msg):
@@ -193,12 +193,12 @@ if __name__ == '__main__':
     trainer, trainer_class = es.ESTrainer, es
     config = trainer_class.DEFAULT_CONFIG.copy()
     config["framework"] = "tf"
-    config["env_config"] = {"env_name": "gym_soccerbot:walk-forward-velocity-v2"}
+    config["env_config"] = {"env_name": "gym_soccerbot:walk-omni-v0"}
     config["num_workers"] = 1
     agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
     agent.load_checkpoint(checkpoint_path)
     env_id = "walk-forward-norm-v1"
-    env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-forward-velocity-v2", goal=(2, 0))
+    env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-omni-v0", goal=(2, 0))
     sub_js = rospy.Subscriber("/robot1/joint_states", JointState, js_callback)
     sub_imu = rospy.Subscriber("/robot1/imu_data", Imu, imu_callback)
     sub_pose = rospy.Subscriber("/robot1/amcl_pose", PoseWithCovarianceStamped, pose_callback)
