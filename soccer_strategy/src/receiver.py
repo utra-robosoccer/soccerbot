@@ -151,7 +151,6 @@ class GameStateReceiver(object):
             logger.log("Network Error: %s" % str(e))
 
     def on_new_gamestate(self, state):
-        #print(state.game_state)
         """ Is called with the new game state after receiving a package.
             The information is processed and published as a standard message to a ROS topic.
             :param state: Game State
@@ -232,9 +231,6 @@ class GameStateReceiver(object):
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
-        pub = rospy.Publisher("state", Int8, queue_size=1)  # black magic publisher
-        pub.publish(state.game_state.intvalue)
-        #print("publish state: "+ str(state.game_state) )
 
     def get_last_state(self):
         return self.state, self.time
@@ -253,10 +249,7 @@ if __name__ == '__main__':
 
     team_id = rospy.get_param("team_id")
     robot_id = rospy.get_param("robot_id")
-
     is_goal_keeper = rospy.get_param("is_goal_keeper")
-    print(team_id)
-    print(robot_id)
-    print(is_goal_keeper)
+
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
     rec.receive_forever()
