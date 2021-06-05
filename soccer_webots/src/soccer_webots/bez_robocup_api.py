@@ -278,9 +278,8 @@ class BezRobocupApi():
         s_m = messages_pb2.SensorMeasurements()
         s_m.ParseFromString(msg)
 
-        if self.base_frame == 'robot1':
-            self.handle_time(s_m.time)
-            self.handle_real_time(s_m.real_time)
+        self.handle_time(s_m.time)
+        self.handle_real_time(s_m.real_time)
         self.handle_messages(s_m.messages)
         self.handle_imu_data(s_m.accelerometers, s_m.gyros)
         self.handle_bumper_measurements(s_m.bumpers)
@@ -298,14 +297,16 @@ class BezRobocupApi():
         msg = Clock()
         msg.clock.secs = ros_time.secs
         msg.clock.nsecs = ros_time.nsecs
-        self.pub_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_clock.publish(msg)
 
     def handle_real_time(self, time):
         # real unix time stamp at which the measurements were performed in [ms]
         msg = Clock()
         msg.clock.secs = time // 1000
         msg.clock.nsecs = (time % 1000) * 10 ** 6
-        self.pub_server_time_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_server_time_clock.publish(msg)
 
     def handle_messages(self, messages):
         for message in messages:
