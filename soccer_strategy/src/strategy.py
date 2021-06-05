@@ -6,7 +6,7 @@ class Strategy:
     def __init__(self):
         pass
 
-    def update_both_team_strategy(self, robots, ball):
+    def update_friendly_strategy(self, robots, ball):
         friendly = []
         opponent = []
         for robot in robots:
