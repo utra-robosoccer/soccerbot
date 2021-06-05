@@ -6,7 +6,7 @@
     <arg name="map_name" />
     <arg name="x_pos" />
     <arg name="y_pos" />
-
+    <arg name="a_pos" />
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
           args="$(find soccer_common)/maps/$(arg map_name).yaml">
@@ -51,11 +51,12 @@
 
     </node>
 
-<!--     AMCL Localization -->
+<!--     AMCL Localization $(arg x_pos)-->
     <node pkg="amcl" type="amcl" name="amcl" unless="$(arg fake_localization)">
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
         <param name="initial_pose_x" value="$(arg x_pos)" />
         <param name="initial_pose_y" value="$(arg y_pos)" />
+        <param name="initial_pose_a" value="$(arg a_pos)" />
         <param name="odom_frame_id" value="$(arg robot_name)/odom" />
         <param name="base_frame_id" value="$(arg robot_name)/base_camera" />
     </node>

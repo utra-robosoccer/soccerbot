@@ -3,7 +3,7 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"  />
     <include file="$(find video_stream_opencv)/launch/camera.launch">
         <arg name="camera_name" value="camera"/>
-        <arg name="video_stream_provider" value="$(find soccer_fieldline_detection)/media/videos/test4.mp4"/>
+        <arg name="video_stream_provider" value="$(find soccer_fieldline_detection)/media/videos/test5.mp4"/>
         <arg name="visualize" value="false"/>
     </include>
     <node pkg="soccer_fieldline_detection" type="test_soccer_vision" name="test_soccer_vision"
