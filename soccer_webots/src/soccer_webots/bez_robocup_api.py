@@ -76,14 +76,14 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
+        addr = rospy.get_param('ROBOCUP_SIMULATOR_ADDR')
         while not rospy.is_shutdown():
             try:
                 self.socket = self.get_connection(addr)
                 break
             except ConnectionRefusedError as ex:
                 rospy.logwarn(ex)
-                time.sleep(10)
+                time.sleep(1)
 
         self.first_run = True
         self.published_camera_info = False

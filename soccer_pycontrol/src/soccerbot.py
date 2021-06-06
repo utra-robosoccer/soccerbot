@@ -1,5 +1,4 @@
-import pybullet as pb
-import numpy as np
+import os
 import enum
 from transformation import Transformation as tr
 import matplotlib.pyplot as plt
@@ -7,6 +6,12 @@ from robotpath import Robotpath
 import math
 from os.path import expanduser
 from copy import deepcopy
+import numpy as np
+import rospy
+
+if rospy.get_param('ENABLE_PYBULLET'):
+    import pybullet as pb
+
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -76,23 +81,45 @@ class Soccerbot:
         :param link2: Ending link
         :return: H-transform from starting link to the ending link
         """
-        if link1 == Links.TORSO:
-            link1world = pb.getBasePositionAndOrientation(self.body)
-            link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+        if rospy.get_param('ENABLE_PYBULLET'):
+            if link1 == Links.TORSO:
+                link1world = pb.getBasePositionAndOrientation(self.body)
+                link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+            else:
+                link1world = pb.getLinkState(self.body, link1)[4:6]
+
+            if link2 == Links.TORSO:
+                link2world = pb.getBasePositionAndOrientation(self.body)
+                link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+            else:
+                link2world = pb.getLinkState(self.body, link2)[4:6]
+
+            link1worldrev = pb.invertTransform(link1world[0], link1world[1])
+            link2worldrev = pb.invertTransform(link2world[0], link2world[1])
+
+            final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0],
+                                                         link1worldrev[1])
+            return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
         else:
-            link1world = pb.getLinkState(self.body, link1)[4:6]
+            if link1 == Links.RIGHT_LEG_4 and link2 == Links.RIGHT_LEG_3:
+                matrix = [[0., -0., 0.089], [0., 0., 0., 1.]]
+            elif link1 == Links.RIGHT_LEG_5 and link2 == Links.RIGHT_LEG_4:
+                matrix = [[0., 0., 0.0827], [0., -0., 0., 1.]]
+            elif link1 == Links.TORSO and link2 == Links.RIGHT_LEG_1:
+                matrix = [[0.0135, -0.035, -0.156], [0., -0., 0., 1.]]
+            elif link1 == Links.LEFT_LEG_1 and link2 == Links.RIGHT_LEG_1:
+                matrix = [[0., -0.07, 0.], [0., -0., 0., 1.]]
+            elif link1 == Links.RIGHT_LEG_1 and link2 == Links.TORSO:
+                matrix = [[-0.0135, 0.035, 0.156], [0., -0., 0., 1.]]
+            elif link1 == Links.TORSO and link2 == Links.RIGHT_LEG_6:
+                matrix = [[0.0135, -0.035, -0.3277], [0., -0., 0., 1.]]
+            elif link1 == Links.TORSO and link2 == Links.LEFT_LEG_6:
+                matrix = [[0.0135, 0.035, -0.3277], [0., -0., 0., 1.]]
+            # print(os.getenv('ENABLE_PYBULLET', 'true'))
+            # print(tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5)))
+            # print(tr(matrix[0], matrix[1]))
 
-        if link2 == Links.TORSO:
-            link2world = pb.getBasePositionAndOrientation(self.body)
-            link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
-        else:
-            link2world = pb.getLinkState(self.body, link2)[4:6]
-
-        link1worldrev = pb.invertTransform(link1world[0], link1world[1])
-        link2worldrev = pb.invertTransform(link2world[0], link2world[1])
-
-        final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0], link1worldrev[1])
-        return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
+            return tr(matrix[0], matrix[1])  # tr(matrix)
 
     def __init__(self, pose, useFixedBase=False):
         """
@@ -101,11 +128,13 @@ class Soccerbot:
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
         home = expanduser("~")
-        self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
-                                useFixedBase=useFixedBase,
-                                flags=pb.URDF_USE_INERTIA_FROM_FILE,
-                                basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
-                                baseOrientation=pose.get_orientation())
+        if rospy.get_param('ENABLE_PYBULLET'):
+            self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
+                                    useFixedBase=useFixedBase,
+                                    flags=pb.URDF_USE_INERTIA_FROM_FILE,
+                                    basePosition=[pose.get_position()[0], pose.get_position()[1],
+                                                  Soccerbot.standing_hip_height],
+                                    baseOrientation=pose.get_orientation())
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
@@ -127,10 +156,12 @@ class Soccerbot:
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.right_foot_init_position[2, 3] = -(
+                self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
-        self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.left_foot_init_position[2, 3] = -(
+                self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
         self.setPose(pose)
         self.torso_offset = tr()
@@ -138,15 +169,15 @@ class Soccerbot:
 
         self.configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.max_forces = []
-        for i in range(0,18):
-            self.max_forces.append(pb.getJointInfo(self.body, i)[10])
 
-
-        pb.setJointMotorControlArray(bodyIndex=self.body,
-                                     controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 18, 1)),
-                                     targetPositions=self.get_angles(),
-                                     forces=self.max_forces)
+        if rospy.get_param('ENABLE_PYBULLET'):
+            for i in range(0, 18):
+                self.max_forces.append(pb.getJointInfo(self.body, i)[10])
+            pb.setJointMotorControlArray(bodyIndex=self.body,
+                                         controlMode=pb.POSITION_CONTROL,
+                                         jointIndices=list(range(0, 18, 1)),
+                                         targetPositions=self.get_angles(),
+                                         forces=self.max_forces)
 
         self.current_step_time = 0
 
@@ -172,11 +203,12 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        pb.setJointMotorControlArray(bodyIndex=self.body,
-                                     controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 18, 1)),
-                                     targetPositions=self.get_angles(),
-                                     forces=self.max_forces)
+        if rospy.get_param('ENABLE_PYBULLET'):
+            pb.setJointMotorControlArray(bodyIndex=self.body,
+                                         controlMode=pb.POSITION_CONTROL,
+                                         jointIndices=list(range(0, 18, 1)),
+                                         targetPositions=self.get_angles(),
+                                         forces=self.max_forces)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
@@ -250,7 +282,8 @@ class Soccerbot:
 
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
         self.pose.set_orientation([0, 0, 0, 1])
-        pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+        if rospy.get_param('ENABLE_PYBULLET'):
+            pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
     def setGoal(self, finishPosition):
         """
@@ -360,68 +393,69 @@ class Soccerbot:
         foot_pressure_values = self.get_foot_pressure_sensors(floor)
 
         motor_forces = deepcopy(self.max_forces)
-        if (foot_pressure_values[0] and foot_pressure_values[1]) or (foot_pressure_values[2] and foot_pressure_values[3]): # Right foot on the ground
+        if (foot_pressure_values[0] and foot_pressure_values[1]) or (
+                foot_pressure_values[2] and foot_pressure_values[3]):  # Right foot on the ground
             motor_forces[Joints.RIGHT_LEG_6] = 0.5
-        if (foot_pressure_values[4] and foot_pressure_values[5]) or (foot_pressure_values[6] and foot_pressure_values[7]): # Right foot on the ground
+        if (foot_pressure_values[4] and foot_pressure_values[5]) or (
+                foot_pressure_values[6] and foot_pressure_values[7]):  # Right foot on the ground
             motor_forces[Joints.LEFT_LEG_6] = 0.5
 
         return motor_forces
 
+    if rospy.get_param('ENABLE_PYBULLET'):
+        def get_imu(self, verbose=False):
+            """
+            Simulates the IMU at the IMU link location.
+            TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
+            :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
+            :return: concatenated 3-axes values for linear acceleration and angular velocity
+            """
+            [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU,
+                                                             computeLinkVelocity=1)[5:8]
+            # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
+            # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
+            # p.getBaseVelocity(self.soccerbotUid)
+            lin_vel = np.array(lin_vel, dtype=np.float32)
+            self.gravity = [0, 0, -9.81]
+            lin_acc = (lin_vel - self.prev_lin_vel) / self.time_step_sim
+            lin_acc -= self.gravity
+            rot_mat = np.array(pb.getMatrixFromQuaternion(quart_link), dtype=np.float32).reshape((3, 3))
+            lin_acc = np.matmul(rot_mat, lin_acc)
+            ang_vel = np.array(ang_vel, dtype=np.float32)
+            self.prev_lin_vel = lin_vel
+            if verbose:
+                print(f'lin_acc = {lin_acc}', end="\t\t")
+                print(f'ang_vel = {ang_vel}')
+            return np.concatenate((lin_acc, ang_vel))
 
-    def get_imu(self, verbose=False):
-        """
-        Simulates the IMU at the IMU link location.
-        TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
-        :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
-        :return: concatenated 3-axes values for linear acceleration and angular velocity
-        """
-        [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU,
-                                                         computeLinkVelocity=1)[5:8]
-        # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
-        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
-        # p.getBaseVelocity(self.soccerbotUid)
-        lin_vel = np.array(lin_vel, dtype=np.float32)
-        self.gravity = [0, 0, -9.81]
-        lin_acc = (lin_vel - self.prev_lin_vel) / self.time_step_sim
-        lin_acc -= self.gravity
-        rot_mat = np.array(pb.getMatrixFromQuaternion(quart_link), dtype=np.float32).reshape((3, 3))
-        lin_acc = np.matmul(rot_mat, lin_acc)
-        ang_vel = np.array(ang_vel, dtype=np.float32)
-        self.prev_lin_vel = lin_vel
-        if verbose:
-            print(f'lin_acc = {lin_acc}', end="\t\t")
-            print(f'ang_vel = {ang_vel}')
-        return np.concatenate((lin_acc, ang_vel))
+        def get_foot_pressure_sensors(self, floor):
+            """
+            Checks if 4 corners of the each feet are in contact with ground
 
-    def get_foot_pressure_sensors(self, floor):
-        """
-        Checks if 4 corners of the each feet are in contact with ground
+            Indicies for looking from above on the feet plates:
+              Left         Right
+            4-------5    0-------1
+            |   ^   |    |   ^   |      ^
+            |   |   |    |   |   |      | : forward direction
+            |       |    |       |
+            6-------7    2-------3
 
-        Indicies for looking from above on the feet plates:
-          Left         Right
-        4-------5    0-------1
-        |   ^   |    |   ^   |      ^
-        |   |   |    |   |   |      | : forward direction
-        |       |    |       |
-        6-------7    2-------3
-
-        :param floor: PyBullet body id of the plane the robot is walking on.
-        :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
-        """
-        locations = [False] * 8
-        right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
-        left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
-        right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
-        left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-        right_tr = tr.get_rotation_matrix_from_transformation(
-            tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]))
-        left_tr = tr.get_rotation_matrix_from_transformation(
-            tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]))
-        for point in right_pts:
-            index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
-            locations[index[1] + index[0] * 2] = True
-        for point in left_pts:
-            index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
-            locations[index[1] + (index[0] * 2) + 4] = True
-        return locations
-
+            :param floor: PyBullet body id of the plane the robot is walking on.
+            :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
+            """
+            locations = [False] * 8
+            right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
+            left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
+            right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
+            left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
+            right_tr = tr.get_rotation_matrix_from_transformation(
+                tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]))
+            left_tr = tr.get_rotation_matrix_from_transformation(
+                tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]))
+            for point in right_pts:
+                index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
+                locations[index[1] + index[0] * 2] = True
+            for point in left_pts:
+                index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
+                locations[index[1] + (index[0] * 2) + 4] = True
+            return locations

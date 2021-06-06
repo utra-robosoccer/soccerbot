@@ -12,7 +12,4 @@ soccer_description/meshes/*.stl
 soccer_hardware
 soccer_rlcontrol
 soccer_embedded
-soccer_webots/protos
-soccer_webots/worlds
-soccer_webots/controllers
 soccer_fieldline_detection/media
