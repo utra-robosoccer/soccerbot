@@ -62,8 +62,8 @@ class DummyStrategy(Strategy):
         position = [round(friendly[0].position[0] + ball.get_position()[0], 2),
                     round(friendly[0].position[1] + ball.get_position()[1], 2), 0]
         print(position)
-        print(np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()))
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 4.7:
+        print(np.linalg.norm( ball.get_position()))
+        if np.linalg.norm(ball.get_position()) < 0.225:
             # Stop moving
             current_closest.set_navigation_position(current_closest.get_position())
 

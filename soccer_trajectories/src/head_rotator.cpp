@@ -75,7 +75,7 @@ public:
         }
         ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
 //        std::cout << last_pose << "   "<< has_pose << std::endl;
-        if (last_pose < ros::Duration(0.1)) {
+        if (last_pose < ros::Duration(0.2)) {
 //            std::cout << last_pose << std::endl;
             has_pose = true;
             return;
@@ -108,7 +108,7 @@ public:
                     else {
 
                         std_msgs::Float64 angle2;
-                        angle2.data = 0.8;
+                        angle2.data = 1.0;
                         head_rotator_1.publish(angle2);
                     }
                     //std::cout << angle.data << "    " << first_wave << std::endl;
