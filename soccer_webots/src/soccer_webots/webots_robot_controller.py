@@ -33,31 +33,67 @@ class RobotController:
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
 
-        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
-                            "right_arm_motor_1",
-                            "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
-                            ]
-        self.sensor_names = ["left_arm_motor_0_sensor", "left_arm_motor_1_sensor", "right_arm_motor_0_sensor",
-                             "right_arm_motor_1_sensor",
-                             "right_leg_motor_0_sensor", "right_leg_motor_1_sensor", "right_leg_motor_2_sensor",
-                             "right_leg_motor_3_sensor",
-                             "right_leg_motor_4_sensor", "right_leg_motor_5_sensor", "left_leg_motor_0_sensor",
-                             "left_leg_motor_1_sensor",
-                             "left_leg_motor_2_sensor", "left_leg_motor_3_sensor", "left_leg_motor_4_sensor",
-                             "left_leg_motor_5_sensor",
-                             "head_motor_0_sensor", "head_motor_1_sensor"
-                             ]
+        self.motor_names = [
+            "left_arm_motor_0 [shoulder]",
+            "left_arm_motor_1",
+            "right_arm_motor_0 [shoulder]",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1 [hip]",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1 [hip]",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1"
+        ]
+        self.sensor_names = [
+            "left_arm_motor_0_sensor",
+            "left_arm_motor_1_sensor",
+            "right_arm_motor_0_sensor",
+            "right_arm_motor_1_sensor",
+            "right_leg_motor_0_sensor",
+            "right_leg_motor_1_sensor",
+            "right_leg_motor_2_sensor",
+            "right_leg_motor_3_sensor",
+            "right_leg_motor_4_sensor",
+            "right_leg_motor_5_sensor",
+            "left_leg_motor_0_sensor",
+            "left_leg_motor_1_sensor",
+            "left_leg_motor_2_sensor",
+            "left_leg_motor_3_sensor",
+            "left_leg_motor_4_sensor",
+            "left_leg_motor_5_sensor",
+            "head_motor_0_sensor",
+            "head_motor_1_sensor"
+        ]
         self.motor_count = len(self.motor_names)
-        self.external_motor_names = \
-            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-             "head_motor_0", "head_motor_1"
-             ]
+        self.external_motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1"
+         ]
         accel_name = "imu accelerometer"
         gyro_name = "imu gyro"
         camera_name = "camera"
