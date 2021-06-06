@@ -4,6 +4,7 @@ humanoid-ars:
     checkpoint_freq: 50
     max_failures: 10
     checkpoint_at_end: true
+
     local_dir: ./results/
     stop:
         timesteps_total: 1000000000
@@ -25,18 +26,18 @@ humanoid-ars:
         horizon: 1024
         num_gpus: 0
         model:
-            fcnet_hiddens: [256, 256]
+            fcnet_hiddens: [128, 128]
             fcnet_activation: tanh
         #     free_log_std: false
             # Share layers for value function. If you set this to True it's
             # important to tune vf_loss_coeff.
             #     vf_share_layers: false
         action_noise_std: 0.0
-        noise_stdev: 0.04 # 0.02  # std deviation of parameter noise
-        num_rollouts: 31  # number of perturbs to try
-        rollouts_used: 31  # number of perturbs to keep in gradient estimate
+        noise_stdev: 0.02 # 0.02  # std deviation of parameter noise
+        num_rollouts: 124  # number of perturbs to try
+        rollouts_used: 124  # number of perturbs to keep in gradient estimate
         # num_workers: 32,
-        sgd_stepsize: 0.02 #0.01  # sgd step-size
+        sgd_stepsize: 0.01 #0.01  # sgd step-size
         observation_filter: MeanStdFilter
         noise_size: 250000000
         eval_prob: 0.03  # probability of evaluating the parameter rewards
