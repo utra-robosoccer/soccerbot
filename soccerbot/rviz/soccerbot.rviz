@@ -123,8 +123,6 @@ Visualization Manager:
         world:
           robot1/odom:
             robot1/base_footprint:
-              robot1/ball:
-                {}
               robot1/base_camera:
                 {}
               robot1/torso:
@@ -447,7 +445,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_0
               Name: PressureSensor1
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -455,7 +453,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_1
               Name: PressureSensor2
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -463,7 +461,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_2
               Name: PressureSensor3
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -471,7 +469,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_4
               Name: PressureSensor4
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -479,7 +477,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_3
               Name: PressureSensor5
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -487,7 +485,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_5
               Name: PressureSensor6
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -495,7 +493,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_6
               Name: PressureSensor7
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -503,7 +501,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_7
               Name: PressureSensor8
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Image
@@ -673,7 +671,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.616764545440674
+      Distance: 13.479312896728516
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -689,9 +687,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3953985273838043
+      Pitch: 0.5403984189033508
       Target Frame: <Fixed Frame>
-      Yaw: 3.910444736480713
+      Yaw: 4.130439758300781
     Saved: ~
 Window Geometry:
   Displays:

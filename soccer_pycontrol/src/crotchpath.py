@@ -103,4 +103,3 @@ class Crotchpath(Footpath):
             i = i + 1
         self.show_tf(fig, tfInterp, len(iterator))
 
-

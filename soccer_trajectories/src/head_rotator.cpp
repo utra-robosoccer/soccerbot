@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Empty.h>
 #include <sensor_msgs/JointState.h>
 #include <tf2_ros/transform_listener.h>
 
@@ -22,7 +23,11 @@ class BallDetector {
 
     ros::Publisher head_rotator_0;
     ros::Publisher head_rotator_1;
+    ros::Subscriber start_walking;
+    ros::Subscriber stop_rushed;
+    ros::Subscriber stop_completed;
     std::string competition;
+    bool is_walking = false;
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
     float max_angle_2 = 0.9;
@@ -39,6 +44,10 @@ public:
         head_rotator = n.advertise<sensor_msgs::JointState>("all_motor", 10);
         head_rotator_0 = n.advertise<std_msgs::Float64>("head_motor_0/command", 1);
         head_rotator_1 = n.advertise<std_msgs::Float64>("head_motor_1/command", 1);
+        start_walking = n.subscribe("start_walking", 1, &BallDetector::start_walk, this);
+        stop_rushed = n.subscribe("terminate_walking", 1, &BallDetector::stop_walk_rushed, this);
+        stop_completed = n.subscribe("completed_walking", 1, &BallDetector::stop_walk_complete, this);
+
         while(!n.hasParam("competition")) {
             ros::Duration(1.0).sleep();
         }
@@ -77,29 +86,38 @@ public:
                 std_msgs::Float64 angle;
                 angle.data = max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency);
                 head_rotator_0.publish(angle);
+//                std::cout << is_walking << std::endl;
+                if (is_walking == false) {
+                    if (first_wave % 2 == 0 and first_wave >= 2) {
+                        std_msgs::Float64 angle2;
+                        angle2.data = std::abs(max_angle_2 * std::cos(static_cast<float>(last_t) / 100.f * frequency));
+                        head_rotator_1.publish(angle2);
 
-                if (first_wave % 2 == 0 and first_wave >= 2) {
-                    std_msgs::Float64 angle2;
-                    angle2.data = std::abs (max_angle_2 * std::cos(static_cast<float>(last_t) / 100.f * frequency));
-                    head_rotator_1.publish(angle2);
+                        last_angle_2 = angle2.data;
 
-                    last_angle_2 = angle2.data;
+                    }
+                    else {
 
+                        std_msgs::Float64 angle2;
+                        angle2.data = 0.4;
+                        head_rotator_1.publish(angle2);
+                    }
+                    //std::cout << angle.data << "    " << first_wave << std::endl;
+
+                    if (angle.data > 0.78 and last_angle < 0.78) {
+                        first_wave += 1;
+
+                    }
+                    last_angle = angle.data;
+                    last_t += 1;
                 }
                 else{
-
-                    std_msgs::Float64 angle2;
-                    angle2.data = 0.4;
-                    head_rotator_1.publish(angle2);
+                    std_msgs::Float64 angle;
+                    angle.data = 0;
+                    head_rotator_0.publish(angle);
+                    angle.data = 0;
+                    head_rotator_1.publish(angle);
                 }
-                //std::cout << angle.data << "    " << first_wave << std::endl;
-
-                if (angle.data > 0.78  and last_angle < 0.78) {
-                    first_wave += 1;
-
-                }
-                last_angle = angle.data;
-                last_t += 3;
              }
         }
         else {
@@ -108,15 +126,29 @@ public:
 
 
     }
+    void start_walk(const std_msgs::Empty &msg) {
+        is_walking = true;
+        std::cout << "Stop Head rotator" << std::endl;
+    }
+    void stop_walk_rushed(const std_msgs::Empty &msg) {
+        is_walking = false;
+        std::cout << "Start Head rotator" << std::endl;
+    }
+    void stop_walk_complete(const std_msgs::Empty &msg) {
+        is_walking = false;
+        std::cout << "Start Head rotator" << std::endl;
+    }
 };
 
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "ball_detector");
-    BallDetector ballDetector;
 
+    BallDetector ballDetector;
+//    ballDetector.move_head();
     ros::Rate r(100);
     while (ros::ok()) {
+
         ballDetector.move_head();
         r.sleep();
     }

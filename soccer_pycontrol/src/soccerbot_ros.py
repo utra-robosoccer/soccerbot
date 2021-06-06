@@ -1,7 +1,7 @@
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
-from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from soccerbot import *
 import rospy
 import os
@@ -55,6 +55,14 @@ class SoccerbotRos(Soccerbot):
             r.sleep()
         self.competition = rospy.get_param("competition")
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        self.amcl_pose = Pose()
+        self.robot_pose_sub = rospy.Subscriber("amcl_pose",
+                                               PoseWithCovarianceStamped,
+                                               self.robot_pose_callback)
+
+    def robot_pose_callback(self, data):
+        self.amcl_pose = data.pose
+        pass
 
     def publishAngles(self):
         ban_list = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]
@@ -76,7 +84,13 @@ class SoccerbotRos(Soccerbot):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)
 
         # Get odometry from the simulator itself >:)
-        base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body)
+        if rospy.get_param('ENABLE_PYBULLET'):
+            base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body)
+        else:
+            base_pose = [self.amcl_pose.pose.position.x, self.amcl_pose.pose.position.y, self.amcl_pose.pose.position.z]
+            base_orientation = [self.amcl_pose.pose.orientation.x, self.amcl_pose.pose.orientation.y,
+                                self.amcl_pose.pose.orientation.z,
+                                self.amcl_pose.pose.orientation.w]
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self):
