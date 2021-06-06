@@ -125,7 +125,7 @@ private:
                     ball.pose.pose.orientation.w = 1;
                     ball_pub.publish(ball);
                 } else {
-                    if (float(angle) == float(0.6)) {
+                    if (float(angle) == float(0.4)) {
                         geometry_msgs::Pose robot_pose;
                         robot_pose.position.x = floor_coordinate.x;
                         robot_pose.position.y = floor_coordinate.y;
