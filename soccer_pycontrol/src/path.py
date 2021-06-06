@@ -9,8 +9,8 @@ from copy import deepcopy
 class Path:
     bodystep_size = 0.025 # Not absolutely fixed, will be modified slightly when
     angular_bodystep_size = 0.1
-    speed = 3.0 * 0.025
-    angular_speed = 3.0 * 0.1 # Rotational speed in radians per second
+    speed = 3.0 * bodystep_size
+    angular_speed = 3.0 * angular_bodystep_size # Rotational speed in radians per second
     turn_duration = 4 # Number of body steps to turn
     step_size = 0.02 # Time for a single step
 

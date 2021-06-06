@@ -19,12 +19,3 @@ catkin_package()
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
-
-add_executable(
-    head_rotator
-    src/head_rotator.cpp
-)
-add_dependencies(head_rotator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(head_rotator
-    ${catkin_LIBRARIES}
-)
