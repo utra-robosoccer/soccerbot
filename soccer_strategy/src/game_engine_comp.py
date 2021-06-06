@@ -11,6 +11,8 @@ from robot import Robot, gameState, secondaryState, secondaryStateMode, teamColo
 from ball import Ball
 import game_engine_ros
 from strategy import DummyStrategy
+import tf
+from geometry_msgs.msg import TransformStamped
 
 import logging
 
@@ -76,6 +78,9 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
 
         # friendly communication
         self.friendly_connection = False
+
+        self.listener = tf.TransformListener()
+        self.last_pose = rospy.Duration(10)
 
     def gc_callback(self, data):
         self.secondaryState = secondaryState(data.secondaryState)
@@ -165,7 +170,19 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
             if self.gameState == gameState.GAMESTATE_PLAYING:
                 if rostime % GameEngineComp.STRATEGY_UPDATE_INTERVAL < \
                         rostime_previous % GameEngineComp.STRATEGY_UPDATE_INTERVAL:
-                    self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
+                    try:
+
+                        self.ball_pose = self.listener.lookupTransform(robot_name_map[self.robot_id - 1] + '/ball',
+                                                                       robot_name_map[self.robot_id - 1] + '/torso',
+                                                                       rospy.Time(0))
+                        header = self.listener.getLatestCommonTime(robot_name_map[self.robot_id - 1] + '/ball',
+                                                                   robot_name_map[self.robot_id - 1] + '/torso')
+                        self.last_pose = rospy.Time.now() - header
+
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        continue
+                    if self.last_pose < rospy.Duration(0.1):
+                        self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
                 rostime_previous = rostime
                 pass
 

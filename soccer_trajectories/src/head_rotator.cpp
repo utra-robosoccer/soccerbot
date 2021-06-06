@@ -27,6 +27,7 @@ class BallDetector {
     ros::Subscriber stop_rushed;
     ros::Subscriber stop_completed;
     std::string competition;
+    std::string name;
     bool is_walking = false;
     float frequency = 0.2f;
     float max_angle = M_PI / 4.f;
@@ -53,6 +54,12 @@ public:
         }
         ros::Duration(1.0).sleep();
         n.getParam("competition", competition);
+
+        while(!n.hasParam("name")) {
+            ros::Duration(1.0).sleep();
+        }
+
+        n.getParam("name", name);
     }
     // catch names of the controllers availables on ROS network
 
@@ -60,17 +67,19 @@ public:
         geometry_msgs::TransformStamped ball_pose;
 
         bool has_pose = false;
-//        try {
-//            ball_pose = tfBuffer.lookupTransform("ball", "torso",ros::Time(0));
-//            //has_pose = true;
-//        } catch (tf2::TransformException &ex) {
-//            has_pose = false;
-//        }
-        /*ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
-        if (last_pose < ros::Duration(1)) {
+        try {
+            ball_pose = tfBuffer.lookupTransform(name +"/ball", name + "/torso",ros::Time(0));
+//            has_pose = true;
+        } catch (tf2::TransformException &ex) {
+            has_pose = false;
+        }
+        ros::Duration last_pose = ros::Time::now() - ball_pose.header.stamp;
+//        std::cout << last_pose << "   "<< has_pose << std::endl;
+        if (last_pose < ros::Duration(0.1)) {
+//            std::cout << last_pose << std::endl;
             has_pose = true;
             return;
-        }*/
+        }
 
         if (!has_pose) {
             if (competition == "False") {
@@ -99,17 +108,17 @@ public:
                     else {
 
                         std_msgs::Float64 angle2;
-                        angle2.data = 0.4;
+                        angle2.data = 0.8;
                         head_rotator_1.publish(angle2);
                     }
                     //std::cout << angle.data << "    " << first_wave << std::endl;
 
                     if (angle.data > 0.78 and last_angle < 0.78) {
-                        first_wave += 1;
+//                        first_wave += 1;
 
                     }
                     last_angle = angle.data;
-                    last_t += 1;
+                    last_t += 3;
                 }
                 else{
                     std_msgs::Float64 angle;

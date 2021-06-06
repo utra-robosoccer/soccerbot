@@ -2,6 +2,7 @@ import math
 import numpy as np
 from robot import Robot
 
+
 class Strategy:
     def __init__(self):
         pass
@@ -25,6 +26,7 @@ class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
         return
 
+
 class DummyStrategy(Strategy):
 
     def who_has_the_ball(self, robots, ball):
@@ -46,10 +48,22 @@ class DummyStrategy(Strategy):
 
         if current_closest == None:
             return
-
+        try:
+            pass
+        except:
+            print("error")
         a = current_closest.get_position()
         b = ball.get_position()
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
+        print("Here for ball")
+        print(friendly[0].position)
+        print(a)
+        print(ball.get_position())
+
+        position = [round(friendly[0].position[0] + ball.get_position()[0], 2),
+                    round(friendly[0].position[1] + ball.get_position()[1], 2), 0]
+        print(position)
+        print(np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()))
+        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 4.7:
             # Stop moving
             current_closest.set_navigation_position(current_closest.get_position())
 
@@ -65,8 +79,23 @@ class DummyStrategy(Strategy):
             current_closest.status = Robot.Status.KICKING
             current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
+            pass
             current_closest.status = Robot.Status.WALKING
-            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
+
+
+            current_closest.set_navigation_position(position)
+
+
+            # current_closest.status = Robot.Status.KICKING
+            #
+            # if current_closest.team == Robot.Team.FRIENDLY:
+            #     opponent_goal = np.array([0, 4.5])
+            # else:
+            #     opponent_goal = np.array([0, -4.5])
+            # delta = opponent_goal - ball.get_position()
+            # unit = delta / np.linalg.norm(delta)
+            # current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+
 
 class PassStrategy(DummyStrategy):
 
@@ -112,4 +141,3 @@ class PassStrategy(DummyStrategy):
             #     return
             current_closest.status = Robot.Status.WALKING
             current_closest.set_navigation_position(np.append(ball.get_position(), 0))
-
