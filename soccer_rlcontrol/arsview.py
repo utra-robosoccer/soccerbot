@@ -8,7 +8,7 @@ import ray.rllib.agents.ars as ars
 import cProfile, pstats, io
 from pstats import SortKey
 
-checkpoint_path = "/home/robosoccer/shah_ws/robust/soccerbot/soccer_rlcontrol/results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015000/checkpoint-15000"
+checkpoint_path = "./results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015000/checkpoint-15000"
 
 if __name__ == '__main__':
     physical_devices = tf.config.list_physical_devices('GPU')
