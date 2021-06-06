@@ -54,12 +54,11 @@ class GameStateReceiver(object):
         self.team = team
         self.player = player
         self.is_goalkeeper = is_goalkeeper
+        rospy.loginfo('We are playing as player {} in team {}'.format(self.player, self.team))
 
         self.man_penalize = True
-        self.game_controller_lost_time = 20
+        self.game_controller_lost_time = 5
         self.game_controller_connected_publisher = rospy.Publisher('game_controller_connected', Bool, queue_size=1)
-
-        rospy.loginfo('We are playing as player {} in team {}'.format(self.player, self.team))
         self.state_publisher = rospy.Publisher('gamestate', GameStateMsg, queue_size=1)
 
         # The address listening on and the port for sending back the robots meta data
@@ -76,8 +75,9 @@ class GameStateReceiver(object):
 
         self._open_socket()
 
+        self.connected = False
+
     def _open_socket(self):
-        """ Erzeugt das Socket """
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.addr)
@@ -86,7 +86,6 @@ class GameStateReceiver(object):
         self.socket2.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def receive_forever(self):
-        """ Waits in a loop that is terminated by setting self.running = False """
         while self.running and not rospy.is_shutdown():
             try:
                 self.receive_once()
@@ -100,13 +99,17 @@ class GameStateReceiver(object):
         try:
             data, peer = self.socket.recvfrom(GameState.sizeof())
 
-            #print(len(data))
             # Throws a ConstError if it doesn't work
             parsed_state = GameState.parse(data)
 
             # Assign the new package after it parsed successful to the state
             self.state = parsed_state
             self.time = time.time()
+
+            # Publish that game controller received message
+            msg = Bool()
+            msg.data = True
+            self.game_controller_connected_publisher.publish(msg)
 
             # Call the handler for the package
             self.on_new_gamestate(self.state)
@@ -151,7 +154,6 @@ class GameStateReceiver(object):
             logger.log("Network Error: %s" % str(e))
 
     def on_new_gamestate(self, state):
-        #print(state.game_state)
         """ Is called with the new game state after receiving a package.
             The information is processed and published as a standard message to a ROS topic.
             :param state: Game State
@@ -232,9 +234,6 @@ class GameStateReceiver(object):
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
-        pub = rospy.Publisher("state", Int8, queue_size=1)  # black magic publisher
-        pub.publish(state.game_state.intvalue)
-        #print("publish state: "+ str(state.game_state) )
 
     def get_last_state(self):
         return self.state, self.time
@@ -253,10 +252,7 @@ if __name__ == '__main__':
 
     team_id = rospy.get_param("team_id")
     robot_id = rospy.get_param("robot_id")
-
     is_goal_keeper = rospy.get_param("is_goal_keeper")
-    print(team_id)
-    print(robot_id)
-    print(is_goal_keeper)
+
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
     rec.receive_forever()
