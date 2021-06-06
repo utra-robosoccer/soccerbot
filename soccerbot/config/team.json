@@ -4,7 +4,7 @@
     "1": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "bash ./start_competition.sh robot1 -4 -3.6 1.57",
+      "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1",
       "halfTimeStartingPose": {
         "translation": [-4, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -14,18 +14,18 @@
         "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2.0, 0, 0.362568],
+        "translation": [2.6, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       },
       "goalKeeperStartingPose": {
-        "translation": [-4.47, 0, 0.362568],
+        "translation": [-4.5, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       }
     },
     "2": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "bash ./start_competition.sh robot2 -4 3.06 -1.57",
+      "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2",
       "halfTimeStartingPose": {
         "translation": [-4, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
@@ -35,18 +35,18 @@
         "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2.0, 0, 0.362568],
+        "translation": [2.6, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       },
       "goalKeeperStartingPose": {
-        "translation": [-4.47, 0, 0.362568],
+        "translation": [-4.50, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       }
     },
     "3": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "bash ./start_competition.sh robot3 -3.5 -3.6 1.57",
+      "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot3",
       "halfTimeStartingPose": {
         "translation": [-3.5, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
@@ -56,18 +56,18 @@
         "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2.0, 0, 0.362568],
+        "translation": [2.6, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       },
       "goalKeeperStartingPose": {
-        "translation": [-4.47, 0, 0.362568],
+        "translation": [-4.5, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       }
     },
     "4": {
       "proto": "Bez",
       "dockerTag": "latest",
-      "dockerCmd": "bash ./start_competition.sh robot4 -3.5 3.06 -1.57",
+      "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot4",
       "halfTimeStartingPose": {
         "translation": [-3.5, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
@@ -77,11 +77,11 @@
         "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2.0, 0, 0.362568],
+        "translation": [2.6, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       },
       "goalKeeperStartingPose": {
-        "translation": [-4.47, 0, 0.362568],
+        "translation": [-4.5, 0, 0.362568],
         "rotation": [0, 0, 1, 0]
       }
     }

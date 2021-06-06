@@ -181,7 +181,7 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
 
                     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                         continue
-                    if self.last_pose < rospy.Duration(0.1):
+                    if self.last_pose < rospy.Duration(0.2):
                         self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
                 rostime_previous = rostime
                 pass

@@ -11,7 +11,7 @@
 
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1" >
+    <include file="$(find soccerbot)/launch/soccerbot.launch"  >
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot1" />

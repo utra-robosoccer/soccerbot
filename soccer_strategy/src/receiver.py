@@ -258,8 +258,8 @@ if __name__ == '__main__':
     team_id = rospy.get_param('TEAM_ID')
     robot_id = rospy.get_param('ROBOCUP_ROBOT_ID')
     is_goal_keeper = rospy.get_param('GOALIE')
-    DEFAULT_LISTENING_HOST = rospy.get_param('ROBOCUP_GAMECONTROLLER_IP')  # 0.0.0.0   for competition
-    # DEFAULT_LISTENING_HOST = '0.0.0.0'
+    #DEFAULT_LISTENING_HOST = rospy.get_param('ROBOCUP_GAMECONTROLLER_IP')  # 0.0.0.0   for competition
+    DEFAULT_LISTENING_HOST = '0.0.0.0'
     print("Look here")
     print(DEFAULT_LISTENING_HOST)
     print(team_id)
