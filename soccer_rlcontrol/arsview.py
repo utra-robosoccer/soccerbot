@@ -8,6 +8,7 @@ import ray.rllib.agents.ars as ars
 import cProfile, pstats, io
 from pstats import SortKey
 
+checkpoint_path = "./results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015000/checkpoint-15000"
 
 if __name__ == '__main__':
     physical_devices = tf.config.list_physical_devices('GPU')
@@ -20,9 +21,9 @@ if __name__ == '__main__':
     config["eager_tracing"] = False
     config["env_config"] = {"env_name": "gym_soccerbot:walk-omni-v0"}
     config["num_workers"] = 1
-    config["model"] = {"fcnet_hiddens": [256, 256]}
+    config["model"] = {"fcnet_hiddens": [128, 128]}
     config["num_gpus"] = 0
-    agent = trainer(env="gym_soccerbot:walk-omni-v0", config=config)
+    agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
     agent.load_checkpoint(checkpoint_path)
     #agent.restore(checkpoint_path)
     #agent.get_policy().get_weights()
@@ -51,7 +52,7 @@ if __name__ == '__main__':
             sleep(0.0041)
             episode_reward += reward
             i += 1
-            print(f'step: {i}')
+            # print(f'step: {i}')
         # print(f'episode_reward: {episode_reward:.3f}, episode_len: {i}, info: {info}')
     pr.disable()
     s = io.StringIO()

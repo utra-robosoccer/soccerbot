@@ -1,0 +1,52 @@
+humanoid-ars:
+    env: gym_soccerbot:walk-forward-norm-v1
+    run: ARS
+    checkpoint_freq: 50
+    max_failures: 10
+    checkpoint_at_end: true
+    restore: /home/robosoccer/shah_ws/robust/soccerbot/soccer_rlcontrol/results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015100/checkpoint-15100
+    local_dir: ./results/
+    stop:
+        timesteps_total: 1000000000
+    config:
+        # Works for both torch and tf.
+        framework: tf
+        env_config:
+            env_name: gym_soccerbot:walk-omni-v0
+            start_ang: !!float 45.
+            goal:
+                    - 2
+                    - 0
+        extra_python_environs_for_driver:
+            OMP_NUM_THREADS: 31
+        num_workers: 31
+        # remote_worker_envs: true
+        num_cpus_per_worker: 1.0
+        num_envs_per_worker: 1
+        horizon: 1024
+        num_gpus: 0
+        model:
+            fcnet_hiddens: [128, 128]
+            fcnet_activation: tanh
+        #     free_log_std: false
+            # Share layers for value function. If you set this to True it's
+            # important to tune vf_loss_coeff.
+            #     vf_share_layers: false
+        action_noise_std: 0.0
+        noise_stdev: 0.02 # 0.02  # std deviation of parameter noise
+        num_rollouts: 124  # number of perturbs to try
+        rollouts_used: 124  # number of perturbs to keep in gradient estimate
+        # num_workers: 32,
+        sgd_stepsize: 0.01 #0.01  # sgd step-size
+        observation_filter: MeanStdFilter
+        noise_size: 250000000
+        eval_prob: 0.03  # probability of evaluating the parameter rewards
+        report_length: 10  # how many of the last rewards we average over
+        offset: 0
+        # ARS will use Trainer's evaluation WorkerSet (if evaluation_interval > 0).
+        # Therefore, we must be careful not to use more than 1 env per eval worker
+        # (would break ARSPolicy's compute_action method) and to not do obs-
+        # filtering.
+        evaluation_config:
+            num_envs_per_worker: 1
+            observation_filter: NoFilter

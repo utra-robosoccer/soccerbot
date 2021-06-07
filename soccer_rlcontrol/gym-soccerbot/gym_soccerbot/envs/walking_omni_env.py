@@ -527,7 +527,7 @@ class WalkingOmni(gym.Env):
         # Bring robot back to origin
         starting_ang = 0
         if self.start_ang is not None:
-            starting_ang = np_random.uniform(-self.start_ang, self.start_ang)
+            starting_ang = self.np_random.uniform(-self.start_ang, self.start_ang)
         theta = np.pi * (starting_ang) / 360 # start_ang in degrees
         p.resetBasePositionAndOrientation(self.soccerbotUid, [0, 0, self._STANDING_HEIGHT], [0.0, 0.0, np.sin(theta), np.cos(theta)])
         p.resetBaseVelocity(self.soccerbotUid, [0, 0, 0], [0, 0, 0])
