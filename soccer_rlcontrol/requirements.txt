@@ -1,4 +1,6 @@
-ray
+ray[default]
+ray[tune]
+ray[rllib]
 pybullet
 tensorflow-gpu
 gym
