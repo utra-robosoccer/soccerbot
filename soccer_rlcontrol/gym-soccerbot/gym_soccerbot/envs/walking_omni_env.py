@@ -486,7 +486,7 @@ class WalkingOmni(gym.Env):
             p = self._p
             p.resetSimulation()
 
-            urdfBotPath = gym_soccerbot.getModelPath()
+            urdfBotPath = gym_soccerbot.getModelPath(self._renders)
             self.soccerbotUid = p.loadURDF(urdfBotPath,
                                            useFixedBase=False,
                                            useMaximalCoordinates=False,
