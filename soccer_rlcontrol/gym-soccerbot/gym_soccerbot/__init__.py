@@ -13,6 +13,9 @@ register(
 import os
 from os.path import dirname as up
 
-def getModelPath():
-  respath = os.path.join(up(up(up(os.path.dirname(__file__)))), "soccer_description/models/soccerbot_stl.urdf")
+def getModelPath(renders=False):
+  if renders:
+    respath = os.path.join(up(up(up(os.path.dirname(__file__)))), "soccer_description/models/soccerbot_stl.urdf")
+  else:
+    respath = os.path.join(os.path.dirname(__file__), "soccerbot_empty.urdf")
   return respath

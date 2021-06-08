@@ -5,8 +5,9 @@ humanoid-es:
     max_failures: 10
     checkpoint_at_end: true
     local_dir: ./results/
+    restore: /home/robosoccer/shah_ws/robust/soccerbot/soccer_rlcontrol/results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015100/checkpoint-15100
     stop:
-        timesteps_total: 200000000
+        timesteps_total: 1000000000
     config:
         # Works for both torch and tf.
         framework: tf
@@ -17,12 +18,15 @@ humanoid-es:
                     - 0
             start_ang: !!float 45.
         extra_python_environs_for_driver:
-            OMP_NUM_THREADS: 12
-        num_workers: 10
+            OMP_NUM_THREADS: 32
+        num_workers: 31
         # num_cpus_per_worker: 0.001
         num_envs_per_worker: 2
         horizon: 1024
         num_gpus: 1
+        model:
+            fcnet_hiddens: [128, 128]
+            fcnet_activation: tanh
 
         action_noise_std: 0.01
         l2_coeff: 0.005
