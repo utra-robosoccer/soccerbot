@@ -1,4 +1,4 @@
-from sensor_msgs.msg import JointState
+from sensor_msgs.msg import JointState, Imu
 from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped
@@ -14,63 +14,44 @@ class SoccerbotRos(Soccerbot):
         super().__init__(position, useFixedBase)
 
         self.motor_publishers = {}
-        # self.motor_publishers[Joints.LEFT_ARM_1] = rospy.Publisher("left_arm_motor_0/command", Float64, queue_size=1)
-        # self.motor_publishers[Joints.LEFT_ARM_2] = rospy.Publisher("left_arm_motor_1/command", Float64, queue_size=1)
-        # self.motor_publishers[Joints.RIGHT_ARM_1] = rospy.Publisher("right_arm_motor_0/command", Float64, queue_size=1)
-        # self.motor_publishers[Joints.RIGHT_ARM_2] = rospy.Publisher("right_arm_motor_1/command", Float64, queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_1 - 4] = rospy.Publisher("left_leg_motor_0/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_2 - 4] = rospy.Publisher("left_leg_motor_1/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_3 - 4] = rospy.Publisher("left_leg_motor_2/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_4 - 4] = rospy.Publisher("left_leg_motor_3/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_5 - 4] = rospy.Publisher("left_leg_motor_4/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.LEFT_LEG_6 - 4] = rospy.Publisher("left_leg_motor_5/command", Float64,
-                                                                       queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_1 - 4] = rospy.Publisher("right_leg_motor_0/command", Float64,
-                                                                        queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_2 - 4] = rospy.Publisher("right_leg_motor_1/command", Float64,
-                                                                        queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_3 - 4] = rospy.Publisher("right_leg_motor_2/command", Float64,
-                                                                        queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_4 - 4] = rospy.Publisher("right_leg_motor_3/command", Float64,
-                                                                        queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_5 - 4] = rospy.Publisher("right_leg_motor_4/command", Float64,
-                                                                        queue_size=1)
-        self.motor_publishers[Joints.RIGHT_LEG_6 - 4] = rospy.Publisher("right_leg_motor_5/command", Float64,
-                                                                        queue_size=1)
-
-        self.pub_all_motor = rospy.Publisher("all_motor", JointState, queue_size=10)
-        self.motor_names = ["left_leg_motor_0", "left_leg_motor_1",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5"
-                            ]
+        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        self.motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1"
+        ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
-        r = rospy.Rate(10)
-        while not rospy.has_param("competition"):
-            r.sleep()
-        self.competition = rospy.get_param("competition")
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
+
+    def imu_callback(self, msg: Imu):
+        self.imu_msg = msg
 
     def publishAngles(self):
-        ban_list = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]
-        if self.competition == "True":
-            for m in self.motor_publishers:
-                self.motor_publishers[m].publish(self.configuration[m + 4])  # Skips arms
-        elif self.competition == "False":
-            js = JointState()
-            js.name = []
-            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = []
-            js.effort = []
-            for i, n in enumerate(self.motor_names):
-                js.name.append(n)
-                js.position.append(self.configuration[i + 4])
-            self.pub_all_motor.publish(js)
+        js = JointState()
+        js.name = []
+        js.header.stamp = rospy.Time.now()
+        js.position = []
+        js.effort = []
+        for i, n in enumerate(self.motor_names):
+            js.name.append(n)
+            js.position.append(self.configuration[i])
+        self.pub_all_motor.publish(js)
 
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)
@@ -125,8 +106,10 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def get_imu(self, verbose=False):
-        # TODO get ROS IMU
-        pass
+        if self.imu_msg == None:
+            return None
+        return tr([0, 0, 0], [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
+                              self.imu_msg.orientation.w])
 
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
