@@ -124,7 +124,7 @@ class RobotController:
         self.camera.enable(self.timestep)
 
         clock_topic = base_ns + "/clock"
-        rospy.Subscriber(base_ns + '/all_motor', JointState, self.all_motor_callback)
+        rospy.Subscriber(base_ns + '/joint_command', JointState, self.all_motor_callback)
         self.pub_imu = rospy.Publisher(base_ns + "/imu_raw", Imu, queue_size=1)
         self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
