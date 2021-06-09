@@ -12,13 +12,17 @@ import rospy
 import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
-
+RUN_RL = True
 RUN_IN_ROS = False
 
 class Test(TestCase):
 
     def setUp(self) -> None:
-        if RUN_IN_ROS:
+        if RUN_RL:
+            import soccerbot_controller_ros_rl
+            rospy.init_node("soccer_control")
+            self.walker = soccerbot_controller_ros_rl.SoccerbotControllerRosRl()
+        elif RUN_IN_ROS:
             import soccerbot_controller_ros
             rospy.init_node("soccer_control")
             self.walker = soccerbot_controller_ros.SoccerbotControllerRos()

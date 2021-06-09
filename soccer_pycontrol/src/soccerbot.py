@@ -1,3 +1,5 @@
+import os
+
 import pybullet as pb
 import numpy as np
 import enum
@@ -107,6 +109,8 @@ class Soccerbot:
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
         home = expanduser("~")
+        if os.environ['USER'] == 'shahryar':
+            home = home + "/hdd"
         self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                 useFixedBase=useFixedBase,
                                 flags=pb.URDF_USE_INERTIA_FROM_FILE,

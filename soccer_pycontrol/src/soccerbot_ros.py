@@ -1,5 +1,5 @@
 from sensor_msgs.msg import JointState, Imu
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Bool
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped
 from soccerbot import *
@@ -15,6 +15,8 @@ class SoccerbotRos(Soccerbot):
 
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        self.sub_all_motor = rospy.Subscriber("joint_states", JointState, self.jointStateCallback)
+
         self.motor_names = [
             "left_arm_motor_0",
             "left_arm_motor_1",
@@ -39,8 +41,17 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
 
+        self.foot_pressure_sensor_subscriber_list = []
+        self.foot_pressure_values = []
+        for i in range(8): # TODO get correct topic
+            foot_pressure_sensor = rospy.Subscriber("foot" + str(i), self.foot_pressure_sensor_callback, i)
+            self.foot_pressure_sensor_subscriber_list.append()
+
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
+
+    def foot_pressure_sensor_callback(self, sensor_msg: Bool, footnum):
+        self.foot_pressure_values[footnum] = sensor_msg.data
 
     def publishAngles(self):
         js = JointState()
@@ -112,5 +123,4 @@ class SoccerbotRos(Soccerbot):
                               self.imu_msg.orientation.w])
 
     def get_foot_pressure_sensors(self, floor):
-        # TODO subscribe to foot pressure sensors
-        pass
+        return self.foot_pressure_values
