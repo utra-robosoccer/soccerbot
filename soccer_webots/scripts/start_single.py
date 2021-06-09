@@ -8,8 +8,6 @@ import tf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
-time.sleep(15)
-
 def callback(data):
     global temp_bool
     temp_bool = False
