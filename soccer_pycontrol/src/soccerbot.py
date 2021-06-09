@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from robotpath import Robotpath
 import math
 from os.path import expanduser
+from copy import deepcopy
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -136,8 +137,16 @@ class Soccerbot:
         self.robot_path = None
 
         self.configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 18, 1)), targetPositions=self.get_angles())
+        self.max_forces = []
+        for i in range(0,18):
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10])
+
+
+        pb.setJointMotorControlArray(bodyIndex=self.body,
+                                     controlMode=pb.POSITION_CONTROL,
+                                     jointIndices=list(range(0, 18, 1)),
+                                     targetPositions=self.get_angles(),
+                                     forces=self.max_forces)
 
         self.current_step_time = 0
 
@@ -163,8 +172,11 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        pb.setJointMotorControlArray(bodyIndex=self.body, controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 18, 1)), targetPositions=self.get_angles())
+        pb.setJointMotorControlArray(bodyIndex=self.body,
+                                     controlMode=pb.POSITION_CONTROL,
+                                     jointIndices=list(range(0, 18, 1)),
+                                     targetPositions=self.get_angles(),
+                                     forces=self.max_forces)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
@@ -249,7 +261,6 @@ class Soccerbot:
         finishPositionCoordinate = finishPosition.get_position()
         finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         finishPosition.set_position(finishPositionCoordinate)
-        finishPosition.set_orientation([0, 0, 0, 1])
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
 
@@ -345,6 +356,18 @@ class Soccerbot:
             fig.canvas.draw()
             plt.show()
 
+    def get_motor_forces(self, floor):
+        foot_pressure_values = self.get_foot_pressure_sensors(floor)
+
+        motor_forces = deepcopy(self.max_forces)
+        if (foot_pressure_values[0] and foot_pressure_values[1]) or (foot_pressure_values[2] and foot_pressure_values[3]): # Right foot on the ground
+            motor_forces[Joints.RIGHT_LEG_6] = 0.5
+        if (foot_pressure_values[4] and foot_pressure_values[5]) or (foot_pressure_values[6] and foot_pressure_values[7]): # Right foot on the ground
+            motor_forces[Joints.LEFT_LEG_6] = 0.5
+
+        return motor_forces
+
+
     def get_imu(self, verbose=False):
         """
         Simulates the IMU at the IMU link location.
@@ -352,7 +375,7 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quart_link, lin_vel, ang_vel] = pb.getLinkState(bodyUniqueId=self.body, linkIndex=Links.IMU,
+        [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU,
                                                          computeLinkVelocity=1)[5:8]
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
         # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
@@ -370,7 +393,7 @@ class Soccerbot:
             print(f'ang_vel = {ang_vel}')
         return np.concatenate((lin_acc, ang_vel))
 
-    def get_feet(self, floor):
+    def get_foot_pressure_sensors(self, floor):
         """
         Checks if 4 corners of the each feet are in contact with ground
 
@@ -388,12 +411,12 @@ class Soccerbot:
         locations = [False] * 8
         right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
         left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
-        right_center = np.array(pb.getLinkState(bodyUniqueId=self.body, linkIndex=Links.RIGHT_LEG_6)[4])
-        left_center = np.array(pb.getLinkState(bodyUniqueId=self.body, linkIndex=Links.LEFT_LEG_6)[4])
+        right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
+        left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
         right_tr = tr.get_rotation_matrix_from_transformation(
-            tr(quaternion=pb.getLinkState(bodyUniqueId=self.body, linkIndex=Links.RIGHT_LEG_6)[5]))
+            tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]))
         left_tr = tr.get_rotation_matrix_from_transformation(
-            tr(quaternion=pb.getLinkState(bodyUniqueId=self.body, linkIndex=Links.LEFT_LEG_6)[5]))
+            tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]))
         for point in right_pts:
             index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
             locations[index[1] + index[0] * 2] = True
@@ -401,3 +424,4 @@ class Soccerbot:
             index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
+

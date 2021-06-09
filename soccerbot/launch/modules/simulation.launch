@@ -1,35 +1,5 @@
 <launch>
     <arg name="robot_name" default="robot1" />
-    <arg name="pose_name" default="lying_back"/>
-    <arg name="x_pos" default="0.0" />
-    <arg name="y_pos" default="0.0" />
-    <arg name="a_pos" default="0.0" />
-    <rosparam file="$(find soccer_trajectories)/poses/$(arg pose_name).yaml" command="load" ns="initial_state" />
-    <!--<node pkg="soccerbot" type="world_generator.py" args="$(arg robot_name) $(arg x_pos) $(arg y_pos)"/> -->
-
-<!--    &lt;!&ndash; Controller &ndash;&gt;-->
-<!--    <rosparam file="$(find soccer_description)/config/soccerbot_control.yaml" command="load"/>-->
-<!--    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"-->
-<!--          args="&#45;&#45;namespace=/$(arg robot_name)-->
-<!--            joint_state_controller-->
-<!--            right_leg_motor_0-->
-<!--            right_leg_motor_1-->
-<!--            right_leg_motor_2-->
-<!--            right_leg_motor_3-->
-<!--            right_leg_motor_4-->
-<!--            right_leg_motor_5-->
-<!--            left_leg_motor_0-->
-<!--            left_leg_motor_1-->
-<!--            left_leg_motor_2-->
-<!--            left_leg_motor_3-->
-<!--            left_leg_motor_4-->
-<!--            left_leg_motor_5-->
-<!--            head_motor_0-->
-<!--            head_motor_1-->
-<!--            left_arm_motor_0-->
-<!--            left_arm_motor_1-->
-<!--            right_arm_motor_0-->
-<!--            right_arm_motor_1-->
-<!--            "/>-->
-
+    <node pkg="soccer_webots" type="start_single.sh" name="webots_ros_interface" output="screen"
+        args="--robot_name $(arg robot_name) --robot_tag /$(arg robot_name)" />
 </launch>

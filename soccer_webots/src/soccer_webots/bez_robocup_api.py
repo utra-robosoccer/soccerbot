@@ -5,6 +5,8 @@ import sys
 import math
 import re
 import socket
+import time
+
 import rospy
 import rospkg
 import struct
@@ -23,7 +25,6 @@ class BezRobocupApi():
     def __init__(self, base_ns="robot1"):
         # rospack = rospkg.RosPack()
         # self._package_path = rospack.get_path("bez_robocup_api")
-
         rospy.init_node("bez_robocup_api")
         parser = argparse.ArgumentParser()
         parser.add_argument('--robot_name', help="which robot should be started")
@@ -75,9 +76,14 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.environ.get('ROBOCUP_SIMULATOR_ADDR')
-        # addr = "127.0.0.1:10022"
-        self.socket = self.get_connection(addr)
+        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
+        while not rospy.is_shutdown():
+            try:
+                self.socket = self.get_connection(addr)
+                break
+            except ConnectionRefusedError as ex:
+                rospy.logwarn(ex)
+                time.sleep(10)
 
         self.first_run = True
         self.published_camera_info = False
@@ -291,14 +297,16 @@ class BezRobocupApi():
         msg = Clock()
         msg.clock.secs = ros_time.secs
         msg.clock.nsecs = ros_time.nsecs
-        self.pub_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_clock.publish(msg)
 
     def handle_real_time(self, time):
         # real unix time stamp at which the measurements were performed in [ms]
         msg = Clock()
         msg.clock.secs = time // 1000
         msg.clock.nsecs = (time % 1000) * 10 ** 6
-        self.pub_server_time_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_server_time_clock.publish(msg)
 
     def handle_messages(self, messages):
         for message in messages:
