@@ -8,15 +8,13 @@ x-soccerbot: &soccerbot
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  deploy:
-    resources:
-      limits:
-        cpus: '4'
-        memory: 16384MB
-  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch  || sleep infinity"
+#  deploy:
+#    resources:
+#      limits:
+#        cpus: '4'
+#        memory: 16384MB
+#  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch  || sleep infinity"
   environment:
-    ROBOCUP_MIRROR_SERVER_IP: 127.0.0.1
-    ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
     ROBOCUP_TEAM_PLAYER1_IP: localhost
     ROBOCUP_TEAM_PLAYER2_IP: localhost
     ROBOCUP_TEAM_PLAYER3_IP: localhost
@@ -37,11 +35,13 @@ services:
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
       ROBOT_NAME: robot1
+      ROBOCUP_MIRROR_SERVER_IP: 127.0.0.1
+      ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
       TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-
+    command: bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1
 
 #  friendly2: # Left midfield
 #    <<: *soccerbot

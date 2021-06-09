@@ -108,13 +108,13 @@ public:
                     else {
 
                         std_msgs::Float64 angle2;
-                        angle2.data = 1.0;
+                        angle2.data = 0.4;
                         head_rotator_1.publish(angle2);
                     }
                     //std::cout << angle.data << "    " << first_wave << std::endl;
 
                     if (angle.data > 0.78 and last_angle < 0.78) {
-//                        first_wave += 1;
+                        first_wave += 1;
 
                     }
                     last_angle = angle.data;
