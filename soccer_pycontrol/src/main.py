@@ -8,9 +8,16 @@ import soccerbot_controller_ros
 import matplotlib as plt
 #plt.use('tkagg')
 
+USE_RL_CONTROL=False
 
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
-    walker = soccerbot_controller_ros.SoccerbotControllerRos()
-    walker.run()
+
+    if USE_RL_CONTROL:
+        import soccerbot_controller_ros_rl
+        walker = soccerbot_controller_ros_rl.SoccerbotControllerRosRl()
+        walker.run()
+    else:
+        walker = soccerbot_controller_ros.SoccerbotControllerRos()
+        walker.run()
