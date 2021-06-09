@@ -2,6 +2,7 @@
     <arg name="simulation" default="true" />
     <arg name="single" default="true" />
     <arg name="fake_localization" default="false" />
+    <arg name="competition" default="false" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch">
@@ -19,6 +20,7 @@
         <arg name="y_pos" value="0" />
         <arg name="a_pos" value="0" />
         <arg name="goalie" value="true" />
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
@@ -27,7 +29,9 @@
         <arg name="robot_name" value="robot2" />
         <arg name="x_pos" value="-2.00" />
         <arg name="y_pos" value="2.00" />
+        <arg name="a_pos" value="0" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
@@ -36,7 +40,9 @@
         <arg name="robot_name" value="robot3" />
         <arg name="x_pos" value="-2.00" />
         <arg name="y_pos" value="-2.00" />
+        <arg name="a_pos" value="0" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="$(arg competition)" />
     </include>
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
@@ -44,7 +50,9 @@
         <arg name="robot_name" value="robot4" />
         <arg name="x_pos" value="-3.00" />
         <arg name="y_pos" value="0.00" />
+        <arg name="a_pos" value="0" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="$(arg competition)" />
     </include>
 
 </launch>

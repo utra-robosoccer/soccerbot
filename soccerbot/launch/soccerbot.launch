@@ -3,7 +3,6 @@
     <group ns="$(arg robot_name)">
         <arg name="simulation" default="true" />
         <arg name="competition" default="$(optenv COMPETITION false)" />
-<!--        <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />-->
         <arg name="x_pos" default="$(optenv X_POS 0)" />
         <arg name="y_pos" default="$(optenv Y_POS 0)" />
         <arg name="a_pos" default="$(optenv ANGLE 0)" />
@@ -59,3 +58,5 @@
         <node pkg="soccer_strategy" type="receiver.py" name="game_controller" output="screen"/>
     </group>
 </launch>
+
+<!--        sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 &#45;&#45;net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1-->

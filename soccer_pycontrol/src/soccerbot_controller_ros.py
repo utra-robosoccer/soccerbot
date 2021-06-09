@@ -52,13 +52,13 @@ class SoccerbotControllerRos(SoccerbotController):
                 try:
                     print("Recieved New Goal")
                     self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
-                    self.wait(200)
+                    # self.wait(200)
 
                     self.goal = self.new_goal
                     self.soccerbot.ready() # TODO Cancel walking
                     self.soccerbot.publishAngles()
                     print("Getting ready")
-                    self.wait(150)
+                    # self.wait(150)
 
 
                     # Reset robot position and goal
