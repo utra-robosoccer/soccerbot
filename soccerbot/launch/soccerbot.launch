@@ -1,15 +1,16 @@
 <launch>
+    <arg name="simulation" default="true" />
+    <arg name="competition" default="$(optenv COMPETITION false)" />
+    <arg name="x_pos" default="$(optenv X_POS 0)" />
+    <arg name="y_pos" default="$(optenv Y_POS 0)" />
+    <arg name="a_pos" default="$(optenv ANGLE 0)" />
+    <arg name="goalie" default="$(optenv GOALIE false)" />
+    <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
-    <group ns="$(arg robot_name)">
-        <arg name="simulation" default="true" />
-        <arg name="competition" default="$(optenv COMPETITION false)" />
-        <arg name="x_pos" default="$(optenv X_POS 0)" />
-        <arg name="y_pos" default="$(optenv Y_POS 0)" />
-        <arg name="a_pos" default="$(optenv ANGLE 0)" />
-        <arg name="goalie" default="$(optenv GOALIE false)" />
-        <arg name="fake_localization" default="false" />
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
-        <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
+    <group ns="$(arg robot_name)">
+
 
         <param name="/simulation_active" value="true"/>
         <param name="/use_sim_time" value="true"/>
@@ -27,7 +28,7 @@
 
         <!-- Robocup bridge -->
         <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" output="screen"
-              args="--robot_name $(arg robot_name)" required="true" >
+              args="--robot_name $(arg robot_name)" required="true" if="$(arg competition)">
         </node>
 
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
@@ -55,7 +56,7 @@
         <rosparam command="load" file="$(find soccerbot)/config/game.yaml" />
     <!--    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>-->
         <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
-        <node pkg="soccer_strategy" type="receiver.py" name="game_controller" output="screen"/>
+        <node pkg="soccer_strategy" type="receiver.py" name="game_controller" output="screen" if="$(arg competition)"/>
     </group>
 </launch>
 

@@ -1744,7 +1744,16 @@ PROTO Bez [
           translation 0.100000 0.000000 0.007500
           rotation 0.000000 1.000000 0.000000 0.000000
           children [
-
+            Shape {
+                appearance PBRAppearance {
+                    baseColor 0 0 0
+                    roughness 1
+                    metalness 0
+                }
+                geometry Box {
+                    size 0.005 0.02 0.005
+                }
+            }
             Accelerometer {
                 name "imu accelerometer"
                 lookupTable [
