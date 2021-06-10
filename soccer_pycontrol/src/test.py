@@ -17,7 +17,7 @@ RUN_IN_ROS = False
 
 class Test(TestCase):
 
-    def setUp(self) -> None:
+    def setUp(self): # -> None:
         if RUN_RL:
             import soccerbot_controller_ros_rl
             rospy.init_node("soccer_control")

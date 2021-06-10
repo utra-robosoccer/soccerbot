@@ -10,7 +10,7 @@ import ray.rllib.agents.ars as ars
 import numpy as np
 import pybullet as pb
 env_id = "walk-forward-norm-v1"
-checkpoint_path = "/home/manx52/catkin_ws/src/soccerbot/soccer_pycontrol/src/soccer_rlcontrol/results/humanoid-ars" \
+checkpoint_path = "/home/shahryar/hdd/catkin_ws/src/soccerbot/soccer_pycontrol/src/soccer_rlcontrol/results/humanoid-ars" \
                   "/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015000" \
                   "/checkpoint-15000"
 #"./soccer_rlcontrol/results/humanoid-ars/ARS_gym_soccerbot:walk-forward-norm-v1_f29f6_00000_0_2021-06-05_18-39-54/checkpoint_015000/checkpoint-15000"
@@ -52,7 +52,7 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
         config["num_gpus"] = 0
         self.agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
         self.agent.load_checkpoint(checkpoint_path)
-        env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-omni-v0", goal=[10, 0])
+        self.env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-omni-v0", goal=[10, 0])
 
     def robot_pose_callback(self, pose):
         self.robot_pose = pose
@@ -95,12 +95,20 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
 
                 # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
+
+                # RL Code
                 observation_vector = self.soccerbot.getObservationVector()
-
-                ## RL code here
+                '''
+                observation_vector = self.env.normalize(observation_vector, self.env.env.observation_limit_low,
+                                                        self.env.env.observation_limit_high,
+                                                        self.env.observation_plus_range)
+                '''
                 action_vector = self.agent.compute_action(observation_vector)
+                action_vector = self.env.denormalize(action_vector, self.env.env.action_space.low,
+                                                     self.env.env.action_space.high,
+                                                     self.env.action_plus_range)
 
-                self.soccerbot.velocity_configuration(np.concatenate((action_vector, [0, 0])))  # 16+2
+                self.soccerbot.velocity_configuration = list(np.concatenate((action_vector, np.array([0, 0]))))  # 16+2
 
                 self.soccerbot.publishPath()
 

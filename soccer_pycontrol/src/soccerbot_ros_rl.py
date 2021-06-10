@@ -9,6 +9,7 @@ from geometry_msgs.msg import PoseStamped
 from transformation import Transformation
 from std_msgs.msg import Int32
 
+LOOP_FREQUENCY = 120
 
 class SoccerbotRosRl(SoccerbotRos):
 
@@ -29,6 +30,8 @@ class SoccerbotRosRl(SoccerbotRos):
             foot_pressure_sensor = rospy.Subscriber(temp_string, Int32, self.foot_pressure_sensor_callback,
                                                     i)
             self.foot_pressure_sensor_subscriber_list.append(foot_pressure_sensor)
+        self.lastjointState = JointState()
+        self.lastjointState.position = [0] * 18
 
     def ready(self):
         """
@@ -70,6 +73,8 @@ class SoccerbotRosRl(SoccerbotRos):
 
     def jointStateCallback(self, jointState: JointState):
         self.jointState = jointState
+        self.jointState.velocity = tuple((np.array(self.jointState.position) - np.array(self.lastjointState.position)) * LOOP_FREQUENCY)
+        self.lastjointState = jointState
         pass
 
     def imu_callback(self, imu: Imu):
@@ -82,20 +87,28 @@ class SoccerbotRosRl(SoccerbotRos):
             self.foot_pressure_values[footnum] = sensor_msg.data
 
     def getObservationVector(self):
-        positions = self.jointState.position  # Array of floats
-        velocities = self.jointState.velocity  # Array of floats
+        positions = self.jointState.position[:16]  # Array of floats
+        print(f'positions: {positions}')
+        velocities = self.jointState.velocity[:16]  # Array of floats
+        print(f'velocities: {velocities}')
         imu_angvel = [self.imu_msg.angular_velocity.x, self.imu_msg.angular_velocity.y,
                       self.imu_msg.angular_velocity.z]  # IMU angular velocity
+        print(f'imu_angvel: {imu_angvel}')
         imu_linacc = [self.imu_msg.linear_acceleration.x, self.imu_msg.linear_acceleration.y,
                       self.imu_msg.linear_acceleration.z]  # IMU linear acceleration
+        print(f'imu_licacc: {imu_linacc}')
         imu_orientation = [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
                            self.imu_msg.orientation.w]  # IMU orientation
+        print(f'imu_orientation: {imu_orientation}')
         feet_pressure_sensors = self.foot_pressure_values
+        print(f'feet_pressure_sensors: {feet_pressure_sensors}')
         orientation_vector = self.getDirectionVector()
-
+        print(f'orientation_vector: {orientation_vector}')
         # Concatenate vector
+        # return np.concatenate(
+        #     (positions, velocities, imu_angvel, imu_linacc, imu_orientation, orientation_vector, feet_pressure_sensors))
         return np.concatenate(
-            (positions, velocities, imu_angvel, imu_linacc, imu_orientation, orientation_vector, feet_pressure_sensors))
+            (positions, velocities, imu_angvel, imu_linacc, orientation_vector, feet_pressure_sensors))
 
     def getDirectionVector(self):
         current = self.pose
@@ -110,15 +123,6 @@ class SoccerbotRosRl(SoccerbotRos):
         cos = np.dot(d2_vect, distance_unit_vec)
         sin = np.linalg.norm(np.cross(distance_unit_vec, d2_vect))
         vec = np.array([cos, sin], dtype=np.float32)
-
-        # p = self._p
-
-        # mat = p.getMatrixFromQuaternion(p.getBasePositionAndOrientation(self.soccerbotUid)[1])
-        # d2_vect = np.array([mat[0], mat[3]], dtype=self.DTYPE)
-        # d2_vect /= np.linalg.norm(d2_vect)
-        # cos = np.dot(d2_vect, distance_unit_vec)
-        # sin = np.linalg.norm(np.cross(distance_unit_vec, d2_vect))
-        # vec = np.array([cos, sin], dtype=self.DTYPE)
         return vec
 
     def setGoal(self, finishPosition):
