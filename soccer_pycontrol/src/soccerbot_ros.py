@@ -5,7 +5,8 @@ from geometry_msgs.msg import Pose, PoseStamped
 from soccerbot import *
 import rospy
 import os
-
+import pybullet as pb
+from std_msgs.msg import Int32
 
 class SoccerbotRos(Soccerbot):
 
@@ -44,8 +45,8 @@ class SoccerbotRos(Soccerbot):
         self.foot_pressure_sensor_subscriber_list = []
         self.foot_pressure_values = []
         for i in range(8): # TODO get correct topic
-            foot_pressure_sensor = rospy.Subscriber("foot" + str(i), self.foot_pressure_sensor_callback, i)
-            self.foot_pressure_sensor_subscriber_list.append()
+            foot_pressure_sensor = rospy.Subscriber("num_foot_pressure_" + str(i), Int32, self.foot_pressure_sensor_callback, i)
+            self.foot_pressure_sensor_subscriber_list.append(foot_pressure_sensor)
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg

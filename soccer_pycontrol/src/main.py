@@ -8,7 +8,7 @@ import soccerbot_controller_ros
 import matplotlib as plt
 #plt.use('tkagg')
 
-USE_RL_CONTROL=False
+USE_RL_CONTROL=True
 
 if __name__ == '__main__':
 

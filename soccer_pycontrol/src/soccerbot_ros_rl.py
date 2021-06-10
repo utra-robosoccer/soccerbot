@@ -2,16 +2,33 @@ import rospy
 import numpy as np
 import pybullet as pb
 from sensor_msgs.msg import JointState, Imu
-
+from nav_msgs.msg import Odometry, Path
 from soccerbot import Joints
 from soccerbot_ros import SoccerbotRos
+from geometry_msgs.msg import PoseStamped
+from transformation import Transformation
+from std_msgs.msg import Int32
+
 
 class SoccerbotRosRl(SoccerbotRos):
 
     def __init__(self, pose, useFixedBase=False):
         super().__init__(pose, useFixedBase)
         self.velocity_configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.jointState = None
+        self.jointState = JointState()
+        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        self.sub_all_motor = rospy.Subscriber("joint_states", JointState, self.jointStateCallback)
+        self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
+        self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
+
+        self.foot_pressure_sensor_subscriber_list = []
+        self.foot_pressure_values = [-1, -1, -1, -1, -1, -1, -1, -1]
+        for i in range(8):  # TODO get correct topic
+            temp_string = "num_foot_pressure_" + str(i)
+            foot_pressure_sensor = rospy.Subscriber(temp_string, Int32, self.foot_pressure_sensor_callback,
+                                                    i)
+            self.foot_pressure_sensor_subscriber_list.append(foot_pressure_sensor)
 
     def ready(self):
         """
@@ -43,7 +60,6 @@ class SoccerbotRosRl(SoccerbotRos):
         self.configuration[Joints.RIGHT_ARM_1] = -0.5
         self.configuration[Joints.RIGHT_ARM_2] = 2.8
 
-
         pb.setJointMotorControlArray(bodyIndex=self.body,
                                      controlMode=pb.POSITION_CONTROL,
                                      jointIndices=list(range(0, 20, 1)),
@@ -59,17 +75,27 @@ class SoccerbotRosRl(SoccerbotRos):
     def imu_callback(self, imu: Imu):
         self.imu_msg = imu
 
+    def foot_pressure_sensor_callback(self, sensor_msg: Int32, footnum):
+        if sensor_msg.data == 0:
+            self.foot_pressure_values[footnum] = -1
+        else:
+            self.foot_pressure_values[footnum] = sensor_msg.data
+
     def getObservationVector(self):
-        positions = self.jointState.position # Array of floats
-        velocities = self.jointState.velocity # Array of floats
-        imu_angvel = [self.imu_msg.angular_velocity.x, self.imu_msg.angular_velocity.y, self.imu_msg.angular_velocity.z] # IMU angular velocity
-        imu_linacc = [self.imu_msg.linear_acceleration.x, self.imu_msg.linear_acceleration.y, self.imu_msg.linear_acceleration.z] # IMU linear acceleration
-        imu_orientation = [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z, self.imu_msg.orientation.w] # IMU orientation
+        positions = self.jointState.position  # Array of floats
+        velocities = self.jointState.velocity  # Array of floats
+        imu_angvel = [self.imu_msg.angular_velocity.x, self.imu_msg.angular_velocity.y,
+                      self.imu_msg.angular_velocity.z]  # IMU angular velocity
+        imu_linacc = [self.imu_msg.linear_acceleration.x, self.imu_msg.linear_acceleration.y,
+                      self.imu_msg.linear_acceleration.z]  # IMU linear acceleration
+        imu_orientation = [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
+                           self.imu_msg.orientation.w]  # IMU orientation
         feet_pressure_sensors = self.foot_pressure_values
         orientation_vector = self.getDirectionVector()
 
         # Concatenate vector
-        return np.concatenate((positions, velocities, imu_angvel, imu_linacc, imu_orientation, orientation_vector, feet_pressure_sensors))
+        return np.concatenate(
+            (positions, velocities, imu_angvel, imu_linacc, imu_orientation, orientation_vector, feet_pressure_sensors))
 
     def getDirectionVector(self):
         current = self.pose
@@ -78,11 +104,21 @@ class SoccerbotRosRl(SoccerbotRos):
         distance_unit_vec = current.get_position()[0:2] - end.get_position()[0:2]
         distance_unit_vec /= np.linalg.norm(distance_unit_vec)
         mat = current[0:3, 0:3]
-        d2_vect = np.array([mat[0], mat[3]], dtype=np.float32)
+
+        d2_vect = np.array([mat[0, 0], mat[1, 0]], dtype=np.float32)
         d2_vect /= np.linalg.norm(d2_vect)
         cos = np.dot(d2_vect, distance_unit_vec)
         sin = np.linalg.norm(np.cross(distance_unit_vec, d2_vect))
         vec = np.array([cos, sin], dtype=np.float32)
+
+        # p = self._p
+
+        # mat = p.getMatrixFromQuaternion(p.getBasePositionAndOrientation(self.soccerbotUid)[1])
+        # d2_vect = np.array([mat[0], mat[3]], dtype=self.DTYPE)
+        # d2_vect /= np.linalg.norm(d2_vect)
+        # cos = np.dot(d2_vect, distance_unit_vec)
+        # sin = np.linalg.norm(np.cross(distance_unit_vec, d2_vect))
+        # vec = np.array([cos, sin], dtype=self.DTYPE)
         return vec
 
     def setGoal(self, finishPosition):
@@ -100,9 +136,9 @@ class SoccerbotRosRl(SoccerbotRos):
         js = JointState()
         js.name = []
         js.header.stamp = rospy.Time.now()
-        js.position = []
+        js.velocity = []
         js.effort = []
         for i, n in enumerate(self.motor_names):
             js.name.append(n)
-            js.velocity.append(self.velocity_configuration[i]) # Velocity control only
+            js.velocity.append(self.velocity_configuration[i])  # Velocity control only
         self.pub_all_motor.publish(js)

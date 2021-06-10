@@ -8,7 +8,7 @@ from controller import Robot, Node, Field
 import rospy
 from geometry_msgs.msg import PoseArray, Pose, Point
 from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
-
+from std_msgs.msg import Int32
 
 class RobotController:
     def __init__(self, base_ns="/robot1"):
@@ -132,6 +132,8 @@ class RobotController:
 
         self.pressure_sensors_pub = {
             i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
+        self.pressure_sensors_pub_number = {
+            i: rospy.Publisher(base_ns + "/num_foot_pressure_{}".format(i), Int32, queue_size=10) for i in range(8)}
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
@@ -312,5 +314,7 @@ class RobotController:
             marker_object.pose.orientation.y = 0
             marker_object.pose.orientation.z = 0
             marker_object.pose.orientation.w = 1
-
+            temp_msg = Int32()
+            temp_msg.data = int(self.pressure_sensors[i].getValue())
+            self.pressure_sensors_pub_number[i].publish(temp_msg)
             self.pressure_sensors_pub[i].publish(marker_object)

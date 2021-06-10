@@ -52,4 +52,5 @@
     </include>
 
 <!--    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>-->
+    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" />
 </launch>

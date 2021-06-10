@@ -3,14 +3,15 @@ import rospy
 from soccerbot_ros import SoccerbotRos
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from std_msgs.msg import Empty
+import pybullet as pb
 
 class SoccerbotControllerRos(SoccerbotController):
 
     def __init__(self):
-        if os.getenv('COMPETITION', 'false') == 'true':
-            pb.connect(pb.DIRECT)
-        else:
-            pb.connect(pb.GUI)
+        # if os.getenv('COMPETITION', 'false') == 'true':
+        #     pb.connect(pb.DIRECT)
+        # else:
+        pb.connect(pb.GUI)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)

@@ -15,10 +15,10 @@ class SoccerbotController:
     PYBULLET_STEP = 0.004
 
     def __init__(self):
-        if os.getenv('COMPETITION', 'false') == 'true':
-            pb.connect(pb.DIRECT)
-        else:
-            pb.connect(pb.GUI)
+        # if os.getenv('COMPETITION', 'false') == 'true':
+        #     pb.connect(pb.DIRECT)
+        # else:
+        pb.connect(pb.GUI)
 
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])

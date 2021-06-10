@@ -9,5 +9,5 @@
         <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
     </node>
 
-<!--    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol"/>-->
+    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen" />
 </launch>
