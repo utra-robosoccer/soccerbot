@@ -102,7 +102,7 @@ class Soccerbot:
         final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0], link1worldrev[1])
         return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
 
-    def __init__(self, pose, useFixedBase=False):
+    def __init__(self, pose):
         """
         Contsructor for the soccerbot. Loads the robot into the pybullet simulation.
         :param position: transformation
@@ -112,7 +112,7 @@ class Soccerbot:
         if os.environ['USER'] == 'shahryar':
             home = home + "/hdd"
         self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
-                                useFixedBase=useFixedBase,
+                                useFixedBase=False,
                                 flags=pb.URDF_USE_INERTIA_FROM_FILE,
                                 basePosition=[pose.get_position()[0], pose.get_position()[1],
                                               Soccerbot.standing_hip_height],

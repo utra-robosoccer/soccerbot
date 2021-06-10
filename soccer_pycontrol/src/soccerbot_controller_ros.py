@@ -16,7 +16,7 @@ class SoccerbotControllerRos(SoccerbotController):
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
 
-        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
+        self.soccerbot = SoccerbotRos(Transformation(), usePybullet=True)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)

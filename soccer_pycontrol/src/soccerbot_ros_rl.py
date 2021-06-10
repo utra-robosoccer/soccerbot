@@ -13,8 +13,8 @@ LOOP_FREQUENCY = 120
 
 class SoccerbotRosRl(SoccerbotRos):
 
-    def __init__(self, pose, useFixedBase=False):
-        super().__init__(pose, useFixedBase)
+    def __init__(self, pose, usePybullet=False):
+        super().__init__(pose, usePybullet)
         self.velocity_configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.jointState = JointState()
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
@@ -38,10 +38,6 @@ class SoccerbotRosRl(SoccerbotRos):
         Sets the robot's joint angles for the robot to standing pose.
         :return: None
         """
-        # Used later to calculate inverse kinematics
-        position = self.pose.get_position()
-        position[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        self.pose.set_position(position)
 
         # Set initial posit
         self.configuration[Joints.RIGHT_LEG_1] = 0.0
@@ -62,12 +58,6 @@ class SoccerbotRosRl(SoccerbotRos):
         self.configuration[Joints.LEFT_ARM_2] = 2.8
         self.configuration[Joints.RIGHT_ARM_1] = -0.5
         self.configuration[Joints.RIGHT_ARM_2] = 2.8
-
-        pb.setJointMotorControlArray(bodyIndex=self.body,
-                                     controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 20, 1)),
-                                     targetPositions=self.get_angles(),
-                                     forces=self.max_forces)
         # Publish angles using position control
         super().publishAngles()
 
@@ -126,17 +116,9 @@ class SoccerbotRosRl(SoccerbotRos):
         return vec
 
     def setGoal(self, finishPosition):
-        """
-        Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
-        :param finishPosition: #TODO
-        :return: #TODO
-        """
-        finishPositionCoordinate = finishPosition.get_position()
-        finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        finishPosition.set_position(finishPositionCoordinate)
         self.goal_position = finishPosition
 
-    def publishAngles(self):
+    def publishAngularVelocities(self):
         js = JointState()
         js.name = []
         js.header.stamp = rospy.Time.now()
@@ -146,3 +128,6 @@ class SoccerbotRosRl(SoccerbotRos):
             js.name.append(n)
             js.velocity.append(self.velocity_configuration[i])  # Velocity control only
         self.pub_all_motor.publish(js)
+
+    def setPose(self, pose):
+        self.pose = pose

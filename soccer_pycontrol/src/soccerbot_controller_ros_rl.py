@@ -19,14 +19,8 @@ checkpoint_path = "/home/shahryar/hdd/catkin_ws/src/soccerbot/soccer_pycontrol/s
 class SoccerbotControllerRosRl(SoccerbotControllerRos):
 
     def __init__(self):
-        pb.connect(pb.GUI)
-        pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
-        pb.setGravity(0, 0, -9.81)
-        self.soccerbot = SoccerbotRosRl(Transformation(), useFixedBase=False)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9,
-                         rollingFriction=0.0)
 
+        self.soccerbot = SoccerbotRosRl(Transformation(), usePybullet=False)
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
         self.robot_position_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped,
                                                           self.robot_pose_callback)
@@ -40,6 +34,7 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
         # TODO change goal later?
         # physical_devices = tf.config.list_physical_devices('GPU')
         # tf.config.experimental.set_memory_growth(physical_devices[0], True)
+        print("RAY INIT START")
         ray.init(local_mode=True)
         trainer, trainer_class = ars.ARSTrainer, ars
         # load
@@ -53,6 +48,7 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
         self.agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
         self.agent.load_checkpoint(checkpoint_path)
         self.env = gym.make(env_id, renders=True, env_name="gym_soccerbot:walk-omni-v0", goal=[10, 0])
+        print("RAY INIT END")
 
     def robot_pose_callback(self, pose):
         self.robot_pose = pose
@@ -71,13 +67,12 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
         return t
 
     def wait(self, steps):
-        for i in range(steps):
-            rospy.sleep(SoccerbotController.PYBULLET_STEP)
-            pb.stepSimulation()
+        rospy.sleep(SoccerbotController.PYBULLET_STEP * steps)
 
     def run(self):
         r = rospy.Rate(120)
 
+        completed = True
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
                 print("Recieved New Goal")
@@ -87,16 +82,13 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
                 self.goal = self.new_goal
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_head()
-
-
                 self.soccerbot.publishAngles()
                 print("Getting ready")
                 self.wait(150)
-
-                # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
+                completed = False
 
-                # RL Code
+            if not completed:
                 observation_vector = self.soccerbot.getObservationVector()
                 '''
                 observation_vector = self.env.normalize(observation_vector, self.env.env.observation_limit_low,
@@ -110,16 +102,11 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
 
                 self.soccerbot.velocity_configuration = list(np.concatenate((action_vector, np.array([0, 0]))))  # 16+2
 
-                self.soccerbot.publishPath()
-
-                t = 0
-
             if self.terminate_walk:
-                # TODO terminate walk
+                self.completed = True
                 self.terminate_walk = False
 
-
-
+            # Here do a check if the walking is completed
             # # TODO walk is completed
             # if False:
             #     print("Completed Walk")
@@ -130,5 +117,5 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
             # if True:
             #     self.soccerbot.apply_head_rotation()
 
-            self.soccerbot.publishAngles()
+            self.soccerbot.publishAngularVelocities()
             r.sleep()

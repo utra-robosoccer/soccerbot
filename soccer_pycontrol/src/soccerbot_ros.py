@@ -10,13 +10,14 @@ from std_msgs.msg import Int32
 
 class SoccerbotRos(Soccerbot):
 
-    def __init__(self, position, useFixedBase=False):
-
-        super().__init__(position, useFixedBase)
+    def __init__(self, position, usePybullet=False):
+        if usePybullet:
+            super().__init__(position)
+        else:
+            self.configuration = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
-        self.sub_all_motor = rospy.Subscriber("joint_states", JointState, self.jointStateCallback)
 
         self.motor_names = [
             "left_arm_motor_0",

@@ -24,7 +24,7 @@ class SoccerbotController:
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
 
-        self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
+        self.soccerbot = Soccerbot(Transformation())
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
     def wait(self, steps):
