@@ -28,7 +28,7 @@ class Transformation(np.ndarray):
         Gives the translational component of H-transform
         :return: a vector 3x1
         """
-        return self[0:3, 3]
+        return np.array(self[0:3, 3])
 
     def set_position(self, position):
         """
@@ -45,6 +45,13 @@ class Transformation(np.ndarray):
         """
         r = R.from_matrix(self[0:3, 0:3])
         return r.as_quat()
+
+    def get_orientation_euler(self):
+        """
+        Gives the rotation of the H-transform in euler axis form
+        :return: angles of form [r p y]
+        """
+        return Transformation.get_euler_from_rotation_matrix(self[0:3, 0:3])
 
     def set_orientation(self, quat):
         """

@@ -8,7 +8,7 @@ from controller import Robot, Node, Field
 import rospy
 from geometry_msgs.msg import PoseArray, Pose, Point
 from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
-
+from std_msgs.msg import Int32
 
 class RobotController:
     def __init__(self, base_ns="/robot1"):
@@ -33,31 +33,67 @@ class RobotController:
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
 
-        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
-                            "right_arm_motor_1",
-                            "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
-                            ]
-        self.sensor_names = ["left_arm_motor_0_sensor", "left_arm_motor_1_sensor", "right_arm_motor_0_sensor",
-                             "right_arm_motor_1_sensor",
-                             "right_leg_motor_0_sensor", "right_leg_motor_1_sensor", "right_leg_motor_2_sensor",
-                             "right_leg_motor_3_sensor",
-                             "right_leg_motor_4_sensor", "right_leg_motor_5_sensor", "left_leg_motor_0_sensor",
-                             "left_leg_motor_1_sensor",
-                             "left_leg_motor_2_sensor", "left_leg_motor_3_sensor", "left_leg_motor_4_sensor",
-                             "left_leg_motor_5_sensor",
-                             "head_motor_0_sensor", "head_motor_1_sensor"
-                             ]
+        self.motor_names = [
+            "left_arm_motor_0 [shoulder]",
+            "left_arm_motor_1",
+            "right_arm_motor_0 [shoulder]",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1 [hip]",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1 [hip]",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1"
+        ]
+        self.sensor_names = [
+            "left_arm_motor_0_sensor",
+            "left_arm_motor_1_sensor",
+            "right_arm_motor_0_sensor",
+            "right_arm_motor_1_sensor",
+            "right_leg_motor_0_sensor",
+            "right_leg_motor_1_sensor",
+            "right_leg_motor_2_sensor",
+            "right_leg_motor_3_sensor",
+            "right_leg_motor_4_sensor",
+            "right_leg_motor_5_sensor",
+            "left_leg_motor_0_sensor",
+            "left_leg_motor_1_sensor",
+            "left_leg_motor_2_sensor",
+            "left_leg_motor_3_sensor",
+            "left_leg_motor_4_sensor",
+            "left_leg_motor_5_sensor",
+            "head_motor_0_sensor",
+            "head_motor_1_sensor"
+        ]
         self.motor_count = len(self.motor_names)
-        self.external_motor_names = \
-            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-             "head_motor_0", "head_motor_1"
-             ]
+        self.external_motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1"
+         ]
         accel_name = "imu accelerometer"
         gyro_name = "imu gyro"
         camera_name = "camera"
@@ -88,7 +124,7 @@ class RobotController:
         self.camera.enable(self.timestep)
 
         clock_topic = base_ns + "/clock"
-        rospy.Subscriber(base_ns + '/all_motor', JointState, self.all_motor_callback)
+        rospy.Subscriber(base_ns + '/joint_command', JointState, self.all_motor_callback)
         self.pub_imu = rospy.Publisher(base_ns + "/imu_raw", Imu, queue_size=1)
         self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
@@ -96,6 +132,8 @@ class RobotController:
 
         self.pressure_sensors_pub = {
             i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
+        self.pressure_sensors_pub_number = {
+            i: rospy.Publisher(base_ns + "/num_foot_pressure_{}".format(i), Int32, queue_size=10) for i in range(8)}
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
@@ -276,5 +314,7 @@ class RobotController:
             marker_object.pose.orientation.y = 0
             marker_object.pose.orientation.z = 0
             marker_object.pose.orientation.w = 1
-
+            temp_msg = Int32()
+            temp_msg.data = int(self.pressure_sensors[i].getValue())
+            self.pressure_sensors_pub_number[i].publish(temp_msg)
             self.pressure_sensors_pub[i].publish(marker_object)

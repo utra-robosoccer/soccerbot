@@ -38,4 +38,8 @@
 
   <!-- strategy-->
   <depend>soccer_strategy</depend>
+
+  <!-- Game Controller -->
+  <depend>ant</depend>
+  <depend>java</depend>
 </package>

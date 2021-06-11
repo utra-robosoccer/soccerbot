@@ -44,23 +44,24 @@ PROTO Bez [
     %{
 
       print (fields.name.value)
-          if fields.name.value ~= '' then
-
-          -- name is supposed to be something like "red player 2" or "blue player 1"
-      local words = {}
-      for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
-
-          color = words[1]
-          number = words[3]
-          else
-          color = "blue"
+      if fields.name.value ~= 'robot1' then
+          color = "red"
+          number = 1
+      end
+      if fields.name.value ~= 'robot2' then
+          color = "red"
+          number = 2
+      end
+      if fields.name.value ~= 'robot3' then
+          color = "red"
           number = 3
-          end
-
-          local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
-          local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
-
-
+      end
+      if fields.name.value ~= 'robot4' then
+          color = "red"
+          number = 4
+      end
+      local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+      local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
 
     }%
       Soccerbot_torso_0Mesh {

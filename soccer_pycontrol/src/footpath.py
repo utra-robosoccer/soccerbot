@@ -4,7 +4,7 @@ import enum
 from path import Path
 from transformation import Transformation as tr
 import matplotlib.pyplot as plt
-
+from copy import deepcopy
 
 class PostPreSetting(enum.IntEnum):
     POST_AND_PRE = 0
@@ -233,7 +233,13 @@ class Footpath(Path):
 
         step_time = self.bodyStepTime()
         distance_between_step = tr.get_distance(startTransform, endTransform)
-        assert (distance_between_step != 0.0)
+        if distance_between_step == 0.0:
+            delta = 0.001
+            angle = startTransform.get_orientation_euler()[2]
+            delta_tr = [np.cos(angle) * delta, np.sin(angle) * delta, 0]
+            endTransform = deepcopy(endTransform)
+            endTransform.set_position(endTransform.get_position() + delta_tr)
+            distance_between_step = tr.get_distance(startTransform, endTransform)
         height_per_step = np.linalg.norm([zdiff, sidediff])
 
         h = height_per_step

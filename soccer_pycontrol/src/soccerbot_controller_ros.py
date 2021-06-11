@@ -3,16 +3,20 @@ import rospy
 from soccerbot_ros import SoccerbotRos
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from std_msgs.msg import Empty
+import pybullet as pb
 
 class SoccerbotControllerRos(SoccerbotController):
 
     def __init__(self):
+        # if os.getenv('COMPETITION', 'false') == 'true':
+        #     pb.connect(pb.DIRECT)
+        # else:
         pb.connect(pb.GUI)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
 
-        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
+        self.soccerbot = SoccerbotRos(Transformation(), usePybullet=True)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
@@ -39,11 +43,14 @@ class SoccerbotControllerRos(SoccerbotController):
                            [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
         return t
 
+    def wait(self, steps):
+        for i in range(steps):
+            rospy.sleep(SoccerbotController.PYBULLET_STEP)
+            pb.stepSimulation()
+
     def run(self):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
-
-        rospy.set_param("walking_engine_ready", True)
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
@@ -53,6 +60,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
                 self.goal = self.new_goal
                 self.soccerbot.ready() # TODO Cancel walking
+                self.soccerbot.reset_head()
                 self.soccerbot.publishAngles()
                 print("Getting ready")
                 self.wait(150)
@@ -73,20 +81,26 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
+                self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
+                self.soccerbot.apply_head_rotation()
+                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                 pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 18, 1)),
-                                             targetPositions=self.soccerbot.configuration)
+                                             jointIndices=list(range(0, 20, 1)),
+                                             targetPositions=self.soccerbot.get_angles(),
+                                             forces=forces
+                                             )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
                 self.soccerbot.publishOdometry()
-                self.soccerbot.publishAngles()
 
-            if  self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() and  t + SoccerbotController.PYBULLET_STEP > self.soccerbot.robot_path.duration():
+            if self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() < t + SoccerbotController.PYBULLET_STEP:
                 print("Completed Walk")
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
-            pb.stepSimulation()
-            # self.soccerbot.get_imu()
+            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
+                self.soccerbot.apply_head_rotation()
 
+            self.soccerbot.publishAngles()
+            pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP
             r.sleep()

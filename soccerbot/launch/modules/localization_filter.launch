@@ -1,7 +1,0 @@
-<launch>
-<!--    <arg name="robot_name" default="robot1"/>-->
-
-<!--    <node name="estimate_odom" pkg="rostopic" type="rostopic"-->
-<!--          args="pub /$(arg robot_name)/correct_odm">-->
-<!--    </node>-->
-</launch>

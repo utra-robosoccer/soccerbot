@@ -1,0 +1,40 @@
+{
+  "action_noise_std": 0.0,
+  "env": "gym_soccerbot:walk-forward-norm-v1",
+  "env_config": {
+    "env_name": "gym_soccerbot:walk-omni-v0",
+    "goal": [
+      2,
+      0
+    ]
+  },
+  "eval_prob": 0.03,
+  "evaluation_config": {
+    "num_envs_per_worker": 1,
+    "observation_filter": "NoFilter"
+  },
+  "extra_python_environs_for_driver": {
+    "OMP_NUM_THREADS": 31
+  },
+  "framework": "tf",
+  "horizon": 1024,
+  "model": {
+    "fcnet_activation": "tanh",
+    "fcnet_hiddens": [
+      128,
+      128
+    ]
+  },
+  "noise_size": 250000000,
+  "noise_stdev": 0.02,
+  "num_cpus_per_worker": 1.0,
+  "num_envs_per_worker": 1,
+  "num_gpus": 0,
+  "num_rollouts": 124,
+  "num_workers": 31,
+  "observation_filter": "MeanStdFilter",
+  "offset": 0,
+  "report_length": 10,
+  "rollouts_used": 124,
+  "sgd_stepsize": 0.01
+}

@@ -106,18 +106,6 @@ class GameEngineRos(game_engine.GameEngine):
 
             self.updateEstimatedPhysics(self.robots, self.ball)
 
-            # Check victory condition
-            if self.ball.get_position()[1] > 4.5:
-                print("Friendly Scores!")
-                friendly_points += 1
-                self.robots = self.robots_init
-                self.ball = self.ball_init
-            elif self.ball.get_position()[1] < -4.5:
-                print("Opponent Scores!")
-                opponent_points += 1
-                robots = self.robots_init
-                self.ball = self.ball_init
-
             if self.display and rostime % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL) < \
                     rostime_previous % (GameEngineRos.DISPLAY_UPDATE_INTERVAL * GameEngineRos.PHYSICS_UPDATE_INTERVAL):
                 self.displayGameState(self.robots, self.ball, rostime)
