@@ -54,10 +54,6 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
         self.robot_pose = pose
         pass
 
-    def goal_callback(self, pose):
-        self.new_goal = pose
-        pass
-
     def terminate_walk_callback(self, val):
         self.terminate_walk = True
 
@@ -74,9 +70,9 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
 
         completed = True
         while not rospy.is_shutdown():
+            self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
             if self.new_goal != self.goal:
                 print("Recieved New Goal")
-                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.wait(200)
 
                 self.goal = self.new_goal
@@ -90,16 +86,17 @@ class SoccerbotControllerRosRl(SoccerbotControllerRos):
 
             if not completed:
                 observation_vector = self.soccerbot.getObservationVector()
-                '''
+                joint_angles = observation_vector[:16]
                 observation_vector = self.env.normalize(observation_vector, self.env.env.observation_limit_low,
                                                         self.env.env.observation_limit_high,
                                                         self.env.observation_plus_range)
-                '''
+                # clip
+                observation_vector = np.clip(observation_vector, -10.0, 10.0)
                 action_vector = self.agent.compute_action(observation_vector)
                 action_vector = self.env.denormalize(action_vector, self.env.env.action_space.low,
                                                      self.env.env.action_space.high,
                                                      self.env.action_plus_range)
-
+                action_vector = self.soccerbot.motor_control(action_vector, joint_angles, self.env.env)
                 self.soccerbot.velocity_configuration = list(np.concatenate((action_vector, np.array([0, 0]))))  # 16+2
 
             if self.terminate_walk:

@@ -13,29 +13,24 @@ import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
 RUN_RL = True
-RUN_IN_ROS = False
+RUN_IN_ROS = True
 
 class Test(TestCase):
 
     def setUp(self): # -> None:
-        if RUN_RL:
-            import soccerbot_controller_ros_rl
-            from std_msgs.msg import Bool
+        if RUN_IN_ROS:
+            from std_msgs.msg import String
             rospy.init_node("soccer_control")
-            resetPublisher = rospy.Publisher("/reset", Bool)
-            b = Bool()
-            b.data = True
+            resetPublisher = rospy.Publisher("/reset", String, latch=True)
+            b = String()
+            b.data = ""
             resetPublisher.publish(b)
-            self.walker = soccerbot_controller_ros_rl.SoccerbotControllerRosRl()
-        elif RUN_IN_ROS:
-            import soccerbot_controller_ros
-            from std_msgs.msg import Bool
-            rospy.init_node("soccer_control")
-            resetPublisher = rospy.Publisher("/reset", Bool)
-            b = Bool()
-            b.data = True
-            resetPublisher.publish(b)
-            self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
+            if RUN_RL:
+                import soccerbot_controller_ros_rl
+                self.walker = soccerbot_controller_ros_rl.SoccerbotControllerRosRl()
+            else:
+                import soccerbot_controller_ros
+                self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
         else:
             self.walker = soccerbot_controller.SoccerbotController()
 
@@ -52,9 +47,9 @@ class Test(TestCase):
     def test_walk_1_rl(self):
         from geometry_msgs.msg import PoseStamped
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.wait(5)
+        self.walker.wait(100)
         self.walker.soccerbot.ready()
-        self.walker.wait(5)
+        self.walker.wait(200)
         self.walker.new_goal = PoseStamped()
         self.walker.new_goal.pose.position.x = 5
         self.walker.new_goal.pose.position.y = 0

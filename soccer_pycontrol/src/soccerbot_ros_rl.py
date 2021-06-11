@@ -54,16 +54,16 @@ class SoccerbotRosRl(SoccerbotRos):
         self.configuration[Joints.LEFT_LEG_5] = 0.4
         self.configuration[Joints.LEFT_LEG_6] = -0.05
 
-        self.configuration[Joints.LEFT_ARM_1] = -0.5
+        self.configuration[Joints.LEFT_ARM_1] = 0.0 # -0.5
         self.configuration[Joints.LEFT_ARM_2] = 2.8
-        self.configuration[Joints.RIGHT_ARM_1] = -0.5
+        self.configuration[Joints.RIGHT_ARM_1] = 0.0 # -0.5
         self.configuration[Joints.RIGHT_ARM_2] = 2.8
         # Publish angles using position control
         super().publishAngles()
 
     def jointStateCallback(self, jointState: JointState):
         self.jointState = jointState
-        self.jointState.velocity = tuple((np.array(self.jointState.position) - np.array(self.lastjointState.position)) * LOOP_FREQUENCY)
+        self.jointState.velocity = tuple((np.array(self.jointState.position) - np.array(self.lastjointState.position)) / 0.008)
         self.lastjointState = jointState
         pass
 
@@ -89,8 +89,17 @@ class SoccerbotRosRl(SoccerbotRos):
         print(f'imu_licacc: {imu_linacc}')
         imu_orientation = [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
                            self.imu_msg.orientation.w]  # IMU orientation
-        print(f'imu_orientation: {imu_orientation}')
+        # print(f'imu_orientation: {imu_orientation}')
         feet_pressure_sensors = self.foot_pressure_values
+        feet_pressure_sensors = np.array([feet_pressure_sensors[0],
+                                          feet_pressure_sensors[1],
+                                          feet_pressure_sensors[3],
+                                          feet_pressure_sensors[2],
+                                          feet_pressure_sensors[4],
+                                          feet_pressure_sensors[5],
+                                          feet_pressure_sensors[7],
+                                          feet_pressure_sensors[6],
+                                          ])
         print(f'feet_pressure_sensors: {feet_pressure_sensors}')
         orientation_vector = self.getDirectionVector()
         print(f'orientation_vector: {orientation_vector}')
@@ -98,13 +107,15 @@ class SoccerbotRosRl(SoccerbotRos):
         # return np.concatenate(
         #     (positions, velocities, imu_angvel, imu_linacc, imu_orientation, orientation_vector, feet_pressure_sensors))
         return np.concatenate(
-            (positions, velocities, imu_angvel, imu_linacc, orientation_vector, feet_pressure_sensors))
+            (positions, velocities, imu_linacc, imu_angvel, orientation_vector, feet_pressure_sensors))
 
     def getDirectionVector(self):
         current = self.pose
         end = self.goal_position
+        print(f'current: {self.pose}')
+        print(f'goal: {self.goal_position}')
 
-        distance_unit_vec = current.get_position()[0:2] - end.get_position()[0:2]
+        distance_unit_vec = end.get_position()[0:2] - current.get_position()[0:2]
         distance_unit_vec /= np.linalg.norm(distance_unit_vec)
         mat = current[0:3, 0:3]
 
@@ -131,3 +142,17 @@ class SoccerbotRosRl(SoccerbotRos):
 
     def setPose(self, pose):
         self.pose = pose
+
+    def motor_control(self, action, joint_angles, env):
+        _MX_28_velocity = 2 * np.pi
+        # CLIP ACTIONS
+        # action = np.clip(action, self._joint_limit_low, self._joint_limit_high)
+        for i in range(Joints.LEFT_ARM_1, Joints.HEAD_1, 1):
+            joint_cur_pos = joint_angles[i]
+            velocity = action[i]
+            velocity = velocity if joint_cur_pos < env._joint_limit_high[i] else -_MX_28_velocity
+            velocity = velocity if joint_cur_pos > env._joint_limit_low[i] else _MX_28_velocity
+            if velocity != action[i]:
+                print(f'***** Joint {i} capped')
+            action[i] = velocity
+        return action
