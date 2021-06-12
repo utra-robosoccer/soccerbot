@@ -1,4 +1,5 @@
 import os
+import time
 
 import pybullet as pb
 import pybullet_data
@@ -6,8 +7,6 @@ from transformation import Transformation
 from time import sleep
 from soccerbot import Soccerbot
 from ramp import Ramp
-import matplotlib as plt
-import rospy
 
 
 class SoccerbotController:
@@ -26,9 +25,15 @@ class SoccerbotController:
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
+    def ready(self):
+        self.soccerbot.ready()
+
+    def setGoal(self, goal):
+        self.soccerbot.setGoal(goal)
+
     def wait(self, steps):
         for i in range(steps):
-            rospy.sleep(SoccerbotController.PYBULLET_STEP)
+            time.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
     def run(self):
@@ -39,11 +44,11 @@ class SoccerbotController:
         while t <= self.soccerbot.robot_path.duration():
             if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
-                forces = self.soccerbot.get_motor_forces(self.ramp.plane)
-                self.soccerbot.get_imu(verbose=True)
+                self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
+                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                 pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 18, 1)),
-                                             targetPositions=self.soccerbot.configuration,
+                                             jointIndices=list(range(0, 20, 1)),
+                                             targetPositions=self.soccerbot.get_angles(),
                                              forces=forces
                                              )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
