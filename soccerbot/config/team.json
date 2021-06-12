@@ -2,7 +2,7 @@
   "name": "UTRA",
   "players": {
     "1": {
-      "proto": "Bez",
+      "proto": "BezRobocup",
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1",
       "halfTimeStartingPose": {
@@ -23,7 +23,7 @@
       }
     },
     "2": {
-      "proto": "Bez",
+      "proto": "BezRobocup",
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2",
       "halfTimeStartingPose": {
@@ -44,7 +44,7 @@
       }
     },
     "3": {
-      "proto": "Bez",
+      "proto": "BezRobocup",
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot3",
       "halfTimeStartingPose": {
@@ -65,7 +65,7 @@
       }
     },
     "4": {
-      "proto": "Bez",
+      "proto": "BezRobocup",
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot4",
       "halfTimeStartingPose": {
