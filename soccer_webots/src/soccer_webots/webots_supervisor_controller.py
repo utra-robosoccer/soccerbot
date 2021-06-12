@@ -40,7 +40,7 @@ class SupervisorController:
         self.timestep = int(self.supervisor.getBasicTimeStep())
 
         # resolve the node for corresponding name
-        self.robot_names = ["red_player_1", "red_player_2", "red_player_3", "red_player_4"]
+        self.robot_names = ["robot1", "robot2", "robot3", "robot4"]
         self.robot_nodes = {}
         self.translation_fields = {}
         self.rotation_fields = {}
@@ -82,14 +82,14 @@ class SupervisorController:
         self.clock_msg.clock = rospy.Time.from_seconds(self.time)
         self.clock_publisher.publish(self.clock_msg)
 
-    def publish_odom(self, name="red_player_1"):
-        if name == "red_player_1":
+    def publish_odom(self, name="robot1"):
+        if name == "robot1":
             base = "robot1"
-        elif name == "red_player_2":
+        elif name == "robot2":
             base = "robot2"
-        elif name == "red_player_3":
+        elif name == "robot3":
             base = "robot3"
-        elif name == "red_player_4":
+        elif name == "robot4":
             base = "robot4"
         odom = rospy.Publisher('/' + base + '/base_pose_ground_truth', nav_msgs.msg.Odometry, queue_size=1)
         odometry = nav_msgs.msg.Odometry()
@@ -148,66 +148,66 @@ class SupervisorController:
         self.ball.resetPhysics()
 
     def set_initial_poses(self, req=None):
-        self.reset_robot_pose_rpy([-1, 3, 0.42], [0, 0, 0], name="red_player_1")
-        # self.reset_robot_pose_rpy([-1, -3, 0.42], [0, 0.24, 1.57], name="red_player_2")
-        # self.reset_robot_pose_rpy([-3, 3, 0.42], [0, 0.24, -1.57], name="red_player_3")
-        # self.reset_robot_pose_rpy([-3, -3, 0.42], [0, 0.24, 1.57], name="red_player_4")
+        self.reset_robot_pose_rpy([-1, 3, 0.42], [0, 0, 0], name="robot1")
+        # self.reset_robot_pose_rpy([-1, -3, 0.42], [0, 0.24, 1.57], name="robot2")
+        # self.reset_robot_pose_rpy([-3, 3, 0.42], [0, 0.24, -1.57], name="robot3")
+        # self.reset_robot_pose_rpy([-3, -3, 0.42], [0, 0.24, 1.57], name="robot4")
 
     def reset(self, msg):
         self.supervisor.simulationReset()
         self.supervisor.simulationResetPhysics()
 
-    def get_robot_position(self, name="red_player_1"):
+    def get_robot_position(self, name="robot1"):
         if name in self.translation_fields:
             return self.translation_fields[name].getSFVec3f()
 
-    def get_robot_orientation_axangles(self, name="red_player_1"):
+    def get_robot_orientation_axangles(self, name="robot1"):
         if name in self.rotation_fields:
             return self.rotation_fields[name].getSFRotation()
 
-    def get_robot_orientation_quat(self, name="red_player_1"):
+    def get_robot_orientation_quat(self, name="robot1"):
         ax_angle = self.get_robot_orientation_axangles(name)
         # transforms 3d uses scalar (i.e. the w part in the quaternion) first notation of quaternions, ros uses scalar last
         quat_scalar_first = transforms3d.quaternions.axangle2quat(ax_angle[:3], ax_angle[3])
         quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
         return list(quat_scalar_last)
 
-    def get_robot_pose_rpy(self, name="red_player_1"):
+    def get_robot_pose_rpy(self, name="robot1"):
         return self.get_robot_position(name), self.get_robot_orientation_rpy(name)
 
-    def get_robot_pose_quat(self, name="red_player_1"):
+    def get_robot_pose_quat(self, name="robot1"):
         return self.get_robot_position(name), self.get_robot_orientation_quat(name)
 
-    def reset_robot_pose(self, pos, quat, name="red_player_1"):
+    def reset_robot_pose(self, pos, quat, name="robot1"):
         self.set_robot_pose_quat(pos, quat, name)
         if name in self.robot_nodes:
             self.robot_nodes[name].resetPhysics()
 
-    def reset_robot_pose_rpy(self, pos, rpy, name="red_player_1"):
+    def reset_robot_pose_rpy(self, pos, rpy, name="robot1"):
         self.set_robot_pose_rpy(pos, rpy, name)
         if name in self.robot_nodes:
             self.robot_nodes[name].resetPhysics()
 
-    def set_robot_rpy(self, rpy, name="red_player_1"):
+    def set_robot_rpy(self, rpy, name="robot1"):
         axis, angle = transforms3d.euler.euler2axangle(rpy[0], rpy[1], rpy[2], axes='sxyz')
         self.set_robot_axis_angle(axis, angle, name)
 
-    def set_robot_quat(self, quat, name="red_player_1"):
+    def set_robot_quat(self, quat, name="robot1"):
         axis, angle = transforms3d.quaternions.quat2axangle([quat[3], quat[0], quat[1], quat[2]])
         self.set_robot_axis_angle(axis, angle, name)
 
-    def set_robot_position(self, pos, name="red_player_1"):
+    def set_robot_position(self, pos, name="robot1"):
         if name in self.translation_fields:
             self.translation_fields[name].setSFVec3f(list(pos))
 
-    def set_robot_pose_rpy(self, pos, rpy, name="red_player_1"):
+    def set_robot_pose_rpy(self, pos, rpy, name="robot1"):
         self.set_robot_position(pos, name)
         self.set_robot_rpy(rpy, name)
 
-    def set_robot_pose_quat(self, pos, quat, name="red_player_1"):
+    def set_robot_pose_quat(self, pos, quat, name="robot1"):
         self.set_robot_position(pos, name)
         self.set_robot_quat(quat, name)
 
-    def set_robot_axis_angle(self, axis, angle, name="red_player_1"):
+    def set_robot_axis_angle(self, axis, angle, name="robot1"):
         if name in self.rotation_fields:
             self.rotation_fields[name].setSFRotation(list(np.append(axis, angle)))

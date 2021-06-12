@@ -5,12 +5,11 @@ if "ROS_NAMESPACE" not in os.environ:
 import rospy
 import soccerbot_controller_ros
 
-import matplotlib as plt
-#plt.use('tkagg')
-
 
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
+    rospy.logwarn("Initializing Soccer Control")
     walker = soccerbot_controller_ros.SoccerbotControllerRos()
+    rospy.logwarn("Starting Control Loop")
     walker.run()
