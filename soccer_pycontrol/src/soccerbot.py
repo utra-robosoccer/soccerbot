@@ -444,9 +444,9 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    Kp = 1
-    Kd = 0
-    Ki = 0.001
+    Kp = 5
+    Kd = 0.1
+    Ki = 0.000
     DESIRED_PITCH = 0.0
 
     def apply_imu_feedback(self, pose: tr):
@@ -465,8 +465,8 @@ class Soccerbot:
         elif F < -1.57:
             F = -1.57
 
-        self.configuration_offset[Joints.LEFT_LEG_3] = F
-        self.configuration_offset[Joints.RIGHT_LEG_3] = F
+        self.configuration_offset[Joints.LEFT_LEG_4] = F
+        self.configuration_offset[Joints.RIGHT_LEG_4] = F
         self.last_F = F
         self.lastError = error
 
