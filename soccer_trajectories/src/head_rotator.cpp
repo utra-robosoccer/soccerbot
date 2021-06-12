@@ -69,7 +69,7 @@ public:
                 js.name.push_back("head_motor_0");
                 js.name.push_back("head_motor_1");
                 js.position.push_back(max_angle * std::sin(static_cast<float>(last_t) / 100.f * frequency));
-                js.position.push_back(max_angle_2 * std::sin(static_cast<float>(last_t) / 100.f * frequency));
+                js.position.push_back(0.4);
                 head_rotator.publish(js);
                 last_t += 3;
             }
