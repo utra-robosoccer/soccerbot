@@ -12,7 +12,7 @@ Panels:
         - /Friendly Goalie1/Localization1
         - /Friendly Goalie1/Sensors1
       Splitter Ratio: 0.4962962865829468
-    Tree Height: 544
+    Tree Height: 421
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -30,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan Robot1
+    SyncSource: "Line "
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -109,8 +109,6 @@ Visualization Manager:
           Value: true
         robot1/torso:
           Value: true
-        world:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF
@@ -118,38 +116,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          robot1/odom:
-            robot1/base_footprint:
-              robot1/base_camera:
-                {}
-              robot1/torso:
-                robot1/imu_link:
-                  {}
-                robot1/left_bicep:
-                  robot1/left_forearm:
-                    {}
-                robot1/left_hip_side:
-                  robot1/left_hip_front:
-                    robot1/left_thigh:
-                      robot1/left_calve:
-                        robot1/left_ankle:
-                          robot1/left_foot:
-                            {}
-                robot1/neck:
-                  robot1/head:
-                    robot1/camera:
-                      {}
-                robot1/right_bicep:
-                  robot1/right_forearm:
-                    {}
-                robot1/right_hip_side:
-                  robot1/right_hip_front:
-                    robot1/right_thigh:
-                      robot1/right_calve:
-                        robot1/right_ankle:
-                          robot1/right_foot:
-                            {}
+        {}
       Update Interval: 0
       Value: true
     - Class: rviz/Group
@@ -157,7 +124,7 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Image
-              Enabled: false
+              Enabled: true
               Image Topic: /robot1/camera/line_image
               Max Value: 1
               Median window: 5
@@ -167,7 +134,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: false
+              Value: true
             - Class: rviz/Image
               Enabled: false
               Image Topic: /robot1/detection_image
@@ -431,7 +398,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_0
               Name: PressureSensor1
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -439,7 +406,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_1
               Name: PressureSensor2
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -447,7 +414,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_2
               Name: PressureSensor3
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -455,7 +422,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_4
               Name: PressureSensor4
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -463,7 +430,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_3
               Name: PressureSensor5
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -471,7 +438,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_5
               Name: PressureSensor6
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -479,7 +446,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_6
               Name: PressureSensor7
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -487,7 +454,7 @@ Visualization Manager:
               Marker Topic: /robot1/foot_pressure_7
               Name: PressureSensor8
               Namespaces:
-                Soccer_bot: true
+                {}
               Queue Size: 100
               Value: true
           Enabled: true
@@ -645,7 +612,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.5797228813171387
+      Distance: 3.165905714035034
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -661,21 +628,21 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.020398586988449097
+      Pitch: 0.4603983759880066
       Target Frame: <Fixed Frame>
-      Yaw: 4.935444355010986
+      Yaw: 6.1254496574401855
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: true
+    collapsed: false
   Height: 1016
-  Hide Left Dock: true
+  Hide Left Dock: false
   Hide Right Dock: true
   "Line ":
-    collapsed: true
+    collapsed: false
   Objection Detection:
-    collapsed: true
-  QMainWindow State: 000000ff00000000fd0000000400000000000001f20000033efc0200000012fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073000000003d0000025d000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d0061006700650000000163000001210000000000000000fb0000000a0049006d00610067006500000002280000009d0000000000000000fb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d00610067006500000001c8000000840000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000000000000000fb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e00000002a0000000650000001600fffffffb0000000a004c0069006e00650020000000030b000000700000001600ffffff000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000039c0000005afc0100000002fb0000000800540069006d006501000000000000039c000002eb00fffffffb0000000800540069006d006501000000000000045000000000000000000000039c0000033e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000001f20000033efc0200000012fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003d000001e2000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d0061006700650000000163000001210000000000000000fb0000000a0049006d00610067006500000002280000009d0000000000000000fb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d00610067006500000001c8000000840000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000000000000000fb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e000000019d000000e30000001600fffffffb0000000a004c0069006e006500200100000225000001560000001600ffffff000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007380000005afc0100000002fb0000000800540069006d0065010000000000000738000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000005400000033e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -684,6 +651,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 924
+  Width: 1848
   X: 72
   Y: 27
