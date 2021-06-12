@@ -37,7 +37,7 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
-        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
+        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -50,7 +50,7 @@ class SoccerbotRos(Soccerbot):
         js.effort = []
         for i, n in enumerate(self.motor_names):
             js.name.append(n)
-            js.position.append(self.configuration[i])
+            js.position.append(self.get_angles()[i])
         self.pub_all_motor.publish(js)
 
     def stepPath(self, t, verbose=False):

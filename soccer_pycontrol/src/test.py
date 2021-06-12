@@ -185,9 +185,10 @@ class Test(TestCase):
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
                 self.walker.soccerbot.stepPath(t, verbose=True)
                 pitch = self.walker.soccerbot.get_imu().get_orientation_euler()[1]
-                pitches.append(pitch)
+                f = self.walker.soccerbot.apply_imu_feedback(t, self.walker.soccerbot.get_imu())
+
                 times.append(t)
-                self.walker.soccerbot.apply_imu_feedback(self.walker.soccerbot.get_imu())
+                pitches.append((pitch, f))
 
                 forces = self.walker.soccerbot.apply_foot_pressure_sensor_feedback(self.walker.ramp.plane)
                 pb.setJointMotorControlArray(bodyIndex=self.walker.soccerbot.body, controlMode=pb.POSITION_CONTROL,

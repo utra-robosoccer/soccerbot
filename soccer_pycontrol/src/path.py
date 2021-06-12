@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 
 class Path:
-    bodystep_size = 0.025 # m Not absolutely fixed, will be modified slightly when
+    bodystep_size = 0.047 # m Not absolutely fixed, will be modified slightly when
     angular_bodystep_size = 0.4 # radians Radians per angular step
-    steps_per_second = 3.0
+    steps_per_second = 2.4
     speed = steps_per_second * bodystep_size # m/s
     angular_speed = steps_per_second * angular_bodystep_size # Rotational speed in radians per second
     turn_duration = 4 # Number of body steps to turn
