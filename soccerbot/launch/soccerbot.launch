@@ -26,7 +26,7 @@
 
     <!-- Robocup bridge -->
     <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" output="screen"
-          args="--robot_name $(arg robot_name)">
+          args="--robot_name $(arg robot_name)" if="$(arg competition)">
     </node>
 
     <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
