@@ -27,6 +27,12 @@ class SoccerbotController:
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
+    def ready(self):
+        self.soccerbot.ready()
+
+    def setGoal(self, goal):
+        self.soccerbot.setGoal(goal)
+
     def wait(self, steps):
         for i in range(steps):
             time.sleep(SoccerbotController.PYBULLET_STEP)

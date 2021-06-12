@@ -42,6 +42,24 @@ class SoccerbotControllerRos(SoccerbotController):
                            [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
         return t
 
+    def transformation_to_pose(self, trans: Transformation) -> PoseStamped:
+        t = PoseStamped()
+        t.pose.position.x = trans.get_position()[0]
+        t.pose.position.y = trans.get_position()[1]
+        t.pose.position.z = trans.get_position()[2]
+
+        t.pose.orientation.x = trans.get_orientation()[0]
+        t.pose.orientation.y = trans.get_orientation()[1]
+        t.pose.orientation.z = trans.get_orientation()[2]
+        t.pose.orientation.w = trans.get_orientation()[3]
+        return t
+
+    def ready(self):
+        pass
+
+    def setGoal(self, goal):
+        self.goal_callback(self.transformation_to_pose(goal))
+
     def wait(self, steps):
         for i in range(steps):
             rospy.sleep(SoccerbotController.PYBULLET_STEP)
@@ -81,7 +99,6 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
                 self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
-                self.soccerbot.apply_head_rotation()
                 forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                 pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
                                              jointIndices=list(range(0, 20, 1)),

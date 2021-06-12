@@ -13,7 +13,7 @@ class Robotpath(Crotchpath):
     def show(self):
         fig = plt.figure()
         Path.show(self)
-        # Footpath.show(self, fig)
+        Footpath.show(self, fig)
         # Crotchpath.show(self, fig)
         plt.show() # to interact with the path graph uncomment this
 
