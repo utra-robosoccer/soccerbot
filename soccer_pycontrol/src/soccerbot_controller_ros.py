@@ -69,6 +69,10 @@ class SoccerbotControllerRos(SoccerbotController):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
 
+        self.soccerbot.ready()
+        self.soccerbot.reset_head()
+        self.soccerbot.publishAngles()
+
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
                 print("Recieved New Goal")
@@ -115,6 +119,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
                 self.soccerbot.apply_head_rotation()
+
 
             self.soccerbot.publishAngles()
             pb.stepSimulation()
