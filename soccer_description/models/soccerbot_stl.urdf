@@ -856,7 +856,7 @@
   <joint name="/torso_imu" type="fixed">
     <parent link="/torso"/>
     <child link="/imu_link"/>
-    <origin rpy="0 0 0" xyz="0.1 0 0.0075"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
     <axis xyz="0 0 0"/>
   </joint>
   <gazebo reference="/imu_link">
