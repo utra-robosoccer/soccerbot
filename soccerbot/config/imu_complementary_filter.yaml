@@ -1,0 +1,6 @@
+#publish_tf: true
+gain_acc: 0.05
+bias_alpha: 0.01
+do_bias_estimation: true
+do_adaptive_gain: true
+publish_debug_topics: true
