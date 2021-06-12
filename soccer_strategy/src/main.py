@@ -12,9 +12,6 @@ if __name__ == '__main__':
 
         rospy.init_node("soccer_strategy")
         rospy.sleep(1)
-        # r = rospy.Rate(10)
-        # while rospy.get_param("walking_engine_ready") == "false":
-        #     r.sleep()
 
         g = GameEngineComp()
         g.run()
