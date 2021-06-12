@@ -7,6 +7,8 @@ import math
 import tf.transformations
 from sensor_msgs.msg import Imu
 
+robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4}
+
 
 class RobotRos(Robot):
     def __init__(self, team, role, status, robot_name):
@@ -19,10 +21,12 @@ class RobotRos(Robot):
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1)
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
-        self.terminate_walking_publisher = rospy.Publisher('/'+ robot_name + "/terminate_walking", Empty, queue_size=1)
-        self.completed_walking_subscriber = rospy.Subscriber('/'+ robot_name + "/completed_walking", Empty, self.completed_walking_callback)
-        self.completed_trajectory_subscriber = rospy.Subscriber('/'+ robot_name + "/trajectory_complete", Bool, self.completed_trajectory_subscriber)
-        self.start_walking_publisher = rospy.Publisher('/'+ robot_name + "/start_walking", Empty, queue_size=1)
+        self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
+        self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
+                                                             self.completed_walking_callback)
+        self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
+                                                                self.completed_trajectory_subscriber)
+        self.start_walking_publisher = rospy.Publisher('/' + robot_name + "/start_walking", Empty, queue_size=1)
 
         self.team = team
         self.role = role
@@ -31,11 +35,16 @@ class RobotRos(Robot):
         self.goal_position = np.array([0.0, 0.0, 0])
         self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name
+        self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
         self.previous_status = Robot.Status.READY
 
         # for static trajectories
         self.trajectory_complete = True
+
+        # terminate all action
+        self.terminate = False
+
 
     def robot_pose_callback(self, data):
         quaternion = (
@@ -45,7 +54,7 @@ class RobotRos(Robot):
             data.pose.pose.orientation.z
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
-        self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi/2])
+        self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi / 2])
         pass
 
     def ball_pose_callback(self, data):
@@ -70,7 +79,7 @@ class RobotRos(Robot):
         p.pose.position.y = -position[0]
         p.pose.position.z = 0
         angle_fixed = position[2]
-        #print(angle_fixed)
+        # print(angle_fixed)
         q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
         p.pose.orientation.x = q[0]
         p.pose.orientation.y = q[1]
@@ -95,4 +104,3 @@ class RobotRos(Robot):
                 print("fall front triggered")
                 self.status = Robot.Status.FALLEN_FRONT
         pass
-
