@@ -77,20 +77,15 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.new_goal != self.goal:
                 print("Recieved New Goal")
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
-                self.wait(200)
-
                 self.goal = self.new_goal
                 self.soccerbot.ready() # TODO Cancel walking
                 self.soccerbot.reset_head()
-                self.soccerbot.publishAngles()
-                print("Getting ready")
-                self.wait(150)
-
 
                 # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 t = 0
+                self.wait(300)
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path != None:
@@ -117,9 +112,10 @@ class SoccerbotControllerRos(SoccerbotController):
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
-            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
+            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration() or t < 0:
                 self.soccerbot.apply_head_rotation()
-
+                if self.soccerbot.imu_ready:
+                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
             self.soccerbot.publishAngles()
             pb.stepSimulation()

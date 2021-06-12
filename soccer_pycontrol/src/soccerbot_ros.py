@@ -39,8 +39,11 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
 
+        self.imu_ready = False
+
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
+        self.imu_ready = True
 
     def publishAngles(self):
         js = JointState()
@@ -56,8 +59,9 @@ class SoccerbotRos(Soccerbot):
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)
 
-        # Get odometry from the simulator itself >:)
-        base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body)
+        base_pose = self.pose.get_position()
+        base_orientation = self.pose.get_orientation()
+        # base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body) # Get odometry from the simulator itself >:)
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self):
@@ -106,8 +110,6 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def get_imu(self, verbose=False):
-        if self.imu_msg == None:
-            return None
         return tr([0, 0, 0], [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
                               self.imu_msg.orientation.w])
 

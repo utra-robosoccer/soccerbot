@@ -62,7 +62,7 @@ class Soccerbot:
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
-    arm_0_center = -0.25
+    arm_0_center = -1.0
     arm_1_center = np.pi * 0.75
 
 
@@ -445,10 +445,10 @@ class Soccerbot:
         return locations
 
     Kp = 1.5
-    Kd = 0.2
-    Ki = 0.000
-    DESIRED_PITCH = -0.1
-
+    Kd = 0.0
+    Ki = 0.0002
+    DESIRED_PITCH = -0.05
+    integral1 = 0
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
             return
@@ -459,7 +459,7 @@ class Soccerbot:
         derivative = error - self.pid_last_error
         integral = 0
 
-        F = (self.Kp * error) + (self.Ki * integral) + (self.Kd * derivative)
+        F = (self.Kp * error) + (self.Ki * self.integral1) + (self.Kd * derivative)
         if F > 1.57:
             F = 1.57
         elif F < -1.57:
@@ -468,8 +468,6 @@ class Soccerbot:
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
         if len(right_foot_action) == 2: # Right foot moving
-            # self.configuration_offset[Joints.LEFT_LEG_5] = 0
-            # self.configuration_offset[Joints.RIGHT_LEG_5] = F
             if F > 0:
                 self.configuration_offset[Joints.LEFT_LEG_2] = 0
                 self.configuration_offset[Joints.LEFT_LEG_3] = 0
@@ -478,9 +476,8 @@ class Soccerbot:
                 self.configuration_offset[Joints.RIGHT_LEG_3] = 0
                 self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
             pass
+
         elif len(left_foot_action) == 2: # Left foot moving
-            # self.configuration_offset[Joints.LEFT_LEG_5] = F
-            # self.configuration_offset[Joints.RIGHT_LEG_5] = 0
             if F > 0:
                 self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
                 self.configuration_offset[Joints.LEFT_LEG_3] = 0
@@ -491,17 +488,42 @@ class Soccerbot:
             pass
 
 
-        self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
-        self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
+        self.last_F = F
+        self.lastError = error
+        self.integral1 = self.integral1 + error
+        return F
 
+    Kp2 = 0.2
+    Kd2 = 0.0
+    Ki2 = 0.002
+    DESIRED_PITCH_2 = 0.0
+    integral2 = 0.0
+    def apply_imu_feedback_standing(self, pose: tr):
+        if pose is None:
+            return
+
+        [roll, pitch, yaw] = pose.get_orientation_euler()
+
+        error = Soccerbot.DESIRED_PITCH_2 - pitch
+        derivative = error - self.pid_last_error
+
+        F = (self.Kp2 * error) + (self.Ki2 * self.integral2) + (self.Kd2 * derivative)
+        if F > 1.57:
+            F = 1.57
+        elif F < -1.57:
+            F = -1.57
+
+        self.configuration_offset[Joints.LEFT_LEG_5] = F
+        self.configuration_offset[Joints.RIGHT_LEG_5] = F
 
         self.last_F = F
         self.lastError = error
+        self.integral2 = self.integral2 + error
         return F
+        pass
 
-
-    HEAD_YAW_FREQ = 0.008
-    HEAD_PITCH_FREQ = 0.005
+    HEAD_YAW_FREQ = 0.002
+    HEAD_PITCH_FREQ = 0.00125
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
         self.configuration[Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
