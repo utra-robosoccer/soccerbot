@@ -1,86 +1,55 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" default="false" />
-    <arg name="address" default="false" />
-    <arg name="walking_demo" default="false" />
-    <arg name="robot_name" default="robot1" />
-    <arg name="pose_name" default="standing" />
-    <arg name="ip_address" default="localhost" />
-    <arg name="x_pos" default="0" />
-    <arg name="y_pos" default="0" />
-    <arg name="a_pos" default="0" />
-    <arg name="angle" default="$(optenv ANGLE 0)" />
+    <arg name="competition" value="$(optenv COMPETITION false)" />
+    <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
+    <arg name="x_pos" default="$(optenv X_POS 0)" />
+    <arg name="y_pos" default="$(optenv Y_POS 0)" />
+    <arg name="a_pos" default="$(optenv ANGLE 0)" />
     <arg name="goalie" default="$(optenv GOALIE false)" />
-    <arg name="easy_walking" default="false" />
     <arg name="fake_localization" default="false" />
-    <arg name="team_id" default="25" />
-    <arg name="robot_id" default="1" />
-    <arg name="is_goal_keeper" default="false" />
 
-    <arg name="model_name" value="soccerbot" unless="$(arg easy_walking)" />
-    <arg name="model_name" value="soccerbot_stand" if="$(arg easy_walking)" />
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
+
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
-    <machine name="$(arg robot_name)" address="$(arg ip_address)" />
+    <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
 
-    <env name="ROBOCUP_SIMULATOR_ADDR" value="127.0.0.1:10021" />
+    <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=dae
+        file_path:=package://soccer_description
+        has_base_footprint:=true
+        tf_prefix:=$(arg robot_name)
+        "
+    />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-    <group ns="$(arg robot_name)">
-        <param name="walking_engine_ready" value="false" />
-        <param name="robot_description" command="xacro '$(find soccer_description)/models/$(arg model_name).xacro'
-            robot_name:=$(arg robot_name)
-            model_type:=dae
-            file_path:=package://soccer_description
-            has_base_footprint:=true
-            tf_prefix:=$(arg robot_name)
-            "
-        />
-<!--        Dont run in competition   unless="$(arg competition)">-->
+    <!-- Robocup bridge -->
+    <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" output="screen"
+          args="--robot_name $(arg robot_name)">
+    </node>
 
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
 
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-        <node pkg="soccer_webots" type="bez_robocup_api.py" name="bez_robocup_api" respawn="true" respawn_delay="1" output="screen"
-              args="--robot_name $(arg robot_name)"
-              if ="$(arg competition)" >
+    <include file="$(find soccerbot)/launch/modules/simulation.launch" if="$(eval simulation and not competition)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
 
-        </node>
-        <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
-            <arg name="robot_name" value="$(arg robot_name)" />
-        </include>
+    <include file="$(find soccerbot)/launch/modules/localization.launch">
+        <arg name="fake_localization" value="$(arg fake_localization)" />
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="a_pos" value="$(arg a_pos)" />
+        <arg name="map_name" value="robocup" if="$(arg simulation)" />
+        <arg name="map_name" value="test" unless="$(arg simulation)" />
+    </include>
 
-        <include file="$(find soccerbot)/launch/modules/simulation.launch" if="$(arg simulation)">
-            <arg name="robot_name" value="$(arg robot_name)" />
-            <arg name="pose_name" default="$(arg pose_name)"/>
-            <arg name="x_pos" value="$(arg x_pos)" />
-            <arg name="y_pos" value="$(arg y_pos)" />
-            <arg name="a_pos" value="$(arg a_pos)" />
-        </include>
+    <include file="$(find soccerbot)/launch/modules/navigation.launch">
+        <arg name="simulation" value="$(arg simulation)" />
+    </include>
 
-        <include file="$(find soccerbot)/launch/modules/localization.launch">
-            <arg name="fake_localization" value="$(arg fake_localization)" />
-            <arg name="robot_name" value="$(arg robot_name)"/>
-            <arg name="x_pos" value="$(arg x_pos)" />
-            <arg name="y_pos" value="$(arg y_pos)" />
-            <arg name="a_pos" value="$(arg a_pos)" />
-            <arg name="map_name" value="robocup" if="$(arg simulation)" />
-            <arg name="map_name" value="test" unless="$(arg simulation)" />
-        </include>
-
-        <include file="$(find soccerbot)/launch/modules/navigation.launch">
-            <arg name="simulation" value="$(arg simulation)" />
-        </include>
-
-
-        <param name="team_id" value="$(arg team_id)" />
-        <param name="robot_id" value="$(arg robot_id)" />
-        <param name="is_goal_keeper" value="$(arg is_goal_keeper)" />
-
-        <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol"/>
-        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
-        <node pkg="soccer_strategy" type="balance.py" name="balance" output="screen"/>
-        <node pkg="soccer_strategy" type="receiver.py" name="receiver" output="screen"/>
-
-
-
-    </group>
+    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>
 </launch>

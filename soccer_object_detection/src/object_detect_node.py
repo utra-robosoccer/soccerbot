@@ -36,7 +36,12 @@ class ObjectDetectionNode(object):
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
         self.model = CNN(kernel=3, num_features=8)
-        self.model.load_state_dict(torch.load(model_path))
+
+        if os.getenv('COMPETITION', 'false') == 'true':
+            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        else:
+            self.model.load_state_dict(torch.load(model_path))
+
         self.model.eval()
 
     def callback(self, msg):

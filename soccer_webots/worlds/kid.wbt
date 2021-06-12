@@ -46,11 +46,11 @@ TexturedBackgroundLight {
 RobocupSoccerField {
   size "kid"
 }
-DEF red_player_1 Bez {
+DEF robot1 Bez {
 
   translation -1.5 0 0.362568
   rotation 0 0 1 0
-  name "red_player_1"
+  name "robot1"
   controller "<extern>"
 }
 

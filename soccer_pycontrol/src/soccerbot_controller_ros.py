@@ -7,7 +7,10 @@ from std_msgs.msg import Empty
 class SoccerbotControllerRos(SoccerbotController):
 
     def __init__(self):
-        pb.connect(pb.GUI)
+        if os.getenv('COMPETITION', 'false') == 'true':
+            pb.connect(pb.DIRECT)
+        else:
+            pb.connect(pb.GUI)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
@@ -42,8 +45,6 @@ class SoccerbotControllerRos(SoccerbotController):
     def run(self):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
-
-        rospy.set_param("walking_engine_ready", True)
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
