@@ -444,12 +444,12 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    Kp = 5
-    Kd = 0.1
+    Kp = 1.5
+    Kd = 0.2
     Ki = 0.000
-    DESIRED_PITCH = 0.0
+    DESIRED_PITCH = -0.1
 
-    def apply_imu_feedback(self, pose: tr):
+    def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
             return
 
@@ -465,10 +465,39 @@ class Soccerbot:
         elif F < -1.57:
             F = -1.57
 
-        self.configuration_offset[Joints.LEFT_LEG_4] = F
-        self.configuration_offset[Joints.RIGHT_LEG_4] = F
+        [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
+        [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
+        if len(right_foot_action) == 2: # Right foot moving
+            # self.configuration_offset[Joints.LEFT_LEG_5] = 0
+            # self.configuration_offset[Joints.RIGHT_LEG_5] = F
+            if F > 0:
+                self.configuration_offset[Joints.LEFT_LEG_2] = 0
+                self.configuration_offset[Joints.LEFT_LEG_3] = 0
+                self.configuration_offset[Joints.LEFT_LEG_4] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio
+                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
+            pass
+        elif len(left_foot_action) == 2: # Left foot moving
+            # self.configuration_offset[Joints.LEFT_LEG_5] = F
+            # self.configuration_offset[Joints.RIGHT_LEG_5] = 0
+            if F > 0:
+                self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
+                self.configuration_offset[Joints.LEFT_LEG_3] = 0
+                self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio
+                self.configuration_offset[Joints.RIGHT_LEG_2] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_4] = 0
+            pass
+
+
+        self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
+        self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
+
+
         self.last_F = F
         self.lastError = error
+        return F
 
 
     HEAD_YAW_FREQ = 0.008
@@ -491,12 +520,12 @@ class Soccerbot:
         if foot_pressure_values is None:
             return motor_forces
 
-        if (foot_pressure_values[0] and foot_pressure_values[1]) or (
-                foot_pressure_values[2] and foot_pressure_values[3]):  # Right foot on the ground
-            motor_forces[Joints.RIGHT_LEG_6] = 0.75
-        if (foot_pressure_values[4] and foot_pressure_values[5]) or (
-                foot_pressure_values[6] and foot_pressure_values[7]):  # Right foot on the ground
-            motor_forces[Joints.LEFT_LEG_6] = 0.75
+        # if (foot_pressure_values[0] and foot_pressure_values[1]) or (
+        #         foot_pressure_values[2] and foot_pressure_values[3]):  # Right foot on the ground
+        #     motor_forces[Joints.RIGHT_LEG_6] = 0.75
+        # if (foot_pressure_values[4] and foot_pressure_values[5]) or (
+        #         foot_pressure_values[6] and foot_pressure_values[7]):  # Right foot on the ground
+        #     motor_forces[Joints.LEFT_LEG_6] = 0.75
 
         # Synchronise walking speed
 
