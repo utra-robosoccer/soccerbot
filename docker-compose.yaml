@@ -2,6 +2,7 @@ version: "3.3"
 
 x-soccerbot: &soccerbot
   image: utrarobosoccer/soccerbot
+  privileged: true
   build:
     context: .
     target: builder
@@ -14,7 +15,7 @@ x-soccerbot: &soccerbot
       limits:
         cpus: '4'
         memory: 16384MB
-  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
+  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch --wait soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
   environment:
     ROBOCUP_MIRROR_SERVER_IP: locahost:3737
     ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
@@ -78,6 +79,8 @@ services:
       ROBOT_NAME: robot1
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
+      ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
+    command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
 
 #  friendly2: # Left midfield
 #    <<: *soccerbot
@@ -121,20 +124,20 @@ services:
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 
-  oppponent1: # Goalie
-    <<: *soccerbot
-    environment:
-      X_POS: 0.0
-      Y_POS: 3.5
-      ANGLE: -1.57
-      GOALIE: "true"
-      ROBOCUP_TEAM_ID: 25
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
-      ROBOT_NAME: opponent1
-      COMPETITION: "true"
-      PYTHONUNBUFFERED: 1
+#  oppponent1: # Goalie
+#    <<: *soccerbot
+#    environment:
+#      X_POS: 0.0
+#      Y_POS: 3.5
+#      ANGLE: -1.57
+#      GOALIE: "true"
+#      ROBOCUP_TEAM_ID: 25
+#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
+#      ROBOT_NAME: opponent1
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  oppponent2: # Left midfield
 #    <<: *soccerbot
