@@ -49,8 +49,8 @@ bool penalized
 uint16 secondsTillUnpenalized
 
 # Team colors
-int8 BLUE = 0
-int8 RED = 1
+int8 TEAM_COLOR_BLUE = 0
+int8 TEAM_COLOR_RED = 1
 int8 teamColor
 
 bool dropInTeam
