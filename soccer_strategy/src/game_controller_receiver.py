@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     team_id = (os.getenv('ROBOCUP_TEAM_COLOR', 'red') == 'blue') + 1
     robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
-    is_goal_keeper = rospy.get_param("is_goal_keeper")
+    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
     rec.receive_forever()

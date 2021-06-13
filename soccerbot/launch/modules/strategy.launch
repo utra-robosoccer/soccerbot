@@ -2,5 +2,5 @@
     <arg name="goalie" default="false" />
 
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>
-    <node pkg="soccer_strategy" type="game_controller_bridge.py" name="game_controller_receiver" output="screen"/>
+    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen"/>
 </launch>
