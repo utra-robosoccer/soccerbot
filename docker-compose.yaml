@@ -82,6 +82,8 @@ services:
       X_POS: -1.5
       Y_POS: -1.5
       ANGLE: 1.57
+      GOALIE: "false"
+      ROBOT_NAME: "robot2"
       ROBOCUP_TEAM_ID: 8
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "red"
@@ -97,6 +99,8 @@ services:
       X_POS: 1.5
       Y_POS: -1.5
       ANGLE: 1.57
+      GOALIE: "false"
+      ROBOT_NAME: "robot3"
       ROBOCUP_TEAM_ID: 8
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_COLOR: "red"
@@ -112,6 +116,8 @@ services:
       X_POS: 0.0
       Y_POS: -0.8
       ANGLE: 1.57
+      GOALIE: "false"
+      ROBOT_NAME: "robot4"
       ROBOCUP_TEAM_ID: 8
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_COLOR: "red"
