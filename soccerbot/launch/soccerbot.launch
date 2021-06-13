@@ -8,9 +8,8 @@
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
-
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
     <group ns="$(arg robot_name)">
-
 
         <param name="/simulation_active" value="true"/>
         <param name="/use_sim_time" value="true"/>

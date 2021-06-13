@@ -64,7 +64,8 @@ class SoccerbotControllerRos(SoccerbotController):
     def wait(self, steps):
         for i in range(steps):
             rospy.sleep(SoccerbotController.PYBULLET_STEP)
-            pb.stepSimulation()
+            if rospy.get_param('ENABLE_PYBULLET'):
+                pb.stepSimulation()
 
     def run(self):
         t = 0
@@ -76,20 +77,19 @@ class SoccerbotControllerRos(SoccerbotController):
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
-                try:
-                    print("Recieved New Goal")
-                    self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
-                    self.goal = self.new_goal
-                    self.soccerbot.ready() # TODO Cancel walking
-                    self.soccerbot.reset_head()
 
-                    # Reset robot position and goal
-                    self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
-                    self.soccerbot.publishPath()
-                    t = 0
-                    self.wait(300)
-                except:
-                    print("Error")
+                print("Recieved New Goal")
+                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
+                self.goal = self.new_goal
+                self.soccerbot.ready() # TODO Cancel walking
+                self.soccerbot.reset_head()
+
+                # Reset robot position and goal
+                self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
+                self.soccerbot.publishPath()
+                t = 0
+                self.wait(300)
+
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path != None:
@@ -102,8 +102,9 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
                 self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
-                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
+
                 if rospy.get_param('ENABLE_PYBULLET'):
+                    forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                     pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
                                              jointIndices=list(range(0, 20, 1)),
                                              targetPositions=self.soccerbot.get_angles(),
