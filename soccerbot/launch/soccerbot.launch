@@ -1,6 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" default="$(optenv COMPETITION false)" />
+    <arg name="competition" default="$(optenv COMPETITION true)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv ANGLE 0)" />
