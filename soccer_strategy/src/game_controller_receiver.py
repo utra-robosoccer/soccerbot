@@ -9,9 +9,6 @@ This module shows how the GameController Communication protocol can be used
 in python and also allows to be changed such that every team using python to
 interface with the GC can utilize the new protocol.
 
-.. moduleauthor:: Nils Rokita <0rokita@informatik.uni-hamburg.de>
-.. moduleauthor:: Robert Kessler <8kessler@informatik.uni-hamburg.de>
-
 """
 
 
