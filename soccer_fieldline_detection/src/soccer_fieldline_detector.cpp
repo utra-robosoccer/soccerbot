@@ -14,9 +14,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
     fallen_sub = nh.subscribe("trajectory_complete", 1, &SoccerFieldlineDetector::fallenCallBack, this);
     image_publisher = it.advertise("camera/line_image",1);
-    image_publisher2 = it.advertise("camera/base",1);
-    image_publisher3 = it.advertise("camera/canny",1);
-    image_publisher4 = it.advertise("camera/binary",1);
+
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
     nh.getParam("soccer_fieldline_detector/cannythreshold2", cannythreshold2);
@@ -26,18 +24,14 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghThreshold", threshold);
     nh.getParam("soccer_fieldline_detector/houghMinLineLength", minLineLength);
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
-//    ros::Duration(3.0).sleep();
-    while(!nh.hasParam("name")) {
-        ros::Duration(1.0).sleep();
-    }
-    nh.getParam("name", name);
-
+    robotName = ros::this_node::getNamespace();
+    robotName.erase(0, 1);
     // Initialize Camera
     geometry_msgs::TransformStamped camera_pose;
 
     while(ros::ok()) {
         try{
-            camera_pose = tfBuffer.lookupTransform(name + "/camera", name + "/base_footprint",
+            camera_pose = tfBuffer.lookupTransform(robotName + "/camera", robotName + "/base_footprint",
                                                    ros::Time(0), ros::Duration(1.0));
             break;
         }
@@ -70,7 +64,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     geometry_msgs::TransformStamped camera_pose;
     try {
 
-        camera_pose = tfBuffer.lookupTransform(name + "/base_footprint", name + "/camera",
+        camera_pose = tfBuffer.lookupTransform(robotName + "/base_footprint", robotName + "/camera",
                                                ros::Time(0), ros::Duration(0.1));
 
         Pose3 camera_position;
@@ -198,7 +192,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         sensor_msgs::PointCloud2 point_cloud_msg;
         //Setting up PointCloud2 msg
         point_cloud_msg.header.stamp = msg->header.stamp;
-        point_cloud_msg.header.frame_id = name + "/base_camera";
+        point_cloud_msg.header.frame_id = robotName + "/base_camera";
         point_cloud_msg.height = 1;
         point_cloud_msg.width = points3d.size();
         point_cloud_msg.is_bigendian = false;
@@ -231,8 +225,8 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         points3d.clear();
 
         geometry_msgs::TransformStamped camera_footprint = camera_pose;
-        camera_footprint.header.frame_id = name + "/base_footprint";
-        camera_footprint.child_frame_id = name + "/base_camera";
+        camera_footprint.header.frame_id = robotName + "/base_footprint";
+        camera_footprint.child_frame_id = robotName + "/base_camera";
         camera_footprint.header.stamp = msg->header.stamp;
         camera_footprint.header.seq = msg->header.seq;
 
@@ -256,7 +250,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 }
 
 void SoccerFieldlineDetector::fallenCallBack(const std_msgs::Bool &msg){
-    fallen = true;
+    fallen = msg.data;
 }
 
 int main(int argc, char **argv) {
