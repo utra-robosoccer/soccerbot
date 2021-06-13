@@ -38,6 +38,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             # the robot that run strategy will always be the first one in self.robots
             self.friendly = [
                 RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.STOPPED,
+
                          robot_name=self.robot_name)
             ]
         else:
@@ -82,10 +83,12 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.previous_gameState = self.gameState
         self.previous_gameState.gameState = GameState.GAMESTATE_FINISHED
 
+
         # gc connection
         self.game_state_subscriber = rospy.Subscriber('gamestate', GameState, self.gamestate_callback)
         self.game_controller_connected_subscriber = rospy.Subscriber('game_controller_connected', Bool, self.game_controller_connected_callback)
         self.gc_connected = False
+
 
         # Setup the strategy
         self.rostime_previous = 0
@@ -148,11 +151,13 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.self.stop_all_robot()()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
+
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_READY:
                 self.resume_all_robot()
+
                 self.previous_gameState.gameState = GameState.GAMESTATE_READY
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
