@@ -116,12 +116,16 @@ class GameStateReceiver(object):
             self.answer_to_gamecontroller(peer)
 
         except AssertionError as ae:
-            rospy.logerr_throttle(10, "ae.message")
-        except socket.timeout:
-            rospy.logwarn_throttle(10, "Socket timeout")
-        except ConstError:
-            rospy.logwarn_throttle("Parse Error: Probably using an old protocol!")
+            rospy.logerr_throttle(10, ae)
+        except socket.timeout as s:
+            rospy.logerr("Socket Timeout")
+            rospy.logwarn_throttle(10, "Socket Timeout")
+            rospy.logwarn_throttle(10, s)
+        except ConstError as c:
+            rospy.logwarn_throttle(10, c)
         except Exception as e:
+            rospy.logerr("Error")
+            rospy.logerr(e)
             if self.get_time_since_last_package() > self.game_controller_lost_time:
                 self.time += 5  # Resend message every five seconds
                 rospy.logwarn_throttle(5.0, 'No game controller messages received, allowing robot to move')
@@ -213,7 +217,7 @@ if __name__ == '__main__':
     rospy.init_node('game_controller')
 
     team_id = int(os.getenv('ROBOCUP_TEAM_ID'))
-    robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
+    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
     is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
