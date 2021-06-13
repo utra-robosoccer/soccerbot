@@ -39,12 +39,8 @@ class RobotRos(Robot):
         self.max_kick_speed = 2
         self.previous_status = Robot.Status.READY
 
-        # for static trajectories
-        self.trajectory_complete = True
-
         # terminate all action
-        self.terminate = False
-
+        self.stop_requested = False
 
     def robot_pose_callback(self, data):
         quaternion = (
@@ -62,12 +58,16 @@ class RobotRos(Robot):
         pass
 
     def completed_walking_callback(self, data):
+        assert (self.status == Robot.Status.WALKING)
         self.status = Robot.Status.READY
-        print("Completed Walking")
-        pass
 
     def completed_trajectory_subscriber(self, data):
-        self.trajectory_complete = data.data
+        assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS)
+        if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+            if self.stop_requested:
+                self.status = Robot.Status.STOPPED
+            else:
+                self.status = Robot.Status.READY
 
     def set_navigation_position(self, position):
         super(RobotRos, self).set_navigation_position(position)
@@ -104,3 +104,41 @@ class RobotRos(Robot):
                 print("fall front triggered")
                 self.status = Robot.Status.FALLEN_FRONT
         pass
+
+    def update_status(self):
+        if self.status != self.previous_status:
+            print(self.robot_name + " status changes to " + str(self.status))
+            self.previous_status = self.status
+
+        if self.status == Robot.Status.READY:
+            if self.stop_requested:
+                self.status = Robot.Status.STOPPED
+
+        if self.status == Robot.Status.WALKING:
+            if self.stop_requested:
+                self.terminate_walking_publisher.publish()
+                self.status = Robot.Status.STOPPED
+
+        elif self.status == Robot.Status.KICKING:
+            self.trajectory_publisher.publish("rightkick")
+            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            rospy.loginfo(self.robot_name + " kicking")
+
+        elif self.status == Robot.Status.FALLEN_BACK:
+            self.terminate_walking_publisher.publish()
+            self.trajectory_publisher.publish("getupback")
+            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            rospy.loginfo(self.robot_name + "getupback")
+
+        elif self.status == Robot.Status.FALLEN_FRONT:
+            self.terminate_walking_publisher.publish()
+            self.trajectory_publisher.publish("getupfront")
+            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            rospy.loginfo(self.robot_name + "getupfront")
+
+        elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+            rospy.loginfo_throttle(20, self.robot_name + " trajectory in progress")
+
+        else:
+            rospy.logerr_throttle(20, self.robot_name + " is in invalid status " + str(self.status))
+
