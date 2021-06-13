@@ -35,44 +35,40 @@ class Test(TestCase):
 
     def test_walk_1(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_2(self):
         self.walker.soccerbot.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_side(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_backward(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([-1, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.run()
 
     def test_turn_in_place(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
+
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         self.walker.setGoal(goal)
         # self.walker.soccerbot.robot_path.show()
@@ -80,9 +76,8 @@ class Test(TestCase):
 
     def test_small_movement_1(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([0.15, 0, 0])
         self.walker.setGoal(goal)
@@ -91,9 +86,8 @@ class Test(TestCase):
 
     def test_small_movement_2(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([-0.3, 0, 0])
         self.walker.setGoal(goal)
@@ -102,9 +96,8 @@ class Test(TestCase):
 
     def test_small_movement_3(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([-np.pi/2, 0, 0])
         goal.set_position([-0.3, -0.3, 0])
         self.walker.setGoal(goal)
@@ -113,9 +106,8 @@ class Test(TestCase):
 
     def test_do_nothing(self):
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([0, 0, 0])
         self.walker.setGoal(goal)
         # self.walker.soccerbot.robot_path.show()
@@ -125,9 +117,8 @@ class Test(TestCase):
         import pybullet as pb
 
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
 
         pitches = []
@@ -163,9 +154,8 @@ class Test(TestCase):
         from soccerbot_controller import SoccerbotController
 
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
 
         self.walker.soccerbot.ready()  # TODO Cancel walking
         self.walker.soccerbot.reset_head()
@@ -214,9 +204,8 @@ class Test(TestCase):
         fig, axs = plt.subplots(2)
 
         self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.wait(100)
         self.walker.ready()
-        self.walker.wait(200)
+        self.walker.wait(100)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
 
         times = np.linspace(0, self.walker.soccerbot.robot_path.duration(), num=math.ceil(self.walker.soccerbot.robot_path.duration() / self.walker.soccerbot.robot_path.step_size) + 1)
