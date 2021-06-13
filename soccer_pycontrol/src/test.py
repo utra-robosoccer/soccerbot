@@ -63,7 +63,7 @@ class Test(TestCase):
         self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        self.walker.setGoal(Transformation([-1, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setGoal(Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]))
         self.walker.run()
 
     def test_turn_in_place(self):

@@ -50,6 +50,7 @@ class GameStateReceiver(object):
         self.team = team
         self.player = player
         self.is_goalkeeper = is_goalkeeper
+        rospy.loginfo("Listening to " + str(DEFAULT_LISTENING_HOST) + " " + str(GAME_CONTROLLER_ANSWER_PORT))
         rospy.loginfo('We are playing as player {} in team {}'.format(self.player, self.team))
 
         self.man_penalize = True
@@ -106,6 +107,7 @@ class GameStateReceiver(object):
             msg = Bool()
             msg.data = True
             self.game_controller_connected_publisher.publish(msg)
+            rospy.loginfo_once("Game Controller Connected")
 
             # Call the handler for the package
             self.on_new_gamestate(self.state)
@@ -114,11 +116,11 @@ class GameStateReceiver(object):
             self.answer_to_gamecontroller(peer)
 
         except AssertionError as ae:
-            logger.error(ae.message)
+            rospy.logerr_throttle(10, "ae.message")
         except socket.timeout:
-            logger.warning("Socket timeout")
+            rospy.logwarn_throttle(10, "Socket timeout")
         except ConstError:
-            logger.warning("Parse Error: Probably using an old protocol!")
+            rospy.logwarn_throttle("Parse Error: Probably using an old protocol!")
         except Exception as e:
             if self.get_time_since_last_package() > self.game_controller_lost_time:
                 self.time += 5  # Resend message every five seconds
