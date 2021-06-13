@@ -22,6 +22,5 @@ soccer_webots/protos/*.cache
 soccer_webots/protos/Soccerbot_meshes/*.cache
 soccer_webots/worlds/*.wbproj
 soccer_webots/worlds/.kid.wbproj
-soccer_webots
 cmake-build-debug
 external
