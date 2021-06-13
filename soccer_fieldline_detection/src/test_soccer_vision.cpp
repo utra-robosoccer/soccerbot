@@ -42,26 +42,26 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
     try {
         auto t_start = std::chrono::high_resolution_clock::now();
+
         const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
 
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
         cv::Mat hsv, mask,out,mask2 , out2;
-
+        cvtColor(image, hsv , cv::COLOR_BGR2HSV);
         // Single image
 //        cv::Mat image1,image2;
-//        cv::String imageName( "/home/manx52/catkin_ws/src/soccerbot/soccer_fieldline_detection/media/field/field8.png" ); // by default
+//        cv::String imageName( "/home/manx52/catkin_ws/src/soccerbot/soccer_fieldline_detection/media/field/field7.png" ); // by default
 //
 //        std::cout << imageName << std::endl;
 //
 //        image1=cv::imread(imageName, cv::IMREAD_COLOR);
 //        cv::cvtColor(image1, hsv , cv::COLOR_BGR2HSV);
 
-        cvtColor(image, hsv , cv::COLOR_BGR2HSV);
 
         // cv::inRange(hsv,cv::Scalar (0,0,255 - 15) , cv::Scalar(255, 15, 255), mask); Goal post detection
         // cv::Scalar (0,0,200), cv::Scalar(179, 77, 255) old
-        // cv::inRange(hsv,cv::Scalar (0,0,255 - 110) , cv::Scalar(255, 110, 255), mask); pretty good
+        // cv::inRange(hsv,cv::Scalar (0,0,255 - 110) , cv::Scalar(255, 110, 255), mask); pretty good, but field boundary needs to be better
 
         cv::inRange(hsv,cv::Scalar (45, 115,45), cv::Scalar(70, 255,255), mask2); // old
 
@@ -94,35 +94,27 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
                 area += 1; //cv::contourArea(contours[i]);
                 count += 1;
 //                std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
-                cv::Scalar color = cv::Scalar(255, 0, 0); // blue - color for convex hull
-                drawContours(drawin, hull, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+//                cv::Scalar color_contours = cv::Scalar(0, 255, 0);
+//                drawContours(drawin, contours, i, color_contours, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+//                cv::Scalar color = cv::Scalar(255, 0, 0); // blue - color for convex hull
+//                drawContours(drawin, hull, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
 
                 boundRect[count] = boundingRect(hull[i]);
-
-                color = cv::Scalar(0, 255, 0); // blue - color for convex hull
-//                cv::drawContours(drawin, contours_poly, (int) i, color);
-
             }
-
-
     }
-
         // Merge biggest contours
-//        cv::Rect final = boundRect[0];
-//        for (const auto &r : boundRect) { final |= r; }
-//        cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
-//        cv::rectangle(image, final.tl(), final.br(), color, 2);
-//
-//        // Top Black rectangle
-//        cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
-//        // Bottom Black rectangle
-//        cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(1920,1080), cv::Scalar(0, 0, 0), -1, 8);
+        if (count > 0) {
+            cv::Rect final = boundRect[0];
+            for (const auto &r : boundRect) { final |= r; }
+            cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
+            cv::rectangle(image, final.tl(), final.br(), color, 2);
 
-
-        cv::imshow("Car",drawin);
-        int k = cv::waitKey(0); // Wait for a keystroke in the window
-
-
+            // Top Black rectangle
+            cv::rectangle(image, cv::Point(0, 0), cv::Point(final.br().x, final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
+            // Bottom Black rectangle
+            cv::rectangle(image, cv::Point(final.tl().x, final.br().y), cv::Point(1920, 1080), cv::Scalar(0, 0, 0), -1,
+                          8);
+        }
 
 
         cvtColor(image, hsv , cv::COLOR_BGR2HSV);
@@ -130,18 +122,15 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
         cv::bitwise_and(image,image,out,mask);
 
-
         cvtColor(out, cdst, CV_BGR2GRAY);
 
         cv::threshold(cdst,dst, 127, 255,cv::THRESH_BINARY);
 
         //cv::adaptiveThreshold(cdst,dst, 255,cv::ADAPTIVE_THRESH_GAUSSIAN_C,cv::THRESH_BINARY,11,2);
 
-
         cv::Canny(dst, cdst,50,150);
-
-
-
+        cv::imshow("Car",cdst);
+        int k = cv::waitKey(0); // Wait for a keystroke in the window
         HoughLinesP(cdst, lines, rho, theta,threshold,minLineLength,maxLineGap);
         cvtColor(cdst, dst, CV_GRAY2BGR);
         for (const auto& l : lines) {

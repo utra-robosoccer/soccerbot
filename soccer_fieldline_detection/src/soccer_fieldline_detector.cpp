@@ -45,7 +45,6 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
             std::string s = ex.what();
         }
     }
-
     // Initalize Camera
     Pose3 camera_position;
     camera_position.position.x = camera_pose.transform.translation.x;
@@ -101,11 +100,9 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         try {
             const cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
 
-            // Detect Field Lines (Copy from simulink)
+            // Field Boundary Detector
             cv::Mat dst, cdst;
             cv::Mat hsv, mask, mask2, out;
-
-
 
             cvtColor(image, hsv , cv::COLOR_BGR2HSV);
 
@@ -122,52 +119,36 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             std::vector<cv::Rect> boundRect( contours.size() );
             std::vector<cv::Point2f>centers( contours.size() );
             std::vector<float>radius( contours.size() );
-            std::vector<int> index;
-            double max = 0;
             int count = 0;
-            cv::Mat drawing = cv::Mat::zeros( mask2.size(), CV_8UC3 );
             cv::RNG rng(12345);
-
             std::vector< std::vector<cv::Point> > hull(contours.size());
-
-            // create a blank image (black image)
-
-            cv::Mat drawin = cv::Mat::zeros(mask2.size(), CV_8UC3);
-            double area = 0;
-
             count =0;
             for(int i = 0; i < contours.size(); i++) {
-//            cv::Scalar color_contours = cv::Scalar(0, 255, 0); // green - color for contours
-//            std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
                 if (cv::contourArea(contours[i])  >  1000 ) {
                     convexHull(cv::Mat(contours[i]), hull[i], false);
-                    area += 1; //cv::contourArea(contours[i]);
+
                     count += 1;
-//                std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
-//                cv::Scalar color = cv::Scalar(255, 0, 0); // blue - color for convex hull
-//                drawContours(drawin, hull, index1, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
-
                     boundRect[count] = boundingRect(hull[i]);
-
-//               color = cv::Scalar(0, 255, 0); // blue - color for convex hull
-//                cv::drawContours(drawing, contours_poly, (int) i, color);
 
                 }
 
+            }
+            // Merge largest contours
+            if (count > 0) {
+                cv::Rect final = boundRect[0];
+                for (const auto &r : boundRect) { final |= r; }
+                cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
+                cv::rectangle(image, final.tl(), final.br(), color, 2);
+
+                // Top Black rectangle
+                cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
+                // Bottom Black rectangle
+                // TODO Hardcoded second point needs to take camera info
+                cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(640,480), cv::Scalar(0, 0, 0), -1, 8);
 
             }
-//            std::cout << cv::contourArea(contours[count])  << "  here  " << area << std::endl;
-            // Merge biggest contours
-            cv::Rect final = boundRect[0];
-            for (const auto &r : boundRect) { final |= r; }
-            cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
-            cv::rectangle(image, final.tl(), final.br(), color, 2);
 
-            // Top Black rectangle
-            cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
-            // Bottom Black rectangle
-            cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(1920,1080), cv::Scalar(0, 0, 0), -1, 8);
-
+            // Field Line Detection
             cvtColor(image, hsv , cv::COLOR_BGR2HSV);
             cv::inRange(hsv,cv::Scalar (0,0,255 - 65) , cv::Scalar(255, 65, 255), mask);
 
@@ -180,9 +161,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
             //cv::adaptiveThreshold(cdst,dst, 255,cv::ADAPTIVE_THRESH_GAUSSIAN_C,cv::THRESH_BINARY,11,2);
 
-
             cv::Canny(dst, cdst,50,150);
-
 
             HoughLinesP(cdst, lines, rho, theta, threshold, minLineLength, maxLineGap);
             cvtColor(cdst, dst, CV_GRAY2BGR);
@@ -202,14 +181,12 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
 
             sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
-            //if(image_publisher.getNumSubscribers() > 1){
 
             image_publisher.publish(message);
 
         } catch (const cv_bridge::Exception &e) {
             ROS_ERROR_STREAM("CV Exception" << e.what());
         }
-
 
         std::vector<Point3> points3d;
         for (const auto &p : pts) {
