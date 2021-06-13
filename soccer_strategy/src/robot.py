@@ -15,6 +15,7 @@ class Robot:
         RIGHT_MIDFIELD = 4
 
     class Status(enum.IntEnum):
+        DISCONNECTED = 0
         READY = 1
         LOCALIZING = 2
         WALKING = 3

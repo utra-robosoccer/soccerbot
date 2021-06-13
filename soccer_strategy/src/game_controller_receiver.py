@@ -31,8 +31,7 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
-DEFAULT_LISTENING_HOST = '127.0.1.1'
-# DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
+DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
 GAME_CONTROLLER_LISTEN_PORT = 3838
 GAME_CONTROLLER_ANSWER_PORT = 3939
 
@@ -211,7 +210,7 @@ class GameStateReceiver(object):
 if __name__ == '__main__':
     rospy.init_node('game_controller')
 
-    team_id = (os.getenv('ROBOCUP_TEAM_COLOR', 'red') == 'blue') + 1
+    team_id = int(os.getenv('ROBOCUP_TEAM_ID'))
     robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
     is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 

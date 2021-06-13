@@ -20,21 +20,21 @@ class GameEngine:
         self.display = display
         # Initialize robots
         self.robots = [
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.DISCONNECTED,
                   position=np.array([0.0, -3.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.DISCONNECTED,
                   position=np.array([-1.5, -1.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.DISCONNECTED,
                   position=np.array([1.5, -1.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.DISCONNECTED,
                   position=np.array([0.0, -0.8, math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.DISCONNECTED,
                   position=np.array([0.0, 3.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.DISCONNECTED,
                   position=np.array([-1.5, 1.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.DISCONNECTED,
                   position=np.array([1.5, 1.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.DISCONNECTED,
                   position=np.array([0.0, 0.8, -math.pi / 2]))
         ]
         self.ball = Ball(position=np.array([0, 0]))

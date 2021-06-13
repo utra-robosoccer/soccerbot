@@ -51,7 +51,8 @@ class RobotRos(Robot):
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi / 2])
-        pass
+        if self.status == Robot.Status.DISCONNECTED:
+            self.status = Robot.Status.READY
 
     def ball_pose_callback(self, data):
         self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
@@ -138,6 +139,9 @@ class RobotRos(Robot):
 
         elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             rospy.loginfo_throttle(20, self.robot_name + " trajectory in progress")
+
+        elif self.status == Robot.Status.STOPPED:
+            pass
 
         else:
             rospy.logerr_throttle(20, self.robot_name + " is in invalid status " + str(self.status))
