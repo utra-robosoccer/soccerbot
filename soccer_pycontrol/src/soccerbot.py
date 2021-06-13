@@ -400,7 +400,7 @@ class Soccerbot:
             print(f'ang_vel = {ang_vel}')
         return np.concatenate((lin_acc, ang_vel))
 
-    def get_imu(self, verbose=False):
+    def get_imu(self):
         """
         Simulates the IMU at the IMU link location.
         TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
