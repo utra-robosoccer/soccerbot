@@ -4,6 +4,7 @@ x-soccerbot: &soccerbot
   image: utrarobosoccer/soccerbot
   build:
     context: .
+    target: builder
   network_mode: host
   cap_add:
     - SYS_PTRACE
