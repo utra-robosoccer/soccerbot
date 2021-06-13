@@ -9,9 +9,6 @@ This module shows how the GameController Communication protocol can be used
 in python and also allows to be changed such that every team using python to
 interface with the GC can utilize the new protocol.
 
-.. moduleauthor:: Nils Rokita <0rokita@informatik.uni-hamburg.de>
-.. moduleauthor:: Robert Kessler <8kessler@informatik.uni-hamburg.de>
-
 """
 
 
@@ -34,8 +31,7 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
 
-DEFAULT_LISTENING_HOST = '127.0.1.1'
-# DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
+DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
 GAME_CONTROLLER_LISTEN_PORT = 3838
 GAME_CONTROLLER_ANSWER_PORT = 3939
 
@@ -189,44 +185,8 @@ class GameStateReceiver(object):
         msg.penalized = me.penalty != 0
         msg.secondsTillUnpenalized = me.secs_till_unpenalized
 
-        if me.penalty != 0:
-            msg.allowedToMove = False
-        elif state.game_state in ('STATE_INITIAL', 'STATE_SET'):
-            msg.allowedToMove = False
-        elif state.game_state == 'STATE_READY':
-            msg.allowedToMove = True
-        elif state.game_state == 'STATE_PLAYING':
-            if state.kick_of_team >= 128:
-                # Drop ball
-                msg.allowedToMove = True
-            elif state.secondary_state in (
-                    'STATE_DIRECT_FREEKICK',
-                    'STATE_INDIRECT_FREEKICK',
-                    'STATE_PENALTYKICK',
-                    'STATE_CORNERKICK',
-                    'STATE_GOALKICK',
-                    'STATE_THROWIN'):
-                if state.secondary_state_info[1] in (0, 2):
-                    msg.allowedToMove = False
-                else:
-                    msg.allowedToMove = True
-                msg.secondaryStateTeam = state.secondary_state_info[0]
-            elif state.secondary_state == 'STATE_PENALTYSHOOT':
-                # we have penalty kick
-                if state.kick_of_team == self.team:
-                    msg.allowedToMove = True
-                else:
-                    msg.allowedToMove = False
-            elif state.kick_of_team == self.team:
-                msg.allowedToMove = True
-            else:
-                # Other team has kickoff
-                if msg.secondary_seconds_remaining != 0:
-                    msg.allowedToMove = False
-                else:
-                    # We have waited the kickoff time
-                    msg.allowedToMove = True
-
+        msg.secondaryStateTeam = state.secondary_state_info[0]
+        msg.secondaryStateMode = state.secondary_state_info[1]
         msg.teamColor = own_team.team_color.intvalue
         msg.dropInTeam = state.drop_in_team
         msg.dropInTime = state.drop_in_time
@@ -250,9 +210,9 @@ class GameStateReceiver(object):
 if __name__ == '__main__':
     rospy.init_node('game_controller')
 
-    team_id = (os.getenv('ROBOCUP_TEAM_COLOR', 'red') == 'blue') + 1
+    team_id = int(os.getenv('ROBOCUP_TEAM_ID'))
     robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
-    is_goal_keeper = rospy.get_param("is_goal_keeper")
+    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
     rec.receive_forever()

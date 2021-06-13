@@ -47,13 +47,10 @@ int32 secondary_seconds_remaining
 bool hasKickOff
 bool penalized
 uint16 secondsTillUnpenalized
-# Allowed to move is different from penalized.
-# You can for example be not allowed to move due to the current state of the game
-bool allowedToMove
 
 # Team colors
-int8 BLUE = 0
-int8 RED = 1
+int8 TEAM_COLOR_BLUE = 0
+int8 TEAM_COLOR_RED = 1
 int8 teamColor
 
 bool dropInTeam
