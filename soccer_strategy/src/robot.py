@@ -34,7 +34,7 @@ class Robot:
         self.position = position
         self.goal_position = position
 
-        self.speed = 0.20
+        self.speed = 0.12
         self.max_kick_speed = 2
 
     def set_navigation_position(self, position):

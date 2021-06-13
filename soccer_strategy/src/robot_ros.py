@@ -7,6 +7,9 @@ import math
 import tf.transformations
 from sensor_msgs.msg import Imu
 
+# The robot needs to move behind the ball and face the net (and also slight offset to the left or right) to be able to kick the ball
+# Move to a point and then rotate with fixed rotation speed
+# Stay away from opponent and friendly by 0.2 radiusAdd slight penalty walk
 
 class RobotRos(Robot):
     def __init__(self, team, role, status, robot_name):
