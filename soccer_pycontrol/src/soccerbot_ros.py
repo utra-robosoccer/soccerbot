@@ -37,17 +37,10 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
-        self.amcl_pose = Pose()
-        self.robot_pose_sub = rospy.Subscriber("amcl_pose",
-                                               PoseWithCovarianceStamped,
-                                               self.robot_pose_callback)
 
-    def robot_pose_callback(self, data):
-        self.amcl_pose = data.pose
-        pass
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
-
         self.imu_ready = False
+
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -69,14 +62,9 @@ class SoccerbotRos(Soccerbot):
 
         # base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body) # Get odometry from the simulator itself >:)
         # Get odometry from the simulator itself >:)
-        if rospy.get_param('ENABLE_PYBULLET'):
-            base_pose = self.pose.get_position()
-            base_orientation = self.pose.get_orientation()
-        else:
-            base_pose = [self.amcl_pose.pose.position.x, self.amcl_pose.pose.position.y, self.amcl_pose.pose.position.z]
-            base_orientation = [self.amcl_pose.pose.orientation.x, self.amcl_pose.pose.orientation.y,
-                                self.amcl_pose.pose.orientation.z,
-                                self.amcl_pose.pose.orientation.w]
+
+        base_pose = self.pose.get_position()
+        base_orientation = self.pose.get_orientation()
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self):
