@@ -130,9 +130,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
             std::vector< std::vector<cv::Point> > hull(contours.size());
 
-            for(int i = 0; i < contours.size(); i++)
-                convexHull(cv::Mat(contours[i]), hull[i], false);
-
             // create a blank image (black image)
 
             cv::Mat drawin = cv::Mat::zeros(mask2.size(), CV_8UC3);
@@ -143,6 +140,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 //            cv::Scalar color_contours = cv::Scalar(0, 255, 0); // green - color for contours
 //            std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
                 if (cv::contourArea(contours[i])  >  1000 ) {
+                    convexHull(cv::Mat(contours[i]), hull[i], false);
                     area += 1; //cv::contourArea(contours[i]);
                     count += 1;
 //                std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;

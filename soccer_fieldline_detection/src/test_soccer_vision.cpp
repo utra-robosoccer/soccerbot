@@ -47,6 +47,16 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
         // Detect Field Lines (Copy from simulink)
         cv::Mat dst, cdst;
         cv::Mat hsv, mask,out,mask2 , out2;
+
+        // Single image
+//        cv::Mat image1,image2;
+//        cv::String imageName( "/home/manx52/catkin_ws/src/soccerbot/soccer_fieldline_detection/media/field/field8.png" ); // by default
+//
+//        std::cout << imageName << std::endl;
+//
+//        image1=cv::imread(imageName, cv::IMREAD_COLOR);
+//        cv::cvtColor(image1, hsv , cv::COLOR_BGR2HSV);
+
         cvtColor(image, hsv , cv::COLOR_BGR2HSV);
 
         // cv::inRange(hsv,cv::Scalar (0,0,255 - 15) , cv::Scalar(255, 15, 255), mask); Goal post detection
@@ -70,9 +80,6 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
         std::vector< std::vector<cv::Point> > hull(contours.size());
 
-        for(int i = 0; i < contours.size(); i++)
-            convexHull(cv::Mat(contours[i]), hull[i], false);
-
         // create a blank image (black image)
 
         cv::Mat drawin = cv::Mat::zeros(mask2.size(), CV_8UC3);
@@ -83,16 +90,17 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 //            cv::Scalar color_contours = cv::Scalar(0, 255, 0); // green - color for contours
 //            std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
             if (cv::contourArea(contours[i])  >  1000 ) {
+                convexHull(cv::Mat(contours[i]), hull[i], false);
                 area += 1; //cv::contourArea(contours[i]);
                 count += 1;
 //                std::cout << cv::contourArea(contours[i])  << "         " << area << std::endl;
-//                cv::Scalar color = cv::Scalar(255, 0, 0); // blue - color for convex hull
-//                drawContours(drawin, hull, index1, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+                cv::Scalar color = cv::Scalar(255, 0, 0); // blue - color for convex hull
+                drawContours(drawin, hull, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
 
                 boundRect[count] = boundingRect(hull[i]);
 
-//               color = cv::Scalar(0, 255, 0); // blue - color for convex hull
-//                cv::drawContours(drawing, contours_poly, (int) i, color);
+                color = cv::Scalar(0, 255, 0); // blue - color for convex hull
+//                cv::drawContours(drawin, contours_poly, (int) i, color);
 
             }
 
@@ -100,28 +108,21 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
     }
 
         // Merge biggest contours
-        cv::Rect final = boundRect[0];
-        for (const auto &r : boundRect) { final |= r; }
-        cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
-        cv::rectangle(image, final.tl(), final.br(), color, 2);
-
-        // Top Black rectangle
-        cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
-        // Bottom Black rectangle
-        cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(1920,1080), cv::Scalar(0, 0, 0), -1, 8);
-
-
-// Single image
-//        cv::Mat image1,image2;
-//        cv::String imageName( "/home/manx52/catkin_ws/src/soccerbot/soccer_fieldline_detection/media/pictures/4.jpeg" ); // by default
+//        cv::Rect final = boundRect[0];
+//        for (const auto &r : boundRect) { final |= r; }
+//        cv::Scalar color = cv::Scalar(0, 0, 255); // blue - color for convex hull
+//        cv::rectangle(image, final.tl(), final.br(), color, 2);
 //
-//        std::cout << imageName << std::endl;
-//
-//        image1=cv::imread(imageName, cv::IMREAD_COLOR);
-//        cv::cvtColor(image1, hsv , cv::COLOR_BGR2HSV);
+//        // Top Black rectangle
+//        cv::rectangle(image, cv::Point(0,0), cv::Point(final.br().x,final.tl().y), cv::Scalar(0, 0, 0), -1, 8);
+//        // Bottom Black rectangle
+//        cv::rectangle(image, cv::Point(final.tl().x,final.br().y), cv::Point(1920,1080), cv::Scalar(0, 0, 0), -1, 8);
 
-//        cv::bitwise_and(image,image,out,out2);
-//        cv::bitwise_and(image,image,out,mask2);
+
+        cv::imshow("Car",drawin);
+        int k = cv::waitKey(0); // Wait for a keystroke in the window
+
+
 
 
         cvtColor(image, hsv , cv::COLOR_BGR2HSV);
@@ -165,8 +166,7 @@ void TestSoccerVision::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
         auto t_end = std::chrono::high_resolution_clock::now();
         double elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end-t_start).count();
         std::cout << elapsed_time_ms << std::endl;
-        cv::imshow("Car",dst);
-        int k = cv::waitKey(0); // Wait for a keystroke in the window
+
     } catch (const cv_bridge::Exception &e) {
         ROS_ERROR_STREAM("CV Exception" << e.what());
     }
