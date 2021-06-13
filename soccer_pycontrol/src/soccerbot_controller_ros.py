@@ -2,7 +2,7 @@ from soccerbot_controller import *
 import rospy
 from soccerbot_ros import SoccerbotRos
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty, Bool
 
 class SoccerbotControllerRos(SoccerbotController):
 
@@ -23,9 +23,18 @@ class SoccerbotControllerRos(SoccerbotController):
         self.robot_position_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
         self.terminate_walk_subscriber = rospy.Subscriber("terminate_walking", Empty, self.terminate_walk_callback)
         self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty, queue_size=1)
+        self.finish_trajectory = rospy.Subscriber('trajectory_complete', Bool, self.trajectory_callback, queue_size=1)
+        self.fixed_trajectory_running = False
+        self.robot_pose = PoseWithCovarianceStamped()
         self.goal = PoseStamped()
         self.new_goal = self.goal
         self.terminate_walk = False
+
+    def trajectory_callback(self, msg):
+        self.fixed_trajectory_running = not msg.data
+        if not msg.data:
+            self.soccerbot.reset_pid_controllers()
+        pass
 
     def robot_pose_callback(self, pose):
         self.robot_pose = pose
@@ -120,10 +129,13 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration() or t < 0:
                 self.soccerbot.apply_head_rotation()
-                if self.soccerbot.imu_ready:
+                if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
-            self.soccerbot.publishAngles()
+
+            if not self.fixed_trajectory_running:
+                self.soccerbot.publishAngles()
+
             if rospy.get_param('ENABLE_PYBULLET'):
                 pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP

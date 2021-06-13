@@ -188,11 +188,6 @@ class Soccerbot:
 
         self.current_step_time = 0
 
-        # For PID controller
-        self.pid_last_error = 0
-        self.last_F = 0
-        self.lastError = 0
-
         # For head rotation
         self.head_step = 0
 
@@ -477,16 +472,19 @@ class Soccerbot:
     Kp = 1.5
     Kd = 0.0
     Ki = 0.0002
-    DESIRED_PITCH = -0.05
+    DESIRED_PITCH_1 = -0.05
     integral1 = 0
+    pid_last_error_1 = 0
+    last_F_1 = 0
+    lastError1 = 0
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
             return
 
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
-        error = Soccerbot.DESIRED_PITCH - pitch
-        derivative = error - self.pid_last_error
+        error = Soccerbot.DESIRED_PITCH_1 - pitch
+        derivative = error - self.pid_last_error_1
         integral = 0
 
         F = (self.Kp * error) + (self.Ki * self.integral1) + (self.Kd * derivative)
@@ -518,8 +516,8 @@ class Soccerbot:
             pass
 
 
-        self.last_F = F
-        self.lastError = error
+        self.last_F_1 = F
+        self.lastError1 = error
         self.integral1 = self.integral1 + error
         return F
 
@@ -528,6 +526,9 @@ class Soccerbot:
     Ki2 = 0.002
     DESIRED_PITCH_2 = 0.0
     integral2 = 0.0
+    pid_last_error_2 = 0
+    last_F_2 = 0
+    lastError2 = 0
     def apply_imu_feedback_standing(self, pose: tr):
         if pose is None:
             return
@@ -535,7 +536,7 @@ class Soccerbot:
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
         error = Soccerbot.DESIRED_PITCH_2 - pitch
-        derivative = error - self.pid_last_error
+        derivative = error - self.pid_last_error_2
 
         F = (self.Kp2 * error) + (self.Ki2 * self.integral2) + (self.Kd2 * derivative)
         if F > 1.57:
@@ -546,17 +547,27 @@ class Soccerbot:
         self.configuration_offset[Joints.LEFT_LEG_5] = F
         self.configuration_offset[Joints.RIGHT_LEG_5] = F
 
-        self.last_F = F
-        self.lastError = error
+        self.last_F_2 = F
+        self.lastError2 = error
         self.integral2 = self.integral2 + error
         return F
         pass
 
+    def reset_pid_controllers(self):
+        self.integral1 = 0.0
+        self.integral2 = 0.0
+        self.pid_last_error_1 = 0.0
+        self.pid_last_error_2 = 0.0
+        self.last_F_1 = 0.0
+        self.last_F_2 = 0.0
+        self.lastError1 = 0.0
+        self.lastError2 = 0.0
+
     HEAD_YAW_FREQ = 0.002
     HEAD_PITCH_FREQ = 0.00125
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[Joints.HEAD_1] = 0# math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
+        self.configuration[Joints.HEAD_2] = 1 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 

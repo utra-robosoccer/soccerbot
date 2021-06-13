@@ -7,6 +7,7 @@ from scipy.interpolate import interp1d
 import rospy
 from sensor_msgs.msg import JointState
 
+
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints."""
 
@@ -17,7 +18,21 @@ class Trajectory:
         self.splines = {}
         self.step_map = {}
         self.time_to_last_pose = 2.0  # seconds
+        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
+                            "right_arm_motor_1",
+                            "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
+                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
+                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
+                            "head_motor_0", "head_motor_1"
+                            ]
 
+        self.external_motor_names = \
+            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
+             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
+             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
+             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
+             "head_motor_0", "head_motor_1"
+             ]
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
@@ -52,17 +67,25 @@ class Trajectory:
         t = 0
         while not rospy.is_shutdown() and t < self.max_time:
             js = JointState()
-            js.name = []
+            js.name = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
+                       "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
+                       "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
+                       "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
+                       "head_motor_0", "head_motor_1"
+                       ]
             js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = []
+            js.position = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
             js.effort = []
+
             for joint, setpoint in self.get_setpoint(t).items():
-                js.name.append(joint)
-                js.position.append(setpoint)
+                motor_index = js.name.index(joint)
+                js.position[motor_index] = setpoint
 
             pub_all_motor.publish(js)
             t = t + 0.01
             rate.sleep()
+
 
 class SoccerTrajectoryClass:
     def __init__(self):
