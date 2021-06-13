@@ -112,11 +112,12 @@ class ObjectDetectionNode(object):
 
                 self.pub_boundingbox.publish(bbs_msg)
                 self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
-        try:
-            loop_rate.sleep()
-        except rospy.exceptions.ROSInterruptException as ex:
-            print(ex)
-            exit(0)
+
+            try:
+                loop_rate.sleep()
+            except rospy.exceptions.ROSInterruptException as ex:
+                print(ex)
+                exit(0)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
