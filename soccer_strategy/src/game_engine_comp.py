@@ -55,6 +55,7 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
         # gamestate varibles
         self.teamColor = teamColor.BLUE
         self.gameState = gameState.GAMESTATE_INITIAL
+        self.previous_gameState = gameState.GAMESTATE_INITIAL
         self.secondaryState = secondaryState.STATE_NORMAL
         self.firstHalf = True
         self.ownScore = 0
@@ -72,6 +73,7 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
         self.gc_connected = False
 
         # Setup the strategy
+        self.rostime_previous = 0
         self.strategy = DummyStrategy()
 
         # friendly communication
@@ -79,6 +81,7 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
 
     def gc_callback(self, data):
         self.secondaryState = secondaryState(data.secondaryState)
+        self.secondaryStateTeam = data.secondaryStateTeam
         self.teamColor = teamColor(data.teamColor)
         self.firstHalf = data.firstHalf
         self.ownScore = data.ownScore
@@ -94,18 +97,6 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
             print("--------state transition to " + str(new_gameState))
         self.gameState = new_gameState
 
-        new_allowedToMove = data.allowedToMove
-        if not new_allowedToMove == self.allowedToMove:
-            if data.allowedToMove:
-                for robot in self.friendly:
-                    robot.terminate = False
-                    robot.status = Robot.Status.READY
-                    print(robot.robot_name + " set to allow moving")
-            else:
-                for robot in self.friendly:
-                    robot.terminate = True
-                    print(robot.robot_name + " set to forbid moving")
-        self.allowedToMove = new_allowedToMove
 
     def gc_connected_callback(self, data):
         if self.gc_connected == False and data.data == True:
@@ -134,54 +125,127 @@ class GameEngineComp(game_engine_ros.GameEngineRos):
         # todo add opponent to self.robots
         pass
 
+    def stop_moving(self):
+        for robot in self.friendly:
+            robot.terminate = True
+            print(robot.robot_name + " set to forbid moving")
+
+    def resume_moving(self):
+        for robot in self.friendly:
+            if robot.terminate:
+                robot.terminate = False
+            if robot.status == Robot.Status.TERMINATE:
+                robot.status = Robot.Status.READY
+                print(robot.robot_name + " set to allow moving")
+
+    # run loop
     def run(self):
-        rostime_previous = 0
-
         while not rospy.is_shutdown():
-            rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
-
-            # INITIAL
-            if self.gameState == gameState.GAMESTATE_INITIAL:
-                pass
-
-            # READY
-            if self.gameState == gameState.GAMESTATE_READY:
-                if rostime % GameEngineComp.STRATEGY_UPDATE_INTERVAL < rostime_previous % GameEngineComp.STRATEGY_UPDATE_INTERVAL:
-                    for robot in self.friendly:
-                        if robot.status == Robot.Status.READY:
-                            robot.status = Robot.Status.WALKING
-                            if self.teamColor == teamColor.BLUE:
-                                robot.set_navigation_position(blue_initial_position[robot.robot_id - 1])
-                            else:
-                                robot.set_navigation_position(red_initial_position[robot.robot_id - 1])
-
-                rostime_previous = rostime
-
-            # SET
-            if self.gameState == gameState.GAMESTATE_SET:
-                pass
-
-            # PLAYING
-            if self.gameState == gameState.GAMESTATE_PLAYING:
-                if rostime % GameEngineComp.STRATEGY_UPDATE_INTERVAL < \
-                        rostime_previous % GameEngineComp.STRATEGY_UPDATE_INTERVAL:
-                    self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
-                rostime_previous = rostime
-                pass
-
-            # FINISHED
-            if self.gameState == gameState.GAMESTATE_FINISHED:
-                pass
+            if self.secondaryState == secondaryState.STATE_NORMAL:
+                self.run_normal()
+            if self.secondaryState == secondaryState.STATE_DIRECT_FREEKICK:
+                self.run_freekick()
 
 
+    def run_normal(self):
+        rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
-            self.update_average_ball_position()
-            for robot in self.friendly:
-                self.basicRobotAI(robot)
+        # INITIAL
+        if self.gameState == gameState.GAMESTATE_INITIAL:
+            self.stop_moving()
 
-            # enable broadcasting to friendly
-            if self.is_goal_keeper:
-                self.broadcast_to_friendly()
+        # READY
+        if self.gameState == gameState.GAMESTATE_READY:
+            # on state transition
+            if self.previous_gameState != gameState.GAMESTATE_READY:
+                self.resume_moving()
+                self.previous_gameState = gameState.GAMESTATE_READY
+
+            if rostime % GameEngineComp.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineComp.STRATEGY_UPDATE_INTERVAL:
+                for robot in self.friendly:
+                    if robot.status == Robot.Status.READY:
+                        robot.status = Robot.Status.WALKING
+                        if self.teamColor == teamColor.BLUE:
+                            robot.set_navigation_position(blue_initial_position[robot.robot_id - 1])
+                        else:
+                            robot.set_navigation_position(red_initial_position[robot.robot_id - 1])
+            self.rostime_previous = rostime
+
+        # SET
+        if self.gameState == gameState.GAMESTATE_SET:
+            # on state transition
+            if self.previous_gameState != gameState.GAMESTATE_SET:
+                self.stop_moving()
+                self.previous_gameState = gameState.GAMESTATE_SET
+
+        # PLAYING
+        if self.gameState == gameState.GAMESTATE_PLAYING:
+            # on state transition
+            if self.previous_gameState != gameState.GAMESTATE_PLAYING:
+                self.resume_moving()
+                self.previous_gameState = gameState.GAMESTATE_PLAYING
+
+            if rostime % GameEngineComp.STRATEGY_UPDATE_INTERVAL < \
+                    self.rostime_previous % GameEngineComp.STRATEGY_UPDATE_INTERVAL:
+                self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
+            self.rostime_previous = rostime
+            pass
+
+        # FINISHED
+        if self.gameState == gameState.GAMESTATE_FINISHED:
+            # on state transition
+            if self.previous_gameState != gameState.GAMESTATE_FINISHED:
+                self.stop_moving()
+                self.previous_gameState = gameState.GAMESTATE_FINISHED
+            pass
+
+        self.update_average_ball_position()
+        for robot in self.friendly:
+            self.basicRobotAI(robot)
+
+    def run_freekick(self):
+
+
+        pass
+
+    """if me.penalty != 0:
+            msg.allowedToMove = False
+        elif state.game_state in ('STATE_INITIAL', 'STATE_SET'):
+            msg.allowedToMove = False
+        elif state.game_state == 'STATE_READY':
+            msg.allowedToMove = True
+        elif state.game_state == 'STATE_PLAYING':
+            if state.kick_of_team >= 128:
+                # Drop ball
+                msg.allowedToMove = True
+            elif state.secondary_state in (
+                    'STATE_DIRECT_FREEKICK',
+                    'STATE_INDIRECT_FREEKICK',
+                    'STATE_PENALTYKICK',
+                    'STATE_CORNERKICK',
+                    'STATE_GOALKICK',
+                    'STATE_THROWIN'):
+                if state.secondary_state_info[1] in (0, 2):
+                    msg.allowedToMove = False
+                else:
+                    msg.allowedToMove = True
+                msg.secondaryStateTeam = state+.secondary_state_info[0]
+            elif state.secondary_state == 'STATE_PENALTYSHOOT':
+                # we have penalty kick
+                if state.kick_of_team == self.team:
+                    msg.allowedToMove = True
+                else:
+                    msg.allowedToMove = False
+            elif state.kick_of_team == self.team:
+                msg.allowedToMove = True
+            else:
+                # Other team has kickoff
+                if msg.secondary_seconds_remaining != 0:
+                    msg.allowedToMove = False
+                else:
+                    # We have waited the kickoff time
+                    msg.allowedToMove = True"""
+
 
     def basicRobotAI(self, robot):
         if robot.status == Robot.Status.WALKING:
