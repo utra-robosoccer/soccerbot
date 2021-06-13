@@ -7,7 +7,7 @@ import math
 import tf.transformations
 from sensor_msgs.msg import Imu
 
-robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4}
+robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1": 1, "opponent2": 2, "opponent3": 3, "opponent4": 4}
 
 
 class RobotRos(Robot):
