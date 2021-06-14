@@ -82,21 +82,21 @@ class SoccerbotControllerRos(SoccerbotController):
         self.soccerbot.ready()
         self.soccerbot.reset_head()
         self.soccerbot.publishAngles()
+        self.soccerbot.reset_imus()
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
-                print("Recieved New Goal")
-                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
-                self.goal = self.new_goal
+                rospy.loginfo("Recieved New Goal")
                 self.soccerbot.ready() # TODO Cancel walking
                 self.soccerbot.reset_head()
+                self.soccerbot.reset_imus()
 
-                # Reset robot position and goal
+                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
+                self.goal = self.new_goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = 0
-                self.wait(200)
+                t = -3
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -115,12 +115,14 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.publishOdometry()
 
             if self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() < t + SoccerbotController.PYBULLET_STEP:
-                print("Completed Walk")
+                rospy.loginfo("Completed Walk")
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
-            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration() or t < 0:
+            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
                 self.soccerbot.apply_head_rotation()
+
+            if t < 0:
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 

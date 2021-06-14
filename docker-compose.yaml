@@ -52,6 +52,7 @@ services:
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/:/root/webots/projects/samples/contests/robocup/controllers/referee/:rw
+      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
       WEBOTS_HOME: /root/webots
