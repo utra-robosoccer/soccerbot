@@ -83,14 +83,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.previous_gameState = self.gameState
         self.previous_gameState.gameState = GameState.GAMESTATE_FINISHED
 
-
-        # gc connection
         self.game_state_subscriber = rospy.Subscriber('gamestate', GameState, self.gamestate_callback)
-        self.game_controller_connected_subscriber = rospy.Subscriber('game_controller_connected', Bool, self.game_controller_connected_callback)
-        self.gc_connected = False
 
-
-        # Setup the strategy
         self.rostime_previous = 0
         self.team1_strategy = DummyStrategy()
         self.team2_strategy = DummyStrategy()
@@ -98,14 +92,6 @@ class GameEngineCompetition(game_engine.GameEngine):
     def gamestate_callback(self, gameState):
         self.previous_gameState = self.gameState
         self.gameState = gameState
-
-    def game_controller_connected_callback(self, data):
-        if self.gc_connected == False and data.data == True:
-            self.gc_connected = data.data
-            print("soccer strategy connected to gamecontroller")
-        if self.gc_connected == True and data.data == False:
-            self.gc_connected = data.data
-            print("soccer strategy failed to connect to gamecontroller")
 
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
