@@ -158,7 +158,15 @@ class GameControllerBridge():
         self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
 
     def joint_command_callback(self, msg: JointState):
-        self.joint_command = msg.position
+        motor_dictionary = {}
+        for i in range(len(msg.name)):
+            motor_dictionary[msg.name[i]] = msg.position[i]
+
+        for i in range(len(self.external_motor_names)):
+            if self.external_motor_names[i] in motor_dictionary:
+                self.joint_command[i] = motor_dictionary[self.external_motor_names[i]]
+            else:
+                self.joint_command[i] = 0
 
     def get_connection(self, addr):
         host, port = addr.split(':')
@@ -353,6 +361,7 @@ class GameControllerBridge():
         for i, name in enumerate(self.motor_names):
             motor_position = messages_pb2.MotorPosition()
             motor_position.name = name
+            assert (len(self.joint_command) == len(self.motor_names))
             motor_position.position = self.joint_command[i]
             actuator_requests.motor_positions.append(motor_position)
 

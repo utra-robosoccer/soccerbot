@@ -37,6 +37,9 @@ class SoccerbotControllerRos(SoccerbotController):
         pass
 
     def terminate_walk_callback(self, val):
+        rospy.logwarn("Terminating Walk Requested")
+        self.soccerbot.ready()
+        self.soccerbot.publishAngles()
         self.terminate_walk = True
 
     def pose_to_transformation(self, pose: Pose) -> Transformation:
@@ -91,16 +94,13 @@ class SoccerbotControllerRos(SoccerbotController):
                 # Reset robot position and goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
+                self.terminate_walk = False
                 t = 0
-                self.wait(100)
+                self.wait(200)
 
             if self.terminate_walk:
-                if self.soccerbot.robot_path != None:
-                    self.soccerbot.ready()
-                    self.soccerbot.publishAngles()
-                    print("Terminating Walk")
+                if self.soccerbot.robot_path is not None:
                     t = self.soccerbot.robot_path.duration() + 1
-                self.terminate_walk = False
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
@@ -128,8 +128,10 @@ class SoccerbotControllerRos(SoccerbotController):
                 if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():
                     break
 
-            self.soccerbot.publishAngles()
-            pb.stepSimulation()
+            if not self.terminate_walk:
+                self.soccerbot.publishAngles()
+                pb.stepSimulation()
+
             t = t + SoccerbotController.PYBULLET_STEP
             r.sleep()
 

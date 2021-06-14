@@ -68,7 +68,7 @@ services:
       GOALIE: "true"
       ROBOT_NAME: "robot1"
       ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_ID: 8
+      ROBOCUP_TEAM_ID: 25
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10001"
       ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
@@ -77,56 +77,56 @@ services:
       PYTHONUNBUFFERED: 1
     command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
 
-  friendly2: # Left midfield
-    <<: *soccerbot
-    environment:
-      X_POS: -3.0
-      Y_POS: -3.1
-      ANGLE: 1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot2"
-      ROBOCUP_ROBOT_ID: 2
-      ROBOCUP_TEAM_ID: 8
-      ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10002"
-      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
-      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
-      COMPETITION: "true"
-      PYTHONUNBUFFERED: 1
+#  friendly2: # Left midfield
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -3.0
+#      Y_POS: -3.1
+#      ANGLE: 1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot2"
+#      ROBOCUP_ROBOT_ID: 2
+#      ROBOCUP_TEAM_ID: 25
+#      ROBOCUP_TEAM_COLOR: "red"
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10002"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
-  friendly3: # Right midfield
-    <<: *soccerbot
-    environment:
-      X_POS: -3.5
-      Y_POS: 3.1
-      ANGLE: -1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot3"
-      ROBOCUP_ROBOT_ID: 3
-      ROBOCUP_TEAM_ID: 8
-      ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10003"
-      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
-      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
-      COMPETITION: "true"
-      PYTHONUNBUFFERED: 1
-
-  friendly4: # Striker
-    <<: *soccerbot
-    environment:
-      X_POS: -3.0
-      Y_POS: 3.1
-      ANGLE: -1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot4"
-      ROBOCUP_ROBOT_ID: 4
-      ROBOCUP_TEAM_ID: 8
-      ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10004"
-      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
-      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
-      COMPETITION: "true"
-      PYTHONUNBUFFERED: 1
+#  friendly3: # Right midfield
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -3.5
+#      Y_POS: 3.1
+#      ANGLE: -1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot3"
+#      ROBOCUP_ROBOT_ID: 3
+#      ROBOCUP_TEAM_ID: 8
+#      ROBOCUP_TEAM_COLOR: "red"
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10003"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
+#
+#  friendly4: # Striker
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -3.0
+#      Y_POS: 3.1
+#      ANGLE: -1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot4"
+#      ROBOCUP_ROBOT_ID: 4
+#      ROBOCUP_TEAM_ID: 8
+#      ROBOCUP_TEAM_COLOR: "red"
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10004"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
 
 #  oppponent1: # Goalie
 #    <<: *soccerbot
