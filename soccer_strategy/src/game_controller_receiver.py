@@ -39,7 +39,6 @@ class GameStateReceiver(object):
             try:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
                 rospy.loginfo_once("Game Controller Connected")
-                rospy.loginfo("Game Controller Still Alive")
 
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
