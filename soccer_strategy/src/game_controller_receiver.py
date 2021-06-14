@@ -50,6 +50,7 @@ class GameStateReceiver(object):
         self.team = team
         self.player = player
         self.is_goalkeeper = is_goalkeeper
+        rospy.loginfo("Listening to " + str(DEFAULT_LISTENING_HOST) + " " + str(GAME_CONTROLLER_ANSWER_PORT))
         rospy.loginfo('We are playing as player {} in team {}'.format(self.player, self.team))
 
         self.man_penalize = True
@@ -106,6 +107,7 @@ class GameStateReceiver(object):
             msg = Bool()
             msg.data = True
             self.game_controller_connected_publisher.publish(msg)
+            rospy.loginfo_once("Game Controller Connected")
 
             # Call the handler for the package
             self.on_new_gamestate(self.state)
@@ -114,12 +116,16 @@ class GameStateReceiver(object):
             self.answer_to_gamecontroller(peer)
 
         except AssertionError as ae:
-            logger.error(ae.message)
-        except socket.timeout:
-            logger.warning("Socket timeout")
-        except ConstError:
-            logger.warning("Parse Error: Probably using an old protocol!")
+            rospy.logerr_throttle(10, ae)
+        except socket.timeout as s:
+            rospy.logerr("Socket Timeout")
+            rospy.logwarn_throttle(10, "Socket Timeout")
+            rospy.logwarn_throttle(10, s)
+        except ConstError as c:
+            rospy.logwarn_throttle(10, c)
         except Exception as e:
+            rospy.logerr("Error")
+            rospy.logerr(e)
             if self.get_time_since_last_package() > self.game_controller_lost_time:
                 self.time += 5  # Resend message every five seconds
                 rospy.logwarn_throttle(5.0, 'No game controller messages received, allowing robot to move')
@@ -211,7 +217,7 @@ if __name__ == '__main__':
     rospy.init_node('game_controller')
 
     team_id = int(os.getenv('ROBOCUP_TEAM_ID'))
-    robot_id = os.getenv('ROBOCUP_ROBOT_ID', 1)
+    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
     is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 
     rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)

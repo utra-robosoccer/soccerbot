@@ -1,0 +1,6 @@
+webots/.*
+GameController/.*
+*.md
+external
+LICENSE
+Dockerfile

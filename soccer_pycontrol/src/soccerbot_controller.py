@@ -28,6 +28,9 @@ class SoccerbotController:
     def ready(self):
         self.soccerbot.ready()
 
+    def setPose(self, pose):
+        self.soccerbot.setPose(pose)
+
     def setGoal(self, goal):
         self.soccerbot.setGoal(goal)
 
@@ -36,7 +39,7 @@ class SoccerbotController:
             time.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
-    def run(self):
+    def run(self, stop_on_completed_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
             return
 
@@ -56,3 +59,6 @@ class SoccerbotController:
             pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP
             sleep(SoccerbotController.PYBULLET_STEP)
+
+    def updateGoal(self):
+        pass

@@ -148,7 +148,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                self.self.stop_all_robot()()
+                self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
 

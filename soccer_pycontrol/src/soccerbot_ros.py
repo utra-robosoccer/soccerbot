@@ -109,9 +109,14 @@ class SoccerbotRos(Soccerbot):
         self.odom_publisher.publish(o)
         pass
 
-    def get_imu(self, verbose=False):
+    def get_imu(self):
         return tr([0, 0, 0], [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
                               self.imu_msg.orientation.w])
+
+    def is_fallen(self) -> bool:
+        pose = self.get_imu()
+        [roll, pitch, yaw] = pose.get_orientation_euler()
+        return not np.pi/6 > pitch > -np.pi/6
 
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
