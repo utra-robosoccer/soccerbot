@@ -19,14 +19,13 @@ class RobotRos(Robot):
                                               PoseWithCovarianceStamped,
                                               self.ball_pose_callback)
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
-        self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1)
+        self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
         self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
-        self.start_walking_publisher = rospy.Publisher('/' + robot_name + "/start_walking", Empty, queue_size=1)
 
         self.team = team
         self.role = role
@@ -59,11 +58,14 @@ class RobotRos(Robot):
         pass
 
     def completed_walking_callback(self, data):
-        assert (self.status == Robot.Status.WALKING)
-        self.status = Robot.Status.READY
+        rospy.loginfo("Completed Walking")
+        if self.status == Robot.Status.WALKING:
+            self.status = Robot.Status.READY
 
     def completed_trajectory_subscriber(self, data):
-        assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS)
+        rospy.loginfo("Completed Trajectory")
+        print(self.status)
+        assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status)
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED
@@ -71,6 +73,7 @@ class RobotRos(Robot):
                 self.status = Robot.Status.READY
 
     def set_navigation_position(self, position):
+        assert (self.status == Robot.Status.WALKING)
         super(RobotRos, self).set_navigation_position(position)
         print("Sending Robot " + self.robot_name + " to position" + str(position))
         p = PoseStamped()
@@ -87,8 +90,6 @@ class RobotRos(Robot):
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
         self.goal_publisher.publish(p)
-        if self.status == Robot.Status.WALKING:
-            self.start_walking_publisher.publish()
 
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian

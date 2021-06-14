@@ -127,7 +127,6 @@ class GameEngineCompetition(game_engine.GameEngine):
 
 
     def run_normal(self):
-        global blue_initial_position, red_initial_position
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
         # INITIAL
@@ -138,12 +137,11 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
 
-        # READY
+        #READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_READY:
                 self.resume_all_robot()
-
                 self.previous_gameState.gameState = GameState.GAMESTATE_READY
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
@@ -151,38 +149,38 @@ class GameEngineCompetition(game_engine.GameEngine):
                     if robot.status == Robot.Status.READY:
                         robot.status = Robot.Status.WALKING
                         if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
-                            robot.set_navigation_position(blue_initial_position[robot.robot_id - 1])
+                            robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
                         else:
-                            robot.set_navigation_position(red_initial_position[robot.robot_id - 1])
+                            robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
             self.rostime_previous = rostime
 
-        # SET
-        if self.gameState.gameState == GameState.GAMESTATE_SET:
-            # on state transition
-            if self.previous_gameState.gameState != GameState.GAMESTATE_SET:
-                self.stop_all_robot()
-                self.previous_gameState.gameState = GameState.GAMESTATE_SET
-
-        # PLAYING
-        if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
-            # on state transition
-            if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
-                self.resume_all_robot()
-                self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
-
-            if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
-                    self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
-                self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
-            self.rostime_previous = rostime
-            pass
-
-        # FINISHED
-        if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
-            # on state transition
-            if self.previous_gameState.gameState != GameState.GAMESTATE_FINISHED:
-                self.stop_all_robot()
-                self.previous_gameState.gameState = GameState.GAMESTATE_FINISHED
-            pass
+        # # SET
+        # if self.gameState.gameState == GameState.GAMESTATE_SET:
+        #     # on state transition
+        #     if self.previous_gameState.gameState != GameState.GAMESTATE_SET:
+        #         self.stop_all_robot()
+        #         self.previous_gameState.gameState = GameState.GAMESTATE_SET
+        #
+        # # PLAYING
+        # if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+        #     # on state transition
+        #     if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
+        #         self.resume_all_robot()
+        #         self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
+        #
+        #     if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
+        #             self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+        #         self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+        #     self.rostime_previous = rostime
+        #     pass
+        #
+        # # FINISHED
+        # if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
+        #     # on state transition
+        #     if self.previous_gameState.gameState != GameState.GAMESTATE_FINISHED:
+        #         self.stop_all_robot()
+        #         self.previous_gameState.gameState = GameState.GAMESTATE_FINISHED
+        #     pass
 
         self.update_average_ball_position()
         for robot in self.friendly:
