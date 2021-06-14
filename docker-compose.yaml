@@ -28,7 +28,8 @@ services:
   # curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
   # sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
   # sudo apt-get update
-  # sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit
+  # sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit mesa-utils
+  # sudo systemctl restart docker
   simulator:
     image: utrarobosoccer/webots
     privileged: true
@@ -58,23 +59,23 @@ services:
       GAME_CONTROLLER_HOME: /root/GameController
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
-  friendly1: # Goalie
-    <<: *soccerbot
-    environment:
-      X_POS: -3.5
-      Y_POS: -3.1
-      ANGLE: 1.57
-      GOALIE: "true"
-      ROBOT_NAME: "robot1"
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_ID: 8
-      ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10001"
-      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
-      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
-      COMPETITION: "true"
-      PYTHONUNBUFFERED: 1
-    command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
+#  friendly1: # Goalie
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -3.5
+#      Y_POS: -3.1
+#      ANGLE: 1.57
+#      GOALIE: "true"
+#      ROBOT_NAME: "robot1"
+#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_TEAM_ID: 8
+#      ROBOCUP_TEAM_COLOR: "red"
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10001"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
+#    command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
 
 #  friendly2: # Left midfield
 #    <<: *soccerbot

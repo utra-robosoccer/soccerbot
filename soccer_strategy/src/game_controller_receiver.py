@@ -1,181 +1,102 @@
 #!/usr/bin/python3
 
-#-*- coding:utf-8 -*-
-
-from __future__ import unicode_literals, print_function
-
-"""
-This module shows how the GameController Communication protocol can be used
-in python and also allows to be changed such that every team using python to
-interface with the GC can utilize the new protocol.
-
-"""
-
-
 import socket
-import time
-import logging
 import rospy
-from std_msgs.msg import Bool, Int8
 import os
-
-# Requires construct==2.5.3
 from soccer_msgs.msg import GameState as GameStateMsg
 from construct import Container, ConstError
 from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 
-logger = logging.getLogger('game_controller')
-logger.setLevel(logging.DEBUG)
-
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
-logger.addHandler(console_handler)
-
-DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
-GAME_CONTROLLER_LISTEN_PORT = 3838
-GAME_CONTROLLER_ANSWER_PORT = 3939
-
 class GameStateReceiver(object):
-    """ This class puts up a simple UDP Server which receives the
-    *addr* parameter to listen to the packages from the game_controller.
 
-    If it receives a package it will be interpreted with the construct data
-    structure and the :func:`on_new_gamestate` will be called with the content.
+    team_id = int(os.getenv('ROBOCUP_TEAM_ID', 25))
+    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
+    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
+    DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
+    GAME_CONTROLLER_LISTEN_PORT = 3838
+    GAME_CONTROLLER_ANSWER_PORT = 3939
 
-    After this we send a package back to the GC """
+    def __init__(self):
+        rospy.loginfo("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
+        rospy.loginfo('We are playing as player {} in team {}'.format(self.robot_id, self.team_id))
 
-    def __init__(self, team, player, is_goalkeeper, addr=(DEFAULT_LISTENING_HOST, GAME_CONTROLLER_LISTEN_PORT), answer_port=GAME_CONTROLLER_ANSWER_PORT):
-
-        # Information that is used when sending the answer to the game controller
-        self.team = team
-        self.player = player
-        self.is_goalkeeper = is_goalkeeper
-        rospy.loginfo("Listening to " + str(DEFAULT_LISTENING_HOST) + " " + str(GAME_CONTROLLER_ANSWER_PORT))
-        rospy.loginfo('We are playing as player {} in team {}'.format(self.player, self.team))
-
-        self.man_penalize = True
-        self.game_controller_lost_time = 5
-        self.game_controller_connected_publisher = rospy.Publisher('game_controller_connected', Bool, queue_size=1)
         self.state_publisher = rospy.Publisher('gamestate', GameStateMsg, queue_size=1)
 
-        # The address listening on and the port for sending back the robots meta data
-        self.addr = addr
-        self.answer_port = answer_port
-
-        # The state and time we received last form the GC
-        self.state = None
-        self.time = None
-
-        # The socket and whether it is still running
-        self.socket = None
-        self.running = True
-
-        self._open_socket()
-
-        self.connected = False
-
-    def _open_socket(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind(self.addr)
-        self.socket.settimeout(0.5)
-        self.socket2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.socket2.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        self.receiver_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 255)
+        self.receiver_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+                        socket.inet_aton("237.252.249.227") + socket.inet_aton("0.0.0.0"))
+        self.receiver_socket.settimeout(2)
+        self.receiver_socket.bind((self.DEFAULT_LISTENING_HOST, self.GAME_CONTROLLER_LISTEN_PORT))
+        self.send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 
     def receive_forever(self):
-        while self.running and not rospy.is_shutdown():
+        while not rospy.is_shutdown():
             try:
-                self.receive_once()
-            except IOError as e:
-                logger.debug("Fehler beim Senden des KeepAlive: " + str(e))
+                data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
+                rospy.loginfo_once("Game Controller Connected")
+                rospy.loginfo("Game Controller Still Alive")
 
-    def receive_once(self):
-        """ Receives a package and interprets it.
-            Calls :func:`on_new_gamestate`
-            Sends an answer to the GC """
-        try:
-            data, peer = self.socket.recvfrom(GameState.sizeof())
-
-            # Throws a ConstError if it doesn't work
-            parsed_state = GameState.parse(data)
-
-            # Assign the new package after it parsed successful to the state
-            self.state = parsed_state
-            self.time = time.time()
-
-            # Publish that game controller received message
-            msg = Bool()
-            msg.data = True
-            self.game_controller_connected_publisher.publish(msg)
-            rospy.loginfo_once("Game Controller Connected")
-
-            # Call the handler for the package
-            self.on_new_gamestate(self.state)
-
-            # Answer the GameController
-            self.answer_to_gamecontroller(peer)
-
-        except AssertionError as ae:
-            rospy.logerr_throttle(10, ae)
-        except socket.timeout as s:
-            rospy.logerr("Socket Timeout")
-            rospy.logwarn_throttle(10, "Socket Timeout")
-            rospy.logwarn_throttle(10, s)
-        except ConstError as c:
-            rospy.logwarn_throttle(10, c)
-        except Exception as e:
-            rospy.logerr("Error")
-            rospy.logerr(e)
-            if self.get_time_since_last_package() > self.game_controller_lost_time:
-                self.time += 5  # Resend message every five seconds
-                rospy.logwarn_throttle(5.0, 'No game controller messages received, allowing robot to move')
-                msg = GameStateMsg()
-                msg.allowedToMove = True
-                msg.gameState = 3  # PLAYING
-                self.state_publisher.publish(msg)
-                msg2 = Bool()
-                msg2.data = False
-                self.game_controller_connected_publisher.publish(msg2)
+                self.on_new_gamestate(GameState.parse(data))
+                self.answer_to_gamecontroller(peer)
+            except AssertionError as ae:
+                rospy.logerr_throttle(10, ae)
+            except socket.timeout as s:
+                rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                self.receiver_socket.close()
+                self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+                self.receiver_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 255)
+                self.receiver_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+                                                socket.inet_aton("237.252.249.227") + socket.inet_aton("0.0.0.0"))
+                self.receiver_socket.settimeout(2)
+                self.receiver_socket.bind((self.DEFAULT_LISTENING_HOST, self.GAME_CONTROLLER_LISTEN_PORT))
+            except ConstError as c:
+                rospy.logwarn_throttle(10, c)
+            except Exception as e:
+                rospy.logerr_throttle(10, "Error")
+                rospy.logerr(e)
+        self.receiver_socket.close()
+        self.send_socket.close()
 
     def answer_to_gamecontroller(self, peer):
-        """ Sends a life sign to the game controller """
-        return_message = 0 if self.man_penalize else 2
-        if self.is_goalkeeper:
+        if self.is_goal_keeper:
             return_message = 3
+        else:
+            return_message = 2
 
         data = Container(
             header=b"RGrt",
             version=GAME_CONTROLLER_RESPONSE_VERSION,
-            team=self.team,
-            player=self.player,
+            team=self.team_id,
+            player=self.robot_id,
             message=return_message)
-        try:
-            destination = peer[0], GAME_CONTROLLER_ANSWER_PORT
-            self.socket.sendto(ReturnData.build(data), destination)
-        except Exception as e:
-            logger.log("Network Error: %s" % str(e))
+
+        destination = peer[0], self.GAME_CONTROLLER_ANSWER_PORT
+        self.send_socket.sendto(ReturnData.build(data), destination)
 
     def on_new_gamestate(self, state):
-        """ Is called with the new game state after receiving a package.
-            The information is processed and published as a standard message to a ROS topic.
-            :param state: Game State
-        """
-        if state.teams[0].team_number == self.team:
+        if state.teams[0].team_number == self.team_id:
             own_team = state.teams[0]
             rival_team = state.teams[1]
-        elif state.teams[1].team_number == self.team:
+        elif state.teams[1].team_number == self.team_id:
             own_team = state.teams[1]
             rival_team = state.teams[0]
         else:
-            rospy.logerr('Team {} not playing, only {} and {}'.format(self.team,
+            rospy.logerr('Team {} not playing, only {} and {}'.format(self.team_id,
                                                                       state.teams[0].team_number,
                                                                       state.teams[1].team_number))
             return
 
         try:
-            me = own_team.players[self.player - 1]
+            me = own_team.players[self.robot_id - 1]
         except IndexError:
-            rospy.logerr('Robot {} not playing'.format(self.player))
+            rospy.logerr('Robot {} not playing'.format(self.robot_id))
             return
 
         msg = GameStateMsg()
@@ -187,7 +108,7 @@ class GameStateReceiver(object):
         msg.rivalScore = rival_team.score
         msg.secondsRemaining = state.seconds_remaining
         msg.secondary_seconds_remaining = state.secondary_seconds_remaining
-        msg.hasKickOff = state.kick_of_team == self.team
+        msg.hasKickOff = state.kick_of_team == self.team_id
         msg.penalized = me.penalty != 0
         msg.secondsTillUnpenalized = me.secs_till_unpenalized
 
@@ -201,24 +122,8 @@ class GameStateReceiver(object):
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
 
-    def get_last_state(self):
-        return self.state, self.time
-
-    def get_time_since_last_package(self):
-        return time.time() - self.time
-
-    def stop(self):
-        self.running = False
-
-    def set_manual_penalty(self, flag):
-        self.man_penalize = flag
 
 if __name__ == '__main__':
     rospy.init_node('game_controller')
-
-    team_id = int(os.getenv('ROBOCUP_TEAM_ID'))
-    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
-    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
-
-    rec = GameStateReceiver(team=team_id, player=robot_id, is_goalkeeper=is_goal_keeper)
+    rec = GameStateReceiver()
     rec.receive_forever()
