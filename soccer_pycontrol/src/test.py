@@ -9,32 +9,34 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-import rospy
 
 import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
 
 RUN_IN_ROS = True
+if RUN_IN_ROS:
+    import rospy
+    import soccerbot_controller_ros
+    from std_msgs.msg import String
+    from geometry_msgs.msg import PoseWithCovarianceStamped
 
 class Test(TestCase):
 
     def setUp(self) -> None:
         if RUN_IN_ROS:
-            import soccerbot_controller_ros
-            from std_msgs.msg import String
             rospy.init_node("soccer_control")
-            resetPublisher = rospy.Publisher("/reset", String, queue_size=1, latch=True)
+            self.resetPublisher = rospy.Publisher("/reset", String, queue_size=1, latch=True)
             b = String()
             b.data = ""
-            resetPublisher.publish(b)
+            self.resetPublisher.publish(b)
             self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
         else:
             self.walker = soccerbot_controller.SoccerbotController()
 
 
     def test_walk_1(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
@@ -42,7 +44,7 @@ class Test(TestCase):
         self.walker.run()
 
     def test_walk_2(self):
-        self.walker.soccerbot.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
@@ -50,7 +52,7 @@ class Test(TestCase):
         self.walker.run()
 
     def test_walk_side(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
@@ -58,14 +60,14 @@ class Test(TestCase):
         self.walker.run()
 
     def test_walk_backward(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        self.walker.setGoal(Transformation([-1, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setGoal(Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]))
         self.walker.run()
 
     def test_turn_in_place(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
 
@@ -75,17 +77,17 @@ class Test(TestCase):
         self.walker.run()
 
     def test_small_movement_1(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([0.15, 0, 0])
         self.walker.setGoal(goal)
-        self.walker.soccerbot.robot_path.show()
+        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_2(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
@@ -95,7 +97,7 @@ class Test(TestCase):
         self.walker.run()
 
     def test_small_movement_3(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([-np.pi/2, 0, 0])
@@ -105,7 +107,7 @@ class Test(TestCase):
         self.walker.run()
 
     def test_do_nothing(self):
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([0, 0, 0])
@@ -116,7 +118,7 @@ class Test(TestCase):
     def test_imu_feedback(self):
         import pybullet as pb
 
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
@@ -153,7 +155,7 @@ class Test(TestCase):
         import pybullet as pb
         from soccerbot_controller import SoccerbotController
 
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
 
@@ -203,7 +205,7 @@ class Test(TestCase):
         import pybullet as pb
         fig, axs = plt.subplots(2)
 
-        self.walker.soccerbot.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
@@ -261,3 +263,36 @@ class Test(TestCase):
         axs[0].scatter(scatter_pts_x, scatter_pts_y, s=3)
         axs[1].scatter(scatter_pts_x_1, scatter_pts_y_1, s=3)
         plt.show()
+
+    def test_calculate_accuracy_matrix(self):
+
+        x_range = np.arange(-1, 1, 0.2)
+        y_range = np.arange(-1, 1, 0.2)
+        ang_range = np.arange(-np.pi, np.pi, np.pi/6)
+
+        x, y, ang = np.meshgrid(x_range, y_range, ang_range)
+
+        fake_localization_pose_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
+
+        for i in x_range:
+            for j in y_range:
+                for k in ang_range:
+                    b = String()
+                    b.data = ""
+                    self.resetPublisher.publish(b)
+
+                    self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+                    self.walker.ready()
+                    t = Transformation.get_transform_from_euler([k, 0, 0])
+                    t.set_position([i, j, 0])
+                    self.walker.setGoal(t)
+                    # self.walker.updateGoal()
+                    # self.walker.soccerbot.robot_path.show()
+                    self.walker.wait(100)
+                    self.walker.run(True)
+
+        pass
+
+    def amcl_pose_callback(self, amcl_pose):
+        self.amcl_pose = amcl_pose
+        pass
