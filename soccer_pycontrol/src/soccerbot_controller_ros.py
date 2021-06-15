@@ -87,6 +87,8 @@ class SoccerbotControllerRos(SoccerbotController):
         self.soccerbot.reset_head()
         self.soccerbot.reset_imus()
 
+        stable_count = 30
+
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
@@ -129,8 +131,17 @@ class SoccerbotControllerRos(SoccerbotController):
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
-                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.015:
-                        t = 0
+                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
+                        stable_count = stable_count - 1
+                        if stable_count == 0:
+                            t = 0
+                    else:
+                        stable_count = 30
+
+            # Post walk stabilization
+            if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
+                if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
+                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
             if stop_on_completed_trajectory:
                 if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():
