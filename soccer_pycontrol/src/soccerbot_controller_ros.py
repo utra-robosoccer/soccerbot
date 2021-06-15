@@ -97,7 +97,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 t = 0
-                self.wait(300)
+                self.wait(100)
 
 
             if self.terminate_walk:

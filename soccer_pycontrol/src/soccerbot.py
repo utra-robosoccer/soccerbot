@@ -13,7 +13,6 @@ if rospy.get_param('ENABLE_PYBULLET'):
     import pybullet as pb
 
 
-
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
     LEFT_ARM_2 = 1
@@ -70,7 +69,6 @@ class Soccerbot:
     arm_0_center = -1.0
     arm_1_center = np.pi * 0.75
 
-
     def get_angles(self):
         """
         Function for getting all the feet angles (for now?) #TODO
@@ -78,7 +76,6 @@ class Soccerbot:
         """
 
         return [a + b for a, b in zip(self.configuration, self.configuration_offset)]
-
 
     def get_link_transformation(self, link1, link2):
         """
@@ -136,11 +133,11 @@ class Soccerbot:
         home = expanduser("~")
         if rospy.get_param('ENABLE_PYBULLET'):
             self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
-                                useFixedBase=useFixedBase,
-                                flags=pb.URDF_USE_INERTIA_FROM_FILE,
-                                basePosition=[pose.get_position()[0], pose.get_position()[1],
-                                              Soccerbot.standing_hip_height],
-                                baseOrientation=pose.get_orientation())
+                                    useFixedBase=useFixedBase,
+                                    flags=pb.URDF_USE_INERTIA_FROM_FILE,
+                                    basePosition=[pose.get_position()[0], pose.get_position()[1],
+                                                  Soccerbot.standing_hip_height],
+                                    baseOrientation=pose.get_orientation())
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
@@ -182,9 +179,9 @@ class Soccerbot:
 
             pb.setJointMotorControlArray(bodyIndex=self.body,
                                          controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 20, 1)),
-                                     targetPositions=self.get_angles(),
-                                     forces=self.max_forces)
+                                         jointIndices=list(range(0, 20, 1)),
+                                         targetPositions=self.get_angles(),
+                                         forces=self.max_forces)
 
         self.current_step_time = 0
 
@@ -216,10 +213,10 @@ class Soccerbot:
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.setJointMotorControlArray(bodyIndex=self.body,
-                                     controlMode=pb.POSITION_CONTROL,
-                                     jointIndices=list(range(0, 20, 1)),
-                                     targetPositions=self.get_angles(),
-                                     forces=self.max_forces)
+                                         controlMode=pb.POSITION_CONTROL,
+                                         jointIndices=list(range(0, 20, 1)),
+                                         targetPositions=self.get_angles(),
+                                         forces=self.max_forces)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
@@ -477,6 +474,7 @@ class Soccerbot:
     pid_last_error_1 = 0
     last_F_1 = 0
     lastError1 = 0
+
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
             return
@@ -495,7 +493,7 @@ class Soccerbot:
 
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
-        if len(right_foot_action) == 2: # Right foot moving
+        if len(right_foot_action) == 2:  # Right foot moving
             if F > 0:
                 self.configuration_offset[Joints.LEFT_LEG_2] = 0
                 self.configuration_offset[Joints.LEFT_LEG_3] = 0
@@ -505,7 +503,7 @@ class Soccerbot:
                 self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
             pass
 
-        elif len(left_foot_action) == 2: # Left foot moving
+        elif len(left_foot_action) == 2:  # Left foot moving
             if F > 0:
                 self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
                 self.configuration_offset[Joints.LEFT_LEG_3] = 0
@@ -514,7 +512,6 @@ class Soccerbot:
                 self.configuration_offset[Joints.RIGHT_LEG_3] = 0
                 self.configuration_offset[Joints.RIGHT_LEG_4] = 0
             pass
-
 
         self.last_F_1 = F
         self.lastError1 = error
@@ -529,6 +526,7 @@ class Soccerbot:
     pid_last_error_2 = 0
     last_F_2 = 0
     lastError2 = 0
+
     def apply_imu_feedback_standing(self, pose: tr):
         if pose is None:
             return
@@ -563,11 +561,13 @@ class Soccerbot:
         self.lastError1 = 0.0
         self.lastError2 = 0.0
 
-    HEAD_YAW_FREQ = 0.002
+    HEAD_YAW_FREQ = 0.001
     HEAD_PITCH_FREQ = 0.00125
+
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[Joints.HEAD_2] = 0.4 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[
+            Joints.HEAD_2] = 0.4  # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 
