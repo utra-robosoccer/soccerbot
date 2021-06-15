@@ -62,10 +62,14 @@ class SoccerbotControllerRos(SoccerbotController):
     def ready(self):
         pass
 
+    def robot_pose_callback_nothing(self, pose: PoseWithCovarianceStamped):
+        pass
+
     def setPose(self, pose: Transformation):
         p = PoseWithCovarianceStamped()
         p.pose = self.transformation_to_pose(pose)
         self.robot_pose_callback(p)
+        self.robot_pose_callback = self.robot_pose_callback_nothing
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))
@@ -96,7 +100,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -3
+                t = -100
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -124,7 +128,10 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if t < 0:
                 if self.soccerbot.imu_ready:
-                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    print(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.01:
+                        t = 0
 
             if stop_on_completed_trajectory:
                 if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():

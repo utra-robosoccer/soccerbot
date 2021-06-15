@@ -1,6 +1,6 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" value="$(optenv COMPETITION true)" />
+    <arg name="competition" value="$(optenv COMPETITION false)" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
@@ -51,8 +51,8 @@
         <arg name="simulation" value="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch" >
-        <arg name="goalie" value="$(arg goalie)" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/modules/strategy.launch" >-->
+<!--        <arg name="goalie" value="$(arg goalie)" />-->
+<!--    </include>-->
 
 </launch>
