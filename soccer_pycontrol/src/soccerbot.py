@@ -440,22 +440,20 @@ class Soccerbot:
     Kp = 1.5
     Kd = 0.0
     Ki = 0.0002
-    DESIRED_PITCH1 = -0.05
+    DESIRED_PITCH_1 = -0.05
     integral1 = 0
     pid_last_error1 = 0
     last_F1 = 0
     lastError1 = 0
 
     def apply_imu_feedback(self, t: float, pose: tr):
-        return
         if pose is None:
             return
 
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
-        error = Soccerbot.DESIRED_PITCH1 - pitch
+        error = Soccerbot.DESIRED_PITCH_1 - pitch
         derivative = error - self.pid_last_error1
-        integral = 0
 
         F = (self.Kp * error) + (self.Ki * self.integral1) + (self.Kd * derivative)
         if F > 1.57:
@@ -465,25 +463,24 @@ class Soccerbot:
 
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
-        # if len(right_foot_action) == 2:  # Right foot moving
-        #     if F > 0:
-        #         self.configuration_offset[Joints.LEFT_LEG_2] = 0
-        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
-        #         self.configuration_offset[Joints.LEFT_LEG_4] = 0
-        #         self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio
-        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-        #         self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
-        #     pass
-        #
-        # elif len(left_foot_action) == 2:  # Left foot moving
-        #     if F > 0:
-        #         self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
-        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
-        #         self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio
-        #         self.configuration_offset[Joints.RIGHT_LEG_2] = 0
-        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-        #         self.configuration_offset[Joints.RIGHT_LEG_4] = 0
-        #     pass
+        if len(right_foot_action) == 2: # Right foot moving
+            if F > 0:
+                self.configuration_offset[Joints.LEFT_LEG_2] = 0
+                self.configuration_offset[Joints.LEFT_LEG_3] = 0
+                self.configuration_offset[Joints.LEFT_LEG_4] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio
+                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
+            pass
+        elif len(left_foot_action) == 2: # Left foot moving
+            if F > 0:
+                self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
+                self.configuration_offset[Joints.LEFT_LEG_3] = 0
+                self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio
+                self.configuration_offset[Joints.RIGHT_LEG_2] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+                self.configuration_offset[Joints.RIGHT_LEG_4] = 0
+            pass
 
         self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
@@ -493,12 +490,11 @@ class Soccerbot:
         self.integral1 = self.integral1 + error
         return F
 
-    Kp2 = 0.2
+    Kp2 = 0.17
     Kd2 = 0.0
-    Ki2 = 0.002
-    DESIRED_PITCH_2 = 0.0
+    Ki2 = 0.0005
+    DESIRED_PITCH_2 = -0.08
     integral2 = 0.0
-    pid_last_error2 = 0
     last_F2 = 0
     lastError2 = 0
 
@@ -509,7 +505,7 @@ class Soccerbot:
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
         error = Soccerbot.DESIRED_PITCH_2 - pitch
-        derivative = error - self.pid_last_error2
+        derivative = error - self.lastError2
 
         F = (self.Kp2 * error) + (self.Ki2 * self.integral2) + (self.Kd2 * derivative)
         if F > 1.57:
@@ -519,12 +515,11 @@ class Soccerbot:
 
         self.configuration_offset[Joints.LEFT_LEG_5] = F
         self.configuration_offset[Joints.RIGHT_LEG_5] = F
-
         self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-        return F
-        pass
+
+        return pitch
 
     def reset_imus(self):
         self.integral1 = 0
