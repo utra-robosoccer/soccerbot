@@ -62,8 +62,8 @@ class Soccerbot:
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
-    arm_0_center = -0.3
-    arm_1_center = np.pi * 1
+    arm_0_center = -0.45
+    arm_1_center = np.pi * 0.8
 
     def get_angles(self):
         """
@@ -437,12 +437,11 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    Kp = 1.5
+    Kp = 0.8
     Kd = 0.0
-    Ki = 0.0002
+    Ki = 0.0005
     DESIRED_PITCH_1 = -0.05
     integral1 = 0
-    pid_last_error1 = 0
     last_F1 = 0
     lastError1 = 0
 
@@ -453,7 +452,7 @@ class Soccerbot:
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
         error = Soccerbot.DESIRED_PITCH_1 - pitch
-        derivative = error - self.pid_last_error1
+        derivative = error - self.lastError1
 
         F = (self.Kp * error) + (self.Ki * self.integral1) + (self.Kd * derivative)
         if F > 1.57:
@@ -463,24 +462,24 @@ class Soccerbot:
 
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
-        if len(right_foot_action) == 2: # Right foot moving
-            if F > 0:
-                self.configuration_offset[Joints.LEFT_LEG_2] = 0
-                self.configuration_offset[Joints.LEFT_LEG_3] = 0
-                self.configuration_offset[Joints.LEFT_LEG_4] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio
-                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
-            pass
-        elif len(left_foot_action) == 2: # Left foot moving
-            if F > 0:
-                self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
-                self.configuration_offset[Joints.LEFT_LEG_3] = 0
-                self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio
-                self.configuration_offset[Joints.RIGHT_LEG_2] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_4] = 0
-            pass
+        # if len(right_foot_action) == 2: # Right foot moving
+        #     if F > 0:
+        #         self.configuration_offset[Joints.LEFT_LEG_2] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_4] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio * 10
+        #     pass
+        # elif len(left_foot_action) == 2: # Left foot moving
+        #     if F > 0:
+        #         self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.RIGHT_LEG_2] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_4] = 0
+        #     pass
 
         self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
@@ -493,7 +492,7 @@ class Soccerbot:
     Kp2 = 0.15
     Kd2 = 0.0
     Ki2 = 0.001
-    DESIRED_PITCH_2 = 0.0
+    DESIRED_PITCH_2 = -0.05
     integral2 = 0.0
     last_F2 = 0
     lastError2 = 0
