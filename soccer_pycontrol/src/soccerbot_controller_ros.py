@@ -62,10 +62,14 @@ class SoccerbotControllerRos(SoccerbotController):
     def ready(self):
         pass
 
+    def robot_pose_callback_nothing(self, pose: PoseWithCovarianceStamped):
+        pass
+
     def setPose(self, pose: Transformation):
         p = PoseWithCovarianceStamped()
         p.pose = self.transformation_to_pose(pose)
         self.robot_pose_callback(p)
+        self.robot_pose_callback = self.robot_pose_callback_nothing
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))
@@ -81,8 +85,9 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.soccerbot.ready()
         self.soccerbot.reset_head()
-        self.soccerbot.publishAngles()
         self.soccerbot.reset_imus()
+
+        stable_count = 30
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
@@ -96,7 +101,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -3
+                t = -100
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -124,6 +129,18 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if t < 0:
                 if self.soccerbot.imu_ready:
+                    pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
+                        stable_count = stable_count - 1
+                        if stable_count == 0:
+                            t = 0
+                    else:
+                        stable_count = 30
+
+            # Post walk stabilization
+            if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
+                if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
             if stop_on_completed_trajectory:

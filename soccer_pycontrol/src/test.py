@@ -73,7 +73,16 @@ class Test(TestCase):
 
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         self.walker.setGoal(goal)
-        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+
+    def test_small_movement_0(self):
+        self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        goal = Transformation.get_transform_from_euler([np.pi/5, 0, 0])
+        goal.set_position([0.05, 0.05, 0])
+        self.walker.setGoal(goal)
+        self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_1(self):
@@ -81,7 +90,7 @@ class Test(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
-        goal.set_position([0.15, 0, 0])
+        goal.set_position([0.15, 0.05, 0])
         self.walker.setGoal(goal)
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
@@ -101,7 +110,7 @@ class Test(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         goal = Transformation.get_transform_from_euler([-np.pi/2, 0, 0])
-        goal.set_position([-0.3, -0.3, 0])
+        goal.set_position([-0.2, -0.2, 0])
         self.walker.setGoal(goal)
         self.walker.soccerbot.robot_path.show()
         self.walker.run()
