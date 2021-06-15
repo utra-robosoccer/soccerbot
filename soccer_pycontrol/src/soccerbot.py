@@ -62,8 +62,8 @@ class Soccerbot:
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
-    arm_0_center = -1.0
-    arm_1_center = np.pi * 0.75
+    arm_0_center = -0.3
+    arm_1_center = np.pi * 1
 
     def get_angles(self):
         """
@@ -490,10 +490,10 @@ class Soccerbot:
         self.integral1 = self.integral1 + error
         return F
 
-    Kp2 = 0.17
+    Kp2 = 0.15
     Kd2 = 0.0
-    Ki2 = 0.0005
-    DESIRED_PITCH_2 = -0.08
+    Ki2 = 0.001
+    DESIRED_PITCH_2 = 0.0
     integral2 = 0.0
     last_F2 = 0
     lastError2 = 0
@@ -518,7 +518,7 @@ class Soccerbot:
         self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-
+        print(self.DESIRED_PITCH_2)
         return pitch
 
     def reset_imus(self):

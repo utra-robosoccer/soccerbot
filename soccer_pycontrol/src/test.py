@@ -14,7 +14,7 @@ import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
 
-RUN_IN_ROS = False
+RUN_IN_ROS = True
 if RUN_IN_ROS:
     import rospy
     import soccerbot_controller_ros

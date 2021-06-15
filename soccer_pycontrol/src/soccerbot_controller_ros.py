@@ -85,7 +85,6 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.soccerbot.ready()
         self.soccerbot.reset_head()
-        self.soccerbot.publishAngles()
         self.soccerbot.reset_imus()
 
         while not rospy.is_shutdown():
@@ -129,8 +128,8 @@ class SoccerbotControllerRos(SoccerbotController):
             if t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    print(pitch - self.soccerbot.DESIRED_PITCH_2)
-                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.01:
+                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.015:
                         t = 0
 
             if stop_on_completed_trajectory:
