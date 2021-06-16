@@ -64,7 +64,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         for robot in self.robots:
             if robot.robot_name == self.robot_name:
                 self.this_robot = robot
-        assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
+        # assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
 
         self.ball = Ball(position=np.array([0, 0]))
 
@@ -92,6 +92,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.team2_strategy = DummyStrategy()
         # Setup the strategy
         self.strategy = DummyStrategy()
+        self.opponent = []
         self.listener = tf.TransformListener()
 
     def gamestate_callback(self, gameState):
@@ -169,6 +170,11 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         # PLAYING
         if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+
+            if self.previous_gameState.gameState != GameState.GAMESTATE_READY:
+                self.resume_all_robot()
+                self.previous_gameState.gameState = GameState.GAMESTATE_READY
+
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
                     self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 try:
