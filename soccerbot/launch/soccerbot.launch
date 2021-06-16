@@ -4,7 +4,7 @@
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv ANGLE 0)" />
-    <arg name="goalie" default="$(optenv GOALIE false)" />
+    <arg name="goalie" default="$(optenv GOALIE true)" />
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
@@ -53,10 +53,12 @@
         </include>
 
         <rosparam command="load" file="$(find soccerbot)/config/game.yaml" />
-    <!--    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>-->
-        <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen"/>
-        <node pkg="soccer_strategy" type="receiver.py" name="game_controller" output="screen" if="$(arg competition)"/>
+        <include file="$(find soccerbot)/launch/modules/strategy.launch" >
+            <arg name="goalie" value="$(arg goalie)" />
+        </include>
     </group>
+
+
 </launch>
 
 <!--        sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 &#45;&#45;net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1-->

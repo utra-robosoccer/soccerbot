@@ -16,9 +16,9 @@
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot1" />
-        <arg name="x_pos" value="-1.5" />
-        <arg name="y_pos" value="0" />
-        <arg name="a_pos" value="0" />
+        <arg name="x_pos" value="3.5" />
+        <arg name="y_pos" value="-3.06" />
+        <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="true" />
         <arg name="competition" value="$(arg competition)" />
     </include>
@@ -27,9 +27,9 @@
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot2" />
-        <arg name="x_pos" value="-2.00" />
-        <arg name="y_pos" value="2.00" />
-        <arg name="a_pos" value="0" />
+        <arg name="x_pos" value="3.0" />
+        <arg name="y_pos" value="-3.06" />
+        <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="false" />
         <arg name="competition" value="$(arg competition)" />
     </include>
@@ -38,19 +38,20 @@
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot3" />
-        <arg name="x_pos" value="-2.00" />
-        <arg name="y_pos" value="-2.00" />
-        <arg name="a_pos" value="0" />
+        <arg name="x_pos" value="3.5" />
+        <arg name="y_pos" value="3.06" />
+        <arg name="a_pos" value="-1.57" />
         <arg name="goalie" value="false" />
         <arg name="competition" value="$(arg competition)" />
     </include>
+
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot4" />
-        <arg name="x_pos" value="-3.00" />
-        <arg name="y_pos" value="0.00" />
-        <arg name="a_pos" value="0" />
+        <arg name="x_pos" value="3.0" />
+        <arg name="y_pos" value="3.06" />
+        <arg name="a_pos" value="-1.57" />
         <arg name="goalie" value="false" />
         <arg name="competition" value="$(arg competition)" />
     </include>

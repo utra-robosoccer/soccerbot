@@ -1,3 +1,0 @@
-<launch>
-    <node pkg="soccer_strategy" type="receiver.py" name="receiver" output="screen"/>
-</launch>

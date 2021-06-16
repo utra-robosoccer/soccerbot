@@ -66,8 +66,8 @@ class Soccerbot:
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
-    arm_0_center = -1.0
-    arm_1_center = np.pi * 0.75
+    arm_0_center = -0.45
+    arm_1_center = np.pi * 0.8
 
     def get_angles(self):
         """
@@ -289,7 +289,7 @@ class Soccerbot:
             last_hip_height = Soccerbot.standing_hip_height
 
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
-        self.pose.set_orientation([0, 0, 0, 1])
+        self.pose.set_orientation(pose.get_orientation())
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
@@ -422,7 +422,7 @@ class Soccerbot:
             print(f'ang_vel = {ang_vel}')
         return np.concatenate((lin_acc, ang_vel))
 
-    def get_imu(self, verbose=False):
+    def get_imu(self):
         """
         Simulates the IMU at the IMU link location.
         TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
@@ -466,13 +466,12 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    Kp = 1.5
+    Kp = 0.8
     Kd = 0.0
-    Ki = 0.0002
+    Ki = 0.0005
     DESIRED_PITCH_1 = -0.05
     integral1 = 0
-    pid_last_error_1 = 0
-    last_F_1 = 0
+    last_F1 = 0
     lastError1 = 0
 
     def apply_imu_feedback(self, t: float, pose: tr):
@@ -482,8 +481,7 @@ class Soccerbot:
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
         error = Soccerbot.DESIRED_PITCH_1 - pitch
-        derivative = error - self.pid_last_error_1
-        integral = 0
+        derivative = error - self.lastError1
 
         F = (self.Kp * error) + (self.Ki * self.integral1) + (self.Kd * derivative)
         if F > 1.57:
@@ -493,38 +491,39 @@ class Soccerbot:
 
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.robot_path.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.robot_path.whatIsTheFootDoing(step_num)
-        if len(right_foot_action) == 2:  # Right foot moving
-            if F > 0:
-                self.configuration_offset[Joints.LEFT_LEG_2] = 0
-                self.configuration_offset[Joints.LEFT_LEG_3] = 0
-                self.configuration_offset[Joints.LEFT_LEG_4] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio
-                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio
-            pass
+        # if len(right_foot_action) == 2: # Right foot moving
+        #     if F > 0:
+        #         self.configuration_offset[Joints.LEFT_LEG_2] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_4] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_2] = F * right_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_4] = - F * right_foot_step_ratio * 10
+        #     pass
+        # elif len(left_foot_action) == 2: # Left foot moving
+        #     if F > 0:
+        #         self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.LEFT_LEG_3] = 0
+        #         self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio * 10
+        #         self.configuration_offset[Joints.RIGHT_LEG_2] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_3] = 0
+        #         self.configuration_offset[Joints.RIGHT_LEG_4] = 0
+        #     pass
 
-        elif len(left_foot_action) == 2:  # Left foot moving
-            if F > 0:
-                self.configuration_offset[Joints.LEFT_LEG_2] = F * left_foot_step_ratio
-                self.configuration_offset[Joints.LEFT_LEG_3] = 0
-                self.configuration_offset[Joints.LEFT_LEG_4] = - F * left_foot_step_ratio
-                self.configuration_offset[Joints.RIGHT_LEG_2] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_3] = 0
-                self.configuration_offset[Joints.RIGHT_LEG_4] = 0
-            pass
+        self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
+        self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
 
-        self.last_F_1 = F
+        self.last_F1 = F
         self.lastError1 = error
         self.integral1 = self.integral1 + error
         return F
 
-    Kp2 = 0.2
+    Kp2 = 0.15
     Kd2 = 0.0
-    Ki2 = 0.002
-    DESIRED_PITCH_2 = 0.0
+    Ki2 = 0.001
+    DESIRED_PITCH_2 = -0.05
     integral2 = 0.0
-    pid_last_error_2 = 0
-    last_F_2 = 0
+    last_F2 = 0
     lastError2 = 0
 
     def apply_imu_feedback_standing(self, pose: tr):
@@ -534,7 +533,7 @@ class Soccerbot:
         [roll, pitch, yaw] = pose.get_orientation_euler()
 
         error = Soccerbot.DESIRED_PITCH_2 - pitch
-        derivative = error - self.pid_last_error_2
+        derivative = error - self.lastError2
 
         F = (self.Kp2 * error) + (self.Ki2 * self.integral2) + (self.Kd2 * derivative)
         if F > 1.57:
@@ -544,30 +543,29 @@ class Soccerbot:
 
         self.configuration_offset[Joints.LEFT_LEG_5] = F
         self.configuration_offset[Joints.RIGHT_LEG_5] = F
-
-        self.last_F_2 = F
+        self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-        return F
-        pass
+        print(self.DESIRED_PITCH_2)
+        return pitch
 
-    def reset_pid_controllers(self):
-        self.integral1 = 0.0
-        self.integral2 = 0.0
-        self.pid_last_error_1 = 0.0
-        self.pid_last_error_2 = 0.0
-        self.last_F_1 = 0.0
-        self.last_F_2 = 0.0
-        self.lastError1 = 0.0
-        self.lastError2 = 0.0
+    def reset_imus(self):
+        self.integral1 = 0
+        self.pid_last_error1 = 0
+        self.last_F1 = 0
+        self.lastError1 = 0
+        self.integral2 = 0
+        self.pid_last_error2 = 0
+        self.last_F2 = 0
+        self.lastError2 = 0
 
-    HEAD_YAW_FREQ = 0.001
+    HEAD_YAW_FREQ = 0.002
     HEAD_PITCH_FREQ = 0.00125
 
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[
-            Joints.HEAD_2] = 0.4  # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[Joints.HEAD_2] = math.cos(
+            self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 

@@ -2,6 +2,7 @@ version: "3.3"
 
 x-soccerbot: &soccerbot
   image: utrarobosoccer/soccerbot
+  privileged: true
   build:
     context: .
     target: builder
@@ -9,22 +10,50 @@ x-soccerbot: &soccerbot
   cap_add:
     - SYS_PTRACE
   pid: "host"
-#  deploy:
-#    resources:
-#      limits:
-#        cpus: '4'
-#        memory: 16384MB
-#  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch  || sleep infinity"
-  environment:
-    ROBOCUP_TEAM_PLAYER1_IP: localhost
-    ROBOCUP_TEAM_PLAYER2_IP: localhost
-    ROBOCUP_TEAM_PLAYER3_IP: localhost
-    ROBOCUP_TEAM_PLAYER4_IP: localhost
-    PYTHONUNBUFFERED: 1
   volumes:
     - .:/root/catkin_ws/src/soccerbot
 
 services:
+
+  # Run xhost +local:docker
+  # curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
+  # sudo apt-key add -
+  # distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+  # curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
+  # sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+  # sudo apt-get update
+  # sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit mesa-utils
+  # sudo systemctl restart docker
+#  simulator:
+#    image: utrarobosoccer/webots
+#    privileged: true
+#    build:
+#      context: external
+#    network_mode: host
+#    cap_add:
+#      - SYS_PTRACE
+#    pid: "host"
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#          - driver: nvidia
+#            count: all
+#            capabilities: [gpu, compute, utility, graphics]
+#    command: bash -c "cd webots && WEBOTS_HOME=/root/webots ./webots --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
+#    volumes:
+#      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+#      - /dev/dri:/dev/dri:rw
+#      - /dev/snd:/dev/snd:rw
+#      - ./external/webots/projects/samples/contests/robocup/controllers/referee/:/root/webots/projects/samples/contests/robocup/controllers/referee/:rw
+#      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
+#    environment:
+#      DISPLAY: unix$DISPLAY
+#      WEBOTS_HOME: /root/webots
+#      JAVA_HOME: /usr
+#      GAME_CONTROLLER_HOME: /root/GameController
+#      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+
   friendly1: # Goalie
     <<: *soccerbot
     environment:
@@ -47,39 +76,51 @@ services:
 #  friendly2: # Left midfield
 #    <<: *soccerbot
 #    environment:
-#      X_POS: -1.5
-#      Y_POS: -1.5
+#      X_POS: -3.0
+#      Y_POS: -3.1
 #      ANGLE: 1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot2"
 #      ROBOCUP_ROBOT_ID: 2
+#      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10002
-#      ROBOT_NAME: robot2
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10002"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 
 #  friendly3: # Right midfield
 #    <<: *soccerbot
 #    environment:
-#      X_POS: 1.5
-#      Y_POS: -1.5
-#      ANGLE: 1.57
+#      X_POS: -3.5
+#      Y_POS: 3.1
+#      ANGLE: -1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot3"
 #      ROBOCUP_ROBOT_ID: 3
+#      ROBOCUP_TEAM_ID: 8
 #      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10003
-#      ROBOT_NAME: robot3
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10003"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
-
+#
 #  friendly4: # Striker
 #    <<: *soccerbot
 #    environment:
-#      X_POS: 0.0
-#      Y_POS: -0.8
-#      ANGLE: 1.57
+#      X_POS: -3.0
+#      Y_POS: 3.1
+#      ANGLE: -1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot4"
 #      ROBOCUP_ROBOT_ID: 4
+#      ROBOCUP_TEAM_ID: 8
 #      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10004
-#      ROBOT_NAME: robot4
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.1.1:10004"
+#      ROBOCUP_GAMECONTROLLER_IP: "127.0.1.1"
+#      ROBOCUP_MIRROR_SERVER_IP: "127.0.1.1:3737"
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 
@@ -90,6 +131,7 @@ services:
 #      Y_POS: 3.5
 #      ANGLE: -1.57
 #      GOALIE: "true"
+#      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 1
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
@@ -103,6 +145,7 @@ services:
 #      X_POS: -1.5
 #      Y_POS: 1.5
 #      ANGLE: -1.57
+#      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 2
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
@@ -116,6 +159,7 @@ services:
 #      X_POS: 1.5
 #      Y_POS: 1.5
 #      ANGLE: -1.57
+#      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 3
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
@@ -129,6 +173,7 @@ services:
 #      X_POS: 0.0
 #      Y_POS: 0.8
 #      ANGLE: -1.57
+#      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 4
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
