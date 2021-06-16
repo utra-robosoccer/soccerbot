@@ -559,7 +559,7 @@ class Soccerbot:
         self.last_F2 = 0
         self.lastError2 = 0
 
-    HEAD_YAW_FREQ = 0.002
+    HEAD_YAW_FREQ = 0.0015
     HEAD_PITCH_FREQ = 0.00125
 
     def apply_head_rotation(self):

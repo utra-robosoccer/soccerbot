@@ -6,7 +6,7 @@ update_min_d: 0.2
 #gui_publish_rate: 1
 transform_tolerance: 5
 laser_model_type: "likelihood_field_prob"
-laser_max_beams: 100
+laser_max_beams: 30
 
 odom_model_type: "omni-corrected"
 
