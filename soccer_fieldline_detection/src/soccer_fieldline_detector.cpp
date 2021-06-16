@@ -178,74 +178,75 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
             image_publisher.publish(message);
 
+
+            std::vector<Point3> points3d;
+            for (const auto &p : pts) {
+                Point3 p2 = camera->FindFloorCoordinate(p.x, p.y);
+                points3d.push_back(p2);
+            }
+
+            // Publish fieldlines in a LaserScan data format
+            sensor_msgs::PointCloud2 point_cloud_msg;
+            //Setting up PointCloud2 msg
+            point_cloud_msg.header.stamp = msg->header.stamp;
+            point_cloud_msg.header.frame_id = robotName + "/base_camera";
+            point_cloud_msg.height = 1;
+            point_cloud_msg.width = points3d.size();
+            point_cloud_msg.is_bigendian = false;
+            point_cloud_msg.is_dense = false;
+            point_cloud_msg.point_step = 12;
+            point_cloud_msg.row_step = 12 * points3d.size();
+
+            //Adding points to the PointCloud2 msg
+            sensor_msgs::PointCloud2Modifier modifier(point_cloud_msg);
+            modifier.setPointCloud2FieldsByString(1, "xyz");
+            modifier.resize(points3d.size());
+
+            sensor_msgs::PointCloud2Iterator<float> iter_x(point_cloud_msg, "x");
+            sensor_msgs::PointCloud2Iterator<float> iter_y(point_cloud_msg, "y");
+            sensor_msgs::PointCloud2Iterator<float> iter_z(point_cloud_msg, "z");
+
+            for (const auto &p : points3d) {
+                *iter_x = p.x;
+                *iter_y = p.y;
+                *iter_z = p.z;
+                ++iter_x;
+                ++iter_y;
+                ++iter_z;
+            }
+            if (point_cloud_publisher.getNumSubscribers() > 0) {
+                point_cloud_publisher.publish(point_cloud_msg);
+
+            }
+            pts.clear();
+            points3d.clear();
+
+            geometry_msgs::TransformStamped camera_footprint = camera_pose;
+            camera_footprint.header.frame_id = robotName + "/base_footprint";
+            camera_footprint.child_frame_id = robotName + "/base_camera";
+            camera_footprint.header.stamp = msg->header.stamp;
+            camera_footprint.header.seq = msg->header.seq;
+
+            tf2::Quaternion q(camera_footprint.transform.rotation.x,
+                              camera_footprint.transform.rotation.y,
+                              camera_footprint.transform.rotation.z,
+                              camera_footprint.transform.rotation.w);
+            tf2::Matrix3x3 m(q);
+            double r, p, y;
+            m.getRPY(r, p, y);
+            q.setRPY(0, 0, y);
+            q.normalize();
+            camera_footprint.transform.rotation.x = q[0];
+            camera_footprint.transform.rotation.y = q[1];
+            camera_footprint.transform.rotation.z = q[2];
+            camera_footprint.transform.rotation.w = q[3];
+            camera_footprint.transform.translation.z = 0;
+
+            br.sendTransform(camera_footprint);
         } catch (const cv_bridge::Exception &e) {
             ROS_ERROR_STREAM("CV Exception" << e.what());
         }
 
-        std::vector<Point3> points3d;
-        for (const auto &p : pts) {
-            Point3 p2 = camera->FindFloorCoordinate(p.x, p.y);
-            points3d.push_back(p2);
-        }
-
-        // Publish fieldlines in a LaserScan data format
-        sensor_msgs::PointCloud2 point_cloud_msg;
-        //Setting up PointCloud2 msg
-        point_cloud_msg.header.stamp = msg->header.stamp;
-        point_cloud_msg.header.frame_id = robotName + "/base_camera";
-        point_cloud_msg.height = 1;
-        point_cloud_msg.width = points3d.size();
-        point_cloud_msg.is_bigendian = false;
-        point_cloud_msg.is_dense = false;
-        point_cloud_msg.point_step = 12;
-        point_cloud_msg.row_step = 12 * points3d.size();
-
-        //Adding points to the PointCloud2 msg
-        sensor_msgs::PointCloud2Modifier modifier(point_cloud_msg);
-        modifier.setPointCloud2FieldsByString(1, "xyz");
-        modifier.resize(points3d.size());
-
-        sensor_msgs::PointCloud2Iterator<float> iter_x(point_cloud_msg, "x");
-        sensor_msgs::PointCloud2Iterator<float> iter_y(point_cloud_msg, "y");
-        sensor_msgs::PointCloud2Iterator<float> iter_z(point_cloud_msg, "z");
-
-        for (const auto &p : points3d) {
-            *iter_x = p.x;
-            *iter_y = p.y;
-            *iter_z = p.z;
-            ++iter_x;
-            ++iter_y;
-            ++iter_z;
-        }
-        if (point_cloud_publisher.getNumSubscribers() > 0) {
-            point_cloud_publisher.publish(point_cloud_msg);
-
-        }
-        pts.clear();
-        points3d.clear();
-
-        geometry_msgs::TransformStamped camera_footprint = camera_pose;
-        camera_footprint.header.frame_id = robotName + "/base_footprint";
-        camera_footprint.child_frame_id = robotName + "/base_camera";
-        camera_footprint.header.stamp = msg->header.stamp;
-        camera_footprint.header.seq = msg->header.seq;
-
-        tf2::Quaternion q(camera_footprint.transform.rotation.x,
-                          camera_footprint.transform.rotation.y,
-                          camera_footprint.transform.rotation.z,
-                          camera_footprint.transform.rotation.w);
-        tf2::Matrix3x3 m(q);
-        double r, p, y;
-        m.getRPY(r, p, y);
-        q.setRPY(0, 0, y);
-        q.normalize();
-        camera_footprint.transform.rotation.x = q[0];
-        camera_footprint.transform.rotation.y = q[1];
-        camera_footprint.transform.rotation.z = q[2];
-        camera_footprint.transform.rotation.w = q[3];
-        camera_footprint.transform.translation.z = 0;
-
-        br.sendTransform(camera_footprint);
     }
 }
 
