@@ -564,8 +564,7 @@ class Soccerbot:
 
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[Joints.HEAD_2] = math.cos(
-            self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[Joints.HEAD_2] = 0.4 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 

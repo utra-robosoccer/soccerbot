@@ -24,8 +24,8 @@ logger.addHandler(console_handler)
 robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 5
-    blue_initial_position = [[0, 3, math.pi], [1.5, 1.5, math.pi], [-1.5, 1.5, math.pi], [0, 1, math.pi]]
-    red_initial_position = [[0, -3, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
+    blue_initial_position = [[0, -3.6, 0], [1.5, 1.5, 0], [-1.5, 1.5, 0], [0, 1, 0]]
+    red_initial_position = [[0, 3.6, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
 
     def __init__(self):
         print("initializing strategy")
@@ -90,6 +90,9 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.rostime_previous = 0
         self.team1_strategy = DummyStrategy()
         self.team2_strategy = DummyStrategy()
+        # Setup the strategy
+        self.strategy = DummyStrategy()
+        self.listener = tf.TransformListener()
 
     def gamestate_callback(self, gameState):
         self.previous_gameState = self.gameState
@@ -136,6 +139,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
                 self.stop_all_robot()
+
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
 
