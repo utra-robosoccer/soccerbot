@@ -1,7 +1,9 @@
+import numpy as np
+
 from soccerbot_controller import *
 import rospy
 from soccerbot_ros import SoccerbotRos
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Pose
 from std_msgs.msg import Empty, Bool
 
 class SoccerbotControllerRos(SoccerbotController):
@@ -23,31 +25,26 @@ class SoccerbotControllerRos(SoccerbotController):
         self.robot_position_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
         self.terminate_walk_subscriber = rospy.Subscriber("terminate_walking", Empty, self.terminate_walk_callback)
         self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty, queue_size=1)
-        self.finish_trajectory = rospy.Subscriber('trajectory_complete', Bool, self.trajectory_callback, queue_size=1)
-        self.fixed_trajectory_running = False
-        self.robot_pose = PoseWithCovarianceStamped()
         self.goal = PoseStamped()
+        self.robot_pose = PoseWithCovarianceStamped()
         self.new_goal = self.goal
         self.terminate_walk = False
 
-    def trajectory_callback(self, msg):
-        self.fixed_trajectory_running = not msg.data
-        if not msg.data:
-            self.soccerbot.reset_pid_controllers()
-        pass
-
-    def robot_pose_callback(self, pose):
+    def robot_pose_callback(self, pose: PoseWithCovarianceStamped):
         self.robot_pose = pose
         pass
 
-    def goal_callback(self, pose):
+    def goal_callback(self, pose: PoseStamped):
         self.new_goal = pose
         pass
 
     def terminate_walk_callback(self, val):
+        rospy.logwarn("Terminating Walk Requested")
+        self.soccerbot.ready()
+        self.soccerbot.publishAngles()
         self.terminate_walk = True
 
-    def pose_to_transformation(self, pose):
+    def pose_to_transformation(self, pose: Pose) -> Transformation:
         t = Transformation([pose.position.x, pose.position.y, pose.position.z],
                            [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
         return t
@@ -67,46 +64,51 @@ class SoccerbotControllerRos(SoccerbotController):
     def ready(self):
         pass
 
-    def setGoal(self, goal):
+    def robot_pose_callback_nothing(self, pose: PoseWithCovarianceStamped):
+        pass
+
+    def setPose(self, pose: Transformation):
+        p = PoseWithCovarianceStamped()
+        p.pose = self.transformation_to_pose(pose)
+        self.robot_pose_callback(p)
+        self.robot_pose_callback = self.robot_pose_callback_nothing
+
+    def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))
 
-    def wait(self, steps):
+    def wait(self, steps: int):
         for i in range(steps):
             rospy.sleep(SoccerbotController.PYBULLET_STEP)
             if rospy.get_param('ENABLE_PYBULLET'):
                 pb.stepSimulation()
 
-    def run(self):
+    def run(self, stop_on_completed_trajectory=False):
         t = 0
         r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
 
         self.soccerbot.ready()
         self.soccerbot.reset_head()
-        self.soccerbot.publishAngles()
+        self.soccerbot.reset_imus()
+
+        stable_count = 30
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
-
-                print("Recieved New Goal")
-                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
-                self.goal = self.new_goal
+                rospy.loginfo("Recieved New Goal")
                 self.soccerbot.ready() # TODO Cancel walking
                 self.soccerbot.reset_head()
+                self.soccerbot.reset_imus()
 
-                # Reset robot position and goal
+                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
+                self.goal = self.new_goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
-                t = 0
-                self.wait(100)
-
+                self.terminate_walk = False
+                t = -100
 
             if self.terminate_walk:
-                if self.soccerbot.robot_path != None:
-                    self.soccerbot.ready()
-                    self.soccerbot.publishAngles()
-                    print("Terminating Walk")
+                if self.soccerbot.robot_path is not None:
                     t = self.soccerbot.robot_path.duration() + 1
-                self.terminate_walk = False
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=True)
@@ -123,20 +125,41 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.publishOdometry()
 
             if self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() < t + SoccerbotController.PYBULLET_STEP:
-                print("Completed Walk")
+                rospy.loginfo("Completed Walk")
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
-            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration() or t < 0:
+            if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
                 self.soccerbot.apply_head_rotation()
-                if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
+
+            if t < 0:
+                if self.soccerbot.imu_ready:
+                    pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
+                        stable_count = stable_count - 1
+                        if stable_count == 0:
+                            t = 0
+                    else:
+                        stable_count = 30
+
+            # Post walk stabilization
+            if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
+                if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
+            if stop_on_completed_trajectory:
+                if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():
+                    break
 
-            if not self.fixed_trajectory_running:
+            if not self.terminate_walk:
                 self.soccerbot.publishAngles()
+                if rospy.get_param('ENABLE_PYBULLET'):
+                    pb.stepSimulation()
 
-            if rospy.get_param('ENABLE_PYBULLET'):
-                pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP
             r.sleep()
+
+
+    def correct_goal_pose(self):
+        pass
