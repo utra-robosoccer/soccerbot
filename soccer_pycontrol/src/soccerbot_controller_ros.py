@@ -130,7 +130,7 @@ class SoccerbotControllerRos(SoccerbotController):
             if t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    #rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
                     if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:

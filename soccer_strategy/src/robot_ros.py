@@ -40,6 +40,7 @@ class RobotRos(Robot):
 
         # terminate all action
         self.stop_requested = False
+        self.designated_kicker = False
 
     def robot_pose_callback(self, data):
         quaternion = (
