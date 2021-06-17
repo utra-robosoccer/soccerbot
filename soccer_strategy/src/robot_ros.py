@@ -50,6 +50,7 @@ class RobotRos(Robot):
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi / 2])
+        #print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
 
@@ -64,7 +65,6 @@ class RobotRos(Robot):
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
-        print(self.status)
         assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status)
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
@@ -141,7 +141,7 @@ class RobotRos(Robot):
         elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             rospy.loginfo_throttle(20, self.robot_name + " trajectory in progress")
 
-        elif self.status == Robot.Status.STOPPED:
+        elif self.status == Robot.Status.STOPPED or self.status == Robot.Status.READY:
             pass
 
         else:
