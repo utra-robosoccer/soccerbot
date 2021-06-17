@@ -30,7 +30,7 @@ class SoccerFieldlineDetector {
     int minLineLength = 50;
     int maxLineGap = 50;
 
-    std::string name;
+    std::string robotName;
 
     // Camera Pose subscriber
     tf2_ros::Buffer tfBuffer;

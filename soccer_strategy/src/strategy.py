@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from robot import Robot
+from robot_ros import RobotRos
 
 class Strategy:
     def __init__(self):
@@ -47,8 +48,6 @@ class DummyStrategy(Strategy):
         if current_closest == None:
             return
 
-        a = current_closest.get_position()
-        b = ball.get_position()
         if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
             current_closest.set_navigation_position(current_closest.get_position())
@@ -113,3 +112,73 @@ class PassStrategy(DummyStrategy):
             current_closest.status = Robot.Status.WALKING
             current_closest.set_navigation_position(np.append(ball.get_position(), 0))
 
+class FreekickStrategy(Strategy):
+
+    # preparation if we are the kicking team
+    def update_kicking_strategy(self, friendly, ball):
+        non_kicker = []
+        for robot in friendly:
+            if robot.designated_kicker:
+                kicker = self.who_has_the_ball(friendly, ball)
+            else:
+                non_kicker.append(robot)
+
+        if kicker == None:
+            return
+
+        if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
+            # Stop moving
+            kicker.set_navigation_position(kicker.get_position())
+            return True
+        else:
+            kicker.status = Robot.Status.WALKING
+            kicker.set_navigation_position(np.append(ball.get_position(), 0))
+            return False
+
+        #todo impliment strategy for non kicking robot
+
+    # kicker actually kick the ball
+    def execute_kicking(self, friendly, ball):
+        for robot in friendly:
+            if robot.designated_kicker:
+                kicker = self.who_has_the_ball(friendly, ball)
+
+        if kicker == None:
+            return
+
+        if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
+            # Stop moving
+            kicker.set_navigation_position(kicker.get_position())
+            kicker.status = Robot.Status.KICKING
+        else:
+            kicker.status = Robot.Status.WALKING
+            kicker.set_navigation_position(np.append(ball.get_position(), 0))
+
+    # preparation if we are not the kicking team
+    def update_non_kicking_strategy(self, friendly, ball):
+        for robot in friendly:
+            if robot.team == Robot.Team.FRIENDLY:
+                own_goal = np.array([0, -4.5])
+            else:
+                own_goal = np.array([0, 4.5])
+
+            # Kick the ball towards the goal
+            delta = own_goal - ball.get_position()
+            unit = delta / np.linalg.norm(delta)
+            angle = np.arctan(delta[0], delta[1]) + math.pi/2 #todo verify this angle
+
+            robot.status = Robot.Status.WALKING
+            if robot.role == Robot.Role.STRIKER:
+                nav_pose = ball.get_position() + unit*0.8
+                robot.set_navigation_position(np.append(nav_pose, angle))
+            if robot.role == Robot.Role.LEFT_MIDFIELD:
+                nav_pose = ball.get_position() + unit*0.8 + np.array([0.5, 0])
+                robot.set_navigation_position(np.append(nav_pose, angle))
+            if robot.role == Robot.Role.RIGHT_MIDFIELD:
+                nav_pose = ball.get_position() + unit * 0.8 + np.array([-0.5, 0])
+                robot.set_navigation_position(np.append(nav_pose, angle))
+            if robot.role == Robot.Role.STRIKER:
+                nav_pose = own_goal
+                robot.set_navigation_position(np.append(nav_pose, angle))
+
+        # todo make is so that all robot stay within the field boundary
