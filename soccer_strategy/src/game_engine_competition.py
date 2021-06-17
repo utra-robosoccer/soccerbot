@@ -129,6 +129,19 @@ class GameEngineCompetition(game_engine.GameEngine):
     def run_normal(self):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
+        if self.gameState.gameState != self.previous_gameState.gameState:
+            if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
+                new_state = "GAMESTATE_INITIAL"
+            if self.gameState.gameState == GameState.GAMESTATE_READY:
+                new_state = "GAMESTATE_READY"
+            if self.gameState.gameState == GameState.GAMESTATE_SET:
+                new_state = "GAMESTATE_SET"
+            if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+                new_state = "GAMESTATE_PLAYING"
+            if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
+                new_state = "GAMESTATE_FINISHED"
+            print(" Gamestate transition to "+ new_state)
+
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
