@@ -124,7 +124,12 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.run_normal()
             if self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
                 self.run_freekick()
-
+            if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                if self.gameState.hasKickOff:
+                    print("has kick off, run normal game logic")
+                    self.run_normal()
+                else:
+                    print("does not have kickoff, do nothing")
 
     def run_normal(self):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
