@@ -51,7 +51,7 @@ class RobotRos(Robot):
         )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi / 2])
-        print(self.position)
+        #print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
 
@@ -74,7 +74,7 @@ class RobotRos(Robot):
                 self.status = Robot.Status.READY
 
     def set_navigation_position(self, position):
-        assert (self.status == Robot.Status.WALKING)
+        #assert (self.status == Robot.Status.WALKING)
         super(RobotRos, self).set_navigation_position(position)
         print("Sending Robot " + self.robot_name + " to position" + str(position))
         p = PoseStamped()
