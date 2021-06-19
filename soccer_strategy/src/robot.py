@@ -1,6 +1,9 @@
 import copy
 import enum
+
 import numpy as np
+
+np.random.seed(2)
 
 
 class Robot:

@@ -2,11 +2,15 @@ from abc import ABC
 from enum import IntEnum
 import itertools
 import math
+
+
 import numpy as np
 from shapely.geometry import LineString, Point, Polygon
 
 from ball import Ball
 from robot import Robot
+
+np.random.seed(2)
 
 
 class Strategy:
@@ -240,13 +244,13 @@ def tangent_lines_to_circle_through_pt(c, r, pt):
     # Compute x values corresponding to each k
     a_x1 = 1 + k1**2
     b_x1 = 2 * (x_c + k1 * y_c)
-    a_x2 = 1 + k2 ** 2
+    a_x2 = 1 + k2**2
     b_x2 = 2 * (x_c + k2 * y_c)
     c_x = x_c**2 + y_c**2 - r**2
-    disc_x1 = b_x1**2 - 4 * a_x1 * c_k
-    disc_x2 = b_x2**2 - 4 * a_x2 * c_k
-    x1 = (-b_x1 - np.sqrt(disc_x1)) / (2 * a_x1)
-    x2 = (-b_x2 - np.sqrt(disc_x2)) / (2 * a_x2)
+    disc_x1 = b_x1**2 - 4 * a_x1 * c_x
+    disc_x2 = b_x2**2 - 4 * a_x2 * c_x
+    x1 = (-b_x1 - np.sqrt(max(disc_x1, 0))) / (2 * a_x1)
+    x2 = (-b_x2 - np.sqrt(max(disc_x2, 0))) / (2 * a_x2)
 
     # Compute y values corresponding to each x value
     y1 = k1 * x1
@@ -296,13 +300,16 @@ def grad_rep(beta, r_rep, d_rep, x2, x1):
 
 class PlayerStrategy(ABC, Strategy):
 
-    def __init__(self, player, ball):
+    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
         super().__init__()
         self._player = player
         self._player_pos = player.get_position()[0:2]
         self._team = self._player.team
         self._ball = ball
         self._ball_pos = ball.get_position()
+        self._alpha = alpha
+        self._beta = beta
+        self._eps = eps
         self._net = Field.NET[self._team]
         if self._team == Robot.Team.FRIENDLY:
             self._opponent_net = Field.NET[Robot.Team.OPPONENT]
@@ -313,12 +320,29 @@ class PlayerStrategy(ABC, Strategy):
         self._net_area = Field.NET_AREA[self._team]
         self._net_line = Field.NET_LINE[self._team]
         self._Y_SIGN = -1 if self._net.y < 0 else 1
+        self._all_robots = None
 
     def _distance_to(self, pos):
         return np.linalg.norm(self._player_pos - pos)
 
     def has_possession(self):
         return self._distance_to(self._ball_pos) <= Thresholds.POSSESSION
+
+    def _compute_obstacles(self, ref_pos, thresh):
+        """
+        Computes the locations of obstacles (both friendly and opponent robots)
+        within distance thresh of position ref_pos
+        """
+        obstacles = []
+        for robot in self._all_robots:
+            if robot == self._player:
+                continue # A robot is not its own obstacle
+            pos = robot.get_position()[0:2]
+            dist = distance_between(ref_pos, pos)
+            # TODO: what about obstacles outside this radius? Do they matter?
+            if dist <= thresh:
+                obstacles.append(pos)
+        return obstacles
 
     def _is_closest_to_pos(self, pos, friendlies, opponents):
         """
@@ -357,7 +381,36 @@ class PlayerStrategy(ABC, Strategy):
         return closest_teammate, min_dist
 
     def _move_player_to(self, pos):
-        self._player.set_navigation_position(np.append(pos, 0))
+        assert self._all_robots is not None, 'all_robots not set!'
+        # Path planning with obstacle avoidance via potential functions
+        # Source:
+        # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
+        thresh = Thresholds.passing(self._player) # Seems reasonable for avoidance
+        obstacles = self._compute_obstacles(self._player_pos, thresh)
+        goal_pos = pos
+        if self._distance_to(goal_pos) > self._eps:
+            grad = grad_att(self._alpha, self._player_pos, pos)
+            if len(obstacles) > 0:
+                r_rep = 2 * Thresholds.POSSESSION
+                d_rep = float('inf')
+                obs_rep = None
+                for obs in obstacles:
+                    dist = self._distance_to(obs)
+                    if dist < d_rep:
+                        d_rep = dist
+                        obs_rep = obs
+                        # grad -= grad_rep(self._beta, r_rep, dist, obs, self._player_pos)
+                grad -= grad_rep(self._beta, r_rep, d_rep, obs_rep, self._player_pos)
+            # Perturb out of local minima
+            angle_rand = np.random.uniform(low=-np.pi/12, high=np.pi/12)
+            rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
+                                      [np.sin(angle_rand), np.cos(angle_rand)]])
+            grad_perturbed = rotation_rand @ grad
+            # Gradient descent update
+            step = 0.3  # TODO: line search for step size
+            goal_pos = self._player_pos - step * grad_perturbed
+        # Update robot state
+        self._player.set_navigation_position(np.append(goal_pos, 0))
         self._player.status = Robot.Status.WALKING
 
     def _pursue_ball(self):
@@ -419,8 +472,8 @@ class GoalieStrategy(PlayerStrategy):
     Objective: defend the net against the opponent team
     """
 
-    def __init__(self, player, ball):
-        super().__init__(player, ball)
+    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
+        super().__init__(player, ball, alpha, beta, eps)
 
     def _shot_on_net(self):
         if not self._ball.is_moving():
@@ -470,6 +523,7 @@ class GoalieStrategy(PlayerStrategy):
         self._move_player_to(crit_pos)
 
     def update_next_strategy(self, friendlies, opponents):
+        self._all_robots = list(itertools.chain(friendlies, opponents))
         if self.has_possession():
             # Return ball to offensive players
             self._pass_to_offense(friendlies)
@@ -477,7 +531,7 @@ class GoalieStrategy(PlayerStrategy):
             # Intercept shot on net
             self._defend_shot()
         elif self._is_closest_to_ball_dest(friendlies, opponents):
-            # Intercept nearby ballb
+            # Intercept nearby ball
             # Assumes ALL robots have same speed
             self._pursue_ball()
         else:
@@ -490,10 +544,11 @@ class ScoreStrategy(PlayerStrategy):
     Objective: score on the other team
     """
 
-    def __init__(self, player, ball):
-        super().__init__(player, ball)
+    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
+        super().__init__(player, ball, alpha, beta, eps)
 
     def update_next_strategy(self, friendlies, opponents):
+        self._all_robots = list(itertools.chain(friendlies, opponents))
         if self.has_possession():
             # Try kicking to nearest point on goal line
             # TODO: account for kick angle uncertainty; play it safe
@@ -511,27 +566,13 @@ class ScoreStrategy(PlayerStrategy):
             self._move_player_to(ball_dest)
 
 
-# TODO: refactor into obstacle avoidance strategy that can be reused for all players
 class OpenStrategy(PlayerStrategy):
     """
     Objective: find and move to an open position (to receive passes)
     """
 
     def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
-        super().__init__(player, ball)
-        self._alpha = alpha
-        self._beta = beta
-        self._eps = eps
-
-    def _compute_obstacles(self, opponents, thresh):
-        obstacles = []
-        for robot in opponents:
-            pos = robot.get_position()[0:2]
-            dist = distance_between(self._ball_pos, pos)
-            # TODO: what about obstacles outside this radius? Do they matter?
-            if dist <= thresh:
-                obstacles.append(pos)
-        return obstacles
+        super().__init__(player, ball, alpha, beta, eps)
 
     def _get_feasible_region_angles(self, obstacles):
         """
@@ -651,41 +692,14 @@ class OpenStrategy(PlayerStrategy):
         return goal_pos
 
     def update_next_strategy(self, friendlies, opponents):
-        # Compute goal position
+        self._all_robots = list(itertools.chain(friendlies, opponents))
+        # Compute goal position by avoiding obstacles near the ball, trying
+        # to remain within line of sight of the ball, and remaining away from
+        # the ball but within passing distance
         thresh = Thresholds.passing(self._player)
-        obstacles = self._compute_obstacles(opponents, thresh)
+        obstacles = self._compute_obstacles(self._ball_pos, thresh)
         x_g = self._compute_goal_pos(obstacles)
-        if self._distance_to(x_g) > self._eps:
-            # Path planning with obstacle avoidance via potential functions
-            # Source:
-            # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
-            grad = grad_att(self._alpha, self._player_pos, x_g)
-            if len(obstacles) > 0:
-                r_rep = 2 * Thresholds.POSSESSION
-                d_rep = float('inf')
-                obs_rep = None
-                for obs in obstacles:
-                    dist = self._distance_to(obs)
-                    if dist < d_rep:
-                        d_rep = dist
-                        obs_rep = obs
-                grad += grad_rep(self._beta, r_rep, d_rep, obs_rep, self._player_pos)
-            # TODO: line search for step size
-            # def grad_func(x1, x2, x3):
-            #     val = grad_att(self._alpha, x1, x2)
-            #     if len(obstacles) > 0:
-            #         val += grad_rep(self._beta, r_rep, d_rep, x2, x3)
-            #     return val
-            # def obj_func(x1, x2):
-            #     val = func_att(self._alpha, x1, x2)
-            #     if len(obstacles) > 0:
-            #         val += func_rep(self._beta, r_rep, d_rep)
-            #     return val
-            step = 0.3
-            # Gradient descent update
-            # TODO: perturb out of local minima
-            pos = self._player_pos - step * grad
-            self._move_player_to(pos)
+        self._move_player_to(x_g)
 
 
 class TeamStrategy(Strategy):
@@ -696,6 +710,7 @@ class TeamStrategy(Strategy):
         self.reset()
         PhysConsts.init(self._dt)
         Thresholds.init()
+        self._cnt = 0
 
     def reset(self):
         pass
@@ -705,6 +720,7 @@ class TeamStrategy(Strategy):
         # TODO: maybe TeamStrategy could decide which strategy each player
         # should use depending on game conditions. Could maybe also modify
         # strategy parameters...hmm...
+        self._cnt += 1
         strats = []
         ball_pos = ball.get_position()
         dist_to_ball = []
@@ -713,6 +729,7 @@ class TeamStrategy(Strategy):
                 strats.append(GoalieStrategy(robot, ball))
             else:
                 robot_pos = robot.get_position()[0:2]
+                assert not np.isnan(robot_pos).any(), f'nan position on iter {self._cnt}'
                 dist = distance_between(robot_pos, ball_pos)
                 dist_to_ball.append((dist, robot))
         # The two players closest to the ball will use ScoreStrategy, and the

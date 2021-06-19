@@ -8,13 +8,17 @@ from ball import Ball
 from strategy import StationaryStrategy, DummyStrategy, PassStrategy, TeamStrategy
 import math
 import numpy as np
+import random
 import copy
+
+random.seed(2)
+np.random.seed(2)
 
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
-    DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 5  # Every X physics steps
+    DISPLAY_UPDATE_INTERVAL = 20  # Every Y physics steps
 
     def __init__(self, display=True):
         self.display = display

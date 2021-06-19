@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import time
+
 from game_engine import GameEngine
 
 RUN_IN_ROS = False
@@ -14,7 +15,7 @@ if __name__ == '__main__':
         g.run()
     else:
         DISPLAY_GAME = False
-        NUM_GAMES = 100
+        NUM_GAMES = 10
         num_friendly_wins = 0
         tot_friendly_pts = 0
         num_opponent_wins = 0
