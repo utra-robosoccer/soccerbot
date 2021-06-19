@@ -102,6 +102,10 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.goal = self.new_goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
+                print("robotpose ", self.robot_pose.pose.pose)
+                print("robotpose_trans ", self.pose_to_transformation(self.robot_pose.pose.pose))
+                print("goalpose ", self.goal.pose)
+                print("goalpose_trans ", self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
                 t = -100
@@ -111,7 +115,7 @@ class SoccerbotControllerRos(SoccerbotController):
                     t = self.soccerbot.robot_path.duration() + 1
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(t, verbose=True)
+                self.soccerbot.stepPath(t, verbose=False)
                 self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
 
                 if rospy.get_param('ENABLE_PYBULLET'):
@@ -153,7 +157,7 @@ class SoccerbotControllerRos(SoccerbotController):
                     break
 
             if not self.terminate_walk:
-                self.soccerbot.publishAngles()
+                self.soccerbot.publishAngles() # Disable to stop walking
                 if rospy.get_param('ENABLE_PYBULLET'):
                     pb.stepSimulation()
 
