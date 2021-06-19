@@ -66,7 +66,7 @@ class GameEngine:
             foreground.set_facecolor((0, 0, 0, 0))
 
         # Setup the strategy
-        self.team1_strategy = TeamStrategy()
+        self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL)
         self.team2_strategy = DummyStrategy()
 
     def reset_strategies(self):

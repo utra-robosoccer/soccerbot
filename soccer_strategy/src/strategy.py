@@ -5,6 +5,7 @@ import math
 import numpy as np
 from shapely.geometry import LineString, Point, Polygon
 
+from ball import Ball
 from robot import Robot
 
 
@@ -18,9 +19,11 @@ class Strategy:
     def update_next_strategy(self, friendly, opponent, ball):
         raise NotImplementedError
 
+
 class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
         return
+
 
 class DummyStrategy(Strategy):
 
@@ -56,6 +59,7 @@ class DummyStrategy(Strategy):
             #     return
             current_closest.set_navigation_position(np.append(ball.get_position(), 0))
             current_closest.status = Robot.Status.WALKING
+
 
 class PassStrategy(DummyStrategy):
 
@@ -101,18 +105,12 @@ class PassStrategy(DummyStrategy):
             current_closest.set_navigation_position(np.append(ball.get_position(), 0))
             current_closest.status = Robot.Status.WALKING
 
+
 ###############################################################################
 class GameState(IntEnum):
     INIT = 1
     OPPONENT_POSSESSION = 2
     FRIENDLY_POSSESSION = 3
-
-
-# TODO: sync this across Ball, Robot and GameEngine
-class PhysConsts:
-    DELTA_T = 0.1
-    BALL_FRIC_COEFF = 0.8
-    ROBOT_MAX_KICK_SPEED = 2
 
 
 class Field:
@@ -153,6 +151,19 @@ class Field:
 Field.init()
 
 
+class PhysConsts:
+    DELTA_T = -1
+
+    @staticmethod
+    def init(d_t):
+        PhysConsts.DELTA_T = d_t
+
+    @staticmethod
+    def get_friction_coeff():
+        coeff = PhysConsts.DELTA_T / (1 - Ball.FRICTION_COEFF)
+        return coeff
+
+
 class Thresholds:
     POSSESSION = 0.2  # How close player has to be to ball to have possession
     GOALIE_ANGLE = 5 # How close goalie has to be to defense line
@@ -161,10 +172,12 @@ class Thresholds:
 
     @staticmethod
     def init():
-        coeff = PhysConsts.DELTA_T / (1 - PhysConsts.BALL_FRIC_COEFF)
-        Thresholds.PASS = PhysConsts.ROBOT_MAX_KICK_SPEED * coeff
         Thresholds.OBSTACLE = 2 * Thresholds.POSSESSION # TODO: add robot_width / 2
-Thresholds.init()
+
+    @staticmethod
+    def passing(robot):
+        val = robot.max_kick_speed * PhysConsts.get_friction_coeff()
+        return val
 
 
 def unit_vec(v):
@@ -281,7 +294,7 @@ def grad_rep(beta, r_rep, d_rep, x2, x1):
     return val
 
 
-class PlayerStrategy(Strategy):
+class PlayerStrategy(ABC, Strategy):
 
     def __init__(self, player, ball):
         super().__init__()
@@ -355,7 +368,7 @@ class PlayerStrategy(Strategy):
         Uses equations of motion to guess, based on the ball's current position
         and velocity, what position it will rest at
         """
-        coeff = PhysConsts.DELTA_T / (1 - PhysConsts.BALL_FRIC_COEFF)
+        coeff = PhysConsts.get_friction_coeff()
         vel = self._ball.get_velocity()
         ball_dest = self._ball_pos + vel * coeff
         return ball_dest
@@ -363,6 +376,7 @@ class PlayerStrategy(Strategy):
     def _kick_ball(self, pos, kick_speed_perc=100.0):
         """Kick ball towards position (full-speed kick)"""
         dir = unit_vec(pos - self._ball_pos)
+        # TODO: rotate player to within some epsilon of the direction before finally kicking
         mag = self._player.max_kick_speed * kick_speed_perc / 100.0
         self._player.set_kick_velocity(dir * mag)
         self._player.status = Robot.Status.KICKING
@@ -370,7 +384,7 @@ class PlayerStrategy(Strategy):
     def _pass_ball(self, teammate):
         """Pass ball to teammate"""
         teammate_pos = teammate.get_position()[0:2]
-        coeff = PhysConsts.DELTA_T / (1 - PhysConsts.BALL_FRIC_COEFF)
+        coeff = PhysConsts.get_friction_coeff()
         pass_dist = self._distance_to(teammate_pos)
         magnitude = 100 * min(pass_dist / coeff, 1)
         self._kick_ball(teammate_pos, kick_speed_perc=magnitude)
@@ -497,6 +511,7 @@ class ScoreStrategy(PlayerStrategy):
             self._move_player_to(ball_dest)
 
 
+# TODO: refactor into obstacle avoidance strategy that can be reused for all players
 class OpenStrategy(PlayerStrategy):
     """
     Objective: find and move to an open position (to receive passes)
@@ -508,13 +523,13 @@ class OpenStrategy(PlayerStrategy):
         self._beta = beta
         self._eps = eps
 
-    def _compute_obstacles(self, opponents):
+    def _compute_obstacles(self, opponents, thresh):
         obstacles = []
         for robot in opponents:
             pos = robot.get_position()[0:2]
             dist = distance_between(self._ball_pos, pos)
             # TODO: what about obstacles outside this radius? Do they matter?
-            if dist <= Thresholds.PASS:
+            if dist <= thresh:
                 obstacles.append(pos)
         return obstacles
 
@@ -585,8 +600,9 @@ class OpenStrategy(PlayerStrategy):
             opp_net_line[Field.Y_COORD]
         )
         gb_unit_vec = unit_vec(net_pos - self._ball_pos)
+        thresh = Thresholds.passing(self._player) # TODO: should be the player with possession
         if is_infeasible or len(obstacles) == 0:
-            goal_pos = Thresholds.PASS * gb_unit_vec + self._ball_pos
+            goal_pos = thresh * gb_unit_vec + self._ball_pos
         else:
             # 3. Compute feasible regions, each defined by a left and right
             # point
@@ -597,7 +613,7 @@ class OpenStrategy(PlayerStrategy):
             # search for best region
             if len(feas_regs) == 0:
                 delta = self._ball_pos - self._player_pos
-                goal_pos = Thresholds.PASS * unit_vec(delta)
+                goal_pos = thresh * unit_vec(delta)
                 goal_pos += self._player_pos
             else:
                 # 5. For each feasible region, compute the minimum distance
@@ -617,13 +633,13 @@ class OpenStrategy(PlayerStrategy):
                         theta_r -= theta_r
                         gb_angle_tmp -= theta_r
                     if theta_l >= gb_angle_tmp >= theta_r:
-                        pt = Thresholds.PASS * gb_unit_vec + self._ball_pos
+                        pt = thresh * gb_unit_vec + self._ball_pos
                         dmin = distance_between(net_pos, pt)
                     elif gb_angle>= theta_l:
-                        pt = Thresholds.PASS * np.array([np.cos(theta_l), np.sin(theta_l)]) + self._ball_pos
+                        pt = thresh * np.array([np.cos(theta_l), np.sin(theta_l)]) + self._ball_pos
                         dmin = distance_between(net_pos, pt)
                     else:
-                        pt = Thresholds.PASS * np.array([np.cos(theta_r), np.sin(theta_r)]) + self._ball_pos
+                        pt = thresh * np.array([np.cos(theta_r), np.sin(theta_r)]) + self._ball_pos
                         dmin = distance_between(net_pos, pt)
                     dists.append((dmin, pt))
 
@@ -636,7 +652,8 @@ class OpenStrategy(PlayerStrategy):
 
     def update_next_strategy(self, friendlies, opponents):
         # Compute goal position
-        obstacles = self._compute_obstacles(opponents)
+        thresh = Thresholds.passing(self._player)
+        obstacles = self._compute_obstacles(opponents, thresh)
         x_g = self._compute_goal_pos(obstacles)
         if self._distance_to(x_g) > self._eps:
             # Path planning with obstacle avoidance via potential functions
@@ -670,11 +687,15 @@ class OpenStrategy(PlayerStrategy):
             pos = self._player_pos - step * grad
             self._move_player_to(pos)
 
+
 class TeamStrategy(Strategy):
 
-    def __init__(self):
+    def __init__(self, delta_t):
         super().__init__()
+        self._dt = delta_t
         self.reset()
+        PhysConsts.init(self._dt)
+        Thresholds.init()
 
     def reset(self):
         pass
