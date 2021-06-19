@@ -70,10 +70,12 @@ private:
             camera_position.position.x = camera_pose.transform.translation.x;
             camera_position.position.y = camera_pose.transform.translation.y;
             camera_position.position.z = camera_pose.transform.translation.z;
+
             camera_position.orientation.w = camera_pose.transform.rotation.w;
             camera_position.orientation.x = camera_pose.transform.rotation.x;
             camera_position.orientation.y = camera_pose.transform.rotation.y;
             camera_position.orientation.z = camera_pose.transform.rotation.z;
+
             camera->setPose(camera_position);
         }
         catch (tf2::TransformException &ex) {
@@ -91,7 +93,7 @@ private:
                 }
                 // For now take the center of the box
                 int xavg = (box.xmin + box.xmax) / 2;
-                int yavg = box.ymin;
+                int yavg = (box.ymin + box.ymax) / 2;
                 Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
 
                 if (objectClass == "ball") {
