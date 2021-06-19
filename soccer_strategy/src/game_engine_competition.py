@@ -130,9 +130,24 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.run_normal(rostime)
             if self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
                 self.run_freekick(rostime)
-
+            if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                if self.gameState.hasKickOff:
+                    self.run_normal(rostime)
 
     def run_normal(self, rostime):
+
+        if self.gameState.gameState != self.previous_gameState.gameState:
+            if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
+                new_state = "GAMESTATE_INITIAL"
+            if self.gameState.gameState == GameState.GAMESTATE_READY:
+                new_state = "GAMESTATE_READY"
+            if self.gameState.gameState == GameState.GAMESTATE_SET:
+                new_state = "GAMESTATE_SET"
+            if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+                new_state = "GAMESTATE_PLAYING"
+            if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
+                new_state = "GAMESTATE_FINISHED"
+            print(" Gamestate transition to "+ new_state)
 
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
