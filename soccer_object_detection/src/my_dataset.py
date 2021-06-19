@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import torch
 import torchvision
+import yaml
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
@@ -104,40 +105,75 @@ class MyDataSet(Dataset):
             for file in os.listdir(path):
                 if '.txt' in file:
                     file_labels = os.path.join(path, file)
-                    self.read_labels(path, file_labels)
+                    self.read_labels(path, file_labels, 'txt')
+                elif '.yaml' in file:
+                    file_labels = os.path.join(path, file)
+                    self.read_labels(path, file, 'yaml')
 
-    def read_labels(self, path, file_labels):
+    def read_labels(self, path, file_labels, file_type):
         """
         :param path: folder containing images and label text file
         :param file_labels: label text file
+        :param file_type: processes the file depending on whether it is the original .txt or the BitBots .yaml file
         :return: None
         """
+
         with open(file_labels) as labels:
-            for i, line in enumerate(labels):
-                if i <= 5:  # ignore first few metadata lines
-                    continue
+            if file_type == 'txt':
+                for i, line in enumerate(labels):
+                    if i <= 5:  # ignore first few metadata lines
+                        continue
 
-                try:
-                    label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split('|')
-                except:
-                    # ignore unknown format
-                    continue
+                    try:
+                        label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split('|')
+                    except:
+                        # ignore unknown format
+                        continue
 
-                if label == 'label::ball':
-                    label = Label.BALL
-                    self.num_ball_labels += 1
-                elif label == 'label::robot':
-                    label = Label.ROBOT
-                    self.num_robot_labels += 1
-                else:
-                    print('Unexpected Label:', label)
+                    if label == 'label::ball':
+                        label = Label.BALL
+                        self.num_ball_labels += 1
+                    elif label == 'label::robot':
+                        label = Label.ROBOT
+                        self.num_robot_labels += 1
+                    else:
+                        print('Unexpected Label:', label)
 
-                img_path = os.path.join(path, img)
-                if img_path not in self.img_paths:
-                    self.bounding_boxes[img_path] = []
-                    self.img_paths.append(img_path)
+                    img_path = os.path.join(path, img)
+                    if img_path not in self.img_paths:
+                        self.bounding_boxes[img_path] = []
+                        self.img_paths.append(img_path)
 
-                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                    self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+
+            elif file_type == 'yaml':
+                documents = yaml.full_load(labels)
+                image_list = documents['images']
+                for image in image_list:
+                    annotations = image_list[image]['annotations']
+                    for annotation in annotations:
+                        if annotation['in_image'] == True:
+                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
+                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                                x1 = location[0][0]
+                                y1 = location[0][1]
+                                x2 = location[1][0]
+                                y2 = location[1][1]
+
+                                if annotation['type'] == 'ball':
+                                    label = label.BALL
+                                    self.num_ball_labels += 1
+                                else:
+                                    label = label.ROBOT
+                                    self.num_robot_labels += 1
+
+                                img_path = os.path.join(path, image)
+                                if img_path not in self.img_paths:
+                                    self.bounding_boxes[img_path] = []
+                                    self.img_paths.append(img_path)
+
+                                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+
 
     def __len__(self):
         return len(self.bounding_boxes)
