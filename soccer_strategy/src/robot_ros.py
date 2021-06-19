@@ -75,22 +75,26 @@ class RobotRos(Robot):
 
     def set_navigation_position(self, position):
         #assert (self.status == Robot.Status.WALKING)
-        super(RobotRos, self).set_navigation_position(position)
-        print("Sending Robot " + self.robot_name + " to position" + str(position))
-        p = PoseStamped()
-        p.header.stamp = rospy.get_rostime()
-        p.header.frame_id = "world"
-        p.pose.position.x = position[1]
-        p.pose.position.y = -position[0]
-        p.pose.position.z = 0
-        angle_fixed = position[2]
-        # print(angle_fixed)
-        q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
-        p.pose.orientation.x = q[0]
-        p.pose.orientation.y = q[1]
-        p.pose.orientation.z = q[2]
-        p.pose.orientation.w = q[3]
-        self.goal_publisher.publish(p)
+        if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
+            super(RobotRos, self).set_navigation_position(position)
+            print("Sending Robot " + self.robot_name + " to position" + str(position))
+            p = PoseStamped()
+            p.header.stamp = rospy.get_rostime()
+            p.header.frame_id = "world"
+            p.pose.position.x = position[1]
+            p.pose.position.y = -position[0]
+            p.pose.position.z = 0
+            angle_fixed = position[2]
+            # print(angle_fixed)
+            q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
+            p.pose.orientation.x = q[0]
+            p.pose.orientation.y = q[1]
+            p.pose.orientation.z = q[2]
+            p.pose.orientation.w = q[3]
+            self.goal_publisher.publish(p)
+            self.status = Robot.Status.WALKING
+        else:
+            print("Failed to send nav position, robot currently in " + str(self.status))
 
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian

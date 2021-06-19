@@ -27,6 +27,19 @@ class GameEngineCompetition(game_engine.GameEngine):
     NAV_GOAL_UPDATE_INTERVAL = 2
     blue_initial_position = [[0, 3, math.pi], [1.5, 1.5, math.pi], [-1.5, 1.5, math.pi], [0, 1, math.pi]]
     red_initial_position = [[0, -3, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
+    GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
+    SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
+    SecondaryGameStateMap = ["STATE_NORMAL",
+                             "STATE_PENALTYSHOOT",
+                             "STATE_OVERTIME",
+                             "STATE_TIMEOUT",
+                             "STATE_DIRECT_FREEKICK",
+                             "STATE_INDIRECT_FREEKICK",
+                             "STATE_PENALTYKICK",
+                             "STATE_CORNER_KICK",
+                             "STATE_GOAL_KICK",
+                             "STATE_THROW_IN"
+                             ]
 
     def __init__(self):
         print("initializing strategy")
@@ -91,9 +104,19 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.rostime_previous = 0
         self.team1_strategy = DummyStrategy()
         self.team2_strategy = DummyStrategy()
-        self.freekick_strategy = FreekickStrategy()
+        self.freekick_strategy = FreekickStrategy(False)
+        self.penaltykick_strategy = FreekickStrategy(True)
 
     def gamestate_callback(self, gameState):
+        # log on state transition
+        if self.gameState.gameState != self.previous_gameState.gameState:
+            print(" - Gamestate transition to " + self.GameStateMap[self.gameState.gameState])
+        if self.previous_gameState.secondaryState != self.gameState.secondaryState:
+            print(" -- SecondaryGamestate transition to " + self.SecondaryGameStateMap[self.gameState.secondaryState])
+        if self.previous_gameState.secondaryStateMode != self.gameState.secondaryStateMode:
+            print(
+                " --- SecondaryGameMode transition to " + self.SecondaryStateModeMap[self.gameState.secondaryStateMode])
+
         self.previous_gameState = self.gameState
         self.gameState = gameState
 
@@ -126,36 +149,39 @@ class GameEngineCompetition(game_engine.GameEngine):
         while not rospy.is_shutdown():
             rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
+            # normal game
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 self.run_normal(rostime)
+
+            # free kick
             if self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
-                self.run_freekick(rostime)
+                self.run_freekick(rostime, self.freekick_strategy)
+            if self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
+                self.run_freekick(rostime, self.freekick_strategy)
+            if self.gameState.secondaryState == GameState.STATE_CORNER_KICK:
+                self.run_freekick(rostime, self.freekick_strategy)
+            if self.gameState.secondaryState == GameState.STATE_GOAL_KICK:
+                self.run_freekick(rostime, self.freekick_strategy)
+            if self.gameState.secondaryState == GameState.STATE_THROW_IN:
+                self.run_freekick(rostime, self.freekick_strategy)
+
+            # penalty kick
+            if self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
+                self.run_freekick(rostime, self.penaltykick_strategy)
+
+            # penalty shootout
             if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                # if we have kickoff, run normal game strategy
                 if self.gameState.hasKickOff:
                     self.run_normal(rostime)
 
     def run_normal(self, rostime):
-
-        if self.gameState.gameState != self.previous_gameState.gameState:
-            if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
-                new_state = "GAMESTATE_INITIAL"
-            if self.gameState.gameState == GameState.GAMESTATE_READY:
-                new_state = "GAMESTATE_READY"
-            if self.gameState.gameState == GameState.GAMESTATE_SET:
-                new_state = "GAMESTATE_SET"
-            if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
-                new_state = "GAMESTATE_PLAYING"
-            if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
-                new_state = "GAMESTATE_FINISHED"
-            print(" Gamestate transition to "+ new_state)
-
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
                 self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
-
 
         #READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -167,12 +193,10 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
-                        robot.status = Robot.Status.WALKING
                         if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
                             robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
                         else:
                             robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
-            self.rostime_previous = rostime
 
         # SET
         if self.gameState.gameState == GameState.GAMESTATE_SET:
@@ -191,7 +215,6 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
                     self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
-            self.rostime_previous = rostime
             pass
 
         # FINISHED
@@ -202,40 +225,53 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.previous_gameState.gameState = GameState.GAMESTATE_FINISHED
             pass
 
+        self.rostime_previous = rostime
         self.update_average_ball_position()
         for robot in self.friendly:
             robot.update_status()
 
-    def run_freekick(self, rostime):
-        print(self.gameState.secondaryStateMode)
+    def run_freekick(self, rostime, strategy):
         # PREPARATION
-        # if self.gameState.secondaryStateMode == GameState.MODE_PREPARATION:
-        #     if self.gameState.secondaryStateTeam == self.team_number:
-        #         # first time running freekick logic
-        #         if self.previous_gameState.secondaryStateMode == GameState.STATE_NORMAL:
-        #             self.designate_kicker()
-        #
-        #         if rostime % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL:
-        #             completed = self.freekick_strategy.update_kicking_strategy(self.friendly, self.ball)
-        #             if completed:
-        #                 self.execute_game_interruption_publisher.publish()
-        #
-        #
-        #     if self.gameState.secondaryState !=self.team_number:
-        #         if rostime % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL:
-        #             self.freekick_strategy.update_non_kicking_strategy(self.friendly, self.ball)
-        #
-        # # PLACING
-        # if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
-        #     if self.gameState.secondaryStateTeam == self.team_number:
-        #         if rostime % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.NAV_GOAL_UPDATE_INTERVAL:
-        #             self.freekick_strategy.execute_kicking(self.friendly, self.ball)
+        if self.gameState.secondaryStateMode == GameState.MODE_PREPARATION:
+            if self.gameState.secondaryStateTeam == self.team_number:
+                # first time running freekick logic
+                if self.previous_gameState.secondaryStateMode == GameState.STATE_NORMAL:
+                    self.designate_kicker()
+
+                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+                    completed = strategy.update_kicking_strategy(self.friendly, self.ball)
+                    if completed:
+                        self.execute_game_interruption_publisher.publish()
+
+            if self.gameState.secondaryState !=self.team_number:
+                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+                    strategy.update_non_kicking_strategy(self.friendly, self.ball)
+
+        # PLACING
+        if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
+            if self.gameState.secondaryStateTeam == self.team_number:
+                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+                    strategy.execute_kicking(self.friendly, self.ball)
+            else:
+                # todo perform goalie trajectory if penalty kick
+                pass
+
+        self.rostime_previous = rostime
+        self.update_average_ball_position()
+        for robot in self.friendly:
+            robot.update_status()
 
     def designate_kicker(self):
+        closest_dist = math.inf
+        current_closest = None
         for robot in self.friendly:
             dist = np.linalg.norm(self.ball.get_position()[0:2] - robot.get_position()[0:2])
             if dist < closest_dist:
                 closest_dist = dist
                 current_closest = robot
         current_closest.designated_kicker = True
+
+    def run_penaltykick(self, rostime):
+        # implement penalty kick strategy
+        pass
 
