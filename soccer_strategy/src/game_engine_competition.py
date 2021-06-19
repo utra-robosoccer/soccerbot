@@ -20,12 +20,13 @@ logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 logger.addHandler(console_handler)
-
 robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
+
+
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 5
-    blue_initial_position = [[0, -3.6, 0], [1.5, 1.5, 0], [-1.5, 1.5, 0], [0, 1, 0]]
-    red_initial_position = [[0, 3.6, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
+    blue_initial_position = [[-4.5, 0, 0], [1.5, 1.5, 0], [-1.5, 1.5, 0], [0, 1, 0]]
+    red_initial_position = [[4.5, 0, 0], [1.5, -1.5, 0], [-1.5, -1.5, 0], [0, -1, 0]]
 
     def __init__(self):
         print("initializing strategy")
@@ -51,13 +52,19 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.robots = [
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+                     robot_name="robot2"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+                     robot_name="robot3"),
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY, robot_name="robot4"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY, robot_name="opponent4")
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+                     robot_name="opponent1"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+                     robot_name="opponent2"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+                     robot_name="opponent3"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+                     robot_name="opponent4")
         ]
 
         self.this_robot = None
@@ -94,6 +101,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.strategy = DummyStrategy()
         self.opponent = []
         self.listener = tf.TransformListener()
+        self.run_once = True
+        self.run_once_2 = False
 
     def gamestate_callback(self, gameState):
         self.previous_gameState = self.gameState
@@ -131,6 +140,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
                 self.run_freekick()
 
+    temp_bool = True
 
     def run_normal(self):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
@@ -143,8 +153,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
-
-        #READY
+        # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_READY:
@@ -155,10 +164,17 @@ class GameEngineCompetition(game_engine.GameEngine):
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
                         robot.status = Robot.Status.WALKING
-                        if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
-                            robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
-                        else:
-                            robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
+                        # if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE and self.run_once:
+                        if self.run_once:
+                            robot.set_navigation_position([0, -4, 1.57])
+                            self.run_once = False
+                            self.run_once_2 = True
+                        elif self.run_once_2:
+                            robot.set_navigation_position([0, -4.5, 0])
+                            self.run_once_2 = False
+                        # else:
+                        #     print("Here", self.gameState.teamColor)
+                            # robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
             self.rostime_previous = rostime
 
         # SET

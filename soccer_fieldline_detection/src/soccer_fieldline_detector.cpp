@@ -167,7 +167,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 Segment2 s(pt1, pt2);
                 float b = l[1] - s.slope() * l[0];
 
-                for (size_t i = l[0]; i < l[2]; i += 13) {
+                for (size_t i = l[0]; i < l[2]; i += 15) {
                     float y = s.slope() * i + b;
                     Point2 pt(i, y);
                     pts.push_back(pt);
@@ -177,6 +177,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
 
             image_publisher.publish(message);
+
 
 
             std::vector<Point3> points3d;
@@ -246,7 +247,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         } catch (const cv_bridge::Exception &e) {
             ROS_ERROR_STREAM("CV Exception" << e.what());
         }
-
     }
 }
 

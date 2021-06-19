@@ -546,7 +546,7 @@ class Soccerbot:
         self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-        print(self.DESIRED_PITCH_2)
+        # print(self.DESIRED_PITCH_2)
         return pitch
 
     def reset_imus(self):
@@ -559,12 +559,12 @@ class Soccerbot:
         self.last_F2 = 0
         self.lastError2 = 0
 
-    HEAD_YAW_FREQ = 0.0015
+    HEAD_YAW_FREQ = 0.002
     HEAD_PITCH_FREQ = 0.00125
 
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[Joints.HEAD_2] = 0.4 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
+        self.configuration[Joints.HEAD_2] = 0.6 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 
