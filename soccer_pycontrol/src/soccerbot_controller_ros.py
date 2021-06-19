@@ -152,6 +152,9 @@ class SoccerbotControllerRos(SoccerbotController):
                 if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
+            if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
+                self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+
             if stop_on_completed_trajectory:
                 if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():
                     break

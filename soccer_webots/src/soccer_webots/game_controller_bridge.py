@@ -301,9 +301,9 @@ class GameControllerBridge():
         camera_info_msg.height = height
         camera_info_msg.width = width
         f_y = self.mat_from_fov_and_resolution(
-            self.h_fov_to_v_fov(1.35, height, width),
+            self.h_fov_to_v_fov(1.39626, height, width),
             height)
-        f_x = self.mat_from_fov_and_resolution(1.35, width)
+        f_x = self.mat_from_fov_and_resolution(1.39626, width)
         camera_info_msg.K = [f_x, 0, width / 2,
                              0, f_y, height / 2,
                              0, 0, 1]

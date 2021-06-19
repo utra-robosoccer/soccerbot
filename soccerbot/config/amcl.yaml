@@ -1,8 +1,9 @@
-min_particles: 100
+min_particles: 1000
 max_particles: 5000
 kld_err: 0.00001
+kld_z: 0.99
 update_min_d: 0.2
-update_min_a: 0.01
+update_min_a: 0.1
 resample_interval: 2
 gui_publish_rate: 1
 transform_tolerance: 5
@@ -19,7 +20,7 @@ odom_alpha5: 0.9
 use_map_topic: true
 first_map_only: true
 scan_topic: scan
-initial_cov_xx: 1
-initial_cov_yy: 1
-initial_cov_aa: 1.57
+initial_cov_xx: 0.25
+initial_cov_yy: 0.25
+initial_cov_aa: 0.1308
 global_frame_id: "world"
