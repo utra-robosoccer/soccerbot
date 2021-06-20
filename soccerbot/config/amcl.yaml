@@ -9,7 +9,7 @@ gui_publish_rate: 1
 transform_tolerance: 5
 laser_model_type: "likelihood_field_prob"
 laser_max_beams: 100
-
+tf_broadcast: true
 odom_model_type: "omni-corrected"
 odom_alpha1: 0.9
 odom_alpha2: 0.9

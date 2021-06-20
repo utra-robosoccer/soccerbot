@@ -45,6 +45,10 @@
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
+        <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />-->
+    </node>
+
 
     <!-- AMCL Localization $(arg x_pos)-->
     <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg fake_localization)">
@@ -67,22 +71,5 @@
         <param name="delta_y" value="0" />
     </node>
 
-<!--<node pkg="rostopic" type="rostopic" name="odom_broadcaster"-->
-<!--    args="pub /robot1/odom nav_msgs/Odometry-->
-<!--        '{header: {seq: 0, stamp: { secs: 0, nsecs: 0}, frame_id: '$(arg robot_name)/odom'},child_frame_id: '$(arg robot_name)/base_footprint',-->
-<!--        pose:-->
-<!--          {pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}},-->
-<!--          covariance:      [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,-->
-<!--                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,-->
-<!--                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,-->
-<!--                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,-->
-<!--                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,-->
-<!--                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]},-->
-<!--        twist:-->
-<!--          {twist: {linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}-->
-<!--          ,covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,-->
-<!--                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,-->
-<!--                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}' &#45;&#45;once"-->
-<!--     output="screen"/>-->
 
 </launch>

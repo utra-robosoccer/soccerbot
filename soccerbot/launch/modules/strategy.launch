@@ -1,6 +1,7 @@
 <launch>
     <arg name="goalie" default="true" />
-    <env name="ROBOCUP_TEAM_ID" value="$(optenv ROBOCUP_TEAM_ID 25)" />
+    <env name="ROBOCUP_TEAM_ID" value="$(optenv ROBOCUP_TEAM_ID 16)" />
+    <env name="ROBOCUP_TEAM_COLOR" value="$(optenv ROBOCUP_TEAM_COLOR red)" />
     <env name="ROBOCUP_GAMECONTROLLER_IP" value="$(optenv ROBOCUP_GAMECONTROLLER_IP 127.0.1.1)" />
 
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(arg goalie)"/>

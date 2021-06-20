@@ -52,19 +52,13 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.robots = [
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-                     robot_name="robot2"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-                     robot_name="robot3"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY, robot_name="robot4"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                     robot_name="opponent1"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-                     robot_name="opponent2"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-                     robot_name="opponent3"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                     robot_name="opponent4")
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
+            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY, robot_name="opponent4")
         ]
 
         self.this_robot = None
@@ -98,7 +92,6 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.team1_strategy = DummyStrategy()
         self.team2_strategy = DummyStrategy()
         # Setup the strategy
-        self.strategy = DummyStrategy()
         self.opponent = []
         self.listener = tf.TransformListener()
         self.run_once = True
@@ -139,11 +132,26 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.run_normal()
             if self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
                 self.run_freekick()
-
+            if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                if self.gameState.hasKickOff:
+                    self.run_normal()
     temp_bool = True
 
     def run_normal(self):
         rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
+
+        if self.gameState.gameState != self.previous_gameState.gameState:
+            if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
+                new_state = "GAMESTATE_INITIAL"
+            if self.gameState.gameState == GameState.GAMESTATE_READY:
+                new_state = "GAMESTATE_READY"
+            if self.gameState.gameState == GameState.GAMESTATE_SET:
+                new_state = "GAMESTATE_SET"
+            if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+                new_state = "GAMESTATE_PLAYING"
+            if self.gameState.gameState == GameState.GAMESTATE_FINISHED:
+                new_state = "GAMESTATE_FINISHED"
+            print(" Gamestate transition to "+ new_state)
 
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
@@ -198,6 +206,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                     self.ball_pose = self.listener.lookupTransform(robot_name_map[self.robot_id - 1] + '/ball',
                                                                    robot_name_map[self.robot_id - 1] + '/torso',
                                                                    rospy.Time(0))
+                    # print(self.ball_pose)
                     header = self.listener.getLatestCommonTime(robot_name_map[self.robot_id - 1] + '/ball',
                                                                robot_name_map[self.robot_id - 1] + '/torso')
                     self.last_pose = rospy.Time.now() - header
@@ -206,6 +215,20 @@ class GameEngineCompetition(game_engine.GameEngine):
                     pass
                 if self.last_pose < rospy.Duration(0.2):
                     self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
+                    self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+            self.rostime_previous = rostime
+
+
+        # PLAYING
+        if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
+            # on state transition
+            if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
+                self.resume_all_robot()
+                self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
+
+            if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
+                    self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+                self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
             self.rostime_previous = rostime
             pass
 
