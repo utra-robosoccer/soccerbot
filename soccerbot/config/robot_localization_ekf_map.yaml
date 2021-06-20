@@ -9,11 +9,11 @@ publish_tf: false
 
 
 map_frame: world
-odom_frame: robot1/odom
-base_link_frame: robot1/base_camera
+odom_frame: robot2/odom
+base_link_frame: robot2/base_footprint
 world_frame: world
 
-odom0: /robot1/odom
+odom0: /robot2/odom
 odom0_config: [true, true, false,    #x,y,z
                false, false, true, #roll, pitch, yaw
                false,  false,  false,  #vx, vy, vz
@@ -24,7 +24,7 @@ odom0_nodelay: true
 odom0_differential: false
 odom0_relative: false
 
-pose1: /robot1/odom_combined
+pose1: /robot2/odom_combined
 pose1_config: [true,  true,  false,
                false, false, true,
                false, false, false,
@@ -35,7 +35,7 @@ pose1_nodelay: true
 pose1_differential: false
 pose1_relative: false
 
-pose0: /robot1/amcl_pose
+pose0: /robot2/amcl_pose
 pose0_config: [true,  true,  false,
                false, false, true,
                false, false, false,
@@ -45,7 +45,7 @@ pose0_queue_size: 10
 pose0_nodelay: true
 pose0_differential: false
 pose0_relative: false
-imu0: /robot1/imu_filtered
+imu0: /robot2/imu_filtered
 imu0_config: [false, false, false,
               true,  true,  true,
               false, false, false,
