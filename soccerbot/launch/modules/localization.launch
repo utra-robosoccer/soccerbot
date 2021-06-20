@@ -37,6 +37,11 @@
         <remap from="imu/data" to="imu_filtered" />
     </node>
 
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter_orient" >
+        <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
+        <remap from="imu/data_raw" to="imu_orient_raw" />
+        <remap from="imu/data" to="imu_orient_filtered" />
+    </node>
     <!-- IMU location -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
@@ -45,13 +50,13 @@
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log">
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
-        <param name="odom0" value="/$(arg robot_name)/odom" />
-<!--        <param name="pose1" value="odom_combined" />-->
+<!--        <param name="odom0" value="/$(arg robot_name)/odom" />-->
+<!--&lt;!&ndash;        <param name="pose1" value="odom_combined" />&ndash;&gt;-->
 
-        <param name="pose0" value="/$(arg robot_name)/amcl_pose" />
-        <param name="imu0" value="/$(arg robot_name)/imu_filtered" />
+<!--        <param name="pose0" value="/$(arg robot_name)/amcl_pose" />-->
+<!--        <param name="imu0" value="/$(arg robot_name)/imu_filtered" />-->
         <param name="odom_frame" value="$(arg robot_name)/odom" />
         <param name="base_link_frame" value="$(arg robot_name)/base_camera" />
     </node>

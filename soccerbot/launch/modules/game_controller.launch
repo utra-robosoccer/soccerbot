@@ -3,5 +3,5 @@
     <env name="WEBOTS_HOME" value="$HOME/catkin_ws/src/soccerbot/external/webots" />
     <env name="JAVA_HOME" value="/usr" />
     
-    <node pkg="soccerbot" type="game_controller.sh" name="game_controller" />
+    <node pkg="soccerbot" type="game_controller.sh" name="game_controller" required="true"/>
 </launch>
