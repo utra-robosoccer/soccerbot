@@ -117,7 +117,6 @@ class SoccerbotControllerRos(SoccerbotController):
                                              forces=forces
                                              )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
-                self.soccerbot.publishOdometry()
 
             if self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() < t + SoccerbotController.PYBULLET_STEP:
                 rospy.loginfo("Completed Walk")
@@ -125,12 +124,14 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
+                if hasattr(self, 'robot_pose'):
+                    self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.soccerbot.apply_head_rotation()
 
             if t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    rospy.logwarn_throttle(10, "Adjusting robot pitch" + str(pitch - self.soccerbot.DESIRED_PITCH_2))
                     if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:
@@ -151,6 +152,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.publishAngles()
                 pb.stepSimulation()
 
+            self.soccerbot.publishOdometry() # Publish odometry at all times
             t = t + SoccerbotController.PYBULLET_STEP
             r.sleep()
 

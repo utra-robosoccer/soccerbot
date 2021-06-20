@@ -40,6 +40,10 @@ class SoccerbotRos(Soccerbot):
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
 
         self.imu_ready = False
+        self.odom_pose = None
+        self.odom_pose_previous = None
+        self.odom_ros_time_previous = None
+        self.odom_seq = 0
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -88,25 +92,57 @@ class SoccerbotRos(Soccerbot):
 
     def publishOdometry(self):
         o = Odometry()
+        o.header.seq = self.odom_seq
         o.header.stamp = rospy.Time.now()
-        o.header.frame_id = os.environ["ROS_NAMESPACE"] + "/odom"
-        pose = self.odom_pose.get_position()
-        o.pose.pose.position.x = pose[0]
-        o.pose.pose.position.y = pose[1]
-        o.pose.pose.position.z = 0
-        orientation = self.odom_pose.get_orientation()
-        o.pose.pose.orientation.x = orientation[0]
-        o.pose.pose.orientation.y = orientation[1]
-        o.pose.pose.orientation.z = orientation[2]
-        o.pose.pose.orientation.w = orientation[3]
-
+        if self.odom_ros_time_previous == o.header.stamp:
+            return
+        o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
+        o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_footprint"
+        o.pose.pose.orientation.w = 1
         o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
                              0, 1E-2, 0, 0, 0, 0,
                              0, 0, 1E-6, 0, 0, 0,
                              0, 0, 0, 1E-6, 0, 0,
                              0, 0, 0, 0, 1E-6, 0,
                              0, 0, 0, 0, 0, 1E-2]
+        o.twist.covariance = [1E-3, 0, 0, 0, 0, 0,
+                             0, 1E-3, 0, 0, 0, 0,
+                             0, 0, 1E-6, 0, 0, 0,
+                             0, 0, 0, 1E-6, 0, 0,
+                             0, 0, 0, 0, 1E-6, 0,
+                             0, 0, 0, 0, 0, 1E-3]
+
+        if self.odom_pose is not None:
+            pose = self.odom_pose.get_position()
+            o.pose.pose.position.x = pose[0]
+            o.pose.pose.position.y = pose[1]
+            o.pose.pose.position.z = 0
+            orientation = self.odom_pose.get_orientation()
+            o.pose.pose.orientation.x = orientation[0]
+            o.pose.pose.orientation.y = orientation[1]
+            o.pose.pose.orientation.z = orientation[2]
+            o.pose.pose.orientation.w = orientation[3]
+
+
+            # Velocity calcululations
+            if self.odom_pose_previous is not None:
+                dt_ros = (o.header.stamp - self.odom_ros_time_previous)
+                dt = dt_ros.to_sec() + dt_ros.to_nsec() * 10E-9
+                o.twist.twist.linear.x = (self.odom_pose.get_position()[0] - self.odom_pose_previous.get_position()[0]) / dt
+                o.twist.twist.linear.y = (self.odom_pose.get_position()[1] - self.odom_pose_previous.get_position()[1]) / dt
+                o.twist.twist.angular.z = (self.odom_pose.get_orientation_euler()[2] - self.odom_pose_previous.get_orientation_euler()[2]) / dt
+
+            self.odom_pose_previous = self.odom_pose
+        else:
+            orientation = self.pose.get_orientation()
+            o.pose.pose.orientation.x = orientation[0]
+            o.pose.pose.orientation.y = orientation[1]
+            o.pose.pose.orientation.z = orientation[2]
+            o.pose.pose.orientation.w = orientation[3]
+
+        self.odom_ros_time_previous = o.header.stamp
         self.odom_publisher.publish(o)
+        self.odom_seq += 1
         pass
 
     def get_imu(self):

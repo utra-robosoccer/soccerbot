@@ -65,7 +65,7 @@ class RobotRos(Robot):
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
-        assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status)
+        assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED

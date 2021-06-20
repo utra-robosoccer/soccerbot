@@ -14,7 +14,7 @@ odom_model_type: "omni-corrected"
 use_map_topic: true
 first_map_only: true
 scan_topic: scan
-initial_cov_xx: 1
-initial_cov_yy: 1
+initial_cov_xx: 0.05
+initial_cov_yy: 0.05
 
 global_frame_id: "world"

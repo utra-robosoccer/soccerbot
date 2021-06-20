@@ -8,14 +8,11 @@ import time
 
 import rospy
 import struct
-import tf
 from rosgraph_msgs.msg import Clock
 
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool, Float64
 import messages_pb2
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 
 class GameControllerBridge():
@@ -81,8 +78,6 @@ class GameControllerBridge():
 
         self.first_run = True
         self.published_camera_info = False
-        self.temp_bool = True
-        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.callback)
         self.run()
 
     def receive_msg(self):
@@ -108,41 +103,8 @@ class GameControllerBridge():
                 sensor_time_steps = self.get_sensor_time_steps(active=True)
             self.send_actuator_requests(sensor_time_steps)
             self.first_run = False
-            if self.temp_bool:
-                odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
-
-                # since all odometry is 6DOF we'll need a quaternion created from yaw
-                odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
-
-                # next, we'll publish the odometry message over ROS
-                odom = Odometry()
-                odom.header.stamp = self.stamp
-                odom.header.frame_id = self.base_frame + "/odom"
-
-                # set the position
-                odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
-                odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                        0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                        0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                        0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                        0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                # set the velocity
-                odom.child_frame_id = self.base_frame + "/base_footprint"
-                odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-                odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                # publish the message
-                odom_pub.publish(odom)
 
         self.close_connection()
-
-    def callback(self, data):
-        self.temp_bool = False
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)

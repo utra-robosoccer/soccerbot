@@ -62,7 +62,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         for robot in self.robots:
             if robot.robot_name == self.robot_name:
                 self.this_robot = robot
-        assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
+        assert self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name
 
         self.ball = Ball(position=np.array([0, 0]))
 
