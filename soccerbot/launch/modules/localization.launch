@@ -51,7 +51,7 @@
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
         <param name="initial_pose_x" value="$(arg x_pos)" />
         <param name="initial_pose_y" value="$(arg y_pos)" />
-        <param name="initial_pose_a" value="$(arg a_pos)" />
+        <param name="initial_pose_a" value="$(eval 0.5 * 3.1415 * arg('a_pos'))" />
         <param name="odom_frame_id" value="$(arg robot_name)/odom" />
         <param name="base_frame_id" value="$(arg robot_name)/base_camera" />
     </node>

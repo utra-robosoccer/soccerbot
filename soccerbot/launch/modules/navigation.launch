@@ -1,5 +1,8 @@
 <launch>
     <arg name="simulation" />
+    <arg name="x_pos" />
+    <arg name="y_pos" />
+    <arg name="a_pos" />
 
     <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
 
@@ -9,5 +12,9 @@
         <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
     </node>
 
-    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol"/>
+    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol">
+        <param name="x_pos" value="$(arg x_pos)" />
+        <param name="y_pos" value="$(arg y_pos)" />
+        <param name="a_pos" value="$(arg a_pos)" />
+    </node>
 </launch>

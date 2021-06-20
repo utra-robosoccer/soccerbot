@@ -1,7 +1,8 @@
 from sensor_msgs.msg import JointState, Imu
-from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped
+
+from transformation import Transformation
 from soccerbot import *
 import rospy
 import os
@@ -38,6 +39,10 @@ class SoccerbotRos(Soccerbot):
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
+
+        self.x_pos_init = rospy.get_param("~x_pos", 0)
+        self.y_pos_init = rospy.get_param("~y_pos", 0)
+        self.a_pos_init = rospy.get_param("~a_pos", 0)
 
         self.imu_ready = False
         self.odom_pose = None
@@ -99,18 +104,14 @@ class SoccerbotRos(Soccerbot):
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
         o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_footprint"
         o.pose.pose.orientation.w = 1
-        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
-                             0, 1E-2, 0, 0, 0, 0,
+        o.pose.pose.position.x = -3.5
+        o.pose.pose.position.y = 1
+        o.pose.covariance = [5E-2, 0, 0, 0, 0, 0,
+                             0, 5E-2, 0, 0, 0, 0,
                              0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
+                             0, 0, 0, 1E-2, 0, 0,
+                             0, 0, 0, 0, 1E-2, 0,
                              0, 0, 0, 0, 0, 1E-2]
-        o.twist.covariance = [1E-3, 0, 0, 0, 0, 0,
-                             0, 1E-3, 0, 0, 0, 0,
-                             0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
-                             0, 0, 0, 0, 0, 1E-3]
 
         if self.odom_pose is not None:
             pose = self.odom_pose.get_position()
@@ -125,6 +126,12 @@ class SoccerbotRos(Soccerbot):
 
 
             # Velocity calcululations
+            o.twist.covariance = [5E-2, 0, 0, 0, 0, 0,
+                                  0, 5E-2, 0, 0, 0, 0,
+                                  0, 0, 1E-6, 0, 0, 0,
+                                  0, 0, 0, 1E-2, 0, 0,
+                                  0, 0, 0, 0, 1E-2, 0,
+                                  0, 0, 0, 0, 0, 1E-2]
             if self.odom_pose_previous is not None:
                 dt_ros = (o.header.stamp - self.odom_ros_time_previous)
                 dt = dt_ros.to_sec() + dt_ros.to_nsec() * 10E-9
@@ -133,6 +140,14 @@ class SoccerbotRos(Soccerbot):
                 o.twist.twist.angular.z = (self.odom_pose.get_orientation_euler()[2] - self.odom_pose_previous.get_orientation_euler()[2]) / dt
 
             self.odom_pose_previous = self.odom_pose
+        else:
+            o.pose.pose.position.x = self.x_pos_init
+            o.pose.pose.position.y = self.y_pos_init
+            orientation = Transformation.get_quaternion_from_euler([0, 0, self.a_pos_init])
+            o.pose.pose.orientation.x = orientation[0]
+            o.pose.pose.orientation.y = orientation[1]
+            o.pose.pose.orientation.z = orientation[2]
+            o.pose.pose.orientation.w = orientation[3]
 
         self.odom_ros_time_previous = o.header.stamp
         self.odom_publisher.publish(o)

@@ -49,6 +49,9 @@
 
     <include file="$(find soccerbot)/launch/modules/navigation.launch">
         <arg name="simulation" value="$(arg simulation)" />
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="a_pos" value="$(arg a_pos)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" >

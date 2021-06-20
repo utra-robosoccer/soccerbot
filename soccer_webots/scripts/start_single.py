@@ -29,7 +29,6 @@ os.environ["WEBOTS_ROBOT_NAME"] = args.robot_name
 rospy.loginfo("Starting ros interface for " + args.robot_name)
 
 r = RobotController(base_ns=args.robot_name)
-init_pub = rospy.Publisher("/" + args.robot_name + "/initialpose", PoseWithCovarianceStamped, queue_size=50)
 
 current_time = rospy.Time.from_seconds(r.time)
 last_time = rospy.Time.from_seconds(r.time)
