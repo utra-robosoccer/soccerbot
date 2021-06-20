@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import math
+import tf
 import rospy
 from std_msgs.msg import Empty
 from soccer_msgs.msg import GameState
@@ -102,6 +103,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.execute_game_interruption_publisher = rospy.Publisher('execute_game_interruption', Empty, queue_size=1)
 
         self.rostime_previous = 0
+        self.listener = tf.TransformListener()
         self.team1_strategy = DummyStrategy()
         self.team2_strategy = DummyStrategy()
         self.freekick_strategy = FreekickStrategy(False)
@@ -121,15 +123,27 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.gameState = gameState
 
     def update_average_ball_position(self):
-        # get estimated ball position with tf information from 4 robots and average them
-        # this needs to be team-dependent in the future
         ball_positions = []
         for robot in self.friendly:
-            if robot.ball_position.all():
-                ball_positions.append(robot.ball_position)
+            time_diff = rospy.Duration(10)
+            try:
+                ball_pose = self.listener.lookupTransform(robot.robot_name + '/ball',
+                                                               robot.robot_name + '/torso',
+                                                               rospy.Time(0))
+                header = self.listener.getLatestCommonTime(robot.robot_name + '/ball',
+                                                           robot.robot_name + '/torso')
+                time_diff = rospy.Time.now() - header
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                pass
+            if time_diff < rospy.Duration(0.2):
+                ball_positions.append(np.array([-ball_pose[0][1], ball_pose[0][0]]) + robot.position[0:2])
+                print(ball_positions)
 
         if ball_positions:
             self.ball.position = np.array(ball_positions).mean(axis=0)
+        else:
+            self.ball.position = None
 
     def stop_all_robot(self):
         for robot in self.friendly:
@@ -271,7 +285,4 @@ class GameEngineCompetition(game_engine.GameEngine):
                 current_closest = robot
         current_closest.designated_kicker = True
 
-    def run_penaltykick(self, rostime):
-        # implement penalty kick strategy
-        pass
 
