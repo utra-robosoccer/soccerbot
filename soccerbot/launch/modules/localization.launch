@@ -46,7 +46,13 @@
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
-        <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />-->
+        <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
+        <param name="odom0" value="odom" />
+        <param name="pose1" value="odom_combined" />
+        <param name="pose0" value="amcl_pose" />
+        <param name="imu0" value="imu_filtered" />
+        <param name="odom_frame" value="$(arg robot_name)/odom" />
+        <param name="base_link_frame" value="$(arg robot_name)/base_camera" />
     </node>
 
 
