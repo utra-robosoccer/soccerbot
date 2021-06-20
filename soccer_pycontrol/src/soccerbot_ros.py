@@ -133,12 +133,6 @@ class SoccerbotRos(Soccerbot):
                 o.twist.twist.angular.z = (self.odom_pose.get_orientation_euler()[2] - self.odom_pose_previous.get_orientation_euler()[2]) / dt
 
             self.odom_pose_previous = self.odom_pose
-        else:
-            orientation = self.pose.get_orientation()
-            o.pose.pose.orientation.x = orientation[0]
-            o.pose.pose.orientation.y = orientation[1]
-            o.pose.pose.orientation.z = orientation[2]
-            o.pose.pose.orientation.w = orientation[3]
 
         self.odom_ros_time_previous = o.header.stamp
         self.odom_publisher.publish(o)

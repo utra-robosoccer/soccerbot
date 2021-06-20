@@ -124,8 +124,6 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
-                if hasattr(self, 'robot_pose'):
-                    self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.soccerbot.apply_head_rotation()
 
             if t < 0:
