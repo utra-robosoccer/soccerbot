@@ -15,9 +15,6 @@ class RobotRos(Robot):
         self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose",
                                                PoseWithCovarianceStamped,
                                                self.robot_pose_callback)
-        self.ball_pose_sub = rospy.Subscriber('/' + robot_name + "/ball",
-                                              PoseWithCovarianceStamped,
-                                              self.ball_pose_callback)
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
@@ -32,7 +29,6 @@ class RobotRos(Robot):
         self.status = status
         self.position = np.array([0.0, 0.0, 0])
         self.goal_position = np.array([0.0, 0.0, 0])
-        self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name
         self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
@@ -54,10 +50,6 @@ class RobotRos(Robot):
         #print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
-
-    def ball_pose_callback(self, data):
-        self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
-        pass
 
     def completed_walking_callback(self, data):
         rospy.loginfo("Completed Walking")

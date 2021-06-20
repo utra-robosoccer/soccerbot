@@ -21,6 +21,12 @@ class Strategy:
     def update_next_strategy(self, friendly, opponent, ball):
         raise NotImplementedError
 
+    def check_ball_avaliable(self, ball):
+        if ball.position is None:
+            print("No ball position available")
+            return False
+        else:
+            return True
 
 class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
@@ -42,6 +48,9 @@ class DummyStrategy(Strategy):
         return current_closest
 
     def update_next_strategy(self, friendly, opponent, ball):
+        if not self.check_ball_avaliable(ball):
+            return
+
         # Guess who has the ball
         current_closest = self.who_has_the_ball(friendly, ball)
 
@@ -81,6 +90,9 @@ class PassStrategy(DummyStrategy):
         return current_closest
 
     def update_next_strategy(self, friendly, opponent, ball):
+        if not self.check_ball_avaliable(ball):
+            return
+
         # Guess who has the ball
         current_closest = self.who_has_the_ball(friendly, ball)
 
@@ -116,6 +128,9 @@ class FreekickStrategy(DummyStrategy):
 
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
+        if not self.check_ball_avaliable(ball):
+            return False
+
         non_kicker = []
         for robot in friendly:
             if robot.designated_kicker:
@@ -143,16 +158,16 @@ class FreekickStrategy(DummyStrategy):
             kicker.set_navigation_position(np.append(ball.get_position(), 0))
             return False
 
-
-
-
     # kicker actually kick the ball
     def execute_kicking(self, friendly, ball):
+        if not self.check_ball_avaliable(ball):
+            return
+
         for robot in friendly:
             if robot.designated_kicker:
                 kicker = self.who_has_the_ball(friendly, ball)
 
-        if kicker == None:
+        if kicker is None:
             return
 
         if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
@@ -163,6 +178,9 @@ class FreekickStrategy(DummyStrategy):
 
     # preparation if we are not the kicking team
     def update_non_kicking_strategy(self, friendly, ball):
+        if not self.check_ball_avaliable(ball):
+            return
+
         for robot in friendly:
             if robot.team == Robot.Team.FRIENDLY:
                 own_goal = np.array([0, -4.5])
@@ -187,4 +205,4 @@ class FreekickStrategy(DummyStrategy):
                 nav_pose = own_goal
                 robot.set_navigation_position(np.append(nav_pose, angle))
 
-        # todo make is so that all robot stay within the field boundary
+        #todo make is so that all robot stay within the field boundary
