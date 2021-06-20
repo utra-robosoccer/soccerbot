@@ -22,7 +22,7 @@ if [[ "robot1" = "$1" ]]
 then
     GOALIE=true
     X_POS=-4
-    Y_POS=-3.6
+    Y_POS=-3.06
     ANGLE=1.57
 else
     GOALIE=false
@@ -38,15 +38,15 @@ fi
 
 if [[ "robot3" = "$1" ]]
 then
-    X_POS=-3.5
-    Y_POS=-3.6
+    X_POS=-1
+    Y_POS=-3.06
     ANGLE=1.57
 
 fi
 
 if [[ "robot4" = "$1" ]]
 then
-    X_POS=-3.5
+    X_POS=-1
     Y_POS=3.06
     ANGLE=-1.57
 

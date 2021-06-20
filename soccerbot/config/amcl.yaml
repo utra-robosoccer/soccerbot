@@ -2,7 +2,7 @@ min_particles: 100
 max_particles: 5000
 kld_err: 0.00001
 kld_z: 0.99
-update_min_d: 0.2
+update_min_d: 0.1
 update_min_a: 0.1
 resample_interval: 1
 gui_publish_rate: 1
