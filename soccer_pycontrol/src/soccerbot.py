@@ -517,7 +517,6 @@ class Soccerbot:
         self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-        print(self.DESIRED_PITCH_2)
         return pitch
 
     def reset_imus(self):

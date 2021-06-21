@@ -19,6 +19,7 @@
         <arg name="y_pos" value="-3.06" />
         <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="true" />
+        <arg name="competition" value="false" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
@@ -29,6 +30,7 @@
         <arg name="y_pos" value="-3.06" />
         <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="false" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
@@ -39,6 +41,7 @@
         <arg name="y_pos" value="3.06" />
         <arg name="a_pos" value="-1.57" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="false" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
@@ -49,6 +52,7 @@
         <arg name="y_pos" value="3.06" />
         <arg name="a_pos" value="-1.57" />
         <arg name="goalie" value="false" />
+        <arg name="competition" value="false" />
     </include>
 
 </launch>

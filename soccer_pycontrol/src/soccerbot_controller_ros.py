@@ -11,7 +11,7 @@ from sensor_msgs.msg import Imu
 class SoccerbotControllerRos(SoccerbotController):
 
     def __init__(self):
-        if rospy.get_param('COMPETITION'):
+        if os.getenv('COMPETITION', 'false') == 'true':
             pb.connect(pb.DIRECT)
         else:
             pb.connect(pb.GUI)
@@ -155,7 +155,6 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.apply_head_rotation()
 
             if t < 0:
-                print(t)
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
