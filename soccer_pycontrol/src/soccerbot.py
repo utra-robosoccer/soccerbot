@@ -585,9 +585,6 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
         self.head_step = 0
-# [-0.45, 2.5132741228718345, -0.45, 2.5132741228718345, 0.0, 2.220446049250313e-16, 0.5637032613023638,
-#  -1.1763368775247551, 0.6146834557094691, 0.0, 0.0, -2.220446049250313e-16, 0.5637032613023638,
-#  -1.1763368775247551, 0.6146834557094691, 0.0, 0.3508168920914668, 0.6]
 
     def apply_foot_pressure_sensor_feedback(self, floor):
         foot_pressure_values = self.get_foot_pressure_sensors(floor)

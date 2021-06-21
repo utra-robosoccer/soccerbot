@@ -27,11 +27,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2",
       "halfTimeStartingPose": {
-        "translation": [-1, -3.06, 0.362568],
+        "translation": [-1.25, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-1, -3.06, 0.362568],
+        "translation": [-1.25, -3.06, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
@@ -69,11 +69,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot4",
       "halfTimeStartingPose": {
-        "translation": [-1, 3.06, 0.362568],
+        "translation": [-1.25, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-1, 3.06, 0.362568],
+        "translation": [-1.25, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {

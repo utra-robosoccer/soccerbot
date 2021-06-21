@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
     rospy.logwarn("Initializing Soccer Control")
-    rospy.sleep(5)
+    rospy.sleep(1)
     walker = soccerbot_controller_ros.SoccerbotControllerRos()
     rospy.logwarn("Starting Control Loop")
     walker.run()
