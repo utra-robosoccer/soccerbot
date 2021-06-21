@@ -13,8 +13,8 @@ class Camera {
     Pose3 pose;
 
     // Values for the C920 camera
-    float resolution_x = 0;
-    float resolution_y = 0;
+    float resolution_x = 640;
+    float resolution_y = 480;
 
 private:
 
