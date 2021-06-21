@@ -1,7 +1,7 @@
 from sensor_msgs.msg import JointState, Imu
 from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
-from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from soccerbot import *
 import rospy
 import os
@@ -37,9 +37,10 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
-        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
 
+        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
+
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -59,9 +60,11 @@ class SoccerbotRos(Soccerbot):
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)
 
+        # base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body) # Get odometry from the simulator itself >:)
+        # Get odometry from the simulator itself >:)
+
         base_pose = self.pose.get_position()
         base_orientation = self.pose.get_orientation()
-        # base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body) # Get odometry from the simulator itself >:)
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self):
