@@ -8,14 +8,13 @@ transform_tolerance: 1
 laser_model_type: "likelihood_field_prob"
 laser_max_beams: 100
 
-#odom_model_type: "omni-corrected"
+odom_model_type: "omni-corrected"
 
 
 use_map_topic: true
 first_map_only: true
 scan_topic: scan
-initial_pose_a: 0.0
-initial_cov_xx: 1.0
-initial_cov_yy: 1.0
+initial_cov_xx: 1
+initial_cov_yy: 1
 
 global_frame_id: "world"

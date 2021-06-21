@@ -9,9 +9,9 @@ PROTO Soccerbot_left_calve_3Mesh [
 {
   Shape {
     appearance PBRAppearance {
-      baseColor 0.627451 0.627451 0.627451
+      baseColor 0.000000 0.000000 0.000000
       transparency 0.000000
-      roughness 0.000000
+      roughness 1.000000
       metalness 0
       emissiveColor 0.000000 0.000000 0.000000
     }

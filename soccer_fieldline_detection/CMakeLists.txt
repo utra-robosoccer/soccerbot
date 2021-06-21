@@ -51,6 +51,16 @@ target_link_libraries(ball_detector
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
+add_executable(
+        test_soccer_vision
+        src/test_soccer_vision.cpp
+        src/camera.cpp
+)
+add_dependencies(test_soccer_vision ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(test_soccer_vision
+        ${catkin_LIBRARIES}
+        ${OpenCV_LIBRARIES}
+        )
 
 #############
 ## Testing ##

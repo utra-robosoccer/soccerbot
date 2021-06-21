@@ -8,11 +8,11 @@ Panels:
         - /Status1
         - /Grid1/Offset1
         - /TF1/Frames1
-        - /Localization1
-        - /RobotModel3
-        - /RobotModel4
+        - /Friendly Goalie1
+        - /Friendly Goalie1/Localization1
+        - /Friendly Goalie1/Localization1/Objection Detection1
       Splitter Ratio: 0.4962962865829468
-    Tree Height: 320
+    Tree Height: 404
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -30,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Image
+    SyncSource: LaserScan Robot1
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -156,524 +156,495 @@ Visualization Manager:
                             {}
       Update Interval: 0
       Value: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-        robot1/base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        robot1/camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        robot1/head:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/imu_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        robot1/left_ankle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_bicep:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_calve:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_foot:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_forearm:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_hip_front:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_hip_side:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/left_thigh:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/neck:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_ankle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_bicep:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_calve:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_foot:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_forearm:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_hip_front:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_hip_side:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/right_thigh:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot1/torso:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Name: RobotModel
-      Robot Description: robot1/robot_description
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
     - Class: rviz/Group
       Displays:
-        - Class: rviz/Image
-          Enabled: false
-          Image Topic: /robot1/darknet_ros/detection_image
-          Max Value: 1
-          Median window: 5
-          Min Value: 0
-          Name: Image
-          Normalize Range: true
-          Queue Size: 2
-          Transport Hint: raw
-          Unreliable: false
-          Value: false
-        - Alpha: 1
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 10
-            Min Value: -10
-            Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/PointCloud2
-          Color: 255; 255; 255
-          Color Transformer: Intensity
-          Decay Time: 0
-          Enabled: false
-          Invert Rainbow: false
-          Max Color: 255; 255; 255
-          Min Color: 0; 0; 0
-          Name: Field Lines Point Cloud
-          Position Transformer: XYZ
-          Queue Size: 10
-          Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.007000000216066837
-          Style: Spheres
-          Topic: /robot1/field_point_cloud
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
-          Value: false
-        - Alpha: 1
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 10
-            Min Value: -10
-            Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/LaserScan
-          Color: 255; 0; 0
-          Color Transformer: FlatColor
-          Decay Time: 0
-          Enabled: true
-          Invert Rainbow: true
-          Max Color: 255; 255; 255
-          Min Color: 0; 0; 0
-          Name: LaserScan Robot1
-          Position Transformer: XYZ
-          Queue Size: 10
-          Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.009999999776482582
-          Style: Spheres
-          Topic: /robot1/scan
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: false
-          Value: true
-        - Alpha: 0.30000001192092896
-          Class: rviz/Map
-          Color Scheme: costmap
-          Draw Behind: false
-          Enabled: true
-          Name: Map
-          Topic: /robot1/map
-          Unreliable: false
-          Use Timestamp: false
-          Value: true
-        - Alpha: 1
-          Axes Length: 1
-          Axes Radius: 0.10000000149011612
-          Class: rviz/PoseWithCovariance
-          Color: 255; 25; 0
-          Covariance:
-            Orientation:
-              Alpha: 0.5
-              Color: 255; 255; 127
-              Color Style: Unique
-              Frame: Local
-              Offset: 1
-              Scale: 1
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Image
+              Enabled: true
+              Image Topic: /robot1/camera/line_image
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: "Line "
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
               Value: true
-            Position:
-              Alpha: 0.30000001192092896
-              Color: 204; 51; 204
-              Scale: 1
+            - Class: rviz/Image
+              Enabled: true
+              Image Topic: /robot1/detection_image
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: Objection Detection
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
               Value: true
-            Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: Intensity
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Field Lines Point Cloud
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.007000000216066837
+              Style: Spheres
+              Topic: /robot1/field_point_cloud
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/LaserScan
+              Color: 255; 0; 0
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: true
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: LaserScan Robot1
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Spheres
+              Topic: /robot1/scan
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: false
+              Value: true
+            - Alpha: 0.30000001192092896
+              Class: rviz/Map
+              Color Scheme: costmap
+              Draw Behind: false
+              Enabled: true
+              Name: Map
+              Topic: /robot1/map
+              Unreliable: false
+              Use Timestamp: false
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.10000000149011612
+              Class: rviz/PoseWithCovariance
+              Color: 255; 25; 0
+              Covariance:
+                Orientation:
+                  Alpha: 0.5
+                  Color: 255; 255; 127
+                  Color Style: Unique
+                  Frame: Local
+                  Offset: 1
+                  Scale: 1
+                  Value: true
+                Position:
+                  Alpha: 0.30000001192092896
+                  Color: 204; 51; 204
+                  Scale: 1
+                  Value: true
+                Value: true
+              Enabled: true
+              Head Length: 0.10000000149011612
+              Head Radius: 0.029999999329447746
+              Name: AMCL Pose
+              Queue Size: 10
+              Shaft Length: 0.30000001192092896
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow
+              Topic: /robot1/amcl_pose
+              Unreliable: false
+              Value: true
+            - Alpha: 0.20000000298023224
+              Arrow Length: 0.009999999776482582
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz/PoseArray
+              Color: 138; 226; 52
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Pose Estimates
+              Queue Size: 10
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (Flat)
+              Topic: /robot1/particlecloud
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/LaserScan
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: LaserScan Robot2
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Spheres
+              Topic: robot2/scan
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/LaserScan
+              Color: 252; 175; 62
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: LaserScan Robot3
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Spheres
+              Topic: /robot3/scan
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/LaserScan
+              Color: 255; 255; 255
+              Color Transformer: ""
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: LaserScan Robot4
+              Position Transformer: ""
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Spheres
+              Topic: /robot4/scan
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
           Enabled: true
-          Head Length: 0.10000000149011612
-          Head Radius: 0.029999999329447746
-          Name: AMCL Pose
-          Queue Size: 10
-          Shaft Length: 0.30000001192092896
-          Shaft Radius: 0.009999999776482582
-          Shape: Arrow
-          Topic: /robot1/amcl_pose
-          Unreliable: false
-          Value: true
-        - Alpha: 0.20000000298023224
-          Arrow Length: 0.009999999776482582
-          Axes Length: 0.30000001192092896
-          Axes Radius: 0.009999999776482582
-          Class: rviz/PoseArray
-          Color: 138; 226; 52
+          Name: Localization
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.10000000149011612
+              Class: rviz/Pose
+              Color: 78; 154; 6
+              Enabled: true
+              Head Length: 0.30000001192092896
+              Head Radius: 0.10000000149011612
+              Name: Goal
+              Queue Size: 10
+              Shaft Length: 0.5
+              Shaft Radius: 0.05000000074505806
+              Shape: Arrow
+              Topic: /robot1/goal
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Buffer Length: 1
+              Class: rviz/Path
+              Color: 25; 255; 0
+              Enabled: true
+              Head Diameter: 0.30000001192092896
+              Head Length: 0.20000000298023224
+              Length: 0.30000001192092896
+              Line Style: Lines
+              Line Width: 0.029999999329447746
+              Name: Path
+              Offset:
+                X: 0
+                Y: 0
+                Z: 0
+              Pose Color: 255; 85; 255
+              Pose Style: None
+              Queue Size: 10
+              Radius: 0.029999999329447746
+              Shaft Diameter: 0.10000000149011612
+              Shaft Length: 0.10000000149011612
+              Topic: /robot1/path
+              Unreliable: false
+              Value: true
           Enabled: true
-          Head Length: 0.07000000029802322
-          Head Radius: 0.029999999329447746
-          Name: Pose Estimates
-          Queue Size: 10
-          Shaft Length: 0.23000000417232513
-          Shaft Radius: 0.009999999776482582
-          Shape: Arrow (Flat)
-          Topic: /robot1/particlecloud
-          Unreliable: false
-          Value: true
+          Name: Planning
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Image
+              Enabled: false
+              Image Topic: /robot1/camera/line_image
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: Image
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_0
+              Name: PressureSensor1
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_1
+              Name: PressureSensor2
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_2
+              Name: PressureSensor3
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_4
+              Name: PressureSensor4
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_3
+              Name: PressureSensor5
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_5
+              Name: PressureSensor6
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_6
+              Name: PressureSensor7
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /robot1/foot_pressure_7
+              Name: PressureSensor8
+              Namespaces:
+                Soccer_bot: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Image
+              Enabled: false
+              Image Topic: /robot1/detection_image
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: Image
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
+              Value: false
+          Enabled: true
+          Name: Sensors
         - Alpha: 1
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 10
-            Min Value: -10
-            Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/LaserScan
-          Color: 255; 255; 255
-          Color Transformer: FlatColor
-          Decay Time: 0
+          Class: rviz/RobotModel
+          Collision Enabled: false
           Enabled: true
-          Invert Rainbow: false
-          Max Color: 255; 255; 255
-          Min Color: 0; 0; 0
-          Name: LaserScan Robot2
-          Position Transformer: XYZ
-          Queue Size: 10
-          Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.009999999776482582
-          Style: Spheres
-          Topic: robot2/scan
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
+          Links:
+            All Links Enabled: true
+            Expand Joint Details: false
+            Expand Link Details: false
+            Expand Tree: false
+            Link Tree Style: Links in Alphabetic Order
+            robot1/base_footprint:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/head:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/imu_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/left_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/neck:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/torso:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+          Name: RobotModel
+          Robot Description: robot1/robot_description
+          TF Prefix: ""
+          Update Interval: 0
           Value: true
-        - Alpha: 1
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 10
-            Min Value: -10
-            Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/LaserScan
-          Color: 252; 175; 62
-          Color Transformer: FlatColor
-          Decay Time: 0
-          Enabled: true
-          Invert Rainbow: false
-          Max Color: 255; 255; 255
-          Min Color: 0; 0; 0
-          Name: LaserScan Robot3
-          Position Transformer: XYZ
-          Queue Size: 10
-          Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.009999999776482582
-          Style: Spheres
-          Topic: /robot3/scan
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
-          Value: true
-        - Alpha: 1
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 10
-            Min Value: -10
-            Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/LaserScan
-          Color: 255; 255; 255
-          Color Transformer: ""
-          Decay Time: 0
-          Enabled: true
-          Invert Rainbow: false
-          Max Color: 255; 255; 255
-          Min Color: 0; 0; 0
-          Name: LaserScan Robot4
-          Position Transformer: ""
-          Queue Size: 10
-          Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.009999999776482582
-          Style: Spheres
-          Topic: /robot4/scan
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
-          Value: true
+          Visual Enabled: true
       Enabled: true
-      Name: Localization
-    - Class: rviz/Group
-      Displays:
-        - Class: rviz/MarkerArray
-          Enabled: true
-          Marker Topic: /successor_states
-          Name: Successor States
-          Namespaces:
-            {}
-          Queue Size: 100
-          Value: true
-        - Alpha: 1
-          Axes Length: 1
-          Axes Radius: 0.10000000149011612
-          Class: rviz/Pose
-          Color: 255; 25; 0
-          Enabled: true
-          Head Length: 0.30000001192092896
-          Head Radius: 0.10000000149011612
-          Name: Pose
-          Queue Size: 10
-          Shaft Length: 1
-          Shaft Radius: 0.05000000074505806
-          Shape: Arrow
-          Topic: /robot1/goal
-          Unreliable: false
-          Value: true
-        - Alpha: 1
-          Arrow Length: 0.30000001192092896
-          Axes Length: 0.30000001192092896
-          Axes Radius: 0.009999999776482582
-          Class: rviz/PoseArray
-          Color: 255; 25; 0
-          Enabled: true
-          Head Length: 0.07000000029802322
-          Head Radius: 0.029999999329447746
-          Name: PoseArray
-          Queue Size: 10
-          Shaft Length: 0.23000000417232513
-          Shaft Radius: 0.009999999776482582
-          Shape: Arrow (Flat)
-          Topic: /robot1/successor_states
-          Unreliable: false
-          Value: true
-      Enabled: true
-      Name: Planning
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /robot1/camera/line_image
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_0
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_1
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_2
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_4
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_3
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_5
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_6
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /robot1/foot_pressure_7
-      Name: Marker
-      Namespaces:
-        Soccer_bot: true
-      Queue Size: 100
-      Value: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-      Name: RobotModel
-      Robot Description: /robot2/robot_description
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-      Name: RobotModel
-      Robot Description: robot3/robot_description
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-      Name: RobotModel
-      Robot Description: robot4/robot_description
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /robot1/detection_image
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
+      Name: Friendly Goalie
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -702,7 +673,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.091775894165039
+      Distance: 4.616764545440674
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -710,17 +681,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.09501519054174423
-        Y: 0.10241812467575073
-        Z: 0.16243012249469757
+        X: -0.2573540210723877
+        Y: -0.09743208438158035
+        Z: 0.22706744074821472
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4653984606266022
+      Pitch: 0.3953985273838043
       Target Frame: <Fixed Frame>
-      Yaw: 3.4254491329193115
+      Yaw: 3.910444736480713
     Saved: ~
 Window Geometry:
   Displays:
@@ -730,7 +701,11 @@ Window Geometry:
   Hide Right Dock: true
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000020f00000375fc0200000010fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003d0000017d000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d006100670065000000018e000001210000001600fffffffb0000000a0049006d00610067006501000001c0000001130000001600fffffffb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d006100670065000000011d000001560000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000001600ffffff000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d0065010000000000000780000002eb00fffffffb0000000800540069006d006501000000000000045000000000000000000000056b0000037500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  "Line ":
+    collapsed: false
+  Objection Detection:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000001f200000359fc0200000012fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003d000001d1000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000175000001280000005c00fffffffb0000000a0049006d006100670065000000018e000001210000001600fffffffb0000000a0049006d0061006700650000000592000003aa0000001600fffffffb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d00610067006500000001c8000000840000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000000000000000fb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e0100000214000000b40000001600fffffffb0000000a004c0069006e0065002001000002ce000000c80000001600ffffff000000010000010000000361fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000361000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000005afc0100000002fb0000000800540069006d0065010000000000000780000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000005880000035900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:

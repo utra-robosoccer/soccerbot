@@ -51,7 +51,7 @@ class ObjectDetectionNode(object):
                 img = self.image[:,:,:3] # get rid of alpha channel
 
                 dim = (640//3, 480//3) # (213, 160)
-                img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_CUBIC)
+                img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
 
                 w, h = 200, 150
                 y, x, _ = img.shape # 160, 213
@@ -62,41 +62,47 @@ class ObjectDetectionNode(object):
 
                 img_torch = util.cv_to_torch(crop_img)
 
-                outputs, _ = self.model(torch.tensor(np.expand_dims(img_torch, axis=0)).float())
-                bounding_boxes = find_batch_bounding_boxes(outputs)[0]
+                img_norm = img_torch / 255  # model expects normalized img
 
-                img_torch = util.draw_bounding_boxes(img_torch, bounding_boxes[Label.BALL.value], (255, 0, 0))
-                img_torch = util.draw_bounding_boxes(img_torch, bounding_boxes[Label.ROBOT.value], (0, 0, 255))
-
-                img = util.torch_to_cv(img_torch)
+                outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
+                bbxs = find_batch_bounding_boxes(outputs)[0]
 
                 if bounding_boxes is None:
                     continue
 
                 bbs_msg = BoundingBoxes()
-                ball_box_msg = BoundingBox()
-                robot_box_msg = BoundingBox()
-                for ball_box in bounding_boxes[Label.BALL.value]:
-                    ball_box_msg.xmin = int((ball_box[0] + x_offset) * 3)
-                    ball_box_msg.ymin = int((ball_box[1] + y_offset) * 3)
-                    ball_box_msg.xmax = int((ball_box[2] + x_offset) * 3)
-                    ball_box_msg.ymax = int((ball_box[3] + y_offset) * 3)
-                    ball_box_msg.id = Label.BALL.value
-                    ball_box_msg.Class = 'ball'
+                bb_msg = BoundingBox()
+                for ball_bb in bbxs[Label.BALL.value]:
+                    bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
+                    bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
+                    bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
+                    bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
+                    bb_msg.id = Label.BALL.value
+                    bb_msg.Class = 'ball'
+                bbs_msg.bounding_boxes = [bb_msg]
 
-                for robot_box in bounding_boxes[Label.ROBOT.value]:
-                    robot_box_msg.xmin = int((robot_box[0]+x_offset) * 3)
-                    ball_box_msg.ymin = int((robot_box[1] + y_offset) * 3)
-                    ball_box_msg.xmax = int((robot_box[2] + x_offset) * 3)
-                    ball_box_msg.ymax = int((robot_box[3] + y_offset) * 3)
-                    ball_box_msg.id = Label.ROBOT.value
-                    ball_box_msg.Class = 'robot'
+                big_enough_robot_bbxs = []
+                for robot_bb in bbxs[Label.ROBOT.value]:
+                    bb_msg = BoundingBox()
+                    bb_msg.xmin = int((robot_bb[0] + x_offset) * 3)
+                    bb_msg.ymin = int((robot_bb[1] + y_offset) * 3)
+                    bb_msg.xmax = int((robot_bb[2] + x_offset) * 3)
+                    bb_msg.ymax = int((robot_bb[3] + y_offset) * 3)
+                    bb_msg.id = Label.ROBOT.value
+                    bb_msg.Class = 'robot'
+                    # ignore small boxes
+                    if (bb_msg.xmax - bb_msg.xmin)*(bb_msg.ymax - bb_msg.ymin) > 1000:
+                        bbs_msg.bounding_boxes.append(bb_msg)
+                        big_enough_robot_bbxs.append(robot_bb)
 
                 header = std_msgs.msg.Header()
                 header.stamp = rospy.Time.now()
                 bbs_msg.header = header
                 bbs_msg.image_header = self.image_header
-                bbs_msg.bounding_boxes = [ball_box_msg, robot_box_msg]
+
+                img_torch = util.draw_bounding_boxes(img_torch, big_enough_robot_bbxs, (0, 0, 255))
+                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
+                img = util.torch_to_cv(img_torch)
 
                 self.pub_boundingbox.publish(bbs_msg)
                 self.pub_detection.publish(br.cv2_to_imgmsg(img))

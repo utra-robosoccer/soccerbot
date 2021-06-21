@@ -23,6 +23,9 @@ class Robot:
         FALLEN_BACK = 6
         PENALTY = 7
         OUT_OF_BOUNDS = 8
+        TRAJECTORY_IN_PROGRESS = 9
+        STOP = 10  #stop current action and getup
+        TERMINATE = 11 #terminate all action
 
     def get_position(self):
         return self.position
@@ -48,3 +51,12 @@ class Robot:
                                   [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
 
         self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
+
+    def get_opponent_net_position(self):
+        if self.team == Robot.Team.FRIENDLY:
+            opponent_goal = np.array([0, 4.5])
+        else:
+            opponent_goal = np.array([0, -4.5])
+        return opponent_goal
+
+
