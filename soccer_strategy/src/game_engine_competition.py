@@ -25,8 +25,8 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 5
-    blue_initial_position = [[0, -1, 0], [0, -1, 0], [-1.5, 1.5, 0], [0, 1, 0]]
-    red_initial_position = [[0, -1, 0], [0, -1, 0], [-1.5, -1.5, 0], [0, -1, 0]]
+    blue_initial_position = [[-0.95, -4, 0], [-0.95, -1, 0], [-1.5, 1.5, 0], [0, 1, 0]]
+    red_initial_position = [[-0.95, -4, 0], [-0.95, -1, 0], [-1.5, -1.5, 0], [0, -1, 0]]
 
     def __init__(self):
         print("initializing strategy")
@@ -170,11 +170,14 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
-                        robot.status = Robot.Status.WALKING
+
                         if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE and self.run_once:
-                            robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
+                            robot.status = Robot.Status.WALKING
+                            robot.set_navigation_position(self.blue_initial_position[robot.robot_id ])
                             self.run_once = False
+                            print("only once")
                         elif self.gameState.teamColor == GameState.TEAM_COLOR_RED and self.run_once:
+                            robot.status = Robot.Status.WALKING
                             robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
                             self.run_once = False
             self.rostime_previous = rostime
@@ -208,8 +211,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                 except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                     pass
                 if self.last_pose < rospy.Duration(0.2):
-                    self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
-                    self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+                    # self.strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
+                    self.team1_strategy.update_next_strategy(self.friendly, self.opponent, self.ball)
             self.rostime_previous = rostime
 
 

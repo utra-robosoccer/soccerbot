@@ -114,7 +114,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
                 self.soccerbot.reset_head()
-                for i in range(15):
+                for i in range(20):
                     if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
                         self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     self.soccerbot.publishAngles()  # Disable to stop walking
