@@ -82,7 +82,7 @@ class Test(TestCase):
         goal = Transformation.get_transform_from_euler([np.pi/5, 0, 0])
         goal.set_position([0.05, 0.05, 0])
         self.walker.setGoal(goal)
-        self.walker.soccerbot.robot_path.show()
+        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_1(self):
