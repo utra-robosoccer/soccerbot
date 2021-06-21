@@ -61,7 +61,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_forearm.dae" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/left_forearm.dae" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -151,9 +151,9 @@
       </geometry>
     </collision>
     <visual name="visual">
-      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <origin rpy="1.57  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_forearm.dae" scale="1 1 1"/>
+        <mesh filename="../soccer_description/meshes/right_forearm.dae" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>

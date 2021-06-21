@@ -3,7 +3,7 @@
     <arg name="pose_name" default="lying_back"/>
     <arg name="x_pos" default="0.0" />
     <arg name="y_pos" default="0.0" />
-
+    <arg name="a_pos" default="0.0" />
     <rosparam file="$(find soccer_trajectories)/poses/$(arg pose_name).yaml" command="load" ns="initial_state" />
     <!--<node pkg="soccerbot" type="world_generator.py" args="$(arg robot_name) $(arg x_pos) $(arg y_pos)"/> -->
 

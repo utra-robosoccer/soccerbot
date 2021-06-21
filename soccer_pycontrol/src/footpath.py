@@ -177,12 +177,20 @@ class Footpath(Path):
                 right_foot_action = [self.num_steps() - 1]
 
         else:
-            if (step_num % 2) == 0:  # Left foot moving
-                left_foot_action = [step_num]
-                right_foot_action = [step_num - 1, step_num + 1]
+            if self.first_step_left:
+                if (step_num % 2) == 0:  # Left foot moving
+                    left_foot_action = [step_num]
+                    right_foot_action = [step_num - 1, step_num + 1]
+                else:
+                    left_foot_action = [step_num - 1, step_num + 1]
+                    right_foot_action = [step_num]
             else:
-                left_foot_action = [step_num - 1, step_num + 1]
-                right_foot_action = [step_num]
+                if (step_num % 2) == 0:  # Left foot moving
+                    right_foot_action = [step_num]
+                    left_foot_action = [step_num - 1, step_num + 1]
+                else:
+                    right_foot_action = [step_num - 1, step_num + 1]
+                    left_foot_action = [step_num]
 
         return [right_foot_action, left_foot_action]
 
@@ -190,6 +198,12 @@ class Footpath(Path):
 
         [step_num, right_foot_step_ratio, left_foot_step_ratio] = self.footHeightRatio(t)
         [right_foot_action, left_foot_action] = self.whatIsTheFootDoing(step_num)
+        if right_foot_step_ratio != 0 and right_foot_step_ratio != 1:
+            assert (len(right_foot_action) == 2)
+        if left_foot_step_ratio != 0 and left_foot_step_ratio != 1:
+            assert (len(left_foot_action) == 2)
+        # assert ((len(right_foot_action) == 2) == (right_foot_step_ratio != 0 and right_foot_step_ratio != 1))
+
 
         # Left foot
         if len(right_foot_action) == 1:

@@ -193,7 +193,7 @@ class MyDataSet(Dataset):
         bounding_boxes = self.bounding_boxes[img_path]
         img = util.read_image(img_path)
 
-        height, width, _ = np.array(img).shape
+        height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
         mask = np.ones((height, width, 3)) * Label.OTHER.value
         for bb in bounding_boxes:
@@ -213,6 +213,9 @@ class MyDataSet(Dataset):
         # Apply transformations to get desired dimensions
         img = np.array(self.img_transform(img))
         mask = np.array(self.mask_transform(mask))
+        if depth == 4:
+            img = img[:,:,:3]
+        img = img/255
 
         # flip to channel*W*H - how Pytorch expects it
         img = np.moveaxis(img, -1, 0)

@@ -2,71 +2,87 @@
   "name": "UTRA",
   "players": {
     "1": {
-      "robotModelName": "Bez",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --goalie",
+      "proto": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "sudo ./start_competition.sh robot1 -4 -3.6 1.57",
       "halfTimeStartingPose": {
-        "translation": [-3.5, -3.06, 0.24],
+        "translation": [-4, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
-        "rotation": [0.0, 0.707, 0.707, 3.14]
+        "translation": [-4, -3.6, 0.362568],
+        "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
-        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+        "translation": [2.0, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
+      },
+      "goalKeeperStartingPose": {
+        "translation": [-4.47, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
       }
     },
     "2": {
-      "robotModelName": "bez",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "proto": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "sudo ./start_competition.sh robot2 -4 3.06 -1.57",
       "halfTimeStartingPose": {
-        "translation": [-3.5, 3.06, 0.24],
+        "translation": [-4, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
-        "rotation": [0.0, 0.707, 0.707, 3.14]
+        "translation": [-4, 3.06, 0.362568],
+        "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
-        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+        "translation": [2.0, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
+      },
+      "goalKeeperStartingPose": {
+        "translation": [-4.47, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
       }
     },
     "3": {
-      "robotModelName": "robotB",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "proto": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "sudo ./start_competition.sh robot3 -3.5 -3.6 1.57",
       "halfTimeStartingPose": {
-        "translation": [-0.75, -3.06, 0.24],
+        "translation": [-3.5, -3.6, 0.362568],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
-        "rotation": [0.0, 0.707, 0.707, 3.14]
+        "translation": [-3.5, -3.6, 0.362568],
+        "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
-        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+        "translation": [2.0, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
+      },
+      "goalKeeperStartingPose": {
+        "translation": [-4.47, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
       }
     },
     "4": {
-      "robotModelName": "robotB",
-      "dockerImg": "UTRA_Bez",
-      "dockerCmd": "launchRobot.sh --fieldPlayer",
+      "proto": "Bez",
+      "dockerTag": "latest",
+      "dockerCmd": "sudo ./start_competition.sh robot4 -3.5 3.06 -1.57",
       "halfTimeStartingPose": {
-        "translation": [-0.75, 3.06, 0.24],
+        "translation": [-3.5, 3.06, 0.362568],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-3, -3.11, 0.24],
-        "rotation": [0.0, 0.707, 0.707, 3.14]
+        "translation": [-3.5, 3.06, 0.362568],
+        "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {
-        "translation": [2, 0, 0.24],
-        "rotation": [-0.57735, -0.57735, -0.57735, -2.0944]
+        "translation": [2.0, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
+      },
+      "goalKeeperStartingPose": {
+        "translation": [-4.47, 0, 0.362568],
+        "rotation": [0, 0, 1, 0]
       }
     }
   }
