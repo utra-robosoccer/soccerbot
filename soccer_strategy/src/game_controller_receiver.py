@@ -3,17 +3,26 @@
 import socket
 import rospy
 import os
-from std_msgs.msg import Empty
 from soccer_msgs.msg import GameState as GameStateMsg
 from construct import Container, ConstError
 from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 
 
 class GameStateReceiver(object):
-    team_id = int(os.getenv('ROBOCUP_TEAM_ID', 25))
-    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
-    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
-    DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
+    # team_id = int(os.getenv('ROBOCUP_TEAM_ID', 25))
+    # robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
+    # is_goal_keeper = os.getenv("GOALIE", "true") == "true"
+    # DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
+    team_id = int(rospy.get_param('TEAM_ID'))
+    robot_id = int(rospy.get_param('ROBOCUP_ROBOT_ID'))
+    is_goal_keeper = bool(rospy.get_param('GOALIE'))
+    DEFAULT_LISTENING_HOST = rospy.get_param('ROBOCUP_GAMECONTROLLER_IP')  # 0.0.0.0   for competition
+    # DEFAULT_LISTENING_HOST = '0.0.0.0'
+    print("Look here")
+    print(DEFAULT_LISTENING_HOST)
+    print(team_id)
+    print(robot_id)
+    print(is_goal_keeper)
     GAME_CONTROLLER_LISTEN_PORT = 3838
     GAME_CONTROLLER_ANSWER_PORT = 3939
 
@@ -23,9 +32,6 @@ class GameStateReceiver(object):
         rospy.loginfo('We are playing as player {} in team {}'.format(self.robot_id, self.team_id))
 
         self.state_publisher = rospy.Publisher('gamestate', GameStateMsg, queue_size=1)
-        self.execute_game_interruption_subscriber = rospy.Subscriber('execute_game_interruption', Empty,
-                                                                     self.game_interruption_callback)
-        self.execute_game_interruption = False
 
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -74,9 +80,6 @@ class GameStateReceiver(object):
         else:
             return_message = 2
 
-        if self.execute_game_interruption:
-            return_message = 4
-
         data = Container(
             header=b"RGrt",
             version=GAME_CONTROLLER_RESPONSE_VERSION,
@@ -106,10 +109,6 @@ class GameStateReceiver(object):
             rospy.logerr('Robot {} not playing'.format(self.robot_id))
             return
 
-        # reset execute game interruption if gamestate back to normal
-        if state.secondary_state == GameState.secondary_state.STATE_NORMAL and self.execute_game_interruption:
-            self.execute_game_interruption = False
-
         msg = GameStateMsg()
         msg.header.stamp = rospy.Time.now()
         msg.gameState = state.game_state.intvalue
@@ -132,9 +131,6 @@ class GameStateReceiver(object):
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
-
-    def game_interruption_callback(self, data):
-        self.execute_game_interruption = True
 
 
 if __name__ == '__main__':

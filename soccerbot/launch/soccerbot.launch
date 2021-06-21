@@ -1,14 +1,15 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" value="$(optenv COMPETITION true)" />
-    <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
+    <arg name="competition" default="$(optenv COMPETITION true)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv ANGLE 0)" />
-    <arg name="goalie" default="$(optenv GOALIE false)" />
+    <arg name="goalie" default="$(optenv GOALIE true)" />
     <arg name="fake_localization" default="false" />
-
+    <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
+
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>

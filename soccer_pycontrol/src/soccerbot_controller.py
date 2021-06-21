@@ -46,7 +46,7 @@ class SoccerbotController:
         t = 0
         while t <= self.soccerbot.robot_path.duration():
             if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(t, verbose=True)
+                self.soccerbot.stepPath(t, verbose=False)
                 self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
                 forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                 pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
