@@ -10,8 +10,8 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
 import util
 
-train_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/train'
-test_path = '/media/nam/My Passport/bit-bots-ball-dataset-2018/test'
+train_path = '/home/robosoccer/hdd/dataset/simulation/train/data'
+test_path = '/home/robosoccer/hdd/dataset/simulation/test/data'
 
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=True):
@@ -108,7 +108,7 @@ class MyDataSet(Dataset):
                     self.read_labels(path, file_labels, 'txt')
                 elif '.yaml' in file:
                     file_labels = os.path.join(path, file)
-                    self.read_labels(path, file, 'yaml')
+                    self.read_labels(path, file_labels, 'yaml')
 
     def read_labels(self, path, file_labels, file_type):
         """
@@ -149,7 +149,11 @@ class MyDataSet(Dataset):
             elif file_type == 'yaml':
                 documents = yaml.full_load(labels)
                 image_list = documents['images']
+                counter = 0
                 for image in image_list:
+                    if counter > 10: # SR
+                        break
+                    counter += 1 # SR
                     annotations = image_list[image]['annotations']
                     for annotation in annotations:
                         if annotation['in_image'] == True:
@@ -161,10 +165,10 @@ class MyDataSet(Dataset):
                                 y2 = location[1][1]
 
                                 if annotation['type'] == 'ball':
-                                    label = label.BALL
+                                    label = Label.BALL
                                     self.num_ball_labels += 1
                                 else:
-                                    label = label.ROBOT
+                                    label = Label.ROBOT
                                     self.num_robot_labels += 1
 
                                 img_path = os.path.join(path, image)
