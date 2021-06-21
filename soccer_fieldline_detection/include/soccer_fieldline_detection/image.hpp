@@ -5,8 +5,8 @@
 #include <soccer_geometry/line2.hpp>
 
 class Image {
-    int height = 240;   // Y
-    int width = 360;    // X
+    int height = 480;   // Y
+    int width = 640;    // X
 
     std::vector<Segment2> segments;
 

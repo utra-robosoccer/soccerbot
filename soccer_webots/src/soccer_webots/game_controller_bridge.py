@@ -77,7 +77,7 @@ class GameControllerBridge():
                 break
             except ConnectionRefusedError as ex:
                 rospy.logwarn(ex)
-                time.sleep(20)
+                time.sleep(1)
 
         self.first_run = True
         self.published_camera_info = False
@@ -150,6 +150,7 @@ class GameControllerBridge():
         self.pub_camera = rospy.Publisher('camera/image_raw', Image, queue_size=1)
         self.pub_camera_info = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=1, latch=True)
         self.pub_imu = rospy.Publisher('imu_raw', Imu, queue_size=1)
+        self.pub_imu_orient = rospy.Publisher('imu_orient_raw', Imu, queue_size=1)
         self.pressure_sensors_pub = {
             i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
         self.pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
@@ -241,6 +242,11 @@ class GameControllerBridge():
         imu_msg.orientation.w = 1
         imu_accel = imu_gyro = False
 
+        imu_orient_msg = Imu()
+        imu_orient_msg.header.stamp = self.stamp
+        imu_orient_msg.header.frame_id = self.base_frame + "/imu_link"
+        imu_orient_msg.orientation.w = 1
+
         # Extract data from message
         for accelerometer in accelerometers:
             name = accelerometer.name
@@ -251,6 +257,10 @@ class GameControllerBridge():
                 imu_msg.linear_acceleration.y = ((value.Y + 32768) / 65535) * (19.62 * 2) - 19.62
                 imu_msg.linear_acceleration.z = ((value.Z + 32768) / 65535) * (19.62 * 2) - 19.62
 
+                imu_orient_msg.linear_acceleration.x = ((value.X + 32768) / 65535) * (19.62 * 2) - 19.62
+                imu_orient_msg.linear_acceleration.y = 0
+                imu_orient_msg.linear_acceleration.z = 0
+
         for gyro in gyros:
             name = gyro.name
             value = gyro.value
@@ -260,8 +270,13 @@ class GameControllerBridge():
                 imu_msg.angular_velocity.y = ((value.Y + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.z = ((value.Z + 32768) / 65535) * (8.7266 * 2) - 8.7266
 
+                imu_orient_msg.angular_velocity.x = ((value.X + 32768) / 65535) * (8.7266 * 2) - 8.7266
+                imu_orient_msg.angular_velocity.y = 0
+                imu_orient_msg.angular_velocity.z = 0
+
         if imu_accel and imu_gyro:
             self.pub_imu.publish(imu_msg)
+            self.pub_imu_orient.publish(imu_orient_msg)
 
     def handle_bumper_measurements(self, bumpers):
         # TODO
@@ -301,9 +316,9 @@ class GameControllerBridge():
         camera_info_msg.height = height
         camera_info_msg.width = width
         f_y = self.mat_from_fov_and_resolution(
-            self.h_fov_to_v_fov(1.35, height, width),
+            self.h_fov_to_v_fov(1.39626, height, width),
             height)
-        f_x = self.mat_from_fov_and_resolution(1.35, width)
+        f_x = self.mat_from_fov_and_resolution(1.39626, width)
         camera_info_msg.K = [f_x, 0, width / 2,
                              0, f_y, height / 2,
                              0, 0, 1]

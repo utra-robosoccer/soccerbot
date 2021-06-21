@@ -15,6 +15,9 @@ class RobotRos(Robot):
         self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose",
                                                PoseWithCovarianceStamped,
                                                self.robot_pose_callback)
+        self.ball_pose_sub = rospy.Subscriber('/' + robot_name + "/ball",
+                                              PoseWithCovarianceStamped,
+                                              self.ball_pose_callback)
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
@@ -27,8 +30,9 @@ class RobotRos(Robot):
         self.team = team
         self.role = role
         self.status = status
-        self.position = np.array([0.0, 0.0, 0])
+        self.position = np.array([-3, -3, 0]) # 1.57
         self.goal_position = np.array([0.0, 0.0, 0])
+        self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name
         self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
@@ -36,7 +40,6 @@ class RobotRos(Robot):
 
         # terminate all action
         self.stop_requested = False
-        self.designated_kicker = False
 
     def robot_pose_callback(self, data):
         quaternion = (
@@ -50,6 +53,10 @@ class RobotRos(Robot):
         #print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
+
+    def ball_pose_callback(self, data):
+        self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
+        pass
 
     def completed_walking_callback(self, data):
         rospy.loginfo("Completed Walking")
@@ -67,26 +74,22 @@ class RobotRos(Robot):
 
     def set_navigation_position(self, position):
         #assert (self.status == Robot.Status.WALKING)
-        if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
-            super(RobotRos, self).set_navigation_position(position)
-            print("Sending Robot " + self.robot_name + " to position" + str(position))
-            p = PoseStamped()
-            p.header.stamp = rospy.get_rostime()
-            p.header.frame_id = "world"
-            p.pose.position.x = position[1]
-            p.pose.position.y = -position[0]
-            p.pose.position.z = 0
-            angle_fixed = position[2]
-            # print(angle_fixed)
-            q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
-            p.pose.orientation.x = q[0]
-            p.pose.orientation.y = q[1]
-            p.pose.orientation.z = q[2]
-            p.pose.orientation.w = q[3]
-            self.goal_publisher.publish(p)
-            self.status = Robot.Status.WALKING
-        else:
-            print("Failed to send nav position, robot currently in " + str(self.status))
+        super(RobotRos, self).set_navigation_position(position)
+        print("Sending Robot " + self.robot_name + " to position" + str(position))
+        p = PoseStamped()
+        p.header.stamp = rospy.get_rostime()
+        p.header.frame_id = "world"
+        p.pose.position.x = position[1]
+        p.pose.position.y = -position[0]
+        p.pose.position.z = 0
+        angle_fixed = position[2]
+        # print(angle_fixed)
+        q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
+        p.pose.orientation.x = q[0]
+        p.pose.orientation.y = q[1]
+        p.pose.orientation.z = q[2]
+        p.pose.orientation.w = q[3]
+        self.goal_publisher.publish(p)
 
     def imu_callback(self, msg):
         angle_threshold = 1  # in radian

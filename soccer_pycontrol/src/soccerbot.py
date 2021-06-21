@@ -517,7 +517,6 @@ class Soccerbot:
         self.last_F2 = F
         self.lastError2 = error
         self.integral2 = self.integral2 + error
-        print(self.DESIRED_PITCH_2)
         return pitch
 
     def reset_imus(self):
@@ -534,15 +533,27 @@ class Soccerbot:
     HEAD_PITCH_FREQ = 0.00125
 
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * math.pi / 2
-        self.configuration[Joints.HEAD_2] = math.cos(
-            self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
+        self.configuration[Joints.HEAD_2] = 0.6 # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
         self.head_step += 1
         pass
 
     def reset_head(self):
         self.configuration[Joints.HEAD_1] = 0
         self.configuration[Joints.HEAD_2] = 0
+        # hands
+        self.configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
+        self.configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
+        self.configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
+        self.configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
+
+        # right leg
+        thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
+        self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
+
+        # left leg
+        thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
+        self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
         self.head_step = 0
 
     def apply_foot_pressure_sensor_feedback(self, floor):

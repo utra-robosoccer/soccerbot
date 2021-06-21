@@ -75,7 +75,7 @@ class Footpath(Path):
                 first_foot_step_ratio = 1
             else:
                 first_foot_step_ratio = (adjusted_step_time - post_step_time) / (
-                            half_step_time - post_step_time - pre_step_time)
+                        half_step_time - post_step_time - pre_step_time)
         else:
             adjusted_step_time = t - half_step_time
 
@@ -95,7 +95,7 @@ class Footpath(Path):
                     first_foot_step_ratio = 1
                 else:
                     first_foot_step_ratio = (adjusted_step_time - post_step_time) / (
-                                full_step_time - post_step_time - pre_step_time)
+                            full_step_time - post_step_time - pre_step_time)
 
         # Second foot
         if t < half_step_time:
@@ -128,7 +128,7 @@ class Footpath(Path):
                     second_foot_step_ratio = 1
                 else:
                     second_foot_step_ratio = (adjusted_step_time - post_step_time) / (
-                                full_step_time - post_step_time - pre_step_time)
+                            full_step_time - post_step_time - pre_step_time)
 
         # Which foot is first?
         assert (first_foot_step_ratio <= 1)
@@ -240,6 +240,8 @@ class Footpath(Path):
             endTransform = deepcopy(endTransform)
             endTransform.set_position(endTransform.get_position() + delta_tr)
             distance_between_step = tr.get_distance(startTransform, endTransform)
+
+        assert (distance_between_step != 0.0)
         height_per_step = np.linalg.norm([zdiff, sidediff])
 
         h = height_per_step
