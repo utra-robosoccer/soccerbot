@@ -37,7 +37,7 @@ class ObjectDetectionNode(object):
 
         self.model = CNN(kernel=3, num_features=8)
 
-        if bool(rospy.get_param('COMPETITION')):
+        if os.getenv('COMPETITION', 'false') == 'true':
             self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         else:
             self.model.load_state_dict(torch.load(model_path))

@@ -9,20 +9,10 @@ from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 
 
 class GameStateReceiver(object):
-    # team_id = int(os.getenv('ROBOCUP_TEAM_ID', 25))
-    # robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
-    # is_goal_keeper = os.getenv("GOALIE", "true") == "true"
-    # DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
-    team_id = int(rospy.get_param('TEAM_ID'))
-    robot_id = int(rospy.get_param('ROBOCUP_ROBOT_ID'))
-    is_goal_keeper = bool(rospy.get_param('GOALIE'))
-    DEFAULT_LISTENING_HOST = rospy.get_param('ROBOCUP_GAMECONTROLLER_IP')  # 0.0.0.0   for competition
-    # DEFAULT_LISTENING_HOST = '0.0.0.0'
-    print("Look here")
-    print(DEFAULT_LISTENING_HOST)
-    print(team_id)
-    print(robot_id)
-    print(is_goal_keeper)
+    team_id = int(os.getenv('ROBOCUP_TEAM_ID', 25))
+    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
+    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
+    DEFAULT_LISTENING_HOST = os.environ.get('ROBOCUP_GAMECONTROLLER_IP')
     GAME_CONTROLLER_LISTEN_PORT = 3838
     GAME_CONTROLLER_ANSWER_PORT = 3939
 

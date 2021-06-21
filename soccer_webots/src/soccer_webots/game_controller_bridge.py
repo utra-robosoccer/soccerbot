@@ -70,7 +70,7 @@ class GameControllerBridge():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = rospy.get_param('ROBOCUP_SIMULATOR_ADDR')
+        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
         while not rospy.is_shutdown():
             try:
                 self.socket = self.get_connection(addr)

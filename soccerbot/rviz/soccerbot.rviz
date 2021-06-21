@@ -30,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: "Line "
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -61,54 +61,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        robot1/base_camera:
-          Value: true
-        robot1/base_footprint:
-          Value: true
-        robot1/camera:
-          Value: true
-        robot1/head:
-          Value: true
-        robot1/imu_link:
-          Value: true
-        robot1/left_ankle:
-          Value: true
-        robot1/left_bicep:
-          Value: true
-        robot1/left_calve:
-          Value: true
-        robot1/left_foot:
-          Value: true
-        robot1/left_forearm:
-          Value: true
-        robot1/left_hip_front:
-          Value: true
-        robot1/left_hip_side:
-          Value: true
-        robot1/left_thigh:
-          Value: true
-        robot1/neck:
-          Value: true
-        robot1/odom:
-          Value: true
-        robot1/right_ankle:
-          Value: true
-        robot1/right_bicep:
-          Value: true
-        robot1/right_calve:
-          Value: true
-        robot1/right_foot:
-          Value: true
-        robot1/right_forearm:
-          Value: true
-        robot1/right_hip_front:
-          Value: true
-        robot1/right_hip_side:
-          Value: true
-        robot1/right_thigh:
-          Value: true
-        robot1/torso:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF

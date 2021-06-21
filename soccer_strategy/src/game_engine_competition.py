@@ -30,12 +30,10 @@ class GameEngineCompetition(game_engine.GameEngine):
 
     def __init__(self):
         print("initializing strategy")
-        # self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
-        # self.robot_name = os.getenv("ROBOT_NAME", "robot1")
-        # self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
-        self.robot_id = int(rospy.get_param('ROBOCUP_ROBOT_ID'))
-        self.robot_name = rospy.get_param('ROBOT_NAME')
-        self.is_goal_keeper = bool(rospy.get_param('GOALIE'))
+        self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
+        self.robot_name = os.getenv("ROBOT_NAME", "robot1")
+        self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
+
         # game strategy information
         if self.is_goal_keeper:
             # the robot that run strategy will always be the first one in self.robots
