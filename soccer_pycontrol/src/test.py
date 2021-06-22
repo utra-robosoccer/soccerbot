@@ -14,7 +14,7 @@ import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
 
-RUN_IN_ROS = True
+RUN_IN_ROS = False
 if RUN_IN_ROS:
     import rospy
     import soccerbot_controller_ros
@@ -82,7 +82,7 @@ class Test(TestCase):
         goal = Transformation.get_transform_from_euler([np.pi/5, 0, 0])
         goal.set_position([0.05, 0.05, 0])
         self.walker.setGoal(goal)
-        self.walker.soccerbot.robot_path.show()
+        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_1(self):

@@ -34,8 +34,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.9945711674752865 -0.07285792650155973 -0.07429613295952103 1.5566928450002824
-  position -1.4929139954653743 -1.7613799804902215 0.3680253600889122
+  orientation 0.6716042334292766 0.5417133186457191 0.5054645724892253 2.0220028782325845
+  position 7.5015538159913735 -2.8503655617114623 0.31286044321723977
 }
 TexturedBackground {
   texture "stadium_dry"
@@ -48,8 +48,8 @@ RobocupSoccerField {
 }
 DEF robot1 Bez {
 
-  translation -1.5 0 0.362568
-  rotation 0 0 1 0
+  translation 3.5 -3.06 0.362568
+  rotation 0 0 1 1.57
   name "robot1"
   controller "<extern>"
 }
