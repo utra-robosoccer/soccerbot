@@ -12,7 +12,7 @@ class Path:
     steps_per_second = 2.4
     speed = steps_per_second * bodystep_size # m/s
     angular_speed = steps_per_second * angular_bodystep_size # Rotational speed in radians per second
-    turn_duration = 4 # Number of body steps to turn
+    turn_duration = 8 # Number of body steps to turn
     step_size = 0.02 # Time for a single time step
 
     pre_footstep_ratio = 0.15 # Ratio of fullstep duration to keep foot on ground on prefootstep
@@ -111,6 +111,11 @@ class Path:
         return np.linalg.norm(self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]) < self.bodystep_size * self.turn_duration * 2
 
     def poseAtRatio(self, r):
+        # if r < 0.1:
+        #     r = r * 0.5
+        # else:
+        #     r = (r - 0.1)/0.95 + 0.05
+
         if self.isRotateInPlace():
             return self.poseAtRatioRotateInPlace(r)
         else:

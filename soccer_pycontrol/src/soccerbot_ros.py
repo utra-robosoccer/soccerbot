@@ -1,10 +1,11 @@
 from sensor_msgs.msg import JointState, Imu
 from std_msgs.msg import Float64
 from nav_msgs.msg import Odometry, Path
-from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
 from soccerbot import *
 import rospy
 import os
+import tf
 
 
 class SoccerbotRos(Soccerbot):
@@ -37,10 +38,13 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
-
+        self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", PointStamped, self.ball_callback, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
-
+        self.ball_pixel = PointStamped()
+        self.listener = tf.TransformListener()
+        self.head_motor_0 = 0
+        self.head_motor_1 = 0
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -119,8 +123,48 @@ class SoccerbotRos(Soccerbot):
     def is_fallen(self) -> bool:
         pose = self.get_imu()
         [roll, pitch, yaw] = pose.get_orientation_euler()
-        return not np.pi/6 > pitch > -np.pi/6
+        return not np.pi / 6 > pitch > -np.pi / 6
 
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass
+
+    def apply_head_rotation(self):
+        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
+        self.configuration[
+            Joints.HEAD_2] = 0.6  # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
+        last_pose = rospy.Duration(10)
+        try:
+
+            header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
+                                                       rospy.get_param("ROBOT_NAME") + '/torso')
+            last_pose = rospy.Time.now() - header
+
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            pass
+
+        if last_pose < rospy.Duration(0.2):
+            self.head_step -= 1
+            # x
+            if self.ball_pixel.point.x > 350:
+                self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.00375
+            elif self.ball_pixel.point.x < 290:
+                self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.00375
+            else:
+                self.configuration[Joints.HEAD_1] = self.head_motor_0
+            # y
+            if self.ball_pixel.point.y > 270:
+                self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.00375
+            elif self.ball_pixel.point.y < 210:
+                self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.00375
+            else:
+                self.configuration[Joints.HEAD_2] = self.head_motor_1
+
+
+        self.head_motor_0 = self.configuration[Joints.HEAD_1]
+        self.head_motor_1 = self.configuration[Joints.HEAD_2]
+        self.head_step += 1
+        pass
+
+    def ball_callback(self, msg: PointStamped):
+        self.ball_pixel = msg

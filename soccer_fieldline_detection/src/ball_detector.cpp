@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PointStamped.h>
 #include <soccer_object_detection/BoundingBoxes.h>
 #include <soccer_object_detection/BoundingBox.h>
 #include <string>
@@ -16,6 +17,7 @@ public:
     ros::Subscriber head_motor_1;
 
     ros::Publisher ballPublisher;
+    ros::Publisher ballPixelPublisher;
     ros::Publisher robotPosePub;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
@@ -26,6 +28,7 @@ public:
     BallDetector() : tfListener(tfBuffer) {
         boundingBoxesSub = n.subscribe("object_bounding_boxes", 1, &BallDetector::ballDetectorCallback, this);
         ballPublisher = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("ball", 1);
+        ballPixelPublisher = n.advertise<geometry_msgs::PointStamped>("ball_pixel", 1);
         robotPosePub = n.advertise<geometry_msgs::Pose>("detected_robot_pose", 1);
         head_motor_1 = n.subscribe("head_motor_1/command", 1, &BallDetector::headTilt, this);
         geometry_msgs::TransformStamped camera_pose;
@@ -123,6 +126,16 @@ private:
                     ball.pose.pose.orientation.z = 0;
                     ball.pose.pose.orientation.w = 1;
                     ballPublisher.publish(ball);
+
+                    geometry_msgs::PointStamped ball_pixel;
+                    ball_pixel.header.frame_id = robotName + "/base_footprint";
+                    ball_pixel.header.seq = msg->header.seq;
+                    ball_pixel.header.stamp = msg->header.stamp;
+                    ball_pixel.point.x = xavg;
+                    ball_pixel.point.y = yavg;
+                    ball_pixel.point.z = 0;
+                    ballPixelPublisher.publish(ball_pixel);
+
 
                 } else {
                     if (float(angle) == float(1)) {

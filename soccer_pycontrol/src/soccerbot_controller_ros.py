@@ -31,12 +31,19 @@ class SoccerbotControllerRos(SoccerbotController):
         self.terminate_walk_subscriber = rospy.Subscriber("terminate_walking", Empty, self.terminate_walk_callback)
         self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty, queue_size=1)
         self.imu_orient_subscriber = rospy.Subscriber("imu_orient_filtered", Imu, self.imu_orient_callback)
+        self.finish_trajectory = rospy.Subscriber('trajectory_complete', Bool, self.trajectory_callback, queue_size=1)
+        self.fixed_trajectory_running = False
         self.goal = PoseStamped()
         self.robot_pose = PoseWithCovarianceStamped()
         self.new_goal = self.goal
         self.terminate_walk = False
         self.imu_orient = Quaternion()
         self.imu_orient_ready = False
+
+    def trajectory_callback(self, msg):
+        self.fixed_trajectory_running = not msg.data
+        self.soccerbot.reset_imus()
+        pass
 
     def robot_pose_callback(self, pose: PoseWithCovarianceStamped):
         self.robot_pose = pose
@@ -115,7 +122,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.reset_imus()
                 self.soccerbot.reset_head()
                 for i in range(20):
-                    if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
+                    if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                         self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     self.soccerbot.publishAngles()  # Disable to stop walking
                     rospy.sleep(0.05)
@@ -129,7 +136,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # print("goalpose_trans ", self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -5
+                t = -1
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -171,17 +178,18 @@ class SoccerbotControllerRos(SoccerbotController):
 
             # Post walk stabilization
             if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
-                if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
+                if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
-            if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
+            if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.fixed_trajectory_running:
+                # print("here")
                 self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
 
             if stop_on_completed_trajectory:
-                if t > self.soccerbot.robot_path.duration() or self.soccerbot.is_fallen():
+                if (self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration()) or self.fixed_trajectory_running:
                     break
 
-            if not self.terminate_walk:
+            if not self.terminate_walk and not self.fixed_trajectory_running:
                 self.soccerbot.publishAngles()  # Disable to stop walking
                 if rospy.get_param('ENABLE_PYBULLET'):
                     pb.stepSimulation()
