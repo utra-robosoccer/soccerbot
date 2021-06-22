@@ -9,17 +9,26 @@ from PIL import Image
 from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
 import util
+import time
+import pickle
 
-train_path = '/home/robosoccer/hdd/dataset/simulation/train/data'
-test_path = '/home/robosoccer/hdd/dataset/simulation/test/data'
+train_path = '/home/robosoccer/dataset/train'
+train_images = '/home/robosoccer/dataset/train/images'
+# train_labels = '/home/robosoccer/hdd/dataset/simulation/train/annotations.yaml'
+train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
+
+test_path = '/home/robosoccer/dataset/test'
+test_images = '/home/robosoccer/dataset/test/images'
+# test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
+test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
 
-def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=True):
+def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=32, shuffle=True):
     train_folders = [os.path.join(train_path, folder) for folder in os.listdir(train_path)]
     test_folders = [os.path.join(test_path, folder) for folder in os.listdir(test_path)]
 
-    full_dataset = MyDataSet(train_folders, (150, 200), jitter=jitter)
-    test_dataset = MyDataSet(test_folders, (150, 200))
+    full_dataset = MyDataSet(train_labels, train_folders, (150, 200), jitter=jitter)
+    test_dataset = MyDataSet(test_labels, test_folders, (150, 200))
 
     train_size = int(0.8 * len(full_dataset))
     valid_size = len(full_dataset) - train_size
@@ -76,7 +85,7 @@ def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=T
 
 
 class MyDataSet(Dataset):
-    def __init__(self, folder_paths, target_dim, jitter=[0, 0, 0, 0]):
+    def __init__(self, label_file, folder_paths, target_dim, jitter=[0, 0, 0, 0]):
         self.folder_paths = folder_paths  # folders of the images
         self.img_paths = []  # all individual image paths
         self.bounding_boxes = {}  # image paths and their labels
@@ -101,6 +110,14 @@ class MyDataSet(Dataset):
         self.num_train_ball_labels = 0
 
         # add paths for train data with labels
+        if '.txt' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'txt')
+        elif '.yaml' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'yaml')
+        elif '.pkl' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'pkl')
+
+    '''
         for path in folder_paths:
             for file in os.listdir(path):
                 if '.txt' in file:
@@ -109,6 +126,7 @@ class MyDataSet(Dataset):
                 elif '.yaml' in file:
                     file_labels = os.path.join(path, file)
                     self.read_labels(path, file_labels, 'yaml')
+    '''
 
     def read_labels(self, path, file_labels, file_type):
         """
@@ -118,8 +136,8 @@ class MyDataSet(Dataset):
         :return: None
         """
 
-        with open(file_labels) as labels:
-            if file_type == 'txt':
+        if file_type == 'txt':
+            with open(file_labels) as labels:
                 for i, line in enumerate(labels):
                     if i <= 5:  # ignore first few metadata lines
                         continue
@@ -146,14 +164,15 @@ class MyDataSet(Dataset):
 
                     self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
 
-            elif file_type == 'yaml':
+        elif file_type == 'yaml':
+            with open(file_labels) as labels:
+                t0 = time.time()
                 documents = yaml.full_load(labels)
+                t1 = time.time()
+                print(f'Yaml Load Took: {(t1 - t0)} s')
                 image_list = documents['images']
-                counter = 0
+                t0 = time.time()
                 for image in image_list:
-                    if counter > 10: # SR
-                        break
-                    counter += 1 # SR
                     annotations = image_list[image]['annotations']
                     for annotation in annotations:
                         if annotation['in_image'] == True:
@@ -177,6 +196,44 @@ class MyDataSet(Dataset):
                                     self.img_paths.append(img_path)
 
                                 self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                t1 = time.time()
+                print(f'Yaml Loop Took: {(t1 - t0)} s')
+
+        elif file_type == 'pkl':
+            with open(file_labels, 'rb') as labels:
+                t0 = time.time()
+                documents = pickle.load(labels) #, encoding='bytes')
+                t1 = time.time()
+                print(f'Pickle Load Took: {(t1 - t0)} s')
+                image_list = documents['images']
+                t0 = time.time()
+                for image in image_list:
+                    annotations = image_list[image]['annotations']
+                    for annotation in annotations:
+                        if annotation['in_image'] == True:
+                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
+                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                                x1 = location[0][0]
+                                y1 = location[0][1]
+                                x2 = location[1][0]
+                                y2 = location[1][1]
+
+                                if annotation['type'] == 'ball':
+                                    label = Label.BALL
+                                    self.num_ball_labels += 1
+                                else:
+                                    label = Label.ROBOT
+                                    self.num_robot_labels += 1
+
+                                img_path = os.path.join(path, image)
+                                if img_path not in self.img_paths:
+                                    self.bounding_boxes[img_path] = []
+                                    self.img_paths.append(img_path)
+
+                                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                t1 = time.time()
+                print(f'Pickle Loop Took: {(t1 - t0)} s')
+
 
 
     def __len__(self):
