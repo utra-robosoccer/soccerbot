@@ -111,10 +111,6 @@ class Path:
         return np.linalg.norm(self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]) < self.bodystep_size * self.turn_duration * 2
 
     def poseAtRatio(self, r):
-        # if r < 0.1:
-        #     r = r * 0.5
-        # else:
-        #     r = (r - 0.1)/0.95 + 0.05
 
         if self.isRotateInPlace():
             return self.poseAtRatioRotateInPlace(r)
