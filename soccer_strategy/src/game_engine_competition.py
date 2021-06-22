@@ -26,7 +26,7 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 5
     blue_initial_position = [[-0.95, -4, 0], [-0.95, -1, 0], [-1.5, 1.5, 0], [0, 1, 0]]
-    red_initial_position = [[-0.95, -4, 0], [-0.95, -1, 0], [-1.5, -1.5, 0], [0, -1, 0]]
+    red_initial_position = [[-0.95, 4, 3.14], [-0.95, 1, 3.14], [-1.5, -1.5, 0], [0, -1, 0]]
 
     def __init__(self):
         print("initializing strategy")
@@ -178,7 +178,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                             print("only once")
                         elif self.gameState.teamColor == GameState.TEAM_COLOR_RED and self.run_once:
                             robot.status = Robot.Status.WALKING
-                            robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
+                            robot.set_navigation_position(self.red_initial_position[robot.robot_id ])
                             self.run_once = False
             self.rostime_previous = rostime
 

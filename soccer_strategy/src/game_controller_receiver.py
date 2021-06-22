@@ -108,7 +108,6 @@ class GameStateReceiver(object):
         except IndexError:
             rospy.logerr('Robot {} not playing'.format(self.robot_id))
             return
-
         msg = GameStateMsg()
         msg.header.stamp = rospy.Time.now()
         msg.gameState = state.game_state.intvalue

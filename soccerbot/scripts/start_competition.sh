@@ -30,7 +30,7 @@ fi
 
 if [[ "robot2" = "$1" ]]
 then
-    X_POS=-1.25
+    X_POS=-1
     Y_POS=-3.06
     ANGLE=1.57
 
@@ -46,7 +46,7 @@ fi
 
 if [[ "robot4" = "$1" ]]
 then
-    X_POS=-1.25
+    X_POS=-1
     Y_POS=3.06
     ANGLE=-1.57
 
