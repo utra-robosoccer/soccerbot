@@ -20,8 +20,8 @@ def train_model():
         'train_class_weight': [.2, .07, .73],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-3,
         'train_weight_decay': 0,
-        'train_batch_size': 20,
-        'train_epochs': 8,
+        'train_batch_size': 128, # 80, # 20,
+        'train_epochs': 32, # 8,
         'colour_jitter': [0.1, 0.1, 0.1, 0.1],  # brightness, contrast, saturation, hue
         'output_folder': 'outputs',
     }
@@ -117,4 +117,5 @@ def webcam():
 
 
 if __name__ == '__main__':
-    display_dataset()
+    # display_dataset()
+    train_model()

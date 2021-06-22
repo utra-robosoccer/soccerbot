@@ -118,6 +118,7 @@ class Trainer:
             self.update_batch_stats(stats, bbxs, masks, dataset, indexes)
 
         # Show sample image with bounding boxes to get feel for what model is learning
+        '''
         for i in range(1):
             img = draw_bounding_boxes(images[i], bbxs[i][Label.BALL.value], (255, 0, 0))  # balls
             img = draw_bounding_boxes(img, bbxs[i][Label.ROBOT.value], (0, 0, 255))  # robots
@@ -130,6 +131,7 @@ class Trainer:
                 (outputs[i][Label.BALL.value], 'gray', 'Ball'),
                 (outputs[i][Label.ROBOT.value], 'gray', 'Robot')
             ])
+        '''
 
         self.valid_losses.append(np.sum(losses) / len(losses))
         time_elapsed = time.time() - start_valid
