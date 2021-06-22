@@ -112,11 +112,6 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
                 self.soccerbot.reset_head()
-                for i in range(20):
-                    if self.soccerbot.imu_ready and not self.soccerbot.is_fallen():
-                        self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    self.soccerbot.publishAngles()  # Disable to stop walking
-                    rospy.sleep(0.05)
 
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose.pose))
                 self.goal = self.new_goal
@@ -127,7 +122,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # print("goalpose_trans ", self.pose_to_transformation(self.goal.pose))
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -5
+                t = -10
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:

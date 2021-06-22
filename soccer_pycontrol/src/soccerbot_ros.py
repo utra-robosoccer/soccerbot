@@ -36,6 +36,7 @@ class SoccerbotRos(Soccerbot):
             "head_motor_1"
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
+        self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
 
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
@@ -93,6 +94,7 @@ class SoccerbotRos(Soccerbot):
         o = Odometry()
         o.header.stamp = rospy.Time.now()
         o.header.frame_id = os.environ["ROS_NAMESPACE"] + "/odom"
+        o.child_frame_id = os.environ["ROS_NAMESPACE"] + "/torso"
         pose = self.odom_pose.get_position()
         o.pose.pose.position.x = pose[0]
         o.pose.pose.position.y = pose[1]
@@ -110,6 +112,17 @@ class SoccerbotRos(Soccerbot):
                              0, 0, 0, 0, 1E-6, 0,
                              0, 0, 0, 0, 0, 1E-2]
         self.odom_publisher.publish(o)
+        self.publishHeight()
+        pass
+
+    def ready(self):
+        super(SoccerbotRos, self).ready()
+        self.publishHeight()
+
+    def publishHeight(self):
+        f = Float64()
+        f.data = self.pose.get_position()[2]
+        self.torso_height_publisher.publish(f)
         pass
 
     def get_imu(self):

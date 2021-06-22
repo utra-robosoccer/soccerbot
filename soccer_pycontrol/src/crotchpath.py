@@ -12,11 +12,6 @@ class Crotchpath(Footpath):
     crotch_sidediff_sway_decay = 5
     crotch_thetadiff_sway = [0., 0., 0.] # [0, 0, 0.08]
 
-    # Distort per step
-    crotch_zdiff_step = 0.000
-    crotch_sidediff_step = 0.000
-    crotch_rot_step = [0, 0, 0.0]
-
     first_step_left = 0
 
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
@@ -32,7 +27,7 @@ class Crotchpath(Footpath):
         else:
             self.first_step_left = 1
 
-    @functools.lru_cache
+
     def crotchPosition(self, t):
         [step_num, right_foot_ratio, left_foot_ratio] = self.footHeightRatio(t, 1)
         [right_foot_action, _] = self.whatIsTheFootDoing(step_num)
@@ -90,7 +85,7 @@ class Crotchpath(Footpath):
         thetadiff = ydiff / self.crotch_sidediff_sway * np.array(self.crotch_thetadiff_sway)
 
         H = tr.get_transform_from_euler(thetadiff) # H = eul2tform(thetadiff)
-        H.set_position([0.00, ydiff, zdiff])
+        H.set_position([-0.005, ydiff, zdiff])
 
         position = np.matmul(position, H)
 
