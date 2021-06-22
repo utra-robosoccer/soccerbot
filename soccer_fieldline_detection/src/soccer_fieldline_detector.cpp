@@ -31,7 +31,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
 
     while(ros::ok()) {
         try{
-            camera_pose = tfBuffer.lookupTransform(robotName + "/camera", robotName + "/base_footprint",
+            camera_pose = tfBuffer.lookupTransform(robotName + "/camera", robotName + "/odom",
                                                    ros::Time(0), ros::Duration(1.0));
             break;
         }
@@ -61,11 +61,16 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
     }
 
     // Get transformation
+//    geometry_msgs::TransformStamped odom_pose;
     geometry_msgs::TransformStamped camera_pose;
     try {
 
-        camera_pose = tfBuffer.lookupTransform(robotName + "/base_footprint", robotName + "/camera",
+        camera_pose = tfBuffer.lookupTransform(robotName + "/odom", robotName + "/camera",
                                                ros::Time(0), ros::Duration(0.1));
+
+//        odom_pose = tfBuffer.lookupTransform(robotName + "/odom", robotName + "/base_footprint",
+//                                               ros::Time(0), ros::Duration(0.1));
+
 
         Pose3 camera_position;
         camera_position.position.x = camera_pose.transform.translation.x;
@@ -76,6 +81,14 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                           camera_pose.transform.rotation.y,
                           camera_pose.transform.rotation.z,
                           camera_pose.transform.rotation.w);
+
+//        tf2::Quaternion q2(odom_pose.transform.rotation.x,
+//                           odom_pose.transform.rotation.y,
+//                           odom_pose.transform.rotation.z,
+//                           odom_pose.transform.rotation.w);
+
+//        tf2::Quaternion q = q2 * q1;
+
         tf2::Matrix3x3 m(q);
         double r, p, y;
         m.getRPY(r, p, y);
@@ -222,7 +235,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             points3d.clear();
 
             geometry_msgs::TransformStamped camera_footprint = camera_pose;
-            camera_footprint.header.frame_id = robotName + "/base_footprint";
+            camera_footprint.header.frame_id = robotName + "/odom";
             camera_footprint.child_frame_id = robotName + "/base_camera";
             camera_footprint.header.stamp = msg->header.stamp;
             camera_footprint.header.seq = msg->header.seq;
@@ -231,6 +244,14 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                               camera_footprint.transform.rotation.y,
                               camera_footprint.transform.rotation.z,
                               camera_footprint.transform.rotation.w);
+
+//            tf2::Quaternion q2(odom_pose.transform.rotation.x,
+//                               odom_pose.transform.rotation.y,
+//                               odom_pose.transform.rotation.z,
+//                               odom_pose.transform.rotation.w);
+//
+//            tf2::Quaternion q = q1 * q2;
+
             tf2::Matrix3x3 m(q);
             double r, p, y;
             m.getRPY(r, p, y);
