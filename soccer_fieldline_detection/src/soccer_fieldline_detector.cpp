@@ -26,7 +26,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
     robotName = ros::this_node::getNamespace();
     robotName.erase(0, 1);
-    ros::Duration(5).sleep();
+
     // Initialize Camera
     geometry_msgs::TransformStamped camera_pose;
 

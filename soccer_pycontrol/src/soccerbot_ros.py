@@ -1,5 +1,5 @@
 from sensor_msgs.msg import JointState, Imu
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Bool
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
 from soccerbot import *
@@ -41,6 +41,7 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", PointStamped, self.ball_callback, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
+        self.move_head_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
         self.imu_ready = False
         self.ball_pixel = PointStamped()
         self.listener = tf.TransformListener()
@@ -150,7 +151,7 @@ class SoccerbotRos(Soccerbot):
         try:
 
             header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
-                                                       rospy.get_param("ROBOT_NAME") + '/torso')
+                                                       rospy.get_param("ROBOT_NAME") + '/base_footprint')
             last_pose = rospy.Time.now() - header
 
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
@@ -172,7 +173,14 @@ class SoccerbotRos(Soccerbot):
                 self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.00375
             else:
                 self.configuration[Joints.HEAD_2] = self.head_motor_1
-
+        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
+            temp = Bool()
+            temp.data = True
+            self.move_head_publisher.publish(temp)
+        else:
+            temp = Bool()
+            temp.data = False
+            self.move_head_publisher.publish(temp)
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]

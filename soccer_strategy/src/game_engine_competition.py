@@ -27,8 +27,9 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 3
     NAV_GOAL_UPDATE_INTERVAL = 2
-    blue_initial_position = [[0, 3, math.pi], [1, 1, math.pi], [-1.5, 2, math.pi]]
-    red_initial_position = [[0, -3, 0], [1, -1, 0], [-1.5, -2, 0]]
+    blue_initial_position = [[-0.9, -3.9, 0], [-0.9, -0.9, 0], [-1, 0, 0]]
+    red_initial_position = [[-0.9, 3.9, 3.14], [-0.9, 0.9, 3.14], [-1, 0, 3.14]]
+
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
     SecondaryGameStateMap = ["STATE_NORMAL",
@@ -121,17 +122,17 @@ class GameEngineCompetition(game_engine.GameEngine):
         for robot in self.friendly:
             time_diff = rospy.Duration(10)
             try:
-                ball_pose = self.listener.lookupTransform(robot.robot_name + '/ball',
-                                                               robot.robot_name + '/torso',
+                ball_pose = self.listener.lookupTransform('world',
+                                                          robot.robot_name + '/ball',
                                                                rospy.Time(0))
-                header = self.listener.getLatestCommonTime(robot.robot_name + '/ball',
-                                                           robot.robot_name + '/torso')
+                header = self.listener.getLatestCommonTime('world',
+                                                           robot.robot_name + '/ball')
                 time_diff = rospy.Time.now() - header
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
             if time_diff < rospy.Duration(0.2):
-                ball_positions.append(np.array([-ball_pose[0][1], ball_pose[0][0]]) + robot.position[0:2])
+                ball_positions.append(np.array([-ball_pose[0][1], ball_pose[0][0]]))
 
         if ball_positions:
             self.ball.position = np.array(ball_positions).mean(axis=0)
@@ -187,8 +188,11 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                self.stop_all_robot()
+                # self.stop_all_robot()
+                self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
+            rospy.sleep(1)
+            self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:

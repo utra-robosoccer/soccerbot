@@ -52,13 +52,18 @@ class DummyStrategy(Strategy):
 
         # Guess who has the ball
         current_closest = self.who_has_the_ball(friendly, ball)
-
-        if current_closest == None:
+        if current_closest == None or not current_closest.send_nav:
             return
+        print("Here for ball")
+        print(current_closest.get_position())
 
+        position = [round(ball.get_position()[0], 2),
+                    round(ball.get_position()[1], 2), round(current_closest.get_position()[2], 2)]
+        print(position)
+        print("X: ", ball.get_position()[1], "Y: ", -ball.get_position()[0])
+        print(np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()[0:2]))
         if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
-            current_closest.set_navigation_position(current_closest.get_position())
 
             if current_closest.team == Robot.Team.FRIENDLY:
                 opponent_goal = np.array([0, 4.5])
@@ -68,11 +73,12 @@ class DummyStrategy(Strategy):
             # Kick the ball towards the goal
             delta = opponent_goal - ball.get_position()
             unit = delta / np.linalg.norm(delta)
-
+            #
             current_closest.status = Robot.Status.KICKING
             current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
-            current_closest.set_navigation_position(np.append(ball.get_position(), 0))
+            current_closest.set_navigation_position(position)
+            pass
 
 class PassStrategy(DummyStrategy):
 
