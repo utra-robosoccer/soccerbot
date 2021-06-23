@@ -144,6 +144,10 @@ class GameControllerBridge():
                 rospy.logwarn(ex)
                 self.socket = None
                 time.sleep(1)
+            except ConnectionResetError as ex:
+                rospy.logwarn(ex)
+                self.socket = None
+                time.sleep(1)
 
         self.close_connection()
 
