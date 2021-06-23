@@ -8,28 +8,28 @@
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
-    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
     <group ns="$(arg robot_name)">
 
         <param name="/simulation_active" value="true"/>
         <param name="/use_sim_time" value="true"/>
         <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
 
-    <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
-        robot_name:=$(arg robot_name)
-        model_type:=dae
-        file_path:=package://soccer_description
-        has_base_footprint:=false
-        tf_prefix:=$(arg robot_name)
-        "
-    />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
+        <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
+            robot_name:=$(arg robot_name)
+            model_type:=dae
+            file_path:=package://soccer_description
+            has_base_footprint:=false
+            tf_prefix:=$(arg robot_name)
+            "
+        />
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+        <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
 
-    <!-- Robocup bridge -->
-    <node pkg="soccer_webots" type="game_controller_bridge.py" name="game_controller_bridge" output="screen"
-          args="--robot_name $(arg robot_name)" if="$(arg competition)">
-    </node>
+        <!-- Robocup bridge -->
+        <node pkg="soccer_webots" type="game_controller_bridge.py" name="game_controller_bridge" output="screen"
+              args="--robot_name $(arg robot_name)" if="$(arg competition)">
+        </node>
 
         <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
             <arg name="robot_name" value="$(arg robot_name)" />
