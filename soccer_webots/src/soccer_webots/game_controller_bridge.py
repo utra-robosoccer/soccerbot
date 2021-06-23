@@ -70,19 +70,13 @@ class GameControllerBridge():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = rospy.get_param('ROBOCUP_SIMULATOR_ADDR')
-        while not rospy.is_shutdown():
-            try:
-                self.socket = self.get_connection(addr)
-                break
-            except ConnectionRefusedError as ex:
-                rospy.logwarn(ex)
-                time.sleep(1)
+        self.addr = rospy.get_param('ROBOCUP_SIMULATOR_ADDR')
 
+        self.socket = None
         self.first_run = True
         self.published_camera_info = False
-        self.temp_bool = True
-        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.callback)
+        self.amcl_received = False
+        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.amcl_callback)
         self.run()
 
     def receive_msg(self):
@@ -100,49 +94,61 @@ class GameControllerBridge():
     def run(self):
         while not rospy.is_shutdown():
             # Parse sensor
-            msg = self.receive_msg()
-            self.handle_sensor_measurements_msg(msg)
+            try:
+                if self.socket is None:
+                    self.socket = self.get_connection(self.addr)
 
-            sensor_time_steps = None
-            if self.first_run:
-                sensor_time_steps = self.get_sensor_time_steps(active=True)
-            self.send_actuator_requests(sensor_time_steps)
-            self.first_run = False
-            if self.temp_bool:
-                odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
+                msg = self.receive_msg()
+                self.handle_sensor_measurements_msg(msg)
 
-                # since all odometry is 6DOF we'll need a quaternion created from yaw
-                odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
+                sensor_time_steps = None
+                if self.first_run:
+                    sensor_time_steps = self.get_sensor_time_steps(active=True)
+                self.send_actuator_requests(sensor_time_steps)
+                self.first_run = False
+                if not self.amcl_received:
+                    odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
 
-                # next, we'll publish the odometry message over ROS
-                odom = Odometry()
-                odom.header.stamp = self.stamp
-                odom.header.frame_id = self.base_frame + "/odom"
+                    # since all odometry is 6DOF we'll need a quaternion created from yaw
+                    odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
 
-                # set the position
-                odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
-                odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                        0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                        0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                        0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                        0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                # set the velocity
-                odom.child_frame_id = self.base_frame + "/base_footprint"
-                odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-                odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                # publish the message
-                odom_pub.publish(odom)
+                    # next, we'll publish the odometry message over ROS
+                    odom = Odometry()
+                    odom.header.stamp = self.stamp
+                    odom.header.frame_id = self.base_frame + "/odom"
+
+                    # set the position
+                    odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
+                    odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                    # set the velocity
+                    odom.child_frame_id = self.base_frame + "/base_footprint"
+                    odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+                    odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                    # publish the message
+                    odom_pub.publish(odom)
+            except socket.timeout as s:
+                rospy.logwarn(s)
+                self.socket = None
+                time.sleep(1)
+            except ConnectionRefusedError as ex:
+                rospy.logwarn(ex)
+                self.socket = None
+                time.sleep(1)
 
         self.close_connection()
 
-    def callback(self, data):
-        self.temp_bool = False
+    def amcl_callback(self, data):
+        self.amcl_received = True
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
@@ -187,7 +193,7 @@ class GameControllerBridge():
             sys.exit(1)
 
     def close_connection(self):
-        if hasattr(self, 'socket'):
+        if hasattr(self, 'socket') and self.socket is not None:
             self.socket.close()
 
     def handle_sensor_measurements_msg(self, msg):
