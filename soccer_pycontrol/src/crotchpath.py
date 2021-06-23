@@ -27,7 +27,7 @@ class Crotchpath(Footpath):
         else:
             self.first_step_left = 1
 
-    @functools.lru_cache
+
     def crotchPosition(self, t):
         [step_num, right_foot_ratio, left_foot_ratio] = self.footHeightRatio(t, 1)
         [right_foot_action, _] = self.whatIsTheFootDoing(step_num)
