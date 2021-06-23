@@ -1,8 +1,8 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="single" default="true" />
+    <arg name="single" default="false" />
     <arg name="fake_localization" default="false" />
-    <arg name="competition" default="false" />
+    <arg name="competition" default="true" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
 
     <include file="$(find soccerbot)/launch/modules/simulator.launch" unless="$(arg competition)">
@@ -16,29 +16,29 @@
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot1" />
-        <arg name="x_pos" value="3.5" />
+        <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="-3.06" />
         <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="true" />
         <arg name="competition" value="$(arg competition)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
+    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot2" />
-        <arg name="x_pos" value="3.0" />
+        <arg name="x_pos" value="-1" />
         <arg name="y_pos" value="-3.06" />
         <arg name="a_pos" value="1.57" />
         <arg name="goalie" value="false" />
         <arg name="competition" value="$(arg competition)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
+    <include file="$(find soccerbot)/launch/soccerbot.launch" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot3" />
-        <arg name="x_pos" value="3.5" />
+        <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="3.06" />
         <arg name="a_pos" value="-1.57" />
         <arg name="goalie" value="false" />
