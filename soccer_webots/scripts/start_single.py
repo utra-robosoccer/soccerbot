@@ -36,7 +36,6 @@ rospy.logdebug("Starting ros interface for " + args.robot_name)
 
 r = RobotController(base_ns=args.robot_name)
 odom_pub = rospy.Publisher("/" + args.robot_name + "/odom", Odometry, queue_size=50)
-init_pub = rospy.Publisher("/" + args.robot_name + "/initialpose", PoseWithCovarianceStamped, queue_size=50)
 odom_broadcaster = tf.TransformBroadcaster()
 rospy.Subscriber("/" + args.robot_name + '/amcl_pose', PoseWithCovarianceStamped, callback)
 
