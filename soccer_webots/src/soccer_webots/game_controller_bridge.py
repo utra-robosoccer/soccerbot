@@ -193,7 +193,7 @@ class GameControllerBridge():
             sys.exit(1)
 
     def close_connection(self):
-        if hasattr(self, 'socket'):
+        if hasattr(self, 'socket') and self.socket is not None:
             self.socket.close()
 
     def handle_sensor_measurements_msg(self, msg):
