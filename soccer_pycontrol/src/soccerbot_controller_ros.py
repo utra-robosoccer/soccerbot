@@ -34,7 +34,7 @@ class SoccerbotControllerRos(SoccerbotController):
         self.finish_trajectory = rospy.Subscriber('trajectory_complete', Bool, self.trajectory_callback, queue_size=1)
         self.fixed_trajectory_running = False
         self.goal = PoseStamped()
-        self.robot_pose = PoseWithCovarianceStamped()
+        self.robot_pose = None
         self.new_goal = self.goal
         self.terminate_walk = False
         self.imu_orient = Quaternion()
@@ -116,7 +116,7 @@ class SoccerbotControllerRos(SoccerbotController):
         stable_count = 30
 
         while not rospy.is_shutdown():
-            if self.new_goal != self.goal:
+            if self.robot_pose is not None and self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
@@ -165,7 +165,6 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.apply_head_rotation()
 
             if t < 0:
-                print(t)
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
