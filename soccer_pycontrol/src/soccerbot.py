@@ -211,6 +211,11 @@ class Soccerbot:
         # left leg
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
+
+        # head
+        self.configuration[Joints.HEAD_1] = 0
+        self.configuration[Joints.HEAD_2] = 0
+        
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.setJointMotorControlArray(bodyIndex=self.body,
                                          controlMode=pb.POSITION_CONTROL,
@@ -569,24 +574,6 @@ class Soccerbot:
 
         self.head_step += 1
         pass
-
-    def reset_head(self):
-        self.configuration[Joints.HEAD_1] = 0
-        self.configuration[Joints.HEAD_2] = 0
-        # hands
-        self.configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
-        self.configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
-        self.configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
-        self.configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
-
-        # right leg
-        thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
-        self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
-
-        # left leg
-        thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
-        self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
-        self.head_step = 0
 
     def apply_foot_pressure_sensor_feedback(self, floor):
         foot_pressure_values = self.get_foot_pressure_sensors(floor)

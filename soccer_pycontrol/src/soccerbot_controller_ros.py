@@ -41,8 +41,11 @@ class SoccerbotControllerRos(SoccerbotController):
         self.imu_orient_ready = False
 
     def trajectory_callback(self, msg):
-        self.fixed_trajectory_running = not msg.data
         self.soccerbot.reset_imus()
+        self.soccerbot.ready()
+        self.fixed_trajectory_running = not msg.data
+        if msg.data:
+            self.terminate_walk = False
         pass
 
     def robot_pose_callback(self, pose: PoseWithCovarianceStamped):
@@ -110,18 +113,14 @@ class SoccerbotControllerRos(SoccerbotController):
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
 
         self.soccerbot.ready()
-        self.soccerbot.reset_head()
         self.soccerbot.reset_imus()
-
-        stable_count = 30
 
         while not rospy.is_shutdown():
             if self.robot_pose is not None and self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
-                self.soccerbot.reset_head()
-                for i in range(20):
+                for i in range(15):
                     if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                         self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     self.soccerbot.publishAngles()  # Disable to stop walking
@@ -167,7 +166,7 @@ class SoccerbotControllerRos(SoccerbotController):
             if t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn(pitch - self.soccerbot.DESIRED_PITCH_2)
+                    rospy.logwarn_throttle(0.3, "Moving to desired pitch: " + str(pitch - self.soccerbot.DESIRED_PITCH_2))
                     if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:
@@ -195,6 +194,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
             t = t + SoccerbotController.PYBULLET_STEP
             r.sleep()
+        stable_count = 30
+
 
     def correct_goal_pose(self):
         pass

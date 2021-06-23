@@ -4,7 +4,7 @@ kld_err: 0.01
 kld_z: 0.99
 update_min_d: 0.1
 update_min_a: 0.1
-resample_interval: 5
+resample_interval: 1
 gui_publish_rate: 1
 transform_tolerance: 0.1
 laser_model_type: "likelihood_field"

@@ -6,6 +6,7 @@
 #include <string>
 #include <soccer_geometry/pose3.hpp>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <sensor_msgs/JointState.h>
 #include <soccer_fieldline_detection/camera.hpp>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -30,7 +31,7 @@ public:
         ballPublisher = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("ball", 1);
         ballPixelPublisher = n.advertise<geometry_msgs::PointStamped>("ball_pixel", 1);
         robotPosePub = n.advertise<geometry_msgs::Pose>("detected_robot_pose", 1);
-        head_motor_1 = n.subscribe("head_motor_1/command", 1, &BallDetector::headTilt, this);
+        head_motor_1 = n.subscribe("joint_states", 1, &BallDetector::headTilt, this);
         geometry_msgs::TransformStamped camera_pose;
 
         robotName = ros::this_node::getNamespace();
@@ -59,8 +60,16 @@ public:
         camera = std::make_unique<Camera>(camera_position);
 
     }
-    void headTilt(const std_msgs::Float64 &msg) {
-        angle = msg.data;
+    void headTilt(const sensor_msgs::JointState &msg) {
+        int count = 0;
+        for (auto i : msg.name) {
+            if (i == "head_motor_1") {
+                angle = msg.position[count];
+            }
+            count += 1;
+        }
+
+
     }
 private:
     void ballDetectorCallback(const soccer_object_detection::BoundingBoxes::ConstPtr &msg) {
@@ -97,9 +106,18 @@ private:
                 // For now take the center of the box
                 int xavg = (box.xmin + box.xmax) / 2;
                 int yavg = (box.ymin + box.ymax) / 2;
-                Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
+                float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
 
+                Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
+                // Reduce false positives
+                if (area < 3500.0 and float(angle) > 0.6  ) {
+                    continue;
+                }
+                else if (area < 500.0 ) {
+                    continue;
+                }
                 if (objectClass == "ball") {
+//                    std::cout << "Ball: " << area << "  " << float(angle) << std::endl;
                     geometry_msgs::TransformStamped ball_pose;
                     ball_pose.header.frame_id = robotName + "/base_footprint";
                     ball_pose.child_frame_id = robotName + "/ball";
@@ -138,7 +156,7 @@ private:
 
 
                 } else {
-                    if (float(angle) == float(1)) {
+                    if (float(angle) == float(0.6)) {
                         geometry_msgs::Pose robot_pose;
                         robot_pose.position.x = floor_coordinate.x;
                         robot_pose.position.y = floor_coordinate.y;

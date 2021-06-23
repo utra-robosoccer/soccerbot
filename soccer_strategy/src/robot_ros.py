@@ -25,7 +25,7 @@ class RobotRos(Robot):
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
-
+        self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
         self.team = team
         self.role = role
         self.status = status
@@ -36,7 +36,7 @@ class RobotRos(Robot):
         self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
         self.previous_status = Robot.Status.READY
-        self.start_pose = start_pose
+        self.send_nav = False
         # terminate all action
         self.stop_requested = False
         self.designated_kicker = False
@@ -48,11 +48,19 @@ class RobotRos(Robot):
             data.pose.pose.orientation.y,
             data.pose.pose.orientation.z
         )
-        euler = tf.transformations.euler_from_quaternion(quaternion)
-        self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi / 2])
-        #print(self.position)
+        euler = tf.transformations.euler_from_quaternion(quaternion) #  -euler[0] - math.pi / 2
+        self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi])
+        # print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
+
+    def ball_pose_callback(self, data):
+        self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
+        pass
+
+    def move_head_callback(self, data):
+        self.send_nav = data.data
+        pass
 
     def completed_walking_callback(self, data):
         rospy.loginfo("Completed Walking")
@@ -61,7 +69,7 @@ class RobotRos(Robot):
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
-        assert (self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status)
+        assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED

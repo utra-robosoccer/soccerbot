@@ -18,40 +18,81 @@ ROBOT_NAME=$1
 COMPETITION=true
 TEAM_ID=16
 ENABLE_PYBULLET=false
-if [[ "robot1" = "$1" ]]
+if [[ "blue" = "$ROBOCUP_TEAM_COLOR" ]]
 then
-    GOALIE=true
-    X_POS=-4
-    Y_POS=-3.06
-    ANGLE=1.57
-else
-    GOALIE=false
+  if [[ "robot1" = "$1" ]]
+  then
+      GOALIE=true
+      X_POS=-4
+      Y_POS=-3.06
+      ANGLE=1.57
+  else
+      GOALIE=false
+  fi
+
+  if [[ "robot2" = "$1" ]]
+  then
+      X_POS=-1
+      Y_POS=-3.06
+      ANGLE=1.57
+
+  fi
+
+  if [[ "robot3" = "$1" ]]
+  then
+      X_POS=-4
+      Y_POS=3.06
+      ANGLE=-1.57
+
+  fi
+
+  if [[ "robot4" = "$1" ]]
+  then
+      X_POS=-1
+      Y_POS=3.06
+      ANGLE=-1.57
+
+  fi
+
 fi
 
-if [[ "robot2" = "$1" ]]
+if [[ "red" = "$ROBOCUP_TEAM_COLOR" ]]
 then
-    X_POS=-1
-    Y_POS=-3.06
-    ANGLE=1.57
+  if [[ "robot1" = "$1" ]]
+  then
+      GOALIE=true
+      X_POS=4
+      Y_POS=-3.06
+      ANGLE=1.57
+  else
+      GOALIE=false
+  fi
+
+  if [[ "robot2" = "$1" ]]
+  then
+      X_POS=1
+      Y_POS=-3.06
+      ANGLE=1.57
+
+  fi
+
+  if [[ "robot3" = "$1" ]]
+  then
+      X_POS=4
+      Y_POS=3.06
+      ANGLE=-1.57
+
+  fi
+
+  if [[ "robot4" = "$1" ]]
+  then
+      X_POS=1
+      Y_POS=3.06
+      ANGLE=-1.57
+
+  fi
 
 fi
-
-if [[ "robot3" = "$1" ]]
-then
-    X_POS=-4
-    Y_POS=3.06
-    ANGLE=-1.57
-
-fi
-
-if [[ "robot4" = "$1" ]]
-then
-    X_POS=-1
-    Y_POS=3.06
-    ANGLE=-1.57
-
-fi
-
 echo "ROBOCUP_ROBOT_ID: $ROBOCUP_ROBOT_ID"
 echo "ROBOCUP_TEAM_COLOR: $ROBOCUP_TEAM_COLOR"
 echo "ROBOCUP_SIMULATOR_ADDR: $ROBOCUP_SIMULATOR_ADDR"
@@ -72,7 +113,7 @@ ROBOCUP_ROBOT_ID: $ROBOCUP_ROBOT_ID
 ROBOCUP_TEAM_COLOR: $ROBOCUP_TEAM_COLOR
 ROBOCUP_SIMULATOR_ADDR: $ROBOCUP_SIMULATOR_ADDR
 ROBOCUP_MIRROR_SERVER_IP: $ROBOCUP_MIRROR_SERVER_IP
-ROBOCUP_GAMECONTROLLER_IP: $ROBOCUP_GAMECONTROLLER_IP
+ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
 X_POS: $X_POS
 Y_POS: $Y_POS
 ANGLE: $ANGLE
