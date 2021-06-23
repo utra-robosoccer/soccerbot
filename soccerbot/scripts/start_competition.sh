@@ -97,11 +97,11 @@ echo "ROBOCUP_ROBOT_ID: $ROBOCUP_ROBOT_ID"
 echo "ROBOCUP_TEAM_COLOR: $ROBOCUP_TEAM_COLOR"
 echo "ROBOCUP_SIMULATOR_ADDR: $ROBOCUP_SIMULATOR_ADDR"
 echo "ROBOCUP_MIRROR_SERVER_IP: $ROBOCUP_MIRROR_SERVER_IP"
-echo "ROBOCUP_GAMECONTROLLER_IP: $ROBOCUP_GAMECONTROLLER_IP"
+echo "ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0"
 echo "X_POS: $X_POS"
 echo "Y_POS: $Y_POS"
 echo "ANGLE: $ANGLE"
-echo "ROBOT_NAME: $ROBOT_NAME"
+echo "ROBOT_NAME: robot1"
 echo "COMPETITION: $COMPETITION"
 echo "GOALIE: $GOALIE"
 echo "TEAM_ID: $TEAM_ID"
@@ -117,10 +117,10 @@ ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
 X_POS: $X_POS
 Y_POS: $Y_POS
 ANGLE: $ANGLE
-ROBOT_NAME: $ROBOT_NAME
+ROBOT_NAME: robot1
 COMPETITION: $COMPETITION
 GOALIE: $GOALIE
 ENABLE_PYBULLET: $ENABLE_PYBULLET
 TEAM_ID: $TEAM_ID
 EOF
-exec roslaunch  soccerbot soccerbot.launch fake_localization:=false robot_name:=$ROBOT_NAME x_pos:=$X_POS y_pos:=$y_POS a_pos:=$ANGLE goalie:=$GOALIE competition:=$COMPETITION
+exec roslaunch  soccerbot soccerbot.launch fake_localization:=false robot_name:=robot1 x_pos:=$X_POS y_pos:=$Y_POS a_pos:=$ANGLE goalie:=$GOALIE competition:=$COMPETITION

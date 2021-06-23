@@ -114,7 +114,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
-
+        stable_count = 30
         while not rospy.is_shutdown():
             if self.robot_pose is not None and self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
