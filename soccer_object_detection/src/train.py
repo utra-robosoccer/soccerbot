@@ -59,6 +59,7 @@ class Trainer:
         for epoch in range(self.epochs):
             self.train_epoch(epoch)
             self.test_model('valid', epoch)
+            torch.save(self.model.state_dict(), 'outputs/model'+str(epoch))
 
         self.test_model('test', 'test')
 
@@ -117,8 +118,7 @@ class Trainer:
             bbxs = find_batch_bounding_boxes(outputs)
             self.update_batch_stats(stats, bbxs, masks, dataset, indexes)
 
-        # Show sample image with bounding boxes to get feel for what model is learning
-        '''
+        '''# Show sample image with bounding boxes to get feel for what model is learning
         for i in range(1):
             img = draw_bounding_boxes(images[i], bbxs[i][Label.BALL.value], (255, 0, 0))  # balls
             img = draw_bounding_boxes(img, bbxs[i][Label.ROBOT.value], (0, 0, 255))  # robots
@@ -130,8 +130,7 @@ class Trainer:
                 (outputs[i][Label.OTHER.value], 'gray', 'Background'),
                 (outputs[i][Label.BALL.value], 'gray', 'Ball'),
                 (outputs[i][Label.ROBOT.value], 'gray', 'Robot')
-            ])
-        '''
+            ])'''
 
         self.valid_losses.append(np.sum(losses) / len(losses))
         time_elapsed = time.time() - start_valid

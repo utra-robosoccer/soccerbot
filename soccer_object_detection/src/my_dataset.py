@@ -12,13 +12,13 @@ import util
 import time
 import pickle
 
-train_path = '/home/robosoccer/dataset/train'
-train_images = '/home/robosoccer/dataset/train/images'
+train_path = '/home/robosoccer/dataset/train/small'
+train_images = '/home/robosoccer/dataset/train/small/preprocessed_images'
 # train_labels = '/home/robosoccer/hdd/dataset/simulation/train/annotations.yaml'
 train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
 
-test_path = '/home/robosoccer/dataset/test'
-test_images = '/home/robosoccer/dataset/test/images'
+test_path = '/home/robosoccer/dataset/test/small'
+test_images = '/home/robosoccer/dataset/test/small/preprocessed_images'
 # test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
 test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
@@ -95,8 +95,8 @@ class MyDataSet(Dataset):
         self.img_transform = torchvision.transforms.Compose([
             torchvision.transforms.ColorJitter(brightness=jitter[0], contrast=jitter[1], saturation=jitter[2],
                                                hue=jitter[3]),
-            torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR),
-            torchvision.transforms.CenterCrop((self.target_height, self.target_width)),
+            #torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR), # assume images already preprocessed
+            #torchvision.transforms.CenterCrop((self.target_height, self.target_width)), # assume images already preprocessed
         ])
         self.mask_transform = torchvision.transforms.Compose([
             torchvision.transforms.Resize(self.target_height, interpolation=Image.NEAREST),
@@ -252,7 +252,7 @@ class MyDataSet(Dataset):
 
         height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
-        mask = np.ones((height, width, 3)) * Label.OTHER.value
+        mask = np.ones((1080, 1980, 3)) * Label.OTHER.value  # hardcoding the original img size (1920x1080) so that annotations still work
         for bb in bounding_boxes:
             pt1, pt2, label = np.array(bb[0:2]), np.array(bb[2:4]), bb[4]
 
