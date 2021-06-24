@@ -110,12 +110,12 @@ private:
 
                 Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
                 // Reduce false positives
-                if (area < 3500.0 and float(angle) > 0.6  ) {
-                    continue;
-                }
-                else if (area < 400.0 ) {
-                    continue;
-                }
+//                if (area < 3500.0 and float(angle) > 0.6  ) {
+//                    continue;
+//                }
+//                else if (area < 400.0 ) {
+//                    continue;
+//                }
                 if (objectClass == "ball") {
 //                    std::cout << "Ball: " << area << "  " << float(angle) << std::endl;
                     geometry_msgs::TransformStamped ball_pose;

@@ -68,7 +68,7 @@ class ObjectDetectionNode(object):
                 outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
                 bbxs = find_batch_bounding_boxes(outputs)[0]
 
-                if bounding_boxes is None:
+                if bbxs is None:
                     continue
 
                 bbs_msg = BoundingBoxes()
