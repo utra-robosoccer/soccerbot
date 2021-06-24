@@ -62,21 +62,26 @@ class DummyStrategy(Strategy):
         return rem
 
     def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
-        if secondaryState == GameState.STATE_PENALTYSHOOT:
-            goal_position = np.array([0, -4.5])
-        else:
-            if teamcolor == 0:
-                if is_first_half == 1:
-                    goal_position = np.array([0, 4.5])
-                else:
-                    goal_position = np.array([0, -4.5])
-            else:
-                if is_first_half == 1:
-                    goal_position = np.array([0, -4.5])
-                else:
-                    goal_position = np.array([0, 4.5])
 
         if self.check_ball_avaliable(ball):
+
+            if secondaryState == GameState.STATE_PENALTYSHOOT:
+                goal_position = np.array([0, -4.5])
+            else:
+                if teamcolor == 0:
+                    if is_first_half == 1:
+                        goal_position = np.array([0, 4.5])
+                    else:
+                        goal_position = np.array([0, -4.5])
+                else:
+                    if is_first_half == 1:
+                        goal_position = np.array([0, -4.5])
+                    else:
+                        goal_position = np.array([0, 4.5])
+
+            if abs(ball.get_position()[0]) < 1.0:
+                goal_position[0] = ball.get_position()[0]
+
             if abs(ball.get_position()[0]) < 3.5 and abs(ball.get_position()[1]) < 5:
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 current_closest = self.who_has_the_ball(friendly, ball) # Guess who has the ball
@@ -93,7 +98,7 @@ class DummyStrategy(Strategy):
 
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.3:
+                    if distance_of_player_to_ball < 0.45:
                         navigation_bias = 0.7
                     else:
                         navigation_bias = 1.1
@@ -112,7 +117,7 @@ class DummyStrategy(Strategy):
                     print("Distance between player and ball")
                     print(distance_of_player_to_ball)
 
-                    if distance_of_player_to_ball < 0.25:
+                    if distance_of_player_to_ball < 0.2:
                         # Stop moving
                         # Kick the ball towards the goal
                         player_vector = [math.cos(player_angle), math.sin(player_angle)]
