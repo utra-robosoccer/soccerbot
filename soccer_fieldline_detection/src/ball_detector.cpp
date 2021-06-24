@@ -17,8 +17,6 @@ public:
     ros::Subscriber boundingBoxesSub;
     ros::Subscriber head_motor_1;
 
-    ros::Publisher ballPublisher;
-    ros::Publisher ballPixelPublisher;
     ros::Publisher robotPosePub;
     std::unique_ptr<Camera> camera;
     tf2_ros::Buffer tfBuffer;
@@ -28,8 +26,6 @@ public:
     float angle = 0;
     BallDetector() : tfListener(tfBuffer) {
         boundingBoxesSub = n.subscribe("object_bounding_boxes", 1, &BallDetector::ballDetectorCallback, this);
-        ballPublisher = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("ball", 1);
-        ballPixelPublisher = n.advertise<geometry_msgs::PointStamped>("ball_pixel", 1);
         robotPosePub = n.advertise<geometry_msgs::Pose>("detected_robot_pose", 1);
         head_motor_1 = n.subscribe("joint_states", 1, &BallDetector::headTilt, this);
         geometry_msgs::TransformStamped camera_pose;
@@ -39,7 +35,7 @@ public:
 
         while (ros::ok()) {
             try {
-                camera_pose = tfBuffer.lookupTransform(robotName + "/camera", robotName + "/base_footprint",
+                camera_pose = tfBuffer.lookupTransform(robotName + "/camera", robotName + "/odom",
                                                        ros::Time(0), ros::Duration(1.0));
                 break;
             }
@@ -68,15 +64,13 @@ public:
             }
             count += 1;
         }
-
-
     }
 private:
     void ballDetectorCallback(const soccer_object_detection::BoundingBoxes::ConstPtr &msg) {
         // Get transformation
         geometry_msgs::TransformStamped camera_pose;
         try {
-            camera_pose = tfBuffer.lookupTransform(robotName + "/base_footprint", robotName + "/camera",
+            camera_pose = tfBuffer.lookupTransform(robotName + "/odom", robotName + "/camera",
                                                    ros::Time(0), ros::Duration(0.1));
             Pose3 camera_position;
             camera_position.position.x = camera_pose.transform.translation.x;
@@ -103,12 +97,27 @@ private:
                 if (objectClass != "ball" && objectClass != "robot") {
                     continue;
                 }
-                // For now take the center of the box
-                int xavg = (box.xmin + box.xmax) / 2;
-                int yavg = 0.5 * box.ymax + 0.5 * box.ymin;
-                float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
+                float xavg = (box.xmin + box.xmax) / 2;
+                float yavg = 0.5 * box.ymax + 0.5 * box.ymin;
+                float yclose = box.ymax;
 
-                Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
+                Point3 floor_coordinate_center = camera->FindFloorCoordinate(xavg, yavg);
+                Point3 floor_coordinate_close = camera->FindFloorCoordinate(xavg, yclose);
+
+                Pose3 camera_pose = camera->getPose();
+                float camera_height = camera_pose.position.z;
+                float distance = sqrt(pow(floor_coordinate_center.x - camera_pose.position.x, 2) + pow(floor_coordinate_center.y - camera_pose.position.y, 2));
+                float theta = atan2(distance, camera_height);
+                float ratio = pow(tan(theta),2);
+                float ratio2 = 1 / (1 + ratio);
+                assert(ratio2 >= 0 && ratio2 <= 1);
+
+                Point3 floor_coordinate = floor_coordinate_close;
+                floor_coordinate.x = floor_coordinate.x * (1 - ratio2) + floor_coordinate_center.x * ratio2;
+                floor_coordinate.y = floor_coordinate.y * (1 - ratio2) + floor_coordinate_center.y * ratio2;
+
+
+
                 // Reduce false positives
 //                if (area < 3500.0 and float(angle) > 0.6  ) {
 //                    continue;
@@ -119,7 +128,7 @@ private:
                 if (objectClass == "ball") {
 //                    std::cout << "Ball: X:" << xavg << " Y:" << yavg << " Area " << area << "  " << float(angle) << std::endl;
                     geometry_msgs::TransformStamped ball_pose;
-                    ball_pose.header.frame_id = robotName + "/base_footprint";
+                    ball_pose.header.frame_id = robotName + "/odom";
                     ball_pose.child_frame_id = robotName + "/ball";
                     ball_pose.header.stamp = msg->header.stamp;
                     ball_pose.header.seq = msg->header.seq;
@@ -131,30 +140,6 @@ private:
                     ball_pose.transform.rotation.z = 0;
                     ball_pose.transform.rotation.w = 1;
                     BallDetector::br.sendTransform(ball_pose);
-
-                    geometry_msgs::PoseWithCovarianceStamped ball;
-                    ball.header.frame_id = robotName + "/base_footprint";
-                    ball.header.seq = msg->header.seq;
-                    ball.header.stamp = msg->header.stamp;
-                    ball.pose.pose.position.x = floor_coordinate.x;
-                    ball.pose.pose.position.y = floor_coordinate.y;
-                    ball.pose.pose.position.z = floor_coordinate.z;
-                    ball.pose.pose.orientation.x = 0;
-                    ball.pose.pose.orientation.y = 0;
-                    ball.pose.pose.orientation.z = 0;
-                    ball.pose.pose.orientation.w = 1;
-                    ballPublisher.publish(ball);
-
-                    geometry_msgs::PointStamped ball_pixel;
-                    ball_pixel.header.frame_id = robotName + "/base_footprint";
-                    ball_pixel.header.seq = msg->header.seq;
-                    ball_pixel.header.stamp = msg->header.stamp;
-                    ball_pixel.point.x = xavg;
-                    ball_pixel.point.y = yavg;
-                    ball_pixel.point.z = 0;
-                    ballPixelPublisher.publish(ball_pixel);
-
-
                 } else {
                     if (float(angle) == float(0.6)) {
                         geometry_msgs::Pose robot_pose;
