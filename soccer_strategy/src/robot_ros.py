@@ -5,7 +5,7 @@ import rospy
 import os
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from std_msgs.msg import Empty, Bool
-from soccer_msgs.msg import FixedTrajectoryAction
+from soccer_msgs.msg import FixedTrajectoryCommand
 import numpy as np
 import math
 import tf.transformations
@@ -22,7 +22,7 @@ class RobotRos(Robot):
 
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
-        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryAction, queue_size=1)
+        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryCommand, queue_size=1)
         self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
                                                              self.completed_walking_callback)
@@ -165,7 +165,7 @@ class RobotRos(Robot):
                 self.status = Robot.Status.STOPPED
 
         elif self.status == Robot.Status.KICKING:
-            f = FixedTrajectoryAction()
+            f = FixedTrajectoryCommand()
             f.trajectory_name = "rightkick"
             if not self.kick_with_right_foot:
                 f.mirror = True
@@ -175,7 +175,7 @@ class RobotRos(Robot):
 
         elif self.status == Robot.Status.FALLEN_BACK:
             self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryAction()
+            f = FixedTrajectoryCommand()
             f.trajectory_name = "getupback"
             self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
@@ -184,7 +184,7 @@ class RobotRos(Robot):
 
         elif self.status == Robot.Status.FALLEN_FRONT:
             self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryAction()
+            f = FixedTrajectoryCommand()
             f.trajectory_name = "getupfront"
             self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
@@ -194,7 +194,7 @@ class RobotRos(Robot):
         elif self.status == Robot.Status.FALLEN_SIDE:
             self.terminate_walking_publisher.publish()
             self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryAction()
+            f = FixedTrajectoryCommand()
             f.trajectory_name = "getupside"
             self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
