@@ -111,7 +111,7 @@ private:
                 float theta = atan2(distance, camera_height);
                 float ratio = pow(tan(theta),2);
                 float ratio2 = 1 / (1 + ratio);
-                assert(ratio2 >= 0 && ratio2 <= 1);
+//                assert(ratio2 >= 0 && ratio2 <= 1);
 
                 Point3 floor_coordinate = floor_coordinate_close;
                 floor_coordinate.x = floor_coordinate.x * (1 - ratio2) + floor_coordinate_center.x * ratio2;

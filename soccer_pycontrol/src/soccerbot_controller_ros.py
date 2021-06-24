@@ -172,6 +172,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 rospy.loginfo("Completed Walk")
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
+            # print(t)
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
                 self.soccerbot.apply_head_rotation()
