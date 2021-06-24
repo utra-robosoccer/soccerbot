@@ -120,7 +120,7 @@ class SoccerbotControllerRos(SoccerbotController):
     def run(self, stop_on_completed_trajectory=False):
         t = 0
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
-        stable_count = 30
+        stable_count = 5
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
 
@@ -144,7 +144,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -5
+                t = -2
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -181,7 +181,7 @@ class SoccerbotControllerRos(SoccerbotController):
                         if stable_count == 0:
                             t = 0
                     else:
-                        stable_count = 30
+                        stable_count = 5
 
             # Post walk stabilization
             if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():

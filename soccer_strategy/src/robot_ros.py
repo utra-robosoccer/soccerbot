@@ -48,6 +48,7 @@ class RobotRos(Robot):
         # terminate all action
         self.stop_requested = False
         self.designated_kicker = False
+        self.relocalization_timeout = 0
 
     def robot_pose_callback(self, data):
         if self.status == Robot.Status.DISCONNECTED:
@@ -178,6 +179,7 @@ class RobotRos(Robot):
             f.trajectory_name = "getupback"
             self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            self.relocalization_timeout = 5
             rospy.loginfo(self.robot_name + "getupback")
 
         elif self.status == Robot.Status.FALLEN_FRONT:
@@ -186,6 +188,7 @@ class RobotRos(Robot):
             f.trajectory_name = "getupfront"
             self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            self.relocalization_timeout = 5
             rospy.loginfo(self.robot_name + "getupfront")
 
         elif self.status == Robot.Status.FALLEN_SIDE:

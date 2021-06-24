@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import rospy
+
 from robot import Robot
 
 class Strategy:
@@ -21,7 +23,7 @@ class Strategy:
         raise NotImplementedError
 
     def check_ball_avaliable(self, ball):
-        if ball.position is None:
+        if ball.get_position() is None:
             print("No ball position available")
             return False
         else:
@@ -31,7 +33,12 @@ class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
         return
 
+HAVENT_SEEN_THE_BALL_TIMEOUT = 30
 class DummyStrategy(Strategy):
+
+    def __init__(self):
+        self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+        super(DummyStrategy, self).__init__()
 
     def who_has_the_ball(self, robots, ball):
         closest_dist = math.inf
@@ -40,25 +47,21 @@ class DummyStrategy(Strategy):
             if robot.status != Robot.Status.READY:
                 continue
 
+            if robot.relocalization_timeout > 0:
+                robot.relocalization_timeout = robot.relocalization_timeout - 1
+                continue
+
             dist = np.linalg.norm(ball.get_position()[0:2] - robot.get_position()[0:2])
             if dist < closest_dist:
                 closest_dist = dist
                 current_closest = robot
         return current_closest
 
+    def wrapToPi(self, num: float) -> float:
+        rem = (num + np.pi) % (2 * np.pi) - np.pi
+        return rem
+
     def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half):
-        if not self.check_ball_avaliable(ball):
-            return
-
-        # Guess who has the ball
-        current_closest = self.who_has_the_ball(friendly, ball)
-        if current_closest is None or not current_closest.send_nav:
-            return
-
-        # If ball out of bounds
-        if abs(ball.get_position()[0]) > 3.5 or abs(ball.get_position()[1]) > 5:
-            return
-
         if teamcolor == 1:
             if is_first_half == 1:
                 goal_position = np.array([0, 4.5])
@@ -70,53 +73,86 @@ class DummyStrategy(Strategy):
             else:
                 goal_position = np.array([0, 4.5])
 
-        distance_of_player_goal_to_ball = 0.1
-        ball_position = ball.get_position()
-        player_position = current_closest.get_position()[0:2]
-        player_angle = current_closest.get_position()[2]
+        if self.check_ball_avaliable(ball):
+            if abs(ball.get_position()[0]) < 3.5 and abs(ball.get_position()[1]) < 5:
+                self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+                current_closest = self.who_has_the_ball(friendly, ball) # Guess who has the ball
+                if current_closest is not None and current_closest.send_nav:
 
-        diff = ball_position - goal_position
-        diff_unit = diff / np.linalg.norm(diff)
-        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+                    distance_of_player_goal_to_ball = 0.1
+                    ball_position = ball.get_position()
+                    player_position = current_closest.get_position()[0:2]
+                    player_angle = current_closest.get_position()[2]
 
-        destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
+                    diff = ball_position - goal_position
+                    diff_unit = diff / np.linalg.norm(diff)
+                    diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
-        navigation_bias = 1.1
-        diff = destination_position - player_position
-        destination_position_biased = player_position + diff * navigation_bias
+                    destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
 
-        destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
-        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+                    navigation_bias = 1.1
+                    diff = destination_position - player_position
+                    destination_position_biased = player_position + diff * navigation_bias
+
+                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
+                    distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+
+                    print("Position of closest player")
+                    print(player_position)
+                    print("Ball Position")
+                    print(ball_position)
+                    print("Destination Position")
+                    print(destination_position)
+                    print("Distance between player and ball")
+                    print(distance_of_player_to_ball)
+
+                    if distance_of_player_to_ball < 0.15:
+                        # Stop moving
+                        # Kick the ball towards the goal
+                        player_vector = [math.cos(player_angle), math.sin(player_angle)]
+                        player_to_ball_vector = ball_position - player_position
+                        cross = np.cross(player_to_ball_vector, player_vector)
+                        if cross > 0: # right foot
+                            current_closest.kick_with_right_foot = True
+                        else:
+                            current_closest.kick_with_right_foot = False
+
+                        delta = goal_position - ball.get_position()
+                        unit = delta / np.linalg.norm(delta)
+
+                        current_closest.status = Robot.Status.KICKING
+                        current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+                    else:
+                        current_closest.set_navigation_position(destination_position_biased)
+                        pass
+
+        # If player is not facing the right direction, and not seeing the ball, then face the goal
+        self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
+        for player in friendly:
+            if player.status != Robot.Status.READY:
+                continue
+
+            player_angle = player.get_position()[2]
+            player_position = player.get_position()[0:2]
+            #
+            # player_to_goal = goal_position - player_position
+            # player_to_goal_angle = math.atan2(player_to_goal[1], player_to_goal[0])
+            #
+            # # Not facing the goal
+            # if abs(self.wrapToPi(player_angle - player_to_goal_angle)) > math.pi / 2:
+            #     facing_goalposition = [player_position[0], player_position[1], player_to_goal_angle]
+            #     player.set_navigation_position(facing_goalposition)
+            #     pass
+
+            # Haven't seen the ball timeout
+            if self.havent_seen_the_ball_timeout == 0:
+                rospy.loginfo("Havent seen the ball for a while. Rototating robot " + player.robot_name
+                              )
+                self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi]
+                player.set_navigation_position(turn_position)
 
 
-        print("Position of closest player")
-        print(player_position)
-        print("Ball Position")
-        print(ball_position)
-        print("Destination Position")
-        print(destination_position)
-        print("Distance between player and ball")
-        print(distance_of_player_to_ball)
-
-        if distance_of_player_to_ball < 0.15:
-            # Stop moving
-            # Kick the ball towards the goal
-            player_vector = [math.cos(player_angle), math.sin(player_angle)]
-            player_to_ball_vector = ball_position - player_position
-            cross = np.cross(player_to_ball_vector, player_vector)
-            if cross > 0: # right foot
-                current_closest.kick_with_right_foot = True
-            else:
-                current_closest.kick_with_right_foot = False
-
-            delta = goal_position - ball.get_position()
-            unit = delta / np.linalg.norm(delta)
-
-            current_closest.status = Robot.Status.KICKING
-            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
-        else:
-            current_closest.set_navigation_position(destination_position_biased)
-            pass
 
 # BROKEN DO NOT USE
 class PassStrategy(DummyStrategy):
