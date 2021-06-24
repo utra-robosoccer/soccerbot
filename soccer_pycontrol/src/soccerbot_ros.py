@@ -182,6 +182,9 @@ class SoccerbotRos(Soccerbot):
             temp.data = False
             self.move_head_publisher.publish(temp)
 
+        if self.configuration[Joints.HEAD_2] > 0.6:
+            self.configuration[Joints.HEAD_2] = 0.6
+
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]
         self.head_step += 1
