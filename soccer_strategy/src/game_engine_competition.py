@@ -307,12 +307,11 @@ class GameEngineCompetition(game_engine.GameEngine):
                         self.kickoff_started = True
                         print("kickoff started after ball moved 10cm")
 
-            if self.kickoff_started:
-                if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
-                        self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+            if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+                if self.kickoff_started:
                     self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
-            else:
-                print("kickoff not started, no strategy output")
+                else:
+                    print("kickoff not started, no strategy output")
 
             pass
 
