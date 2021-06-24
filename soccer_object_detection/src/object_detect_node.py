@@ -79,10 +79,10 @@ class ObjectDetectionNode(object):
                 bbs_msg = BoundingBoxes()
                 bb_msg = BoundingBox()
                 for ball_bb in bbxs[Label.BALL.value]:
-                    bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
-                    bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
-                    bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
-                    bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
+                    bb_msg.xmin = int((ball_bb[0] + x_offset) * scale)
+                    bb_msg.ymin = int((ball_bb[1] + y_offset) * scale)
+                    bb_msg.xmax = int((ball_bb[2] + x_offset) * scale)
+                    bb_msg.ymax = int((ball_bb[3] + y_offset) * scale)
                     bb_msg.id = Label.BALL.value
                     bb_msg.Class = 'ball'
                 bbs_msg.bounding_boxes = [bb_msg]
@@ -90,10 +90,10 @@ class ObjectDetectionNode(object):
                 big_enough_robot_bbxs = []
                 for robot_bb in bbxs[Label.ROBOT.value]:
                     bb_msg = BoundingBox()
-                    bb_msg.xmin = int((robot_bb[0] + x_offset) * 3)
-                    bb_msg.ymin = int((robot_bb[1] + y_offset) * 3)
-                    bb_msg.xmax = int((robot_bb[2] + x_offset) * 3)
-                    bb_msg.ymax = int((robot_bb[3] + y_offset) * 3)
+                    bb_msg.xmin = int((robot_bb[0] + x_offset) * scale)
+                    bb_msg.ymin = int((robot_bb[1] + y_offset) * scale)
+                    bb_msg.xmax = int((robot_bb[2] + x_offset) * scale)
+                    bb_msg.ymax = int((robot_bb[3] + y_offset) * scale)
                     bb_msg.id = Label.ROBOT.value
                     bb_msg.Class = 'robot'
                     # ignore small boxes
