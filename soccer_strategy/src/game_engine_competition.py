@@ -28,8 +28,8 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 3
     NAV_GOAL_UPDATE_INTERVAL = 2
-    blue_initial_position = [[-0.75, -3.9, 1.57], [-.75, -0.9, 1.57], [-1.75, -1.5, 1.57]]
-    red_initial_position = [[-0.75, 3.9, -1.57], [-0.75, 0.9, -1.57], [-1.75, 1.5, -1.57]]
+    blue_initial_position = [[-0, -4, 1.57], [0, -1, 1.57], [-1.75, -1.5, 1.57]]
+    red_initial_position = [[-0, 4, -1.57], [0, 1, -1.57], [-1.75, 1.5, -1.57]]
 
     blue_start_position = [[-4, -3.06, 1.57], [-1, -3.06, 1.57], [-4, 3.06, -1.57]]
     red_start_position = [[4, -3.06, 1.57], [1, -3.06, 1.57], [4, 3.06, -1.57]]
@@ -153,6 +153,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
     def resume_all_robot(self):
         for robot in self.friendly:
+            robot.completed_trajectory_publisher.publish(True)
             if robot.stop_requested:
                 robot.stop_requested = False
             if robot.status == Robot.Status.STOPPED:
@@ -261,31 +262,27 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_SET
 
-            if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                if self.gameState.hasKickOff:
-                    for robot in self.friendly:
-                        robot.reset_initial_position([-2.6, 0, 3.14])
-
-                else:
-                    for robot in self.friendly:
-                        robot.reset_initial_position([-4.5, 0, 0])
+                if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                    if self.gameState.hasKickOff:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-2.6, 0, 3.14])
+                    else:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-4.5, 0, 0])
 
         # PLAYING
         if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
-                print("hi")
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                     if self.gameState.hasKickOff:
                         for robot in self.friendly:
                             robot.reset_initial_position([-2.6, 0, 3.14])
-
                     else:
                         for robot in self.friendly:
                             robot.reset_initial_position([-4.5, 0, 0])
-
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
                     self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
