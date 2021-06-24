@@ -92,13 +92,16 @@ class DummyStrategy(Strategy):
                     diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
-
-                    navigation_bias = 1.1
+                    distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+                    if distance_of_player_to_ball < 0.3:
+                        navigation_bias = 0.7
+                    else:
+                        navigation_bias = 1.1
                     diff = destination_position - player_position
                     destination_position_biased = player_position + diff * navigation_bias
 
                     destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
-                    distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+
 
                     print("Position of closest player")
                     print(player_position)
@@ -109,7 +112,7 @@ class DummyStrategy(Strategy):
                     print("Distance between player and ball")
                     print(distance_of_player_to_ball)
 
-                    if distance_of_player_to_ball < 0.15:
+                    if distance_of_player_to_ball < 0.25:
                         # Stop moving
                         # Kick the ball towards the goal
                         player_vector = [math.cos(player_angle), math.sin(player_angle)]
@@ -131,6 +134,7 @@ class DummyStrategy(Strategy):
 
         # If player is not facing the right direction, and not seeing the ball, then face the goal
         self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
+        # print(self.havent_seen_the_ball_timeout)
         for player in friendly:
             if player.status != Robot.Status.READY:
                 continue
