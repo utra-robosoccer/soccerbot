@@ -37,11 +37,6 @@
         <remap from="imu/data" to="imu_filtered" />
     </node>
 
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter_orient" >
-        <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
-        <remap from="imu/data_raw" to="imu_orient_raw" />
-        <remap from="imu/data" to="imu_orient_filtered" />
-    </node>
     <!-- IMU location -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />

@@ -31,10 +31,10 @@ class SoccerbotController:
     def ready(self):
         self.soccerbot.ready()
 
-    def setPose(self, pose):
+    def setPose(self, pose: Transformation):
         self.soccerbot.setPose(pose)
 
-    def setGoal(self, goal):
+    def setGoal(self, goal: Transformation):
         self.soccerbot.setGoal(goal)
 
     def wait(self, steps):
@@ -42,8 +42,6 @@ class SoccerbotController:
             time.sleep(SoccerbotController.PYBULLET_STEP)
             if rospy.get_param('ENABLE_PYBULLET'):
                 pb.stepSimulation()
-
-
 
     def run(self, stop_on_completed_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
