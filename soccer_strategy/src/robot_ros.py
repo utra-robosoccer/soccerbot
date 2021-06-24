@@ -2,11 +2,14 @@ from soccer_msgs.msg import GameState
 
 from robot import Robot
 import rospy
+import os
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
-from std_msgs.msg import String, Empty, Bool
+from std_msgs.msg import Empty, Bool
+from soccer_msgs.msg import FixedTrajectoryAction
 import numpy as np
 import math
 import tf.transformations
+
 from sensor_msgs.msg import Imu
 
 robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1": 1, "opponent2": 2, "opponent3": 3, "opponent4": 4}
@@ -19,13 +22,16 @@ class RobotRos(Robot):
 
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
-        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
+        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryAction, queue_size=1)
         self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
         self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
+
+        self.tf_listener = tf.TransformListener()
+
         self.team = team
         self.role = role
         self.status = status
@@ -36,6 +42,7 @@ class RobotRos(Robot):
         self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
         self.previous_status = Robot.Status.READY
+        self.kick_with_right_foot = True
 
         self.send_nav = False
         # terminate all action
@@ -43,15 +50,6 @@ class RobotRos(Robot):
         self.designated_kicker = False
 
     def robot_pose_callback(self, data):
-        quaternion = (
-            data.pose.pose.orientation.w,
-            data.pose.pose.orientation.x,
-            data.pose.pose.orientation.y,
-            data.pose.pose.orientation.z
-        )
-        euler = tf.transformations.euler_from_quaternion(quaternion) #  -euler[0] - math.pi / 2
-        self.position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x, -euler[0] - math.pi])
-        # print(self.position)
         if self.status == Robot.Status.DISCONNECTED:
             self.status = Robot.Status.READY
 
@@ -77,6 +75,16 @@ class RobotRos(Robot):
             else:
                 self.status = Robot.Status.READY
 
+    def get_position(self):
+        try:
+            (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/base_footprint', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            return self.position
+
+        eul = tf.transformations.euler_from_quaternion(rot)
+        self.position = [-trans[1], trans[0], eul[2] + math.pi/2]
+        return self.position
+
     def set_navigation_position(self, position):
         #assert (self.status == Robot.Status.WALKING)
         if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
@@ -88,7 +96,7 @@ class RobotRos(Robot):
             p.pose.position.x = position[1]
             p.pose.position.y = -position[0]
             p.pose.position.z = 0
-            angle_fixed = position[2]
+            angle_fixed = position[2] - math.pi / 2
             # print(angle_fixed)
             q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
             p.pose.orientation.x = q[0]
@@ -156,25 +164,36 @@ class RobotRos(Robot):
                 self.status = Robot.Status.STOPPED
 
         elif self.status == Robot.Status.KICKING:
-            self.trajectory_publisher.publish("rightkick")
+            f = FixedTrajectoryAction()
+            f.trajectory_name = "rightkick"
+            if not self.kick_with_right_foot:
+                f.mirror = True
+            self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
             rospy.loginfo(self.robot_name + " kicking")
 
         elif self.status == Robot.Status.FALLEN_BACK:
             self.terminate_walking_publisher.publish()
-            self.trajectory_publisher.publish("getupback")
+            f = FixedTrajectoryAction()
+            f.trajectory_name = "getupback"
+            self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
             rospy.loginfo(self.robot_name + "getupback")
 
         elif self.status == Robot.Status.FALLEN_FRONT:
             self.terminate_walking_publisher.publish()
-            self.trajectory_publisher.publish("getupfront")
+            f = FixedTrajectoryAction()
+            f.trajectory_name = "getupfront"
+            self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
             rospy.loginfo(self.robot_name + "getupfront")
 
         elif self.status == Robot.Status.FALLEN_SIDE:
             self.terminate_walking_publisher.publish()
-            self.trajectory_publisher.publish("getupside")
+            self.terminate_walking_publisher.publish()
+            f = FixedTrajectoryAction()
+            f.trajectory_name = "getupside"
+            self.trajectory_publisher.publish(f)
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
             rospy.loginfo(self.robot_name + "getupside")
 

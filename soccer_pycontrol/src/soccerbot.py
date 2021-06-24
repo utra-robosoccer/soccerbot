@@ -215,7 +215,9 @@ class Soccerbot:
         # head
         self.configuration[Joints.HEAD_1] = 0
         self.configuration[Joints.HEAD_2] = 0
-        
+
+        self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.setJointMotorControlArray(bodyIndex=self.body,
                                          controlMode=pb.POSITION_CONTROL,

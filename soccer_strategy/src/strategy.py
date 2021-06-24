@@ -52,41 +52,70 @@ class DummyStrategy(Strategy):
 
         # Guess who has the ball
         current_closest = self.who_has_the_ball(friendly, ball)
-        if current_closest == None or not current_closest.send_nav:
+        if current_closest is None or not current_closest.send_nav:
             return
+
+        # If ball out of bounds
         if abs(ball.get_position()[0]) > 3.5 or abs(ball.get_position()[1]) > 5:
             return
-        print("Here for ball")
-        print(current_closest.get_position())
 
-        position = [round(ball.get_position()[0], 2),
-                    round(ball.get_position()[1], 2), round(current_closest.get_position()[2], 2)]
-        print(position)
-        print("X: ", ball.get_position()[1], "Y: ", -ball.get_position()[0])
-        print(np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()[0:2]))
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.14:
-            # Stop moving
-
-            if teamcolor == 1: #blue
-                if is_first_half == 1:
-                    opponent_goal = np.array([0, 4.5])
-                else:
-                    opponent_goal = np.array([0, -4.5])
+        if teamcolor == 1:
+            if is_first_half == 1:
+                goal_position = np.array([0, 4.5])
             else:
-                if is_first_half == 1:
-                    opponent_goal = np.array([0, -4.5])
-                else:
-                    opponent_goal = np.array([0, 4.5])
+                goal_position = np.array([0, -4.5])
+        else:
+            if is_first_half == 1:
+                goal_position = np.array([0, -4.5])
+            else:
+                goal_position = np.array([0, 4.5])
+
+        distance_of_player_goal_to_ball = 0.1
+        ball_position = ball.get_position()
+        player_position = current_closest.get_position()[0:2]
+        player_angle = current_closest.get_position()[2]
+
+        diff = ball_position - goal_position
+        diff_unit = diff / np.linalg.norm(diff)
+        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+
+        destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
+
+        navigation_bias = 1.1
+        diff = destination_position - player_position
+        destination_position_biased = player_position + diff * navigation_bias
+
+        destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
+        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
 
+        print("Position of closest player")
+        print(player_position)
+        print("Ball Position")
+        print(ball_position)
+        print("Destination Position")
+        print(destination_position)
+        print("Distance between player and ball")
+        print(distance_of_player_to_ball)
+
+        if distance_of_player_to_ball < 0.15:
+            # Stop moving
             # Kick the ball towards the goal
-            delta = opponent_goal - ball.get_position()
+            player_vector = [math.cos(player_angle), math.sin(player_angle)]
+            player_to_ball_vector = ball_position - player_position
+            cross = np.cross(player_to_ball_vector, player_vector)
+            if cross > 0: # right foot
+                current_closest.kick_with_right_foot = True
+            else:
+                current_closest.kick_with_right_foot = False
+
+            delta = goal_position - ball.get_position()
             unit = delta / np.linalg.norm(delta)
 
-            # current_closest.status = Robot.Status.KICKING
-            # current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+            current_closest.status = Robot.Status.KICKING
+            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
-            # current_closest.set_navigation_position(position)
+            current_closest.set_navigation_position(destination_position_biased)
             pass
 
 # BROKEN DO NOT USE
