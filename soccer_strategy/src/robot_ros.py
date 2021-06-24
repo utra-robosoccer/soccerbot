@@ -139,6 +139,7 @@ class RobotRos(Robot):
                              0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         self.robot_initial_pose_pub.publish(p)
+        # rospy.sleep(1)
 
     def update_status(self):
         if self.status != self.previous_status:
