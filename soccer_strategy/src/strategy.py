@@ -54,6 +54,8 @@ class DummyStrategy(Strategy):
         current_closest = self.who_has_the_ball(friendly, ball)
         if current_closest == None or not current_closest.send_nav:
             return
+        if abs(ball.get_position()[0]) > 3.5 or abs(ball.get_position()[1]) > 5:
+            return
         print("Here for ball")
         print(current_closest.get_position())
 
@@ -81,10 +83,10 @@ class DummyStrategy(Strategy):
             delta = opponent_goal - ball.get_position()
             unit = delta / np.linalg.norm(delta)
 
-            current_closest.status = Robot.Status.KICKING
-            current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+            # current_closest.status = Robot.Status.KICKING
+            # current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
-            current_closest.set_navigation_position(position)
+            # current_closest.set_navigation_position(position)
             pass
 
 # BROKEN DO NOT USE
