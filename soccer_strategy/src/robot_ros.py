@@ -193,7 +193,6 @@ class RobotRos(Robot):
 
         elif self.status == Robot.Status.FALLEN_SIDE:
             self.terminate_walking_publisher.publish()
-            self.terminate_walking_publisher.publish()
             f = FixedTrajectoryCommand()
             f.trajectory_name = "getupside"
             self.trajectory_publisher.publish(f)
