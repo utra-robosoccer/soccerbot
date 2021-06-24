@@ -4,21 +4,31 @@ import cv2
 import numpy as np
 import torch
 import torchvision
+import yaml
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader, random_split
 from model import Label, find_batch_bounding_boxes
 import util
+import time
+import pickle
 
-train_path = '/home/robosoccer/nams_small_dataset/train'
-test_path = '/home/robosoccer/nams_small_dataset/test'
+train_path = '/home/robosoccer/dataset/train/smol'
+train_images = '/home/robosoccer/dataset/train/smol/small-new'
+# train_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
+train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
+
+test_path = '/home/robosoccer/dataset/test/smol'
+test_images = '/home/robosoccer/dataset/test/smol/small-new'
+# test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
+test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
 
-def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=True):
+def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=32, shuffle=True):
     train_folders = [os.path.join(train_path, folder) for folder in os.listdir(train_path)]
     test_folders = [os.path.join(test_path, folder) for folder in os.listdir(test_path)]
 
-    full_dataset = MyDataSet(train_folders, (150, 200), jitter=jitter)
-    test_dataset = MyDataSet(test_folders, (150, 200))
+    full_dataset = MyDataSet(train_labels, train_folders, (300, 400), jitter=jitter)
+    test_dataset = MyDataSet(test_labels, test_folders, (300, 400))
 
     train_size = int(0.8 * len(full_dataset))
     valid_size = len(full_dataset) - train_size
@@ -75,7 +85,7 @@ def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=64, shuffle=T
 
 
 class MyDataSet(Dataset):
-    def __init__(self, folder_paths, target_dim, jitter=[0, 0, 0, 0]):
+    def __init__(self, label_file, folder_paths, target_dim, jitter=[0, 0, 0, 0]):
         self.folder_paths = folder_paths  # folders of the images
         self.img_paths = []  # all individual image paths
         self.bounding_boxes = {}  # image paths and their labels
@@ -85,8 +95,8 @@ class MyDataSet(Dataset):
         self.img_transform = torchvision.transforms.Compose([
             torchvision.transforms.ColorJitter(brightness=jitter[0], contrast=jitter[1], saturation=jitter[2],
                                                hue=jitter[3]),
-            torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR),
-            torchvision.transforms.CenterCrop((self.target_height, self.target_width)),
+            #torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR), # assume images already preprocessed
+            #torchvision.transforms.CenterCrop((self.target_height, self.target_width)), # assume images already preprocessed
         ])
         self.mask_transform = torchvision.transforms.Compose([
             torchvision.transforms.Resize(self.target_height, interpolation=Image.NEAREST),
@@ -100,30 +110,44 @@ class MyDataSet(Dataset):
         self.num_train_ball_labels = 0
 
         # add paths for train data with labels
+        if '.txt' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'txt')
+        elif '.yaml' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'yaml')
+        elif '.pkl' in label_file:
+            self.read_labels(self.folder_paths[0], label_file, 'pkl')
+
+    '''
         for path in folder_paths:
             for file in os.listdir(path):
                 if '.txt' in file:
                     file_labels = os.path.join(path, file)
-                    self.read_labels(path, file_labels)
+                    self.read_labels(path, file_labels, 'txt')
+                elif '.yaml' in file:
+                    file_labels = os.path.join(path, file)
+                    self.read_labels(path, file_labels, 'yaml')
+    '''
 
-    def read_labels(self, path, file_labels):
+    def read_labels(self, path, file_labels, file_type):
         """
         :param path: folder containing images and label text file
         :param file_labels: label text file
+        :param file_type: processes the file depending on whether it is the original .txt or the BitBots .yaml file
         :return: None
         """
-        with open(file_labels) as labels:
-            for i, line in enumerate(labels):
-                if i <= 5:  # ignore first few metadata lines
-                    continue
 
-                try:
-                    label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split('|')
-                except:
-                    # ignore unknown format
-                    continue
+        if file_type == 'txt':
+            with open(file_labels) as labels:
+                for i, line in enumerate(labels):
+                    if i <= 5:  # ignore first few metadata lines
+                        continue
 
-                if img in os.listdir(path):
+                    try:
+                        label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split('|')
+                    except:
+                        # ignore unknown format
+                        continue
+
                     if label == 'label::ball':
                         label = Label.BALL
                         self.num_ball_labels += 1
@@ -139,6 +163,78 @@ class MyDataSet(Dataset):
                         self.img_paths.append(img_path)
 
                     self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+
+        elif file_type == 'yaml':
+            with open(file_labels) as labels:
+                t0 = time.time()
+                documents = yaml.full_load(labels)
+                t1 = time.time()
+                print(f'Yaml Load Took: {(t1 - t0)} s')
+                image_list = documents['images']
+                t0 = time.time()
+                for image in image_list:
+                    annotations = image_list[image]['annotations']
+                    for annotation in annotations:
+                        if annotation['in_image'] == True:
+                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
+                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                                x1 = location[0][0]
+                                y1 = location[0][1]
+                                x2 = location[1][0]
+                                y2 = location[1][1]
+
+                                if annotation['type'] == 'ball':
+                                    label = Label.BALL
+                                    self.num_ball_labels += 1
+                                else:
+                                    label = Label.ROBOT
+                                    self.num_robot_labels += 1
+
+                                img_path = os.path.join(path, image)
+                                if img_path not in self.img_paths:
+                                    self.bounding_boxes[img_path] = []
+                                    self.img_paths.append(img_path)
+
+                                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                t1 = time.time()
+                print(f'Yaml Loop Took: {(t1 - t0)} s')
+
+        elif file_type == 'pkl':
+            with open(file_labels, 'rb') as labels:
+                t0 = time.time()
+                documents = pickle.load(labels) #, encoding='bytes')
+                t1 = time.time()
+                print(f'Pickle Load Took: {(t1 - t0)} s')
+                image_list = documents['images']
+                t0 = time.time()
+                for image in image_list:
+                    annotations = image_list[image]['annotations']
+                    for annotation in annotations:
+                        if annotation['in_image'] == True:
+                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
+                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                                x1 = location[0][0]
+                                y1 = location[0][1]
+                                x2 = location[1][0]
+                                y2 = location[1][1]
+
+                                if annotation['type'] == 'ball':
+                                    label = Label.BALL
+                                    self.num_ball_labels += 1
+                                else:
+                                    label = Label.ROBOT
+                                    self.num_robot_labels += 1
+
+                                img_path = os.path.join(path, image)
+                                if img_path not in self.img_paths:
+                                    self.bounding_boxes[img_path] = []
+                                    self.img_paths.append(img_path)
+
+                                self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
+                t1 = time.time()
+                print(f'Pickle Loop Took: {(t1 - t0)} s')
+
+
 
     def __len__(self):
         return len(self.bounding_boxes)
@@ -156,7 +252,7 @@ class MyDataSet(Dataset):
 
         height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
-        mask = np.ones((height, width, 3)) * Label.OTHER.value
+        mask = np.ones((1080, 1920, 3)) * Label.OTHER.value  # hardcoding the original img size (1920x1080) so that annotations still work
         for bb in bounding_boxes:
             pt1, pt2, label = np.array(bb[0:2]), np.array(bb[2:4]), bb[4]
 

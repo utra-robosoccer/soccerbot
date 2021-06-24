@@ -11,18 +11,18 @@ from PIL import Image
 from model import find_batch_bounding_boxes, Label
 
 
-def train_model():
+def train_model(load_model=None, num_features=8):
     experiment = {
-        'seed': 5,
+        'seed': 1234,
         'model_kernel': 3,
-        'model_num_features': 8,
-        'model_dropout_rate': 0.0,
-        'train_class_weight': [.2, .07, .73],  # BALL, ROBOT, OTHER
-        'train_learn_rate': 1e-3,
+        'model_num_features': 16,
+        'model_dropout_rate': 0.1,
+        'train_class_weight': [.35, .07, .58],  # BALL, ROBOT, OTHER
+        'train_learn_rate': 1e-2, # 1e-3,
         'train_weight_decay': 0,
-        'train_batch_size': 20,
-        'train_epochs': 8,
-        'colour_jitter': [0.1, 0.1, 0.1, 0.1],  # brightness, contrast, saturation, hue
+        'train_batch_size': 16, # 32, # 80, # 20,
+        'train_epochs': 192,
+        'colour_jitter': [0.05, 0.05, 0.05, 0.05],  # brightness, contrast, saturation, hue
         'output_folder': 'outputs',
     }
 
@@ -37,11 +37,16 @@ def train_model():
     test_precision = []
     test_recall = []
     for i in range(1):
-        model = CNN(
-            kernel=experiment['model_kernel'],
-            num_features=experiment['model_num_features'],
-            dropout=experiment['model_dropout_rate'])
-        model.apply(init_weights)
+        if load_model is not None:
+            print(f'Loading previously trained model: {load_model}')
+            model = CNN(kernel=3, num_features=num_features)
+            model.load_state_dict(torch.load(load_model))
+        else:
+            model = CNN(
+                kernel=experiment['model_kernel'],
+                num_features=experiment['model_num_features'],
+                dropout=experiment['model_dropout_rate'])
+            model.apply(init_weights)
 
         trainer = Trainer(model,
                           learn_rate=experiment['train_learn_rate'],
@@ -73,11 +78,11 @@ def train_model():
 
 
 def display_dataset():
-    model = CNN(kernel=3, num_features=8)
-    model.load_state_dict(torch.load('outputs/model_ker3_feat8'))
+    model = CNN(kernel=3, num_features=16)
+    model.load_state_dict(torch.load('outputs/model'))
     model.eval()
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
-    testd.visualize_images(delay=10, model=model, start=0)
+    testd.visualize_images(delay=1000, model=model, start=0)
 
 
 def test_model():
@@ -118,3 +123,5 @@ def webcam():
 
 if __name__ == '__main__':
     display_dataset()
+    # train_model(load_model='outputs/model', num_features=16)
+    # train_model()
