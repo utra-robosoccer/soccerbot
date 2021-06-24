@@ -49,8 +49,8 @@ class ObjectDetectionNode(object):
             br = CvBridge()
             if self.image is not None:
                 img = self.image[:,:,:3] # get rid of alpha channel
-                scale = 1080 / 300 # ~3.6
-                dim = (int(1920 / scale), 300) # (213, 160)
+                scale = 480 / 300
+                dim = (int(640 / scale), 300)
                 img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
 
                 w, h = 400, 300
