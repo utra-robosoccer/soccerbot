@@ -136,6 +136,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # print("robotpose_trans ", self.pose_to_transformation(self.robot_pose.pose.pose))
                 print("goalpose ", self.goal.pose)
                 # print("goalpose_trans ", self.pose_to_transformation(self.goal.pose))
+                self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
                 t = -5

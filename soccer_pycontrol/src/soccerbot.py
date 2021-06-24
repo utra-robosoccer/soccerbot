@@ -286,7 +286,7 @@ class Soccerbot:
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.inverseKinematicsRightFoot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
-    def setPose(self, pose):
+    def setPose(self, pose: tr):
         try:
             last_hip_height = self.pose.get_position()[2]
         except:
@@ -294,7 +294,11 @@ class Soccerbot:
             last_hip_height = Soccerbot.standing_hip_height
 
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
-        self.pose.set_orientation(pose.get_orientation())
+
+        # Remove the roll and yaw from the pose
+        [r, p, y] = pose.get_orientation_euler()
+        q_new = tr.get_quaternion_from_euler([0, 0, y])
+        self.pose.set_orientation(q_new)
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
