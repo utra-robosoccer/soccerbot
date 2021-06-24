@@ -113,7 +113,7 @@ private:
                 if (area < 3500.0 and float(angle) > 0.6  ) {
                     continue;
                 }
-                else if (area < 500.0 ) {
+                else if (area < 400.0 ) {
                     continue;
                 }
                 if (objectClass == "ball") {

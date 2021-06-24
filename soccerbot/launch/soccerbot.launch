@@ -8,7 +8,7 @@
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message})" />
-
+<!--    <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
     <group ns="$(arg robot_name)">
 
         <param name="/simulation_active" value="true"/>
@@ -53,7 +53,7 @@
             <arg name="simulation" value="$(arg simulation)" />
         </include>
 
-        <rosparam command="load" file="$(find soccerbot)/config/$(arg robot_name).yaml" />
+        <rosparam command="load" file="$(find soccerbot)/config/game.yaml" />
         <include file="$(find soccerbot)/launch/modules/strategy.launch" >
             <arg name="goalie" value="$(arg goalie)" />
         </include>

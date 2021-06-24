@@ -113,7 +113,7 @@ ROBOCUP_ROBOT_ID: $ROBOCUP_ROBOT_ID
 ROBOCUP_TEAM_COLOR: $ROBOCUP_TEAM_COLOR
 ROBOCUP_SIMULATOR_ADDR: $ROBOCUP_SIMULATOR_ADDR
 ROBOCUP_MIRROR_SERVER_IP: $ROBOCUP_MIRROR_SERVER_IP
-ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
+ROBOCUP_GAMECONTROLLER_IP: $ROBOCUP_GAMECONTROLLER_IP
 X_POS: $X_POS
 Y_POS: $Y_POS
 ANGLE: $ANGLE
@@ -123,4 +123,4 @@ GOALIE: $GOALIE
 ENABLE_PYBULLET: $ENABLE_PYBULLET
 TEAM_ID: $TEAM_ID
 EOF
-exec roslaunch  soccerbot soccerbot.launch fake_localization:=false robot_name:=$ROBOT_NAME x_pos:=$X_POS y_pos:=$y_POS a_pos:=$ANGLE goalie:=$GOALIE competition:=$COMPETITION
+exec roslaunch  soccerbot soccerbot.launch fake_localization:=false robot_name:=$ROBOT_NAME x_pos:=$X_POS y_pos:=$Y_POS a_pos:=$ANGLE goalie:=$GOALIE competition:=$COMPETITION

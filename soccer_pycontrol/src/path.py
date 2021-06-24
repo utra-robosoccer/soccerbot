@@ -6,17 +6,18 @@ from scipy.special import comb
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
-class Path:
-    bodystep_size = 0.040 # m Not absolutely fixed, will be modified slightly when
-    angular_bodystep_size = 0.4 # radians Radians per angular step
-    steps_per_second = 2.4
-    speed = steps_per_second * bodystep_size # m/s
-    angular_speed = steps_per_second * angular_bodystep_size # Rotational speed in radians per second
-    turn_duration = 8 # Number of body steps to turn
-    step_size = 0.02 # Time for a single time step
 
-    pre_footstep_ratio = 0.15 # Ratio of fullstep duration to keep foot on ground on prefootstep
-    post_footstep_ratio = 0.25 # Ratio of fullstep duration to keep foot on ground on postfootstep
+class Path:
+    bodystep_size = 0.040  # m Not absolutely fixed, will be modified slightly when
+    angular_bodystep_size = 0.4  # radians Radians per angular step
+    steps_per_second = 2.4
+    speed = steps_per_second * bodystep_size  # m/s
+    angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
+    turn_duration = 8  # Number of body steps to turn
+    step_size = 0.02  # Time for a single time step
+
+    pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
+    post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
     def __init__(self, start_transform=Transformation(), end_transform=Transformation()):
         self.start_transform = start_transform
@@ -24,7 +25,7 @@ class Path:
 
         # Compute approximate distance and distance map
         precision = 0.05 * self.bodystep_size
-        precisions = np.linspace(precision, 1.0 , num=(int(1.0/precision) + 1))
+        precisions = np.linspace(precision, 1.0, num=(int(1.0 / precision) + 1))
         self.distance = 0
         self.angle_distance = 0
         prev_pose = self.poseAtRatio(0)
@@ -35,7 +36,8 @@ class Path:
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
-            self.angle_distance = self.angle_distance + abs(new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0])
+            self.angle_distance = self.angle_distance + abs(
+                new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0])
             prev_pose = new_pose
 
             self.distanceMap[j, 0:2] = [i, self.distance]
@@ -51,7 +53,8 @@ class Path:
 
         s_count = self.angularStepCount()
         if self.angle_distance != 0:
-            if self.angle_distance != 0 and self.angle_distance % self.angular_bodystep_size < (self.angular_bodystep_size / 2):
+            if self.angle_distance != 0 and self.angle_distance % self.angular_bodystep_size < (
+                    self.angular_bodystep_size / 2):
                 self.angular_bodystep_size = self.angle_distance / s_count
             else:
                 self.angular_bodystep_size = self.angle_distance / (s_count + 1)
@@ -109,6 +112,7 @@ class Path:
     @functools.lru_cache
     def isRotateInPlace(self):
         return np.linalg.norm(self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]) < self.bodystep_size * self.turn_duration * 2
+        # return False
 
     def poseAtRatio(self, r):
 
@@ -171,7 +175,6 @@ class Path:
             pose = deepcopy(self.end_transform)
             return pose
 
-
     def bezierPositionAtRatio(self, r):
         # If the distance is small, use turn in place strategy, otherwise cubic bezier
 
@@ -194,20 +197,22 @@ class Path:
             bez_param = [p1_pos[d], p2_pos[d], p3_pos[d], p4_pos[d]]
 
             # Cubic bezier
-            for i in range(0,4):
-                position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * ((1 - r) ** (3 - i)) * (r ** i)
+            for i in range(0, 4):
+                position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * (
+                            (1 - r) ** (3 - i)) * (r ** i)
         return Transformation(position)
 
     def show(self):
         position = np.zeros((self.bodyStepCount() + 1, 3))
         orientation = np.zeros((self.bodyStepCount() + 1, 3))
-        for i in range(0,self.bodyStepCount()+1,1):                   # i = 0:1: obj.bodyStepCount
+        for i in range(0, self.bodyStepCount() + 1, 1):  # i = 0:1: obj.bodyStepCount
             step = self.getBodyStep(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:,0]
+            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
 
         ax = plt.gca(projection='3d')
         ax.set_autoscale_on(True)
-        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1], orientation[:, 2])
+        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
+                  orientation[:, 2])
         # ax.set_xlim(-0.2,1)
         # ax.set_ylim(-0.3,0.3)
