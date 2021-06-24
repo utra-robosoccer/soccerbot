@@ -105,7 +105,7 @@ private:
                 }
                 // For now take the center of the box
                 int xavg = (box.xmin + box.xmax) / 2;
-                int yavg = (box.ymin + box.ymax) / 2;
+                int yavg = 0.5 * box.ymax + 0.5 * box.ymin;
                 float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
 
                 Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
