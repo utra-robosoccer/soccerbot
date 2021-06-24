@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 import os
 import sys
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/" + rospy.get_param("ROBOT_NAME")
+
 from sensor_msgs.msg import Image
 import std_msgs
 from cv_bridge import CvBridge

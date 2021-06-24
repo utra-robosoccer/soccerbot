@@ -7,6 +7,27 @@
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
   </material>
+  <material name="silver">
+    <color rgba="0.7 0.7 0.7 1.0"/>
+  </material>
+  <material name="yellow">
+    <color rgba="0.9 0.9 0.0 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.7 0.0 0.0 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.7 0.0 1.0"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 0.7 1.0"/>
+  </material>
+  <material name="purple">
+    <color rgba="0.7 0.0 0.7 1.0"/>
+  </material>
+  <material name="cyan">
+    <color rgba="0.0 0.7 0.7 1.0"/>
+  </material>
   <link name="/torso">
     <inertial>
       <mass value="1.529"/>
@@ -24,6 +45,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/torso.dae" scale="1 1 1"/>
       </geometry>
+      <material name="black"/>
     </visual>
   </link>
   <link name="/left_bicep">
@@ -43,7 +65,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_bicep.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="white"/>
     </visual>
   </link>
   <link name="/left_forearm">
@@ -53,7 +75,7 @@
       <inertia ixx="0.113e-3" ixy="0.000" ixz="1e-06" iyy="0.107e-3" iyz="0.0" izz="0.012e-3"/>
     </inertial>
     <collision name="collision">
-      <origin rpy="0  0  0" xyz="-0.0055 0.01750 -0.0600"/>
+      <origin rpy="0  0  0" xyz="-0.0055 0.0175 -0.0600"/>
       <geometry>
         <box size="0.035 0.049 0.144"/>
       </geometry>
@@ -61,9 +83,9 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/left_forearm.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="../soccer_description/meshes/left_forearm.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="purple"/>
     </visual>
   </link>
   <joint name="left_arm_motor_0" type="revolute">
@@ -135,27 +157,27 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_bicep.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="white"/>
     </visual>
   </link>
   <link name="/right_forearm">
     <inertial>
       <mass value="45.7e-3"/>
-      <origin rpy="0  0  0" xyz="0 0.0245 -0.0546097"/>
+      <origin rpy="0  0  0" xyz="0 -0.0245 -0.0546097"/>
       <inertia ixx="0.113e-3" ixy="0.000" ixz="-1e-06" iyy="0.107e-3" iyz="-0.0" izz="0.012e-3"/>
     </inertial>
     <collision name="collision">
-      <origin rpy="0  0  0" xyz="-0.0055 0.01750 -0.0600"/>
+      <origin rpy="0  0  0" xyz="-0.0055 -0.0175 -0.0600"/>
       <geometry>
         <box size="0.035 0.049 0.144"/>
       </geometry>
     </collision>
     <visual name="visual">
-      <origin rpy="1.57  0  0" xyz="0  0  0"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../soccer_description/meshes/right_forearm.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="../soccer_description/meshes/right_forearm.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="purple"/>
     </visual>
   </link>
   <joint name="right_arm_motor_0" type="revolute">
@@ -227,7 +249,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_hip_side.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="cyan"/>
     </visual>
   </link>
   <link name="/left_hip_front">
@@ -247,7 +269,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_hip_front.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="blue"/>
     </visual>
   </link>
   <link name="/left_thigh">
@@ -267,7 +289,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_thigh.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="red"/>
     </visual>
   </link>
   <link name="/left_calve">
@@ -287,7 +309,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_calve.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="yellow"/>
     </visual>
   </link>
   <link name="/left_ankle">
@@ -307,7 +329,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_ankle.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="purple"/>
     </visual>
   </link>
   <link name="/left_foot">
@@ -328,7 +350,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/left_foot.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="green"/>
     </visual>
   </link>
   <joint name="left_leg_motor_0" type="revolute">
@@ -490,7 +512,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_hip_side.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="cyan"/>
     </visual>
   </link>
   <link name="/right_hip_front">
@@ -510,7 +532,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_hip_front.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="blue"/>
     </visual>
   </link>
   <link name="/right_thigh">
@@ -530,7 +552,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_thigh.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="red"/>
     </visual>
   </link>
   <link name="/right_calve">
@@ -550,7 +572,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_calve.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="yellow"/>
     </visual>
   </link>
   <link name="/right_ankle">
@@ -570,7 +592,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_ankle.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="purple"/>
     </visual>
   </link>
   <link name="/right_foot">
@@ -591,7 +613,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/right_foot.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="green"/>
     </visual>
   </link>
   <joint name="right_leg_motor_0" type="revolute">
@@ -753,7 +775,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/neck.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="silver"/>
     </visual>
   </link>
   <link name="/head">
@@ -773,7 +795,7 @@
       <geometry>
         <mesh filename="../soccer_description/meshes/head.dae" scale="1 1 1"/>
       </geometry>
-      <material name="black"/>
+      <material name="silver"/>
     </visual>
   </link>
   <joint name="head_motor_0" type="revolute">
@@ -834,7 +856,7 @@
   <joint name="/torso_imu" type="fixed">
     <parent link="/torso"/>
     <child link="/imu_link"/>
-    <origin rpy="0 0 0" xyz="0.1 0 0.0075"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
     <axis xyz="0 0 0"/>
   </joint>
   <gazebo reference="/imu_link">

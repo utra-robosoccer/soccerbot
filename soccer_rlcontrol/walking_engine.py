@@ -245,7 +245,7 @@ if __name__ == '__main__':
             velocity = velocity if joint_cur_pos > _joint_limit_low[i] else _MX_28_velocity
             action[i] = velocity
 
-        pub_all_motor = rospy.Publisher("/robot1/all_motor", JointState, queue_size=10)
+        pub_all_motor = rospy.Publisher("/robot1/joint_command", JointState, queue_size=10)
         motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
                        "left_leg_motor_0", "left_leg_motor_1",
                        "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
