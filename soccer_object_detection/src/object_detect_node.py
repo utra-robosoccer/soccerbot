@@ -35,7 +35,7 @@ class ObjectDetectionNode(object):
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
-        self.model = CNN(kernel=3, num_features=8)
+        self.model = CNN(kernel=3, num_features=16)
         self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.model.eval()
 
@@ -49,11 +49,11 @@ class ObjectDetectionNode(object):
             br = CvBridge()
             if self.image is not None:
                 img = self.image[:,:,:3] # get rid of alpha channel
-
-                dim = (640//3, 480//3) # (213, 160)
+                scale = 1080 / 300 # ~3.6
+                dim = (int(1920 / scale), 300) # (213, 160)
                 img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
 
-                w, h = 200, 150
+                w, h = 400, 300
                 y, x, _ = img.shape # 160, 213
                 x_offset = x/2 - w/2
                 y_offset = y/2 - h/2
