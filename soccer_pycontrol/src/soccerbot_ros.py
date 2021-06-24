@@ -176,33 +176,33 @@ class SoccerbotRos(Soccerbot):
 
         if last_pose < rospy.Duration(0.2):
             self.head_step -= 1
-            # x
-            if self.ball_pixel.point.x > 350:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.0035
-            elif self.ball_pixel.point.x < 290:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.0035
-            else:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0
-            # y
-            if self.ball_pixel.point.y > 270:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.0035
-            elif self.ball_pixel.point.y < 210:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.0035
-            else:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1
-
-        if self.configuration[Joints.HEAD_2] < 0.6:
-            self.configuration[Joints.HEAD_2] = 0.6
-
-        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
-            temp = Bool()
-            temp.data = True
-            self.move_head_publisher.publish(temp)
-        else:
-            temp = Bool()
-            temp.data = False
-            self.move_head_publisher.publish(temp)
-
+        #     # x
+        #     if self.ball_pixel.point.x > 350:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.0035
+        #     elif self.ball_pixel.point.x < 290:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.0035
+        #     else:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0
+        #     # y
+        #     if self.ball_pixel.point.y > 270:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.0035
+        #     elif self.ball_pixel.point.y < 210:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.0035
+        #     else:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1
+        #
+        # if self.configuration[Joints.HEAD_2] < 0.6:
+        #     self.configuration[Joints.HEAD_2] = 0.6
+        #
+        # if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
+        #     temp = Bool()
+        #     temp.data = True
+        #     self.move_head_publisher.publish(temp)
+        # else:
+        #     temp = Bool()
+        #     temp.data = False
+        #     self.move_head_publisher.publish(temp)
+        #
 
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
