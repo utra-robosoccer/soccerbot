@@ -12,13 +12,13 @@ import util
 import time
 import pickle
 
-train_path = '/home/robosoccer/dataset/train/small'
-train_images = '/home/robosoccer/dataset/train/small/preprocessed_images'
-# train_labels = '/home/robosoccer/hdd/dataset/simulation/train/annotations.yaml'
+train_path = '/home/robosoccer/dataset/train/smol'
+train_images = '/home/robosoccer/dataset/train/smol/small-new'
+# train_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
 train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
 
-test_path = '/home/robosoccer/dataset/test/small'
-test_images = '/home/robosoccer/dataset/test/small/preprocessed_images'
+test_path = '/home/robosoccer/dataset/test/smol'
+test_images = '/home/robosoccer/dataset/test/smol/small-new'
 # test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
 test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
@@ -27,8 +27,8 @@ def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=32, shuffle=T
     train_folders = [os.path.join(train_path, folder) for folder in os.listdir(train_path)]
     test_folders = [os.path.join(test_path, folder) for folder in os.listdir(test_path)]
 
-    full_dataset = MyDataSet(train_labels, train_folders, (150, 200), jitter=jitter)
-    test_dataset = MyDataSet(test_labels, test_folders, (150, 200))
+    full_dataset = MyDataSet(train_labels, train_folders, (300, 400), jitter=jitter)
+    test_dataset = MyDataSet(test_labels, test_folders, (300, 400))
 
     train_size = int(0.8 * len(full_dataset))
     valid_size = len(full_dataset) - train_size
@@ -252,7 +252,7 @@ class MyDataSet(Dataset):
 
         height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
-        mask = np.ones((1080, 1980, 3)) * Label.OTHER.value  # hardcoding the original img size (1920x1080) so that annotations still work
+        mask = np.ones((1080, 1920, 3)) * Label.OTHER.value  # hardcoding the original img size (1920x1080) so that annotations still work
         for bb in bounding_boxes:
             pt1, pt2, label = np.array(bb[0:2]), np.array(bb[2:4]), bb[4]
 

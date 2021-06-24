@@ -20,7 +20,7 @@ def train_model(load_model=None, num_features=8):
         'train_class_weight': [.35, .07, .58],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-2, # 1e-3,
         'train_weight_decay': 0,
-        'train_batch_size': 32, # 32, # 80, # 20,
+        'train_batch_size': 16, # 32, # 80, # 20,
         'train_epochs': 192,
         'colour_jitter': [0.05, 0.05, 0.05, 0.05],  # brightness, contrast, saturation, hue
         'output_folder': 'outputs',
@@ -122,6 +122,6 @@ def webcam():
 
 
 if __name__ == '__main__':
-    # display_dataset()
-    # train_model(load_model='outputs/model20', num_features=16)
-    train_model()
+    display_dataset()
+    # train_model(load_model='outputs/model', num_features=16)
+    # train_model()
