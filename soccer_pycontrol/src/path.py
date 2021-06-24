@@ -7,6 +7,15 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 
 
+def wrapTo2Pi(num: float) -> float:
+    rem = num % (2 * np.pi)
+    return rem
+
+
+def wrapToPi(num: float) -> float:
+    rem = (num + np.pi) % (2 * np.pi) - np.pi
+    return rem
+
 class Path:
     bodystep_size = 0.040  # m Not absolutely fixed, will be modified slightly when
     angular_bodystep_size = 0.4  # radians Radians per angular step
@@ -65,11 +74,10 @@ class Path:
             start_angle = self.start_transform.get_orientation_euler()[0]
             intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
             final_angle = self.end_transform.get_orientation_euler()[0]
-
             # TODO make sure the rotate in place is correct
-            step_1_angular_distance = abs(intermediate_angle - start_angle)
+            step_1_angular_distance = abs(wrapToPi(intermediate_angle - start_angle))
             step_2_distance = np.linalg.norm(diff_position)
-            step_3_angular_distance = abs(intermediate_angle - final_angle)
+            step_3_angular_distance = abs(wrapToPi(intermediate_angle - final_angle))
 
             step_1_steps = step_1_angular_distance / self.angular_bodystep_size
             step_2_steps = step_2_distance / self.bodystep_size
@@ -145,9 +153,9 @@ class Path:
         final_angle = self.end_transform.get_orientation_euler()[0]
 
         # TODO make sure the rotate in place is correct
-        step_1_duration = abs(intermediate_angle - start_angle) / self.angular_speed
+        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
         step_2_duration = np.linalg.norm(diff_position) / self.speed
-        step_3_duration = abs(intermediate_angle - final_angle) / self.angular_speed
+        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / self.angular_speed
 
         total_duration = step_1_duration + step_2_duration + step_3_duration
         t = r * total_duration
@@ -158,7 +166,7 @@ class Path:
         elif t < step_1_duration != 0:
             pose = deepcopy(self.start_transform)
             percentage = t / step_1_duration
-            angle = (intermediate_angle - start_angle) * percentage
+            angle = start_angle + wrapToPi(intermediate_angle - start_angle) * percentage
             pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
             return pose
         elif step_1_duration < t <= step_1_duration + step_2_duration != 0:
@@ -171,7 +179,7 @@ class Path:
         elif step_1_duration + step_2_duration < t <= step_1_duration + step_2_duration + step_3_duration != 0:
             pose = deepcopy(self.end_transform)
             percentage = (t - step_1_duration - step_2_duration) / step_3_duration
-            angle = (final_angle - intermediate_angle) * percentage
+            angle = intermediate_angle + wrapToPi(final_angle - intermediate_angle) * percentage
             pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
             return pose
         else:
