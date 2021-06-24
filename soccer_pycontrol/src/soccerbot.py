@@ -297,7 +297,7 @@ class Soccerbot:
 
         # Remove the roll and yaw from the pose
         [r, p, y] = pose.get_orientation_euler()
-        q_new = tr.get_quaternion_from_euler([0, 0, y])
+        q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
@@ -311,6 +311,11 @@ class Soccerbot:
         finishPositionCoordinate = finishPosition.get_position()
         finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         finishPosition.set_position(finishPositionCoordinate)
+
+        # Remove the roll and yaw from the designated position
+        [r, p, y] = finishPosition.get_orientation_euler()
+        q_new = tr.get_quaternion_from_euler([r, 0, 0])
+        finishPosition.set_orientation(q_new)
 
         self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
 
