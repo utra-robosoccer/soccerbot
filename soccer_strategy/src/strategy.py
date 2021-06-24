@@ -6,7 +6,7 @@ class Strategy:
     def __init__(self):
         pass
 
-    def update_friendly_strategy(self, robots, ball):
+    def update_friendly_strategy(self, robots, ball, teamcolor, is_first_half):
         friendly = []
         opponent = []
         for robot in robots:
@@ -15,7 +15,7 @@ class Strategy:
             else:
                 opponent.append(robot)
 
-        self.update_next_strategy(friendly, opponent, ball)
+        self.update_next_strategy(friendly, opponent, ball, teamcolor, is_first_half)
 
     def update_next_strategy(self, friendly, opponent, ball):
         raise NotImplementedError
@@ -46,7 +46,7 @@ class DummyStrategy(Strategy):
                 current_closest = robot
         return current_closest
 
-    def update_next_strategy(self, friendly, opponent, ball):
+    def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half):
         if not self.check_ball_avaliable(ball):
             return
 
@@ -65,21 +65,29 @@ class DummyStrategy(Strategy):
         if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
 
-            if current_closest.team == Robot.Team.FRIENDLY:
-                opponent_goal = np.array([0, 4.5])
+            if teamcolor == 1: #blue
+                if is_first_half == 1:
+                    opponent_goal = np.array([0, 4.5])
+                else:
+                    opponent_goal = np.array([0, -4.5])
             else:
-                opponent_goal = np.array([0, -4.5])
+                if is_first_half == 1:
+                    opponent_goal = np.array([0, -4.5])
+                else:
+                    opponent_goal = np.array([0, 4.5])
+
 
             # Kick the ball towards the goal
             delta = opponent_goal - ball.get_position()
             unit = delta / np.linalg.norm(delta)
-            #
+
             current_closest.status = Robot.Status.KICKING
             current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
         else:
             current_closest.set_navigation_position(position)
             pass
 
+# BROKEN DO NOT USE
 class PassStrategy(DummyStrategy):
 
     def get_closest_teammate(self, player, team):
@@ -127,10 +135,6 @@ class PassStrategy(DummyStrategy):
 
 
 class FreekickStrategy(DummyStrategy):
-
-    def __init__(self, penalty):
-        self.penalty = penalty
-
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
         if not self.check_ball_avaliable(ball):
@@ -148,12 +152,6 @@ class FreekickStrategy(DummyStrategy):
             return
 
         # todo move non-kicking robots
-        if self.penalty:
-            # move the non-kicker to the back of the kicker, 75cm
-            pass
-        else:
-            # move the non-kicker to the ideal position
-            pass
 
         if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
             # Stop moving
@@ -182,32 +180,81 @@ class FreekickStrategy(DummyStrategy):
             kicker.set_navigation_position(np.append(ball.get_position(), 0))
 
     # preparation if we are not the kicking team
-    def update_non_kicking_strategy(self, friendly, ball):
+    def update_non_kicking_strategy(self, friendly, ball, teamcolor, is_first_half):
         if not self.check_ball_avaliable(ball):
             return
 
         for robot in friendly:
-            if robot.team == Robot.Team.FRIENDLY:
-                own_goal = np.array([0, -4.5])
-            else:
-                own_goal = np.array([0, 4.5])
+            if teamcolor == 1: #blue
+                if is_first_half == 1:
+                    own_goal = np.array([0, -4.5])
+                    angle = 0
+                else:
+                    own_goal = np.array([0, 4.5])
+                    angle = 3.14
+            elif teamcolor == 0: #red
+                if is_first_half == 1:
+                    own_goal = np.array([0, 4.5])
+                    angle = 3.14
+                else:
+                    own_goal = np.array([0, -4.5])
+                    angle = 0
 
-            # Kick the ball towards the goal
-            delta = own_goal - ball.get_position()
-            unit = delta / np.linalg.norm(delta)
-            angle = np.tan(delta) + math.pi/2 #todo verify this angle
-
-            if robot.role == Robot.Role.STRIKER:
-                nav_pose = ball.get_position() + unit*0.8
-                robot.set_navigation_position(np.append(nav_pose, angle))
             if robot.role == Robot.Role.LEFT_MIDFIELD:
-                nav_pose = ball.get_position() + unit*0.8 + np.array([0.5, 0])
+                nav_pose = ball.get_position() + np.array([0.5, 0])
                 robot.set_navigation_position(np.append(nav_pose, angle))
             if robot.role == Robot.Role.RIGHT_MIDFIELD:
-                nav_pose = ball.get_position() + unit * 0.8 + np.array([-0.5, 0])
+                nav_pose = ball.get_position() + np.array([-0.5, 0])
                 robot.set_navigation_position(np.append(nav_pose, angle))
             if robot.role == Robot.Role.GOALIE:
                 nav_pose = own_goal
                 robot.set_navigation_position(np.append(nav_pose, angle))
 
         #todo make is so that all robot stay within the field boundary
+
+class PenaltykickStrategy(FreekickStrategy):
+    # preparation if we are not the kicking team
+    def update_non_kicking_strategy(self, friendly, ball, teamcolor, is_first_half):
+        if not self.check_ball_avaliable(ball):
+            return
+
+        for robot in friendly:
+            if is_first_half == 1:
+                if robot.role == Robot.Role.LEFT_MIDFIELD:
+                    if teamcolor == 1:
+                        nav_pose = np.array([-1, -1, 0])
+                    else:
+                        nav_pose = np.array([-1, 1, 3.14])
+                    robot.set_navigation_position(nav_pose)
+                if robot.role == Robot.Role.RIGHT_MIDFIELD:
+                    if teamcolor == 1:
+                        nav_pose = np.array([1, -1, 0])
+                    else:
+                        nav_pose = np.array([1, 1, 3.14])
+                    robot.set_navigation_position(nav_pose)
+                if robot.role == Robot.Role.GOALIE:
+                    if teamcolor == 1:
+                        nav_pose = np.array([0, -4.5, 0])
+                    else:
+                        nav_pose = np.array([0, 4.5, 3.14])
+                    robot.set_navigation_position(nav_pose)
+            # second half
+            else:
+                if robot.role == Robot.Role.LEFT_MIDFIELD:
+                    if teamcolor == 1:
+                        nav_pose = np.array([-1, 1, 3.14])
+                    else:
+                        nav_pose = np.array([-1, -1, 0])
+                    robot.set_navigation_position(nav_pose)
+                if robot.role == Robot.Role.RIGHT_MIDFIELD:
+                    if teamcolor == 1:
+                        nav_pose = np.array([1, 1, 3.14])
+                    else:
+                        nav_pose = np.array([1, -1, 0])
+                    robot.set_navigation_position(nav_pose)
+                if robot.role == Robot.Role.GOALIE:
+                    if teamcolor == 1:
+                        nav_pose = np.array([0, 4.5, 3.14])
+                    else:
+                        nav_pose = np.array([0, -4.5, 0])
+                    robot.set_navigation_position(nav_pose)
