@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
+import time
+
 from controller import Robot, Node, Supervisor
-import os
 import rospy
-from geometry_msgs.msg import Quaternion, PointStamped, PoseWithCovarianceStamped, Point, Twist
-from gazebo_msgs.msg import ModelStates
+from geometry_msgs.msg import Quaternion, PoseWithCovarianceStamped, Pose
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
-from std_msgs.msg import String
+from tf.transformations import euler_from_quaternion
 import tf
 
 G = 9.81
@@ -57,7 +57,7 @@ class SupervisorController:
 
         self.clock_publisher = rospy.Publisher(clock_topic, Clock, queue_size=1)
 
-        self.reset_service = rospy.Subscriber("/reset", String, self.reset)
+        self.reset_service = rospy.Subscriber("/reset_robot", Pose, self.reset_robot)
         self.initial_poses_service = rospy.Service("/initial_pose", Empty, self.set_initial_poses)
 
         self.reset_ball_service = rospy.Service("/reset_ball", Empty, self.reset_ball)
@@ -153,9 +153,12 @@ class SupervisorController:
         # self.reset_robot_pose_rpy([-3, 3, 0.42], [0, 0.24, -1.57], name="robot3")
         # self.reset_robot_pose_rpy([-3, -3, 0.42], [0, 0.24, 1.57], name="robot4")
 
-    def reset(self, msg):
+    def reset_robot(self, pose: Pose):
         self.supervisor.simulationReset()
         self.supervisor.simulationResetPhysics()
+        time.sleep(0.5)
+        euler = euler_from_quaternion([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
+        self.reset_robot_pose_rpy([pose.position.x, pose.position.y, 0.350], euler, name="robot1")
 
     def get_robot_position(self, name="robot1"):
         if name in self.translation_fields:

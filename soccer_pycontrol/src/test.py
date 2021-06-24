@@ -14,29 +14,25 @@ import soccerbot_controller
 
 from soccer_pycontrol.src.transformation import Transformation
 
-RUN_IN_ROS = False
+RUN_IN_ROS = True
 if RUN_IN_ROS:
     import rospy
     import soccerbot_controller_ros
     from std_msgs.msg import String
-    from geometry_msgs.msg import PoseWithCovarianceStamped
+    from geometry_msgs.msg import PoseWithCovarianceStamped, Pose2D
 
 class Test(TestCase):
 
     def setUp(self) -> None:
         if RUN_IN_ROS:
             rospy.init_node("soccer_control")
-            self.resetPublisher = rospy.Publisher("/reset", String, queue_size=1, latch=True)
-            b = String()
-            b.data = ""
-            self.resetPublisher.publish(b)
             self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
         else:
             self.walker = soccerbot_controller.SoccerbotController()
 
 
     def test_walk_1(self):
-        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
@@ -48,6 +44,22 @@ class Test(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
+        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+
+    def test_walk_3(self):
+        self.walker.setPose(Transformation([-2.404, -1.0135, 0], [0, 0, -0.9979391070307153, 0.064168050139]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([-2.26, -1.27, 0], [0, 0, 0.997836202477347, 0.06574886330262358]))
+        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+
+    def test_walk_4(self):
+        self.walker.setPose(Transformation([0.3275415, 0.2841, 0.321], [ 0.04060593, 0.0120126, 0.86708929, -0.4963497]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([-0.12015226, -0.19813691, 0.321], [0, 0, 0.95993011, -0.28023953]))
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
