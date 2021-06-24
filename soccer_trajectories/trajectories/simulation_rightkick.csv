@@ -16,3 +16,5 @@ right_leg_motor_5,-0.1,-0.1,-0.1,-0.1,-0.2,-0.2,-0.2,-0.2,-0.1
 right_arm_motor_0,0,0,0,0,1,1,-1,-1,0
 right_arm_motor_1,2,2,2,2,2,2,2,2,2
 comment,stance,x,lean to the side,x,lift leg up,x,kick,step to balance,stance
+head_motor_0,0,0,0,0,0,0,0,0,0
+head_motor_1,0,0,0,0,0,0,0,0,0

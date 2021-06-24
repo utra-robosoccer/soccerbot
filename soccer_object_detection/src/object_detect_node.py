@@ -30,13 +30,18 @@ class ObjectDetectionNode(object):
         self.image = None
         self.image_header = None
         self.br = CvBridge()
-        self.loop_rate = rospy.Rate(10) # Hz
+
         self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=10)
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
         self.model = CNN(kernel=3, num_features=16)
-        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+
+        if os.getenv('COMPETITION', 'false') == 'true':
+            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        else:
+            self.model.load_state_dict(torch.load(model_path))
+
         self.model.eval()
 
     def callback(self, msg):
@@ -45,8 +50,9 @@ class ObjectDetectionNode(object):
         self.image = self.br.imgmsg_to_cv2(msg)
 
     def start(self):
+        loop_rate = rospy.Rate(10)  # Hz
         while not rospy.is_shutdown():
-            br = CvBridge()
+
             if self.image is not None:
                 img = self.image[:,:,:3] # get rid of alpha channel
                 scale = 480 / 300
@@ -105,9 +111,13 @@ class ObjectDetectionNode(object):
                 img = util.torch_to_cv(img_torch)
 
                 self.pub_boundingbox.publish(bbs_msg)
-                self.pub_detection.publish(br.cv2_to_imgmsg(img))
-            self.loop_rate.sleep()
+                self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
 
+            try:
+                loop_rate.sleep()
+            except rospy.exceptions.ROSInterruptException as ex:
+                print(ex)
+                exit(0)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
