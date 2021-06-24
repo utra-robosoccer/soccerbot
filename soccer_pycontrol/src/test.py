@@ -151,6 +151,14 @@ class Test(TestCase):
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
+    def test_small_movement_5(self):
+        self.walker.setPose(Transformation([0.3096807057334623, 0.09374110438873018, 0.0], [0.03189331238935847, -0.0065516868290173, 0.9990119776602083, 0.03024831426656374]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([0.14076394628045208, -0.034574636811865296, 0], [0, 0, -0.9999956132297835, -0.002962013029887055]))
+        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+
     def test_do_nothing(self):
         self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
