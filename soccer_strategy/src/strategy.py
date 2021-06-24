@@ -62,7 +62,7 @@ class DummyStrategy(Strategy):
         print(position)
         print("X: ", ball.get_position()[1], "Y: ", -ball.get_position()[0])
         print(np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()[0:2]))
-        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.2:
+        if np.linalg.norm(current_closest.get_position()[0:2] - ball.get_position()) < 0.14:
             # Stop moving
 
             if teamcolor == 1: #blue
