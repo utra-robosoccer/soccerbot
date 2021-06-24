@@ -173,6 +173,10 @@ class SoccerbotRos(Soccerbot):
                 self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.00375
             else:
                 self.configuration[Joints.HEAD_2] = self.head_motor_1
+
+        if self.configuration[Joints.HEAD_2] < 0.6:
+            self.configuration[Joints.HEAD_2] = 0.6
+
         if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
             temp = Bool()
             temp.data = True
@@ -182,8 +186,7 @@ class SoccerbotRos(Soccerbot):
             temp.data = False
             self.move_head_publisher.publish(temp)
 
-        if self.configuration[Joints.HEAD_2] > 0.6:
-            self.configuration[Joints.HEAD_2] = 0.6
+
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]
