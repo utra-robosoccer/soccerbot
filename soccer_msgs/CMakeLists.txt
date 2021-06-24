@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
     FILES
     GameState.msg
+    FixedTrajectoryCommand.msg
 )
 
 generate_messages(
