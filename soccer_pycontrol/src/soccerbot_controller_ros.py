@@ -117,6 +117,7 @@ class SoccerbotControllerRos(SoccerbotController):
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
         stable_count = 30
+        last_traject = self.fixed_trajectory_running
         while not rospy.is_shutdown():
             if self.robot_pose is not None and self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
@@ -179,11 +180,8 @@ class SoccerbotControllerRos(SoccerbotController):
             # Post walk stabilization
             if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
                 # print("hi ", t, " ", self.fixed_trajectory_running)
-                if self.fixed_trajectory_running:
-                    self.soccerbot.ready()
-                    self.soccerbot.reset_imus()
                 if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
-                    # self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     pass
 
             if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.fixed_trajectory_running:
@@ -193,6 +191,12 @@ class SoccerbotControllerRos(SoccerbotController):
             if stop_on_completed_trajectory:
                 if (self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration()) or self.fixed_trajectory_running:
                     break
+
+            if not self.fixed_trajectory_running and last_traject:
+                self.soccerbot.ready()
+                self.soccerbot.reset_imus()
+            else:
+                last_traject = self.fixed_trajectory_running
 
             if not self.terminate_walk and not self.fixed_trajectory_running:
                 self.soccerbot.publishAngles()  # Disable to stop walking
