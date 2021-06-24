@@ -28,8 +28,8 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 3
     NAV_GOAL_UPDATE_INTERVAL = 2
-    blue_initial_position = [[-0.75, -3.9, 0], [-0.75, -0.9, 0], [-1, 0, 0]]
-    red_initial_position = [[-0.75, 3.9, 3.14], [-0.75, 0.9, 3.14], [-1, 0, 3.14]]
+    blue_initial_position = [[-0.75, -3.9, 1.57], [-0.75, -0.9, 1.57], [-1, 0, 1.57]]
+    red_initial_position = [[-0.75, 3.9, -1.57], [-0.75, 0.9, -1.57], [-1, 0, -1.57]]
 
     blue_start_position = [[-4, -3.06, 1.57], [-1, -3.06, 1.57], [-4, 3.06, -1.57]]
     red_start_position = [[4, -3.06, 1.57], [1, -3.06, 1.57], [4, 3.06, -1.57]]
@@ -195,23 +195,19 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                # self.stop_all_robot()
-                self.resume_all_robot()
+                self.stop_all_robot()
+                # self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
                 # reset localization initial pose
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                     if self.gameState.hasKickOff:
                         for robot in self.friendly:
                             robot.reset_initial_position([-2.6, 0, 3.14])
-                            rospy.set_param("X_POS", -2.6)
-                            rospy.set_param("Y_POS", 0)
-                            rospy.set_param("ANGLE", 3.14)
+
                     else:
                         for robot in self.friendly:
                             robot.reset_initial_position([-4.5, 0, 0])
-                            rospy.set_param("X_POS", -4.5)
-                            rospy.set_param("Y_POS", 0)
-                            rospy.set_param("ANGLE", 3.14)
+
                 else:
                     if self.gameState.firstHalf == 1:
                         print("setting first half initial position")
@@ -230,8 +226,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                             for robot in self.friendly:
                                 robot.reset_initial_position(self.blue_start_position[robot.robot_id - 1])
 
-            self.team1_strategy.update_friendly_strategy(self.robots, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-            rospy.sleep(0.5)
+            # self.team1_strategy.update_friendly_strategy(self.robots, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+            # rospy.sleep(0.5)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -244,6 +240,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
+                        print("ready")
                         print(self.gameState.firstHalf)
 
                         if self.gameState.firstHalf == 1:
@@ -261,46 +258,38 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_SET:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_SET:
-                self.stop_all_robot()
+                # self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_SET
 
             if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                 if self.gameState.hasKickOff:
                     for robot in self.friendly:
                         robot.reset_initial_position([-2.6, 0, 3.14])
-                        rospy.set_param("X_POS", -2.6)
-                        rospy.set_param("Y_POS", 0)
-                        rospy.set_param("ANGLE", 3.14)
+
                 else:
                     for robot in self.friendly:
                         robot.reset_initial_position([-4.5, 0, 0])
-                        rospy.set_param("X_POS", -4.5)
-                        rospy.set_param("Y_POS", 0)
-                        rospy.set_param("ANGLE", 3.14)
+
         # PLAYING
         if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
                 print("hi")
-                self.resume_all_robot()
+                # self.resume_all_robot()
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                     if self.gameState.hasKickOff:
                         for robot in self.friendly:
                             robot.reset_initial_position([-2.6, 0, 3.14])
-                            rospy.set_param("X_POS", -2.6)
-                            rospy.set_param("Y_POS", 0)
-                            rospy.set_param("ANGLE", 3.14)
+
                     else:
                         for robot in self.friendly:
                             robot.reset_initial_position([-4.5, 0, 0])
-                            rospy.set_param("X_POS", -4.5)
-                            rospy.set_param("Y_POS", 0)
-                            rospy.set_param("ANGLE", 3.14)
+
                 self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
                     self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
-                self.team1_strategy.update_friendly_strategy(self.robots, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
 
             pass
 
