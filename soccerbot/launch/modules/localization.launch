@@ -14,7 +14,7 @@
     </node>
 
     <!-- Line and goal detection -->
-    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector"
+    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector" respawn="true"
           output="screen" >
         <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
     </node>
@@ -25,7 +25,7 @@
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" unless="$(arg fake_localization)"/>
+    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" respawn="true" unless="$(arg fake_localization)"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
         args="$(find soccer_object_detection)/src/outputs/model_ker3_feat8" unless="$(arg fake_localization)"/>
 
@@ -50,7 +50,7 @@
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log" respawn="true">
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
 <!--        <param name="odom0" value="/$(arg robot_name)/odom" />-->
 <!--&lt;!&ndash;        <param name="pose1" value="odom_combined" />&ndash;&gt;-->

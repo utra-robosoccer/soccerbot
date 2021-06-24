@@ -564,8 +564,8 @@ class Soccerbot:
         self.last_F2 = 0
         self.lastError2 = 0
 
-    HEAD_YAW_FREQ = 0.002
-    HEAD_PITCH_FREQ = 0.00125
+    HEAD_YAW_FREQ = 0.003
+    HEAD_PITCH_FREQ = 0.0035
 
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
