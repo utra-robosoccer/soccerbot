@@ -28,8 +28,8 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 3
     NAV_GOAL_UPDATE_INTERVAL = 2
-    blue_initial_position = [[-0.9, -3.9, 0], [-0.9, -0.9, 0], [-1, 0, 0]]
-    red_initial_position = [[-0.8, 3.8, 3.14], [-0.8, 0.8, 3.14], [-1, 0, 3.14]]
+    blue_initial_position = [[-0.75, -3.9, 0], [-0.75, -0.9, 0], [-1, 0, 0]]
+    red_initial_position = [[-0.75, 3.9, 3.14], [-0.75, 0.9, 3.14], [-1, 0, 3.14]]
 
     blue_start_position = [[-4, -3.06, 1.57], [-1, -3.06, 1.57], [-4, 3.06, -1.57]]
     red_start_position = [[4, -3.06, 1.57], [1, -3.06, 1.57], [4, 3.06, -1.57]]
