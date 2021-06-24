@@ -14,9 +14,9 @@ robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1":
 
 class RobotRos(Robot):
     def __init__(self, team, role, status, robot_name, start_pose):
-        self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose",
-                                               PoseWithCovarianceStamped,
-                                               self.robot_pose_callback)
+        self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
+        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initial_pose", PoseWithCovarianceStamped, queue_size=1)
+
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", String, queue_size=1)
@@ -36,6 +36,7 @@ class RobotRos(Robot):
         self.robot_id = robot_id_map[self.robot_name]
         self.max_kick_speed = 2
         self.previous_status = Robot.Status.READY
+
         self.send_nav = False
         # terminate all action
         self.stop_requested = False
@@ -103,17 +104,41 @@ class RobotRos(Robot):
         angle_threshold = 1  # in radian
         q = msg.orientation
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
-
         if self.status == Robot.Status.WALKING or self.status == Robot.Status.READY:
             # We want to publish once on state transition
             if pitch > angle_threshold:
                 print("fall back triggered")
                 self.status = Robot.Status.FALLEN_BACK
 
-            if pitch < -angle_threshold:
+            elif pitch < -angle_threshold:
                 print("fall front triggered")
                 self.status = Robot.Status.FALLEN_FRONT
+
+            elif yaw < -angle_threshold or yaw > angle_threshold:
+                print("fall side triggered")
+                self.status = Robot.Status.FALLEN_SIDE
         pass
+
+    def reset_initial_position(self, position):
+        print("Setting initial Robot " + self.robot_name + " position" + str(position))
+        p = PoseWithCovarianceStamped()
+        p.header.stamp = rospy.get_rostime()
+        p.pose.pose.position.x = position[0]
+        p.pose.pose.position.y = position[1]
+        p.pose.pose.position.z = 0
+        angle_fixed = position[2]
+        q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
+        p.pose.pose.orientation.x = q[0]
+        p.pose.pose.orientation.y = q[1]
+        p.pose.pose.orientation.z = q[2]
+        p.pose.pose.orientation.w = q[3]
+        p.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+        self.robot_initial_pose_pub.publish(p)
 
     def update_status(self):
         if self.status != self.previous_status:
@@ -145,6 +170,12 @@ class RobotRos(Robot):
             self.trajectory_publisher.publish("getupfront")
             self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
             rospy.loginfo(self.robot_name + "getupfront")
+
+        elif self.status == Robot.Status.FALLEN_SIDE:
+            self.terminate_walking_publisher.publish()
+            self.trajectory_publisher.publish("getupside")
+            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            rospy.loginfo(self.robot_name + "getupside")
 
         elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             rospy.loginfo_throttle(20, self.robot_name + " trajectory in progress")
