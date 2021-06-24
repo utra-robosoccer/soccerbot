@@ -36,8 +36,13 @@ class ObjectDetectionNode(object):
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
-        self.model = CNN(kernel=3, num_features=16)
-        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        self.model = CNN(kernel=3, num_features=8)
+
+        if os.getenv('COMPETITION', 'false') == 'true':
+            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        else:
+            self.model.load_state_dict(torch.load(model_path))
+
         self.model.eval()
 
     def callback(self, msg):
