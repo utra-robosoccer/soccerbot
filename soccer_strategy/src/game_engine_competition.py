@@ -61,7 +61,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         # game strategy information
 
         self.robots = [
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot1"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1"),
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
             RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
             RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
@@ -227,10 +227,16 @@ class GameEngineCompetition(game_engine.GameEngine):
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
                         print(self.gameState.teamColor)
-                        if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
-                            robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
-                        elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
-                            robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
+                        if self.gameState.firstHalf == 1:
+                            if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
+                                robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
+                            elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
+                                robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
+                        else:
+                            if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
+                                robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
+                            elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
+                                robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
 
         # SET
         if self.gameState.gameState == GameState.GAMESTATE_SET:
@@ -289,6 +295,26 @@ class GameEngineCompetition(game_engine.GameEngine):
                     strategy.execute_kicking(self.friendly, self.ball)
             else:
                 # todo perform goalie trajectory if penalty kick
+                strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                # for robot in self.friendly:
+                #     if robot.role == Robot.Role.GOALIE:
+                #         # check if robot is on the goal line
+                #         if (robot.position[1] < -3.8 or robot.position[1] >3.8) and (robot.position[0] < 0.5 and robot.position[0] >-0,5):
+                #             if abs(self.ball[1]-robot.position[1]) < 1.5:
+                #                 side_delta = self.ball[0]-robot.position[0]
+                #                 if side_delta > 0:
+                #                     if robot.position[1] < 0:
+                #                         robot.terminate_walking_publisher.publish()
+                #                         robot.trajectory_publisher.publish("goalieright")
+                #                         robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                #                         rospy.loginfo(self.robot_name + " goalie jump right")
+                #                     else:
+                #                         robot.terminate_walking_publisher.publish()
+                #                         robot.trajectory_publisher.publish("goalieright")
+                #                         robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                #                         rospy.loginfo(self.robot_name + " goalie jump right")
+                #         else:
+                #             strategy.update_non_kicking_strategy([robot], self.ball, self.gameState.teamColor, self.gameState.firstHalf)
                 pass
 
         self.rostime_previous = rostime
