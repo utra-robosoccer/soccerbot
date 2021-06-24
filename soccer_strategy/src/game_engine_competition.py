@@ -106,6 +106,9 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.freekick_strategy = FreekickStrategy()
         self.penaltykick_strategy = PenaltykickStrategy()
 
+        self.rostime_kickoff = 0
+        self.kickoff_started = False
+
     def gamestate_callback(self, gameState):
         # log on state transition
         if self.gameState.gameState != self.previous_gameState.gameState:
@@ -276,6 +279,15 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
+
+                self.rostime_kickoff = rostime
+                if self.gameState.hasKickOff:
+                    self.kickoff_started = True
+                    print("we have kickoff")
+                else:
+                    self.kickoff_started = False
+                    print("opponent have kickoff")
+
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                     if self.gameState.hasKickOff:
                         for robot in self.friendly:
@@ -284,9 +296,22 @@ class GameEngineCompetition(game_engine.GameEngine):
                         for robot in self.friendly:
                             robot.reset_initial_position([-4.5, 0, 0])
 
-            if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
-                    self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
-                self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+            if self.kickoff_started == False:
+                if (rostime - self.rostime_kickoff) > 10:
+                    self.kickoff_started = True
+                    print("kickoff started after 10s")
+
+                if self.ball.get_position() is not None:
+                    delta = np.linalg.norm(self.ball.get_position())
+                    if delta > 0.1:
+                        self.kickoff_started = True
+                        print("kickoff started after ball moved 10cm")
+
+            if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+                if self.kickoff_started:
+                    self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+                else:
+                    print("kickoff not started, no strategy output")
 
             pass
 
