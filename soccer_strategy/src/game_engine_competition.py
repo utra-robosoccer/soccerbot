@@ -144,7 +144,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.ball.position_is_live_timeout > 0:
                 self.ball.position_is_live_timeout = self.ball.position_is_live_timeout - 1
             elif self.ball.position_is_live_timeout == 0:
-                rospy.loginfo("Ball Position Timed Out")
+                rospy.loginfo_throttle(5, "Ball Position Timed Out")
 
     def stop_all_robot(self):
         for robot in self.friendly:
