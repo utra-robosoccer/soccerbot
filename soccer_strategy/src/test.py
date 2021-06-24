@@ -1,5 +1,6 @@
 from unittest import TestCase
 from soccer_strategy.src.game_engine import GameEngine
+from game_engine_competition import GameEngineCompetition
 
 
 class Test(TestCase):
@@ -14,4 +15,3 @@ class Test(TestCase):
             elif friendly_points < opponent_points:
                 opponent_wins += 1
         print(f'Friendly: {friendly_wins}, opponent: {opponent_wins}')
-

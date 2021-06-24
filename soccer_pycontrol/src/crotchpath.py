@@ -1,3 +1,5 @@
+import functools
+
 import numpy as np
 from footpath import Footpath
 from transformation import Transformation as tr
@@ -9,11 +11,6 @@ class Crotchpath(Footpath):
     crotch_sidediff_sway = -0.03
     crotch_sidediff_sway_decay = 5
     crotch_thetadiff_sway = [0., 0., 0.] # [0, 0, 0.08]
-
-    # Distort per step
-    crotch_zdiff_step = 0.000
-    crotch_sidediff_step = 0.000
-    crotch_rot_step = [0, 0, 0.0]
 
     first_step_left = 0
 
@@ -29,6 +26,7 @@ class Crotchpath(Footpath):
             self.first_step_left = 0
         else:
             self.first_step_left = 1
+
 
     def crotchPosition(self, t):
         [step_num, right_foot_ratio, left_foot_ratio] = self.footHeightRatio(t, 1)
@@ -87,7 +85,7 @@ class Crotchpath(Footpath):
         thetadiff = ydiff / self.crotch_sidediff_sway * np.array(self.crotch_thetadiff_sway)
 
         H = tr.get_transform_from_euler(thetadiff) # H = eul2tform(thetadiff)
-        H.set_position([0.00, ydiff, zdiff])
+        H.set_position([-0.005, ydiff, zdiff])
 
         position = np.matmul(position, H)
 
@@ -102,5 +100,4 @@ class Crotchpath(Footpath):
             tfInterp[:, :, i] = self.crotchPosition(t)
             i = i + 1
         self.show_tf(fig, tfInterp, len(iterator))
-
 
