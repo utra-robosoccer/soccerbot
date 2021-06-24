@@ -2,9 +2,9 @@ min_particles: 100
 max_particles: 1000
 kld_err: 0.01
 kld_z: 0.99
-update_min_d: 0.1
+update_min_d: 0.02
 update_min_a: 0.1
-resample_interval: 1
+resample_interval: 2
 gui_publish_rate: 1
 transform_tolerance: 0.1
 laser_model_type: "likelihood_field"

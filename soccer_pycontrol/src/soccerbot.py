@@ -298,7 +298,7 @@ class Soccerbot:
         if rospy.get_param('ENABLE_PYBULLET'):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
-    def setGoal(self, finishPosition):
+    def setGoal(self, finishPosition: tr):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
