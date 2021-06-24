@@ -124,7 +124,7 @@ class SoccerbotControllerRos(SoccerbotController):
     def run(self, stop_on_completed_trajectory=False):
         t = 0
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
-        stable_count = 30
+        stable_count = 5
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
 
@@ -133,6 +133,11 @@ class SoccerbotControllerRos(SoccerbotController):
                 rospy.loginfo("Recieved New Goal")
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
+                # for i in range(20):
+                #     if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
+                #         self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                #     self.soccerbot.publishAngles()  # Disable to stop walking
+                #     rospy.sleep(0.05)
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                 self.goal = self.new_goal
                 self.soccerbot.setGoal(self.pose_to_transformation(self.goal.pose))
@@ -143,7 +148,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -5
+                t = -2
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
@@ -180,12 +185,14 @@ class SoccerbotControllerRos(SoccerbotController):
                         if stable_count == 0:
                             t = 0
                     else:
-                        stable_count = 30
+                        stable_count = 5
 
             # Post walk stabilization
             if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
+                # print("hi ", t, " ", self.fixed_trajectory_running)
                 if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    pass
 
             if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                 # print("here")

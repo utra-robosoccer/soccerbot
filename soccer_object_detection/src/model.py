@@ -80,7 +80,7 @@ class CNN(nn.Module):
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(8 * num_features),
             nn.LeakyReLU(),
-            nn.UpsamplingBilinear2d(size=(75, 100))  # assume input was 250x200pxl
+            nn.UpsamplingBilinear2d(size=(150, 200))  # assume input was 250x200pxl
         )
 
         # concat 48 + 128
@@ -103,7 +103,7 @@ class CNN(nn.Module):
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(2 * num_features),
             nn.LeakyReLU(),
-            nn.UpsamplingBilinear2d(size=(150, 200))  # assume input was 150x200pxl
+            nn.UpsamplingBilinear2d(size=(300, 400))  # assume input was 150x200pxl
         )
 
         # concat 16 + 32

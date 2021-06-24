@@ -105,19 +105,19 @@ private:
                 }
                 // For now take the center of the box
                 int xavg = (box.xmin + box.xmax) / 2;
-                int yavg = (box.ymin + box.ymax) / 2;
+                int yavg = 0.5 * box.ymax + 0.5 * box.ymin;
                 float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
 
                 Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
                 // Reduce false positives
-                if (area < 3500.0 and float(angle) > 0.6  ) {
-                    continue;
-                }
-                else if (area < 400.0 ) {
-                    continue;
-                }
+//                if (area < 3500.0 and float(angle) > 0.6  ) {
+//                    continue;
+//                }
+//                else if (area < 400.0 ) {
+//                    continue;
+//                }
                 if (objectClass == "ball") {
-//                    std::cout << "Ball: " << area << "  " << float(angle) << std::endl;
+//                    std::cout << "Ball: X:" << xavg << " Y:" << yavg << " Area " << area << "  " << float(angle) << std::endl;
                     geometry_msgs::TransformStamped ball_pose;
                     ball_pose.header.frame_id = robotName + "/base_footprint";
                     ball_pose.child_frame_id = robotName + "/ball";
