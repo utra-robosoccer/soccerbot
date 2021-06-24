@@ -52,7 +52,7 @@ def stream_image(img, wait, scale):
     img = torch_to_cv(img)
     width, height, _ = img.shape
     img = cv2.resize(img, (height * scale, width * scale))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     cv2.imshow('my_window', img)
     cv2.waitKey(wait)
 

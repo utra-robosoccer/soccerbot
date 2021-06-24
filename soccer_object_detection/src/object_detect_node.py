@@ -31,18 +31,13 @@ class ObjectDetectionNode(object):
         self.image = None
         self.image_header = None
         self.br = CvBridge()
-
+        self.loop_rate = rospy.Rate(10) # Hz
         self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=10)
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
-        self.model = CNN(kernel=3, num_features=8)
-
-        if bool(rospy.get_param('COMPETITION')):
-            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-        else:
-            self.model.load_state_dict(torch.load(model_path))
-
+        self.model = CNN(kernel=3, num_features=16)
+        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.model.eval()
 
     def callback(self, msg):
@@ -51,16 +46,15 @@ class ObjectDetectionNode(object):
         self.image = self.br.imgmsg_to_cv2(msg)
 
     def start(self):
-        loop_rate = rospy.Rate(10)  # Hz
         while not rospy.is_shutdown():
-
+            br = CvBridge()
             if self.image is not None:
                 img = self.image[:,:,:3] # get rid of alpha channel
-
-                dim = (640//3, 480//3) # (213, 160)
+                scale = 480 / 300
+                dim = (int(640 / scale), 300)
                 img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
 
-                w, h = 200, 150
+                w, h = 400, 300
                 y, x, _ = img.shape # 160, 213
                 x_offset = x/2 - w/2
                 y_offset = y/2 - h/2
@@ -74,7 +68,7 @@ class ObjectDetectionNode(object):
                 outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
                 bbxs = find_batch_bounding_boxes(outputs)[0]
 
-                if bbxs is None:
+                if bounding_boxes is None:
                     continue
 
                 bbs_msg = BoundingBoxes()
@@ -112,13 +106,9 @@ class ObjectDetectionNode(object):
                 img = util.torch_to_cv(img_torch)
 
                 self.pub_boundingbox.publish(bbs_msg)
-                self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
+                self.pub_detection.publish(br.cv2_to_imgmsg(img))
+            self.loop_rate.sleep()
 
-            try:
-                loop_rate.sleep()
-            except rospy.exceptions.ROSInterruptException as ex:
-                print(ex)
-                exit(0)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
