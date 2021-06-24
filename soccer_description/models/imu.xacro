@@ -12,7 +12,7 @@
         <joint name="${origin}_imu" type="fixed">
             <parent link="${origin}"/>
             <child link="$(arg tf_prefix)/imu_link"/>
-            <origin rpy="0 0 0" xyz="0.1 0 0.0075"/>
+            <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
             <axis xyz="0 0 0"/>
         </joint>
 

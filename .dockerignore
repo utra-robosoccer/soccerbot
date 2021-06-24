@@ -1,5 +1,4 @@
 .*
-!/.dockerignore
 cmake-build-debug
 CMakeLists.txt
 *.md
@@ -8,3 +7,8 @@ LICENSE
 Dockerfile
 docker-compose.yaml
 external/webots
+soccer_description/meshes/*.stl
+soccer_hardware
+soccer_rlcontrol
+soccer_embedded
+soccer_fieldline_detection/media

@@ -1,4 +1,4 @@
-# receiver.py
+# game_controller_receiver.py
 
 import serial
 import struct

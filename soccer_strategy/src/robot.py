@@ -15,6 +15,7 @@ class Robot:
         RIGHT_MIDFIELD = 4
 
     class Status(enum.IntEnum):
+        DISCONNECTED = 0
         READY = 1
         LOCALIZING = 2
         WALKING = 3
@@ -24,8 +25,7 @@ class Robot:
         PENALTY = 7
         OUT_OF_BOUNDS = 8
         TRAJECTORY_IN_PROGRESS = 9
-        STOP = 10  #stop current action and getup
-        TERMINATE = 11 #terminate all action
+        STOPPED = 10  # Game controller
 
     def get_position(self):
         return self.position
@@ -58,5 +58,3 @@ class Robot:
         else:
             opponent_goal = np.array([0, -4.5])
         return opponent_goal
-
-

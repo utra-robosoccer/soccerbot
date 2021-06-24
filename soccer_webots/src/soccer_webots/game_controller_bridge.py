@@ -3,12 +3,11 @@ import argparse
 import os
 import sys
 import math
-import re
 import socket
+import time
+
 import rospy
-import rospkg
 import struct
-#from urdf_parser_py.urdf import URDF
 import tf
 from rosgraph_msgs.msg import Clock
 
@@ -19,22 +18,18 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 
-class BezRobocupApi():
-    def __init__(self, base_ns="robot1"):
-        # rospack = rospkg.RosPack()
-        # self._package_path = rospack.get_path("bez_robocup_api")
-
-        rospy.init_node("bez_robocup_api")
+class GameControllerBridge():
+    def __init__(self):
+        rospy.init_node("game_controller_bridge")
         parser = argparse.ArgumentParser()
         parser.add_argument('--robot_name', help="which robot should be started")
 
         args, unknown = parser.parse_known_args()
-        rospy.set_param("competition", "True")
         rospy.set_param("name", args.robot_name)
         self.base_frame = args.robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
-        self.joint_command = [0, 1.5, 0, 1.5,  0, 0, 0.564, -1.176, 0.613, 0,   0, 0, 0.564, -1.176, 0.613, 0,  0, 0]
+        self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
         self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
                             "right_arm_motor_1",
                             "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
@@ -75,9 +70,14 @@ class BezRobocupApi():
         self.create_publishers()
         self.create_subscribers()
 
-        addr = os.environ.get('ROBOCUP_SIMULATOR_ADDR')
-        # addr = "127.0.0.1:10022"
-        self.socket = self.get_connection(addr)
+        addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
+        while not rospy.is_shutdown():
+            try:
+                self.socket = self.get_connection(addr)
+                break
+            except ConnectionRefusedError as ex:
+                rospy.logwarn(ex)
+                time.sleep(1)
 
         self.first_run = True
         self.published_camera_info = False
@@ -150,105 +150,26 @@ class BezRobocupApi():
         self.pub_camera = rospy.Publisher('camera/image_raw', Image, queue_size=1)
         self.pub_camera_info = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=1, latch=True)
         self.pub_imu = rospy.Publisher('imu_raw', Imu, queue_size=1)
+        self.pub_imu_orient = rospy.Publisher('imu_orient_raw', Imu, queue_size=1)
         self.pressure_sensors_pub = {
-            i: rospy.Publisher("foot_pressure_{}".format(i), Bool, queue_size=10) for i in range(8)}
+            i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
         self.pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
 
     def create_subscribers(self):
-        self.motor_subscribers = {}
-        self.motor_subscribers[0] = rospy.Subscriber("left_arm_motor_0/command", Float64, self.left_arm_motor_0,
-                                                     queue_size=1)
-        self.motor_subscribers[1] = rospy.Subscriber("left_arm_motor_1/command", Float64, self.left_arm_motor_1,
-                                                     queue_size=1)
-        self.motor_subscribers[2] = rospy.Subscriber("right_arm_motor_0/command", Float64, self.right_arm_motor_0,
-                                                     queue_size=1)
-        self.motor_subscribers[3] = rospy.Subscriber("right_arm_motor_1/command", Float64, self.right_arm_motor_1,
-                                                     queue_size=1)
-        self.motor_subscribers[4] = rospy.Subscriber("left_leg_motor_0/command", Float64, self.left_leg_motor_0,
-                                                     queue_size=1)
-        self.motor_subscribers[5] = rospy.Subscriber("left_leg_motor_1/command", Float64, self.left_leg_motor_1,
-                                                     queue_size=1)
-        self.motor_subscribers[6] = rospy.Subscriber("left_leg_motor_2/command", Float64, self.left_leg_motor_2,
-                                                     queue_size=1)
-        self.motor_subscribers[7] = rospy.Subscriber("left_leg_motor_3/command", Float64, self.left_leg_motor_3,
-                                                     queue_size=1)
-        self.motor_subscribers[8] = rospy.Subscriber("left_leg_motor_4/command", Float64, self.left_leg_motor_4,
-                                                     queue_size=1)
-        self.motor_subscribers[9] = rospy.Subscriber("left_leg_motor_5/command", Float64, self.left_leg_motor_5,
-                                                     queue_size=1)
-        self.motor_subscribers[10] = rospy.Subscriber("right_leg_motor_0/command", Float64, self.right_leg_motor_0,
-                                                      queue_size=1)
-        self.motor_subscribers[11] = rospy.Subscriber("right_leg_motor_1/command", Float64, self.right_leg_motor_1,
-                                                      queue_size=1)
-        self.motor_subscribers[12] = rospy.Subscriber("right_leg_motor_2/command", Float64, self.right_leg_motor_2,
-                                                      queue_size=1)
-        self.motor_subscribers[13] = rospy.Subscriber("right_leg_motor_3/command", Float64, self.right_leg_motor_3,
-                                                      queue_size=1)
-        self.motor_subscribers[14] = rospy.Subscriber("right_leg_motor_4/command", Float64, self.right_leg_motor_4,
-                                                      queue_size=1)
-        self.motor_subscribers[15] = rospy.Subscriber("right_leg_motor_5/command", Float64, self.right_leg_motor_5,
-                                                      queue_size=1)
-        self.motor_subscribers[16] = rospy.Subscriber("head_motor_0/command", Float64, self.head_motor_0,
-                                                      queue_size=1)
-        self.motor_subscribers[17] = rospy.Subscriber("head_motor_1/command", Float64, self.head_motor_1,
-                                                      queue_size=1)
+        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
 
-    def left_arm_motor_0(self, msg):
-        self.joint_command[0] = msg.data
+    def joint_command_callback(self, msg: JointState):
+        motor_dictionary = {}
+        for i in range(len(msg.name)):
+            motor_dictionary[msg.name[i]] = msg.position[i]
 
-    def left_arm_motor_1(self, msg):
-        self.joint_command[1] = msg.data
-
-    def right_arm_motor_0(self, msg):
-        self.joint_command[2] = msg.data
-
-    def right_arm_motor_1(self, msg):
-        self.joint_command[3] = msg.data
-
-    def right_leg_motor_0(self, msg):
-        self.joint_command[4] = msg.data
-
-    def right_leg_motor_1(self, msg):
-        self.joint_command[5] = msg.data
-
-    def right_leg_motor_2(self, msg):
-        self.joint_command[6] = msg.data
-
-    def right_leg_motor_3(self, msg):
-        self.joint_command[7] = msg.data
-
-    def right_leg_motor_4(self, msg):
-        self.joint_command[8] = msg.data
-
-    def right_leg_motor_5(self, msg):
-        self.joint_command[9] = msg.data
-
-    def left_leg_motor_0(self, msg):
-        self.joint_command[10] = msg.data
-
-    def left_leg_motor_1(self, msg):
-        self.joint_command[11] = msg.data
-
-    def left_leg_motor_2(self, msg):
-        self.joint_command[12] = msg.data
-
-    def left_leg_motor_3(self, msg):
-        self.joint_command[13] = msg.data
-
-    def left_leg_motor_4(self, msg):
-        self.joint_command[14] = msg.data
-
-    def left_leg_motor_5(self, msg):
-        self.joint_command[15] = msg.data
-
-    def head_motor_0(self, msg):
-        self.joint_command[16] = msg.data
-
-    def head_motor_1(self, msg):
-        self.joint_command[17] = msg.data
+        for i in range(len(self.external_motor_names)):
+            if self.external_motor_names[i] in motor_dictionary:
+                self.joint_command[i] = motor_dictionary[self.external_motor_names[i]]
+            else:
+                self.joint_command[i] = 0
 
     def get_connection(self, addr):
-        print(addr)
         host, port = addr.split(':')
         port = int(port)
         rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
@@ -266,7 +187,8 @@ class BezRobocupApi():
             sys.exit(1)
 
     def close_connection(self):
-        self.socket.close()
+        if hasattr(self, 'socket'):
+            self.socket.close()
 
     def handle_sensor_measurements_msg(self, msg):
         s_m = messages_pb2.SensorMeasurements()
@@ -291,14 +213,16 @@ class BezRobocupApi():
         msg = Clock()
         msg.clock.secs = ros_time.secs
         msg.clock.nsecs = ros_time.nsecs
-        self.pub_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_clock.publish(msg)
 
     def handle_real_time(self, time):
         # real unix time stamp at which the measurements were performed in [ms]
         msg = Clock()
         msg.clock.secs = time // 1000
         msg.clock.nsecs = (time % 1000) * 10 ** 6
-        self.pub_server_time_clock.publish(msg)
+        if self.base_frame == 'robot1':
+            self.pub_server_time_clock.publish(msg)
 
     def handle_messages(self, messages):
         for message in messages:
@@ -318,6 +242,11 @@ class BezRobocupApi():
         imu_msg.orientation.w = 1
         imu_accel = imu_gyro = False
 
+        imu_orient_msg = Imu()
+        imu_orient_msg.header.stamp = self.stamp
+        imu_orient_msg.header.frame_id = self.base_frame + "/imu_link"
+        imu_orient_msg.orientation.w = 1
+
         # Extract data from message
         for accelerometer in accelerometers:
             name = accelerometer.name
@@ -328,6 +257,10 @@ class BezRobocupApi():
                 imu_msg.linear_acceleration.y = ((value.Y + 32768) / 65535) * (19.62 * 2) - 19.62
                 imu_msg.linear_acceleration.z = ((value.Z + 32768) / 65535) * (19.62 * 2) - 19.62
 
+                imu_orient_msg.linear_acceleration.x = ((value.X + 32768) / 65535) * (19.62 * 2) - 19.62
+                imu_orient_msg.linear_acceleration.y = 0
+                imu_orient_msg.linear_acceleration.z = 0
+
         for gyro in gyros:
             name = gyro.name
             value = gyro.value
@@ -337,8 +270,13 @@ class BezRobocupApi():
                 imu_msg.angular_velocity.y = ((value.Y + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.z = ((value.Z + 32768) / 65535) * (8.7266 * 2) - 8.7266
 
+                imu_orient_msg.angular_velocity.x = ((value.X + 32768) / 65535) * (8.7266 * 2) - 8.7266
+                imu_orient_msg.angular_velocity.y = 0
+                imu_orient_msg.angular_velocity.z = 0
+
         if imu_accel and imu_gyro:
             self.pub_imu.publish(imu_msg)
+            self.pub_imu_orient.publish(imu_orient_msg)
 
     def handle_bumper_measurements(self, bumpers):
         # TODO
@@ -378,9 +316,9 @@ class BezRobocupApi():
         camera_info_msg.height = height
         camera_info_msg.width = width
         f_y = self.mat_from_fov_and_resolution(
-            self.h_fov_to_v_fov(1.35, height, width),
+            self.h_fov_to_v_fov(1.39626, height, width),
             height)
-        f_x = self.mat_from_fov_and_resolution(1.35, width)
+        f_x = self.mat_from_fov_and_resolution(1.39626, width)
         camera_info_msg.K = [f_x, 0, width / 2,
                              0, f_y, height / 2,
                              0, 0, 1]
@@ -438,6 +376,7 @@ class BezRobocupApi():
         for i, name in enumerate(self.motor_names):
             motor_position = messages_pb2.MotorPosition()
             motor_position.name = name
+            assert (len(self.joint_command) == len(self.motor_names))
             motor_position.position = self.joint_command[i]
             actuator_requests.motor_positions.append(motor_position)
 
@@ -447,4 +386,4 @@ class BezRobocupApi():
 
 
 if __name__ == '__main__':
-    BezRobocupApi()
+    GameControllerBridge()
