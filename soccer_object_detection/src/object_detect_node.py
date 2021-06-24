@@ -38,10 +38,10 @@ class ObjectDetectionNode(object):
 
         self.model = CNN(kernel=3, num_features=16)
 
-        if rospy.get_param('COMPETITION') == 'true':
-            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-        else:
-            self.model.load_state_dict(torch.load(model_path))
+        # if rospy.get_param('COMPETITION') == 'true':
+        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        # else:
+        #     self.model.load_state_dict(torch.load(model_path))
 
         self.model.eval()
 

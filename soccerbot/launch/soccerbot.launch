@@ -53,7 +53,7 @@
             <arg name="simulation" value="$(arg simulation)" />
         </include>
 
-        <rosparam command="load" file="$(find soccerbot)/config/$(arg robot_name).yaml" />
+        <rosparam command="load" file="$(find soccerbot)/config/game.yaml" />
         <include file="$(find soccerbot)/launch/modules/strategy.launch" >
             <arg name="goalie" value="$(arg goalie)" />
         </include>
@@ -62,5 +62,5 @@
 
 </launch>
 
-<!--        sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 &#45;&#45;net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1-->
+<!--        sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10001 -e ROBOCUP_TEAM_COLOR=red -e ROBOCUP_ROBOT_ID=2 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 &#45;&#45;net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2-->
 <!--        git remote set-url origin git@github.com:utra-robosoccer/soccerbot.git-->
