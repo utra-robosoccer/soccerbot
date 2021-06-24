@@ -122,7 +122,24 @@ class SoccerbotRos(Soccerbot):
 
     def ready(self):
         super(SoccerbotRos, self).ready()
-        self.publishHeight()
+        # # hands
+        # self.configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
+        # self.configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
+        # self.configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
+        # self.configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
+        #
+        # # right leg
+        # thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
+        # self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
+        #
+        # # left leg
+        # thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
+        # self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
+        #
+        # # head
+        # self.configuration[Joints.HEAD_1] = 0
+        # self.configuration[Joints.HEAD_2] = 0
+        # self.publishHeight()
 
     def publishHeight(self):
         f = Float64()
@@ -159,31 +176,34 @@ class SoccerbotRos(Soccerbot):
 
         if last_pose < rospy.Duration(0.2):
             self.head_step -= 1
-            # x
-            if self.ball_pixel.point.x > 350:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.00375
-            elif self.ball_pixel.point.x < 290:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.00375
-            else:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0
-            # y
-            if self.ball_pixel.point.y > 270:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.00375
-            elif self.ball_pixel.point.y < 210:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.00375
-            else:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1
-        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
-            temp = Bool()
-            temp.data = True
-            self.move_head_publisher.publish(temp)
-        else:
-            temp = Bool()
-            temp.data = False
-            self.move_head_publisher.publish(temp)
+        #     # x
+        #     if self.ball_pixel.point.x > 350:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.0035
+        #     elif self.ball_pixel.point.x < 290:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.0035
+        #     else:
+        #         self.configuration[Joints.HEAD_1] = self.head_motor_0
+        #     # y
+        #     if self.ball_pixel.point.y > 270:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.0035
+        #     elif self.ball_pixel.point.y < 210:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.0035
+        #     else:
+        #         self.configuration[Joints.HEAD_2] = self.head_motor_1
+        #
+        # if self.configuration[Joints.HEAD_2] < 0.6:
+        #     self.configuration[Joints.HEAD_2] = 0.6
+        #
+        # if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
+        #     temp = Bool()
+        #     temp.data = True
+        #     self.move_head_publisher.publish(temp)
+        # else:
+        #     temp = Bool()
+        #     temp.data = False
+        #     self.move_head_publisher.publish(temp)
+        #
 
-        if self.configuration[Joints.HEAD_2] > 0.6:
-            self.configuration[Joints.HEAD_2] = 0.6
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]
