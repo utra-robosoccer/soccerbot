@@ -120,10 +120,10 @@ class DummyStrategy(Strategy):
                         delta = goal_position - ball.get_position()
                         unit = delta / np.linalg.norm(delta)
 
-                        current_closest.status = Robot.Status.KICKING
-                        current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+                        # current_closest.status = Robot.Status.KICKING
+                        # current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
-                        current_closest.set_navigation_position(destination_position_biased)
+                        # current_closest.set_navigation_position(destination_position_biased)
                         pass
 
         # If player is not facing the right direction, and not seeing the ball, then face the goal
