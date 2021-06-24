@@ -28,6 +28,7 @@ class RobotRos(Robot):
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
+        self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool, queue_size=1)
         self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
 
         self.tf_listener = tf.TransformListener()
@@ -69,7 +70,7 @@ class RobotRos(Robot):
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
-        assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
+        #assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED
