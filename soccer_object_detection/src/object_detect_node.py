@@ -36,8 +36,13 @@ class ObjectDetectionNode(object):
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         rospy.Subscriber("camera/image_raw",Image, self.callback)
 
-        self.model = CNN(kernel=3, num_features=16)
-        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        self.model = CNN(kernel=3, num_features=8)
+
+        if os.getenv('COMPETITION', 'false') == 'true':
+            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        else:
+            self.model.load_state_dict(torch.load(model_path))
+
         self.model.eval()
 
     def callback(self, msg):
@@ -68,16 +73,16 @@ class ObjectDetectionNode(object):
                 outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
                 bbxs = find_batch_bounding_boxes(outputs)[0]
 
-                if bounding_boxes is None:
+                if bbxs is None:
                     continue
 
                 bbs_msg = BoundingBoxes()
                 bb_msg = BoundingBox()
                 for ball_bb in bbxs[Label.BALL.value]:
-                    bb_msg.xmin = int((ball_bb[0] + x_offset) * 3)
-                    bb_msg.ymin = int((ball_bb[1] + y_offset) * 3)
-                    bb_msg.xmax = int((ball_bb[2] + x_offset) * 3)
-                    bb_msg.ymax = int((ball_bb[3] + y_offset) * 3)
+                    bb_msg.xmin = int((ball_bb[0] + x_offset) * scale)
+                    bb_msg.ymin = int((ball_bb[1] + y_offset) * scale)
+                    bb_msg.xmax = int((ball_bb[2] + x_offset) * scale)
+                    bb_msg.ymax = int((ball_bb[3] + y_offset) * scale)
                     bb_msg.id = Label.BALL.value
                     bb_msg.Class = 'ball'
                 bbs_msg.bounding_boxes = [bb_msg]
@@ -85,10 +90,10 @@ class ObjectDetectionNode(object):
                 big_enough_robot_bbxs = []
                 for robot_bb in bbxs[Label.ROBOT.value]:
                     bb_msg = BoundingBox()
-                    bb_msg.xmin = int((robot_bb[0] + x_offset) * 3)
-                    bb_msg.ymin = int((robot_bb[1] + y_offset) * 3)
-                    bb_msg.xmax = int((robot_bb[2] + x_offset) * 3)
-                    bb_msg.ymax = int((robot_bb[3] + y_offset) * 3)
+                    bb_msg.xmin = int((robot_bb[0] + x_offset) * scale)
+                    bb_msg.ymin = int((robot_bb[1] + y_offset) * scale)
+                    bb_msg.xmax = int((robot_bb[2] + x_offset) * scale)
+                    bb_msg.ymax = int((robot_bb[3] + y_offset) * scale)
                     bb_msg.id = Label.ROBOT.value
                     bb_msg.Class = 'robot'
                     # ignore small boxes
