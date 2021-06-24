@@ -18,7 +18,7 @@ robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1":
 class RobotRos(Robot):
     def __init__(self, team, role, status, robot_name):
         self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
-        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initial_pose", PoseWithCovarianceStamped, queue_size=1)
+        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped, queue_size=1)
 
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
