@@ -28,7 +28,7 @@ class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 3
     NAV_GOAL_UPDATE_INTERVAL = 2
     blue_initial_position = [[-0.9, -3.9, 0], [-0.9, -0.9, 0], [-1, 0, 0]]
-    red_initial_position = [[-0.9, 3.9, 3.14], [-0.9, 0.9, 3.14], [-1, 0, 3.14]]
+    red_initial_position = [[-0.8, 3.9, 3.14], [-0.8, 0.9, 3.14], [-1, 0, 3.14]]
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
@@ -185,11 +185,12 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                self.stop_all_robot()
-                # self.resume_all_robot()
+                # self.stop_all_robot()
+                self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
-            # rospy.sleep(1)
-            # self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+
+            self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+            rospy.sleep(0.5)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -223,7 +224,9 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
                     self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
+
                 self.team1_strategy.update_friendly_strategy(self.robots, self.ball)
+                rospy.sleep(0.5)
             pass
 
         # FINISHED
