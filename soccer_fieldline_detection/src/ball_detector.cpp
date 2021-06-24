@@ -117,7 +117,7 @@ private:
 //                    continue;
 //                }
                 if (objectClass == "ball") {
-//                    std::cout << "Ball: " << area << "  " << float(angle) << std::endl;
+//                    std::cout << "Ball: X:" << xavg << " Y:" << yavg << " Area " << area << "  " << float(angle) << std::endl;
                     geometry_msgs::TransformStamped ball_pose;
                     ball_pose.header.frame_id = robotName + "/base_footprint";
                     ball_pose.child_frame_id = robotName + "/ball";

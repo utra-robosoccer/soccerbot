@@ -41,9 +41,11 @@ class SoccerbotControllerRos(SoccerbotController):
         self.imu_orient_ready = False
 
     def trajectory_callback(self, msg):
+
         self.soccerbot.reset_imus()
         self.soccerbot.ready()
         self.fixed_trajectory_running = not msg.data
+
         if msg.data:
             self.terminate_walk = False
         pass
@@ -176,8 +178,13 @@ class SoccerbotControllerRos(SoccerbotController):
 
             # Post walk stabilization
             if self.soccerbot.robot_path is not None and t > self.soccerbot.robot_path.duration():
+                # print("hi ", t, " ", self.fixed_trajectory_running)
+                if self.fixed_trajectory_running:
+                    self.soccerbot.ready()
+                    self.soccerbot.reset_imus()
                 if self.soccerbot.imu_ready and not self.fixed_trajectory_running:
-                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    # self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    pass
 
             if self.soccerbot.robot_path is None and self.soccerbot.imu_ready and not self.fixed_trajectory_running:
                 # print("here")

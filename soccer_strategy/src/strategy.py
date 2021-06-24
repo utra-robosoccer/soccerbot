@@ -54,6 +54,8 @@ class DummyStrategy(Strategy):
         current_closest = self.who_has_the_ball(friendly, ball)
         if current_closest == None or not current_closest.send_nav:
             return
+        if abs(ball.get_position()[0]) > 3.5 or abs(ball.get_position()[1]) > 5:
+            return
         print("Here for ball")
         print(current_closest.get_position())
 

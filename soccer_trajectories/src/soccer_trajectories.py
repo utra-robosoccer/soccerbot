@@ -125,4 +125,5 @@ class SoccerTrajectoryClass:
 
 if __name__ == '__main__':
     trajectory_class = SoccerTrajectoryClass()
+
     trajectory_class.run()
