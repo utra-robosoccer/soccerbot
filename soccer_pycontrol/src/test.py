@@ -79,6 +79,14 @@ class Test(TestCase):
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
+    def test_walk_7(self):
+        self.walker.setPose(Transformation([2.082603318747387, 0.04499586647232634, 0.0], [0.07888602209666294, -0.03018659995378454, 0.9054426772657052, 0.41597995490997813]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
+        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+
     def test_walk_side(self):
         self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()

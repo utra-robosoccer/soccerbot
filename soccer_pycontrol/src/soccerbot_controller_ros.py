@@ -95,6 +95,9 @@ class SoccerbotControllerRos(SoccerbotController):
         pass
 
     def setPose(self, pose: Transformation):
+        [r, p, y] = pose.get_orientation_euler()
+        q_new = Transformation.get_quaternion_from_euler([r, 0, 0])
+        pose.set_orientation(q_new)
 
         resetPublisher = rospy.Publisher("/reset_robot", Pose, queue_size=1, latch=True)
         initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
@@ -103,6 +106,7 @@ class SoccerbotControllerRos(SoccerbotController):
         self.robot_pose_callback = lambda pose : pose
         self.robot_pose = pose_stamped
         sleep(3)
+
         p = PoseWithCovarianceStamped()
         p.pose.pose = pose_stamped.pose
         initialPosePublisher.publish(p)
