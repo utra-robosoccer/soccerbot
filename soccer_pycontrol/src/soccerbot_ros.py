@@ -42,11 +42,17 @@ class SoccerbotRos(Soccerbot):
         self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", PointStamped, self.ball_callback, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.move_head_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
+        self.localization_reset_subscriber = rospy.Subscriber("localization_mode", Bool, self.localization_callback,
+                                                              queue_size=1)
+        self.localization_reset = False
         self.imu_ready = False
         self.ball_pixel = PointStamped()
         self.listener = tf.TransformListener()
         self.head_motor_0 = 0
         self.head_motor_1 = 0
+
+    def localization_callback(self, msg):
+        self.localization_reset = msg.data
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -165,45 +171,50 @@ class SoccerbotRos(Soccerbot):
         self.configuration[
             Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 5
         last_pose = rospy.Duration(10)
-        try:
-
-            header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
-                                                       rospy.get_param("ROBOT_NAME") + '/base_footprint')
-            last_pose = rospy.Time.now() - header
-
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            pass
-
-        if last_pose < rospy.Duration(0.2):
-            self.head_step -= 1
-            # x
-            if self.ball_pixel.point.x > 350:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.0035
-            elif self.ball_pixel.point.x < 290:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.0035
-            else:
-                self.configuration[Joints.HEAD_1] = self.head_motor_0
-            # y
-            if self.ball_pixel.point.y > 270:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.0035
-            elif self.ball_pixel.point.y < 210:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.0035
-            else:
-                self.configuration[Joints.HEAD_2] = self.head_motor_1
 
         if self.configuration[Joints.HEAD_2] < 0.6:
             self.configuration[Joints.HEAD_2] = 0.6
 
-        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[Joints.HEAD_2] :
-            temp = Bool()
-            temp.data = True
-            self.move_head_publisher.publish(temp)
-        else:
-            temp = Bool()
-            temp.data = False
-            self.move_head_publisher.publish(temp)
+        if not self.localization_reset:
 
+            try:
 
+                header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
+                                                           rospy.get_param("ROBOT_NAME") + '/base_footprint')
+                last_pose = rospy.Time.now() - header
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                pass
+
+            if last_pose < rospy.Duration(0.2):
+                self.head_step -= 1
+                # x
+                if self.ball_pixel.point.x > 350:
+                    self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.003
+                elif self.ball_pixel.point.x < 290:
+                    self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.003
+                else:
+                    self.configuration[Joints.HEAD_1] = self.head_motor_0
+                # y
+                if self.ball_pixel.point.y > 270:
+                    self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.003
+                elif self.ball_pixel.point.y < 210:
+                    self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.003
+                else:
+                    self.configuration[Joints.HEAD_2] = self.head_motor_1
+
+            if self.configuration[Joints.HEAD_2] < 0.6:
+                self.configuration[Joints.HEAD_2] = 0.6
+
+            if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[
+                Joints.HEAD_2]:
+                temp = Bool()
+                temp.data = True
+                self.move_head_publisher.publish(temp)
+            else:
+                temp = Bool()
+                temp.data = False
+                self.move_head_publisher.publish(temp)
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]

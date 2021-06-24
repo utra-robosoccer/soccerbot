@@ -32,7 +32,7 @@ class RobotRos(Robot):
         self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
 
         self.tf_listener = tf.TransformListener()
-
+        self.localization_reset_publisher = rospy.Publisher('/' + robot_name + "/localization_mode", Bool, queue_size=1)
         self.team = team
         self.role = role
         self.status = status
@@ -67,6 +67,12 @@ class RobotRos(Robot):
         rospy.loginfo("Completed Walking")
         if self.status == Robot.Status.WALKING:
             self.status = Robot.Status.READY
+            temp = Bool()
+            temp.data = True
+            self.localization_reset_publisher.publish(temp)
+            rospy.sleep(1)
+            temp.data = False
+            self.localization_reset_publisher.publish(temp)
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
@@ -76,6 +82,12 @@ class RobotRos(Robot):
                 self.status = Robot.Status.STOPPED
             else:
                 self.status = Robot.Status.READY
+                temp = Bool()
+                temp.data = True
+                self.localization_reset_publisher.publish(temp)
+                rospy.sleep(1)
+                temp.data = False
+                self.localization_reset_publisher.publish(temp)
 
     def get_position(self):
         try:
