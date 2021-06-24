@@ -144,7 +144,8 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.ball.position_is_live_timeout > 0:
                 self.ball.position_is_live_timeout = self.ball.position_is_live_timeout - 1
             elif self.ball.position_is_live_timeout == 0:
-                rospy.loginfo("Ball Position Timed Out")
+                pass
+                # rospy.loginfo("Ball Position Timed Out")
 
     def stop_all_robot(self):
         for robot in self.friendly:
@@ -190,6 +191,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                 if self.gameState.hasKickOff:
                     self.run_normal(rostime)
 
+
+
     def run_normal(self, rostime):
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
@@ -200,7 +203,18 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
                 # reset localization initial pose
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                    pass
+                    if self.gameState.hasKickOff:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-2.6, 0, 3.14])
+                            rospy.set_param("X_POS", -2.6)
+                            rospy.set_param("Y_POS", 0)
+                            rospy.set_param("ANGLE", 3.14)
+                    else:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-4.5, 0, 0])
+                            rospy.set_param("X_POS", -4.5)
+                            rospy.set_param("Y_POS", 0)
+                            rospy.set_param("ANGLE", 3.14)
                 else:
                     if self.gameState.firstHalf == 1:
                         print("setting first half initial position")
@@ -253,11 +267,38 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_SET
 
+            if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                if self.gameState.hasKickOff:
+                    for robot in self.friendly:
+                        robot.reset_initial_position([-2.6, 0, 3.14])
+                        rospy.set_param("X_POS", -2.6)
+                        rospy.set_param("Y_POS", 0)
+                        rospy.set_param("ANGLE", 3.14)
+                else:
+                    for robot in self.friendly:
+                        robot.reset_initial_position([-4.5, 0, 0])
+                        rospy.set_param("X_POS", -4.5)
+                        rospy.set_param("Y_POS", 0)
+                        rospy.set_param("ANGLE", 3.14)
         # PLAYING
         if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_PLAYING:
+                print("hi")
                 self.resume_all_robot()
+                if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                    if self.gameState.hasKickOff:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-2.6, 0, 3.14])
+                            rospy.set_param("X_POS", -2.6)
+                            rospy.set_param("Y_POS", 0)
+                            rospy.set_param("ANGLE", 3.14)
+                    else:
+                        for robot in self.friendly:
+                            robot.reset_initial_position([-4.5, 0, 0])
+                            rospy.set_param("X_POS", -4.5)
+                            rospy.set_param("Y_POS", 0)
+                            rospy.set_param("ANGLE", 3.14)
                 self.previous_gameState.gameState = GameState.GAMESTATE_PLAYING
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < \
