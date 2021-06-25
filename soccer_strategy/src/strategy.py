@@ -99,7 +99,7 @@ class DummyStrategy(Strategy):
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.45:
-                        navigation_bias = 0.7
+                        navigation_bias = 0.5
                     else:
                         navigation_bias = 1.1
                     diff = destination_position - player_position
@@ -123,7 +123,7 @@ class DummyStrategy(Strategy):
                         player_vector = [math.cos(player_angle), math.sin(player_angle)]
                         player_to_ball_vector = ball_position - player_position
                         cross = np.cross(player_to_ball_vector, player_vector)
-                        if cross > 0: # right foot
+                        if cross > 0.05: # right foot
                             current_closest.kick_with_right_foot = True
                         else:
                             current_closest.kick_with_right_foot = False
