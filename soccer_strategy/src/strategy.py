@@ -33,7 +33,7 @@ class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
         return
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 30
+HAVENT_SEEN_THE_BALL_TIMEOUT = 15
 class DummyStrategy(Strategy):
 
     def __init__(self):
@@ -62,6 +62,7 @@ class DummyStrategy(Strategy):
         return rem
 
     def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
+
 
         if self.check_ball_avaliable(ball):
 
@@ -99,7 +100,7 @@ class DummyStrategy(Strategy):
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.4:
-                        navigation_bias = 0.6
+                        navigation_bias = 0.55
                     else:
                         navigation_bias = 1.1
                     diff = destination_position - player_position
@@ -123,10 +124,10 @@ class DummyStrategy(Strategy):
 
                     print("Robot ball angle")
                     print(distance_of_player_to_ball)
-                    if distance_of_player_to_ball < 0.19 and abs(cross) > 0.15:
+                    if distance_of_player_to_ball < 0.18 and abs(cross) > 0.15:
                         print("robot ball ange too large, unable to kick")
 
-                    if distance_of_player_to_ball < 0.19 and abs(cross) < 0.15:
+                    if distance_of_player_to_ball < 0.18 and abs(cross) < 0.15:
                         if cross > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
@@ -167,7 +168,34 @@ class DummyStrategy(Strategy):
                               )
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi]
-                player.set_navigation_position(turn_position)
+                # player.set_navigation_position(turn_position)
+
+        # If the robot is walking and a detected obstacle in the direction of the robot
+        for player in friendly:
+            if player.status == Robot.Status.WALKING:
+                player_angle = player.get_position()[2]
+                player_position = player.get_position()[0:2]
+                player_vector = [math.cos(player_angle), math.sin(player_angle)]
+
+                obstacles = player.get_detected_obstacles()
+
+                for obs in obstacles:
+                    obs_position = np.array(obs[0:2])
+
+                    if np.linalg.norm(obs_position - player_position) > 0.5:
+                        continue
+
+                    player_to_ball_vector = obs_position - player_position
+                    cross = float(np.cross(player_to_ball_vector, player_vector))
+
+                    if abs(cross) > 0.15 * 2: # TODO tune
+                        continue
+
+                    player.terminate_walking_publisher.publish()
+                    player.status = Robot.Status.READY
+                    rospy.sleep(0.5)
+                    player.completed_trajectory_publisher.publish(True)
+
 
 
 
@@ -272,17 +300,17 @@ class FreekickStrategy(DummyStrategy):
             if teamcolor == 0: #blue
                 if is_first_half == 1:
                     own_goal = np.array([0, -4.5])
-                    angle = 0
+                    angle = 1.57
                 else:
                     own_goal = np.array([0, 4.5])
-                    angle = 3.14
+                    angle = -1.57
             elif teamcolor == 1: #red
                 if is_first_half == 1:
                     own_goal = np.array([0, 4.5])
-                    angle = 3.14
+                    angle = -1.57
                 else:
                     own_goal = np.array([0, -4.5])
-                    angle = 0
+                    angle = 1.57
 
             if robot.role == Robot.Role.LEFT_MIDFIELD:
                 nav_pose = ball.get_position() + np.array([0.5, 0])
@@ -306,39 +334,39 @@ class PenaltykickStrategy(FreekickStrategy):
             if is_first_half == 1:
                 if robot.role == Robot.Role.LEFT_MIDFIELD:
                     if teamcolor == 0:
-                        nav_pose = np.array([-1, -1, 0])
+                        nav_pose = np.array([-1, -1, 1.57])
                     else:
-                        nav_pose = np.array([-1, 1, 3.14])
+                        nav_pose = np.array([-1, 1, -1.57])
                     robot.set_navigation_position(nav_pose)
                 if robot.role == Robot.Role.RIGHT_MIDFIELD:
                     if teamcolor == 0:
-                        nav_pose = np.array([1, -1, 0])
+                        nav_pose = np.array([1, -1, 1.57])
                     else:
-                        nav_pose = np.array([1, 1, 3.14])
+                        nav_pose = np.array([1, 1, -1.57])
                     robot.set_navigation_position(nav_pose)
                 if robot.role == Robot.Role.GOALIE:
                     if teamcolor == 0:
-                        nav_pose = np.array([0, -4.5, 0])
+                        nav_pose = np.array([0, -4.5, 1.57])
                     else:
-                        nav_pose = np.array([0, 4.5, 3.14])
+                        nav_pose = np.array([0, 4.5, -1.57])
                     robot.set_navigation_position(nav_pose)
             # second half
             else:
                 if robot.role == Robot.Role.LEFT_MIDFIELD:
                     if teamcolor == 0:
-                        nav_pose = np.array([-1, 1, 3.14])
+                        nav_pose = np.array([-1, 1, -1.57])
                     else:
-                        nav_pose = np.array([-1, -1, 0])
+                        nav_pose = np.array([-1, -1, 1.57])
                     robot.set_navigation_position(nav_pose)
                 if robot.role == Robot.Role.RIGHT_MIDFIELD:
                     if teamcolor == 0:
-                        nav_pose = np.array([1, 1, 3.14])
+                        nav_pose = np.array([1, 1, -1.57])
                     else:
-                        nav_pose = np.array([1, -1, 0])
+                        nav_pose = np.array([1, -1, 1.57])
                     robot.set_navigation_position(nav_pose)
                 if robot.role == Robot.Role.GOALIE:
                     if teamcolor == 0:
-                        nav_pose = np.array([0, 4.5, 3.14])
+                        nav_pose = np.array([0, 4.5, -1.57])
                     else:
-                        nav_pose = np.array([0, -4.5, 0])
+                        nav_pose = np.array([0, -4.5, 1.57])
                     robot.set_navigation_position(nav_pose)

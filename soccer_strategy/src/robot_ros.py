@@ -70,7 +70,7 @@ class RobotRos(Robot):
             temp = Bool()
             temp.data = True
             self.localization_reset_publisher.publish(temp)
-            rospy.sleep(1.5)
+            rospy.sleep(1.25)
             temp.data = False
             self.localization_reset_publisher.publish(temp)
 
@@ -85,7 +85,7 @@ class RobotRos(Robot):
                 temp = Bool()
                 temp.data = True
                 self.localization_reset_publisher.publish(temp)
-                rospy.sleep(1.5)
+                rospy.sleep(1.25)
                 temp.data = False
                 self.localization_reset_publisher.publish(temp)
 
@@ -221,3 +221,24 @@ class RobotRos(Robot):
         else:
             rospy.logerr_throttle(20, self.robot_name + " is in invalid status " + str(self.status))
 
+    def get_detected_obstacles(self):
+        # TODO know if they are friendly or enemy robot
+        obstacles = []
+        for i in range(1,10):
+            try:
+                (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/detected_robot_' + str(i), rospy.Time(0))
+                header = self.tf_listener.getLatestCommonTime('world', self.robot_name + '/detected_robot_' + str(i))
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
+
+                continue
+
+
+            if abs(rospy.Time.now() - header) > rospy.Duration(0.5):
+                continue
+
+            eul = tf.transformations.euler_from_quaternion(rot)
+            obstacle_position = [-trans[1], trans[0], eul[2] + math.pi/2]
+            obstacles.append(obstacle_position)
+            pass
+        return obstacles
