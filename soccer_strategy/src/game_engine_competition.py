@@ -199,8 +199,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                # self.stop_all_robot()
-                self.resume_all_robot()
+                self.stop_all_robot()
+                # self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
                 # reset localization initial pose
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
@@ -230,8 +230,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                             for robot in self.friendly:
                                 robot.reset_initial_position(self.blue_start_position[robot.robot_id - 1])
 
-            self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
-            rospy.sleep(0.5)
+            # self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+            # rospy.sleep(0.5)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:

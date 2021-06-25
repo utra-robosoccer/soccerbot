@@ -57,21 +57,21 @@ services:
   friendly1: # Goalie
     <<: *soccerbot
     environment:
-      X_POS: 4
+      X_POS: 1
       Y_POS: -3.6
       ANGLE: 1.57
       GOALIE: "true"
-      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10001
-      ROBOT_NAME: robot1
+      ROBOT_NAME: robot2
       ROBOCUP_MIRROR_SERVER_IP: 127.0.0.1
       ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
       TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-    command: bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1
+    command: bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2
 
 #  friendly2: # Left midfield
 #    <<: *soccerbot
