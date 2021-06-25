@@ -261,7 +261,6 @@ class GameControllerBridge():
                 imu_msg.linear_acceleration.y = ((value.Y + 32768) / 65535) * (19.62 * 2) - 19.62
                 imu_msg.linear_acceleration.z = ((value.Z + 32768) / 65535) * (19.62 * 2) - 19.62
 
-
         for gyro in gyros:
             name = gyro.name
             value = gyro.value
@@ -270,7 +269,6 @@ class GameControllerBridge():
                 imu_msg.angular_velocity.x = ((value.X + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.y = ((value.Y + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.z = ((value.Z + 32768) / 65535) * (8.7266 * 2) - 8.7266
-
 
         if imu_accel and imu_gyro:
             self.pub_imu.publish(imu_msg)
@@ -376,6 +374,13 @@ class GameControllerBridge():
             assert (len(self.joint_command) == len(self.motor_names))
             motor_position.position = self.joint_command[i]
             actuator_requests.motor_positions.append(motor_position)
+
+            motor_pid = messages_pb2.MotorPID()
+            motor_pid.name = name
+            motor_pid.PID.X = 15
+            motor_pid.PID.Y = 0
+            motor_pid.PID.Z = 0
+            actuator_requests.motor_pids.append(motor_pid)
 
         msg = actuator_requests.SerializeToString()
         msg_size = struct.pack(">L", len(msg))
