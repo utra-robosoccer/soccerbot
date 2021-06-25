@@ -26,10 +26,10 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 
 class GameEngineCompetition(game_engine.GameEngine):
-    STRATEGY_UPDATE_INTERVAL = 3
+    STRATEGY_UPDATE_INTERVAL = 1
     NAV_GOAL_UPDATE_INTERVAL = 2
-    blue_initial_position = [[-0, -4, 1.57], [0, -1, 1.57], [-1.75, -1.5, 1.57]]
-    red_initial_position = [[-0, 4, -1.57], [0, 1, -1.57], [-1.75, 1.5, -1.57]]
+    blue_initial_position = [[-0.9, -3.9, 1.57], [-0.9, -0.9, 1.57], [-1.75, -1.5, 1.57]]
+    red_initial_position = [[-0.9, 3.9, -1.57], [-0.9, 0.9, -1.57], [-1.75, 1.5, -1.57]]
 
     blue_start_position = [[-4, -3.06, 1.57], [-1, -3.06, 1.57], [-4, 3.06, -1.57]]
     red_start_position = [[4, -3.06, 1.57], [1, -3.06, 1.57], [4, 3.06, -1.57]]
@@ -199,8 +199,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                # self.stop_all_robot()
-                self.resume_all_robot()
+                self.stop_all_robot()
+                # self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
                 # reset localization initial pose
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
@@ -230,8 +230,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                             for robot in self.friendly:
                                 robot.reset_initial_position(self.blue_start_position[robot.robot_id - 1])
 
-            self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
-            rospy.sleep(0.5)
+            # self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+            # rospy.sleep(0.5)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -301,11 +301,11 @@ class GameEngineCompetition(game_engine.GameEngine):
                     self.kickoff_started = True
                     print("kickoff started after 10s")
 
-                if self.ball.get_position() is not None:
-                    delta = np.linalg.norm(self.ball.get_position())
-                    if delta > 0.1:
-                        self.kickoff_started = True
-                        print("kickoff started after ball moved 10cm")
+                # if self.ball.get_position() is not None:
+                #     delta = np.linalg.norm(self.ball.get_position())
+                #     if delta > 0.1:
+                #         self.kickoff_started = True
+                #         print("kickoff started after ball moved 10cm")
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:

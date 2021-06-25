@@ -148,7 +148,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
                 self.terminate_walk = False
-                t = -2
+                t = -0.5
 
             if self.terminate_walk:
                 if self.soccerbot.robot_path is not None:
