@@ -70,7 +70,7 @@ class RobotRos(Robot):
             temp = Bool()
             temp.data = True
             self.localization_reset_publisher.publish(temp)
-            rospy.sleep(1)
+            rospy.sleep(1.5)
             temp.data = False
             self.localization_reset_publisher.publish(temp)
 
@@ -85,7 +85,7 @@ class RobotRos(Robot):
                 temp = Bool()
                 temp.data = True
                 self.localization_reset_publisher.publish(temp)
-                rospy.sleep(1)
+                rospy.sleep(1.5)
                 temp.data = False
                 self.localization_reset_publisher.publish(temp)
 

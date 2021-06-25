@@ -171,12 +171,7 @@ class SoccerbotRos(Soccerbot):
         self.configuration[
             Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 5
         last_pose = rospy.Duration(10)
-
-        if self.configuration[Joints.HEAD_2] < 0.6:
-            self.configuration[Joints.HEAD_2] = 0.6
-
         if not self.localization_reset:
-
             try:
 
                 header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
@@ -203,18 +198,23 @@ class SoccerbotRos(Soccerbot):
                 else:
                     self.configuration[Joints.HEAD_2] = self.head_motor_1
 
-            if self.configuration[Joints.HEAD_2] < 0.6:
-                self.configuration[Joints.HEAD_2] = 0.6
+        if self.configuration[Joints.HEAD_2] < 0.6:
+            self.configuration[Joints.HEAD_2] = 0.6
 
-            if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[
-                Joints.HEAD_2]:
-                temp = Bool()
-                temp.data = True
-                self.move_head_publisher.publish(temp)
-            else:
-                temp = Bool()
-                temp.data = False
-                self.move_head_publisher.publish(temp)
+        if self.configuration[Joints.HEAD_1] > 1.5:
+            self.configuration[Joints.HEAD_1] = 1.5
+        elif self.configuration[Joints.HEAD_1] < -1.5:
+            self.configuration[Joints.HEAD_1] = -1.5
+
+        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[
+            Joints.HEAD_2] and not self.localization_reset:
+            temp = Bool()
+            temp.data = True
+            self.move_head_publisher.publish(temp)
+        else:
+            temp = Bool()
+            temp.data = False
+            self.move_head_publisher.publish(temp)
 
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]
