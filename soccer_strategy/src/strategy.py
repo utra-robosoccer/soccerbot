@@ -117,13 +117,18 @@ class DummyStrategy(Strategy):
                     print("Distance between player and ball")
                     print(distance_of_player_to_ball)
 
-                    if distance_of_player_to_ball < 0.2:
-                        # Stop moving
-                        # Kick the ball towards the goal
-                        player_vector = [math.cos(player_angle), math.sin(player_angle)]
-                        player_to_ball_vector = ball_position - player_position
-                        cross = np.cross(player_to_ball_vector, player_vector)
-                        if cross > 0: # right foot
+                    player_vector = [math.cos(player_angle), math.sin(player_angle)]
+                    player_to_ball_vector = ball_position - player_position
+                    cross = np.cross(player_to_ball_vector, player_vector)
+
+                    print("Robot ball angle")
+                    print(distance_of_player_to_ball)
+                    if distance_of_player_to_ball < 0.2 and abs(cross) > 0.15:
+                        print("robot ball ange too large, unable to kick")
+
+                    if distance_of_player_to_ball < 0.2 and abs(cross) < 0.15:
+                        if cross > 0:
+                            # right foot
                             current_closest.kick_with_right_foot = True
                         else:
                             current_closest.kick_with_right_foot = False
