@@ -70,14 +70,14 @@ class DummyStrategy(Strategy):
             else:
                 if teamcolor == 0:
                     if is_first_half == 1:
-                        goal_position = np.array([0, 4.5])
+                        goal_position = np.array([0, 5])
                     else:
-                        goal_position = np.array([0, -4.5])
+                        goal_position = np.array([0, -5])
                 else:
                     if is_first_half == 1:
-                        goal_position = np.array([0, -4.5])
+                        goal_position = np.array([0, -5])
                     else:
-                        goal_position = np.array([0, 4.5])
+                        goal_position = np.array([0, 5])
 
             if abs(ball.get_position()[0]) < 1.0:
                 goal_position[0] = ball.get_position()[0]
@@ -98,7 +98,7 @@ class DummyStrategy(Strategy):
 
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.45:
+                    if distance_of_player_to_ball < 0.4:
                         navigation_bias = 0.5
                     else:
                         navigation_bias = 1.1
@@ -123,11 +123,11 @@ class DummyStrategy(Strategy):
 
                     print("Robot ball angle")
                     print(distance_of_player_to_ball)
-                    if distance_of_player_to_ball < 0.2 and abs(cross) > 0.15:
+                    if distance_of_player_to_ball < 0.21 and abs(cross) > 0.15:
                         print("robot ball ange too large, unable to kick")
 
-                    if distance_of_player_to_ball < 0.2 and abs(cross) < 0.15:
-                        if cross > 0.05:
+                    if distance_of_player_to_ball < 0.21 and abs(cross) < 0.15:
+                        if cross > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
                         else:
