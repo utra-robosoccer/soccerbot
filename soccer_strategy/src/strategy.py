@@ -99,7 +99,7 @@ class DummyStrategy(Strategy):
                     destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.4:
-                        navigation_bias = 0.5
+                        navigation_bias = 0.6
                     else:
                         navigation_bias = 1.1
                     diff = destination_position - player_position
@@ -123,10 +123,10 @@ class DummyStrategy(Strategy):
 
                     print("Robot ball angle")
                     print(distance_of_player_to_ball)
-                    if distance_of_player_to_ball < 0.21 and abs(cross) > 0.15:
+                    if distance_of_player_to_ball < 0.19 and abs(cross) > 0.15:
                         print("robot ball ange too large, unable to kick")
 
-                    if distance_of_player_to_ball < 0.21 and abs(cross) < 0.15:
+                    if distance_of_player_to_ball < 0.19 and abs(cross) < 0.15:
                         if cross > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
