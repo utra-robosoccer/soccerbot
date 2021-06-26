@@ -19,7 +19,7 @@ def wrapToPi(num: float) -> float:
 class Path:
     bodystep_size = 0.040  # m Not absolutely fixed, will be modified slightly when
     angular_bodystep_size = 0.4  # radians Radians per angular step
-    steps_per_second = 2.4
+    steps_per_second = 2.4 # try 5
     speed = steps_per_second * bodystep_size  # m/s
     angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
     turn_duration = 4  # Number of body steps to turn

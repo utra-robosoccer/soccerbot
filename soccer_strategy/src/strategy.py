@@ -33,7 +33,7 @@ class StationaryStrategy(Strategy):
     def update_next_strategy(self, friendly, opponent, ball):
         return
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 15
+HAVENT_SEEN_THE_BALL_TIMEOUT = 10
 class DummyStrategy(Strategy):
 
     def __init__(self):
@@ -168,8 +168,7 @@ class DummyStrategy(Strategy):
                               )
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi]
-                # player.set_navigation_position(turn_position)
-
+                player.set_navigation_position(turn_position)
         # If the robot is walking and a detected obstacle in the direction of the robot
         for player in friendly:
             if player.status == Robot.Status.WALKING:

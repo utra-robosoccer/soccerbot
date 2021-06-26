@@ -31,8 +31,8 @@ class GameEngineCompetition(game_engine.GameEngine):
     blue_initial_position = [[0, -3.5, 1.57], [0, -1, 1.57], [-1.75, -1.5, 1.57]]
     red_initial_position = [[0, 3.5, -1.57], [0, 1, -1.57], [-1.75, 1.5, -1.57]]
 
-    blue_start_position = [[-4, -3.06, 1.57], [-1, -3.06, 1.57], [-4, 3.06, -1.57]]
-    red_start_position = [[4, -3.06, 1.57], [1, -3.06, 1.57], [4, 3.06, -1.57]]
+    blue_start_position = [[-4, -3.6, 1.57], [-1, -3.6, 1.57], [-4, 3.6, -1.57]]
+    red_start_position = [[4, -3.6, 1.57], [1, -3.6, 1.57], [4, 3.6, -1.57]]
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
@@ -194,6 +194,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                 if self.gameState.hasKickOff:
                     self.run_normal(rostime)
 
+
     def run_normal(self, rostime):
         # INITIAL
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
@@ -244,8 +245,8 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
-                        print("ready")
-                        print(self.gameState.firstHalf)
+                        # print("ready")
+                        # print(self.gameState.firstHalf)
 
                         if self.gameState.firstHalf == 1:
                             if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
@@ -257,6 +258,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                                 robot.set_navigation_position(self.red_initial_position[robot.robot_id - 1])
                             elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
                                 robot.set_navigation_position(self.blue_initial_position[robot.robot_id - 1])
+                        pass
 
         # SET
         if self.gameState.gameState == GameState.GAMESTATE_SET:
@@ -310,6 +312,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
                     self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+                    pass
                 else:
                     print("kickoff not started, no strategy output")
 
@@ -327,6 +330,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.update_average_ball_position()
         for robot in self.friendly:
             robot.update_status()
+            robot.get_detected_obstacles()
+            robot.obstacles_publisher.publish(robot.obstacles)
 
     def run_freekick(self, rostime, strategy):
         # PREPARATION

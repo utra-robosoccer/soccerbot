@@ -3,7 +3,7 @@ from soccer_msgs.msg import GameState
 from robot import Robot
 import rospy
 import os
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand
 import numpy as np
@@ -12,13 +12,16 @@ import tf.transformations
 
 from sensor_msgs.msg import Imu
 
-robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1": 1, "opponent2": 2, "opponent3": 3, "opponent4": 4}
+robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1": 1, "opponent2": 2, "opponent3": 3,
+                "opponent4": 4}
 
 
 class RobotRos(Robot):
     def __init__(self, team, role, status, robot_name):
-        self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose", PoseWithCovarianceStamped, self.robot_pose_callback)
-        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped, queue_size=1)
+        self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose", PoseWithCovarianceStamped,
+                                               self.robot_pose_callback)
+        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped,
+                                                      queue_size=1)
 
         self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
@@ -28,15 +31,17 @@ class RobotRos(Robot):
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
-        self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool, queue_size=1)
+        self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool,
+                                                              queue_size=1)
         self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
-
+        self.obstacles_publisher = rospy.Publisher('/' + robot_name + "/obstacles", PoseArray,
+                                                              queue_size=1)
         self.tf_listener = tf.TransformListener()
         self.localization_reset_publisher = rospy.Publisher('/' + robot_name + "/localization_mode", Bool, queue_size=1)
         self.team = team
         self.role = role
         self.status = status
-        self.position = np.array([-3, -3, 0]) # 1.57
+        self.position = np.array([-3, -3, 0])  # 1.57
         self.goal_position = np.array([0.0, 0.0, 0])
         self.ball_position = np.array([0.0, 0.0])
         self.robot_name = robot_name
@@ -50,6 +55,8 @@ class RobotRos(Robot):
         self.stop_requested = False
         self.designated_kicker = False
         self.relocalization_timeout = 0
+
+        self.obstacles = PoseArray()
 
     def robot_pose_callback(self, data):
         if self.status == Robot.Status.DISCONNECTED:
@@ -76,7 +83,7 @@ class RobotRos(Robot):
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo("Completed Trajectory")
-        #assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
+        # assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED
@@ -96,11 +103,11 @@ class RobotRos(Robot):
             return self.position
 
         eul = tf.transformations.euler_from_quaternion(rot)
-        self.position = [-trans[1], trans[0], eul[2] + math.pi/2]
+        self.position = [-trans[1], trans[0], eul[2] + math.pi / 2]
         return self.position
 
     def set_navigation_position(self, position):
-        #assert (self.status == Robot.Status.WALKING)
+        # assert (self.status == Robot.Status.WALKING)
         if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
             super(RobotRos, self).set_navigation_position(position)
             print("Sending Robot " + self.robot_name + " to position" + str(position))
@@ -224,21 +231,25 @@ class RobotRos(Robot):
     def get_detected_obstacles(self):
         # TODO know if they are friendly or enemy robot
         obstacles = []
-        for i in range(1,10):
+        for i in range(1, 10):
             try:
-                (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/detected_robot_' + str(i), rospy.Time(0))
+                (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/detected_robot_' + str(i),
+                                                                rospy.Time(0))
                 header = self.tf_listener.getLatestCommonTime('world', self.robot_name + '/detected_robot_' + str(i))
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
 
                 continue
 
-
             if abs(rospy.Time.now() - header) > rospy.Duration(0.5):
                 continue
+            obstacle_pose = Pose()
+            obstacle_pose.position = trans
+            obstacle_pose.orientation = rot
+            self.obstacles.poses.append(obstacle_pose)
 
             eul = tf.transformations.euler_from_quaternion(rot)
-            obstacle_position = [-trans[1], trans[0], eul[2] + math.pi/2]
+            obstacle_position = [-trans[1], trans[0], eul[2] + math.pi / 2]
             obstacles.append(obstacle_position)
             pass
         return obstacles
