@@ -375,12 +375,22 @@ class GameControllerBridge():
             motor_position.position = self.joint_command[i]
             actuator_requests.motor_positions.append(motor_position)
 
-            motor_pid = messages_pb2.MotorPID()
-            motor_pid.name = name
-            motor_pid.PID.X = 15
-            motor_pid.PID.Y = 0
-            motor_pid.PID.Z = 0
-            actuator_requests.motor_pids.append(motor_pid)
+            if not (name in ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]", "right_arm_motor_1"]):
+                # print(name)
+                # print(not (name in ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]))
+                motor_pid = messages_pb2.MotorPID()
+                motor_pid.name = name
+                motor_pid.PID.X = 10
+                motor_pid.PID.Y = 0.00
+                motor_pid.PID.Z = 0
+                actuator_requests.motor_pids.append(motor_pid)
+            else:
+                motor_pid = messages_pb2.MotorPID()
+                motor_pid.name = name
+                motor_pid.PID.X = 10
+                motor_pid.PID.Y = 0.00
+                motor_pid.PID.Z = 0
+                actuator_requests.motor_pids.append(motor_pid)
 
         msg = actuator_requests.SerializeToString()
         msg_size = struct.pack(">L", len(msg))
