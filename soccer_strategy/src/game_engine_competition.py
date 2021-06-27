@@ -29,7 +29,7 @@ class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 1
     NAV_GOAL_UPDATE_INTERVAL = 2
     blue_initial_position = [[0, -3.5, 1.57], [0, -1, 1.57], [-1.75, -1.5, 1.57]]
-    red_initial_position = [[0, 3.5, -1.57], [0, 1, -1.57], [-1.75, 1.5, -1.57]]
+    red_initial_position = [[0, 3.5, -1.57], [-2.5, 0.9, -1.57], [-1.75, 1.5, -1.57]]
 
     blue_start_position = [[-4, -3.6, 1.57], [-1, -3.6, 1.57], [-4, 3.6, -1.57]]
     red_start_position = [[4, -3.6, 1.57], [1, -3.6, 1.57], [4, 3.6, -1.57]]
@@ -200,8 +200,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-                self.stop_all_robot()
-                # self.resume_all_robot()
+                # self.stop_all_robot()
+                self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
                 # reset localization initial pose
                 if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
