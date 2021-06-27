@@ -127,10 +127,11 @@ class SoccerbotControllerRos(SoccerbotController):
         stable_count = 5
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
-
+        time_now = 0
         while not rospy.is_shutdown():
             if self.robot_pose is not None and self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
+                time_now = rospy.Time.now()
                 self.soccerbot.ready()  # TODO Cancel walking
                 self.soccerbot.reset_imus()
                 # for i in range(20):
@@ -170,6 +171,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is not None and t <= self.soccerbot.robot_path.duration() < t + SoccerbotController.PYBULLET_STEP:
                 rospy.loginfo("Completed Walk")
+                walk_time = (rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000)))
+                print(walk_time)
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
             # print(t)

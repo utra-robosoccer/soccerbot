@@ -53,9 +53,10 @@
             <arg name="simulation" value="$(arg simulation)" />
         </include>
 
-        <rosparam command="load" file="$(find soccerbot)/config/game.yaml" />
+        <rosparam command="load" file="$(find soccerbot)/config/$(arg robot_name).yaml" />
         <include file="$(find soccerbot)/launch/modules/strategy.launch" >
             <arg name="goalie" value="$(arg goalie)" />
+            <arg name="competition" value="$(arg competition)" />
         </include>
     </group>
 

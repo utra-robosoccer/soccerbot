@@ -37,7 +37,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Field Lines Point Cloud
+    SyncSource: Objection Detection
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -68,65 +68,65 @@ Visualization Manager:
       Frame Timeout: 3
       Frames:
         All Enabled: false
-        robot2/ball:
+        robot1/ball:
           Value: true
-        robot2/base_camera:
+        robot1/base_camera:
           Value: true
-        robot2/base_footprint:
+        robot1/base_footprint:
           Value: true
-        robot2/camera:
+        robot1/camera:
           Value: true
-        robot2/detected_robot_0:
-          Value: false
-        robot2/detected_robot_1:
-          Value: false
-        robot2/detected_robot_2:
-          Value: false
-        robot2/detected_robot_3:
-          Value: false
-        robot2/detected_robot_4:
-          Value: false
-        robot2/head:
+        robot1/detected_robot_0:
           Value: true
-        robot2/imu_link:
+        robot1/detected_robot_1:
           Value: true
-        robot2/left_ankle:
+        robot1/detected_robot_2:
           Value: true
-        robot2/left_bicep:
+        robot1/detected_robot_3:
           Value: true
-        robot2/left_calve:
+        robot1/detected_robot_4:
           Value: true
-        robot2/left_foot:
+        robot1/head:
           Value: true
-        robot2/left_forearm:
+        robot1/imu_link:
           Value: true
-        robot2/left_hip_front:
+        robot1/left_ankle:
           Value: true
-        robot2/left_hip_side:
+        robot1/left_bicep:
           Value: true
-        robot2/left_thigh:
+        robot1/left_calve:
           Value: true
-        robot2/neck:
+        robot1/left_foot:
           Value: true
-        robot2/odom:
-          Value: false
-        robot2/right_ankle:
+        robot1/left_forearm:
           Value: true
-        robot2/right_bicep:
+        robot1/left_hip_front:
           Value: true
-        robot2/right_calve:
+        robot1/left_hip_side:
           Value: true
-        robot2/right_foot:
+        robot1/left_thigh:
           Value: true
-        robot2/right_forearm:
+        robot1/neck:
           Value: true
-        robot2/right_hip_front:
+        robot1/odom:
           Value: true
-        robot2/right_hip_side:
+        robot1/right_ankle:
           Value: true
-        robot2/right_thigh:
+        robot1/right_bicep:
           Value: true
-        robot2/torso:
+        robot1/right_calve:
+          Value: true
+        robot1/right_foot:
+          Value: true
+        robot1/right_forearm:
+          Value: true
+        robot1/right_hip_front:
+          Value: true
+        robot1/right_hip_side:
+          Value: true
+        robot1/right_thigh:
+          Value: true
+        robot1/torso:
           Value: true
         world:
           Value: true
@@ -138,48 +138,48 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          robot2/odom:
-            robot2/base_camera:
+          robot1/odom:
+            robot1/base_camera:
               {}
-            robot2/base_footprint:
-              robot2/ball:
+            robot1/base_footprint:
+              robot1/ball:
                 {}
-              robot2/detected_robot_0:
+              robot1/detected_robot_0:
                 {}
-              robot2/detected_robot_1:
+              robot1/detected_robot_1:
                 {}
-              robot2/detected_robot_2:
+              robot1/detected_robot_2:
                 {}
-              robot2/detected_robot_3:
+              robot1/detected_robot_3:
                 {}
-              robot2/detected_robot_4:
+              robot1/detected_robot_4:
                 {}
-              robot2/torso:
-                robot2/imu_link:
+              robot1/torso:
+                robot1/imu_link:
                   {}
-                robot2/left_bicep:
-                  robot2/left_forearm:
+                robot1/left_bicep:
+                  robot1/left_forearm:
                     {}
-                robot2/left_hip_side:
-                  robot2/left_hip_front:
-                    robot2/left_thigh:
-                      robot2/left_calve:
-                        robot2/left_ankle:
-                          robot2/left_foot:
+                robot1/left_hip_side:
+                  robot1/left_hip_front:
+                    robot1/left_thigh:
+                      robot1/left_calve:
+                        robot1/left_ankle:
+                          robot1/left_foot:
                             {}
-                robot2/neck:
-                  robot2/head:
-                    robot2/camera:
+                robot1/neck:
+                  robot1/head:
+                    robot1/camera:
                       {}
-                robot2/right_bicep:
-                  robot2/right_forearm:
+                robot1/right_bicep:
+                  robot1/right_forearm:
                     {}
-                robot2/right_hip_side:
-                  robot2/right_hip_front:
-                    robot2/right_thigh:
-                      robot2/right_calve:
-                        robot2/right_ankle:
-                          robot2/right_foot:
+                robot1/right_hip_side:
+                  robot1/right_hip_front:
+                    robot1/right_thigh:
+                      robot1/right_calve:
+                        robot1/right_ankle:
+                          robot1/right_foot:
                             {}
       Update Interval: 0
       Value: true
@@ -200,7 +200,7 @@ Visualization Manager:
               Unreliable: false
               Value: false
             - Class: rviz/Image
-              Enabled: false
+              Enabled: true
               Image Topic: /robot1/detection_image
               Max Value: 1
               Median window: 5
@@ -210,7 +210,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: false
+              Value: true
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -381,6 +381,109 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
+            robot1/camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/head:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/imu_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/left_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/neck:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/torso:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
           Name: RobotModel
           Robot Description: robot1/robot_description
           TF Prefix: ""
@@ -406,7 +509,7 @@ Visualization Manager:
               Unreliable: false
               Value: false
             - Class: rviz/Image
-              Enabled: true
+              Enabled: false
               Image Topic: /robot2/detection_image
               Max Value: 1
               Median window: 5
@@ -416,7 +519,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: true
+              Value: false
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -587,109 +690,6 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
-            robot2/camera:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            robot2/head:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/imu_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            robot2/left_ankle:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_bicep:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_calve:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_foot:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_forearm:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_hip_front:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_hip_side:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/left_thigh:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/neck:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_ankle:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_bicep:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_calve:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_foot:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_forearm:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_hip_front:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_hip_side:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/right_thigh:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            robot2/torso:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
           Name: RobotModel
           Robot Description: robot2/robot_description
           TF Prefix: ""
@@ -936,7 +936,7 @@ Visualization Manager:
       X std deviation: 0.05000000074505806
       Y std deviation: 0.05000000074505806
     - Class: rviz/SetGoal
-      Topic: /robot2/goal
+      Topic: /robot1/goal
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point
