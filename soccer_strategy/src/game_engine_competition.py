@@ -186,6 +186,22 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             # penalty kick
             elif self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
+                # reset initial position for goalie
+                # if first time pentalty kick state and we are not kicking
+                if self.previous_gameState.secondaryState != GameState.STATE_PENALTYKICK and self.gameState.secondaryStateTeam != self.team_id:
+                    for robot in self.friendly:
+                        if robot.role == Robot.Role.GOALIE:
+                            if self.gameState.firstHalf == 1:
+                                if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
+                                    robot.reset_initial_position([-4.5, 0, 0])
+                                elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
+                                    robot.reset_initial_position([4.5, 0, 3.14])
+                            else:
+                                if self.gameState.teamColor == GameState.TEAM_COLOR_BLUE:
+                                    robot.reset_initial_position([4.5, 0, 3.14])
+                                elif self.gameState.teamColor == GameState.TEAM_COLOR_RED:
+                                    robot.reset_initial_position([-4.5, 0, 0])
+
                 self.run_freekick(rostime, self.penaltykick_strategy)
 
             # penalty shootout
@@ -353,25 +369,6 @@ class GameEngineCompetition(game_engine.GameEngine):
             else:
                 # todo perform goalie trajectory if penalty kick
                 strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-                # for robot in self.friendly:
-                #     if robot.role == Robot.Role.GOALIE:
-                #         # check if robot is on the goal line
-                #         if (robot.position[1] < -3.8 or robot.position[1] >3.8) and (robot.position[0] < 0.5 and robot.position[0] >-0,5):
-                #             if abs(self.ball[1]-robot.position[1]) < 1.5:
-                #                 side_delta = self.ball[0]-robot.position[0]
-                #                 if side_delta > 0:
-                #                     if robot.position[1] < 0:
-                #                         robot.terminate_walking_publisher.publish()
-                #                         robot.trajectory_publisher.publish("goalieright")
-                #                         robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-                #                         rospy.loginfo(self.robot_name + " goalie jump right")
-                #                     else:
-                #                         robot.terminate_walking_publisher.publish()
-                #                         robot.trajectory_publisher.publish("goalieright")
-                #                         robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-                #                         rospy.loginfo(self.robot_name + " goalie jump right")
-                #         else:
-                #             strategy.update_non_kicking_strategy([robot], self.ball, self.gameState.teamColor, self.gameState.firstHalf)
                 pass
 
         self.rostime_previous = rostime
