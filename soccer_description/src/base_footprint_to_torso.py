@@ -20,6 +20,6 @@ if __name__ == '__main__':
         br.sendTransform((0, 0, torso_height),
                          [0, 0, 0, 1],
                          rospy.Time.now(),
-                         os.environ["ROS_NAMESPACE"][1:] + "/torso",
-                         os.environ["ROS_NAMESPACE"][1:] + "/base_footprint")
+                         rospy.get_param("ROBOT_NAME") + "/torso",
+                         rospy.get_param("ROBOT_NAME") + "/base_footprint")
         rospy.sleep(0.05)
