@@ -26,6 +26,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     nh.getParam("soccer_fieldline_detector/houghMaxLineGap", maxLineGap);
     robotName = ros::this_node::getNamespace();
     robotName.erase(0, 1);
+
     // Initialize Camera
     geometry_msgs::TransformStamped camera_pose;
 
@@ -76,7 +77,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         camera_position.position.x = camera_pose.transform.translation.x;
         camera_position.position.y = camera_pose.transform.translation.y;
         camera_position.position.z = camera_pose.transform.translation.z;
-
+        camera_position.orientation.w = camera_pose.transform.rotation.w;
+        camera_position.orientation.x = camera_pose.transform.rotation.x;
+        camera_position.orientation.y = camera_pose.transform.rotation.y;
+        camera_position.orientation.z = camera_pose.transform.rotation.z;
         tf2::Quaternion q(camera_pose.transform.rotation.x,
                           camera_pose.transform.rotation.y,
                           camera_pose.transform.rotation.z,
@@ -94,10 +98,10 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         m.getRPY(r, p, y);
         q.setRPY(r, p, 0);
         q.normalize();
-        camera_position.orientation.x = q[0];
-        camera_position.orientation.y = q[1];
-        camera_position.orientation.z = q[2];
-        camera_position.orientation.w = q[3];
+        camera_position.orientation.x = q.getX();
+        camera_position.orientation.y = q.getY();
+        camera_position.orientation.z = q.getZ();
+        camera_position.orientation.w = q.getW();
         camera->setPose(camera_position);
     }
     catch (tf2::TransformException &ex) {
@@ -172,6 +176,7 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
             HoughLinesP(cdst, lines, rho, theta, threshold, minLineLength, maxLineGap);
             cvtColor(cdst, dst, CV_GRAY2BGR);
+            bool temp_bool = true;
             for (const auto &l : lines) {
                 cv::line(dst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
 
@@ -180,16 +185,27 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
                 Segment2 s(pt1, pt2);
                 float b = l[1] - s.slope() * l[0];
 
-                for (size_t i = l[0]; i < l[2]; i += 13) {
+                for (size_t i = l[0]; i < l[2]; i += 15) {
                     float y = s.slope() * i + b;
                     Point2 pt(i, y);
-                    pts.push_back(pt);
+                    temp_bool = true;
+                    for (const auto &p : pts) {
+                        if (pt.x == p.x && pt.y == p.y) {
+                            temp_bool = true;
+                        }
+                    }
+
+                    if(temp_bool) {
+                        pts.push_back(pt);
+                    }
+
                 }
             }
 
             sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
 
             image_publisher.publish(message);
+
 
 
             std::vector<Point3> points3d;
@@ -267,7 +283,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
         } catch (const cv_bridge::Exception &e) {
             ROS_ERROR_STREAM("CV Exception" << e.what());
         }
-
     }
 }
 

@@ -10,7 +10,6 @@ x-soccerbot: &soccerbot
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch --wait soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
   volumes:
     - .:/root/catkin_ws/src/soccerbot
 
@@ -25,53 +24,54 @@ services:
   # sudo apt-get update
   # sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit mesa-utils
   # sudo systemctl restart docker
-  simulator:
-    image: utrarobosoccer/webots
-    privileged: true
-    build:
-      context: external
-    network_mode: host
-    cap_add:
-      - SYS_PTRACE
-    pid: "host"
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu, compute, utility, graphics]
-    command: bash -c "cd webots && WEBOTS_HOME=/root/webots ./webots --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /dev/dri:/dev/dri:rw
-      - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/:/root/webots/projects/samples/contests/robocup/controllers/referee/:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
-    environment:
-      DISPLAY: unix$DISPLAY
-      WEBOTS_HOME: /root/webots
-      JAVA_HOME: /usr
-      GAME_CONTROLLER_HOME: /root/GameController
-      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+#  simulator:
+#    image: utrarobosoccer/webots
+#    privileged: true
+#    build:
+#      context: external
+#    network_mode: host
+#    cap_add:
+#      - SYS_PTRACE
+#    pid: "host"
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#          - driver: nvidia
+#            count: all
+#            capabilities: [gpu, compute, utility, graphics]
+#    command: bash -c "cd webots && WEBOTS_HOME=/root/webots ./webots --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
+#    volumes:
+#      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+#      - /dev/dri:/dev/dri:rw
+#      - /dev/snd:/dev/snd:rw
+#      - ./external/webots/projects/samples/contests/robocup/controllers/referee/:/root/webots/projects/samples/contests/robocup/controllers/referee/:rw
+#      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
+#    environment:
+#      DISPLAY: unix$DISPLAY
+#      WEBOTS_HOME: /root/webots
+#      JAVA_HOME: /usr
+#      GAME_CONTROLLER_HOME: /root/GameController
+#      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
   friendly1: # Goalie
     <<: *soccerbot
     environment:
-      X_POS: -4
+      X_POS: 1
       Y_POS: -3.6
       ANGLE: 1.57
       GOALIE: "true"
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
-      ROBOT_NAME: robot1
+      ROBOCUP_ROBOT_ID: 2
+      ROBOCUP_TEAM_COLOR: "red"
+      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10001
+      ROBOT_NAME: robot2
       ROBOCUP_MIRROR_SERVER_IP: 127.0.0.1
       ROBOCUP_GAMECONTROLLER_IP: 127.0.1.1
       TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
+    command: bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2
 
 #  friendly2: # Left midfield
 #    <<: *soccerbot

@@ -108,7 +108,7 @@ class Footpath(Path):
                 second_foot_step_ratio = 1
             else:
                 second_foot_step_ratio = (adjusted_step_time - post_step_time) / (
-                            half_step_time - post_step_time - pre_step_time)
+                        half_step_time - post_step_time - pre_step_time)
         else:
             adjusted_step_time = t - half_step_time
 
