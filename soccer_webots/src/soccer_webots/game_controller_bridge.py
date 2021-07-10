@@ -380,7 +380,7 @@ class GameControllerBridge():
                 # print(not (name in ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]))
                 motor_pid = messages_pb2.MotorPID()
                 motor_pid.name = name
-                motor_pid.PID.X = 9.25
+                motor_pid.PID.X = 10
                 motor_pid.PID.Y = 0.000
                 motor_pid.PID.Z = 0.00
                 actuator_requests.motor_pids.append(motor_pid)
