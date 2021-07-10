@@ -1,18 +1,18 @@
 #!/usr/bin/python3
-import os
 
 import numpy as np
 import math
 import tf
 import rospy
 from std_msgs.msg import Empty
-from geometry_msgs.msg import PoseWithCovarianceStamped
 from soccer_msgs.msg import GameState
-from robot_ros import RobotRos
-from robot import Robot
-from ball import Ball
+from soccer_strategy.src.robot.robot_ros import RobotRos
+from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.robot.ball import Ball
 import game_engine
-from strategy import DummyStrategy, FreekickStrategy, PenaltykickStrategy
+from soccer_strategy.src.strategy.DummyStrategy import DummyStrategy
+from soccer_strategy.src.strategy.FreekickStrategy import FreekickStrategy
+from soccer_strategy.src.strategy.PenaltykickStrategy import PenaltykickStrategy
 
 import logging
 
@@ -78,6 +78,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         # assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
 
         self.ball = Ball(position=None)
+        self.ball.position_timeout = True
 
         # GameState
         self.gameState = GameState()
@@ -327,7 +328,10 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    self.team1_strategy.update_friendly_strategy(robots=self.robots, ball=self.ball, teamcolor=self.gameState.teamColor, is_first_half=self.gameState.firstHalf, secondaryState=self.gameState.secondaryState)
+                    self.team1_strategy.update_team_strategy(robots=self.robots, ball=self.ball,
+                                                             teamcolor=self.gameState.teamColor,
+                                                             is_first_half=self.gameState.firstHalf,
+                                                             secondaryState=self.gameState.secondaryState)
                     pass
                 else:
                     print("kickoff not started, no strategy output")

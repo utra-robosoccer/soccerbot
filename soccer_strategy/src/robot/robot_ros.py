@@ -1,8 +1,5 @@
-from soccer_msgs.msg import GameState
-
-from robot import Robot
+from soccer_strategy.src.robot.robot import Robot
 import rospy
-import os
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand

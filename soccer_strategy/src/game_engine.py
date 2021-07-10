@@ -3,9 +3,9 @@ import random
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-from robot import Robot
-from ball import Ball
-from strategy import StationaryStrategy, DummyStrategy, PassStrategy
+from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.robot.ball import Ball
+from soccer_strategy.src.strategy.DummyStrategy import DummyStrategy
 import math
 import numpy as np
 import copy
@@ -13,31 +13,32 @@ import copy
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 3  # Every 5 physics steps
     DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
 
     def __init__(self, display=True):
         self.display = display
         # Initialize robots
         self.robots = [
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.DISCONNECTED,
-                  position=np.array([0.0, -3.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.DISCONNECTED,
-                  position=np.array([-1.5, -1.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.DISCONNECTED,
-                  position=np.array([1.5, -1.5, math.pi / 2])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.DISCONNECTED,
-                  position=np.array([0.0, -0.8, math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.DISCONNECTED,
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+                  position=np.array([3.5, 0.0, math.pi])),
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+                  position=np.array([1.5, -1.5, -math.pi])),
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+                  position=np.array([1.5, 1.5, -math.pi])),
+            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+                  position=np.array([0.8, 0.0 , -math.pi])),
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                   position=np.array([0.0, 3.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.DISCONNECTED,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([-1.5, 1.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.DISCONNECTED,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([1.5, 1.5, -math.pi / 2])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.DISCONNECTED,
+            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.0, 0.8, -math.pi / 2]))
         ]
         self.ball = Ball(position=np.array([0, 0]))
+        self.ball.position_timeout = False
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
@@ -46,28 +47,28 @@ class GameEngine:
         # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 
         if self.display:
-            fig = plt.figure(figsize=(6.0, 9.0), dpi=60)
+            fig = plt.figure(figsize=(9.0, 6.0), dpi=60)
             background = fig.add_axes([0, 0, 1, 1])
             background.axis('equal')
-            background.set_xlim([-3.5, 3.5])
-            background.set_ylim([-5, 5])
+            background.set_xlim([-5, 5])
+            background.set_ylim([-3.5, 3.5])
             background.xaxis.set_major_locator(MultipleLocator(1))
             background.yaxis.set_major_locator(MultipleLocator(1))
             background.xaxis.set_minor_locator(MultipleLocator(0.1))
             background.yaxis.set_minor_locator(MultipleLocator(0.1))
             background.grid(which='minor', alpha=0.2)
             background.grid(which='major', alpha=0.5)
-            background.add_patch(plt.Rectangle((-3, -4.5), 6, 9, alpha=0.1, color='green'))
-            background.add_patch(plt.Rectangle((-1.3, -4.55), 2.6, 0.05, color='blue'))
-            background.add_patch(plt.Rectangle((-1.3, 4.5), 2.6, 0.05, color='blue'))
-            background.add_line(plt.Line2D((-3, 3), (0, 0), color='blue'))
+            background.add_patch(plt.Rectangle((-4.5, -3 ), 9, 6, alpha=0.1, color='green'))
+            background.add_patch(plt.Rectangle((-4.55, -1.3), 0.05, 2.6, color='blue'))
+            background.add_patch(plt.Rectangle((4.5, -1.3), 0.05, 2.6, color='blue'))
+            background.add_line(plt.Line2D((0, 0), (-3, 3), color='blue'))
             background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
             foreground = fig.add_axes([0, 0, 1, 1])
             foreground.set_facecolor((0, 0, 0, 0))
 
         # Setup the strategy
         self.team1_strategy = DummyStrategy()
-        self.team2_strategy = PassStrategy()
+        self.team2_strategy = DummyStrategy()
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -81,17 +82,17 @@ class GameEngine:
                 self.resetRobots()
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.team1_strategy.update_next_strategy(self.robots[0:4], self.robots[4:8], self.ball)
-                self.team2_strategy.update_next_strategy(self.robots[4:8], self.robots[0:4], self.ball)
+                self.team1_strategy.update_team_strategy(self.robots, self.ball, 0, 1, 0)
+                self.team2_strategy.update_team_strategy(self.robots, self.ball, 1, 1, 0, opponent_team=True)
 
             self.updateEstimatedPhysics(self.robots, self.ball)
 
             # Check victory condition
-            if self.ball.get_position()[1] > 4.5:
+            if self.ball.get_position()[0] > 4.5:
                 print("Friendly Scores!")
                 friendly_points += 1
                 self.resetRobots()
-            elif self.ball.get_position()[1] < -4.5:
+            elif self.ball.get_position()[0] < -4.5:
                 print("Opponent Scores!")
                 opponent_points += 1
                 self.resetRobots()
@@ -108,9 +109,8 @@ class GameEngine:
         foreground = plt.gcf().axes[1]
         foreground.clear()
         foreground.axis('equal')
-        foreground.set_xlim([-3.5, 3.5])
-        foreground.set_ylim([-5, 5])
-
+        foreground.set_xlim([-5, 5])
+        foreground.set_ylim([-3.5, 3.5])
         # Display Robots
         for robot in robots:
             x = robot.get_position()[0]
@@ -147,7 +147,11 @@ class GameEngine:
             # TODO use the same trajectory as in soccer_pycontrol
             if robot.status == Robot.Status.WALKING:
                 delta = (robot.goal_position - robot.get_position())[0:2]
-                if np.linalg.norm(delta) == 0:
+                delta_distance = np.linalg.norm(delta)
+
+                # if done walking
+                if math.isclose(delta_distance, 0, rel_tol=1e-9, abs_tol=0.01):
+                    robot.status = Robot.Status.READY
                     continue
 
                 unit = delta / np.linalg.norm(delta)
