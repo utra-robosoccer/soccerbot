@@ -3,7 +3,7 @@ import os
 import sys
 import rospy
 if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/" + os.environ["ROS_NAMESPACE"]
+    os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from sensor_msgs.msg import Image
 import std_msgs
