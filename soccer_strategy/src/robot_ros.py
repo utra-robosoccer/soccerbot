@@ -82,7 +82,7 @@ class RobotRos(Robot):
             self.localization_reset_publisher.publish(temp)
 
     def completed_trajectory_subscriber(self, data):
-        rospy.loginfo("Completed Trajectory")
+        rospy.loginfo(f"{self.robot_name} Completed Trajectory")
         # assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
@@ -110,7 +110,7 @@ class RobotRos(Robot):
         # assert (self.status == Robot.Status.WALKING)
         if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
             super(RobotRos, self).set_navigation_position(position)
-            print("Sending Robot " + self.robot_name + " to position" + str(position))
+            rospy.loginfo("Sending Robot " + self.robot_name + " to position" + str(position))
             p = PoseStamped()
             p.header.stamp = rospy.get_rostime()
             p.header.frame_id = "world"
@@ -149,8 +149,9 @@ class RobotRos(Robot):
         pass
 
     def reset_initial_position(self, position):
-        print("Setting initial Robot " + self.robot_name + " position" + str(position))
+        rospy.loginfo("Setting initial Robot " + self.robot_name + " position " + str(position))
         p = PoseWithCovarianceStamped()
+        p.header.frame_id = 'world'
         p.header.stamp = rospy.get_rostime()
         p.pose.pose.position.x = position[0]
         p.pose.pose.position.y = position[1]
@@ -172,7 +173,7 @@ class RobotRos(Robot):
 
     def update_status(self):
         if self.status != self.previous_status:
-            print(self.robot_name + " status changes to " + str(self.status))
+            rospy.loginfo(self.robot_name + " status changes to " + str(self.status))
             self.previous_status = self.status
 
         if self.status == Robot.Status.READY:
