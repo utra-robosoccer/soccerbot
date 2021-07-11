@@ -28,14 +28,6 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 class GameEngineCompetition(game_engine.GameEngine):
     STRATEGY_UPDATE_INTERVAL = 1
     NAV_GOAL_UPDATE_INTERVAL = 2
-    # position when ready
-    blue_initial_position = [[-3.5, 0, 0], [-1, 0, 0], [-1.5, 1.75, 0]]
-    red_initial_position = [[3.5, 0, -math.pi], [1, -2.5, -math.pi], [1.5, 1.75, -math.pi]]
-
-    # start positino outisde the field
-    blue_start_position = [[-4, -3.6, 1.57], [-1, -3.6, 1.57], [-4, 3.6, -1.57]]
-    red_start_position = [[4, -3.6, 1.57], [1, -3.6, 1.57], [4, 3.6, -1.57]]
-
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
