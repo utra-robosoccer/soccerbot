@@ -387,6 +387,7 @@ class GameControllerBridge():
                 motor_pid.PID.Y = 0.000
                 motor_pid.PID.Z = 0.00
                 actuator_requests.motor_pids.append(motor_pid)
+
             else:
                 motor_pid = messages_pb2.MotorPID()
                 motor_pid.name = name
