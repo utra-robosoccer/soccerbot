@@ -2,9 +2,10 @@ import math
 import numpy as np
 import rospy
 
-from soccer_strategy.src.strategy.Strategy import Strategy
+import soccer_strategy.src.config as config
+from soccer_strategy.src.strategy.strategy import Strategy
 from soccer_msgs.msg import GameState
-from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.robot import Robot
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 10
 class DummyStrategy(Strategy):
@@ -13,20 +14,10 @@ class DummyStrategy(Strategy):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
         super(DummyStrategy, self).__init__()
 
-    def generate_goal_position(self, ball, teamcolor, is_first_half, secondaryState):
-        if secondaryState == GameState.STATE_PENALTYSHOOT:
-            goal_position = np.array([4.5, 0])
-        else:
-            if teamcolor == 0:
-                if is_first_half == 1:
-                    goal_position = np.array([-5, 0])
-                else:
-                    goal_position = np.array([5, 0])
-            else:
-                if is_first_half == 1:
-                    goal_position = np.array([5, 0])
-                else:
-                    goal_position = np.array([-5, 0])
+    @staticmethod
+    def generate_goal_position(ball, teamcolor, is_first_half, secondaryState):
+        is_penalty_shoot = (secondaryState == GameState.STATE_PENALTYSHOOT)
+        goal_position = config.position_map_goal(config.GOAL_POSITION, teamcolor, is_first_half, is_penalty_shoot)
 
         if abs(ball.get_position()[1]) < 1.0:
             goal_position[1] = ball.get_position()[1]

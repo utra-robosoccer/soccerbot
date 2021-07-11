@@ -1,8 +1,7 @@
 import math
 import numpy as np
-import rospy
 
-from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.robot import Robot
 
 
 class Strategy:

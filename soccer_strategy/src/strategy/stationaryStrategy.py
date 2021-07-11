@@ -1,4 +1,4 @@
-from soccer_strategy.src.strategy.Strategy import Strategy
+from soccer_strategy.src.strategy.strategy import Strategy
 
 
 class StationaryStrategy(Strategy):

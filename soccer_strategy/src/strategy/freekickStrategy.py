@@ -1,9 +1,10 @@
-import math
 import numpy as np
 import rospy
+import math
 
-from soccer_strategy.src.strategy.DummyStrategy import DummyStrategy
-from soccer_strategy.src.robot.robot import Robot
+import soccer_strategy.src.config as config
+from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
+from soccer_strategy.src.robot import Robot
 
 
 class FreekickStrategy(DummyStrategy):
@@ -20,7 +21,6 @@ class FreekickStrategy(DummyStrategy):
                 non_kicker.append(robot)
 
         if kicker == None:
-            # should not happen
             return
 
         # todo move non-kicking robots
@@ -58,33 +58,26 @@ class FreekickStrategy(DummyStrategy):
 
         for robot in friendly:
             if teamcolor == 0: #blue
-                if is_first_half == 1:
-                    own_goal = np.array([0, -4.5])
-                    angle = 1.57
-                else:
-                    own_goal = np.array([0, 4.5])
-                    angle = -1.57
-            elif teamcolor == 1: #red
-                if is_first_half == 1:
-                    own_goal = np.array([0, 4.5])
-                    angle = -1.57
-                else:
-                    own_goal = np.array([0, -4.5])
-                    angle = 1.57
+                goal_position = config.position_map_goal(config.GOAL_POSITION, teamcolor, is_first_half, False)
+
+                ball_position = ball.get_position()
+                diff = ball_position - goal_position
+                diff_unit = diff / np.linalg.norm(diff)
+                diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
             if robot.role == Robot.Role.LEFT_MIDFIELD:
                 nav_pose = ball.get_position() + np.array([0.5, 0])
-                robot.set_navigation_position(np.append(nav_pose, angle))
+                robot.set_navigation_position(np.append(nav_pose, diff_angle))
             if robot.role == Robot.Role.RIGHT_MIDFIELD:
                 nav_pose = ball.get_position() + np.array([-0.5, 0])
-                robot.set_navigation_position(np.append(nav_pose, angle))
+                robot.set_navigation_position(np.append(nav_pose, diff_angle))
             if robot.role == Robot.Role.GOALIE:
-                nav_pose = own_goal
+                nav_pose = goal_position
                 #check if robot is on the goal line
-                ball_goal_distance = np.linalg.norm(ball.position - own_goal)
-                robot_goal_distance = np.linalg.norm(robot.get_position()[0:2] - own_goal)
-                if robot_goal_distance <0.5:
-                    if ball_goal_distance <1.5:
+                ball_goal_distance = np.linalg.norm(ball.position - goal_position)
+                robot_goal_distance = np.linalg.norm(robot.get_position()[0:2] - goal_position)
+                if robot_goal_distance < 0.5:
+                    if ball_goal_distance < 1.5:
                         side_delta = self.ball[0]-robot.position[0]
                         if abs(side_delta) < 0.1:
                             pass
@@ -99,6 +92,6 @@ class FreekickStrategy(DummyStrategy):
                             robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
                             rospy.loginfo(self.robot_name + " goalie jump left")
                 else:
-                    robot.set_navigation_position(np.append(nav_pose, angle))
+                    robot.set_navigation_position(np.append(nav_pose, diff_angle))
 
         #todo make is so that all robot stay within the field boundary

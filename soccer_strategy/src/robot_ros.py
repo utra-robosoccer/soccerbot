@@ -1,4 +1,4 @@
-from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.robot import Robot
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
@@ -60,7 +60,7 @@ class RobotRos(Robot):
             self.status = Robot.Status.READY
 
     def ball_pose_callback(self, data):
-        self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
+        self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
 
     def move_head_callback(self, data):
@@ -100,7 +100,7 @@ class RobotRos(Robot):
             return self.position
 
         eul = tf.transformations.euler_from_quaternion(rot)
-        self.position = [-trans[1], trans[0], eul[2] + math.pi / 2]
+        self.position = [trans[0], trans[1], eul[2]]
         return self.position
 
     def set_navigation_position(self, position):
@@ -111,10 +111,10 @@ class RobotRos(Robot):
             p = PoseStamped()
             p.header.stamp = rospy.get_rostime()
             p.header.frame_id = "world"
-            p.pose.position.x = position[1]
-            p.pose.position.y = -position[0]
+            p.pose.position.x = position[0]
+            p.pose.position.y = position[1]
             p.pose.position.z = 0
-            angle_fixed = position[2] - math.pi / 2
+            angle_fixed = position[2]
             # print(angle_fixed)
             q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
             p.pose.orientation.x = q[0]
@@ -246,7 +246,7 @@ class RobotRos(Robot):
             self.obstacles.poses.append(obstacle_pose)
 
             eul = tf.transformations.euler_from_quaternion(rot)
-            obstacle_position = [-trans[1], trans[0], eul[2] + math.pi / 2]
+            obstacle_position = [trans[0], trans[1], eul[2]]
             obstacles.append(obstacle_position)
             pass
         return obstacles
