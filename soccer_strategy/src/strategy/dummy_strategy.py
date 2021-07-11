@@ -2,10 +2,10 @@ import math
 import numpy as np
 import rospy
 
-import soccer_strategy.src.config as config
-from soccer_strategy.src.strategy.strategy import Strategy
+import config as config
+from strategy.strategy import Strategy
 from soccer_msgs.msg import GameState
-from soccer_strategy.src.robot import Robot
+from robot import Robot
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 10
 class DummyStrategy(Strategy):

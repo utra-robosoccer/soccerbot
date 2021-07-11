@@ -2,9 +2,9 @@ import numpy as np
 import rospy
 import math
 
-import soccer_strategy.src.config as config
-from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
-from soccer_strategy.src.robot import Robot
+import config as config
+from strategy.dummy_strategy import DummyStrategy
+from robot import Robot
 
 
 class FreekickStrategy(DummyStrategy):

@@ -1,8 +1,8 @@
 import math
 import numpy as np
 
-from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
-from soccer_strategy.src.robot import Robot
+from strategy.dummy_strategy import DummyStrategy
+from robot import Robot
 
 # BROKEN DO NOT USE
 class PassStrategy(DummyStrategy):
