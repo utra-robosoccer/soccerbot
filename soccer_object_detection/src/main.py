@@ -15,15 +15,15 @@ def train_model(load_model=None, num_features=8):
     experiment = {
         'seed': 1234,
         'model_kernel': 3,
-        'model_num_features': 16,
-        'model_dropout_rate': 0.1,
-        'train_class_weight': [.35, .07, .58],  # BALL, ROBOT, OTHER
+        'model_num_features': 8,
+        'model_dropout_rate': 0.05,
+        'train_class_weight': [.2, .02, .78],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-2, # 1e-3,
-        'train_weight_decay': 0,
+        'train_weight_decay': 1e-8,
         'train_batch_size': 16, # 32, # 80, # 20,
-        'train_epochs': 192,
-        'colour_jitter': [0.05, 0.05, 0.05, 0.05],  # brightness, contrast, saturation, hue
-        'output_folder': 'outputs',
+        'train_epochs': 48,
+        'colour_jitter': [0.0, 0.0, 0.0, 0.0],  # brightness, contrast, saturation, hue
+        'output_folder': '06-25-2021-small-model-3',
     }
 
     # Save directory
@@ -78,19 +78,19 @@ def train_model(load_model=None, num_features=8):
 
 
 def display_dataset():
-    model = CNN(kernel=3, num_features=16)
-    model.load_state_dict(torch.load('outputs/model'))
+    model = CNN(kernel=3, num_features=8)
+    model.load_state_dict(torch.load('06-25-2021-small-model/model11'))
     model.eval()
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
-    testd.visualize_images(delay=1000, model=model, start=0)
+    testd.visualize_images(delay=2000, model=model, start=0)
 
 
 def test_model():
-    model = CNN(kernel=3, num_features=10, dropout=0.2)
+    model = CNN(kernel=3, num_features=8, dropout=0.2)
     model.cuda()
-    model.load_state_dict(torch.load('outputs/model'))
-    trainer = Trainer(model, 0.01, 1, 20, 'outputs')
-    trainer.test_model('test')
+    model.load_state_dict(torch.load('06-25-2021-small-model/model11'))
+    trainer = Trainer(model, learn_rate=0.01, weight_decay=0, batch_size=16, epochs=0, colour_jitter=[0,0,0,0], output_folder='outputs', seed=1, class_weights=[0,0,0])
+    trainer.test_model('test', 0)
 
 
 def webcam():
@@ -122,6 +122,7 @@ def webcam():
 
 
 if __name__ == '__main__':
-    display_dataset()
+    # test_model()
+    # display_dataset()
     # train_model(load_model='outputs/model', num_features=16)
-    # train_model()
+    train_model()

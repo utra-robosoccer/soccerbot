@@ -9,7 +9,7 @@ from copy import deepcopy
 import numpy as np
 import rospy
 
-if rospy.get_param('ENABLE_PYBULLET'):
+if os.getenv('ENABLE_PYBULLET', False):
     import pybullet as pb
 
 
@@ -84,7 +84,7 @@ class Soccerbot:
         :param link2: Ending link
         :return: H-transform from starting link to the ending link
         """
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             if link1 == Links.TORSO:
                 link1world = pb.getBasePositionAndOrientation(self.body)
                 link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
@@ -118,9 +118,6 @@ class Soccerbot:
                 matrix = [[0.0135, -0.035, -0.3277], [0., -0., 0., 1.]]
             elif link1 == Links.TORSO and link2 == Links.LEFT_LEG_6:
                 matrix = [[0.0135, 0.035, -0.3277], [0., -0., 0., 1.]]
-            # print(os.getenv('ENABLE_PYBULLET', 'true'))
-            # print(tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5)))
-            # print(tr(matrix[0], matrix[1]))
 
             return tr(matrix[0], matrix[1])  # tr(matrix)
 
@@ -131,7 +128,7 @@ class Soccerbot:
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
         home = expanduser("~")
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                     useFixedBase=useFixedBase,
                                     flags=pb.URDF_USE_INERTIA_FROM_FILE,
@@ -173,7 +170,7 @@ class Soccerbot:
         self.configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.max_forces = []
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             for i in range(0, 20):
                 self.max_forces.append(pb.getJointInfo(self.body, i)[10])
 
@@ -218,7 +215,7 @@ class Soccerbot:
 
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             pb.setJointMotorControlArray(bodyIndex=self.body,
                                          controlMode=pb.POSITION_CONTROL,
                                          jointIndices=list(range(0, 20, 1)),
@@ -301,7 +298,7 @@ class Soccerbot:
         [r, p, y] = pose.get_orientation_euler()
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
     def setGoal(self, finishPosition: tr):

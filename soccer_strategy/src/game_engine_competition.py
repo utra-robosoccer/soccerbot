@@ -44,15 +44,12 @@ class GameEngineCompetition(game_engine.GameEngine):
                              ]
 
     def __init__(self):
-        print("initializing strategy")
-        # self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
-        # self.robot_name = os.getenv("ROBOT_NAME", "robot1")
-        # self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
-        # self.robot_name = int(os.getenv("TEAM_ID", "16"))
-        self.robot_id = int(rospy.get_param('ROBOCUP_ROBOT_ID'))
-        self.robot_name = rospy.get_param('ROBOT_NAME')
-        self.is_goal_keeper = bool(rospy.get_param('GOALIE'))
-        self.team_id = int(rospy.get_param("TEAM_ID"))
+        self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
+        self.robot_name = os.getenv("ROBOT_NAME", "robot1")
+        self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
+        self.team_id = int(os.getenv("TEAM_ID", "16"))
+        rospy.loginfo(f"Initializing strategy with robot id: { self.robot_id }, robot_name: { self.robot_name }, is goalkeeper: { self.is_goal_keeper }, team id { self.team_id }")
+
         # game strategy information
 
         self.robots = [
