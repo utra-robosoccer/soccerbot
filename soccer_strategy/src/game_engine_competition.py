@@ -6,13 +6,13 @@ import tf
 import rospy
 from std_msgs.msg import Empty
 from soccer_msgs.msg import GameState
-from soccer_strategy.src.robot_ros import RobotRos
-from soccer_strategy.src.robot import Robot
-from soccer_strategy.src.ball import Ball
+from robot_ros import RobotRos
+from robot import Robot
+from ball import Ball
 import game_engine
-from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
-from soccer_strategy.src.strategy.freekickStrategy import FreekickStrategy
-from soccer_strategy.src.strategy.penaltykickStrategy import PenaltykickStrategy
+from strategy.dummy_strategy import DummyStrategy
+from strategy.freekick_strategy import FreekickStrategy
+from strategy.penaltykick_strategy import PenaltykickStrategy
 import config
 import logging
 

@@ -4,7 +4,6 @@ from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray,
 from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand
 import numpy as np
-import math
 import tf.transformations
 
 from sensor_msgs.msg import Imu

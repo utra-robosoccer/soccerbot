@@ -1,8 +1,7 @@
 import numpy as np
 
-import soccer_strategy.src.config as config
-from soccer_strategy.src.strategy.freekickStrategy import FreekickStrategy
-from soccer_strategy.src.robot import Robot
+import config as config
+from strategy.freekick_strategy import FreekickStrategy
 
 
 class PenaltykickStrategy(FreekickStrategy):

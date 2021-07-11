@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from soccer_strategy.src.robot import Robot
+from robot import Robot
 
 
 class Strategy:

@@ -3,9 +3,9 @@ import random
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-from soccer_strategy.src.robot import Robot
-from soccer_strategy.src.ball import Ball
-from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
+from robot import Robot
+from ball import Ball
+from strategy.dummy_strategy import DummyStrategy
 import math
 import numpy as np
 import copy
