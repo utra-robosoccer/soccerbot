@@ -3,7 +3,7 @@ import sys
 from game_engine import GameEngine
 from game_engine_competition import GameEngineCompetition
 import rospy
-_IN_ROS = False
+_IN_ROS = True
 
 if __name__ == '__main__':
     if _IN_ROS:
