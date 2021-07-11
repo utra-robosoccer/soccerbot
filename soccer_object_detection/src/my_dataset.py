@@ -12,20 +12,24 @@ import util
 import time
 import pickle
 
-train_path = '/home/robosoccer/dataset/train/smol'
+train_path = '/home/robosoccer/dataset/small_images/ball'
 train_images = '/home/robosoccer/dataset/train/smol/small-new'
 # train_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
 train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
 
-test_path = '/home/robosoccer/dataset/test/smol'
+test_path = '/home/robosoccer/dataset/small_images/ball'
 test_images = '/home/robosoccer/dataset/test/smol/small-new'
 # test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
 test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=32, shuffle=True):
-    train_folders = [os.path.join(train_path, folder) for folder in os.listdir(train_path)]
-    test_folders = [os.path.join(test_path, folder) for folder in os.listdir(test_path)]
+    train_folders = [
+            '/home/robosoccer/dataset/small_images/ball/Ball1-small',
+            '/home/robosoccer/dataset/small_images/ball/Ball2-small',
+            '/home/robosoccer/dataset/small_images/train']
+    test_folders = [
+            '/home/robosoccer/dataset/small_images/ball/Test-small']
 
     full_dataset = MyDataSet(train_labels, train_folders, (300, 400), jitter=jitter)
     test_dataset = MyDataSet(test_labels, test_folders, (300, 400))
@@ -109,24 +113,30 @@ class MyDataSet(Dataset):
         self.num_train_robot_labels = 0  # for subset of full dataset
         self.num_train_ball_labels = 0
 
-        # add paths for train data with labels
+        '''# add paths for train data with labels
         if '.txt' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'txt')
         elif '.yaml' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'yaml')
         elif '.pkl' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'pkl')
-
-    '''
+        '''
+        
         for path in folder_paths:
+            annot = None
             for file in os.listdir(path):
-                if '.txt' in file:
-                    file_labels = os.path.join(path, file)
-                    self.read_labels(path, file_labels, 'txt')
-                elif '.yaml' in file:
-                    file_labels = os.path.join(path, file)
-                    self.read_labels(path, file_labels, 'yaml')
-    '''
+                if 'annotations' in file:
+                    annot = file
+
+            file_labels = os.path.join(path, annot)
+            path = os.path.join(path, 'images')
+            if '.txt' in annot:
+                self.read_labels(path, file_labels, 'txt')
+            elif '.yaml' in annot:
+                self.read_labels(path, file_labels, 'yaml')
+            elif '.pkl' in annot:
+                self.read_labels(path, file_labels, 'pkl')
+                
 
     def read_labels(self, path, file_labels, file_type):
         """
@@ -218,6 +228,17 @@ class MyDataSet(Dataset):
                                 x2 = location[1][0]
                                 y2 = location[1][1]
 
+                                # hacks: convert label 1920x1080 -> 400x300 (center crop)
+                                scale = 1080 / 300
+                                x1 = x1 // scale # scale-down
+                                y1 = y1 // scale
+                                x2 = x2 // scale
+                                y2 = y2 // scale
+                                offset = (1920 // scale - 400) // 2
+                                x1 -= offset # center-crop
+                                x2 -= offset
+                                # end hacks
+
                                 if annotation['type'] == 'ball':
                                     label = Label.BALL
                                     self.num_ball_labels += 1
@@ -252,7 +273,7 @@ class MyDataSet(Dataset):
 
         height, width, depth = np.array(img).shape
         # final mask will have no channels but we need 3 initially to convert it to PIL image to apply transformation
-        mask = np.ones((1080, 1920, 3)) * Label.OTHER.value  # hardcoding the original img size (1920x1080) so that annotations still work
+        mask = np.ones((height, width, 3)) * Label.OTHER.value
         for bb in bounding_boxes:
             pt1, pt2, label = np.array(bb[0:2]), np.array(bb[2:4]), bb[4]
 
