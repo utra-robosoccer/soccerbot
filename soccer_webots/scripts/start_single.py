@@ -19,17 +19,9 @@ temp_bool = True
 args, unknown = parser.parse_known_args()
 
 rospy.init_node("webots_ros_interface", argv=['clock:=/clock'])
-pid_param_name = "/webots_pid"
-
-while not rospy.has_param(pid_param_name):
-    print("Waiting for parameter " + pid_param_name + " to be set..")
-    time.sleep(2.0)
-
-webots_pid = rospy.get_param(pid_param_name)
-
 rospy.set_param("name", args.robot_name)
 rospy.set_param("competition", "False")
-os.environ["WEBOTS_PID"] = webots_pid
+os.environ["WEBOTS_PID"] = "/webots_pid"
 os.environ["WEBOTS_ROBOT_NAME"] = args.robot_name
 
 rospy.logdebug("Starting ros interface for " + args.robot_name)
@@ -79,20 +71,3 @@ while not rospy.is_shutdown():
         # publish the message
         odom_pub.publish(odom)
         last_time = current_time
-        # # temp_bool = False
-        # pose_1 = PoseWithCovarianceStamped()
-        # pose_1.header.stamp = current_time
-        # pose_1.header.frame_id = "world"
-        #
-        # # set the position
-        # pose_1.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
-        # pose_1.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-        #                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-        #                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-        #                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-        #                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-        #                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-        #
-        # # publish the message
-        # init_pub.publish(pose_1)
-        # temp_bool = False
