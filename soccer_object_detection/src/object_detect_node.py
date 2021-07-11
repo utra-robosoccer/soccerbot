@@ -3,7 +3,7 @@ import os
 import sys
 import rospy
 if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/" + rospy.get_param("ROBOT_NAME")
+    os.environ["ROS_NAMESPACE"] = "/" + os.environ["ROS_NAMESPACE"]
 
 from sensor_msgs.msg import Image
 import std_msgs
@@ -38,11 +38,7 @@ class ObjectDetectionNode(object):
 
         self.model = CNN(kernel=3, num_features=16)
 
-        # if rospy.get_param('COMPETITION') == 'true':
         self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-        # else:
-        #     self.model.load_state_dict(torch.load(model_path))
-
         self.model.eval()
 
     def callback(self, msg):

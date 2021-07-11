@@ -70,7 +70,7 @@ class GameControllerBridge():
         self.create_publishers()
         self.create_subscribers()
 
-        self.addr = rospy.get_param('ROBOCUP_SIMULATOR_ADDR')
+        self.addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
 
         self.socket = None
         self.first_run = True
@@ -137,15 +137,15 @@ class GameControllerBridge():
                     # publish the message
                     odom_pub.publish(odom)
             except socket.timeout as s:
-                rospy.logwarn(s)
+                rospy.logwarn_throttle(5, s)
                 self.socket = None
                 time.sleep(1)
             except ConnectionRefusedError as ex:
-                rospy.logwarn(ex)
+                rospy.logwarn_throttle(5, ex)
                 self.socket = None
                 time.sleep(1)
             except ConnectionResetError as ex:
-                rospy.logwarn(ex)
+                rospy.logwarn_throttle(5, ex)
                 self.socket = None
                 time.sleep(1)
 
@@ -181,7 +181,7 @@ class GameControllerBridge():
     def get_connection(self, addr):
         host, port = addr.split(':')
         port = int(port)
-        rospy.loginfo(f"Connecting to '{addr}'", logger_name="rc_api")
+        rospy.loginfo_throttle(5, f"Connecting to '{addr}'", logger_name="rc_api")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
         response = sock.recv(8).decode('utf8')
@@ -222,8 +222,11 @@ class GameControllerBridge():
         msg = Clock()
         msg.clock.secs = ros_time.secs
         msg.clock.nsecs = ros_time.nsecs
-        # if self.base_frame == 'robot1':
-        self.pub_clock.publish(msg)
+
+        shared_strategy_source = os.getenv('SHARED_STRATEGY_SOURCE', True)
+        if (shared_strategy_source == True and self.base_frame == 'robot1') or shared_strategy_source == False:
+            self.pub_clock.publish(msg)
+
 
     def handle_real_time(self, time):
         # real unix time stamp at which the measurements were performed in [ms]
@@ -302,7 +305,7 @@ class GameControllerBridge():
                 img_msg.data = image
                 self.pub_camera.publish(img_msg)
             else:
-                rospy.logwarn(f"Unknown camera: '{name}'", logger_name="rc_api")
+                rospy.logerr(f"Unknown camera: '{name}'", logger_name="rc_api")
 
     def publish_camera_info(self, height, width):
         camera_info_msg = CameraInfo()
