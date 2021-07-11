@@ -59,7 +59,7 @@ class Trainer:
         for epoch in range(self.epochs):
             self.train_epoch(epoch)
             self.test_model('valid', epoch)
-            torch.save(self.model.state_dict(), 'outputs/model'+str(epoch))
+            torch.save(self.model.state_dict(), self.output_folder+'/model'+str(epoch))
 
         self.test_model('test', 'test')
 
