@@ -13,8 +13,6 @@ class DummyStrategy(Strategy):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
         super(DummyStrategy, self).__init__()
 
-
-
     def generate_goal_position(self, ball, teamcolor, is_first_half, secondaryState):
         if secondaryState == GameState.STATE_PENALTYSHOOT:
             goal_position = np.array([4.5, 0])
@@ -37,7 +35,6 @@ class DummyStrategy(Strategy):
 
     def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
         if self.check_ball_avaliable(ball):
-            print("ball avaliable")
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
             # generate goal pose
@@ -66,7 +63,6 @@ class DummyStrategy(Strategy):
 
                     destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
 
-
                     # print("Position of closest player")
                     # print(player_position)
                     # print("Ball Position")
@@ -80,8 +76,6 @@ class DummyStrategy(Strategy):
                     player_to_ball_vector = ball_position - player_position
                     cross = np.cross(player_to_ball_vector, player_vector)
 
-                    # print("Robot ball angle")
-                    # print(distance_of_player_to_ball)
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.18 and abs(cross) > 0.15:
                         print("robot ball ange too large, unable to kick")
@@ -98,16 +92,9 @@ class DummyStrategy(Strategy):
 
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
-                        print("kick")
                     else:
                         current_closest.set_navigation_position(destination_position_biased)
-                        print("nav")
-                        # print(destination_position_biased)
-                        # print(current_closest.get_position())
                         pass
-
-                else:
-                    print("no closest robot")
 
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
@@ -125,6 +112,8 @@ class DummyStrategy(Strategy):
                     self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                     turn_position = [player_position[0], player_position[1], player_angle + math.pi]
                     player.set_navigation_position(turn_position)
+
+
         # If the robot is walking and a detected obstacle in the direction of the robot
         # for player in friendly:
         #     if player.status == Robot.Status.WALKING:
