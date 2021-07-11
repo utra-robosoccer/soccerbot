@@ -1,10 +1,8 @@
 import math
 import numpy as np
-import rospy
 
-from soccer_strategy.src.strategy.DummyStrategy import DummyStrategy
-from soccer_msgs.msg import GameState
-from soccer_strategy.src.robot.robot import Robot
+from soccer_strategy.src.strategy.dummyStrategy import DummyStrategy
+from soccer_strategy.src.robot import Robot
 
 # BROKEN DO NOT USE
 class PassStrategy(DummyStrategy):
