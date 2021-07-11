@@ -174,8 +174,8 @@ class SoccerbotRos(Soccerbot):
         if not self.localization_reset:
             try:
 
-                header = self.listener.getLatestCommonTime(rospy.get_param("ROBOT_NAME") + '/ball',
-                                                           rospy.get_param("ROBOT_NAME") + '/base_footprint')
+                header = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/ball',
+                                                           os.environ["ROS_NAMESPACE"] + '/base_footprint')
                 last_pose = rospy.Time.now() - header
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):

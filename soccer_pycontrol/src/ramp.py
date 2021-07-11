@@ -1,6 +1,6 @@
 import os
 import rospy
-if rospy.get_param('ENABLE_PYBULLET'):
+if os.getenv('ENABLE_PYBULLET', False):
     import pybullet as p
 
 
@@ -10,18 +10,18 @@ class Ramp:
         self.orientation = orientation
         self.position = position
         self.path = path
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             self.plane = p.loadURDF(self.path, basePosition=self.position,
                                     baseOrientation=p.getQuaternionFromEuler(self.orientation))
             p.changeDynamics(self.plane, linkIndex=-1, lateralFriction=lateralFriction,
                              spinningFriction=spinningFriction, rollingFriction=rollingFriction)
 
     def setOrientation(self, orientation):
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             p.removeBody(self.plane)
         self.__init__(self.path, self.position, orientation)
 
     def setPosition(self, position):
-        if rospy.get_param('ENABLE_PYBULLET'):
+        if os.getenv('ENABLE_PYBULLET', False):
             p.removeBody(self.plane)
         self.__init__(self.path, position, self.orientation)
