@@ -21,7 +21,7 @@ class Strategy:
         else:
             self.update_next_strategy(opponent, friendly, ball, teamcolor, is_first_half, secondaryState)
 
-    def update_next_strategy(self, friendly, opponent, ball):
+    def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
         raise NotImplementedError
 
     def check_ball_avaliable(self, ball):
