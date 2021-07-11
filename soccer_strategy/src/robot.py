@@ -42,6 +42,7 @@ class Robot:
         self.max_kick_speed = 2
 
     def set_navigation_position(self, position):
+        self.status = Robot.Status.WALKING
         self.goal_position = position
 
     def set_kick_velocity(self, kick_velocity):
