@@ -27,15 +27,15 @@ class GameEngine:
             Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([1.5, 1.5, -math.pi])),
             Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                  position=np.array([0.8, 0.0 , -math.pi])),
+                  position=np.array([0.8, 0.0, -math.pi])),
             Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                  position=np.array([0.0, 3.5, -math.pi / 2])),
+                  position=np.array([-3.5, 0.0, 0])),
             Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-                  position=np.array([-1.5, 1.5, -math.pi / 2])),
+                  position=np.array([-1.5, -1.5, 0])),
             Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-                  position=np.array([1.5, 1.5, -math.pi / 2])),
+                  position=np.array([-1.5, 1.5, 0])),
             Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                  position=np.array([0.0, 0.8, -math.pi / 2]))
+                  position=np.array([-0.8, 0.0, 0]))
         ]
         self.ball = Ball(position=np.array([0, 0]))
         self.ball.position_timeout = False
