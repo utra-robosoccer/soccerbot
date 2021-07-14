@@ -31,14 +31,16 @@ class Robot:
     def get_position(self):
         return self.position
 
-    def __init__(self, team, role, status, position):
+    def __init__(self, robot_id, team, role, status, position):
         self.team = team
         self.role = role
         self.status = status
         self.position = position
         self.goal_position = position
+        self.robot_id = robot_id
 
         self.speed = 0.20
+        self.angular_speed = 0.3
         self.max_kick_speed = 2
 
     def set_navigation_position(self, position):
