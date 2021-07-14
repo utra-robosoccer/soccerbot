@@ -14,6 +14,7 @@ class DummyStrategy(Strategy):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
         super(DummyStrategy, self).__init__()
 
+    # generate goal position
     @staticmethod
     def generate_goal_position(ball, teamcolor, is_first_half, secondaryState):
         is_penalty_shoot = (secondaryState == GameState.STATE_PENALTYSHOOT)
@@ -21,7 +22,6 @@ class DummyStrategy(Strategy):
 
         if abs(ball.get_position()[1]) < 1.0:
             goal_position[1] = ball.get_position()[1]
-
         return goal_position
 
     def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
