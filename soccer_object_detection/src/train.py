@@ -3,6 +3,7 @@ import time
 import enum
 import numpy as np
 import torch
+import tqdm
 from model import Label, find_batch_bounding_boxes
 from my_dataset import initialize_loader
 from util import display_image, draw_bounding_boxes
@@ -27,7 +28,7 @@ class Trainer:
         self.output_folder = output_folder
         self.seed = seed
         self.optimizer = torch.optim.Adam(model.parameters(), lr=learn_rate, weight_decay=weight_decay)
-        self.class_weights = torch.tensor(class_weights)  # weigh importance of the label during training
+        self.class_weights = torch.tensor(class_weights).float()  # weigh importance of the label during training
         self.criterion = torch.nn.CrossEntropyLoss(weight=self.class_weights.cuda())
 
         torch.manual_seed(seed)
@@ -74,6 +75,7 @@ class Trainer:
         batchload_times = []
         losses = []
         t_readimg = time.time()
+
         for images, masks, img_paths in self.train_loader:
             batchload_times.append(time.time() - t_readimg)
 
@@ -158,7 +160,9 @@ class Trainer:
             self.precision = 0.0
             if tp + fp > 0:
                 self.precision = tp / (tp + fp)
-            self.recall = tp / (tp + fn)
+            if tp + fn > 0:
+                self.recall = tp / (tp + fn)
+
             print('{:>20} {} tp:{:6d}, fp:{:6d}, tn:{:6d}, proxy_fn:{:6d}, ' \
                   'precision:{:.4f}, recall:{:.4f}, total {}'.format(
                 '', label.name, tp, fp, tn, fn,

@@ -12,24 +12,19 @@ import util
 import time
 import pickle
 
-train_path = '/home/robosoccer/dataset/small_images/ball'
-train_images = '/home/robosoccer/dataset/train/smol/small-new'
-# train_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
-train_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
-
-test_path = '/home/robosoccer/dataset/small_images/ball'
-test_images = '/home/robosoccer/dataset/test/smol/small-new'
-# test_labels = '/home/robosoccer/hdd/dataset/simulation/test/annotations.yaml'
-test_labels = '/home/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
 
 
-def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=32, shuffle=True):
+train_labels = '/home/amji/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/train_ann.pkl'
+test_labels = '/home/amji/robosoccer/catkin_ws/src/soccer_ws/soccer_object_detection/src/test_ann.pkl'
+
+
+def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=12, shuffle=True):
     train_folders = [
-            '/home/robosoccer/dataset/small_images/ball/Ball1-small',
-            '/home/robosoccer/dataset/small_images/ball/Ball2-small',
-            '/home/robosoccer/dataset/small_images/train']
+            '/home/amji/robosoccer/dataset/small_images/ball/Ball1-small',
+            '/home/amji/robosoccer/dataset/small_images/ball/Ball2-small',
+            '/home/amji/robosoccer/dataset/small_images/train']
     test_folders = [
-            '/home/robosoccer/dataset/small_images/ball/Test-small']
+            '/home/amji/robosoccer/dataset/small_images/test']
 
     full_dataset = MyDataSet(train_labels, train_folders, (300, 400), jitter=jitter)
     test_dataset = MyDataSet(test_labels, test_folders, (300, 400))
