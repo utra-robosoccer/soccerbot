@@ -11,19 +11,19 @@ from PIL import Image
 from model import find_batch_bounding_boxes, Label
 
 
-def train_model(load_model=None, num_features=8):
+def train_model(load_model=None, num_features=16):
     experiment = {
         'seed': 1234,
         'model_kernel': 3,
-        'model_num_features': 8,
+        'model_num_features': 16,
         'model_dropout_rate': 0.05,
         'train_class_weight': [.2, .02, .78],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-2, # 1e-3,
         'train_weight_decay': 1e-8,
-        'train_batch_size': 16, # 32, # 80, # 20,
-        'train_epochs': 48,
+        'train_batch_size': 8, # 32, # 80, # 20,
+        'train_epochs': 2,
         'colour_jitter': [0.0, 0.0, 0.0, 0.0],  # brightness, contrast, saturation, hue
-        'output_folder': '06-25-2021-small-model-3',
+        'output_folder': 'ae-training',
     }
 
     # Save directory
@@ -77,18 +77,18 @@ def train_model(load_model=None, num_features=8):
     torch.save(model.state_dict(), 'outputs/model')
 
 
-def display_dataset():
+def display_dataset(model_num = 11):
     model = CNN(kernel=3, num_features=8)
-    model.load_state_dict(torch.load('06-25-2021-small-model/model11'))
+    model.load_state_dict(torch.load('06-25-2021-small-model-3/model' + str(model_num)))
     model.eval()
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
     testd.visualize_images(delay=2000, model=model, start=0)
 
 
-def test_model():
+def test_model(model_num = 11):
     model = CNN(kernel=3, num_features=8, dropout=0.2)
     model.cuda()
-    model.load_state_dict(torch.load('06-25-2021-small-model/model11'))
+    model.load_state_dict(torch.load('06-25-2021-small-model-3/model' + str(model_num)))
     trainer = Trainer(model, learn_rate=0.01, weight_decay=0, batch_size=16, epochs=0, colour_jitter=[0,0,0,0], output_folder='outputs', seed=1, class_weights=[0,0,0])
     trainer.test_model('test', 0)
 
@@ -122,7 +122,8 @@ def webcam():
 
 
 if __name__ == '__main__':
-    # test_model()
+    test_model()
     # display_dataset()
     # train_model(load_model='outputs/model', num_features=16)
-    train_model()
+    #train_model()
+    #display_dataset(47)
