@@ -96,10 +96,6 @@ class ObjectDetectionNode(object):
                     bb_msg.ymax = int((robot_bb[3] + y_offset) * scale)
                     bb_msg.id = Label.ROBOT.value
                     bb_msg.Class = 'robot'
-                    # ignore small boxes
-                    if (bb_msg.xmax - bb_msg.xmin)*(bb_msg.ymax - bb_msg.ymin) > 1000:
-                        bbs_msg.bounding_boxes.append(bb_msg)
-                        big_enough_robot_bbxs.append(robot_bb)
 
                 header = std_msgs.msg.Header()
                 header.stamp = rospy.Time.now()
