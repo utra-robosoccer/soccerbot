@@ -55,7 +55,7 @@ def stream_image(img, wait, scale):
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     cv2.imshow('my_window', img)
     cv2.waitKey(wait)
-
+    cv2.destroyAllWindows()
 
 def read_image(path):
     # using opencv imread crashes Pytorch DataLoader for some reason
