@@ -1,6 +1,6 @@
 import functools
 import math
-from transformation import Transformation
+from soccer_pycontrol.transformation import Transformation
 import numpy as np
 from scipy.special import comb
 import matplotlib.pyplot as plt
@@ -108,6 +108,14 @@ class Path:
             return self.distance / self.speed + self.angle_distance / self.angular_speed
         return self.distance / self.speed
 
+    # Do not use in the walking engine
+    def estimatedPositionAtTime(self, t):
+        estimated_ratio = t / self.duration()
+        return self.poseAtRatio(estimated_ratio)
+
+    def isFinished(self, t):
+        return t >= self.duration()
+
     def bodyStepTime(self):
         return self.duration() / self.bodyStepCount()
 
@@ -126,7 +134,6 @@ class Path:
         # return False
 
     def poseAtRatio(self, r):
-
         if self.isRotateInPlace():
             return self.poseAtRatioRotateInPlace(r)
         else:

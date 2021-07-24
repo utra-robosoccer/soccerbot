@@ -2,6 +2,8 @@ import random
 
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
+from matplotlib.path import Path
+import matplotlib.patches as patches
 
 from robot import Robot
 from ball import Ball
@@ -9,36 +11,35 @@ from strategy.dummy_strategy import DummyStrategy
 import math
 import numpy as np
 import copy
-
+from soccer_pycontrol import path
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 3  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 100  # Every 5 physics steps
     DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
 
     def __init__(self, display=True):
         self.display = display
         # Initialize robots
         self.robots = [
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                   position=np.array([3.5, 0.0, math.pi])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            Robot(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([1.5, -1.5, -math.pi])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([1.5, 1.5, -math.pi])),
-            Robot(team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            Robot(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            Robot(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                   position=np.array([-3.5, 0.0, 0])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            Robot(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([-1.5, -1.5, 0])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            Robot(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                   position=np.array([-1.5, 1.5, 0])),
-            Robot(team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ]
-        self.ball = Ball(position=np.array([0, 0]))
-        self.ball.position_timeout = False
+        self.ball = Ball(position=np.array([0.5, 0.5]))
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
@@ -81,11 +82,11 @@ class GameEngine:
                 print("Second Half Started: ")
                 self.resetRobots()
 
+            self.updateEstimatedPhysics(self.robots, self.ball)
+
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
                 self.team1_strategy.update_team_strategy(self.robots, self.ball, 0, 1, 0)
                 self.team2_strategy.update_team_strategy(self.robots, self.ball, 1, 1, 0, opponent_team=True)
-
-            self.updateEstimatedPhysics(self.robots, self.ball)
 
             # Check victory condition
             if self.ball.get_position()[0] > 4.5:
@@ -129,36 +130,50 @@ class GameEngine:
             foreground.arrow(x, y, arrow_end_x, arrow_end_y, head_width=0.05, head_length=0.1, color=color)
 
         # Draw ball
-        x = ball.get_position()[0]
-        y = ball.get_position()[1]
-        dx = ball.get_velocity()[0]
-        dy = ball.get_velocity()[1]
-        foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
-        foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
+        if ball.get_position() is not None:
+            x = ball.get_position()[0]
+            y = ball.get_position()[1]
+            dx = ball.get_velocity()[0]
+            dy = ball.get_velocity()[1]
+            foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
+            foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
 
+        for robot in self.robots:
+            if robot.path is not None:
+                verts = []
+                for i in range(0,11):
+                    path_vert = robot.path.poseAtRatio(i / 10).get_position()
+                    verts.append([path_vert[0], path_vert[1]])
+
+                x, y = zip(*verts)
+                if robot.team == Robot.Team.FRIENDLY:
+                    foreground.plot(x, y, 'g-')
+                else:
+                    foreground.plot(x, y, 'r-')
         # GUI text
         foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
 
         plt.pause(0.001)
 
     def updateEstimatedPhysics(self, robots, ball):
+
         # Robot do action in a random priority order
-        for robot in sorted(robots,key=lambda _: random.random()):
-            # TODO use the same trajectory as in soccer_pycontrol
+        for robot in sorted(robots, key=lambda _: random.random()):
             if robot.status == Robot.Status.WALKING:
-                delta = (robot.goal_position - robot.get_position())[0:2]
-                delta_distance = np.linalg.norm(delta)
+                robot.path_time = robot.path_time + GameEngine.PHYSICS_UPDATE_INTERVAL
+                update_position_transformation = robot.path.estimatedPositionAtTime(robot.path_time)
+                update_position = robot.transformation_to_position(update_position_transformation)
 
                 # if done walking
-                if math.isclose(delta_distance, 0, rel_tol=1e-9, abs_tol=0.01):
+                if robot.robot_id == 4:
+                    print(robot.path.isFinished(robot.path_time))
+                    print(str(robot.path_time) + " - " + str(robot.path.duration()))
+                if robot.path.isFinished(robot.path_time):
                     robot.status = Robot.Status.READY
                     continue
 
-                unit = delta / np.linalg.norm(delta)
+                robot.position = update_position
 
-                # TODO if walk into another robot, stop moving and fallback
-
-                robot.position[0:2] = robot.get_position()[0:2] + unit * robot.speed * GameEngine.PHYSICS_UPDATE_INTERVAL
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
                     ball.velocity = robot.kick_velocity
@@ -170,8 +185,15 @@ class GameEngine:
             ball.kick_timeout = ball.kick_timeout - 1
 
         # TODO If ball hits a person, bounce
-        ball.position = ball.get_position() + ball.get_velocity() * GameEngine.PHYSICS_UPDATE_INTERVAL
-        ball.velocity = ball.velocity * Ball.FRICTION_COEFF
+        self.update_average_ball_position()
+
+    def update_average_ball_position(self):
+        # update ball position
+        # assume that robot always know where the ball is
+        self.ball.position_is_live_timeout = 10
+        self.ball.position = self.ball.get_position() + self.ball.get_velocity() * GameEngine.PHYSICS_UPDATE_INTERVAL
+        self.ball.velocity = self.ball.velocity * Ball.FRICTION_COEFF
+
 
     def resetRobots(self):
         self.robots = copy.deepcopy(self.robots_init)

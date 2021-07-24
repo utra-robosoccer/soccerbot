@@ -70,7 +70,6 @@ class GameEngineCompetition(game_engine.GameEngine):
         # assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
 
         self.ball = Ball(position=None)
-        self.ball.position_timeout = True
 
         # GameState
         self.gameState = GameState()
@@ -94,8 +93,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.rostime_previous = 0
         self.listener = tf.TransformListener()
-        self.team1_strategy = DummyStrategy()
-        self.team2_strategy = DummyStrategy()
+        self.team_strategy = DummyStrategy()
         self.freekick_strategy = FreekickStrategy()
         self.penaltykick_strategy = PenaltykickStrategy()
 
@@ -264,7 +262,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    self.team1_strategy.update_team_strategy(robots=self.robots, ball=self.ball,
+                    self.team_strategy.update_team_strategy(robots=self.robots, ball=self.ball,
                                                              teamcolor=self.gameState.teamColor,
                                                              is_first_half=self.gameState.firstHalf,
                                                              secondaryState=self.gameState.secondaryState)
