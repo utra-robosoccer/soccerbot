@@ -1,5 +1,4 @@
 import math
-from time import sleep
 from unittest import TestCase
 
 import numpy as np
@@ -19,7 +18,8 @@ if RUN_IN_ROS:
     import rospy
     import soccerbot_controller_ros
     from std_msgs.msg import String
-    from geometry_msgs.msg import PoseWithCovarianceStamped, Pose2D
+    from geometry_msgs.msg import PoseWithCovarianceStamped
+
 
 class Test(TestCase):
 

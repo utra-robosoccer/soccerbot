@@ -50,8 +50,10 @@ class DummyStrategy(Strategy):
 
                     navigation_bias = 1
                     diff = destination_position - player_position
+                    # nav bias offset nav goal to be behind the ball
                     destination_position_biased = player_position + diff * navigation_bias
 
+                    # nav goal behind the ball
                     destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
 
                     # print("Position of closest player")
@@ -63,16 +65,15 @@ class DummyStrategy(Strategy):
                     # print("Distance between player and ball")
                     # print(distance_of_player_to_ball)
 
-                    player_vector = [math.cos(player_angle), math.sin(player_angle)]
-                    player_to_ball_vector = ball_position - player_position
-                    cross = np.cross(player_to_ball_vector, player_vector)
+                    # difference between robot angle and nav goal angle
+                    nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle), math.cos(player_angle - diff_angle))
 
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.18 and abs(cross) > 0.15:
-                        print("robot ball ange too large, unable to kick")
+                    if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) > 0.15:
+                        print("robot ball angle too large, unable to kick " + str(abs(nav_angle__diff)))
 
-                    if distance_of_player_to_ball < 0.18 and abs(cross) < 0.15:
-                        if cross > 0.03:
+                    if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15 and current_closest.path.isFinished(current_closest.path_time):
+                        if nav_angle__diff > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
                         else:

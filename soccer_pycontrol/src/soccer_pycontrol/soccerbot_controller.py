@@ -1,8 +1,8 @@
 import os
-from transformation import Transformation
+from soccer_pycontrol.transformation import Transformation
 from time import sleep
-from soccerbot import Soccerbot
-from ramp import Ramp
+from soccer_pycontrol.soccerbot import Soccerbot
+from soccer_pycontrol.ramp import Ramp
 import rospy
 import time
 if os.getenv('ENABLE_PYBULLET', False):
