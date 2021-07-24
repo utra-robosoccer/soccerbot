@@ -2,7 +2,7 @@ from sensor_msgs.msg import JointState, Imu
 from std_msgs.msg import Float64, Bool
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
-from soccerbot import *
+from soccer_pycontrol.soccerbot import *
 import rospy
 import os
 import tf

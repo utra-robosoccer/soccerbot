@@ -67,7 +67,7 @@ class RobotRos(Robot):
         pass
 
     def completed_walking_callback(self, data):
-        rospy.loginfo("Completed Walking")
+        rospy.loginfo(f"{self.robot_name} Completed Walking")
         if self.status == Robot.Status.WALKING:
             self.status = Robot.Status.READY
             temp = Bool()

@@ -1,9 +1,9 @@
 import numpy as np
 import tf
 
-from soccerbot_controller import *
+from soccer_pycontrol.soccerbot_controller import *
 import rospy
-from soccerbot_ros import SoccerbotRos
+from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Pose, PoseArray
 from std_msgs.msg import Empty, Bool
 

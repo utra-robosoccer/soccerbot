@@ -1,8 +1,8 @@
 import os
 import enum
-from transformation import Transformation as tr
+from soccer_pycontrol.transformation import Transformation as tr
 import matplotlib.pyplot as plt
-from robotpath import Robotpath
+from soccer_pycontrol.robotpath import Robotpath
 import math
 from os.path import expanduser
 from copy import deepcopy
