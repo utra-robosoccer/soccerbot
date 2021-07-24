@@ -3,6 +3,7 @@ project(soccer_strategy)
 
 find_package(catkin REQUIRED COMPONENTS
         soccer_msgs
+        soccer_pycontrol
         rospy
         )
 

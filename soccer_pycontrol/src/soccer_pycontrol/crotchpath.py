@@ -1,8 +1,8 @@
 import functools
 
 import numpy as np
-from footpath import Footpath
-from transformation import Transformation as tr
+from soccer_pycontrol.footpath import Footpath
+from soccer_pycontrol.transformation import Transformation as tr
 import math
 
 class Crotchpath(Footpath):

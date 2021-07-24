@@ -1,8 +1,8 @@
 import numpy as np
 import math
 import enum
-from path import Path
-from transformation import Transformation as tr
+from soccer_pycontrol.path import Path
+from soccer_pycontrol.transformation import Transformation as tr
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
