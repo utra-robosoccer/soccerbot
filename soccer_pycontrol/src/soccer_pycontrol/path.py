@@ -61,7 +61,7 @@ class Path:
                 self.bodystep_size = self.distance / (s_count + 1)
 
         s_count = self.angularStepCount()
-        if self.angle_distance != 0:
+        if self.angle_distance != 0 and s_count != 0:
             if self.angle_distance != 0 and self.angle_distance % self.angular_bodystep_size < (
                     self.angular_bodystep_size / 2):
                 self.angular_bodystep_size = self.angle_distance / s_count
@@ -73,8 +73,10 @@ class Path:
             diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
             start_angle = self.start_transform.get_orientation_euler()[0]
             intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
+            if self.isWalkingBackwards():
+                intermediate_angle = wrapToPi(intermediate_angle + np.pi)
             final_angle = self.end_transform.get_orientation_euler()[0]
-            # TODO make sure the rotate in place is correct
+
             step_1_angular_distance = abs(wrapToPi(intermediate_angle - start_angle))
             step_2_distance = np.linalg.norm(diff_position)
             step_3_angular_distance = abs(wrapToPi(intermediate_angle - final_angle))
@@ -121,10 +123,16 @@ class Path:
 
     @functools.lru_cache
     def isWalkingBackwards(self):
-        start_angle = self.start_transform.get_orientation_euler()[0]
-        del_pose = self.end_transform.get_position() - self.start_transform.get_position()
-        if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
-            return True
+        if self.isRotateInPlace():
+            diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
+            start_angle = self.start_transform.get_orientation_euler()[0]
+            intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
+            return abs(wrapToPi(intermediate_angle - start_angle)) > np.pi / 2
+        else:
+            start_angle = self.start_transform.get_orientation_euler()[0]
+            del_pose = self.end_transform.get_position() - self.start_transform.get_position()
+            if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
+                return True
         return False
 
     # If the path is short, rotate in place, go straight and then rotate in place instead
@@ -157,9 +165,10 @@ class Path:
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
+        if self.isWalkingBackwards():
+            intermediate_angle = wrapToPi(intermediate_angle + np.pi)
         final_angle = self.end_transform.get_orientation_euler()[0]
 
-        # TODO make sure the rotate in place is correct
         step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
         step_2_duration = np.linalg.norm(diff_position) / self.speed
         step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / self.angular_speed
@@ -171,12 +180,14 @@ class Path:
             pose = deepcopy(self.start_transform)
             return pose
         elif t < step_1_duration != 0:
+            # First turn
             pose = deepcopy(self.start_transform)
             percentage = t / step_1_duration
             angle = start_angle + wrapToPi(intermediate_angle - start_angle) * percentage
             pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
             return pose
         elif step_1_duration < t <= step_1_duration + step_2_duration != 0:
+            # Then go straight
             pose = deepcopy(self.start_transform)
             percentage = (t - step_1_duration) / step_2_duration
             position = diff_position * percentage + self.start_transform.get_position()[0:2]
@@ -184,6 +195,7 @@ class Path:
             pose.set_orientation(Transformation.get_quaternion_from_euler([intermediate_angle, 0, 0]))
             return pose
         elif step_1_duration + step_2_duration < t <= step_1_duration + step_2_duration + step_3_duration != 0:
+            # Then turn
             pose = deepcopy(self.end_transform)
             percentage = (t - step_1_duration - step_2_duration) / step_3_duration
             angle = intermediate_angle + wrapToPi(final_angle - intermediate_angle) * percentage
