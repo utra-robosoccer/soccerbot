@@ -8,6 +8,7 @@ from soccer_msgs.msg import GameState
 from robot import Robot
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 10
+
 class DummyStrategy(Strategy):
 
     def __init__(self):
@@ -86,7 +87,6 @@ class DummyStrategy(Strategy):
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
                         current_closest.set_navigation_position(destination_position_biased)
-                        pass
 
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
