@@ -39,7 +39,7 @@ class GameEngine:
             Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ]
-        self.ball = Ball(position=np.array([0.5, 0.5]))
+        self.ball = Ball(position=np.array([1.5, 0.5]))
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
