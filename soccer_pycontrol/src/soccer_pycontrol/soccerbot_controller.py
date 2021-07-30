@@ -35,7 +35,7 @@ class SoccerbotController:
         self.soccerbot.setPose(pose)
 
     def setGoal(self, goal: Transformation):
-        self.soccerbot.setGoal(goal)
+        self.soccerbot.createPathToGoal(goal)
 
     def wait(self, steps):
         for i in range(steps):
