@@ -301,7 +301,7 @@ class Soccerbot:
         if os.getenv('ENABLE_PYBULLET', False):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
-    def setGoal(self, finishPosition: tr):
+    def createPathToGoal(self, finishPosition: tr, updateExistingPath=False):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
@@ -324,6 +324,9 @@ class Soccerbot:
 
         self.current_step_time = 0
         return self.robot_path
+
+    def updatePathToGoal(self, finishPosition: tr, t: float):
+        self.robot_path.dynamicallyUpdateGoalPosition(finishPosition)
 
     def stepPath(self, t, verbose=False):
 

@@ -11,7 +11,7 @@ if "ROS_NAMESPACE" not in os.environ:
 
 import soccerbot_controller
 
-from soccer_pycontrol.src.transformation import Transformation
+from transformation import Transformation
 
 RUN_IN_ROS = True
 if RUN_IN_ROS:
@@ -227,7 +227,7 @@ class Test(TestCase):
         self.walker.wait(150)
 
         # Reset robot position and goal
-        self.walker.soccerbot.setGoal(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.createPathToGoal(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
 
         pitches = []
         times = []
@@ -357,3 +357,20 @@ class Test(TestCase):
     def amcl_pose_callback(self, amcl_pose):
         self.amcl_pose = amcl_pose
         pass
+
+    def test_dynamic_walking_1(self):
+        import rospy
+
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
+
+        def send_alternative_trajectory(_):
+            self.walker.setGoal(Transformation([2.0, 0, 0], [0, 0, 0, 1]))
+            pass
+        self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
+        self.walker.run()
+
+
+

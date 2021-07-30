@@ -28,7 +28,7 @@ class Path:
     pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
     post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
-    def __init__(self, start_transform=Transformation(), end_transform=Transformation()):
+    def __init__(self, start_transform: Transformation,  end_transform: Transformation):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
@@ -67,6 +67,10 @@ class Path:
                 self.angular_bodystep_size = self.angle_distance / s_count
             else:
                 self.angular_bodystep_size = self.angle_distance / (s_count + 1)
+
+    def dynamicallyUpdateGoalPosition(self, end_transform: Transformation):
+
+        pass
 
     def getBodyStep(self, n):
         if self.isRotateInPlace():
