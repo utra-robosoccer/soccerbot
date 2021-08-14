@@ -84,7 +84,7 @@ class SoccerbotRos(Soccerbot):
         p.header.frame_id = "world"
         p.header.stamp = rospy.Time.now()
         for i in range(0, self.robot_path.bodyStepCount() + 1, 1):
-            step = self.robot_path.getBodyStep(i)
+            step = self.robot_path.getBodyStepPose(i)
             position = step.get_position()
             orientation = step.get_orientation()
             pose = PoseStamped()

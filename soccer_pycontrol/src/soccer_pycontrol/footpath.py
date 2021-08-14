@@ -146,14 +146,14 @@ class Footpath(Path):
         return [step_num, right_foot_step_ratio, left_foot_step_ratio]
 
     def right_foot_position_at_step(self, n):
-        bodystep = self.getBodyStep(n)
+        bodystep = self.getBodyStepPose(n)
 
         bodypos = bodystep.get_position()
         transformToLeftFoot = tr([0, -self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
         return np.matmul(bodystep, transformToLeftFoot)
 
     def left_foot_position_at_step(self, n):
-        bodystep = self.getBodyStep(n)
+        bodystep = self.getBodyStepPose(n)
 
         bodypos = bodystep.get_position()
         transformToRightFoot = tr([0, self.foot_separation, -bodypos[2] + self.foot_center_to_floor])

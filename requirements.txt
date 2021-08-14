@@ -9,6 +9,7 @@ prettytable
 serial
 transforms3d
 construct==2.10.67
+tqdm
 
 # object detection
 Pillow==8.2.0

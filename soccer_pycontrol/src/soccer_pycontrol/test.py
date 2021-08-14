@@ -358,6 +358,20 @@ class Test(TestCase):
         self.amcl_pose = amcl_pose
         pass
 
+    def test_terminate_walk(self):
+        import rospy
+
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([2.0, 1.0, 0], [0, 0, 0, 1]))
+
+        def send_terminate_walk(_):
+            self.walker.terminate_walk = True
+            pass
+        self.send_terminate_walk = rospy.Timer(rospy.Duration(5), send_terminate_walk, oneshot=True)
+        self.walker.run()
+
     def test_dynamic_walking_1(self):
         import rospy
 
