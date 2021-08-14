@@ -38,21 +38,21 @@ class Crotchpath(Footpath):
 
         # Base position for the torso
         if step_num == 0:
-            _from = self.getBodyStep(0)
-            _to = self.getBodyStep(1)
+            _from = self.getBodyStepPose(0)
+            _to = self.getBodyStepPose(1)
             body_movement_ratio = ratio / 2
         elif step_num == self.num_steps() - 1:
-            _from = self.getBodyStep(step_num - 1)
-            _to = self.getBodyStep(step_num)
+            _from = self.getBodyStepPose(step_num - 1)
+            _to = self.getBodyStepPose(step_num)
             body_movement_ratio = (ratio / 2) + (1 / 2)
         else:
             if (ratio < 0.5):
-                _from = self.getBodyStep(step_num - 1)
-                _to = self.getBodyStep(step_num)
+                _from = self.getBodyStepPose(step_num - 1)
+                _to = self.getBodyStepPose(step_num)
                 body_movement_ratio = ratio + 0.5
             else:
-                _from = self.getBodyStep(step_num)
-                _to = self.getBodyStep(step_num + 1)
+                _from = self.getBodyStepPose(step_num)
+                _to = self.getBodyStepPose(step_num + 1)
                 body_movement_ratio = ratio - 0.5
 
         position = self.parabolicPath(_from, _to, 0.0, 0.0, 0.0, body_movement_ratio)

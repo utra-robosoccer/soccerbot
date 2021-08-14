@@ -27,14 +27,14 @@ class Path:
 
     pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
     post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
+    precision = 0.05 * bodystep_size
 
     def __init__(self, start_transform: Transformation,  end_transform: Transformation):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
         # Compute approximate distance and distance map
-        precision = 0.05 * self.bodystep_size
-        precisions = np.linspace(precision, 1.0, num=(int(1.0 / precision) + 1))
+        precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         self.distance = 0
         self.angle_distance = 0
         prev_pose = self.poseAtRatio(0)
@@ -72,7 +72,7 @@ class Path:
 
         pass
 
-    def getBodyStep(self, n):
+    def getBodyStepPose(self, step_num):
         if self.isRotateInPlace():
             diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
             start_angle = self.start_transform.get_orientation_euler()[0]
@@ -91,10 +91,10 @@ class Path:
             if step_1_steps + step_2_steps + step_3_steps == 0:
                 ratio = 0
             else:
-                ratio = n / (step_1_steps + step_2_steps + step_3_steps)
+                ratio = step_num / (step_1_steps + step_2_steps + step_3_steps)
             return self.poseAtRatio(ratio)
         else:
-            idx = np.argmin(np.abs((n * self.bodystep_size) - self.distanceMap[:, 1]))
+            idx = np.argmin(np.abs((step_num * self.bodystep_size) - self.distanceMap[:, 1]))
             return self.poseAtRatio(self.distanceMap[idx, 0])
 
     def linearStepCount(self):
@@ -113,6 +113,14 @@ class Path:
         if self.isRotateInPlace():
             return self.distance / self.speed + self.angle_distance / self.angular_speed
         return self.distance / self.speed
+
+    def terminateWalk(self, t):
+        # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
+        estimated_ratio = (t + 2 / self.steps_per_second) / self.duration()
+        for i in range(len(self.distanceMap)):
+            if self.distanceMap[i, 0] > estimated_ratio:
+                self.distance = self.distanceMap[i, 1]
+                break
 
     # Do not use in the walking engine
     def estimatedPositionAtTime(self, t):
@@ -240,7 +248,7 @@ class Path:
         position = np.zeros((self.bodyStepCount() + 1, 3))
         orientation = np.zeros((self.bodyStepCount() + 1, 3))
         for i in range(0, self.bodyStepCount() + 1, 1):  # i = 0:1: obj.bodyStepCount
-            step = self.getBodyStep(i)
+            step = self.getBodyStepPose(i)
             position[i, 0:3] = step.get_position()
             orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
 

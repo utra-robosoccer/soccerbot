@@ -27,6 +27,7 @@ class SoccerbotController:
                              rollingFriction=0.0)
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
+        self.terminate_walk = False
 
     def ready(self):
         self.soccerbot.ready()

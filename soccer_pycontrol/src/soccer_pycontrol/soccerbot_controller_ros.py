@@ -65,8 +65,6 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def terminate_walk_callback(self, val):
         rospy.logwarn("Terminating Walk Requested")
-        self.soccerbot.ready()
-        self.soccerbot.publishAngles()
         self.terminate_walk = True
 
     def pose_to_transformation(self, pose: Pose) -> Transformation:
@@ -141,12 +139,12 @@ class SoccerbotControllerRos(SoccerbotController):
 
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
-                self.terminate_walk = False
                 t = -0.5
 
             if self.terminate_walk:
-                if self.soccerbot.robot_path is not None:
-                    t = self.soccerbot.robot_path.duration() + 1
+                print("Terminating Walk at time " + str(t))
+                self.soccerbot.robot_path.terminateWalk(t)
+                self.terminate_walk = False
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(t, verbose=False)
@@ -200,7 +198,7 @@ class SoccerbotControllerRos(SoccerbotController):
                     rospy.loginfo(1, "Trajectory Stopped")
                     break
 
-            if not self.terminate_walk and not self.fixed_trajectory_running:
+            if not self.fixed_trajectory_running:
                 self.soccerbot.publishAngles()  # Disable to stop walking
                 if os.getenv('ENABLE_PYBULLET', False):
                     pb.stepSimulation()
