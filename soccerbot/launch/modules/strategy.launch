@@ -5,5 +5,5 @@
     <env name="ROBOCUP_TEAM_COLOR" value="$(optenv ROBOCUP_TEAM_COLOR red)" />
     <env name="ROBOCUP_GAMECONTROLLER_IP" value="$(optenv ROBOCUP_GAMECONTROLLER_IP 127.0.1.1)" />
 
-    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(eval goalie and shared_strategy_source)"/>
+<!--    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(eval goalie and shared_strategy_source)"/>-->
 </launch>
