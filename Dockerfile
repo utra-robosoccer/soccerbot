@@ -45,7 +45,7 @@ COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
 RUN pip install -r /tmp/requirements.txt
 RUN pip install --upgrade protobuf
-
+RUN pip install tqdm
 # Build
 WORKDIR /root/catkin_ws
 COPY --from=dependencies /root/src src/soccerbot
