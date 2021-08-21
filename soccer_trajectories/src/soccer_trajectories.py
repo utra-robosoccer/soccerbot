@@ -19,7 +19,7 @@ class Trajectory:
         self.mirror = mirror
         self.splines = {}
         self.step_map = {}
-        self.time_to_last_pose = 2.0  # seconds
+        self.time_to_last_pose = 10  # seconds
         self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
                             "right_arm_motor_1",
                             "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
