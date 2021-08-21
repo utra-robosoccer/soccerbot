@@ -37,11 +37,13 @@ class Path:
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         self.distance = 0
         self.angle_distance = 0
-        prev_pose = self.poseAtRatio(0)
         self.distanceMap = np.zeros((len(precisions) + 1, 2))
         self.distanceMap[0, 0:2] = [0., 0.]
-
         j = 1
+
+    def getDistancesAndDistanceMap(self, start_transform, end_transform):
+        precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
+        prev_pose = self.poseAtRatio(0)
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
@@ -52,6 +54,7 @@ class Path:
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
 
+    def adjustBodyStepSizes(self):
         # Round to nearest step
         s_count = self.linearStepCount()
         if self.distance != 0:
@@ -68,12 +71,8 @@ class Path:
             else:
                 self.angular_bodystep_size = self.angle_distance / (s_count + 1)
 
-    def dynamicallyUpdateGoalPosition(self, end_transform: Transformation):
-
-        pass
-
     def getBodyStepPose(self, step_num):
-        if self.isRotateInPlace():
+        if self.isShortPath():
             diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
             start_angle = self.start_transform.get_orientation_euler()[0]
             intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
@@ -104,23 +103,15 @@ class Path:
         return int(np.floor(self.angle_distance / self.angular_bodystep_size))
 
     def bodyStepCount(self):
-        if self.isRotateInPlace():
+        if self.isShortPath():
             return self.linearStepCount() + self.angularStepCount()
         else:
             return self.linearStepCount()
 
     def duration(self):
-        if self.isRotateInPlace():
+        if self.isShortPath():
             return self.distance / self.speed + self.angle_distance / self.angular_speed
         return self.distance / self.speed
-
-    def terminateWalk(self, t):
-        # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
-        estimated_ratio = (t + 2 / self.steps_per_second) / self.duration()
-        for i in range(len(self.distanceMap)):
-            if self.distanceMap[i, 0] > estimated_ratio:
-                self.distance = self.distanceMap[i, 1]
-                break
 
     # Do not use in the walking engine
     def estimatedPositionAtTime(self, t):
@@ -135,7 +126,7 @@ class Path:
 
     @functools.lru_cache
     def isWalkingBackwards(self):
-        if self.isRotateInPlace():
+        if self.isShortPath():
             diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
             start_angle = self.start_transform.get_orientation_euler()[0]
             intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
@@ -149,37 +140,51 @@ class Path:
 
     # If the path is short, rotate in place, go straight and then rotate in place instead
     @functools.lru_cache
-    def isRotateInPlace(self):
-        return np.linalg.norm(self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]) < self.bodystep_size * self.turn_duration * 3
-        # return False
+    def isShortPath(self):
+        return self.isShortDistance(self.start_transform, self.end_transform)
+
+    def isShortDistance(self, position1, position2):
+        return np.linalg.norm(position1[0:2] - position2[0:2]) < self.bodystep_size * self.turn_duration * 3
+
+    def poseAtRatio(self, r, start_transform, end_transform):
+        if self.isShortDistance(start_transform, end_transform):
+            return self.poseAtRatioShortPath(r, start_transform, end_transform)
+        else:
+            return self.poseAtRatioBezier(r, start_transform, end_transform)
 
     def poseAtRatio(self, r):
-        if self.isRotateInPlace():
-            return self.poseAtRatioRotateInPlace(r)
+        if self.isShortPath():
+            return self.poseAtRatioShortPath(r)
         else:
-            pose = self.bezierPositionAtRatio(r)
-            pose_del = self.bezierPositionAtRatio(r + 0.001)
+            return self.poseAtRatioBezier(r)
 
-            if self.isWalkingBackwards():
-                del_pose = pose.get_position() - pose_del.get_position()
-            else:
-                del_pose = pose_del.get_position() - pose.get_position()
+    def startAndEndTransformAtRatio(self, r):
+        return self.start_transform, self.end_transform
 
-            # If walking backwards
-            del_theta = np.arctan2(del_pose[1], del_pose[0])
-            del_psi = np.arctan2(del_pose[2], np.linalg.norm(del_pose[0:2]))
+    def poseAtRatioBezier(self, r, start_transform, end_transform):
+        pose = self.bezierPositionAtRatio(start_transform, end_transform, r)
+        pose_del = self.bezierPositionAtRatio(start_transform, end_transform, r + 0.001)
 
-            orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.])
-            pose.set_orientation(orientation)
+        if self.isWalkingBackwards():
+            del_pose = pose.get_position() - pose_del.get_position()
+        else:
+            del_pose = pose_del.get_position() - pose.get_position()
+
+        # If walking backwards
+        del_theta = np.arctan2(del_pose[1], del_pose[0])
+        del_psi = np.arctan2(del_pose[2], np.linalg.norm(del_pose[0:2]))
+
+        orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.])
+        pose.set_orientation(orientation)
         return pose
 
-    def poseAtRatioRotateInPlace(self, r):
-        diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-        start_angle = self.start_transform.get_orientation_euler()[0]
+    def poseAtRatioShortPath(self, r, start_transform, end_transform):
+        diff_position = end_transform.get_position()[0:2] - start_transform.get_position()[0:2]
+        start_angle = start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
         if self.isWalkingBackwards():
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-        final_angle = self.end_transform.get_orientation_euler()[0]
+        final_angle = end_transform.get_orientation_euler()[0]
 
         step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
         step_2_duration = np.linalg.norm(diff_position) / self.speed
@@ -189,45 +194,45 @@ class Path:
         t = r * total_duration
 
         if t == 0:
-            pose = deepcopy(self.start_transform)
+            pose = deepcopy(start_transform)
             return pose
         elif t < step_1_duration != 0:
             # First turn
-            pose = deepcopy(self.start_transform)
+            pose = deepcopy(start_transform)
             percentage = t / step_1_duration
             angle = start_angle + wrapToPi(intermediate_angle - start_angle) * percentage
             pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
             return pose
         elif step_1_duration < t <= step_1_duration + step_2_duration != 0:
             # Then go straight
-            pose = deepcopy(self.start_transform)
+            pose = deepcopy(start_transform)
             percentage = (t - step_1_duration) / step_2_duration
-            position = diff_position * percentage + self.start_transform.get_position()[0:2]
+            position = diff_position * percentage + start_transform.get_position()[0:2]
             pose.set_position(np.concatenate((position, [pose.get_position()[2]])))
             pose.set_orientation(Transformation.get_quaternion_from_euler([intermediate_angle, 0, 0]))
             return pose
         elif step_1_duration + step_2_duration < t <= step_1_duration + step_2_duration + step_3_duration != 0:
             # Then turn
-            pose = deepcopy(self.end_transform)
+            pose = deepcopy(end_transform)
             percentage = (t - step_1_duration - step_2_duration) / step_3_duration
             angle = intermediate_angle + wrapToPi(final_angle - intermediate_angle) * percentage
             pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
             return pose
         else:
-            pose = deepcopy(self.end_transform)
+            pose = deepcopy(end_transform)
             return pose
 
-    def bezierPositionAtRatio(self, r):
+    def bezierPositionAtRatio(self, start_transform, end_transform, r):
         # If the distance is small, use turn in place strategy, otherwise cubic bezier
 
-        p1 = self.start_transform
+        p1 = start_transform
         if self.isWalkingBackwards():
-            p2 = np.matmul(self.start_transform, Transformation([- self.speed * self.turn_duration, 0., 0.]))
-            p3 = np.matmul(self.end_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([- self.speed * self.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
         else:
-            p2 = np.matmul(self.start_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
-            p3 = np.matmul(self.end_transform, Transformation([-self.speed * self.turn_duration, 0., 0.]))
-        p4 = self.end_transform
+            p2 = np.matmul(start_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([-self.speed * self.turn_duration, 0., 0.]))
+        p4 = end_transform
 
         p1_pos = p1.get_position()
         p2_pos = p2.get_position()
@@ -243,6 +248,19 @@ class Path:
                 position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * (
                             (1 - r) ** (3 - i)) * (r ** i)
         return Transformation(position)
+
+    # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
+    def terminateWalk(self, t):
+        estimated_ratio = (t + 2 / self.steps_per_second) / self.duration()
+        for i in range(len(self.distanceMap)):
+            if self.distanceMap[i, 0] > estimated_ratio:
+                self.distance = min(self.distance, self.distanceMap[i, 1])
+                break
+
+    def changeDestinationLongPathToLongPath(self, t, end_position):
+        assert not self.isShortPath()
+        time_of_destination_change = t + 2 / self.steps_per_second
+        estimated_position_of_destination_change = self.estimatedPositionAtTime(time_of_destination_change)
 
     def show(self):
         position = np.zeros((self.bodyStepCount() + 1, 3))
