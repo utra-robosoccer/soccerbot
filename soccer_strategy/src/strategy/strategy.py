@@ -3,12 +3,11 @@ import numpy as np
 
 from robot import Robot
 
-
 class Strategy:
     def __init__(self):
         pass
 
-    def update_team_strategy(self, robots, ball, teamcolor, is_first_half, secondaryState, opponent_team=False):
+    def update_team_strategy(self, robots, ball, game_properties):
         friendly = []
         opponent = []
         for robot in robots:
@@ -16,12 +15,12 @@ class Strategy:
                 friendly.append(robot)
             else:
                 opponent.append(robot)
-        if not opponent_team:
-            self.update_next_strategy(friendly, opponent, ball, teamcolor, is_first_half, secondaryState)
+        if not game_properties.opponent_team:
+            self.update_next_strategy(friendly, opponent, ball, game_properties)
         else:
-            self.update_next_strategy(opponent, friendly, ball, teamcolor, is_first_half, secondaryState)
+            self.update_next_strategy(opponent, friendly, ball, game_properties)
 
-    def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
+    def update_next_strategy(self, friendly, opponent, ball, game_properties):
         raise NotImplementedError
 
     def check_ball_avaliable(self, ball):

@@ -17,20 +17,24 @@ class DummyStrategy(Strategy):
 
     # generate goal position
     @staticmethod
-    def generate_goal_position(ball, teamcolor, is_first_half, secondaryState):
-        is_penalty_shoot = (secondaryState == GameState.STATE_PENALTYSHOOT)
-        goal_position = config.position_map_goal(config.GOAL_POSITION, teamcolor, is_first_half, is_penalty_shoot)
+    def generate_goal_position(ball, game_properties):
+        goal_position = config.position_map_goal(
+            config.GOAL_POSITION,
+            game_properties.team_color,
+            game_properties.is_first_half,
+            game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
+        )
 
         if abs(ball.get_position()[1]) < 1.0:
             goal_position[1] = ball.get_position()[1]
         return goal_position
 
-    def update_next_strategy(self, friendly, opponent, ball, teamcolor, is_first_half, secondaryState):
+    def update_next_strategy(self, friendly, opponent, ball, game_properties):
         if self.check_ball_avaliable(ball):
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
             # generate goal pose
-            goal_position = self.generate_goal_position(ball, teamcolor, is_first_half, secondaryState)
+            goal_position = self.generate_goal_position(ball, game_properties)
 
             if abs(ball.get_position()[1]) < 3.5 and abs(ball.get_position()[0]) < 5:
 
