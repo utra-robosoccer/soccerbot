@@ -2,5 +2,5 @@ from strategy.strategy import Strategy
 
 
 class StationaryStrategy(Strategy):
-    def update_next_strategy(self, friendly, opponent, ball):
+    def update_next_strategy(self, friendly, opponent, ball, game_properties):
         return
