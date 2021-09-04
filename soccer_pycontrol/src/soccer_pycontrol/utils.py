@@ -1,4 +1,4 @@
-from numpy import np
+import numpy as np
 
 def wrapTo2Pi(num: float) -> float:
     rem = num % (2 * np.pi)

@@ -2,16 +2,14 @@ import functools
 
 from soccer_pycontrol.transformation import Transformation
 import numpy as np
-from scipy.special import comb
-from path import Path
 from path_section import PathSection
-from utils import wrapTo2Pi, wrapToPi
+from utils import wrapToPi
 from copy import deepcopy
 
 class PathSectionShort(PathSection):
 
-
     def poseAtRatio(self, r):
+        r = self.getCutoffRatio(r)
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
@@ -19,9 +17,9 @@ class PathSectionShort(PathSection):
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
         final_angle = self.end_transform.get_orientation_euler()[0]
 
-        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / Path.angular_speed
-        step_2_duration = np.linalg.norm(diff_position) / Path.speed
-        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / Path.angular_speed
+        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / PathSection.angular_speed
+        step_2_duration = np.linalg.norm(diff_position) / PathSection.speed
+        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / PathSection.angular_speed
 
         total_duration = step_1_duration + step_2_duration + step_3_duration
         t = r * total_duration
@@ -77,7 +75,7 @@ class PathSectionShort(PathSection):
         return self.poseAtRatio(ratio)
 
     def duration(self):
-        return self.distance / Path.speed + self.angle_distance / Path.angular_speed
+        return self.distance / PathSection.speed + self.angle_distance / PathSection.angular_speed
 
     @functools.lru_cache
     def isWalkingBackwards(self):
@@ -87,4 +85,4 @@ class PathSectionShort(PathSection):
         return abs(wrapToPi(intermediate_angle - start_angle)) > np.pi / 2
 
     def bodyStepCount(self):
-        return self.linearStepCount()
+        return self.linearStepCount() + self.angularStepCount()

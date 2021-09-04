@@ -2,12 +2,17 @@ import abc
 import functools
 from soccer_pycontrol.transformation import Transformation
 import numpy as np
-from path import Path
 from utils import wrapTo2Pi, wrapToPi
 from abc import ABC
 
 class PathSection(ABC):
-    precision = 0.05 * Path.bodystep_size
+    bodystep_size = 0.04 #try 0.05  # m Not absolutely fixed, will be modified slightly when
+    angular_bodystep_size = 0.4  # radians Radians per angular step
+    steps_per_second = 2.4 # try 6 motors P = 09.25
+    speed = steps_per_second * bodystep_size  # m/s
+    angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
+
+    precision = 0.05 * bodystep_size
 
     def __init__(self, start_transform: Transformation,  end_transform: Transformation):
         self.start_transform = start_transform
@@ -16,6 +21,7 @@ class PathSection(ABC):
         # Calculate distance and angular distance
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         self.distance = 0
+        self.distance_original = 0
         self.angle_distance = 0
         self.distanceMap = np.zeros((len(precisions) + 1, 2))
         self.distanceMap[0, 0:2] = [0., 0.]
@@ -39,10 +45,10 @@ class PathSection(ABC):
         pass
 
     def linearStepCount(self):
-        return int(np.floor(self.distance / Path.bodystep_size))
+        return self.distance / PathSection.bodystep_size
 
     def angularStepCount(self):
-        return int(np.floor(self.angle_distance / Path.angular_bodystep_size))
+        return self.angle_distance / PathSection.angular_bodystep_size
 
     def adjustBodyStepSizes(self):
         # Round to nearest step
