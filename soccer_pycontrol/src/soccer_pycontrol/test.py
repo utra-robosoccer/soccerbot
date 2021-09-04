@@ -4,7 +4,7 @@ from unittest import TestCase
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
+from path import Path
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -381,10 +381,47 @@ class Test(TestCase):
         self.walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
 
         def send_alternative_trajectory(_):
-            self.walker.setGoal(Transformation([2.0, 0, 0], [0, 0, 0, 1]))
+            self.walker.setGoal(Transformation([2.0, 0.5, 0], [0, 0, 0, 1]))
             pass
-        self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
+        self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
+    def test_path_combination(self):
+        height = 0.321
+        start_transform = Transformation([0.5, 0, height], [0, 0, 0, 1])
+        end_transform = Transformation([1.5, 0, height], [0, 0, 0, 1])
 
+        path = Path(start_transform, end_transform)
+        # path.show()
+        t = 3
+        end_transform_new = Transformation([2.0, 0.5, height], [0, 0, 0, 1])
+        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        # path.show()
+        t = 6
+        end_transform_new = Transformation([2.0, -0.5, height], [0, 0, 0, 1])
+        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        # path.show()
+        t = 9
+        end_transform_new = Transformation([1.0, -0.5, height], [0, 0, 0, 1])
+        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        path.show()
 
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.robot_path.path_sections = path.path_sections
+        # self.walker.soccerbot.robot_path.show()
+        self.walker.run()
+        pass
+
+    def test_path_combination_2(self):
+        start_transform = Transformation([0.5, 0, 0], [0, 0, 0, 1])
+        end_transform = Transformation([1.5, 0, 0], [0, 0, 0, 1])
+        end_transform_new = Transformation([1.5, 0.5, 0], [0, 0, 0, 1])
+
+        path = Path(start_transform, end_transform)
+        path.show()
+        t = 5
+        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        pass

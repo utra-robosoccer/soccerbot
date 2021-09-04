@@ -1,16 +1,11 @@
 import functools
-import math
 from soccer_pycontrol.transformation import Transformation
 import numpy as np
 from scipy.special import comb
-import matplotlib.pyplot as plt
-from copy import deepcopy
-from path import Path
-from utils import wrapTo2Pi, wrapToPi
 from path_section import PathSection
 
 class PathSectionBezier(PathSection):
-    precision = 0.05 * Path.bodystep_size
+    turn_duration = 4  # Number of body steps to turn
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)
@@ -34,11 +29,11 @@ class PathSectionBezier(PathSection):
 
         p1 = start_transform
         if self.isWalkingBackwards():
-            p2 = np.matmul(start_transform, Transformation([- Path.speed * Path.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([Path.speed * Path.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([- PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
         else:
-            p2 = np.matmul(start_transform, Transformation([Path.speed * Path.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([-Path.speed * Path.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([-PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
         p4 = end_transform
 
         p1_pos = p1.get_position()
@@ -61,7 +56,7 @@ class PathSectionBezier(PathSection):
         return self.poseAtRatio(self.distanceMap[idx, 0])
 
     def duration(self):
-        return self.distance / Path.speed
+        return self.distance / PathSection.speed
 
     @functools.lru_cache
     def isWalkingBackwards(self):
@@ -72,4 +67,4 @@ class PathSectionBezier(PathSection):
         return False
 
     def bodyStepCount(self):
-        return self.linearStepCount() + self.angularStepCount()
+        return self.linearStepCount()

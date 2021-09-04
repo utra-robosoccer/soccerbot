@@ -11,15 +11,11 @@ from std_msgs.msg import Empty, Bool
 class SoccerbotControllerRos(SoccerbotController):
 
     def __init__(self):
-        if os.getenv('ENABLE_PYBULLET', False):
-            if os.getenv('COMPETITION', False):
-                pb.connect(pb.DIRECT)
-            else:
-                pb.connect(pb.GUI)
-            pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-            pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0,
-                                          cameraTargetPosition=[0, 0, 0.25])
-            pb.setGravity(0, 0, -9.81)
+        pb.connect(pb.DIRECT)
+        pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
+        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0,
+                                      cameraTargetPosition=[0, 0, 0.25])
+        pb.setGravity(0, 0, -9.81)
 
         self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9,
@@ -110,8 +106,7 @@ class SoccerbotControllerRos(SoccerbotController):
     def wait(self, steps: int):
         for i in range(steps):
             rospy.sleep(SoccerbotController.PYBULLET_STEP)
-            if os.getenv('ENABLE_PYBULLET', False):
-                pb.stepSimulation()
+            pb.stepSimulation()
 
     def run(self, stop_on_completed_trajectory=False):
         t = 0
@@ -121,7 +116,7 @@ class SoccerbotControllerRos(SoccerbotController):
         self.soccerbot.reset_imus()
         time_now = 0
         while not rospy.is_shutdown():
-            if self.robot_pose is not None and self.new_goal != self.goal:
+            if self.new_goal != self.goal:
                 rospy.loginfo("Recieved New Goal")
                 time_now = rospy.Time.now()
                 self.soccerbot.ready()  # TODO Cancel walking
@@ -129,17 +124,20 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.update_robot_pose()
 
                 self.goal = self.new_goal
-                print("Start Pose: ", self.robot_pose.pose)
-                print("End Pose: ", self.goal.pose)
+
                 if self.soccerbot.robot_path is None:
                     self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                     self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
+                    t = -0.5
                 else:
-                    self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose), updateExistingPath=True)
+                    goal_position = self.pose_to_transformation(self.goal.pose)
+                    self.soccerbot.addTorsoHeight(goal_position)
+                    self.soccerbot.robot_path.dynamicallyUpdateGoalPosition(t, goal_position)
 
+                print("Start Pose: ", self.robot_pose.pose)
+                print("End Pose: ", self.goal.pose)
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
-                t = -0.5
 
             if self.terminate_walk:
                 print("Terminating Walk at time " + str(t))
@@ -150,13 +148,12 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.stepPath(t, verbose=False)
                 self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
 
-                if os.getenv('ENABLE_PYBULLET', False):
-                    forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
-                    pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                                 jointIndices=list(range(0, 20, 1)),
-                                                 targetPositions=self.soccerbot.get_angles(),
-                                                 forces=forces
-                                                 )
+                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
+                pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
+                                             jointIndices=list(range(0, 20, 1)),
+                                             targetPositions=self.soccerbot.get_angles(),
+                                             forces=forces
+                                             )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
                 self.soccerbot.publishOdometry()
 
@@ -200,11 +197,14 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if not self.fixed_trajectory_running:
                 self.soccerbot.publishAngles()  # Disable to stop walking
-                if os.getenv('ENABLE_PYBULLET', False):
-                    pb.stepSimulation()
+                pb.stepSimulation()
 
             t = t + SoccerbotController.PYBULLET_STEP
-            r.sleep()
+            try:
+                r.sleep()
+            except rospy.exceptions.ROSInterruptException:
+                continue
+
 
     def correct_goal_pose(self):
         pass
