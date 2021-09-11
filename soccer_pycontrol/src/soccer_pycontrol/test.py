@@ -381,10 +381,23 @@ class Test(TestCase):
         self.walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
 
         def send_alternative_trajectory(_):
-            self.walker.setGoal(Transformation([2.0, 0.5, 0], [0, 0, 0, 1]))
+            self.walker.setGoal(Transformation([2.5, 0, 0], [0, 0, 0, 1]))
             pass
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
+
+    def test_path_combination_basic(self):
+        height = 0.321
+        start_transform = Transformation([0.5, 0, height], [0, 0, 0, 1])
+        end_transform = Transformation([0.8, 0, height], [0, 0, 0, 1])
+
+        path = Path(start_transform, end_transform)
+        path.show()
+
+        t = 2
+        end_transform_new = Transformation([1.1, 0, height], [0, 0, 0, 1])
+        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        path.show()
 
     def test_path_combination(self):
         height = 0.321
@@ -409,7 +422,7 @@ class Test(TestCase):
         self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.createPathToGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
         self.walker.soccerbot.robot_path.path_sections = path.path_sections
         # self.walker.soccerbot.robot_path.show()
         self.walker.run()

@@ -53,7 +53,7 @@ class PathSectionShort(PathSection):
             pose = deepcopy(self.end_transform)
             return pose
 
-    def getBodyStepPose(self, step_num):
+    def getRatioFromStep(self, step_num):
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
@@ -72,7 +72,7 @@ class PathSectionShort(PathSection):
             ratio = 0
         else:
             ratio = step_num / (step_1_steps + step_2_steps + step_3_steps)
-        return self.poseAtRatio(ratio)
+        return ratio
 
     def duration(self):
         return self.distance / PathSection.speed + self.angle_distance / PathSection.angular_speed

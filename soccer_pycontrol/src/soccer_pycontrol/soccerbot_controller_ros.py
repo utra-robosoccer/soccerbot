@@ -117,22 +117,23 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
         while not rospy.is_shutdown():
             if self.new_goal != self.goal:
-                rospy.loginfo("Recieved New Goal")
                 time_now = rospy.Time.now()
-                self.soccerbot.ready()  # TODO Cancel walking
-                self.soccerbot.reset_imus()
-                self.update_robot_pose()
-
                 self.goal = self.new_goal
 
                 if self.soccerbot.robot_path is None:
+                    rospy.loginfo("Recieved New Goal")
+                    self.update_robot_pose()
+                    self.soccerbot.reset_imus()
+                    self.soccerbot.ready()
                     self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                     self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
                     t = -0.5
                 else:
+                    rospy.loginfo("Updating New Goal")
                     goal_position = self.pose_to_transformation(self.goal.pose)
                     self.soccerbot.addTorsoHeight(goal_position)
                     self.soccerbot.robot_path.dynamicallyUpdateGoalPosition(t, goal_position)
+                    self.soccerbot.robot_path.showTimingDiagram()
 
                 print("Start Pose: ", self.robot_pose.pose)
                 print("End Pose: ", self.goal.pose)

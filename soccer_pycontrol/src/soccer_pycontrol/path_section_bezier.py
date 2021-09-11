@@ -5,7 +5,7 @@ from scipy.special import comb
 from path_section import PathSection
 
 class PathSectionBezier(PathSection):
-    turn_duration = 4  # Number of body steps to turn
+    turn_duration = 3  # Number of body steps to turn
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)
@@ -51,9 +51,9 @@ class PathSectionBezier(PathSection):
                             (1 - r) ** (3 - i)) * (r ** i)
         return Transformation(position)
 
-    def getBodyStepPose(self, step_num):
+    def getRatioFromStep(self, step_num):
         idx = np.argmin(np.abs((step_num * self.bodystep_size) - self.distanceMap[:, 1]))
-        return self.poseAtRatio(self.distanceMap[idx, 0])
+        return self.distanceMap[idx, 0]
 
     def duration(self):
         return self.distance / PathSection.speed

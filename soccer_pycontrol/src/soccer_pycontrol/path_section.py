@@ -68,8 +68,12 @@ class PathSection(ABC):
                 self.angular_bodystep_size = self.angle_distance / (s_count + 1)
 
     @abc.abstractmethod
-    def getBodyStepPose(self, step_num):
+    def getRatioFromStep(self, step_num):
         pass
+
+    def getBodyStepPose(self, step_num):
+        ratio = self.getRatioFromStep(step_num)
+        return self.poseAtRatio(ratio)
 
     @abc.abstractmethod
     def duration(self):
