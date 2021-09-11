@@ -24,7 +24,8 @@ class Path:
         self.path_sections.append(p)
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
-        is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
+        # is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
+        is_short_distance = False
         if is_short_distance:
             print("Creating Short Path")
             print("Start Transform")
@@ -64,10 +65,6 @@ class Path:
             if count <= path_section.bodyStepCount():
                 return path_section.getBodyStepPose(count)
             count = count - path_section.bodyStepCount()
-
-        # Error print stuff
-        for path_section in self.path_sections:
-            print(path_section.bodyStepCount())
         raise Exception("Invalid body step calculation " + str(count))
 
     def duration(self):
@@ -105,27 +102,42 @@ class Path:
         ratio, path_section = self.getSubPathSectionAndRatio(r)
         return path_section.poseAtRatio(ratio)
 
+    def getTimePathOfNextStep(self, t):
+        def getBodyStepTime(step_num):
+            count = step_num
+            time = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    ratio = path_section.getRatioFromStep(count)
+                    time = time + ratio * path_section.duration()
+                    distance = path_section.bodystep_size * count
+                    return time, ratio, distance, path_section
+                count = count - path_section.bodyStepCount()
+                time = time + path_section.duration()
+            raise Exception("Invalid body step calculation " + str(count))
+
+        for i in range(0, self.bodyStepCount(), 1):
+            time, ratio, path_distance, path_section = getBodyStepTime(i)
+            if t < time:
+                return time, ratio, path_distance, path_section, i
+
     # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
     def terminateWalk(self, t):
-        estimated_ratio = (t + 2 / self.steps_per_second) / self.duration()
-        estimated_sub_ratio, selected_path_section = self.getSubPathSectionAndRatio(estimated_ratio)
-
-        for i in range(len(selected_path_section.distanceMap)):
-            if selected_path_section.distanceMap[i, 0] > estimated_sub_ratio:
-                selected_path_section.distance = min(selected_path_section.distance, selected_path_section.distanceMap[i, 1])
-                break
+        time, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
+        path_section.distance = path_distance
 
         # Remove any future subsections
         reached = False
-        for path_section in self.path_sections:
-            if path_section == selected_path_section:
+        for p in self.path_sections:
+            if p == path_section:
                 reached = True
                 continue
             if reached:
-                self.path_sections.remove(path_section)
+                self.path_sections.remove(p)
 
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
-        start_transform = self.estimatedPositionAtTime(t + 2 / self.steps_per_second)
+        time, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
+        start_transform = self.getBodyStepPose(step)
         self.terminateWalk(t)
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
@@ -133,33 +145,34 @@ class Path:
     def show(self):
         position = np.zeros((self.bodyStepCount(), 3))
         orientation = np.zeros((self.bodyStepCount(), 3))
+        colors = np.zeros((self.bodyStepCount(), 4))
+        colors_arrow_ends = np.zeros((self.bodyStepCount()*2, 4))
+
+        section_color_map = {}
+        for i in range(0, len(self.path_sections)):
+            section_color_map[i] = np.append(np.random.rand(3), 1)
+
+
         for i in range(0, self.bodyStepCount(), 1):  # i = 0:1: obj.bodyStepCount
             step = self.getBodyStepPose(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
+            orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
+
+            count = i
+            section = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    break
+                count = count - path_section.bodyStepCount()
+                section = section + 1
+            colors[i] = section_color_map[section]
+            colors_arrow_ends[2*i] = section_color_map[section]
+            colors_arrow_ends[2*i+1] = section_color_map[section]
 
         ax = plt.gca(projection='3d')
         ax.set_autoscale_on(True)
+        colors = np.concatenate((colors, colors_arrow_ends))
         ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
-                  orientation[:, 2])
+                  orientation[:, 2], colors=colors)
         ax.set_zlim(0, 0.4)
-        print("Done")
-        # Show subpaths
-        # position = np.zeros((self.bodyStepCount() + len(self.path_sections), 3))
-        # orientation = np.zeros((self.bodyStepCount() + len(self.path_sections), 3))
-        # colors = np.zeros((self.bodyStepCount() + len(self.path_sections), 3))
-        # j = 0
-        # for path_section in self.path_sections:
-        #     color = np.random.rand(3)
-        #     for i in range(0, path_section.bodyStepCount() + 1, 1):  # i = 0:1: obj.bodyStepCount
-        #         step = path_section.getBodyStepPose(i)
-        #         position[j, 0:3] = step.get_position()
-        #         orientation[j, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
-        #         colors[j] = color
-        #         j = j + 1
-        #
-        # ax = plt.gca(projection='3d')
-        # ax.set_autoscale_on(True)
-        # ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
-        #           orientation[:, 2], colors=colors)
-        # print("hi")
+        return ax
