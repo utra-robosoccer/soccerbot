@@ -16,13 +16,7 @@ np.random.seed(2)
 # how much the robot move per gradient descent update
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
-# class GameState(IntEnum):
-#     INIT = 1
-#     OPPONENT_POSSESSION = 2
-#     FRIENDLY_POSSESSION = 3
-
 Field.init()
-
 
 class PhysConsts:
     DELTA_T = -1
@@ -49,8 +43,8 @@ class Thresholds:
 
     @staticmethod
     def passing(robot):
-        val = robot.max_kick_speed * PhysConsts.get_friction_coeff()
-        return val
+        #val = robot.max_kick_speed * PhysConsts.get_friction_coeff()
+        return 0.5
 
 
 def unit_vec(v):
@@ -282,6 +276,7 @@ class PlayerStrategy(ABC, Strategy):
         # todo: redo pathing
         self._player.set_navigation_position(np.append(goal_pos, diff_angle))
         self._player.status = Robot.Status.WALKING
+        print(str(goal_pos) + "  " + str(diff_angle))
 
     def _pursue_ball(self):
         self._move_player_to(self._ball_pos)
@@ -397,7 +392,7 @@ class GoalieStrategy(PlayerStrategy):
         self._all_robots = list(itertools.chain(friendlies, opponents))
         if self.has_possession():
             # Return ball to offensive players
-            self._pass_to_offense(friendlies)
+            self._pass_to_offense(friendlies) #todo need to do stuff when no offence player is there
         elif self._shot_on_net():
             # Intercept shot on net
             self._defend_shot()
@@ -570,6 +565,7 @@ class OpenStrategy(PlayerStrategy):
         obstacles = self._compute_obstacles(self._ball_pos, thresh)
         x_g = self._compute_goal_pos(obstacles)
         self._move_player_to(x_g)
+        print(x_g)
 
 
 class TeamStrategy(Strategy):
@@ -590,31 +586,36 @@ class TeamStrategy(Strategy):
         # TODO: maybe TeamStrategy could decide which strategy each player
         # should use depending on game conditions. Could maybe also modify
         # strategy parameters...hmm...
-        for robot in friendlies:
+        """for robot in friendlies:
             strat = OpenStrategy(robot, ball)
+            strat.update_next_strategy(friendlies, opponents, ball, game_properties)"""
+        self._cnt += 1
+        strats = []
+        ball_pos = ball.get_position()
+        dist_to_ball = []
+
+        for robot in friendlies:
+            # Goalie
+            if robot.role == Robot.Role.GOALIE:
+                strats.append(GoalieStrategy(robot, ball))
+            else:
+                robot_pos = robot.get_position()[0:2]
+                assert not np.isnan(robot_pos).any(), f'nan position on iter {self._cnt}'
+                dist = distance_between(robot_pos, ball_pos)
+                dist_to_ball.append((dist, robot))
+
+        # The two players closest to the ball will use ScoreStrategy, and the
+        # one furthest away will use OpenStrategy
+        dist_to_ball.sort(key=lambda x: x[0])
+        cnt = 0
+        for dist, robot in dist_to_ball:
+            strats.append(ScoreStrategy(robot, ball))
+            # if cnt >= 2:
+            #     strats.append(OpenStrategy(robot, ball))
+            # else:
+            #     strats.append(ScoreStrategy(robot, ball))
+            # cnt += 1
+
+        # Update!
+        for strat in strats:
             strat.update_next_strategy(friendlies, opponents, ball, game_properties)
-        # self._cnt += 1
-        # strats = []
-        # ball_pos = ball.get_position()
-        # dist_to_ball = []
-        # for robot in friendlies:
-        #     if robot.role == Robot.Role.GOALIE:
-        #         strats.append(GoalieStrategy(robot, ball))
-        #     else:
-        #         robot_pos = robot.get_position()[0:2]
-        #         assert not np.isnan(robot_pos).any(), f'nan position on iter {self._cnt}'
-        #         dist = distance_between(robot_pos, ball_pos)
-        #         dist_to_ball.append((dist, robot))
-        # # The two players closest to the ball will use ScoreStrategy, and the
-        # # one furthest away will use OpenStrategy
-        # dist_to_ball.sort(key=lambda x: x[0])
-        # cnt = 0
-        # for dist, robot in dist_to_ball:
-        #     strat = ScoreStrategy(robot, ball)
-        #     if cnt >= 2:
-        #         strat = OpenStrategy(robot, ball)
-        #     strats.append(strat)
-        #     cnt += 1
-        # # Update!
-        # for strat in strats:
-        #     strat.update_next_strategy(friendlies, opponents, ball, game_properties)
