@@ -1,4 +1,4 @@
-from math import floor
+from math import floor, ceil
 
 from soccer_pycontrol.transformation import Transformation
 import numpy as np
@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from path_section import PathSection
 from path_section_bezier import PathSectionBezier
 from path_section_short import PathSectionShort
+import time
 
 class Path:
     steps_per_second = PathSectionBezier.steps_per_second
@@ -102,7 +103,7 @@ class Path:
         ratio, path_section = self.getSubPathSectionAndRatio(r)
         return path_section.poseAtRatio(ratio)
 
-    def getTimePathOfNextStep(self, t):
+    def getTimePathOfNextStepOld(self, t):
         def getBodyStepTime(step_num):
             count = step_num
             time = 0
@@ -121,6 +122,38 @@ class Path:
             if t < time:
                 return time, ratio, path_distance, path_section, i
 
+    def getTimePathOfNextStep(self, t):
+        ratio = t / self.duration()
+        ratio, path_section = self.getSubPathSectionAndRatio(ratio)
+
+        # Get next bodystep
+        bodystep_count = 0
+        for path in self.path_sections:
+            if path != path_section:
+                bodystep_count = bodystep_count + path_section.bodyStepCount()
+            else:
+                break
+        subpath_count = (path_section.distance * ratio) / path_section.bodystep_size
+        bodystep_count += subpath_count
+        bodystep_count = ceil(bodystep_count)
+
+        # Get information about this body step
+        def getBodyStepTime(step_num):
+            count = step_num
+            time = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    ratio = path_section.getRatioFromStep(count)
+                    time = time + ratio * path_section.duration()
+                    distance = path_section.bodystep_size * count
+                    return time, ratio, distance, path_section
+                count = count - path_section.bodyStepCount()
+                time = time + path_section.duration()
+            raise Exception("Invalid body step calculation " + str(count))
+
+        time, ratio, distance, path_section = getBodyStepTime(bodystep_count)
+        return time, ratio, distance, path_section, bodystep_count
+
     # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
     def terminateWalk(self, t):
         time, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
@@ -136,9 +169,10 @@ class Path:
                 self.path_sections.remove(p)
 
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
-        time, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
+
+        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
         start_transform = self.getBodyStepPose(step)
-        self.terminateWalk(t)
+        self.terminateWalk(t_new)
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
 

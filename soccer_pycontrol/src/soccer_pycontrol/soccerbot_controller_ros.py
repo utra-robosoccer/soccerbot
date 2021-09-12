@@ -121,7 +121,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
 
                 if self.soccerbot.robot_path is None:
-                    rospy.loginfo("Recieved New Goal")
+                    print("Recieved New Goal")
                     self.update_robot_pose()
                     self.soccerbot.reset_imus()
                     self.soccerbot.ready()
@@ -129,11 +129,13 @@ class SoccerbotControllerRos(SoccerbotController):
                     self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
                     t = -0.5
                 else:
-                    rospy.loginfo("Updating New Goal")
+                    print("Updating New Goal")
+                    start = time.time()
                     goal_position = self.pose_to_transformation(self.goal.pose)
                     self.soccerbot.addTorsoHeight(goal_position)
                     self.soccerbot.robot_path.dynamicallyUpdateGoalPosition(t, goal_position)
-                    self.soccerbot.robot_path.showTimingDiagram()
+                    end = time.time()
+                    print("New Goal Updated, Time Taken: ", end - start)
 
                 print("Start Pose: ", self.robot_pose.pose)
                 print("End Pose: ", self.goal.pose)
