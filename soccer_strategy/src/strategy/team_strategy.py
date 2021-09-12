@@ -14,7 +14,7 @@ from robot import Robot
 np.random.seed(2)
 
 # how much the robot move per gradient descent update
-GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
+GRADIENT_UPDATE_INTERVAL_LENGTH = 1
 
 Field.init()
 

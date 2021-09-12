@@ -8,8 +8,10 @@ import matplotlib.patches as patches
 from robot import Robot
 from ball import Ball
 from strategy.dummy_strategy import DummyStrategy
-from strategy.team_strategy import TeamStrategy
+#from strategy.team_strategy import TeamStrategy
 from strategy.stationary_strategy import StationaryStrategy
+from strategy.player_strategy import TeamStrategy
+
 from strategy.utils import GameProperties, Field
 import math
 import numpy as np
@@ -25,12 +27,12 @@ class GameEngine:
         self.display = display
         # Initialize robots
         self.robots = [
-            Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                  position=np.array([3.5, 0.0, math.pi])),
-            Robot(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-                  position=np.array([1.5, -1.5, -math.pi])),
-            Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-                  position=np.array([1.5, 1.5, -math.pi])),
+            # Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            #       position=np.array([3.5, 0.0, math.pi])),
+            # Robot(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            #       position=np.array([1.5, -1.5, -math.pi])),
+            # Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            #       position=np.array([1.5, 1.5, -math.pi])),
             Robot(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi])),
             Robot(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
@@ -42,7 +44,7 @@ class GameEngine:
             Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ]
-        self.ball = Ball(position=np.array([0, 0]))
+        self.ball = Ball(position=np.array([-2, 0]))
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
@@ -74,7 +76,6 @@ class GameEngine:
         # Setup the strategy
         self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
         self.team2_strategy = StationaryStrategy()
-        #self.team2_strategy = DummyStrategy()
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each

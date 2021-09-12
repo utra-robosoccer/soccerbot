@@ -3,6 +3,7 @@ import numpy as np
 
 from robot import Robot
 
+
 class Strategy:
     def __init__(self):
         pass
