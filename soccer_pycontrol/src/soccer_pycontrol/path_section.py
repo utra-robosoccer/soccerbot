@@ -1,5 +1,7 @@
 import abc
 import functools
+import time
+
 from soccer_pycontrol.transformation import Transformation
 import numpy as np
 from utils import wrapTo2Pi, wrapToPi
@@ -15,6 +17,8 @@ class PathSection(ABC):
     precision = 0.05 * bodystep_size
 
     def __init__(self, start_transform: Transformation,  end_transform: Transformation):
+        start = time.time()
+
         self.start_transform = start_transform
         self.end_transform = end_transform
 
@@ -29,6 +33,7 @@ class PathSection(ABC):
         j = 1
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         prev_pose = self.poseAtRatio(0)
+        start = time.time()
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
@@ -38,7 +43,9 @@ class PathSection(ABC):
 
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
-        pass
+
+        end = time.time()
+        print("Path Creation Time: ", end - start)
 
     @abc.abstractmethod
     def poseAtRatio(self, r):
