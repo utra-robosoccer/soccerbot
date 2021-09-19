@@ -14,7 +14,7 @@ from robot import Robot
 np.random.seed(2)
 
 # how much the robot move per gradient descent update
-GRADIENT_UPDATE_INTERVAL_LENGTH = 1
+GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 Field.init()
 
 class Thresholds:
@@ -46,9 +46,9 @@ class PlayerStrategy(ABC, Strategy):
         self._team = self._player.team
         self._ball = ball
         self._ball_pos = ball.get_position()
-        self._alpha = alpha
-        self._beta = beta
-        self._eps = eps # threshold distance where robot go directly to the ball
+        self._alpha = alpha  # multiplier for attractive field
+        self._beta = beta  # multiplier for repulsive field
+        self._eps = eps  # threshold distance where robot go directly to the ball
         self._net = Field.NET[self._team]
         if self._team == Robot.Team.FRIENDLY:
             self._opponent_net = Field.NET[Robot.Team.OPPONENT]
@@ -60,6 +60,7 @@ class PlayerStrategy(ABC, Strategy):
         self._net_line = Field.NET_LINE[self._team]
         self._Y_SIGN = -1 if self._net.y < 0 else 1
         self._all_robots = None
+        self.target_pos = None
 
     def _distance_to(self, pos):
         return np.linalg.norm(self._player_pos - pos)
@@ -121,6 +122,7 @@ class PlayerStrategy(ABC, Strategy):
 
     def _move_player_to(self, pos):
         assert self._all_robots is not None, 'all_robots not set!'
+        self.target_pos = pos
         # Path planning with obstacle avoidance via potential functions
         # Source:
         # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
@@ -157,6 +159,38 @@ class PlayerStrategy(ABC, Strategy):
         self._player.set_navigation_position(np.append(goal_pos, diff_angle))
         self._player.status = Robot.Status.WALKING
         print(str(goal_pos) + "  " + str(diff_angle))
+
+    # get list of potential field vector around the robots
+    def get_potential_field_vector(self):
+        if self.target_pos is None:
+            return None
+
+        thresh = Thresholds.PASSING  # Seems reasonable for avoidance
+        obstacles = self._compute_obstacles(self._player_pos, thresh)
+        return_list = [[], []]
+
+        for x_sample, y_sample in itertools.product(np.linspace(-1, 1, 15), np.linspace(-1, 1, 15)):
+            sample_point = np.array([self._player_pos[0] + x_sample, self._player_pos[1] + y_sample])
+
+            grad = grad_att(self._alpha, sample_point, self.target_pos)
+            if len(obstacles) > 0:
+                r_rep = 2 * Thresholds.POSSESSION
+                d_rep = float('inf')
+                obs_rep = None
+                for obs in obstacles:
+                    dist = np.linalg.norm(sample_point - obs)
+                    if dist < d_rep:
+                        d_rep = dist
+                        obs_rep = obs
+                grad -= grad_rep(self._beta, r_rep, d_rep, obs_rep, sample_point)
+            # Gradient descent update
+            potential_field_vector = - grad
+
+            unit_field_vector = potential_field_vector / np.linalg.norm(potential_field_vector) / 10
+
+            return_list[0].append(sample_point)
+            return_list[1].append(unit_field_vector)
+        return return_list
 
     def _pursue_ball(self):
         self._move_player_to(self._ball_pos)
@@ -216,7 +250,7 @@ class ScoreStrategy(PlayerStrategy):
     def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
         super().__init__(player, ball, alpha, beta, eps)
 
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties):
+    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=False):
         self._all_robots = list(itertools.chain(friendlies, opponents))
         if self.has_possession():
             # Try kicking to nearest point on goal line
@@ -234,6 +268,9 @@ class ScoreStrategy(PlayerStrategy):
             ball_dest = self._est_ball_dest()
             self._move_player_to(ball_dest)
 
+        if plot_vector:
+            return self.get_potential_field_vector()
+
 
 class TeamStrategy(Strategy):
 
@@ -242,8 +279,10 @@ class TeamStrategy(Strategy):
         self._dt = delta_t
         PhysConsts.init(self._dt)
 
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties):
+    # change plot_vector value to allow potential vectors to be printed
+    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=True):
         strats = []
+        combined_field_vectors = []
 
         for robot in friendlies:
             # Goalie
@@ -256,5 +295,13 @@ class TeamStrategy(Strategy):
             elif robot.role == Robot.Role.STRIKER:
                 strats.append(ScoreStrategy(robot, ball))
 
-        for strat in strats:
-            strat.update_next_strategy(friendlies, opponents, ball, game_properties)
+        # if no plotting needed
+        if not plot_vector:
+            for strat in strats:
+                strat.update_next_strategy(friendlies, opponents, ball, game_properties)
+        else:
+            for strat in strats:
+                field_vectors = strat.update_next_strategy(friendlies, opponents, ball, game_properties, plot_vector)
+                # todo muticolor for different robots
+                combined_field_vectors.append(field_vectors)
+            return combined_field_vectors

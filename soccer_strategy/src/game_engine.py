@@ -10,12 +10,14 @@ from ball import Ball
 from strategy.dummy_strategy import DummyStrategy
 #from strategy.team_strategy import TeamStrategy
 from strategy.stationary_strategy import StationaryStrategy
-from strategy.player_strategy import TeamStrategy
+from strategy.player_strategy import TeamStrategy, ScoreStrategy
 
 from strategy.utils import GameProperties, Field
 import math
 import numpy as np
 import copy
+import itertools
+
 from soccer_pycontrol import path
 
 class GameEngine:
@@ -76,6 +78,8 @@ class GameEngine:
         # Setup the strategy
         self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
         self.team2_strategy = StationaryStrategy()
+        self.team1_strategy_rtval = None
+        self.team2_strategy_rtval = None
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -91,8 +95,8 @@ class GameEngine:
             self.updateEstimatedPhysics(self.robots, self.ball)
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.team1_strategy.update_team_strategy(self.robots, self.ball, GameProperties(0, 1, 0))
-                self.team2_strategy.update_team_strategy(self.robots, self.ball, GameProperties(1, 1, 0, opponent_team=True))
+                self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.ball, GameProperties(0, 1, 0))
+                self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.ball, GameProperties(1, 1, 0, opponent_team=True))
 
             # Check victory condition
             if self.ball.get_position()[0] > 4.5:
@@ -144,6 +148,7 @@ class GameEngine:
             foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
             foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
 
+        # plot path of the robots
         for robot in self.robots:
             if robot.path is not None:
                 verts = []
@@ -156,6 +161,24 @@ class GameEngine:
                     foreground.plot(x, y, 'g-')
                 else:
                     foreground.plot(x, y, 'r-')
+
+        # plot potential field
+        # get points, angles
+        if self.team1_strategy_rtval is not None:
+            # for each robot
+            for k in range(0, len(self.team1_strategy_rtval)):
+                if self.team1_strategy_rtval[k] is not None:
+                    for i in range(0, len(self.team1_strategy_rtval[k][0])):
+                        foreground.arrow(
+                            self.team1_strategy_rtval[k][0][i][0],
+                            self.team1_strategy_rtval[k][0][i][1],
+                            self.team1_strategy_rtval[k][1][i][0],
+                            self.team1_strategy_rtval[k][1][i][1],
+                            head_width=0.05,
+                            head_length=0.05,
+                            color='orange'
+                        )
+
         # GUI text
         foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
 

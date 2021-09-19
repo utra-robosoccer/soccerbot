@@ -17,9 +17,10 @@ class Strategy:
             else:
                 opponent.append(robot)
         if not game_properties.opponent_team:
-            self.update_next_strategy(friendly, opponent, ball, game_properties)
+            rtval = self.update_next_strategy(friendly, opponent, ball, game_properties)
         else:
-            self.update_next_strategy(opponent, friendly, ball, game_properties)
+            rtval = self.update_next_strategy(opponent, friendly, ball, game_properties)
+        return rtval
 
     def update_next_strategy(self, friendly, opponent, ball, game_properties):
         raise NotImplementedError
