@@ -53,11 +53,11 @@ PENALTYSHOOT_START_POSITION =\
     "goalie": [-4.5, 0, 0]
 }
 
-GOAL_POSITION =\
+ENEMY_GOAL_POSITION =\
 {
-    "blue": [-5, 0],
-    "red": [5, 0],
-    "penalty_shoot": [4.5, 0]
+    "blue": [5, 0],
+    "red": [-5, 0],
+    "penalty_shoot": [-4.5, 0]
 }
 
 

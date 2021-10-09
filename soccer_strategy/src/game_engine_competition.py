@@ -28,8 +28,9 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 
 class GameEngineCompetition(game_engine.GameEngine):
-    STRATEGY_UPDATE_INTERVAL = 1
-    NAV_GOAL_UPDATE_INTERVAL = 2
+    # Seconds
+    STRATEGY_UPDATE_INTERVAL = 3
+    NAV_GOAL_UPDATE_INTERVAL = 3
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
@@ -47,6 +48,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
     def __init__(self):
         self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
+
         self.robot_name = os.getenv("ROBOT_NAME", "robot1")
         self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
         self.team_id = int(os.getenv("TEAM_ID", "16"))
@@ -55,12 +57,12 @@ class GameEngineCompetition(game_engine.GameEngine):
         # game strategy information
 
         self.robots = [
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")#,
+            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
+            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
         ]
 
         self.friendly = self.robots[0:3]
@@ -126,7 +128,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                 header = self.listener.getLatestCommonTime('world', robot.robot_name + '/ball')
                 time_diff = rospy.Time.now() - header
                 if time_diff < rospy.Duration(0.2):
-                    ball_positions.append(np.array([-ball_pose[0][1], ball_pose[0][0]]))
+                    ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
 

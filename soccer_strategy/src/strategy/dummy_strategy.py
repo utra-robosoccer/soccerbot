@@ -19,7 +19,7 @@ class DummyStrategy(Strategy):
     @staticmethod
     def generate_goal_position(ball, game_properties):
         goal_position = config.position_map_goal(
-            config.GOAL_POSITION,
+            config.ENEMY_GOAL_POSITION,
             game_properties.team_color,
             game_properties.is_first_half,
             game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot

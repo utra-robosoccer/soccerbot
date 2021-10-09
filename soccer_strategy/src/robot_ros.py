@@ -1,4 +1,4 @@
-from soccer_strategy.src.robot import Robot
+from robot import Robot
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
