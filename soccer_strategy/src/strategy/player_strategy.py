@@ -39,7 +39,7 @@ class PhysConsts:
 
 class PlayerStrategy(ABC, Strategy):
 
-    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
+    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5): # 0.5, 0.5 0.5
         super().__init__()
         self._player = player
         self._player_pos = player.get_position()[0:2]
@@ -159,6 +159,61 @@ class PlayerStrategy(ABC, Strategy):
         self._player.set_navigation_position(np.append(goal_pos, diff_angle))
         self._player.status = Robot.Status.WALKING
         print(str(goal_pos) + "  " + str(diff_angle))
+
+    # move player with 5 seperate descents, does not work well
+    """def _move_player_to(self, pos):
+        assert self._all_robots is not None, 'all_robots not set!'
+        self.target_pos = pos
+        # Path planning with obstacle avoidance via potential functions
+        # Source:
+        # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
+        thresh = Thresholds.PASSING  # Seems reasonable for avoidance
+        obstacles = self._compute_obstacles(self._player_pos, thresh)
+        goal_pos = pos
+        initial_pos = self._player_pos
+        for p in range(1, 5):
+            # if too far to go directly to goal_pos
+            if self._distance_to(goal_pos) > self._eps:
+                grad = grad_att(self._alpha, initial_pos, pos)
+                if len(obstacles) > 0:
+                    r_rep = 2 * Thresholds.POSSESSION
+                    d_rep = float('inf')
+                    obs_rep = None
+                    for obs in obstacles:
+                        dist = self._distance_to(obs)
+                        if dist < d_rep:
+                            d_rep = dist
+                            obs_rep = obs
+                            # grad -= grad_rep(self._beta, r_rep, dist, obs, self._player_pos)
+                    grad -= grad_rep(self._beta, r_rep, d_rep, obs_rep, self._player_pos)
+                # Perturb out of local minima
+                angle_rand = np.random.uniform(low=-np.pi / 12, high=np.pi / 12)
+                rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
+                                          [np.sin(angle_rand), np.cos(angle_rand)]])
+                grad_perturbed = rotation_rand @ grad
+                # Gradient descent update
+                goal_pos = self._player_pos - GRADIENT_UPDATE_INTERVAL_LENGTH/10 * grad_perturbed
+
+                # get robot angle at goal position
+                diff = self._player_pos - goal_pos
+                diff_unit = diff / np.linalg.norm(diff)
+                diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+                # update new initial position for hte descent update
+                initial_pos = goal_pos
+
+            # go directly to goal_pos
+            else:
+                goal_pos = pos
+                # get robot angle at goal position
+                diff = self._player_pos - goal_pos
+                diff_unit = diff / np.linalg.norm(diff)
+                diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+                break
+
+        # todo: redo pathing
+        self._player.set_navigation_position(np.append(goal_pos, diff_angle))
+        self._player.status = Robot.Status.WALKING
+        print(str(goal_pos) + "  " + str(diff_angle))"""
 
     # get list of potential field vector around the robots
     def get_potential_field_vector(self):
@@ -280,7 +335,7 @@ class TeamStrategy(Strategy):
         PhysConsts.init(self._dt)
 
     # change plot_vector value to allow potential vectors to be printed
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=True):
+    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=False):
         strats = []
         combined_field_vectors = []
 
@@ -304,4 +359,4 @@ class TeamStrategy(Strategy):
                 field_vectors = strat.update_next_strategy(friendlies, opponents, ball, game_properties, plot_vector)
                 # todo muticolor for different robots
                 combined_field_vectors.append(field_vectors)
-            return combined_field_vectors
+            return {"potential_field_vectors": combined_field_vectors}
