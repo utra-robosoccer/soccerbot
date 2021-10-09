@@ -13,6 +13,7 @@ import game_engine
 from strategy.dummy_strategy import DummyStrategy
 from strategy.freekick_strategy import FreekickStrategy
 from strategy.penaltykick_strategy import PenaltykickStrategy
+from strategy.utils import GameProperties
 import config
 import logging
 
@@ -262,10 +263,15 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    self.team_strategy.update_team_strategy(robots=self.robots, ball=self.ball,
-                                                             teamcolor=self.gameState.teamColor,
-                                                             is_first_half=self.gameState.firstHalf,
-                                                             secondaryState=self.gameState.secondaryState)
+                    self.team_strategy.update_team_strategy(
+                        self.robots,
+                        self.ball,
+                        GameProperties(
+                            self.gameState.teamColor,
+                            self.gameState.firstHalf,
+                            self.gameState.secondaryState
+                            )
+                        )
                     pass
                 else:
                     print("kickoff not started, no strategy output")

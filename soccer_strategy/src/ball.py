@@ -2,6 +2,7 @@ import numpy as np
 
 
 class Ball:
+    FRICTION = 1
     FRICTION_COEFF = 0.8
 
     def __init__(self, position):
@@ -17,3 +18,6 @@ class Ball:
 
     def get_velocity(self):
         return self.velocity
+
+    def is_moving(self):
+        return np.linalg.norm(self.velocity) < 0.1  # compensate for noise
