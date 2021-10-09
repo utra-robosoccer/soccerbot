@@ -24,4 +24,4 @@ soccer_webots/worlds/*.wbproj
 soccer_webots/worlds/.kid.wbproj
 cmake-build-debug
 
-/soccer_object_detection/src/outputs/*
+/soccer_object_detection/images/*
