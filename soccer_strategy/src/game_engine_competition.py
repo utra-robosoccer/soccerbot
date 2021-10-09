@@ -11,6 +11,7 @@ from robot import Robot
 from ball import Ball
 import game_engine
 from strategy.dummy_strategy import DummyStrategy
+from strategy.dummy_strategy2 import DummyStrategy2
 from strategy.freekick_strategy import FreekickStrategy
 from strategy.penaltykick_strategy import PenaltykickStrategy
 from strategy.utils import GameProperties
@@ -94,7 +95,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.rostime_previous = 0
         self.listener = tf.TransformListener()
-        self.team_strategy = DummyStrategy()
+        self.team_strategy = DummyStrategy2()
         self.freekick_strategy = FreekickStrategy()
         self.penaltykick_strategy = PenaltykickStrategy()
 
