@@ -29,12 +29,12 @@ class GameEngine:
         self.display = display
         # Initialize robots
         self.robots = [
-            # Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-            #       position=np.array([3.5, 0.0, math.pi])),
-            # Robot(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-            #       position=np.array([1.5, -1.5, -math.pi])),
-            # Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-            #       position=np.array([1.5, 1.5, -math.pi])),
+            Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+                  position=np.array([3.5, 0.0, math.pi])),
+            Robot(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+                  position=np.array([1.5, -1.5, -math.pi])),
+            Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+                  position=np.array([1.5, 1.5, -math.pi])),
             Robot(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi])),
             Robot(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
@@ -78,6 +78,8 @@ class GameEngine:
         # Setup the strategy
         self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
         self.team2_strategy = StationaryStrategy()
+        #self.team1_strategy = DummyStrategy()
+        #self.team2_strategy = DummyStrategy()
         self.team1_strategy_rtval = None
         self.team2_strategy_rtval = None
 
@@ -165,19 +167,21 @@ class GameEngine:
         # plot potential field
         # get points, angles
         if self.team1_strategy_rtval is not None:
-            # for each robot
-            for k in range(0, len(self.team1_strategy_rtval)):
-                if self.team1_strategy_rtval[k] is not None:
-                    for i in range(0, len(self.team1_strategy_rtval[k][0])):
-                        foreground.arrow(
-                            self.team1_strategy_rtval[k][0][i][0],
-                            self.team1_strategy_rtval[k][0][i][1],
-                            self.team1_strategy_rtval[k][1][i][0],
-                            self.team1_strategy_rtval[k][1][i][1],
-                            head_width=0.05,
-                            head_length=0.05,
-                            color='orange'
-                        )
+            if "potential_field_vectors" in self.team1_strategy_rtval:
+                field_vectors = self.team1_strategy_rtval["potential_field_vectors"]
+                # for each robot
+                for k in range(0, len(field_vectors)):
+                    if field_vectors[k] is not None:
+                        for i in range(0, len(field_vectors[k][0])):
+                            foreground.arrow(
+                                field_vectors[k][0][i][0],
+                                field_vectors[k][0][i][1],
+                                field_vectors[k][1][i][0],
+                                field_vectors[k][1][i][1],
+                                head_width=0.05,
+                                head_length=0.05,
+                                color='orange'
+                            )
 
         # GUI text
         foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
