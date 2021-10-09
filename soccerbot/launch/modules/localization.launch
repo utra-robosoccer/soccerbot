@@ -7,25 +7,22 @@
     <arg name="x_pos" />
     <arg name="y_pos" />
     <arg name="a_pos" />
+
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
           args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world"/>
     </node>
 
-    <!-- Line and goal detection -->
-    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector" respawn="true"
-          output="screen" >
-        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
-    </node>
+    <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen"/>
 
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
-        <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
+        <rosparam file="$(find soccer_object_localization)/config/pointcloud_to_laserscan.yaml" command="load" />
         <remap from="cloud_in" to="field_point_cloud" />
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" output="screen" respawn="true" unless="$(arg fake_localization)"/>
+<!--    <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen"/>-->
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
         args="$(find soccer_object_detection)/src/outputs/model24" unless="$(arg fake_localization)"/>
 

@@ -205,7 +205,11 @@ class SoccerbotControllerRos(SoccerbotController):
                     pb.stepSimulation()
 
             t = t + SoccerbotController.PYBULLET_STEP
-            r.sleep()
+
+            try:
+                r.sleep()
+            except rospy.exceptions.ROSInterruptException:
+                break
 
     def correct_goal_pose(self):
         pass

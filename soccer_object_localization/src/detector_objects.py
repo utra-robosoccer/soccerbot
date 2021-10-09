@@ -20,8 +20,8 @@ class DetectorBall(Detector):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback)
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
-        self.ball_pixel_pub = rospy.Publisher("ball_pixel", PointStamped)
-        self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped)
+        self.ball_pixel_pub = rospy.Publisher("ball_pixel", PointStamped, queue_size=1)
+        self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
 
     def jointStatesCallback(self, msg: JointState):
@@ -31,30 +31,14 @@ class DetectorBall(Detector):
     def ballDetectorCallback(self, msg: BoundingBoxes):
         if not self.camera.ready:
             return
-        self.camera.reset_position()
+        self.camera.reset_position(publish_basecamera=False)
 
         detected_robots = 0
         for box in msg.bounding_boxes:
             if box.Class == "ball":
-                x_avg = (box.xmin + box.xmax) / 2.
-                y_avg = (box.ymax + box.ymin) / 2.
-                y_close = box.ymax
 
-                [floor_center_x, floor_center_y, _] = self.camera.findFloorCoordinate([x_avg, y_avg])
-                [floor_close_x, floor_close_y, _] = self.camera.findFloorCoordinate([x_avg, y_close])
-
-                camera_pose = self.camera.pose
-
-                distance = ((floor_center_x - camera_pose.position.x) ** 2 +
-                            (floor_center_y - camera_pose.position.y) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position.z)
-                ratio = math.tan(theta) ** 2
-                ratio2 = 1 / (1 + ratio)
-                if 1 < ratio2 < 0:
-                    continue
-
-                floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
-                floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
+                boundingBoxes = [[box.xmin, box.ymax], [box.xmax, box.ymin]]
+                position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
                 br = tf2_ros.TransformBroadcaster()
                 ball_pose = TransformStamped()
@@ -62,8 +46,8 @@ class DetectorBall(Detector):
                 ball_pose.child_frame_id = self.robot_name + "/ball"
                 ball_pose.header.stamp = msg.header.stamp
                 ball_pose.header.seq = msg.header.seq
-                ball_pose.transform.translation.x = floor_x
-                ball_pose.transform.translation.y = floor_y
+                ball_pose.transform.translation.x = position.get_position()[0]
+                ball_pose.transform.translation.y = position.get_position()[1]
                 ball_pose.transform.translation.z = 0
                 ball_pose.transform.rotation.x = 0
                 ball_pose.transform.rotation.y = 0
@@ -71,10 +55,13 @@ class DetectorBall(Detector):
                 ball_pose.transform.rotation.w = 1
                 br.sendTransform(ball_pose)
 
+                # TODO remove
                 ball_pixel = PointStamped()
                 ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
                 ball_pixel.header.seq = msg.header.seq
                 ball_pixel.header.stamp = msg.header.stamp
+                x_avg = (box.xmin + box.xmax) / 2.
+                y_avg = (box.ymax + box.ymin) / 2.
                 ball_pixel.point.x = x_avg
                 ball_pixel.point.y = y_avg
                 ball_pixel.point.z = 0
@@ -132,9 +119,9 @@ class DetectorBall(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.position[0]) ** 2 + (
-                             floor_center_y - camera_pose.position[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position[2])
+                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (
+                             floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
+                theta = math.atan2(distance, camera_pose.get_position()[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
                 if 1 < ratio2 < 0:
