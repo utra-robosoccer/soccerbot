@@ -32,7 +32,7 @@ class DummyStrategy2(Strategy):
     @staticmethod
     def generate_goal_position(ball, game_properties):
         goal_position = config.position_map_goal(
-            config.GOAL_POSITION,
+            config.ENEMY_GOAL_POSITION,
             game_properties.team_color,
             game_properties.is_first_half,
             game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
@@ -103,8 +103,8 @@ class DummyStrategy2(Strategy):
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
-                        # current_closest.set_navigation_position(destination_position_biased)
-                        self.move_player_to(current_closest, destination_position_biased)
+                        current_closest.set_navigation_position(destination_position_biased)
+                        # self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
@@ -154,18 +154,18 @@ class DummyStrategy2(Strategy):
         # Path planning with obstacle avoidance via potential functions
         # Source:
         # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
-        obstacles = player.get_detected_obstacles()
-        player_position = player.get_position()[0:2]
-        goal_pos = destination_position
+        obstacles = np.array(player.get_detected_obstacles())
+        player_position = np.array(player.get_position()[0:2])
+        goal_pos = np.array(destination_position[0:2])
 
-        if distance_between(player_position, destination_position) > EPS:
-            grad = grad_att(ALPHA, player_position, destination_position)
+        if distance_between(player_position, goal_pos) > EPS:
+            grad = grad_att(ALPHA, player_position, goal_pos)
             if len(obstacles) > 0:
                 r_rep = 2 * Thresholds.POSSESSION
                 d_rep = float('inf')
                 obs_rep = None
                 for obs in obstacles:
-                    dist = distance_between(obs, player_position)
+                    dist = distance_between(obs[0:2], player_position)
                     if dist < d_rep:
                         d_rep = dist
                         obs_rep = obs
