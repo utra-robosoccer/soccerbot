@@ -1,23 +1,20 @@
 <package format="2">
-    <name>soccer_fieldline_detection</name>
+    <name>soccer_object_localization</name>
     <version>0.0.0</version>
-    <description>The soccer_fieldline_detection package</description>
+    <description>The soccer_object_detection package</description>
 
-    <maintainer email="namnam.nguyen@utoronto.ca">nam</maintainer>
+    <author email="jonathan.spraggett@mail.utoronto.ca">Jonathan</author>
+    <maintainer email="namnam.nguyen@mail.utoronto.ca">nam</maintainer>
+    <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
 
     <license>BSD</license>
 
     <buildtool_depend>catkin</buildtool_depend>
-    <depend>roscpp</depend>
+    <depend>rospy</depend>
+    <depend>std_msgs</depend>
     <depend>soccer_geometry</depend>
-    <depend>libopencv-dev</depend>
-    <depend>cv_bridge</depend>
-    <depend>image_transport</depend>
-    <depend>video_stream_opencv</depend>
     <depend>sensor_msgs</depend>
-    <depend>pointcloud_to_laserscan</depend>
-    <depend>soccer_object_detection</depend>
     <depend>geometry_msgs</depend>
-    <depend>tf2_ros</depend>
+    <depend>cv_bridge</depend>
 
 </package>

@@ -5,7 +5,7 @@
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv ANGLE 0)" />
     <arg name="goalie" default="$(optenv GOALIE true)" />
-    <arg name="fake_localization" default="false" />
+    <arg name="fake_localization" default="true" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
@@ -21,14 +21,15 @@
         tf_prefix:=$(arg robot_name)
         "
     />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="120.0" />
+    </node>
 
     <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(eval simulation)">
+    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
         <arg name="competition" value="$(arg competition)" />
     </include>
@@ -47,8 +48,8 @@
         <arg name="simulation" value="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch" >
-        <arg name="goalie" value="$(arg goalie)" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/modules/strategy.launch" >-->
+<!--        <arg name="goalie" value="$(arg goalie)" />-->
+<!--    </include>-->
 
 </launch>

@@ -20,8 +20,8 @@ class DetectorBall(Detector):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback)
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
-        self.ball_pixel_pub = rospy.Publisher("ball_pixel", PointStamped)
-        self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped)
+        self.ball_pixel_pub = rospy.Publisher("ball_pixel", PointStamped, queue_size=1)
+        self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
 
     def jointStatesCallback(self, msg: JointState):
@@ -31,7 +31,7 @@ class DetectorBall(Detector):
     def ballDetectorCallback(self, msg: BoundingBoxes):
         if not self.camera.ready:
             return
-        self.camera.reset_position()
+        self.camera.reset_position(publish_basecamera=False)
 
         detected_robots = 0
         for box in msg.bounding_boxes:
@@ -45,9 +45,9 @@ class DetectorBall(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.position.x) ** 2 +
-                            (floor_center_y - camera_pose.position.y) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position.z)
+                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 +
+                            (floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
+                theta = math.atan2(distance, camera_pose.get_position()[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
                 if 1 < ratio2 < 0:
@@ -132,9 +132,9 @@ class DetectorBall(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.position[0]) ** 2 + (
-                             floor_center_y - camera_pose.position[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position[2])
+                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (
+                             floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
+                theta = math.atan2(distance, camera_pose.get_position()[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
                 if 1 < ratio2 < 0:

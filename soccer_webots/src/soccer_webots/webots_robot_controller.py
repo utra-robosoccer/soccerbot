@@ -2,11 +2,13 @@
 import os
 import math
 import time
+
+import tf2_ros
 from visualization_msgs.msg import Marker
 from controller import Robot, Node, Field
 
 import rospy
-from geometry_msgs.msg import PoseArray, Pose, Point
+from geometry_msgs.msg import PoseArray, Pose, Point, TransformStamped
 from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 
@@ -29,6 +31,7 @@ class RobotController:
         self.robot_node = Robot()
         self.base_frame = base_ns + "/"
         base_ns = "/" + base_ns
+        self.base_ns = base_ns
         self.motors = []
         self.sensors = []
         self.timestep = int(self.robot_node.getBasicTimeStep())
@@ -190,7 +193,7 @@ class RobotController:
     def publish_camera(self):
         img_msg = Image()
         img_msg.header.stamp = rospy.Time.from_seconds(self.time)
-        img_msg.header.frame_id = self.base_frame + "camera_base"
+        img_msg.header.frame_id = self.base_frame + "camera"
         img_msg.height = self.camera.getHeight()
         img_msg.width = self.camera.getWidth()
         img_msg.encoding = "bgra8"

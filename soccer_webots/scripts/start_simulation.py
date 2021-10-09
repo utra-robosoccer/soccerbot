@@ -26,8 +26,6 @@ if args.single == "true":
     world_name = "kid.wbt"
 else:
     world_name = "kid_4.wbt"
-print(world_name)
-print(args.single)
 arguments = [os.path.join(os.environ['WEBOTS_HOME'], 'webots'),
              batch,
              no_rendering,
@@ -40,12 +38,11 @@ rospy.set_param("send_odom", "true")
 
 os.environ["WEBOTS_PID"] = str(sim_proc.pid)
 os.environ["WEBOTS_ROBOT_NAME"] = "supervisor_robot"
-print(args.fake_localization)
 if args.fake_localization == "true":
-    fake_arg = True
+    use_ground_truth = True
 else:
-    fake_arg = False
-supervisor_controller = SupervisorController(fake=fake_arg)
+    use_ground_truth = False
+supervisor_controller = SupervisorController(use_ground_truth=use_ground_truth)
 
 while not rospy.is_shutdown():
     supervisor_controller.step()
