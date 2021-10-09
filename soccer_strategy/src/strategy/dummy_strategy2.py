@@ -22,11 +22,11 @@ class Thresholds:
     OBSTACLE = 1  # Size of player obstacles
     PASSING = 2  # distance for obstacle detection when moving to a position
 
-class DummyStrategy(Strategy):
+class DummyStrategy2(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        super(DummyStrategy, self).__init__()
+        super(DummyStrategy2, self).__init__()
 
     # generate goal position
     @staticmethod
