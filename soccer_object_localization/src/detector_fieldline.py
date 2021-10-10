@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+import time
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
@@ -25,34 +27,39 @@ class DetectorFieldline(Detector):
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
         self.trajectory_complete_subscriber = rospy.Subscriber("trajectory_complete", Bool, self.trajectory_complete_callback)
         self.trajectory_complete = True
+
+        cv2.setRNGSeed(12345)
         pass
 
     def trajectory_complete_callback(self, trajectory_complete: Bool):
         self.trajectory_complete = trajectory_complete
 
     def image_callback(self, img: Image):
+        t_start = time.time()
+
         if not self.camera.ready() or not self.trajectory_complete:
             return
 
         pts = []
 
-        self.camera.reset_position()
+
+        self.camera.reset_position(timestamp=img.header.stamp)
 
         rgb_image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
         camera_info_D = np.array(self.camera.camera_info.D)
         image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        mask = cv2.inRange(hsv, lowerb=(45, 115, 45), upperb=(70, 255, 255))
         (contours, hierarchy) = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         bound_rects = []
 
-        cv2.setRNGSeed(12345)
 
         for c in contours:
             if cv2.contourArea(c) > 1000:
@@ -61,18 +68,28 @@ class DetectorFieldline(Detector):
 
         # Merge largest contours
         if len(bound_rects) > 0:
+            def union(a, b):
+                x = min(a[0], b[0])
+                y = min(a[1], b[1])
+                w = max(a[0] + a[2], b[0] + b[2]) - x
+                h = max(a[1] + a[3], b[1] + b[3]) - y
+                return (x, y, w, h)
+
             final = bound_rects[0]
             for rect in bound_rects:
-                final |= rect
+                final = union(final, rect)
             color = [0, 0, 255]
-            cv2.rectangle(image, final.tl(), final.br(), color, 2)
+
+            tl = final[0:2]
+            br = (final[0] + final[2], final[1] + final[3])
+            cv2.rectangle(image, tl, br, color, 2)
 
             # Top black rectangle
-            cv2.rectangle(image, [0, 0], [final.br(), final.tl().y], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
+            cv2.rectangle(image, [0, 0], [br[0], tl[1]], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
 
             # Bottom black rectangle
             # TODO Hardcoded second point needs to take in camera info
-            cv2.rectangle(image, [final.br(), final.tl().y], [640, 480], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
+            cv2.rectangle(image, [tl[0], br[1]], [640, 480], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
 
         # Field line detection
         mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
@@ -122,8 +139,11 @@ class DetectorFieldline(Detector):
             header.stamp = img.header.stamp
             header.frame_id = self.robot_name + "/base_camera"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
-            self.point_cloud_publisher.publish(point_cloud_msg)
+            if self.point_cloud_publisher.get_num_connections() > 0:
+                self.point_cloud_publisher.publish(point_cloud_msg)
 
+        t_end = time.time()
+        rospy.loginfo_throttle(20, "Fieldline detection rate: " + str(t_end - t_start))
 
 if __name__ == '__main__':
     rospy.init_node("detector_fieldline")

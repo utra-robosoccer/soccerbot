@@ -3,10 +3,12 @@ from unittest import TestCase
 
 from soccer_geometry.camera import Camera
 from soccer_geometry.transformation import Transformation
+import rospy
 
 class Test(TestCase):
 
     def setUp(self) -> None:
+        rospy.init_node("camera_test")
         pass
 
 

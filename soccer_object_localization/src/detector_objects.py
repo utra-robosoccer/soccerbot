@@ -31,13 +31,13 @@ class DetectorBall(Detector):
     def ballDetectorCallback(self, msg: BoundingBoxes):
         if not self.camera.ready:
             return
-        self.camera.reset_position(publish_basecamera=False)
+        self.camera.reset_position(publish_basecamera=False, timestamp=msg.header.stamp)
 
         detected_robots = 0
         for box in msg.bounding_boxes:
             if box.Class == "ball":
 
-                boundingBoxes = [[box.xmin, box.ymax], [box.xmax, box.ymin]]
+                boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                 position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
                 br = tf2_ros.TransformBroadcaster()

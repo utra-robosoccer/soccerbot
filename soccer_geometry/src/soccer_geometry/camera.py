@@ -17,7 +17,7 @@ class Camera:
         self.resolution_x = None
         self.resolution_y = None
         self.camera_info = None
-        self.diagonal_fov = 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
+        self.diagonal_fov = 1.57 # 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
         self.focal_length = 3.67  # 3.67
 
         self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo,
@@ -41,7 +41,7 @@ class Camera:
 
         while not rospy.is_shutdown():
             try:
-                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
+                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(1,
@@ -64,7 +64,7 @@ class Camera:
             camera_footprint = TransformStamped()
             camera_footprint.header.frame_id = self.robot_name + "/odom"
             camera_footprint.child_frame_id = self.robot_name + "/base_camera"
-            camera_footprint.header.stamp = rospy.Time.now()
+            camera_footprint.header.stamp = timestamp
 
             euler = Transformation.get_euler_from_quaternion(rot)
             euler[1] = 0
@@ -120,7 +120,6 @@ class Camera:
         return 2 * math.atan2(self.resolution_y / 2., f)
 
     def horizontalFOV(self):
-        # 1.39626
         f = math.sqrt(self.resolution_x ** 2 + self.resolution_y ** 2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
         return 2 * math.atan2(self.resolution_x / 2, f)
 
@@ -141,7 +140,7 @@ class Camera:
         return ((self.resolution_x / 2. - pos_x) * self.pixelWidth(),
                 (self.resolution_y / 2. - pos_y) * self.pixelHeight())
 
-    def worldToImageFrame(self, pos_x: int, pos_y: int) -> tuple:
+    def worldToImageFrame(self, pos_x: float, pos_y: float) -> tuple:
         return ((self.resolution_x / 2. + pos_x / self.pixelWidth()),
                 (self.resolution_y / 2. + pos_y / self.pixelHeight()))
 
@@ -244,3 +243,10 @@ class Camera:
         tr_cam = self.pose @ tr
 
         return tr_cam
+
+    def calculateHorizonCoverArea(self):
+        theta = self.pose.get_orientation_euler()[0]
+        d = math.sin(theta) * self.focal_length
+
+        (r, h) = self.worldToImageFrame(0, d)
+        return h

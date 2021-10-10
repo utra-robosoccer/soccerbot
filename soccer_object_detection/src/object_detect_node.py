@@ -101,14 +101,18 @@ class ObjectDetectionNode(object):
                 header.stamp = rospy.Time.now()
                 bbs_msg.header = header
                 bbs_msg.image_header = self.image_header
-
-                img_torch = util.draw_bounding_boxes(img_torch, big_enough_robot_bbxs, (0, 0, 255))
-                img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
-                img = util.torch_to_cv(img_torch)
-
                 self.pub_boundingbox.publish(bbs_msg)
-                self.pub_detection.publish(br.cv2_to_imgmsg(img))
-            self.loop_rate.sleep()
+
+                if self.pub_detection.get_num_connections() > 0:
+                    img_torch = util.draw_bounding_boxes(img_torch, big_enough_robot_bbxs, (0, 0, 255))
+                    img_torch = util.draw_bounding_boxes(img_torch, bbxs[Label.BALL.value], (255, 0, 0))
+                    img = util.torch_to_cv(img_torch)
+                    self.pub_detection.publish(br.cv2_to_imgmsg(img))
+
+            try:
+                self.loop_rate.sleep()
+            except rospy.exceptions.ROSInterruptException:
+                break
 
 
 if __name__ == '__main__':
