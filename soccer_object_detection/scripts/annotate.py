@@ -90,7 +90,7 @@ class Test(TestCase):
 
         tf_listener = TransformListener()
 
-        j = 394
+        j = 0
         for i in range(num_samples):
             robot_x = random.uniform(-field_height, field_height)
             robot_y = random.uniform(-field_width, field_width)
@@ -130,40 +130,40 @@ class Test(TestCase):
 
             # Annotate the image automatically
             # Set the camera
-            while not rospy.is_shutdown():
-                try:
-                    (ball_position, rot) = tf_listener.lookupTransform('world', 'ball/ball', image_msg.header.stamp)
-                    header = tf_listener.getLatestCommonTime('world', 'ball/ball')
-                    break
-                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                    print("Cannot find ball transform")
+            # while not rospy.is_shutdown():
+            #     try:
+            #         (ball_position, rot) = tf_listener.lookupTransform('world', 'ball/ball', image_msg.header.stamp)
+            #         header = tf_listener.getLatestCommonTime('world', 'ball/ball')
+            #         break
+            #     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            #         print("Cannot find ball transform")
+            #
+            # self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=image_msg.header.stamp)
+            # label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
+            #
+            # # Draw the rectangle
+            # pt1 = (round(label[0][0]), round(label[0][1]))
+            # pt2 = (round(label[1][0]), round(label[1][1]))
+            # image_rect = cv2.rectangle(image.copy(), pt1, pt2, color=(0, 0, 0), thickness=1)
+            #
+            # cv2.imshow("ball", image_rect)
+            # key = cv2.waitKey(0)
+            # print(key)
+            # if key != 32:
+            #     continue
+            # start_num = 1000
 
-            self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=image_msg.header.stamp)
-            label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
 
-            # Draw the rectangle
-            pt1 = (round(label[0][0]), round(label[0][1]))
-            pt2 = (round(label[1][0]), round(label[1][1]))
-            image_rect = cv2.rectangle(image.copy(), pt1, pt2, color=(0, 0, 0), thickness=1)
-
-            cv2.imshow("ball", image_rect)
-            key = cv2.waitKey(0)
-            print(key)
-            if key != 32:
-                continue
-            start_num = 1000
-
-
-            jsonPath = "../images/bb_img_{}.json".format(j)
-            with open(jsonPath, 'w') as f:
-                json.dump((pt1, pt2), f)
+            # jsonPath = "../images/bb_img_{}.json".format(j)
+            # with open(jsonPath, 'w') as f:
+            #     json.dump((pt1, pt2), f)
             filePath = "../images/img_{}.jpg".format(j)
             if os.path.exists(filePath):
                 os.remove(filePath)
             cv2.imwrite(filePath, image)
-            filePath2 = "../images/img_border_{}.jpg".format(j)
-            if os.path.exists(filePath2):
-                os.remove(filePath2)
-            cv2.imwrite(filePath2, image_rect)
+            # filePath2 = "../images/img_border_{}.jpg".format(j)
+            # if os.path.exists(filePath2):
+            #     os.remove(filePath2)
+            # cv2.imwrite(filePath2, image_rect)
 
             j = j + 1

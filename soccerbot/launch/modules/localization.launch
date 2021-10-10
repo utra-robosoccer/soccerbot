@@ -64,16 +64,19 @@
         <param name="base_frame_id" value="$(arg robot_name)/base_camera" />
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
+    <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 1" if="$(arg fake_localization)" />
+    <node pkg="tf" type="static_transform_publisher" name="robot_base_to_camera" args="0 0 0 0 0 0 $(arg robot_name)/base_footprint $(arg robot_name)/torso 1" if="$(arg fake_localization)" />
+    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" unless="$(arg fake_localization)"/>
 
-    <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)" >
-        <remap from="base_pose_ground_truth" to="base_pose_ground_truth" />
-        <param name="global_frame_id" value="world" />
-        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />
-        <param name="odom_frame_id" value="$(arg robot_name)/odom" />
-        <param name="delta_x" value="0" />
-        <param name="delta_y" value="0" />
-    </node>
+
+<!--    <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)" >-->
+<!--        <remap from="base_pose_ground_truth" to="base_pose_ground_truth" />-->
+<!--        <param name="global_frame_id" value="world" />-->
+<!--        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />-->
+<!--        <param name="odom_frame_id" value="$(arg robot_name)/odom" />-->
+<!--        <param name="delta_x" value="0" />-->
+<!--        <param name="delta_y" value="0" />-->
+<!--    </node>-->
 
 
 </launch>

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import time
 
+import tf2_ros
+from nav_msgs.msg import Odometry
 from controller import Robot, Node, Supervisor
 import rospy
-from geometry_msgs.msg import Quaternion, PoseWithCovarianceStamped, Pose
+from geometry_msgs.msg import Quaternion, PoseWithCovarianceStamped, Pose, TransformStamped
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from tf.transformations import euler_from_quaternion
@@ -13,11 +15,8 @@ G = 9.81
 import transforms3d
 import numpy as np
 
-import nav_msgs.msg
-
-
 class SupervisorController:
-    def __init__(self, fake=False):
+    def __init__(self, use_ground_truth=False):
         """
         The SupervisorController, a Webots controller that can control the world.
         Set the environment variable WEBOTS_ROBOT_NAME to "supervisor_robot" if used with 1_bot.wbt or 4_bots.wbt.
@@ -32,7 +31,7 @@ class SupervisorController:
         self.time = 0
         self.clock_msg = Clock()
         self.supervisor = Supervisor()
-        self.localization = fake
+        self.use_ground_truth = use_ground_truth
         self.supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_REAL_TIME)
 
         self.motors = []
@@ -75,7 +74,7 @@ class SupervisorController:
         for name in self.robot_names:
             temp_node = self.supervisor.getFromDef(name)
             if temp_node is not None:
-                if self.localization:
+                if self.use_ground_truth:
                     self.publish_odom(name)
 
     def publish_clock(self):
@@ -83,64 +82,74 @@ class SupervisorController:
         self.clock_publisher.publish(self.clock_msg)
 
     def publish_odom(self, name="robot1"):
-        if name == "robot1":
-            base = "robot1"
-        elif name == "robot2":
-            base = "robot2"
-        elif name == "robot3":
-            base = "robot3"
-        elif name == "robot4":
-            base = "robot4"
-        odom = rospy.Publisher('/' + base + '/base_pose_ground_truth', nav_msgs.msg.Odometry, queue_size=1)
-        odometry = nav_msgs.msg.Odometry()
-        odometry.header.frame_id = base + '/odom'
-        odometry.child_frame_id = base + '/base_footprint'
-        odometry.header.stamp = rospy.Time.from_seconds(self.time)
-        odometry.pose.pose.position.x = self.get_robot_position(name)[0]
-        odometry.pose.pose.position.y = self.get_robot_position(name)[1]
-        odometry.pose.pose.position.z = 0.0
-        odometry.pose.pose.orientation.x = self.get_robot_orientation_quat(name)[0]
-        odometry.pose.pose.orientation.y = self.get_robot_orientation_quat(name)[1]
-        odometry.pose.pose.orientation.z = self.get_robot_orientation_quat(name)[2]
-        odometry.pose.pose.orientation.w = self.get_robot_orientation_quat(name)[3]
-        odometry.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                    0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                    0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-        odom.publish(odometry)
-        pos = self.ball.getField("translation").getSFVec3f()
-        orient = self.ball.getField("rotation").getSFRotation()
+        if name != "ball":
+            br = tf2_ros.TransformBroadcaster()
+            robot_gt = TransformStamped()
+            robot_gt.header.frame_id = "world"
+            robot_gt.child_frame_id = name + '/odom'
+            robot_gt.header.stamp.secs = self.clock_msg.clock.secs
+            robot_gt.header.stamp.nsecs = self.clock_msg.clock.nsecs
+            robot_gt.transform.translation.x = self.get_robot_position(name)[0]
+            robot_gt.transform.translation.y = self.get_robot_position(name)[1]
+            robot_gt.transform.translation.z = self.get_robot_position(name)[2]
+            robot_gt.transform.rotation.x = self.get_robot_orientation_quat(name)[0]
+            robot_gt.transform.rotation.y = self.get_robot_orientation_quat(name)[1]
+            robot_gt.transform.rotation.z = self.get_robot_orientation_quat(name)[2]
+            robot_gt.transform.rotation.w = self.get_robot_orientation_quat(name)[3]
+            br.sendTransform(robot_gt)
 
-        quat_scalar_first = transforms3d.quaternions.axangle2quat(orient[:3], orient[3])
-        quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
-        orient = list(quat_scalar_last)
-        self.ball_broadcaster.sendTransform(
-            (pos[0], pos[1], pos[2]),
-            (orient[0], orient[1], orient[2], orient[3]),
-            rospy.Time.from_sec(self.time),
-            base + "/ball",
-            "world"
-        )
-        ball = rospy.Publisher('/' + base + '/ball', PoseWithCovarianceStamped, queue_size=1)
-        ball_pose = PoseWithCovarianceStamped()
-        ball_pose.header.frame_id = base + '/ball'
-        ball_pose.header.stamp = rospy.Time.from_seconds(self.time)
-        ball_pose.pose.pose.position.x = pos[0]
-        ball_pose.pose.pose.position.y = pos[1]
-        ball_pose.pose.pose.position.z = pos[2]
-        ball_pose.pose.pose.orientation.x = 0
-        ball_pose.pose.pose.orientation.y = 0
-        ball_pose.pose.pose.orientation.z = 0
-        ball_pose.pose.pose.orientation.w = 1
-        ball_pose.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                     0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                     0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                     0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                     0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-        ball.publish(ball_pose)
+            # odom = rospy.Publisher('/' + name + '/base_pose_ground_truth', Odometry, queue_size=1)
+            # odometry = Odometry()
+            # odometry.header.frame_id = name + '/odom'
+            # odometry.child_frame_id = name + '/base_footprint'
+            # odometry.header.stamp = rospy.Time.from_seconds(self.time)
+            # odometry.pose.pose.position.x = self.get_robot_position(name)[0]
+            # odometry.pose.pose.position.y = self.get_robot_position(name)[1]
+            # odometry.pose.pose.position.z = self.get_robot_position(name)[2]
+            # odometry.pose.pose.orientation.x = self.get_robot_orientation_quat(name)[0]
+            # odometry.pose.pose.orientation.y = self.get_robot_orientation_quat(name)[1]
+            # odometry.pose.pose.orientation.z = self.get_robot_orientation_quat(name)[2]
+            # odometry.pose.pose.orientation.w = self.get_robot_orientation_quat(name)[3]
+            # odometry.pose.covariance = [0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
+            #                             0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
+            #                             0.0, 0.0, 0.01, 0.0, 0.0, 0.0,
+            #                             0.0, 0.0, 0.0, 0.01, 0.0, 0.0,
+            #                             0.0, 0.0, 0.0, 0.0, 0.01, 0.0,
+            #                             0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
+            # odom.publish(odometry)
+
+        else:
+            pos = self.ball.getField("translation").getSFVec3f()
+            orient = self.ball.getField("rotation").getSFRotation()
+
+            quat_scalar_first = transforms3d.quaternions.axangle2quat(orient[:3], orient[3])
+            quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
+            orient = list(quat_scalar_last)
+            self.ball_broadcaster.sendTransform(
+                (pos[0], pos[1], pos[2]),
+                (orient[0], orient[1], orient[2], orient[3]),
+                rospy.Time.from_sec(self.time),
+                name + "/ball",
+                "world"
+            )
+            ball = rospy.Publisher('/' + name + '/ball', PoseWithCovarianceStamped, queue_size=1)
+            ball_pose = PoseWithCovarianceStamped()
+            ball_pose.header.frame_id = name + '/ball'
+            ball_pose.header.stamp = rospy.Time.from_seconds(self.time)
+            ball_pose.pose.pose.position.x = pos[0]
+            ball_pose.pose.pose.position.y = pos[1]
+            ball_pose.pose.pose.position.z = pos[2]
+            ball_pose.pose.pose.orientation.x = 0
+            ball_pose.pose.pose.orientation.y = 0
+            ball_pose.pose.pose.orientation.z = 0
+            ball_pose.pose.pose.orientation.w = 1
+            ball_pose.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+            ball.publish(ball_pose)
 
     def reset_ball(self, pose: Pose):
         self.ball.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
@@ -154,11 +163,10 @@ class SupervisorController:
         # self.reset_robot_pose_rpy([-3, -3, 0.42], [0, 0.24, 1.57], name="robot4")
 
     def reset_robot(self, pose: Pose):
-        self.supervisor.simulationReset()
-        self.supervisor.simulationResetPhysics()
-        time.sleep(0.5)
+        # self.supervisor.simulationReset()
+        # self.supervisor.simulationResetPhysics()
         euler = euler_from_quaternion([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
-        self.reset_robot_pose_rpy([pose.position.x, pose.position.y, 0.350], euler, name="robot1")
+        self.reset_robot_pose_rpy([pose.position.x, pose.position.y, 0.334], euler, name="robot1")
 
     def get_robot_position(self, name="robot1"):
         if name in self.translation_fields:
