@@ -167,12 +167,13 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = 0
-        self.configuration[Joints.HEAD_2] = math.pi/8
-
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
         self.configuration[
             Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 5
+
+        self.configuration[Joints.HEAD_1] = 0
+        self.configuration[Joints.HEAD_2] = 0
+
         # last_pose = rospy.Duration(10)
         # if not self.localization_reset:
         #     try:
