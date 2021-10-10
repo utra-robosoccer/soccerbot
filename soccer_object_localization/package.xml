@@ -1,9 +1,11 @@
 <package format="2">
-    <name>soccer_object_detection</name>
+    <name>soccer_object_localization</name>
     <version>0.0.0</version>
     <description>The soccer_object_detection package</description>
 
+    <author email="jonathan.spraggett@mail.utoronto.ca">Jonathan</author>
     <maintainer email="namnam.nguyen@mail.utoronto.ca">nam</maintainer>
+    <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
 
     <license>BSD</license>
 
@@ -11,7 +13,8 @@
     <depend>rospy</depend>
     <depend>std_msgs</depend>
     <depend>soccer_geometry</depend>
-    <build_depend>message_generation</build_depend>
-    <exec_depend>message_runtime</exec_depend>
+    <depend>sensor_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>cv_bridge</depend>
 
 </package>
