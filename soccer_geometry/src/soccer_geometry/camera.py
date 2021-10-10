@@ -17,13 +17,13 @@ class Camera:
         self.resolution_x = None
         self.resolution_y = None
         self.camera_info = None
-        self.diagonal_fov = 1.523 #1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
-        self.focal_length = 3.67 #3.67
+        self.diagonal_fov = 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
+        self.focal_length = 3.67  # 3.67
 
-        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
+        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo,
+                                                 self.cameraInfoCallback)
 
         self.tf_listener = TransformListener()
-
 
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
@@ -39,15 +39,13 @@ class Camera:
 
         target_frame = self.robot_name + '/camera'
 
-        self.tf_listener.waitForTransform(base_frame, target_frame, timestamp, rospy.Duration(1))
         while not rospy.is_shutdown():
             try:
-                now = rospy.Time.now()
-                self.tf_listener.waitForTransform(base_frame, target_frame, timestamp, rospy.Duration(1))
-                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, now)
+                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                rospy.logwarn_throttle(1, "Waiting for transformation from " + self.robot_name + "/odom to " + self.robot_name + "/camera")
+                rospy.logwarn_throttle(1,
+                                       "Waiting for transformation from " + self.robot_name + "/odom to " + self.robot_name + "/camera")
 
         assert trans is not None
         assert rot is not None
