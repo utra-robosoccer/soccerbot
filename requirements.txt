@@ -9,6 +9,7 @@ prettytable
 serial
 transforms3d
 construct==2.10.67
+opencv-python
 shapely
 
 
