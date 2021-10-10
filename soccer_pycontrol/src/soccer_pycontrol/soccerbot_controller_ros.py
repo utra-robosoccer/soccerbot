@@ -171,8 +171,9 @@ class SoccerbotControllerRos(SoccerbotController):
             # print(t)
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
-                self.soccerbot.apply_head_rotation()
 
+                self.soccerbot.apply_head_rotation()
+                pass
             if t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())

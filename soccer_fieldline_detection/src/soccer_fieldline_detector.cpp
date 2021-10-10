@@ -7,6 +7,9 @@
 #include <soccer_geometry/segment2.hpp>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
+#include <iostream>
+#include <cstdio>
+#include <ctime>
 
 SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     image_transport::ImageTransport it(nh);
@@ -53,6 +56,9 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
 }
 
 void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &msg) {
+//    std::clock_t start;
+//    double duration;
+//    start = std::clock();
 
     std::vector<cv::Vec4i> lines;
     std::vector<Point2> pts;
@@ -284,6 +290,9 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             ROS_ERROR_STREAM("CV Exception" << e.what());
         }
     }
+//     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+//     std::cout<<"printf: "<< duration <<'\n';
+
 }
 
 void SoccerFieldlineDetector::fallenCallBack(const std_msgs::Bool &msg){

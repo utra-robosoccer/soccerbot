@@ -7,10 +7,9 @@ Panels:
         - /Global Options1
         - /Status1
         - /Grid1/Offset1
-        - /TF1
         - /TF1/Frames1
-        - /Friendly Goalie1/Localization1/Field Lines Point Cloud1
-        - /Friendly Left Striker1
+        - /Friendly Goalie1
+        - /Friendly Goalie1/Localization1
         - /Friendly Left Striker1/Localization1
         - /Friendly Left Striker1/Planning1
         - /Friendly Right Striker1
@@ -18,7 +17,7 @@ Panels:
         - /Friendly Right Striker1/Planning1/Goal1
         - /Friendly Right Striker1/Planning1/Path1
       Splitter Ratio: 0.5794117450714111
-    Tree Height: 276
+    Tree Height: 845
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -36,7 +35,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Field Lines Point Cloud
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -67,17 +66,13 @@ Visualization Manager:
       Frame Timeout: 3
       Frames:
         All Enabled: false
+        robot1/ball:
+          Value: true
         robot1/base_camera:
           Value: true
         robot1/base_footprint:
           Value: true
         robot1/camera:
-          Value: true
-        robot1/detected_robot_0:
-          Value: true
-        robot1/detected_robot_1:
-          Value: true
-        robot1/detected_robot_2:
           Value: true
         robot1/head:
           Value: true
@@ -135,7 +130,7 @@ Visualization Manager:
             robot1/base_camera:
               {}
             robot1/base_footprint:
-              robot1/detected_robot_0:
+              robot1/ball:
                 {}
               robot1/torso:
                 robot1/imu_link:
@@ -171,7 +166,7 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Image
-              Enabled: false
+              Enabled: true
               Image Topic: /robot1/camera/line_image
               Max Value: 1
               Median window: 5
@@ -181,9 +176,9 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: false
+              Value: true
             - Class: rviz/Image
-              Enabled: false
+              Enabled: true
               Image Topic: /robot1/detection_image
               Max Value: 1
               Median window: 5
@@ -193,7 +188,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: false
+              Value: true
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -205,8 +200,8 @@ Visualization Manager:
               Class: rviz/PointCloud2
               Color: 255; 255; 255
               Color Transformer: Intensity
-              Decay Time: 0.5
-              Enabled: false
+              Decay Time: 0
+              Enabled: true
               Invert Rainbow: false
               Max Color: 255; 255; 255
               Min Color: 0; 0; 0
@@ -214,14 +209,14 @@ Visualization Manager:
               Position Transformer: XYZ
               Queue Size: 10
               Selectable: false
-              Size (Pixels): 2
+              Size (Pixels): 5
               Size (m): 0.007000000216066837
               Style: Points
               Topic: /robot1/field_point_cloud
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: true
-              Value: false
+              Value: true
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -364,6 +359,109 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
+            robot1/camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/head:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/imu_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            robot1/left_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/left_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/neck:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_ankle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_bicep:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_calve:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_foot:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_forearm:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_hip_side:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/right_thigh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            robot1/torso:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
           Name: RobotModel
           Robot Description: robot1/robot_description
           TF Prefix: ""
@@ -389,7 +487,7 @@ Visualization Manager:
               Unreliable: false
               Value: false
             - Class: rviz/Image
-              Enabled: true
+              Enabled: false
               Image Topic: /robot2/detection_image
               Max Value: 1
               Median window: 5
@@ -399,7 +497,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: true
+              Value: false
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -595,7 +693,7 @@ Visualization Manager:
               Unreliable: false
               Value: false
             - Class: rviz/Image
-              Enabled: true
+              Enabled: false
               Image Topic: /robot3/detection_image
               Max Value: 1
               Median window: 5
@@ -605,7 +703,7 @@ Visualization Manager:
               Queue Size: 2
               Transport Hint: raw
               Unreliable: false
-              Value: true
+              Value: false
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -796,6 +894,18 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: false
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /robot1/detection_image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -823,7 +933,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.07500049471855164
+      Angle: -0.13999950885772705
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -833,7 +943,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 77.15047454833984
+      Scale: 223.5054931640625
       Target Frame: <Fixed Frame>
       X: 0
       Y: 0
@@ -841,7 +951,7 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1043
+  Height: 3072
   Hide Left Dock: false
   Hide Right Dock: false
   Image:
@@ -850,7 +960,7 @@ Window Geometry:
     collapsed: false
   Objection Detection:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001f70000030bfc0200000017fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000006e000001820000018200fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000001fc000000b0000000b000fffffffb0000000a0049006d0061006700650000000163000001210000002600fffffffb0000000a0049006d00610067006500000002280000009d0000000000000000fb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d00610067006500000001c8000000840000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000000000000000fb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e01000002b8000000680000002600fffffffb0000000a004c0069006e00650020000000030d000001100000002600fffffffb0000000a004c0069006e006500200000000696000000b10000002600fffffffb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e010000032c0000004d0000002600fffffffb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e00000002d70000009e0000002600fffffffb0000000a004c0069006e006500200000000546000002010000002600fffffffb0000000a0049006d00610067006501000003c6000001170000000000000000000000010000015f0000030bfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000006e0000030b0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000008d800000060fc0100000002fb0000000800540069006d00650100000000000008d80000057100fffffffb0000000800540069006d006501000000000000045000000000000000000000056a0000030b00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000040d00000af8fc0200000018fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000006e000003bb0000018200fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000435000000b0000000b000fffffffb0000000a0049006d0061006700650000000163000001210000002600fffffffb0000000a0049006d00610067006500000002280000009d0000002600fffffffb0000000c00430061006d006500720061000000023d000000980000000000000000fb0000000a0049006d00610067006500000001c8000000840000000000000000fb0000000c00430061006d00650072006100000002cc000000740000000000000000fb0000000a0049006d00610067006501000002510000016a0000000000000000fb0000000a0049006d00610067006501000002d7000000c70000000000000000fb0000000a0049006d00610067006501000002d9000000d90000000000000000fb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e0000000914000001960000002600fffffffb0000000a004c0069006e00650020000000030d000001100000002600fffffffb0000000a004c0069006e006500200000000696000000b10000002600fffffffb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e00000009b00000010c0000002600fffffffb00000026004f0062006a0065006300740069006f006e00200044006500740065006300740069006f006e01000004f1000003970000002600fffffffb0000000a004c0069006e006500200100000894000002d20000002600fffffffb0000000a0049006d00610067006501000003c6000001170000000000000000fb0000000a0049006d0061006700650300000ff900000d4c00000411000003dc000000010000015f00000af8fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000006e00000af80000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000104700000060fc0100000002fb0000000800540069006d00650100000000000010470000057100fffffffb0000000800540069006d0065010000000000000450000000000000000000000ac300000af800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -859,6 +969,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 2264
-  X: 3684
-  Y: 0
+  Width: 4167
+  X: 2632
+  Y: 2358
