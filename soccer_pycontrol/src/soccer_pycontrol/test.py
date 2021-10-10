@@ -11,7 +11,7 @@ if "ROS_NAMESPACE" not in os.environ:
 
 import soccerbot_controller
 
-from soccer_pycontrol.src.transformation import Transformation
+from soccer_geometry.transformation import Transformation
 
 RUN_IN_ROS = True
 if RUN_IN_ROS:
@@ -56,7 +56,7 @@ class Test(TestCase):
         self.walker.run()
 
     def test_walk_4(self):
-        self.walker.setPose(Transformation([0.3275415, 0.2841, 0.321], [ 0.04060593, 0.0120126, 0.86708929, -0.4963497]))
+        self.walker.setPose(Transformation([0.3275415, 0.2841, 0.321], [0.04060593, 0.0120126, 0.86708929, -0.4963497]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([-0.12015226, -0.19813691, 0.321], [0, 0, 0.95993011, -0.28023953]))

@@ -40,7 +40,7 @@ class SupervisorController:
         self.timestep = int(self.supervisor.getBasicTimeStep())
 
         # resolve the node for corresponding name
-        self.robot_names = ["robot1", "robot2", "robot3", "robot4"]
+        self.robot_names = ["robot1", "robot2", "robot3", "robot4", "ball"]
         self.robot_nodes = {}
         self.translation_fields = {}
         self.rotation_fields = {}
@@ -60,7 +60,7 @@ class SupervisorController:
         self.reset_service = rospy.Subscriber("/reset_robot", Pose, self.reset_robot)
         self.initial_poses_service = rospy.Service("/initial_pose", Empty, self.set_initial_poses)
 
-        self.reset_ball_service = rospy.Service("/reset_ball", Empty, self.reset_ball)
+        self.reset_ball_service = rospy.Subscriber("/reset_ball", Pose, self.reset_ball)
         self.world_info = self.supervisor.getFromDef("world_info")
         self.ball = self.supervisor.getFromDef("ball")
         self.ball_broadcaster = tf.TransformBroadcaster()
@@ -142,8 +142,8 @@ class SupervisorController:
                                      0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         ball.publish(ball_pose)
 
-    def reset_ball(self, req=None):
-        self.ball.getField("translation").setSFVec3f([0, 0, 0.0772])
+    def reset_ball(self, pose: Pose):
+        self.ball.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
         self.ball.getField("rotation").setSFRotation([0, 0, 1, 0])
         self.ball.resetPhysics()
 
