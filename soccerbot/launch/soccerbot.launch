@@ -12,7 +12,7 @@
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
-    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+<!--    <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
@@ -21,7 +21,6 @@
         tf_prefix:=$(arg robot_name)
         "
     />
-<!--    <group ns = "robot1">-->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
 
@@ -51,6 +50,5 @@
     <include file="$(find soccerbot)/launch/modules/strategy.launch" >
         <arg name="goalie" value="$(arg goalie)" />
     </include>
-<!--</group>-->
 
 </launch>

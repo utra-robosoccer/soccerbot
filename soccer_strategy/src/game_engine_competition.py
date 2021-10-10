@@ -29,8 +29,8 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 class GameEngineCompetition(game_engine.GameEngine):
     # Seconds
-    STRATEGY_UPDATE_INTERVAL = 3
-    NAV_GOAL_UPDATE_INTERVAL = 3
+    STRATEGY_UPDATE_INTERVAL = 1
+    NAV_GOAL_UPDATE_INTERVAL = 2
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]

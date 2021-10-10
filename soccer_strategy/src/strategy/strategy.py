@@ -36,7 +36,7 @@ class Strategy:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
-            if robot.status != Robot.Status.READY and robot.status != Robot.Status.WALKING:
+            if robot.status != Robot.Status.READY:
                 continue
 
             # if robot.relocalization_timeout > 0:
