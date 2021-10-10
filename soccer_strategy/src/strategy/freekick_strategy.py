@@ -52,13 +52,18 @@ class FreekickStrategy(DummyStrategy):
             kicker.set_navigation_position(np.append(ball.get_position(), 0))
 
     # preparation if we are not the kicking team
-    def update_non_kicking_strategy(self, friendly, ball, teamcolor, is_first_half):
+    def update_non_kicking_strategy(self, friendly, ball, game_properties):
         if not self.check_ball_avaliable(ball):
             return
 
         for robot in friendly:
-            if teamcolor == 0: #blue
-                goal_position = config.position_map_goal(config.GOAL_POSITION, teamcolor, is_first_half, False)
+            if game_properties.team_color == 0: #blue
+                goal_position = config.position_map_goal(
+                    config.GOAL_POSITION,
+                    game_properties.team_color,
+                    game_properties.is_first_half,
+                    False
+                )
 
                 ball_position = ball.get_position()
                 diff = ball_position - goal_position
