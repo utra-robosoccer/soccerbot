@@ -78,11 +78,15 @@ def train_model(load_model=None, num_features=16):
 
 
 def display_dataset(model_num = 11):
-    model = CNN(kernel=3, num_features=8)
-    model.load_state_dict(torch.load('06-25-2021-small-model-3/model' + str(model_num)))
-    model.eval()
+    if model_num is not None:
+        model = CNN(kernel=3, num_features=8)
+        model.load_state_dict(torch.load('../06-25-2021-small-model-3/model' + str(model_num)))
+        model.eval()
+    else:
+        model = None
+
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
-    testd.visualize_images(delay=2000, model=model, start=0)
+    traind.visualize_images(delay=200, model=model, start=0, scale=2)
 
 
 def test_model(model_num = 11):
@@ -122,8 +126,8 @@ def webcam():
 
 
 if __name__ == '__main__':
-    test_model()
+    # test_model()
     # display_dataset()
     # train_model(load_model='outputs/model', num_features=16)
-    #train_model()
-    #display_dataset(47)
+    train_model()
+    # display_dataset(None)
