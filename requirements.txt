@@ -10,9 +10,11 @@ serial
 transforms3d
 construct==2.10.67
 opencv-python
+shapely
+
 
 # object detection
-Pillow==8.2.0
+Pillow==8.3.2
 torch==1.8.1
 torchvision==0.9.1
 

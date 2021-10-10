@@ -6,14 +6,27 @@ import config as config
 from strategy.strategy import Strategy
 from soccer_msgs.msg import GameState
 from robot import Robot
+from strategy.utils import *
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 10
+GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
-class DummyStrategy(Strategy):
+ALPHA = 0.5
+BETA = 0.5
+EPS = 0.5
+
+class Thresholds:
+    POSSESSION = 0.2  # How close player has to be to ball to have possession
+    GOALIE_ANGLE = 5  # How close goalie has to be to defense line
+    PASS = -1  # Maximum distance between players trying to pass to each other
+    OBSTACLE = 1  # Size of player obstacles
+    PASSING = 2  # distance for obstacle detection when moving to a position
+
+class DummyStrategy2(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        super(DummyStrategy, self).__init__()
+        super(DummyStrategy2, self).__init__()
 
     # generate goal position
     @staticmethod
@@ -91,7 +104,7 @@ class DummyStrategy(Strategy):
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
                         current_closest.set_navigation_position(destination_position_biased)
-
+                        # self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
@@ -135,3 +148,42 @@ class DummyStrategy(Strategy):
         #             player.status = Robot.Status.READY
         #             rospy.sleep(0.5)
         #             player.completed_trajectory_publisher.publish(True)
+
+
+    def move_player_to(self, player, destination_position):
+        # Path planning with obstacle avoidance via potential functions
+        # Source:
+        # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
+        obstacles = np.array(player.get_detected_obstacles())
+        player_position = np.array(player.get_position()[0:2])
+        goal_pos = np.array(destination_position[0:2])
+
+        if distance_between(player_position, goal_pos) > EPS:
+            grad = grad_att(ALPHA, player_position, goal_pos)
+            if len(obstacles) > 0:
+                r_rep = 2 * Thresholds.POSSESSION
+                d_rep = float('inf')
+                obs_rep = None
+                for obs in obstacles:
+                    dist = distance_between(obs[0:2], player_position)
+                    if dist < d_rep:
+                        d_rep = dist
+                        obs_rep = obs
+                        # grad -= grad_rep(self._beta, r_rep, dist, obs, self._player_pos)
+                grad -= grad_rep(BETA, r_rep, d_rep, obs_rep, player_position)
+            # Perturb out of local minima
+            angle_rand = np.random.uniform(low=-np.pi / 12, high=np.pi / 12)
+            rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
+                                      [np.sin(angle_rand), np.cos(angle_rand)]])
+            grad_perturbed = rotation_rand @ grad
+            # Gradient descent update
+            goal_pos = player_position - GRADIENT_UPDATE_INTERVAL_LENGTH * grad_perturbed
+
+        # Update robot state
+        diff = player_position - goal_pos
+        diff_unit = diff / np.linalg.norm(diff)
+        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+
+        # send player to new position
+        player.set_navigation_position(np.append(goal_pos, diff_angle))
+        print(str(goal_pos) + "  " + str(diff_angle))

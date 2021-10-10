@@ -8,14 +8,21 @@ import matplotlib.patches as patches
 from robot import Robot
 from ball import Ball
 from strategy.dummy_strategy import DummyStrategy
+#from strategy.team_strategy import TeamStrategy
+from strategy.stationary_strategy import StationaryStrategy
+from strategy.player_strategy import TeamStrategy, ScoreStrategy
+
+from strategy.utils import GameProperties, Field
 import math
 import numpy as np
 import copy
+import itertools
+
 from soccer_pycontrol import path
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 100  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 50  # Every 5 physics steps
     DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
 
     def __init__(self, display=True):
@@ -39,7 +46,7 @@ class GameEngine:
             Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ]
-        self.ball = Ball(position=np.array([1.5, 0.5]))
+        self.ball = Ball(position=np.array([-2, 0]))
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
@@ -67,9 +74,14 @@ class GameEngine:
             foreground = fig.add_axes([0, 0, 1, 1])
             foreground.set_facecolor((0, 0, 0, 0))
 
+
         # Setup the strategy
-        self.team1_strategy = DummyStrategy()
-        self.team2_strategy = DummyStrategy()
+        self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
+        self.team2_strategy = StationaryStrategy()
+        #self.team1_strategy = DummyStrategy()
+        #self.team2_strategy = DummyStrategy()
+        self.team1_strategy_rtval = None
+        self.team2_strategy_rtval = None
 
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
@@ -85,8 +97,8 @@ class GameEngine:
             self.updateEstimatedPhysics(self.robots, self.ball)
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.team1_strategy.update_team_strategy(self.robots, self.ball, 0, 1, 0)
-                self.team2_strategy.update_team_strategy(self.robots, self.ball, 1, 1, 0, opponent_team=True)
+                self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.ball, GameProperties(0, 1, 0))
+                self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.ball, GameProperties(1, 1, 0, opponent_team=True))
 
             # Check victory condition
             if self.ball.get_position()[0] > 4.5:
@@ -138,6 +150,7 @@ class GameEngine:
             foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
             foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
 
+        # plot path of the robots
         for robot in self.robots:
             if robot.path is not None:
                 verts = []
@@ -150,6 +163,26 @@ class GameEngine:
                     foreground.plot(x, y, 'g-')
                 else:
                     foreground.plot(x, y, 'r-')
+
+        # plot potential field
+        # get points, angles
+        if self.team1_strategy_rtval is not None:
+            if "potential_field_vectors" in self.team1_strategy_rtval:
+                field_vectors = self.team1_strategy_rtval["potential_field_vectors"]
+                # for each robot
+                for k in range(0, len(field_vectors)):
+                    if field_vectors[k] is not None:
+                        for i in range(0, len(field_vectors[k][0])):
+                            foreground.arrow(
+                                field_vectors[k][0][i][0],
+                                field_vectors[k][0][i][1],
+                                field_vectors[k][1][i][0],
+                                field_vectors[k][1][i][1],
+                                head_width=0.05,
+                                head_length=0.05,
+                                color='orange'
+                            )
+
         # GUI text
         foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
 
@@ -165,9 +198,9 @@ class GameEngine:
                 update_position = robot.transformation_to_position(update_position_transformation)
 
                 # if done walking
-                if robot.robot_id == 4:
-                    print(robot.path.isFinished(robot.path_time))
-                    print(str(robot.path_time) + " - " + str(robot.path.duration()))
+                # if robot.robot_id == 4:
+                #     print(robot.path.isFinished(robot.path_time))
+                #     print(str(robot.path_time) + " - " + str(robot.path.duration()))
                 if robot.path.isFinished(robot.path_time):
                     robot.status = Robot.Status.READY
                     continue
@@ -192,8 +225,16 @@ class GameEngine:
         # assume that robot always know where the ball is
         self.ball.position_is_live_timeout = 10
         self.ball.position = self.ball.get_position() + self.ball.get_velocity() * GameEngine.PHYSICS_UPDATE_INTERVAL
-        self.ball.velocity = self.ball.velocity * Ball.FRICTION_COEFF
 
+        if not np.array_equal(self.ball.velocity, np.array([0, 0])):
+            ball_unit_velocity = self.ball.velocity / np.linalg.norm(self.ball.velocity)
+
+            ball_delta_speed = Ball.FRICTION * GameEngine.PHYSICS_UPDATE_INTERVAL
+            ball_speed = np.linalg.norm(self.ball.velocity)
+            if ball_speed > ball_delta_speed:
+                self.ball.velocity = self.ball.velocity - ball_delta_speed * ball_unit_velocity
+            else:
+                self.ball.velocity = np.array([0, 0])
 
     def resetRobots(self):
         self.robots = copy.deepcopy(self.robots_init)
