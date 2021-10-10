@@ -47,8 +47,7 @@ class DetectorFieldline(Detector):
 
         pts = []
 
-
-        self.camera.reset_position(timestamp=img.header.stamp)
+        self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
 
         rgb_image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
@@ -56,40 +55,45 @@ class DetectorFieldline(Detector):
         image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
 
-        mask = cv2.inRange(hsv, lowerb=(45, 115, 45), upperb=(70, 255, 255))
-        (contours, hierarchy) = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        bound_rects = []
+        h = self.camera.calculateHorizonCoverArea()
+        cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
 
+        # Original Method using contours
 
-        for c in contours:
-            if cv2.contourArea(c) > 1000:
-                hull = cv2.convexHull(c)
-                bound_rects.append(cv2.boundingRect(hull))
-
-        # Merge largest contours
-        if len(bound_rects) > 0:
-            def union(a, b):
-                x = min(a[0], b[0])
-                y = min(a[1], b[1])
-                w = max(a[0] + a[2], b[0] + b[2]) - x
-                h = max(a[1] + a[3], b[1] + b[3]) - y
-                return (x, y, w, h)
-
-            final = bound_rects[0]
-            for rect in bound_rects:
-                final = union(final, rect)
-            color = [0, 0, 255]
-
-            tl = final[0:2]
-            br = (final[0] + final[2], final[1] + final[3])
-            cv2.rectangle(image, tl, br, color, 2)
-
-            # Top black rectangle
-            cv2.rectangle(image, [0, 0], [br[0], tl[1]], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
-
-            # Bottom black rectangle
-            # TODO Hardcoded second point needs to take in camera info
-            cv2.rectangle(image, [tl[0], br[1]], [640, 480], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
+        # mask = cv2.inRange(hsv, lowerb=(45, 115, 45), upperb=(70, 255, 255))
+        # (contours, hierarchy) = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # bound_rects = []
+        #
+        #
+        # for c in contours:
+        #     if cv2.contourArea(c) > 1000:
+        #         hull = cv2.convexHull(c)
+        #         bound_rects.append(cv2.boundingRect(hull))
+        #
+        # # Merge largest contours
+        # if len(bound_rects) > 0:
+        #     def union(a, b):
+        #         x = min(a[0], b[0])
+        #         y = min(a[1], b[1])
+        #         w = max(a[0] + a[2], b[0] + b[2]) - x
+        #         h = max(a[1] + a[3], b[1] + b[3]) - y
+        #         return (x, y, w, h)
+        #
+        #     final = bound_rects[0]
+        #     for rect in bound_rects:
+        #         final = union(final, rect)
+        #     color = [0, 0, 255]
+        #
+        #     tl = final[0:2]
+        #     br = (final[0] + final[2], final[1] + final[3])
+        #     cv2.rectangle(image, tl, br, color, 2)
+        #
+        #     # Top black rectangle
+        #     cv2.rectangle(image, [0, 0], [br[0], tl[1]], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
+        #
+        #     # Bottom black rectangle
+        #     # TODO Hardcoded second point needs to take in camera info
+        #     cv2.rectangle(image, [tl[0], br[1]], [640, 480], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
 
         # Field line detection
         mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))

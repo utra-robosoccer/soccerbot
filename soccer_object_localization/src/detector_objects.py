@@ -31,7 +31,7 @@ class DetectorBall(Detector):
     def ballDetectorCallback(self, msg: BoundingBoxes):
         if not self.camera.ready:
             return
-        self.camera.reset_position(publish_basecamera=False, timestamp=msg.header.stamp)
+        self.camera.reset_position(timestamp=msg.header.stamp)
 
         detected_robots = 0
         for box in msg.bounding_boxes:

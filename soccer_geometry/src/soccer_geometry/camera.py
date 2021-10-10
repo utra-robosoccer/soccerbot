@@ -28,7 +28,7 @@ class Camera:
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
-    def reset_position(self, publish_basecamera=True, from_world_frame=False, timestamp=rospy.Time(0)):
+    def reset_position(self, publish_basecamera=False, from_world_frame=False, timestamp=rospy.Time(0)):
         trans = None
         rot = None
 
@@ -44,8 +44,11 @@ class Camera:
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                rospy.logwarn_throttle(1,
+                rospy.logwarn_throttle(10,
                                        "Waiting for transformation from " + self.robot_name + "/odom to " + self.robot_name + "/camera")
+
+        if rospy.is_shutdown():
+            exit(0)
 
         assert trans is not None
         assert rot is not None
@@ -244,9 +247,9 @@ class Camera:
 
         return tr_cam
 
-    def calculateHorizonCoverArea(self):
-        theta = self.pose.get_orientation_euler()[0]
-        d = math.sin(theta) * self.focal_length
+    def calculateHorizonCoverArea(self) -> int:
+        pitch = self.pose.get_orientation_euler()[1]
+        d = math.sin(pitch) * self.focal_length
 
-        (r, h) = self.worldToImageFrame(0, d)
-        return h
+        (r, h) = self.worldToImageFrame(0, -d)
+        return int(max(0, h))
