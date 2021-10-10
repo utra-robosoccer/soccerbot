@@ -98,65 +98,42 @@ private:
         int detected_robots = 0;
         for (soccer_object_detection::BoundingBox &box : bounding_boxes) {
                 std::string objectClass = box.Class;
+//            int xavg2 = (box.xmin + box.xmax) / 2;
+//            int yavg2 = (box.ymin + box.ymax) / 2;
+//            float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
+//
+//            Point3 floor_coordinate = camera->FindFloorCoordinate(xavg2, yavg2);
+//            // Reduce false positives
+//            if (area < 3500.0 and float(angle) > 0.6  ) {
+//                continue;
+//            }
+//            else if (area < 400.0 ) {
+//                continue;
+//            }
 
                 if (objectClass == "ball") {
 
-//                    float xavg = (box.xmin + box.xmax) / 2;
-//                    float yavg = 0.5 * box.ymax + 0.5 * box.ymin;
-//                    float yclose = box.ymax;
-//
-//                    Point3 floor_coordinate_center = camera->FindFloorCoordinate(xavg, yavg);
-//                    Point3 floor_coordinate_close = camera->FindFloorCoordinate(xavg, yclose);
-//
-//                    Pose3 camera_pose = camera->getPose();
-//                    float camera_height = camera_pose.position.z;
-//                    float distance = sqrt(pow(floor_coordinate_center.x - camera_pose.position.x, 2) + pow(floor_coordinate_center.y - camera_pose.position.y, 2));
-//                    float theta = atan2(distance, camera_height);
-//                    float ratio = pow(tan(theta),2);
-//                    float ratio2 = 1 / (1 + ratio);
-//                    if (ratio2 > 1 && ratio2 < 0) {
-//                        continue;
-//                    }
-//                    Point3 floor_coordinate = floor_coordinate_close;
-//                    floor_coordinate.x = floor_coordinate.x * (1 - ratio2) + floor_coordinate_center.x * ratio2;
-//                    floor_coordinate.y = floor_coordinate.y * (1 - ratio2) + floor_coordinate_center.y * ratio2;
-//
-//                    geometry_msgs::TransformStamped ball_pose;
-//                    ball_pose.header.frame_id = robotName + "/base_footprint";
-//                    ball_pose.child_frame_id = robotName + "/ball";
-//                    ball_pose.header.stamp = msg->header.stamp;
-//                    ball_pose.header.seq = msg->header.seq;
-//                    ball_pose.transform.translation.x = floor_coordinate.x;
-//                    ball_pose.transform.translation.y = floor_coordinate.y;
-//                    ball_pose.transform.translation.z = floor_coordinate.z;
-//                    ball_pose.transform.rotation.x = 0;
-//                    ball_pose.transform.rotation.y = 0;
-//                    ball_pose.transform.rotation.z = 0;
-//                    ball_pose.transform.rotation.w = 1;
-//                    BallDetector::br.sendTransform(ball_pose);
-//
-//                    geometry_msgs::PointStamped ball_pixel;
-//                    ball_pixel.header.frame_id = robotName + "/base_footprint";
-//                    ball_pixel.header.seq = msg->header.seq;
-//                    ball_pixel.header.stamp = msg->header.stamp;
-//                    ball_pixel.point.x = xavg;
-//                    ball_pixel.point.y = yavg;
-//                    ball_pixel.point.z = 0;
-//                    ballPixelPublisher.publish(ball_pixel);
-                     // For now take the center of the box
-                int xavg = (box.xmin + box.xmax) / 2;
-                int yavg = (box.ymin + box.ymax) / 2;
-                float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
+                    float xavg = (box.xmin + box.xmax) / 2;
+                    float yavg = 0.5 * box.ymax + 0.5 * box.ymin;
+                    float yclose = box.ymax;
 
-                Point3 floor_coordinate = camera->FindFloorCoordinate(xavg, yavg);
-                // Reduce false positives
-                if (area < 3500.0 and float(angle) > 0.6  ) {
-                    continue;
-                }
-                else if (area < 400.0 ) {
-                    continue;
-                }
-                        geometry_msgs::TransformStamped ball_pose;
+                    Point3 floor_coordinate_center = camera->FindFloorCoordinate(xavg, yavg);
+                    Point3 floor_coordinate_close = camera->FindFloorCoordinate(xavg, yclose);
+
+                    Pose3 camera_pose = camera->getPose();
+                    float camera_height = camera_pose.position.z;
+                    float distance = sqrt(pow(floor_coordinate_center.x - camera_pose.position.x, 2) + pow(floor_coordinate_center.y - camera_pose.position.y, 2));
+                    float theta = atan2(distance, camera_height);
+                    float ratio = pow(tan(theta),2);
+                    float ratio2 = 1 / (1 + ratio);
+                    if (ratio2 > 1 && ratio2 < 0) {
+                        continue;
+                    }
+                    Point3 floor_coordinate = floor_coordinate_close;
+                    floor_coordinate.x = floor_coordinate.x * (1 - ratio2) + floor_coordinate_center.x * ratio2;
+                    floor_coordinate.y = floor_coordinate.y * (1 - ratio2) + floor_coordinate_center.y * ratio2;
+
+                    geometry_msgs::TransformStamped ball_pose;
                     ball_pose.header.frame_id = robotName + "/base_footprint";
                     ball_pose.child_frame_id = robotName + "/ball";
                     ball_pose.header.stamp = msg->header.stamp;
@@ -170,8 +147,6 @@ private:
                     ball_pose.transform.rotation.w = 1;
                     BallDetector::br.sendTransform(ball_pose);
 
-
-
                     geometry_msgs::PointStamped ball_pixel;
                     ball_pixel.header.frame_id = robotName + "/base_footprint";
                     ball_pixel.header.seq = msg->header.seq;
@@ -180,6 +155,9 @@ private:
                     ball_pixel.point.y = yavg;
                     ball_pixel.point.z = 0;
                     ballPixelPublisher.publish(ball_pixel);
+
+
+
                 }
 
                 if (objectClass == "robot") {
