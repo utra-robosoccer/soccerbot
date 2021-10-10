@@ -21,6 +21,7 @@
         tf_prefix:=$(arg robot_name)
         "
     />
+
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
         <param name="publish_frequency" type="double" value="120.0" />
     </node>

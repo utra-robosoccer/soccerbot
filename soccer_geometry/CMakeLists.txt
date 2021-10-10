@@ -10,10 +10,6 @@ set(PKG_DEPS
 
 find_package(catkin REQUIRED ${PKG_DEPS})
 
-catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS ${PKG_DEPS}
-)
+catkin_package()
 
 catkin_python_setup()
