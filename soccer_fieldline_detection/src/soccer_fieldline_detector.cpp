@@ -17,7 +17,7 @@ SoccerFieldlineDetector::SoccerFieldlineDetector() : tfListener(tfBuffer){
     point_cloud_publisher = SoccerFieldlineDetector::nh.advertise<sensor_msgs::PointCloud2> ("field_point_cloud",1);
     fallen_sub = nh.subscribe("trajectory_complete", 1, &SoccerFieldlineDetector::fallenCallBack, this);
     image_publisher = it.advertise("camera/line_image",1);
-
+//    image_p = it.advertise("camera/image_horizon",1);
     // Parameters
     nh.getParam("soccer_fieldline_detector/cannythreshold1", cannythreshold1);
     nh.getParam("soccer_fieldline_detector/cannythreshold2", cannythreshold2);
@@ -165,6 +165,9 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
 
             }
 
+//            sensor_msgs::ImagePtr message2 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image).toImageMsg();
+//            image_p.publish(message2);
+
             // Field Line Detection
             cvtColor(image, hsv , cv::COLOR_BGR2HSV);
             cv::inRange(hsv,cv::Scalar (0,0,255 - 65) , cv::Scalar(255, 65, 255), mask);
@@ -209,7 +212,6 @@ void SoccerFieldlineDetector::imageCallback(const sensor_msgs::ImageConstPtr &ms
             }
 
             sensor_msgs::ImagePtr message = cv_bridge::CvImage(std_msgs::Header(), "bgr8", dst).toImageMsg();
-
             image_publisher.publish(message);
 
 

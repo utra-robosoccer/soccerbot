@@ -94,7 +94,7 @@ class DummyStrategy2(Strategy):
                     print("Angle between player and ball")
                     print(nav_angle__diff)
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) > 0.15:
+                    if distance_of_player_to_ball < 0.21 and abs(nav_angle__diff) > 0.15:
                         print("robot ball angle too large, unable to kick " + str(abs(nav_angle__diff)))
                     print("Distance between player and ball")
                     print(distance_of_player_to_ball)

@@ -6,7 +6,7 @@ from strategy.freekick_strategy import FreekickStrategy
 
 class PenaltykickStrategy(FreekickStrategy):
     # preparation if we are not the kicking team
-    def update_non_kicking_strategy(self, friendly, ball, game_properties):
+    def update_non_kicking_strategy(self, friendly, ball, game_properties,half_time):
         if not self.check_ball_avaliable(ball):
             return
 

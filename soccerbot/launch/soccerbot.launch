@@ -8,7 +8,7 @@
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
-
+    <arg name="ROBOCUP_TEAM_COLOR" default="red" />
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
@@ -49,6 +49,7 @@
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" >
         <arg name="goalie" value="$(arg goalie)" />
+        <arg name="ROBOCUP_TEAM_COLOR" value="$(arg ROBOCUP_TEAM_COLOR)" />
     </include>
 
 </launch>

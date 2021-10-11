@@ -52,7 +52,7 @@ class FreekickStrategy(DummyStrategy):
             kicker.set_navigation_position(np.append(ball.get_position(), 0))
 
     # preparation if we are not the kicking team
-    def update_non_kicking_strategy(self, friendly, ball, game_properties):
+    def update_non_kicking_strategy(self, friendly, ball, game_properties,half_time):
         if not self.check_ball_avaliable(ball):
             return
 
