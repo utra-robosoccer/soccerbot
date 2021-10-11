@@ -2,6 +2,6 @@
     <env name="GAME_CONTROLLER_HOME" value="$HOME/catkin_ws/src/soccerbot/external/GameController" />
     <env name="WEBOTS_HOME" value="$HOME/catkin_ws/src/soccerbot/external/webots" />
     <env name="JAVA_HOME" value="/usr" />
-    
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
     <node pkg="soccerbot" type="game_controller.sh" name="game_controller" required="true"/>
 </launch>

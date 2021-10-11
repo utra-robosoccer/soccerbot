@@ -2,7 +2,7 @@ import enum
 from copy import deepcopy
 import tf
 from soccer_pycontrol import path
-from soccer_pycontrol import transformation
+from soccer_geometry import transformation
 
 import numpy as np
 
