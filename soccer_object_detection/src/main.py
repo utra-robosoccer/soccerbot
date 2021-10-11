@@ -15,15 +15,15 @@ def train_model(load_model=None, num_features=16):
     experiment = {
         'seed': 1234,
         'model_kernel': 3,
-        'model_num_features': 16,
-        'model_dropout_rate': 0.05,
-        'train_class_weight': [.2, .02, .78],  # BALL, ROBOT, OTHER
+        'model_num_features': 17,
+        'model_dropout_rate': 0.01,
+        'train_class_weight': [.18, .02, .80],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-2, # 1e-3,
-        'train_weight_decay': 1e-8,
+        'train_weight_decay': 1e-9,
         'train_batch_size': 8, # 32, # 80, # 20,
-        'train_epochs': 2,
+        'train_epochs': 7,
         'colour_jitter': [0.0, 0.0, 0.0, 0.0],  # brightness, contrast, saturation, hue
-        'output_folder': 'ae-training',
+        'output_folder': 'nam-training3',
     }
 
     # Save directory
@@ -77,16 +77,16 @@ def train_model(load_model=None, num_features=16):
     torch.save(model.state_dict(), 'outputs/model')
 
 
-def display_dataset(model_num = 11):
-    if model_num is not None:
-        model = CNN(kernel=3, num_features=8)
-        model.load_state_dict(torch.load('../06-25-2021-small-model-3/model' + str(model_num)))
+def display_dataset(model_path, num_feat):
+    if model_path is not None:
+        model = CNN(kernel=3, num_features=num_feat)
+        model.load_state_dict(torch.load(model_path))
         model.eval()
     else:
         model = None
 
     [trainl, _, _], [traind, testd] = initialize_loader(6, num_workers=1, shuffle=False)
-    traind.visualize_images(delay=200, model=model, start=0, scale=2)
+    testd.visualize_images(delay=1200, model=model, start=0, scale=2)
 
 
 def test_model(model_num = 11):
@@ -129,5 +129,5 @@ if __name__ == '__main__':
     # test_model()
     # display_dataset()
     # train_model(load_model='outputs/model', num_features=16)
-    train_model()
-    # display_dataset(None)
+    #train_model()
+    display_dataset('outputs/model_j1_feat17', num_feat=17)
