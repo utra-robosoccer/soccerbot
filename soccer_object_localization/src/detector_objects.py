@@ -34,39 +34,57 @@ class DetectorBall(Detector):
         self.camera.reset_position(timestamp=msg.header.stamp)
 
         detected_robots = 0
+
+        def box_union(box1: BoundingBox, box2: BoundingBox) -> BoundingBox:
+            box_final = box1
+            box_final.ymin = min(box_final.ymin, box2.ymin)
+            box_final.xmin = min(box_final.xmin, box2.xmin)
+            box_final.ymax = max(box_final.ymax, box2.ymax)
+            box_final.xmax = max(box_final.xmax, box2.xmax)
+            return box_final
+
+        # Ball
+        final_box = None
         for box in msg.bounding_boxes:
             if box.Class == "ball":
+                if final_box == None:
+                    final_box = box
+                else:
+                    final_box = box_union(final_box, box)
 
-                boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+        if final_box is not None:
+            boundingBoxes = [[final_box.xmin, final_box.ymin], [final_box.xmax, final_box.ymax]]
+            position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
-                br = tf2_ros.TransformBroadcaster()
-                ball_pose = TransformStamped()
-                ball_pose.header.frame_id = self.robot_name + "/base_footprint"
-                ball_pose.child_frame_id = self.robot_name + "/ball"
-                ball_pose.header.stamp = msg.header.stamp
-                ball_pose.header.seq = msg.header.seq
-                ball_pose.transform.translation.x = position.get_position()[0]
-                ball_pose.transform.translation.y = position.get_position()[1]
-                ball_pose.transform.translation.z = 0
-                ball_pose.transform.rotation.x = 0
-                ball_pose.transform.rotation.y = 0
-                ball_pose.transform.rotation.z = 0
-                ball_pose.transform.rotation.w = 1
-                br.sendTransform(ball_pose)
+            br = tf2_ros.TransformBroadcaster()
+            ball_pose = TransformStamped()
+            ball_pose.header.frame_id = self.robot_name + "/base_footprint"
+            ball_pose.child_frame_id = self.robot_name + "/ball"
+            ball_pose.header.stamp = msg.header.stamp
+            ball_pose.header.seq = msg.header.seq
+            ball_pose.transform.translation.x = position.get_position()[0]
+            ball_pose.transform.translation.y = position.get_position()[1]
+            ball_pose.transform.translation.z = 0
+            ball_pose.transform.rotation.x = 0
+            ball_pose.transform.rotation.y = 0
+            ball_pose.transform.rotation.z = 0
+            ball_pose.transform.rotation.w = 1
+            br.sendTransform(ball_pose)
 
-                # TODO remove
-                ball_pixel = PointStamped()
-                ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
-                ball_pixel.header.seq = msg.header.seq
-                ball_pixel.header.stamp = msg.header.stamp
-                x_avg = (box.xmin + box.xmax) / 2.
-                y_avg = (box.ymax + box.ymin) / 2.
-                ball_pixel.point.x = x_avg
-                ball_pixel.point.y = y_avg
-                ball_pixel.point.z = 0
-                self.ball_pixel_pub.publish(ball_pixel)
+            # TODO remove
+            ball_pixel = PointStamped()
+            ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
+            ball_pixel.header.seq = msg.header.seq
+            ball_pixel.header.stamp = msg.header.stamp
+            x_avg = (final_box.xmin + final_box.xmax) / 2.
+            y_avg = (final_box.ymax + final_box.ymin) / 2.
+            ball_pixel.point.x = x_avg
+            ball_pixel.point.y = y_avg
+            ball_pixel.point.z = 0
+            self.ball_pixel_pub.publish(ball_pixel)
 
+        # Robots
+        for box in msg.bounding_boxes:
             if box.Class == "robot":
                 if self.head_motor_1_angle > 0.6:
                     continue  # probably looking at own hands
