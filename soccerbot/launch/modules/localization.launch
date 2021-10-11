@@ -27,7 +27,7 @@
     <!-- Ball Detection -->
     <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" output="screen" respawn="true" unless="$(arg fake_localization)"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
-        args="$(find soccer_object_detection)/src/outputs/model24" unless="$(arg fake_localization)"/>
+        args="$(find soccer_object_detection)/src/outputs/model_j1_feat17" unless="$(arg fake_localization)"/>
 
 
     <!-- Complementary filter -->
