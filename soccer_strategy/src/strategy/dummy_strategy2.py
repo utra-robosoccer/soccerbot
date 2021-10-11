@@ -15,12 +15,14 @@ ALPHA = 0.5
 BETA = 0.5
 EPS = 0.5
 
+
 class Thresholds:
     POSSESSION = 0.2  # How close player has to be to ball to have possession
     GOALIE_ANGLE = 5  # How close goalie has to be to defense line
     PASS = -1  # Maximum distance between players trying to pass to each other
     OBSTACLE = 1  # Size of player obstacles
     PASSING = 2  # distance for obstacle detection when moving to a position
+
 
 class DummyStrategy2(Strategy):
 
@@ -35,7 +37,7 @@ class DummyStrategy2(Strategy):
             config.ENEMY_GOAL_POSITION,
             game_properties.team_color,
             game_properties.is_first_half,
-            game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
+            game_properties.secondary_state == GameState.STATE_PENALTYSHOOT  # is pentalty shot
         )
 
         if abs(ball.get_position()[1]) < 1.0:
@@ -51,8 +53,8 @@ class DummyStrategy2(Strategy):
 
             if abs(ball.get_position()[1]) < 3.5 and abs(ball.get_position()[0]) < 5:
 
-                current_closest = self.who_has_the_ball(friendly, ball) # Guess who has the ball
-                if current_closest is not None: #and current_closest.send_nav:
+                current_closest = self.who_has_the_ball(friendly, ball)  # Guess who has the ball
+                if current_closest is not None:  # and current_closest.send_nav:
 
                     # generate destination pose
                     ball_position = ball.get_position()
@@ -72,25 +74,31 @@ class DummyStrategy2(Strategy):
                     destination_position_biased = player_position + diff * navigation_bias
 
                     # nav goal behind the ball
-                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
+                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
+                                                   diff_angle]
 
-                    # print("Position of closest player")
-                    # print(player_position)
-                    # print("Ball Position")
-                    # print(ball_position)
+                    print("Position of closest player")
+                    print(player_position)
+                    print("Ball Position")
+                    print(ball_position)
                     # print("Destination Position")
                     # print(destination_position)
-                    # print("Distance between player and ball")
-                    # print(distance_of_player_to_ball)
 
                     # difference between robot angle and nav goal angle
-                    nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle), math.cos(player_angle - diff_angle))
+                    robot_ball_vector = ball_position - player_position
+                    robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
 
+                    nav_angle__diff = (player_angle - robot_ball_angle)
+                    print("Player angle ", player_angle)
+                    print("robot_ball_angle ", robot_ball_angle)
+                    print("Angle between player and ball")
+                    print(nav_angle__diff)
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) > 0.15:
                         print("robot ball angle too large, unable to kick " + str(abs(nav_angle__diff)))
-
-                    if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15 and current_closest.path.isFinished(current_closest.path_time):
+                    print("Distance between player and ball")
+                    print(distance_of_player_to_ball)
+                    if distance_of_player_to_ball < 0.18:
                         if nav_angle__diff > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
@@ -122,7 +130,6 @@ class DummyStrategy2(Strategy):
                     turn_position = [player_position[0], player_position[1], player_angle + math.pi]
                     player.set_navigation_position(turn_position)
 
-
         # If the robot is walking and a detected obstacle in the direction of the robot
         # for player in friendly:
         #     if player.status == Robot.Status.WALKING:
@@ -148,7 +155,6 @@ class DummyStrategy2(Strategy):
         #             player.status = Robot.Status.READY
         #             rospy.sleep(0.5)
         #             player.completed_trajectory_publisher.publish(True)
-
 
     def move_player_to(self, player, destination_position):
         # Path planning with obstacle avoidance via potential functions

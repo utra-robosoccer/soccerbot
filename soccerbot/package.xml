@@ -19,9 +19,9 @@
   <!-- Localization -->
   <depend>amcl</depend>
   <depend>soccer_object_detection</depend>
+  <depend>soccer_object_localization</depend>
   <depend>map_server</depend>
   <depend>soccer_common</depend>
-  <depend>soccer_fieldline_detection</depend>
   <depend>imu_complementary_filter</depend>
   <depend>robot_pose_ekf</depend>
   <depend>robot_localization</depend>
@@ -29,11 +29,13 @@
   <depend>fake_localization</depend>
   <depend>webots_ros</depend>
   <depend>liborocos-bfl-dev</depend>
+
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_webots</depend>
   <depend>soccer_msgs</depend>
   <depend>python3-protobuf</depend>
+
   <!-- Communication-->
 
   <!-- strategy-->
