@@ -1,0 +1,31 @@
+digraph G {
+"robot1/head" -> "robot1/camera"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 3234.248 sec old)\nBuffer length: 0.000 sec\n"];
+"robot1/neck" -> "robot1/head"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/torso" -> "robot1/imu_link"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 3234.248 sec old)\nBuffer length: 0.000 sec\n"];
+"robot1/base_footprint" -> "robot1/torso"[label="Broadcaster: /robot1/torso_height_publisher\nAverage rate: 18.571 Hz\nMost recent transform: 3234.200 ( 0.048 sec old)\nBuffer length: 1.400 sec\n"];
+"robot1/odom" -> "robot1/base_camera"[label="Broadcaster: /robot1/soccer_fieldline_detector\nAverage rate: 63.172 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.488 sec\n"];
+"world" -> "robot1/odom"[label="Broadcaster: /robot1/amcl\nAverage rate: 63.179 Hz\nMost recent transform: 3234.324 ( -0.076 sec old)\nBuffer length: 1.472 sec\n"];
+"robot1/torso" -> "robot1/neck"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/torso" -> "robot1/left_bicep"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_bicep" -> "robot1/left_forearm"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/torso" -> "robot1/left_hip_side"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_hip_side" -> "robot1/left_hip_front"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_hip_front" -> "robot1/left_thigh"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_thigh" -> "robot1/left_calve"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_calve" -> "robot1/left_ankle"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/left_ankle" -> "robot1/left_foot"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/torso" -> "robot1/right_bicep"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_bicep" -> "robot1/right_forearm"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/torso" -> "robot1/right_hip_side"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_hip_side" -> "robot1/right_hip_front"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_hip_front" -> "robot1/right_thigh"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_thigh" -> "robot1/right_calve"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_calve" -> "robot1/right_ankle"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/right_ankle" -> "robot1/right_foot"[label="Broadcaster: /robot1/robot_state_publisher\nAverage rate: 42.350 Hz\nMost recent transform: 3234.240 ( 0.008 sec old)\nBuffer length: 1.464 sec\n"];
+"robot1/base_footprint" -> "robot1/ball"[label="Broadcaster: /robot1/ball_detector\nAverage rate: 10.838 Hz\nMost recent transform: 3234.176 ( 0.072 sec old)\nBuffer length: 1.384 sec\n"];
+"robot1/odom" -> "robot1/base_footprint"[label="Broadcaster: /robot1/robot_pose_ekf\nAverage rate: 29.330 Hz\nMost recent transform: 3234.200 ( 0.048 sec old)\nBuffer length: 1.432 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 3234.248"[ shape=plaintext ] ;
+ }->"world";
+}

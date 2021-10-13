@@ -9,8 +9,7 @@ source ~/catkin_ws/devel/setup.bash
 cd ~/catkin_ws
 #exec catkin build soccerbot
 ##########
-# sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 --net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1
-# sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=127.0.1.1 --net="host" utrarobosoccer/soccerbot:latest bash ./start_competition.sh robot1
+# sudo docker run -e ROBOCUP_SIMULATOR_ADDR=127.0.0.1:10021 -e ROBOCUP_TEAM_COLOR=blue -e ROBOCUP_ROBOT_ID=1 -e ROBOCUP_GAMECONTROLLER_IP=0.0.0.0 -e ROBOCUP_MIRROR_SERVER_IP=127.0.0.1 --net="host" utrarobosoccer/soccerbot:latest bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1
 ##########
 
 

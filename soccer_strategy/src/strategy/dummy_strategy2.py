@@ -111,8 +111,8 @@ class DummyStrategy2(Strategy):
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
-                        current_closest.set_navigation_position(destination_position_biased)
-                        # self.move_player_to(current_closest, destination_position_biased)
+                        # current_closest.set_navigation_position(destination_position_biased)
+                        self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1

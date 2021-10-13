@@ -48,11 +48,10 @@ class GameEngineCompetition(game_engine.GameEngine):
 
     def __init__(self):
         self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
-        self.team_color = rospy.get_param("ROBOCUP_TEAM_COLOR", "red")
         self.robot_name = os.getenv("ROBOT_NAME", "robot1")
         self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
         self.team_id = int(os.getenv("TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: { self.robot_id }, robot_name: { self.robot_name }, is goalkeeper: { self.is_goal_keeper }, team id { self.team_id }, team color { self.team_color }")
+        rospy.loginfo(f"Initializing strategy with robot id: { self.robot_id }, robot_name: { self.robot_name }, is goalkeeper: { self.is_goal_keeper }, team id { self.team_id }")
 
         # game strategy information
 
@@ -77,11 +76,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         # GameState
         self.gameState = GameState()
-        if self.team_color == 'red':
-            temp = GameState.TEAM_COLOR_RED
-        else:
-            temp = GameState.TEAM_COLOR_BLUE
-        self.gameState.teamColor = temp
+        self.gameState.teamColor = GameState.TEAM_COLOR_BLUE
         self.gameState.gameState = GameState.GAMESTATE_FINISHED
         self.gameState.secondaryState = GameState.STATE_NORMAL
         self.gameState.firstHalf = True
@@ -89,7 +84,7 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.gameState.rivalScore = 0
         self.gameState.secondsRemaining = 0
         self.gameState.secondary_seconds_remaining = 0
-        self.gameState.hasKickOff = temp
+        self.gameState.hasKickOff = GameState.TEAM_COLOR_BLUE
         self.gameState.penalized = False
         self.gameState.secondsTillUnpenalized = 0
 
