@@ -253,9 +253,10 @@ class GameEngineCompetition(game_engine.GameEngine):
                     print("opponent have kickoff")
 
             if self.kickoff_started == False:
-                if (rostime - self.rostime_kickoff) > 10:
-                    self.kickoff_started = True
-                    print("kickoff started after 10s")
+                # if (rostime - self.rostime_kickoff) > 10:
+                rospy.sleep(10)
+                self.kickoff_started = True
+                print("kickoff started after 10s")
 
                 # if self.ball.get_position() is not None:
                 #     delta = np.linalg.norm(self.ball.get_position())

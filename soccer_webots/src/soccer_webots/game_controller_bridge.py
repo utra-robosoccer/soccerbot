@@ -70,7 +70,7 @@ class GameControllerBridge():
         self.create_publishers()
         self.create_subscribers()
 
-        self.addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
+        self.addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10021')
 
         self.socket = None
         self.first_run = True

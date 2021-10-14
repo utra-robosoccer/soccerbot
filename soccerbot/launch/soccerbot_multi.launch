@@ -3,7 +3,7 @@
     <arg name="single" default="true" />
     <arg name="fake_localization" default="false" />
     <arg name="competition" default="false" />
-    <arg name="x_pos" default="$(optenv X_POS 1)" />
+    <arg name="x_pos" default="$(optenv X_POS -1)" />
     <arg name="y_pos" default="$(optenv Y_POS -3.15)" />
     <arg name="angle" default="$(optenv ANGLE 1.57)" />
     <arg name="goalie" default="$(optenv GOALIE true)" />
