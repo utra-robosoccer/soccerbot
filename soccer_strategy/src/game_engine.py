@@ -1,16 +1,8 @@
 import random
-import matplotlib
-# matplotlib.use("tkAgg")
 from vispy import scene, app
 from vispy.scene import visuals, transforms
 from vispy.scene.visuals import Polygon, Ellipse, Rectangle, RegularPolygon
 from vispy.color import Color
-
-from matplotlib import pyplot as plt
-
-from matplotlib.ticker import MultipleLocator
-from matplotlib.path import Path
-import matplotlib.patches as patches
 
 from robot import Robot
 from ball import Ball
@@ -24,7 +16,6 @@ import math
 import numpy as np
 import copy
 import itertools
-import threading
 import _thread
 
 from soccer_pycontrol import path
@@ -201,12 +192,8 @@ class GameEngine:
 
             if self.display and step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
                 self.display_game_states()
-                # self.displayGameState(self.robots, self.ball, step * GameEngine.PHYSICS_UPDATE_INTERVAL)
 
         print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
-        # if self.display:
-        #     plt.show()
-
         return friendly_points, opponent_points
 
     def display_game_states(self):
