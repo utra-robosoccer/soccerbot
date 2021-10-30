@@ -1,14 +1,13 @@
 import random
-
-from matplotlib import pyplot as plt
-from matplotlib.ticker import MultipleLocator
-from matplotlib.path import Path
-import matplotlib.patches as patches
+from vispy import scene, app
+from vispy.scene import visuals, transforms
+from vispy.scene.visuals import Polygon, Ellipse, Rectangle, RegularPolygon
+from vispy.color import Color
 
 from robot import Robot
 from ball import Ball
 from strategy.dummy_strategy import DummyStrategy
-#from strategy.team_strategy import TeamStrategy
+# from strategy.team_strategy import TeamStrategy
 from strategy.stationary_strategy import StationaryStrategy
 from strategy.player_strategy import TeamStrategy, ScoreStrategy
 
@@ -17,13 +16,106 @@ import math
 import numpy as np
 import copy
 import itertools
+import _thread
 
 from soccer_pycontrol import path
 
+white = Color("#ecf0f1")
+gray = Color("#121212")
+red = Color("#e74c3c")
+blue = Color("#2980b9")
+orange = Color("#e88834")
+green = Color("#50bb00")
+black = Color("#000000")
+
+
+class Scene:
+    def __init__(self, robots, ball):
+        self.canvas = scene.SceneCanvas(keys='interactive')
+        self.canvas.size = 800, 400
+        self.view = self.canvas.central_widget.add_view()
+        self.view.bgcolor = black
+        # self.view.camera = 'turntable'
+        self.view.camera = scene.cameras.panzoom.PanZoomCamera(rect=(-5, -3.5, 10, 7))
+        self.canvas.show()
+        self.draw_field()
+        self.init_actors(robots, ball)
+
+    def draw_field(self):
+        field = scene.Rectangle(center=(0, 0), width=10, height=7,
+                                color=green, parent=self.view.scene)
+        center_circle = scene.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2,
+                                      parent=self.view.scene)
+        center_line = scene.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
+        goals = scene.Line(pos=np.array([[-4.5, 1.3], [-4.5, -1.3], [4.5, 1.3], [4.5, -1.3]]), connect='segments',
+                           width=2, color=white, parent=self.view.scene)
+
+    def init_actors(self, robots, ball):
+        self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
+                                  color=blue, parent=self.view.scene)
+        self.robots = []
+        for robot in robots:
+            color = red if robot.team == Robot.Team.OPPONENT else white
+            self.robots.append({"body": scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
+                                                      color=color,
+                                                      parent=self.view.scene),
+                                "arrow": scene.Arrow(pos=np.array([[0, 0], [0, 0]]), width=1, color=color,
+                                                     parent=self.view.scene),
+                                "path": scene.Arrow(pos=None, width=1, color=color, connect='strip',
+                                                    parent=self.view.scene)})
+
+        self.field_vectors = scene.Arrow(pos=None, width=1, color=blue, connect='segments', arrows=None,
+                                         arrow_color=blue, arrow_type='triangle_30', arrow_size=7,
+                                         parent=self.view.scene)
+
+    def update(self, robots, ball, t=0.0):
+        for i in range(len(robots)):
+            x = robots[i].get_position()[0]
+            y = robots[i].get_position()[1]
+            self.robots[i]['body'].center = (x, y)
+
+            theta = robots[i].get_position()[2]
+            arrow_len = 0.3
+            arrow_end_x = math.cos(theta) * arrow_len
+            arrow_end_y = math.sin(theta) * arrow_len
+            self.robots[i]['arrow'].set_data(pos=np.array([[x, y], [x + arrow_end_x, y + arrow_end_y]]))
+
+            if robots[i].path is not None:
+                verts = []
+                for j in range(0, 11):
+                    path_vert = robots[i].path.poseAtRatio(j / 10).get_position()
+                    verts.append([path_vert[0], path_vert[1]])
+                self.robots[i]['path'].set_data(pos=np.array(verts))
+
+        if ball.get_position() is not None:
+            x = ball.get_position()[0]
+            y = ball.get_position()[1]
+            dx = ball.get_velocity()[0]
+            dy = ball.get_velocity()[1]
+            self.ball.center = (x, y)
+
+        self.canvas.update()
+
+    def plot_vectors(self, field_vectors):
+        arrows = []
+        pos = []
+        for k in range(0, len(field_vectors)):
+            if field_vectors[k] is not None:
+                for i in range(0, len(field_vectors[k][0])):
+                    x1 = field_vectors[k][0][i][0]
+                    y1 = field_vectors[k][0][i][1]
+                    x2 = x1 + field_vectors[k][1][i][0]
+                    y2 = y1 + field_vectors[k][1][i][1]
+                    arrows.append([x1, y1, x2, y2])
+                    pos.append([x1, y1])
+                    pos.append([x2, y2])
+        self.field_vectors.set_data(pos=np.array(pos), arrows=np.array(arrows))
+
+
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 50  # Every 5 physics steps
-    DISPLAY_UPDATE_INTERVAL = 10  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
+    DISPLAY_UPDATE_INTERVAL = 1  # Every 5 physics steps
 
     def __init__(self, display=True):
         self.display = display
@@ -55,141 +147,63 @@ class GameEngine:
         # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 
         if self.display:
-            fig = plt.figure(figsize=(9.0, 6.0), dpi=60)
-            background = fig.add_axes([0, 0, 1, 1])
-            background.axis('equal')
-            background.set_xlim([-5, 5])
-            background.set_ylim([-3.5, 3.5])
-            background.xaxis.set_major_locator(MultipleLocator(1))
-            background.yaxis.set_major_locator(MultipleLocator(1))
-            background.xaxis.set_minor_locator(MultipleLocator(0.1))
-            background.yaxis.set_minor_locator(MultipleLocator(0.1))
-            background.grid(which='minor', alpha=0.2)
-            background.grid(which='major', alpha=0.5)
-            background.add_patch(plt.Rectangle((-4.5, -3 ), 9, 6, alpha=0.1, color='green'))
-            background.add_patch(plt.Rectangle((-4.55, -1.3), 0.05, 2.6, color='blue'))
-            background.add_patch(plt.Rectangle((4.5, -1.3), 0.05, 2.6, color='blue'))
-            background.add_line(plt.Line2D((0, 0), (-3, 3), color='blue'))
-            background.add_patch(plt.Circle((-0, 0), 1.3 / 2, fill=None, color='blue'))
-            foreground = fig.add_axes([0, 0, 1, 1])
-            foreground.set_facecolor((0, 0, 0, 0))
-
+            self.scene = Scene(self.robots, self.ball)
 
         # Setup the strategy
         self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
         self.team2_strategy = StationaryStrategy()
-        #self.team1_strategy = DummyStrategy()
-        #self.team2_strategy = DummyStrategy()
+        # self.team1_strategy = DummyStrategy()
+        # self.team2_strategy = DummyStrategy()
         self.team1_strategy_rtval = None
         self.team2_strategy_rtval = None
 
+    def run_loop(self):
+        _thread.start_new_thread(self.run, ())
+        app.run()
+
     def run(self):
         game_period_steps = int(2 * 10 * 60 / GameEngine.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each
-
         friendly_points = 0
         opponent_points = 0
 
         for step in range(game_period_steps):
             if step == int(game_period_steps / 2):
                 print("Second Half Started: ")
-                self.resetRobots()
+                self.reset_robots()
 
-            self.updateEstimatedPhysics(self.robots, self.ball)
+            self.update_estimated_physics(self.robots, self.ball)
 
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.ball, GameProperties(0, 1, 0))
-                self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.ball, GameProperties(1, 1, 0, opponent_team=True))
+                self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.ball,
+                                                                                     GameProperties(0, 1, 0))
+                self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.ball,
+                                                                                     GameProperties(1, 1, 0,
+                                                                                                    opponent_team=True))
 
             # Check victory condition
             if self.ball.get_position()[0] > 4.5:
                 print("Friendly Scores!")
                 friendly_points += 1
-                self.resetRobots()
+                self.reset_robots()
             elif self.ball.get_position()[0] < -4.5:
                 print("Opponent Scores!")
                 opponent_points += 1
-                self.resetRobots()
+                self.reset_robots()
 
             if self.display and step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
-                self.displayGameState(self.robots, self.ball, step * GameEngine.PHYSICS_UPDATE_INTERVAL)
+                self.display_game_states()
 
         print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
-        if self.display:
-            plt.show()
         return friendly_points, opponent_points
 
-    def displayGameState(self, robots, ball, t=0.0):
-        foreground = plt.gcf().axes[1]
-        foreground.clear()
-        foreground.axis('equal')
-        foreground.set_xlim([-5, 5])
-        foreground.set_ylim([-3.5, 3.5])
-        # Display Robots
-        for robot in robots:
-            x = robot.get_position()[0]
-            y = robot.get_position()[1]
-            theta = robot.get_position()[2]
-
-            if robot.team == Robot.Team.OPPONENT:
-                color = 'red'
-            else:
-                color = 'green'
-            foreground.add_patch(plt.Circle((x, y), 0.08, color=color))
-
-            arrow_len = 0.3
-            arrow_end_x = math.cos(theta) * arrow_len
-            arrow_end_y = math.sin(theta) * arrow_len
-            foreground.arrow(x, y, arrow_end_x, arrow_end_y, head_width=0.05, head_length=0.1, color=color)
-
-        # Draw ball
-        if ball.get_position() is not None:
-            x = ball.get_position()[0]
-            y = ball.get_position()[1]
-            dx = ball.get_velocity()[0]
-            dy = ball.get_velocity()[1]
-            foreground.add_patch(plt.Circle((x, y), 0.5 / 2 / math.pi, color='black'))
-            foreground.arrow(x, y, dx, dy, head_width=0.05, head_length=0.1)
-
-        # plot path of the robots
-        for robot in self.robots:
-            if robot.path is not None:
-                verts = []
-                for i in range(0,11):
-                    path_vert = robot.path.poseAtRatio(i / 10).get_position()
-                    verts.append([path_vert[0], path_vert[1]])
-
-                x, y = zip(*verts)
-                if robot.team == Robot.Team.FRIENDLY:
-                    foreground.plot(x, y, 'g-')
-                else:
-                    foreground.plot(x, y, 'r-')
-
-        # plot potential field
-        # get points, angles
+    def display_game_states(self):
+        self.scene.update(self.robots, self.ball)
         if self.team1_strategy_rtval is not None:
             if "potential_field_vectors" in self.team1_strategy_rtval:
                 field_vectors = self.team1_strategy_rtval["potential_field_vectors"]
-                # for each robot
-                for k in range(0, len(field_vectors)):
-                    if field_vectors[k] is not None:
-                        for i in range(0, len(field_vectors[k][0])):
-                            foreground.arrow(
-                                field_vectors[k][0][i][0],
-                                field_vectors[k][0][i][1],
-                                field_vectors[k][1][i][0],
-                                field_vectors[k][1][i][1],
-                                head_width=0.05,
-                                head_length=0.05,
-                                color='orange'
-                            )
+                self.scene.plot_vectors(field_vectors)
 
-        # GUI text
-        foreground.text(-3, 4.5, "Time: {0:.6g}".format(t))
-
-        plt.pause(0.001)
-
-    def updateEstimatedPhysics(self, robots, ball):
-
+    def update_estimated_physics(self, robots, ball):
         # Robot do action in a random priority order
         for robot in sorted(robots, key=lambda _: random.random()):
             if robot.status == Robot.Status.WALKING:
@@ -236,6 +250,6 @@ class GameEngine:
             else:
                 self.ball.velocity = np.array([0, 0])
 
-    def resetRobots(self):
+    def reset_robots(self):
         self.robots = copy.deepcopy(self.robots_init)
         self.ball = copy.deepcopy(self.ball_init)
