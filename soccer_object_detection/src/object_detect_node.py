@@ -7,6 +7,7 @@ from soccer_geometry.camera import Camera
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
+from argparse import ArgumentParser
 from sensor_msgs.msg import Image
 import std_msgs
 from cv_bridge import CvBridge
@@ -14,10 +15,7 @@ import cv2
 import torch
 import numpy as np
 from model import CNN, init_weights
-from my_dataset import initialize_loader
-from train import Trainer
 import util
-import torchvision
 from model import find_batch_bounding_boxes, Label
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
@@ -28,7 +26,7 @@ class ObjectDetectionNode(object):
     input: 480x640x4 bgra8 -> output: 3x200x150
     '''
 
-    def __init__(self, model_path):
+    def __init__(self, model_path, num_feat):
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         self.camera = Camera(self.robot_name)
         self.camera.reset_position()
@@ -40,7 +38,7 @@ class ObjectDetectionNode(object):
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
         self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1)
 
-        self.model = CNN(kernel=3, num_features=16)
+        self.model = CNN(kernel=3, num_features=int(num_feat))
 
         self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.model.eval()
@@ -76,23 +74,24 @@ class ObjectDetectionNode(object):
                 return
 
             bbs_msg = BoundingBoxes()
-            bb_msg = BoundingBox()
+
             for ball_bb in bbxs[Label.BALL.value]:
-                bb_msg.xmin = int((ball_bb[0] + x_offset) * scale)
-                bb_msg.ymin = int((ball_bb[1] + y_offset) * scale)
-                bb_msg.xmax = int((ball_bb[2] + x_offset) * scale)
-                bb_msg.ymax = int((ball_bb[3] + y_offset) * scale)
+                bb_msg = BoundingBox()
+                bb_msg.xmin = round((ball_bb[0] + x_offset) * scale)
+                bb_msg.ymin = round((ball_bb[1] + y_offset) * scale)
+                bb_msg.xmax = round((ball_bb[2] + x_offset) * scale)
+                bb_msg.ymax = round((ball_bb[3] + y_offset) * scale)
                 bb_msg.id = Label.BALL.value
                 bb_msg.Class = 'ball'
-            bbs_msg.bounding_boxes = [bb_msg]
+                bbs_msg.bounding_boxes.append(bb_msg)
 
             big_enough_robot_bbxs = []
             for robot_bb in bbxs[Label.ROBOT.value]:
                 bb_msg = BoundingBox()
-                bb_msg.xmin = int((robot_bb[0] + x_offset) * scale)
-                bb_msg.ymin = int((robot_bb[1] + y_offset) * scale)
-                bb_msg.xmax = int((robot_bb[2] + x_offset) * scale)
-                bb_msg.ymax = int((robot_bb[3] + y_offset) * scale)
+                bb_msg.xmin = round((robot_bb[0] + x_offset) * scale)
+                bb_msg.ymin = round((robot_bb[1] + y_offset) * scale)
+                bb_msg.xmax = round((robot_bb[2] + x_offset) * scale)
+                bb_msg.ymax = round((robot_bb[3] + y_offset) * scale)
                 bb_msg.id = Label.ROBOT.value
                 bb_msg.Class = 'robot'
                 # ignore small boxes
@@ -114,10 +113,11 @@ class ObjectDetectionNode(object):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("usage: my_node.py <path_to_pytorch_model>")
-    else:
-        myargv = rospy.myargv(argv=sys.argv)
-        rospy.init_node("object_detector")
-        my_node = ObjectDetectionNode(sys.argv[1])
-        rospy.spin()
+    parser = ArgumentParser()
+    parser.add_argument("--model", dest="model_path", help="pytorch model")
+    parser.add_argument("--num-feat", dest="num_feat", help="specify model size of the neural network")
+    args, unknown = parser.parse_known_args()
+
+    rospy.init_node("object_detector")
+    my_node = ObjectDetectionNode(args.model_path, args.num_feat)
+    rospy.spin()

@@ -11,10 +11,11 @@ transforms3d
 construct==2.10.67
 opencv-python
 shapely
+vispy
 
 
 # object detection
 Pillow==8.3.2
 torch==1.8.1
 torchvision==0.9.1
-
+tqdm
