@@ -24,7 +24,7 @@
     <!-- Ball Detection -->
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
-        args="$(find soccer_object_detection)/src/outputs/model24" unless="$(arg fake_localization)"/>
+        args="--model $(find soccer_object_detection)/src/outputs/model_j1_feat17 --num-feat 17" unless="$(arg fake_localization)"/>
 
 
     <!-- Complementary filter -->

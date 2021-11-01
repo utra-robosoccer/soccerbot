@@ -312,8 +312,8 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if self.gameState.secondaryState != self.team_id:
                 if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
-                    strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-
+                    # strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                    pass
         # PLACING
         if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
             if self.gameState.secondaryStateTeam == self.team_id:
@@ -321,7 +321,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                     strategy.execute_kicking(self.friendly, self.ball)
             else:
                 # todo perform goalie trajectory if penalty kick
-                strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                # strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
                 pass
 
         self.rostime_previous = rostime
