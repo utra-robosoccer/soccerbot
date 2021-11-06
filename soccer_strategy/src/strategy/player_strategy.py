@@ -335,7 +335,7 @@ class TeamStrategy(Strategy):
         PhysConsts.init(self._dt)
 
     # change plot_vector value to allow potential vectors to be printed
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=False):
+    def update_next_strategy(self, friendlies, opponents, ball, game_properties, plot_vector=True):
         strats = []
         combined_field_vectors = []
 

@@ -4,10 +4,11 @@ import rospy
 
 import config as config
 from strategy.strategy import Strategy
-from soccer_msgs.msg import GameState
+# from soccer_msgs.msg import GameState
 from robot import Robot
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 10
+
 
 class DummyStrategy(Strategy):
 
@@ -22,7 +23,7 @@ class DummyStrategy(Strategy):
             config.ENEMY_GOAL_POSITION,
             game_properties.team_color,
             game_properties.is_first_half,
-            game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
+            1  # game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
         )
 
         if abs(ball.get_position()[1]) < 1.0:
@@ -38,8 +39,8 @@ class DummyStrategy(Strategy):
 
             if abs(ball.get_position()[1]) < 3.5 and abs(ball.get_position()[0]) < 5:
 
-                current_closest = self.who_has_the_ball(friendly, ball) # Guess who has the ball
-                if current_closest is not None: #and current_closest.send_nav:
+                current_closest = self.who_has_the_ball(friendly, ball)  # Guess who has the ball
+                if current_closest is not None:  # and current_closest.send_nav:
 
                     # generate destination pose
                     ball_position = ball.get_position()
@@ -59,7 +60,8 @@ class DummyStrategy(Strategy):
                     destination_position_biased = player_position + diff * navigation_bias
 
                     # nav goal behind the ball
-                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
+                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
+                                                   diff_angle]
 
                     # print("Position of closest player")
                     # print(player_position)
@@ -71,13 +73,15 @@ class DummyStrategy(Strategy):
                     # print(distance_of_player_to_ball)
 
                     # difference between robot angle and nav goal angle
-                    nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle), math.cos(player_angle - diff_angle))
+                    nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle),
+                                                 math.cos(player_angle - diff_angle))
 
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
                     if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) > 0.15:
                         print("robot ball angle too large, unable to kick " + str(abs(nav_angle__diff)))
 
-                    if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15 and current_closest.path.isFinished(current_closest.path_time):
+                    if distance_of_player_to_ball < 0.18 and abs(
+                            nav_angle__diff) < 0.15 and current_closest.path.isFinished(current_closest.path_time):
                         if nav_angle__diff > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
@@ -108,7 +112,6 @@ class DummyStrategy(Strategy):
                     self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                     turn_position = [player_position[0], player_position[1], player_angle + math.pi]
                     player.set_navigation_position(turn_position)
-
 
         # If the robot is walking and a detected obstacle in the direction of the robot
         # for player in friendly:

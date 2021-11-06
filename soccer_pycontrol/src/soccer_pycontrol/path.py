@@ -1,6 +1,6 @@
 import functools
 import math
-from soccer_geometry.transformation import Transformation
+from soccer_geometry import Transformation
 import numpy as np
 from scipy.special import comb
 import matplotlib.pyplot as plt
