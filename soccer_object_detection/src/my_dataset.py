@@ -294,7 +294,7 @@ class MyDataSet(Dataset):
         img = np.moveaxis(img, -1, 0)
         mask = np.moveaxis(mask, -1, 0)[0]  # get rid of channel dimension
 
-        return img, mask, index
+        return img, mask, index, bounding_boxes
 
     def visualize_images(self, start=0, end=None, delay=10, scale=4, model=None):
         """ display dataset as video sequence

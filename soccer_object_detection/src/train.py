@@ -3,6 +3,7 @@ import time
 import enum
 import numpy as np
 import torch
+import copy
 import tqdm
 from model import Label, find_batch_bounding_boxes
 from my_dataset import initialize_loader
@@ -110,7 +111,7 @@ class Trainer:
         start_valid = time.time()
         losses = []
         stats = {Label.BALL: [0, 0, 0, 0], Label.ROBOT: [0, 0, 0, 0]}
-        for images, masks, indexes in loader:
+        for images, masks, indexes, mask_boxes in loader:
             images = images.cuda()
             masks = masks.cuda()
             outputs, logits = self.model(images.float())
@@ -185,6 +186,70 @@ class Trainer:
                         stats[pred_class][self.ErrorType.TRUE_POSITIVE.value] += 1
                     else:
                         stats[pred_class][self.ErrorType.FALSE_POSITIVE.value] += 1
+
+    def update_batch_stats_new(self, stats, batch_bounding_boxes, batch_masks ,threshold=0.5):
+
+        copied_boxes = copy.deepcopy(batch_bounding_boxes)
+
+        for mask_box in batch_masks:
+            if mask_box[4] == Label.BALL:
+                search_label = Label.BALL
+            else:
+                search_label = Label.ROBOT
+
+            max_IoU = 0
+            for box in copied_boxes[search_label]:
+                IoU = self.calculate_IoU(box, mask_box)
+                if IoU > max_IoU:
+                    max_IoU = IoU
+                    matched_box = box
+
+            if max_IoU == 0:
+                stats[search_label][self.ErrorType.FALSE_NEGATIVE.value] += 1
+
+            elif max_IoU >= threshold:
+                stats[search_label][self.ErrorType.TRUE_POSITIVE.value] += 1
+                copied_boxes[search_label].remove(matched_box)
+
+            elif max_IoU < threshold:
+                stats[search_label][self.ErrorType.FALSE_POSITIVE.value] += 1
+                copied_boxes[search_label].remove(matched_box)
+
+        for pred_class in [Label.BALL, Label.ROBOT]:
+            for leftover_box in copied_boxes[pred_class]:
+                self.ErrorType.FALSE_POSITIVE.value += 1
+
+
+    def calculate_IoU(self, bounding_box, mask):
+        # If labels are not equal, return 0 for IoU
+        if mask[4] != bounding_box[4]:
+            return 0
+
+        box_x = [bounding_box[0], bounding_box[2]]
+        box_y = [bounding_box[1], bounding_box[3]]
+
+        mask_x = [mask[0], mask[2]]
+        mask_y = [mask[1], mask[3]]
+
+        box_x.sort()
+        box_y.sort()
+        mask_x.sort()
+        mask_y.sort()
+
+        merge_x = box_x + mask_x
+        merge_y = box_y + mask_y
+
+        merge_x.sort()
+        merge_y.sort()
+
+        intersection_check_x = merge_x[0:2] == box_x or merge_x[0:2] == mask_x
+        intersection_check_y = merge_y[0:2] == box_y or merge_y[0:2] == mask_y
+
+        if intersection_check_x or intersection_check_y:
+            return 0
+        I = (merge_x[2] - merge_x[1]) * (merge_y[2] - merge_y[1])
+        U = (box_x[1] - box_x[0]) * (box_y[1] - box_y[0]) + (mask_x[1] - mask_x[0]) * (mask_y[1] - mask_y[0]) - I
+        return I/U
 
 
     def training_name(self):
