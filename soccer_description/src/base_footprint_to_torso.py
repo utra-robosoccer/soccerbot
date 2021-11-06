@@ -20,6 +20,10 @@ if __name__ == '__main__':
         br.sendTransform((0, 0, torso_height),
                          [0, 0, 0, 1],
                          rospy.Time.now(),
-                         rospy.get_param("ROBOT_NAME") + "/torso",
-                         rospy.get_param("ROBOT_NAME") + "/base_footprint")
-        rospy.sleep(0.05)
+                         os.environ["ROS_NAMESPACE"] + "/torso",
+                         os.environ["ROS_NAMESPACE"] + "/base_footprint")
+
+        try:
+            rospy.sleep(0.05)
+        except rospy.exceptions.ROSInterruptException:
+            break

@@ -7,45 +7,42 @@
     <arg name="x_pos" />
     <arg name="y_pos" />
     <arg name="a_pos" />
+
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server"
           args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world"/>
     </node>
 
-    <!-- Line and goal detection -->
-    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector" respawn="true"
-          output="screen" >
-        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
-    </node>
+    <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen"/>
 
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
-        <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
+        <rosparam file="$(find soccer_object_localization)/config/pointcloud_to_laserscan.yaml" command="load" />
         <remap from="cloud_in" to="field_point_cloud" />
     </node>
 
     <!-- Ball Detection -->
-    <node name="ball_detector" pkg="soccer_fieldline_detection" type="ball_detector" output="screen" respawn="true" unless="$(arg fake_localization)"/>
+    <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen"/>
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen"
-        args="$(find soccer_object_detection)/src/outputs/model24" unless="$(arg fake_localization)"/>
+        args="--model $(find soccer_object_detection)/src/outputs/model_j1_feat17 --num-feat 17" unless="$(arg fake_localization)"/>
 
 
     <!-- Complementary filter -->
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" >
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter"  output="log">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
         <remap from="imu/data_raw" to="imu_raw" />
         <remap from="imu/data" to="imu_filtered" />
     </node>
 
     <!-- IMU location -->
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)">
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)" output="log">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
         <remap from="imu_data" to="imu_filtered" />
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint"/>
     </node>
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log" respawn="true">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log">
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
 <!--        <param name="odom0" value="/$(arg robot_name)/odom" />-->
 <!--&lt;!&ndash;        <param name="pose1" value="odom_combined" />&ndash;&gt;-->
@@ -56,9 +53,10 @@
         <param name="base_link_frame" value="$(arg robot_name)/base_camera" />
     </node>
 
+    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
 
     <!-- AMCL Localization $(arg x_pos)-->
-    <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg fake_localization)">
+    <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg fake_localization)" output="log">
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
         <param name="initial_pose_x" value="$(arg x_pos)" />
         <param name="initial_pose_y" value="$(arg y_pos)" />

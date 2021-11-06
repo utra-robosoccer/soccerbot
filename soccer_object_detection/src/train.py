@@ -111,7 +111,7 @@ class Trainer:
         start_valid = time.time()
         losses = []
         stats = {Label.BALL: [0, 0, 0, 0], Label.ROBOT: [0, 0, 0, 0]}
-        for images, masks, indexes, mask_boxes in loader:
+        for images, masks, indexes in loader:
             images = images.cuda()
             masks = masks.cuda()
             outputs, logits = self.model(images.float())

@@ -1,13 +1,9 @@
-from soccer_msgs.msg import GameState
-
 from robot import Robot
 import rospy
-import os
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand
 import numpy as np
-import math
 import tf.transformations
 
 from sensor_msgs.msg import Imu
@@ -63,7 +59,7 @@ class RobotRos(Robot):
             self.status = Robot.Status.READY
 
     def ball_pose_callback(self, data):
-        self.ball_position = np.array([-data.pose.pose.position.y, data.pose.pose.position.x])
+        self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
 
     def move_head_callback(self, data):
@@ -71,7 +67,7 @@ class RobotRos(Robot):
         pass
 
     def completed_walking_callback(self, data):
-        rospy.loginfo("Completed Walking")
+        rospy.loginfo(f"{self.robot_name} Completed Walking")
         if self.status == Robot.Status.WALKING:
             self.status = Robot.Status.READY
             temp = Bool()
@@ -82,7 +78,7 @@ class RobotRos(Robot):
             self.localization_reset_publisher.publish(temp)
 
     def completed_trajectory_subscriber(self, data):
-        rospy.loginfo("Completed Trajectory")
+        rospy.loginfo(f"{self.robot_name} Completed Trajectory")
         # assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
         if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             if self.stop_requested:
@@ -103,21 +99,21 @@ class RobotRos(Robot):
             return self.position
 
         eul = tf.transformations.euler_from_quaternion(rot)
-        self.position = [-trans[1], trans[0], eul[2] + math.pi / 2]
+        self.position = [trans[0], trans[1], eul[2]]
         return self.position
 
     def set_navigation_position(self, position):
         # assert (self.status == Robot.Status.WALKING)
         if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
             super(RobotRos, self).set_navigation_position(position)
-            print("Sending Robot " + self.robot_name + " to position" + str(position))
+            rospy.loginfo("Sending Robot " + self.robot_name + " to position" + str(position))
             p = PoseStamped()
             p.header.stamp = rospy.get_rostime()
             p.header.frame_id = "world"
-            p.pose.position.x = position[1]
-            p.pose.position.y = -position[0]
+            p.pose.position.x = position[0]
+            p.pose.position.y = position[1]
             p.pose.position.z = 0
-            angle_fixed = position[2] - math.pi / 2
+            angle_fixed = position[2]
             # print(angle_fixed)
             q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
             p.pose.orientation.x = q[0]
@@ -149,8 +145,9 @@ class RobotRos(Robot):
         pass
 
     def reset_initial_position(self, position):
-        print("Setting initial Robot " + self.robot_name + " position" + str(position))
+        rospy.loginfo("Setting initial Robot " + self.robot_name + " position " + str(position))
         p = PoseWithCovarianceStamped()
+        p.header.frame_id = 'world'
         p.header.stamp = rospy.get_rostime()
         p.pose.pose.position.x = position[0]
         p.pose.pose.position.y = position[1]
@@ -172,7 +169,7 @@ class RobotRos(Robot):
 
     def update_status(self):
         if self.status != self.previous_status:
-            print(self.robot_name + " status changes to " + str(self.status))
+            rospy.loginfo(self.robot_name + " status changes to " + str(self.status))
             self.previous_status = self.status
 
         if self.status == Robot.Status.READY:
@@ -249,7 +246,7 @@ class RobotRos(Robot):
             self.obstacles.poses.append(obstacle_pose)
 
             eul = tf.transformations.euler_from_quaternion(rot)
-            obstacle_position = [-trans[1], trans[0], eul[2] + math.pi / 2]
+            obstacle_position = [trans[0], trans[1], eul[2]]
             obstacles.append(obstacle_position)
             pass
         return obstacles
