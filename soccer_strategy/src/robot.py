@@ -3,9 +3,10 @@ from copy import deepcopy
 import tf
 from soccer_pycontrol import path
 from soccer_geometry import transformation
+from ball import Ball
+import math
 
 import numpy as np
-
 
 class Robot:
     class Team(enum.IntEnum):
@@ -32,6 +33,10 @@ class Robot:
         TRAJECTORY_IN_PROGRESS = 10
         STOPPED = 11  # Game controller
 
+    class ObservationConstants:
+        FOV = math.pi/4
+        VISION_RANGE = 3
+
     def get_position(self):
         return self.position
 
@@ -45,10 +50,11 @@ class Robot:
         self.path = None
         self.path_time = 0
         self.robot_id = robot_id
-
+        self.observed_ball = Ball(None, '2D')
         self.speed = 0.20
-        self.angular_speed = 0.3
+        self.angular_speed = 0.3#0.3
         self.max_kick_speed = 2
+        self.robot_name = 'robot %d' % robot_id
 
     def set_navigation_position(self, position):
         self.status = Robot.Status.WALKING
@@ -93,3 +99,38 @@ class Robot:
         else:
             opponent_goal = np.array([0, -4.5])
         return opponent_goal
+
+    def observe_ball(self, ball):
+        if ball is None or ball.get_position() is None:
+            return
+        theta = self.get_position()[2] #TODO change this to direction vector?
+        arrow_len = 0.3
+        arrow_end_x = math.cos(theta) * arrow_len
+        arrow_end_y = math.sin(theta) * arrow_len
+        robot_direction = np.array([arrow_end_x, arrow_end_y])
+        robot_position = np.array([self.position[0], self.position[1]])
+        ball_position = ball.get_position()
+        ball_to_robot = ball_position - robot_position
+        angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
+        distance = np.linalg.norm(ball_to_robot)
+        if angle < Robot.ObservationConstants.FOV/2 and distance < Robot.ObservationConstants.VISION_RANGE:
+            self.observed_ball.position = ball_position
+        #TODO can add noise here
+
+    def can_kick(self, ball):
+        if ball is None or ball.get_position() is None:
+            return False
+        theta = self.get_position()[2]
+        robot_direction = np.array([math.cos(theta), math.sin(theta)])
+        robot_direction = robot_direction/np.linalg.norm(robot_direction)
+        robot_position = np.array([self.position[0], self.position[1]])
+        ball_position = ball.get_position()
+        ball_to_robot = ball_position - robot_position
+        angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
+        distance = np.linalg.norm(ball_to_robot)
+        if angle < 0.1 and distance < 0.2: #TODO change constants to depend on something
+            return True
+
+
+
+
