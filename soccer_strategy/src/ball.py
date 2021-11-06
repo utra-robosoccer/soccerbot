@@ -5,9 +5,12 @@ class Ball:
     FRICTION = 1
     FRICTION_COEFF = 0.8
 
-    def __init__(self, position):
+    def __init__(self, position, simulator='3D'):
         self.position = position
-        self.position_is_live_timeout = 0
+        if simulator == '3D':
+            self.position_is_live_timeout = 0
+        else:
+            self.position_is_live_timeout = 1
         self.velocity = np.array([0, 0])
         self.kick_timeout = 0
 
