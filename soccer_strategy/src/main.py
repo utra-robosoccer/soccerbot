@@ -2,11 +2,10 @@
 import sys
 import rospy
 from game_engine import GameEngine
-import soccer_msgs.msg
-# from game_engine_competition import GameEngineCompetition
+from game_engine_competition import GameEngineCompetition
 # useful sudo apt-get install -y python3-rospy
 
-_IN_ROS = False
+_IN_ROS = True
 
 if __name__ == '__main__':
     if _IN_ROS:
