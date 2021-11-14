@@ -1,3 +1,5 @@
+import math
+
 from sensor_msgs.msg import JointState, Imu
 from std_msgs.msg import Float64, Bool
 from nav_msgs.msg import Odometry, Path
@@ -168,8 +170,10 @@ class SoccerbotRos(Soccerbot):
 
     def apply_head_rotation(self):
         self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
+
         self.configuration[
             Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 5
+
         last_pose = rospy.Duration(10)
         if not self.localization_reset:
             try:
@@ -219,7 +223,7 @@ class SoccerbotRos(Soccerbot):
         self.head_motor_0 = self.configuration[Joints.HEAD_1]
         self.head_motor_1 = self.configuration[Joints.HEAD_2]
         self.head_step += 1
-        pass
+        # pass
 
     def ball_callback(self, msg: PointStamped):
         self.ball_pixel = msg

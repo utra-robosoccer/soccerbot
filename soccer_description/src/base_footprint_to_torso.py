@@ -22,7 +22,8 @@ if __name__ == '__main__':
                          rospy.Time.now(),
                          os.environ["ROS_NAMESPACE"] + "/torso",
                          os.environ["ROS_NAMESPACE"] + "/base_footprint")
+
         try:
             rospy.sleep(0.05)
         except rospy.exceptions.ROSInterruptException:
-            continue
+            break

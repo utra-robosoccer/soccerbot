@@ -171,6 +171,7 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
                 self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
+                pass
 
             if t < 0:
                 if self.soccerbot.imu_ready:
@@ -203,11 +204,11 @@ class SoccerbotControllerRos(SoccerbotController):
                 pb.stepSimulation()
 
             t = t + SoccerbotController.PYBULLET_STEP
+
             try:
                 r.sleep()
             except rospy.exceptions.ROSInterruptException:
-                continue
-
+                break
 
     def correct_goal_pose(self):
         pass

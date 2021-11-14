@@ -1,6 +1,6 @@
 from math import floor, ceil
 
-from soccer_pycontrol.transformation import Transformation
+from soccer_geometry import Transformation
 import numpy as np
 import matplotlib.pyplot as plt
 from path_section import PathSection

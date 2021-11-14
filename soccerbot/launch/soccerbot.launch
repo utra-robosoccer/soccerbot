@@ -12,7 +12,6 @@
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
     <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
-
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
@@ -21,14 +20,16 @@
         tf_prefix:=$(arg robot_name)
         "
     />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="120.0" />
+    </node>
 
     <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(eval simulation)">
+    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
         <arg name="competition" value="$(arg competition)" />
     </include>
