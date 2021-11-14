@@ -11,8 +11,10 @@ from robot import Robot
 from ball import Ball
 import game_engine
 from strategy.dummy_strategy import DummyStrategy
+from strategy.dummy_strategy2 import DummyStrategy2
 from strategy.freekick_strategy import FreekickStrategy
 from strategy.penaltykick_strategy import PenaltykickStrategy
+from strategy.utils import GameProperties
 import config
 import logging
 
@@ -26,6 +28,7 @@ robot_name_map = ["robot1", "robot2", "robot3", "robot4"]
 
 
 class GameEngineCompetition(game_engine.GameEngine):
+    # Seconds
     STRATEGY_UPDATE_INTERVAL = 1
     NAV_GOAL_UPDATE_INTERVAL = 2
 
@@ -45,6 +48,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
     def __init__(self):
         self.robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
+
         self.robot_name = os.getenv("ROBOT_NAME", "robot1")
         self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
         self.team_id = int(os.getenv("TEAM_ID", "16"))
@@ -53,12 +57,12 @@ class GameEngineCompetition(game_engine.GameEngine):
         # game strategy information
 
         self.robots = [
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
-            RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")#,
+            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
+            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
+            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
         ]
 
         self.friendly = self.robots[0:3]
@@ -93,7 +97,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.rostime_previous = 0
         self.listener = tf.TransformListener()
-        self.team_strategy = DummyStrategy()
+        self.team_strategy = DummyStrategy2()
         self.freekick_strategy = FreekickStrategy()
         self.penaltykick_strategy = PenaltykickStrategy()
 
@@ -124,7 +128,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                 header = self.listener.getLatestCommonTime('world', robot.robot_name + '/ball')
                 time_diff = rospy.Time.now() - header
                 if time_diff < rospy.Duration(0.2):
-                    ball_positions.append(np.array([-ball_pose[0][1], ball_pose[0][0]]))
+                    ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
 
@@ -262,10 +266,15 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    self.team_strategy.update_team_strategy(robots=self.robots, ball=self.ball,
-                                                             teamcolor=self.gameState.teamColor,
-                                                             is_first_half=self.gameState.firstHalf,
-                                                             secondaryState=self.gameState.secondaryState)
+                    self.team_strategy.update_team_strategy(
+                        self.robots,
+                        self.ball,
+                        GameProperties(
+                            self.gameState.teamColor,
+                            self.gameState.firstHalf,
+                            self.gameState.secondaryState
+                            )
+                        )
                     pass
                 else:
                     print("kickoff not started, no strategy output")
@@ -303,8 +312,8 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if self.gameState.secondaryState != self.team_id:
                 if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
-                    strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-
+                    # strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                    pass
         # PLACING
         if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
             if self.gameState.secondaryStateTeam == self.team_id:
@@ -312,7 +321,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                     strategy.execute_kicking(self.friendly, self.ball)
             else:
                 # todo perform goalie trajectory if penalty kick
-                strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+                # strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
                 pass
 
         self.rostime_previous = rostime

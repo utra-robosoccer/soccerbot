@@ -3,13 +3,13 @@ INITIAL_POSITION =\
 {
     "blue":
     {
-        1: [-3.5, 0, 0],
+        1: [-1.5, 0, 0],
         2: [-1, 0, 0],
         3: [-1.5, 1.75, 0]
     },
     "red":
     {
-        1: [3.5, 0, -3.14],
+        1: [1.5, 0, -3.14],
         2: [1, -2.5, -3.14],
         3: [1.5, 1.75, -3.14]
     }
@@ -19,15 +19,15 @@ START_POSITION =\
 {
     "blue":
     {
-        1: [-4, -3.1, 1.57],
-        2: [-1, -3.1, 1.57],
-        3: [-4, 3.1, -1.57]
+        1: [-1, -3.15, 1.57],
+        2: [-1, -3.15, 1.57],
+        3: [-4, 3.15, -1.57]
     },
     "red":
     {
-        1: [4, -3.1, 1.57],
-        2: [1, -3.1, 1.57],
-        3: [4, 3.1, -1.57]
+        1: [1, -3.15, 1.57],
+        2: [1, -3.15, 1.57],
+        3: [4, 3.15, -1.57]
     }
 }
 
@@ -53,11 +53,11 @@ PENALTYSHOOT_START_POSITION =\
     "goalie": [-4.5, 0, 0]
 }
 
-GOAL_POSITION =\
+ENEMY_GOAL_POSITION =\
 {
-    "blue": [-5, 0],
-    "red": [5, 0],
-    "penaltyshoot": [4.5, 0]
+    "blue": [5, 0],
+    "red": [-5, 0],
+    "penalty_shoot": [-4.5, 0]
 }
 
 
@@ -81,9 +81,9 @@ def position_map_kickoff(position_dict, has_kickoff):
         return position_dict["goalie"]
 
 
-def position_map_goal(position_dict, team_color, first_half, penaltyshoot):
-    if penaltyshoot:
-        return position_dict["penaltyshoot"]
+def position_map_goal(position_dict, team_color, first_half, penalty_shoot):
+    if penalty_shoot:
+        return position_dict["penalty_shoot"]
 
     if first_half == 1:
         if team_color == 0:

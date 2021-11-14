@@ -98,8 +98,21 @@ private:
         int detected_robots = 0;
         for (soccer_object_detection::BoundingBox &box : bounding_boxes) {
                 std::string objectClass = box.Class;
+//            int xavg2 = (box.xmin + box.xmax) / 2;
+//            int yavg2 = (box.ymin + box.ymax) / 2;
+//            float area = (box.xmax - box.xmin) * (box.ymax - box.ymin);
+//
+//            Point3 floor_coordinate = camera->FindFloorCoordinate(xavg2, yavg2);
+//            // Reduce false positives
+//            if (area < 3500.0 and float(angle) > 0.6  ) {
+//                continue;
+//            }
+//            else if (area < 400.0 ) {
+//                continue;
+//            }
 
                 if (objectClass == "ball") {
+
                     float xavg = (box.xmin + box.xmax) / 2;
                     float yavg = 0.5 * box.ymax + 0.5 * box.ymin;
                     float yclose = box.ymax;
@@ -142,6 +155,9 @@ private:
                     ball_pixel.point.y = yavg;
                     ball_pixel.point.z = 0;
                     ballPixelPublisher.publish(ball_pixel);
+
+
+
                 }
 
                 if (objectClass == "robot") {
@@ -211,20 +227,20 @@ private:
                     floor_coordinate.x = floor_coordinate.x * (1 - ratio2) + floor_coordinate_center.x * ratio2;
                     floor_coordinate.y = floor_coordinate.y * (1 - ratio2) + floor_coordinate_center.y * ratio2;
 
-                    geometry_msgs::TransformStamped robot_pose;
-                    robot_pose.header.frame_id = robotName + "/base_footprint";
-                    robot_pose.child_frame_id = robotName + "/detected_robot_" + std::to_string(detected_robots);
-                    robot_pose.header.stamp = msg->header.stamp;
-                    robot_pose.header.seq = msg->header.seq;
-                    robot_pose.transform.translation.x = floor_coordinate.x;
-                    robot_pose.transform.translation.y = floor_coordinate.y;
-                    robot_pose.transform.translation.z = floor_coordinate.z;
-                    robot_pose.transform.rotation.x = 0;
-                    robot_pose.transform.rotation.y = 0;
-                    robot_pose.transform.rotation.z = 0;
-                    robot_pose.transform.rotation.w = 1;
-                    BallDetector::br.sendTransform(robot_pose);
-                    detected_robots = detected_robots + 1;
+//                    geometry_msgs::TransformStamped robot_pose;
+//                    robot_pose.header.frame_id = robotName + "/base_footprint";
+//                    robot_pose.child_frame_id = robotName + "/detected_robot_" + std::to_string(detected_robots);
+//                    robot_pose.header.stamp = msg->header.stamp;
+//                    robot_pose.header.seq = msg->header.seq;
+//                    robot_pose.transform.translation.x = floor_coordinate.x;
+//                    robot_pose.transform.translation.y = floor_coordinate.y;
+//                    robot_pose.transform.translation.z = floor_coordinate.z;
+//                    robot_pose.transform.rotation.x = 0;
+//                    robot_pose.transform.rotation.y = 0;
+//                    robot_pose.transform.rotation.z = 0;
+//                    robot_pose.transform.rotation.w = 1;
+//                    BallDetector::br.sendTransform(robot_pose);
+//                    detected_robots = detected_robots + 1;
 
 //                    geometry_msgs::PoseStamped robot_pose;
 //                    robot_pose.header.frame_id = robotName + "/base_footprint";

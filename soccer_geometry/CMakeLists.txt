@@ -5,6 +5,7 @@ add_compile_options(-std=c++17)
 
 set(PKG_DEPS
     roscpp
+    rospy
     geometry_msgs
     )
 
@@ -69,3 +70,5 @@ install(DIRECTORY include/${PROJECT_NAME}/
    FILES_MATCHING PATTERN "*.hpp"
    PATTERN ".svn" EXCLUDE
 )
+
+catkin_python_setup()
