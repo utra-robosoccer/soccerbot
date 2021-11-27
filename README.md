@@ -19,10 +19,13 @@ catkin build <pkg name> --verbose --catkin-make-args run_tests
 ```
 
 #### Launching the robot
-You should be ready to go now. Before running, setup your CLion IDE (above),  To run the robot:
+Run simulation and game controller:
 
 ```bash
-roslaunch soccerbot soccerbot_multi.launch simulation:=false multi:=false
+roslaunch soccerbot game_controller.launch
 ```
-- This file launches a soccerbot.lauunch which is a single robot. Each of these have multiple modules (localization, navigation) which are launch files for certain components of a robot
-- Note that the arguments := are optional and the default ones are set in the launch files
+
+Run robot code:
+```bash
+roslaunch soccerbot soccerbot_multi.launch
+```
