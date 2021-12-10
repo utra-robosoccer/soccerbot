@@ -57,7 +57,7 @@ class Transmitter(Thread):
         # return
         with self._jx_ser._motor_lock:
             jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [500] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
+            jx_servo_util.uart_transact(self._jx_ser, [4000] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
             # pass
 
     def stop(self):
@@ -92,7 +92,7 @@ class Transmitter(Thread):
                 pass
             # print(flat_gobilda_goal_angles)
             # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
-            # gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
+            gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
 
     def get_num_tx(self):
         with self._num_tx_lock:

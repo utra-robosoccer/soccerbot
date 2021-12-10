@@ -7,14 +7,14 @@ import pybullet as pb
 import pytest
 
 if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
+    os.environ["ROS_NAMESPACE"] = "/robot3"
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
+real_robot = True
+run_in_ros = True
 display = False
-robot_model = "bez1"
+robot_model = "bez3"
 TEST_TIMEOUT = 60
 
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -29,9 +29,12 @@ if run_in_ros:
     import rospy
 
     rospy.init_node("soccer_control")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill " + os.environ[
+        "ROS_NAMESPACE"] + "/soccer_strategy'")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill " + os.environ[
+        "ROS_NAMESPACE"] + "/soccer_pycontrol'")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill " + os.environ[
+        "ROS_NAMESPACE"] + "/soccer_trajectories'")
 
 from soccer_common.mock_ros import mock_ros
 
@@ -45,7 +48,7 @@ from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
-    robot_models = ["bez1"]
+    robot_models = ["bez3"]
 
     @staticmethod
     def reset_attributes():
@@ -75,10 +78,12 @@ class TestWalking:
     @pytest.mark.flaky(reruns=1)
     @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_ik(self, walker: SoccerbotController):
-        walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
+        walker.soccerbot.configuration[
+        Links.RIGHT_LEG_1: Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
         )
-        walker.soccerbot.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsLeftFoot(
+        walker.soccerbot.configuration[
+        Links.LEFT_LEG_1: Links.LEFT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsLeftFoot(
             np.copy(walker.soccerbot.left_foot_init_position)
         )
 
@@ -93,7 +98,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez3"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -170,7 +175,8 @@ class TestWalking:
         )
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
+        walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0],
+                                      [0, 0, -0.9987013856398979, 0.050946465244882694]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
@@ -287,7 +293,8 @@ class TestWalking:
         )
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([0.14076394628045208, -0.034574636811865296, 0], [0, 0, -0.9999956132297835, -0.002962013029887055]))
+        walker.setGoal(Transformation([0.14076394628045208, -0.034574636811865296, 0],
+                                      [0, 0, -0.9999956132297835, -0.002962013029887055]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 

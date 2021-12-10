@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+./setup_serial
+docker-compose -f docker-compose.robot.yaml up

@@ -24,7 +24,7 @@
 
         <!-- Motor Drivers -->
         <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_name == 'robot_1')" />
-	<include file="$(find soccer_hardware_bez3)/launch/soccer_hardware_bez3.launch" if="$(eval robot_name == 'robot_3')" />
+	    <include file="$(find soccer_hardware_bez3)/launch/soccer_hardware_bez3.launch" if="$(eval robot_name == 'robot_3')" />
 
     </group>
 </launch>

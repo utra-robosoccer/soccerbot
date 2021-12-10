@@ -100,6 +100,7 @@ motor_mapping:
     direction: -1 # arm goes forwards
     offset: 20 # 150
     initial_state: 1.5
+    limits: [20, 180]
   head_motor_0:
     id: 17
     joint_state_id: 0
