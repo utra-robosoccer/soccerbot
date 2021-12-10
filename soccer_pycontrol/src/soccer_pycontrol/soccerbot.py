@@ -532,8 +532,8 @@ class Soccerbot:
 
         [roll, pitch, yaw] = pose.get_orientation_euler()
         F = self.walking_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
-        self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
+        self.configuration_offset[Joints.LEFT_ARM_1] = 1 * F
+        self.configuration_offset[Joints.RIGHT_ARM_1] = 1 * F
         return F
 
     standing_pid = PID(
