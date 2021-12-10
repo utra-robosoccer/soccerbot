@@ -30,10 +30,10 @@ services:
     environment:
       ROS_MASTER_URI: ${ROS_MASTER_URI}
       TEST_CONTROL: "false"
-      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_ROBOT_ID: ${ROBOCUP_ROBOT_ID:-1}
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
-      ROBOCUP_TEAM_ID: 16
+      ROBOCUP_TEAM_ID: ${ROBOCUP_TEAM_ID:-10}
       PYTHONUNBUFFERED: 1
       X_POS: ${X_POS:--4}
       Y_POS: ${X_POS:--3.15}

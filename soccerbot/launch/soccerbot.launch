@@ -39,6 +39,8 @@
     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
+    
+    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
