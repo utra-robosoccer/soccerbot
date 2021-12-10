@@ -59,6 +59,7 @@ class Communication:
     def run(self):
         self._rx_servo_thread.start()
         self._rx_imu_thread.start()
+        print('TX THREAD CALLER')
         self._tx_servo_thread.start()
 
         tx_cycle = WaitForMs(10)
@@ -81,7 +82,9 @@ class Communication:
             if "limits" in motor and motor["limits"] is not None:
                 angle = max(motor["limits"][0], min(motor["limits"][1], angle))
             motor_angles.append(((motor_name, motor), angle))
+        # print(motor_angles)
         self._tx_servo_thread.send(motor_angles)
+        
 
     def receive_servo_callback(self, received_angles):
         joint_state = JointState()

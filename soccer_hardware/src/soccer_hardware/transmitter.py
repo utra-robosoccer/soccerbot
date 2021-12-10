@@ -14,7 +14,7 @@ from jx_servo_util import CMD_HEADS, CMDS, RWS
 from utility import log_string
 
 ANGLE2JX_POT_VOLTS = 0xFFF / 180.0
-ANGLE2GOBILDA_PWM = 0xFFF / 300.0
+ANGLE2GOBILDA_PWM = 0xFFF / (300.0 * 1200 / 2000)
 
 JX_JOINTS = [
     "right_leg_motor_0",
@@ -53,10 +53,12 @@ class Transmitter(Thread):
         self._num_tx_lock = Lock()
 
     def start(self, *args, **kwargs):
-        with self._jx_ser._motor_lock:
-            jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [1000] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
         super().start(*args, **kwargs)
+        return
+        with self._jx_ser._motor_lock:
+            # jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+            # jx_servo_util.uart_transact(self._jx_ser, [1000] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
+            pass
 
     def stop(self):
         """
@@ -87,7 +89,7 @@ class Transmitter(Thread):
             for idx, v in gobilda_goal_angles:
                 flat_gobilda_goal_angles[int(idx - GOBILDA_IDX_BASE)] = constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF)
                 pass
-            # print(flat_gobilda_goal_angles)
+            print(flat_gobilda_goal_angles)
             # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
             gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
 
