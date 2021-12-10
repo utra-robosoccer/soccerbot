@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-export ROS_MASTER_URI=http://192.168.0.103:11311;
+export ROS_MASTER_URI=http://192.168.0.102:11311;
 export ROS_IP=$(hostname -i);
-export TEST_WALKING=true;
+# export TEST_WALKING=;
 source ~/catkin_ws/devel/setup.bash;
 roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$ROBOCUP_ROBOT_ID || sleep infinity;

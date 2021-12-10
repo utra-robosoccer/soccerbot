@@ -16,7 +16,7 @@ from wait_for_ms import WaitForMs
 
 
 class Communication:
-    def __init__(self, servo_ser, imu_ser):
+    def __init__(self, jx_ser, imu_pwm_servo_ser):
         self._last_angles = None
         self._last_imu = None
 
@@ -26,20 +26,23 @@ class Communication:
         self.pitch = 0
         self.roll = 0
 
-        servo_ser._motor_lock = (
+        imu_pwm_servo_ser._motor_lock = (
+            Lock()
+        ) # IMU ser is also used for PWM servos
+        jx_ser._motor_lock = (
             Lock()
         )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
-        self._tx_servo_thread = Transmitter(name="tx_servo_th", ser=servo_ser)
-        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=servo_ser)
-        self._rx_servo_thread.set_timeout(0.015)
+        self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=jx_ser, pwm_ser=imu_pwm_servo_ser)
+        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=jx_ser)
+        self._rx_servo_thread.set_timeout(0.04)
         self._rx_servo_thread.bind(self.receive_servo_callback)
 
-        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=imu_ser)
+        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=imu_pwm_servo_ser)
         self._rx_imu_thread.set_timeout(0.010)
         self._rx_imu_thread.bind(self.receive_imu_callback)
 
-        self._pub_imu = rp.Publisher("~imu_raw", Imu, queue_size=1)
-        self._pub_joint_states = rp.Publisher("~joint_states", JointState, queue_size=1)
+        self._pub_imu = rp.Publisher("imu_raw", Imu, queue_size=1)
+        self._pub_joint_states = rp.Publisher("joint_states", JointState, queue_size=1)
 
         self._imu_calibration = rp.get_param("~imu_calibration")
         self._motor_map = rp.get_param("~motor_mapping")
@@ -74,23 +77,40 @@ class Communication:
         motor_angles = []  # [0] * len(self._motor_map)
         for motor_name, motor in self._motor_map.items():
             angle = np.rad2deg(motor["value"] * float(motor["direction"])) + float(motor["offset"])
+            angle = float(motor['offset'])
             if "limits" in motor and motor["limits"] is not None:
                 angle = max(motor["limits"][0], min(motor["limits"][1], angle))
             motor_angles.append(((motor_name, motor), angle))
         self._tx_servo_thread.send(motor_angles)
 
     def receive_servo_callback(self, received_angles):
-        self._last_angles = received_angles
-        self.publish_sensor_data(self._last_angles, self._last_imu)
+        joint_state = JointState()
+        joint_state.header.stamp = rp.rostime.get_rostime()
+        # print(received_angles)
+        for motor in self._motor_map:
+            servo_idx = int(self._motor_map[motor]["id"])
+            # print(servo_idx, str(type(list(received_angles.keys())[0])), servo_idx in received_angles)
+            if int(servo_idx) < 12 and (servo_idx + 1) in received_angles:
+                angle = received_angles[servo_idx + 1]
+                if math.isnan(angle):  # TODO fix this
+                    continue
+                angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
+                angle = np.deg2rad(angle)
+            else:
+                angle = self._motor_map[motor]["value"]
+
+            # Joint State
+            joint_state.name.append(motor)
+            joint_state.position.append(angle)
+        # print(joint_state)
+        self._pub_joint_states.publish(joint_state)
+        # self.publish_sensor_data(self._last_angles, self._last_imu)
 
     def receive_imu_callback(self, received_imu):
-        print("RECEIVED IMU: ", received_imu)
-        self._last_imu = np.array(received_imu).reshape((6, 1))
-        self.publish_sensor_data(self._last_angles, self._last_imu)
-
-    def publish_sensor_data(self, received_angles, received_imu):
-        if received_imu is None or received_angles is None:
-            return
+        # print("RECEIVED IMU: ", received_imu)
+        received_imu = np.array(received_imu).reshape((6, 1))
+        received_imu = received_imu[[2, 0, 1, 5, 3, 4]] * ([1, -1, -1] * 2)
+        # self.publish_sensor_data(self._last_angles, self._last_imu)
 
         # IMU FEEDBACK
         imu = Imu()
@@ -112,27 +132,12 @@ class Communication:
         # print(imu)
         self._pub_imu.publish(imu)
 
-        # MOTOR FEEDBACK
-        joint_state = JointState()
-        joint_state.header.stamp = rp.rostime.get_rostime()
-        # print(received_angles)
-        for motor in self._motor_map:
-            servo_idx = int(self._motor_map[motor]["id"])
-            # print(servo_idx, str(type(list(received_angles.keys())[0])), servo_idx in received_angles)
-            if int(servo_idx) < 12 and (servo_idx + 1) in received_angles:
-                angle = received_angles[servo_idx + 1]
-                if math.isnan(angle):  # TODO fix this
-                    continue
-                angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
-                angle = np.deg2rad(angle)
-            else:
-                angle = self._motor_map[motor]["value"]
+    # def publish_sensor_data(self, received_angles, received_imu):
+    #     if received_imu is None or received_angles is None:
+    #         return
 
-            # Joint State
-            joint_state.name.append(motor)
-            joint_state.position.append(angle)
-        # print(joint_state)
-        self._pub_joint_states.publish(joint_state)
+    #     # MOTOR FEEDBACK
+        
 
 
 if __name__ == "__main__":

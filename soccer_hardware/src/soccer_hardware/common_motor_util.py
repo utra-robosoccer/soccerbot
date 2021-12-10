@@ -22,7 +22,7 @@ def bytepack(A):
         return struct.pack("B", A)
 
 
-def un6pack(bs, _signed=True):
+def unpack6(bs, _signed=True):
     # little-endian
     c = 0
     for i, b in enumerate(bs):
@@ -34,3 +34,14 @@ def un6pack(bs, _signed=True):
             c -= sign_bit << 1
 
     return c
+
+def constrain(x, a, b):
+    return min(max(x, min(a, b)), max(a, b))
+
+def pack6(A):
+	b = []
+	for a in A:
+		b += [a & 0x3F, (a >> 6) & 0x3F]
+
+	return bytepack(b)
+

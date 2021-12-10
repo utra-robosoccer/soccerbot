@@ -3,7 +3,7 @@ import time
 from enum import Enum
 from threading import Thread
 
-from common_motor_util import bytepack, crc32mpeg2, le_crc, un6pack
+from common_motor_util import bytepack, crc32mpeg2, le_crc, unpack6
 from receiver import Receiver
 from utility import log_string
 
@@ -86,7 +86,7 @@ def uart_transact(ser, B, cmd, rw, timeout=INF):
     _saw_master_start = False
     while uart_state != UART_STATES.ENDED and empty_frames < MAX_EMPTY_FRAMES:
         # examine timeout condition
-        if time.time() > time0 - timeout:
+        if time.time() > time0 + timeout:
             return (False, None)
 
         for ri, r in enumerate(r0):

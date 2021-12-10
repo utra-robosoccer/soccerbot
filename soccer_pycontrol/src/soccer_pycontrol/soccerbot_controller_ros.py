@@ -34,7 +34,7 @@ class SoccerbotControllerRos(SoccerbotController):
         try:
             (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print(e)
+            # print(e)
             return False
         self.robot_pose = PoseStamped()
         self.robot_pose.pose.position.x = trans[0]

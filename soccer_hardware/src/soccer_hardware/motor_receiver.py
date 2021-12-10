@@ -5,7 +5,7 @@ from threading import Event, Lock, Thread
 import jx_servo_util
 import rospy as rp
 import serial
-from common_motor_util import un6pack
+from common_motor_util import unpack6
 from jx_servo_util import CMD_HEADS, CMDS, RWS
 from receiver import Receiver
 from transformations import *
@@ -19,9 +19,8 @@ class MotorReceiver(Receiver):
             pos = {}
             if valid:
                 # print('!!!!!!!RX!!!!!!!')
-                # print(raw_pos)
                 for servo_idx, (p_valid, p) in raw_pos.items():
                     if p_valid:
-                        pos[servo_idx] = un6pack(p[1:3], False) / 0xFFF * 180.0  # note: we use degrees for motor angles
+                        pos[servo_idx] = unpack6(p[1:3], False) / 0xFFF * 180.0  # note: we use degrees for motor angles
 
         return (valid, pos)
