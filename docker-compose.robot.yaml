@@ -21,7 +21,6 @@ services:
       - /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra
     command:
       /bin/bash -c "source ~/catkin_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
-
       if [[ $$TEST_CONTROL == 'true' ]]; then roslaunch soccer_hardware soccer_hardware.launch test_walking:=true  __ns:=robot$$ROBOCUP_ROBOT_ID;
       else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID; fi || sleep infinity"
     environment:
