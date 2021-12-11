@@ -142,7 +142,7 @@ def uart_transact(ser, B, cmd, rw):
 			expect_len = max(0, (w - (l % w))) # both full and empty frames will trigger a full frame read
 
 		if uart_state != UART_STATES.ENDED:
-			ser.timeout = EXPECT_BYTE_RX_TIME * expect_len
+			ser.timeout = EXPECT_BYTE_RX_TIME * max(0, expect_len)
 			# print(ser.timeout)
 			r0 = ser.read(expect_len)
 

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+find /dev \( -name 'ttyUSB*' -or -name 'ttyACM*' \) | while read port; do
+  echo "Setting $port to low_latency"
+  sudo setserial "$port" low_latency
+done

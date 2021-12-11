@@ -78,7 +78,7 @@ class Communication:
         motor_angles = []  # [0] * len(self._motor_map)
         for motor_name, motor in self._motor_map.items():
             angle = np.rad2deg(motor["value"] * float(motor["direction"])) + float(motor["offset"])
-            angle = float(motor['offset'])
+            # angle = float(motor['offset'])
             if "limits" in motor and motor["limits"] is not None:
                 angle = max(motor["limits"][0], min(motor["limits"][1], angle))
             motor_angles.append(((motor_name, motor), angle))
@@ -112,7 +112,7 @@ class Communication:
     def receive_imu_callback(self, received_imu):
         # print("RECEIVED IMU: ", received_imu)
         received_imu = np.array(received_imu).reshape((6, 1))
-        received_imu = received_imu[[2, 0, 1, 5, 3, 4]] * ([1, -1, -1] * 2)
+        received_imu = received_imu[[2, 0, 1, 5, 3, 4]] * ([-1, -1, 1] * 2)
         # self.publish_sensor_data(self._last_angles, self._last_imu)
 
         # IMU FEEDBACK
