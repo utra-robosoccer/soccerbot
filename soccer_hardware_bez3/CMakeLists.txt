@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(soccer_hardware)
+project(soccer_hardware_bez3)
 
 find_package(
     catkin

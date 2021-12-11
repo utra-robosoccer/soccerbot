@@ -1,8 +1,8 @@
 <launch>
-    <arg name="robot_name" default="robot1" />
+    <arg name="robot_name" default="robot3" />
     <arg name="test_walking" default="true" />
 
-    <node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware.py" output="screen" cwd="node">
+    <node name="soccer_hardware_bez3" pkg="soccer_hardware_bez3" type="soccer_hardware.py" output="screen" cwd="node">
         <param name="imu_port" value="/dev/ttyACM" />
         <param name="imu_baud_rate" value="230400" />
         <param name="servo_port" value="/dev/ttyUSB" />

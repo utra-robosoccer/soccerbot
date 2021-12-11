@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>soccer_hardware</name>
+  <name>soccer_hardware_bez3</name>
   <version>0.0.0</version>
   <description>Contains the soccer-communication python code for communicating with the robot using the
         microcontroller
