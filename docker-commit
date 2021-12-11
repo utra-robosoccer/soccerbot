@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker commit soccerbot_friendly1_1 utrarobosoccer/soccerbot:arm64

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker exec -it soccerbot_friendly1_1 bash
