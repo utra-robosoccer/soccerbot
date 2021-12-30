@@ -58,7 +58,7 @@ class DetectorBall(Detector):
 
             br = tf2_ros.TransformBroadcaster()
             ball_pose = TransformStamped()
-            ball_pose.header.frame_id = self.robot_name + "/base_footprint"
+            ball_pose.header.frame_id = self.robot_name + "/odom"
             ball_pose.child_frame_id = self.robot_name + "/ball"
             ball_pose.header.stamp = msg.header.stamp
             ball_pose.header.seq = msg.header.seq
