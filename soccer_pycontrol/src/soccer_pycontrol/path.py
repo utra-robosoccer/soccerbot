@@ -130,7 +130,7 @@ class Path:
         bodystep_count = 0
         for path in self.path_sections:
             if path != path_section:
-                bodystep_count = bodystep_count + path_section.bodyStepCount()
+                bodystep_count = bodystep_count + path.bodyStepCount()
             else:
                 break
         subpath_count = (path_section.distance * ratio) / path_section.bodystep_size
@@ -169,8 +169,11 @@ class Path:
                 self.path_sections.remove(p)
 
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
+        t_change = t + 1
+        if self.duration() - t_change < 1:
+            raise Exception("There is not enough time to update the position")
 
-        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t + 2)
+        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
         start_transform = self.getBodyStepPose(step)
         self.terminateWalk(t_new)
         p = self.createPathSection(start_transform, end_transform)

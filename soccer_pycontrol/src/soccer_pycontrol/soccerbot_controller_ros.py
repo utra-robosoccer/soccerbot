@@ -115,7 +115,13 @@ class SoccerbotControllerRos(SoccerbotController):
             goal_position = self.pose_to_transformation(pose.pose)
             self.soccerbot.addTorsoHeight(goal_position)
             self.new_path = copy.deepcopy(self.soccerbot.robot_path)
-            self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
+
+            try:
+                self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
+            except Exception as ex:
+                print(ex)
+                return
+
             end = time.time()
             print("New Goal Updated, Time Taken: ", end - start)
             pass
@@ -128,9 +134,12 @@ class SoccerbotControllerRos(SoccerbotController):
         stable_count = 5
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
+        time_now = 0
+
         while not rospy.is_shutdown():
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
                 print("Recieved New Goal")
+                time_now = rospy.Time.now()
                 self.goal = self.new_goal
 
                 self.update_robot_pose()
@@ -143,6 +152,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 print("End Pose: ", self.goal.pose)
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
+
 
             if self.new_goal != self.goal and self.soccerbot.robot_path is not None and self.t > self.t_new_path:
                 print("Updating Existing Goal and Path")

@@ -387,19 +387,24 @@ class Test(TestCase):
         self.walker.run()
 
     def test_path_combination_basic(self):
+        plt.figure()
+
         height = 0.321
         start_transform = Transformation([0.5, 0, height], [0, 0, 0, 1])
-        end_transform = Transformation([0.8, 0, height], [0, 0, 0, 1])
+        end_transform = Transformation([0.9, 0, height], [0, 0, 0, 1])
 
         path = Path(start_transform, end_transform)
         path.show()
 
         t = 2
-        end_transform_new = Transformation([1.1, 0, height], [0, 0, 0, 1])
+        end_transform_new = Transformation([1.3, 0, height], [0, 0, 0, 1])
         path.dynamicallyUpdateGoalPosition(t, end_transform_new)
         path.show()
 
+        plt.show()
+
     def test_path_combination(self):
+
         height = 0.321
         start_transform = Transformation([0.5, 0, height], [0, 0, 0, 1])
         end_transform = Transformation([1.5, 0, height], [0, 0, 0, 1])
@@ -417,7 +422,9 @@ class Test(TestCase):
         t = 9
         end_transform_new = Transformation([1.0, -0.5, height], [0, 0, 0, 1])
         path.dynamicallyUpdateGoalPosition(t, end_transform_new)
+        plt.figure()
         path.show()
+        plt.show()
 
         self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
