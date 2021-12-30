@@ -156,6 +156,7 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def get_imu(self):
+        assert(self.imu_ready)
         return tr([0, 0, 0], [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
                               self.imu_msg.orientation.w])
 

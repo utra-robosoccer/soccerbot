@@ -1,13 +1,13 @@
+import os
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import math
 from unittest import TestCase
 
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 from path import Path
-
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import soccerbot_controller
 
@@ -381,7 +381,7 @@ class Test(TestCase):
         self.walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
 
         def send_alternative_trajectory(_):
-            self.walker.setGoal(Transformation([2.5, 0, 0], [0, 0, 0, 1]))
+            self.walker.setGoal(Transformation([2.5, 0.5, 0], [0, 0, 0, 1]))
             pass
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()

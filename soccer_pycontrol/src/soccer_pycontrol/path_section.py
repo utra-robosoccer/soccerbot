@@ -2,7 +2,7 @@ import abc
 import functools
 import time
 
-from soccer_pycontrol.transformation import Transformation
+from soccer_geometry.transformation import Transformation
 import numpy as np
 from utils import wrapTo2Pi, wrapToPi
 from abc import ABC
