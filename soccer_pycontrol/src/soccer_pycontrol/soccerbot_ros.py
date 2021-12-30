@@ -185,19 +185,19 @@ class SoccerbotRos(Soccerbot):
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
 
-            if last_pose < rospy.Duration(0.2):
+            if last_pose < rospy.Duration(0.15):
                 self.head_step -= 1
                 # x
-                if self.ball_pixel.point.x > 350:
-                    self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.003
-                elif self.ball_pixel.point.x < 290:
-                    self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.003
+                if self.ball_pixel.point.x > 360:
+                    self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.0015
+                elif self.ball_pixel.point.x < 280:
+                    self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.0015
                 else:
                     self.configuration[Joints.HEAD_1] = self.head_motor_0
                 # y
-                if self.ball_pixel.point.y > 270:
+                if self.ball_pixel.point.y > 260:
                     self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.003
-                elif self.ball_pixel.point.y < 210:
+                elif self.ball_pixel.point.y < 220:
                     self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.003
                 else:
                     self.configuration[Joints.HEAD_2] = self.head_motor_1
