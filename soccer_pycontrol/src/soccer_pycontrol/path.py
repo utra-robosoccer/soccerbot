@@ -170,11 +170,13 @@ class Path:
 
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
 
-        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
+        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t + 2)
         start_transform = self.getBodyStepPose(step)
         self.terminateWalk(t_new)
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
+
+        return t_new
 
     def show(self):
         position = np.zeros((self.bodyStepCount(), 3))
