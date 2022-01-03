@@ -14,11 +14,11 @@
         <param name="frame_id" value="world"/>
     </node>
 
-    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector" respawn="true"
-          output="screen" >
-        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>
-    </node>
-<!--     <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen"/> -->
+<!--    <node pkg="soccer_fieldline_detection" type="soccer_fieldline_detector" name="soccer_fieldline_detector" respawn="true"-->
+<!--          output="screen" >-->
+<!--        <rosparam file="$(find soccer_fieldline_detection)/config/fieldline_detection.yaml" command="load"/>-->
+<!--    </node>-->
+     <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen"/>
 
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
         <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
