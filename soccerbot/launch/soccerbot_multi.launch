@@ -2,7 +2,7 @@
     <arg name="simulation" default="true" />
     <arg name="single" default="true" />
     <arg name="fake_localization" default="false" />
-    <arg name="competition" default="true" />
+    <arg name="competition" default="false" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <!-- The master simulator controller -->
