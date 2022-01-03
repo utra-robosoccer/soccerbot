@@ -123,6 +123,8 @@ class SoccerbotControllerRos(SoccerbotController):
                 return
 
             end = time.time()
+
+            self.soccerbot.publishPath(self.new_path)
             print("New Goal Updated, Time Taken: ", end - start)
             pass
         self.new_goal = pose

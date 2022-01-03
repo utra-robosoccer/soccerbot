@@ -435,13 +435,17 @@ class Test(TestCase):
         self.walker.run()
         pass
 
-    def test_path_combination_2(self):
-        start_transform = Transformation([0.5, 0, 0], [0, 0, 0, 1])
-        end_transform = Transformation([1.5, 0, 0], [0, 0, 0, 1])
-        end_transform_new = Transformation([1.5, 0.5, 0], [0, 0, 0, 1])
 
-        path = Path(start_transform, end_transform)
-        path.show()
-        t = 5
-        path.dynamicallyUpdateGoalPosition(t, end_transform_new)
-        pass
+    def test_path_combination_2(self):
+        import rospy
+
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([1.5, 0.5, 0], [0, 0, 0, 1]))
+
+        def send_alternative_trajectory(_):
+            self.walker.setGoal(Transformation([1.5, -0.5, 0], [0, 0, 0, 1]))
+            pass
+        self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
+        self.walker.run()
