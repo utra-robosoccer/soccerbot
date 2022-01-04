@@ -41,6 +41,8 @@
 
   <!-- strategy-->
   <depend>soccer_strategy</depend>
+  <depend>team_communication</depend>
+
 
   <!-- Game Controller -->
   <depend>ant</depend>
