@@ -184,11 +184,16 @@ class SoccerbotRos(Soccerbot):
                                                          rospy.Time(0))
             ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
                                                                      os.environ["ROS_NAMESPACE"] + '/ball')
-            self.last_ball_found_timestamp = ball_found_timestamp
-            recenterCameraOnBall = True
+            if rospy.Time.now() - ball_found_timestamp > rospy.Duration(1):
+                self.last_ball_found_timestamp = None
+                rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
+            else:
+                self.last_ball_found_timestamp = ball_found_timestamp
+                recenterCameraOnBall = True
 
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             self.last_ball_found_timestamp = None
+            rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
             pass
 
         # Search for the ball if can't find the ball
@@ -207,12 +212,13 @@ class SoccerbotRos(Soccerbot):
         if recenterCameraOnBall:
             anglelr = math.atan2(trans[1], trans[0])
             angleud = math.atan2(trans[2], trans[0])
+            rospy.loginfo_throttle(5, "Ball found, rotating head {} {}".format(anglelr, angleud))
 
             if anglelr < 0.05 and angleud < 0.05:
                 head_not_moving = True
 
-            self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.001
-            self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.001
+            self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+            self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
             self.head_motor_0 = self.configuration[Joints.HEAD_1]
             self.head_motor_1 = self.configuration[Joints.HEAD_2]
 
