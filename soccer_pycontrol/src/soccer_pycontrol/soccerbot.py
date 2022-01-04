@@ -160,7 +160,7 @@ class Soccerbot:
         self.current_step_time = 0
 
         # For head rotation
-        self.head_step = 0
+        self.head_step = 0.0
 
     def ready(self):
         """
@@ -552,14 +552,9 @@ class Soccerbot:
         self.lastError2 = 0
 
     HEAD_YAW_FREQ = 0.003
-    HEAD_PITCH_FREQ = 0.0035
+    HEAD_PITCH_FREQ = 0.0015
 
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
-        self.configuration[
-            Joints.HEAD_2] = 0.6  # math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 6
-
-        self.head_step += 1
         pass
 
     def apply_foot_pressure_sensor_feedback(self, floor):
