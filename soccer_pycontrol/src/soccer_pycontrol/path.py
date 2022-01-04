@@ -3,9 +3,8 @@ from math import floor, ceil
 from soccer_geometry import Transformation
 import numpy as np
 import matplotlib.pyplot as plt
-from path_section import PathSection
-from path_section_bezier import PathSectionBezier
-from path_section_short import PathSectionShort
+from soccer_pycontrol.path_section_bezier import PathSectionBezier
+from soccer_pycontrol.path_section_short import PathSectionShort
 import time
 
 class Path:

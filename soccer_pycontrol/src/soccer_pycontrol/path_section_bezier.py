@@ -2,7 +2,7 @@ import functools
 from soccer_geometry.transformation import Transformation
 import numpy as np
 from scipy.special import comb
-from path_section import PathSection
+from soccer_pycontrol.path_section import PathSection
 
 class PathSectionBezier(PathSection):
     turn_duration = 4  # Number of body steps to turn
