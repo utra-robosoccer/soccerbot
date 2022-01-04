@@ -161,7 +161,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.terminate_walk:
+            if self.soccerbot.robot_path is not None and self.terminate_walk:
                 print("Terminating Walk at time " + str(self.t))
                 self.soccerbot.robot_path.terminateWalk(self.t)
                 self.terminate_walk = False

@@ -41,17 +41,16 @@ class SoccerbotRos(Soccerbot):
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
-        self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", PointStamped, self.ball_callback, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
-        self.move_head_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
+        self.head_not_moving_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
         self.localization_reset_subscriber = rospy.Subscriber("localization_mode", Bool, self.localization_callback,
                                                               queue_size=1)
         self.localization_reset = False
         self.imu_ready = False
-        self.ball_pixel = PointStamped()
         self.listener = tf.TransformListener()
         self.head_motor_0 = 0
         self.head_motor_1 = 0
+        self.last_ball_found_timestamp = None
 
     def localization_callback(self, msg):
         self.localization_reset = msg.data
@@ -176,62 +175,52 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
+
     def apply_head_rotation(self):
-        self.configuration[Joints.HEAD_1] = math.cos(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 3)
+        recenterCameraOnBall = False
+        try:
+            (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
+                                                         os.environ["ROS_NAMESPACE"] + '/ball',
+                                                         rospy.Time(0))
+            ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
+                                                                     os.environ["ROS_NAMESPACE"] + '/ball')
+            if rospy.Time.now() - ball_found_timestamp > rospy.Duration(1):
+                self.last_ball_found_timestamp = None
+                rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
+            else:
+                self.last_ball_found_timestamp = ball_found_timestamp
+                recenterCameraOnBall = True
 
-        self.configuration[
-            Joints.HEAD_2] = math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 8 + math.pi / 5
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            self.last_ball_found_timestamp = None
+            rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
+            pass
 
-        last_pose = rospy.Duration(10)
-        if not self.localization_reset:
-            try:
+        # Search for the ball if can't find the ball
+        if self.last_ball_found_timestamp is None:
+            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 4)
+            self.configuration[Joints.HEAD_2] = math.pi / 6 - math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 6
+            self.head_motor_0 = self.configuration[Joints.HEAD_1]
+            self.head_motor_1 = self.configuration[Joints.HEAD_2]
+            self.head_step += 1
 
-                header = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/ball',
-                                                           os.environ["ROS_NAMESPACE"] + '/base_footprint')
-                last_pose = rospy.Time.now() - header
+        # The head not moving publisher
+        head_not_moving = Bool()
+        head_not_moving.data = False
 
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                pass
+        # Recenter the head onto the ball
+        if recenterCameraOnBall:
+            anglelr = math.atan2(trans[1], trans[0])
+            angleud = math.atan2(trans[2], trans[0])
+            rospy.loginfo_throttle(5, "Ball found, rotating head {} {}".format(anglelr, angleud))
 
-            if last_pose < rospy.Duration(0.2):
-                self.head_step -= 1
-                # x
-                if self.ball_pixel.point.x > 350:
-                    self.configuration[Joints.HEAD_1] = self.head_motor_0 - 0.003
-                elif self.ball_pixel.point.x < 290:
-                    self.configuration[Joints.HEAD_1] = self.head_motor_0 + 0.003
-                else:
-                    self.configuration[Joints.HEAD_1] = self.head_motor_0
-                # y
-                if self.ball_pixel.point.y > 270:
-                    self.configuration[Joints.HEAD_2] = self.head_motor_1 + 0.003
-                elif self.ball_pixel.point.y < 210:
-                    self.configuration[Joints.HEAD_2] = self.head_motor_1 - 0.003
-                else:
-                    self.configuration[Joints.HEAD_2] = self.head_motor_1
+            if anglelr < 0.05 and angleud < 0.05:
+                head_not_moving = True
 
-        if self.configuration[Joints.HEAD_2] < 0.6:
-            self.configuration[Joints.HEAD_2] = 0.6
+            self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+            self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
+            self.head_motor_0 = self.configuration[Joints.HEAD_1]
+            self.head_motor_1 = self.configuration[Joints.HEAD_2]
 
-        if self.configuration[Joints.HEAD_1] > 1.5:
-            self.configuration[Joints.HEAD_1] = 1.5
-        elif self.configuration[Joints.HEAD_1] < -1.5:
-            self.configuration[Joints.HEAD_1] = -1.5
+        self.head_not_moving_publisher.publish(head_not_moving)
 
-        if self.head_motor_0 == self.configuration[Joints.HEAD_1] and self.head_motor_1 == self.configuration[
-            Joints.HEAD_2] and not self.localization_reset:
-            temp = Bool()
-            temp.data = True
-            self.move_head_publisher.publish(temp)
-        else:
-            temp = Bool()
-            temp.data = False
-            self.move_head_publisher.publish(temp)
-
-        self.head_motor_0 = self.configuration[Joints.HEAD_1]
-        self.head_motor_1 = self.configuration[Joints.HEAD_2]
-        self.head_step += 1
-        # pass
-
-    def ball_callback(self, msg: PointStamped):
-        self.ball_pixel = msg
