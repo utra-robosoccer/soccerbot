@@ -172,7 +172,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is None or t > self.soccerbot.robot_path.duration():
 
-                self.soccerbot.apply_head_rotation()
+                # self.soccerbot.apply_head_rotation()
                 pass
             if t < 0:
                 if self.soccerbot.imu_ready:

@@ -24,7 +24,6 @@ class DetectorGoalPost(DetectorFieldline):
 
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
-        self.goal_post_publisher = rospy.Publisher("goal_post", Bool, queue_size=1)
         self.goal_post_need_subscriber = rospy.Subscriber("goal_post_need", Bool, self.goal_post_need_callback, queue_size=1)
         self.goal_post_need = False
         cv2.setRNGSeed(12345)
@@ -103,11 +102,6 @@ class DetectorGoalPost(DetectorFieldline):
 
         # an image has a goalpost if two perpendicular lines with 0 degrees and 90 degrees intersect
         vertical_line = len(computed_lines[(abs(abs(computed_lines[:, 1]) - 90) < 10)]) > 0
-        has_goalpost = Bool()
-        has_goalpost.data = vertical_line
-
-        # Publish Goal post in image
-        self.goal_post_publisher.publish(has_goalpost)
 
         if vertical_line:
             w = vert_y_max - vert_y_min
@@ -131,20 +125,22 @@ class DetectorGoalPost(DetectorFieldline):
 
                 floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
                 floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
-                br = tf2_ros.TransformBroadcaster()
-                robot_pose = TransformStamped()
-                robot_pose.header.frame_id = self.robot_name + "/base_camera"
-                robot_pose.child_frame_id = self.robot_name + "/goal_post"
-                robot_pose.header.stamp = img.header.stamp
-                robot_pose.header.seq = img.header.seq
-                robot_pose.transform.translation.x = floor_x
-                robot_pose.transform.translation.y = floor_y
-                robot_pose.transform.translation.z = 0
-                robot_pose.transform.rotation.x = 0
-                robot_pose.transform.rotation.y = 0
-                robot_pose.transform.rotation.z = 0
-                robot_pose.transform.rotation.w = 1
-                br.sendTransform(robot_pose)
+                if floor_x > 0.0:
+
+                    br = tf2_ros.TransformBroadcaster()
+                    robot_pose = TransformStamped()
+                    robot_pose.header.frame_id = self.robot_name + "/base_camera"
+                    robot_pose.child_frame_id = self.robot_name + "/goal_post"
+                    robot_pose.header.stamp = img.header.stamp
+                    robot_pose.header.seq = img.header.seq
+                    robot_pose.transform.translation.x = floor_x
+                    robot_pose.transform.translation.y = floor_y
+                    robot_pose.transform.translation.z = 0
+                    robot_pose.transform.rotation.x = 0
+                    robot_pose.transform.rotation.y = 0
+                    robot_pose.transform.rotation.z = 0
+                    robot_pose.transform.rotation.w = 1
+                    br.sendTransform(robot_pose)
 
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(ccdst)
