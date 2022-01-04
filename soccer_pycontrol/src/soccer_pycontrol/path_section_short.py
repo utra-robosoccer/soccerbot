@@ -2,8 +2,8 @@ import functools
 
 from soccer_geometry.transformation import Transformation
 import numpy as np
-from path_section import PathSection
-from utils import wrapToPi
+from soccer_pycontrol.path_section import PathSection
+from soccer_pycontrol.utils import wrapToPi
 from copy import deepcopy
 
 class PathSectionShort(PathSection):

@@ -4,7 +4,7 @@ import time
 
 from soccer_geometry.transformation import Transformation
 import numpy as np
-from utils import wrapTo2Pi, wrapToPi
+from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 from abc import ABC
 
 class PathSection(ABC):
