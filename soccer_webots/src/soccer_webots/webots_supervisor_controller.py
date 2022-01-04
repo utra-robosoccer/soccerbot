@@ -160,6 +160,10 @@ class SupervisorController:
         euler = euler_from_quaternion([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
         self.reset_robot_pose_rpy([pose.position.x, pose.position.y, 0.350], euler, name="robot1")
 
+    def reset_camera(self):
+        viewpoint = self.supervisor.getFromDef("Viewpoint")
+        pass
+
     def get_robot_position(self, name="robot1"):
         if name in self.translation_fields:
             return self.translation_fields[name].getSFVec3f()

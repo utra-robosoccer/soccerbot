@@ -1,118 +1,81 @@
-import functools
-import math
+from math import floor, ceil
+
 from soccer_geometry import Transformation
 import numpy as np
-from scipy.special import comb
 import matplotlib.pyplot as plt
-from copy import deepcopy
-
-
-def wrapTo2Pi(num: float) -> float:
-    rem = num % (2 * np.pi)
-    return rem
-
-
-def wrapToPi(num: float) -> float:
-    rem = (num + np.pi) % (2 * np.pi) - np.pi
-    return rem
+from soccer_pycontrol.path_section_bezier import PathSectionBezier
+from soccer_pycontrol.path_section_short import PathSectionShort
+import time
 
 class Path:
-    bodystep_size = 0.04 #try 0.05  # m Not absolutely fixed, will be modified slightly when
-    angular_bodystep_size = 0.4  # radians Radians per angular step
-    steps_per_second = 2.4 # try 6 motors P = 09.25
-    speed = steps_per_second * bodystep_size  # m/s
-    angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
-    turn_duration = 4  # Number of body steps to turn
+    steps_per_second = PathSectionBezier.steps_per_second
     step_size = 0.02  # Time for a single time step
 
     pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
     post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
-    def __init__(self, start_transform=Transformation(), end_transform=Transformation()):
+    def __init__(self, start_transform: Transformation,  end_transform: Transformation):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
-        # Compute approximate distance and distance map
-        precision = 0.05 * self.bodystep_size
-        precisions = np.linspace(precision, 1.0, num=(int(1.0 / precision) + 1))
-        self.distance = 0
-        self.angle_distance = 0
-        prev_pose = self.poseAtRatio(0)
-        self.distanceMap = np.zeros((len(precisions) + 1, 2))
-        self.distanceMap[0, 0:2] = [0., 0.]
+        self.path_sections = []
 
-        j = 1
-        for i in precisions:
-            new_pose = self.poseAtRatio(i)
-            self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
-            self.angle_distance = self.angle_distance + abs(
-                wrapToPi(new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0]))
-            prev_pose = new_pose
+        p = self.createPathSection(start_transform, end_transform)
+        self.path_sections.append(p)
 
-            self.distanceMap[j, 0:2] = [i, self.distance]
-            j = j + 1
-
-        # Round to nearest step
-        s_count = self.linearStepCount()
-        if self.distance != 0:
-            if self.distance % self.bodystep_size < (self.bodystep_size / 2):
-                self.bodystep_size = self.distance / s_count
-            else:
-                self.bodystep_size = self.distance / (s_count + 1)
-
-        s_count = self.angularStepCount()
-        if self.angle_distance != 0 and s_count != 0:
-            if self.angle_distance != 0 and self.angle_distance % self.angular_bodystep_size < (
-                    self.angular_bodystep_size / 2):
-                self.angular_bodystep_size = self.angle_distance / s_count
-            else:
-                self.angular_bodystep_size = self.angle_distance / (s_count + 1)
-
-    def getBodyStep(self, n):
-        if self.isRotateInPlace():
-            diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-            start_angle = self.start_transform.get_orientation_euler()[0]
-            intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
-            if self.isWalkingBackwards():
-                intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-            final_angle = self.end_transform.get_orientation_euler()[0]
-
-            step_1_angular_distance = abs(wrapToPi(intermediate_angle - start_angle))
-            step_2_distance = np.linalg.norm(diff_position)
-            step_3_angular_distance = abs(wrapToPi(intermediate_angle - final_angle))
-
-            step_1_steps = step_1_angular_distance / self.angular_bodystep_size
-            step_2_steps = step_2_distance / self.bodystep_size
-            step_3_steps = step_3_angular_distance / self.angular_bodystep_size
-            if step_1_steps + step_2_steps + step_3_steps == 0:
-                ratio = 0
-            else:
-                ratio = n / (step_1_steps + step_2_steps + step_3_steps)
-            return self.poseAtRatio(ratio)
+    def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
+        # is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
+        is_short_distance = False
+        if is_short_distance:
+            print("Creating Short Path")
+            print("Start Transform")
+            print(start_transform)
+            print("End Transform")
+            print(end_transform)
+            return PathSectionShort(start_transform, end_transform)
         else:
-            idx = np.argmin(np.abs((n * self.bodystep_size) - self.distanceMap[:, 1]))
-            return self.poseAtRatio(self.distanceMap[idx, 0])
+            print("Creating Bezier Path")
+            print("Start Transform")
+            print(start_transform)
+            print("End Transform")
+            print(end_transform)
+            return PathSectionBezier(start_transform, end_transform)
 
     def linearStepCount(self):
-        return int(np.floor(self.distance / self.bodystep_size))
+        linearStepCount = 0
+        for path_section in self.path_sections:
+            linearStepCount += path_section.angularStepCount()
+        return linearStepCount
 
     def angularStepCount(self):
-        return int(np.floor(self.angle_distance / self.angular_bodystep_size))
+        angularStepCount = 0
+        for path_section in self.path_sections:
+            angularStepCount += path_section.angularStepCount()
+        return angularStepCount
 
     def bodyStepCount(self):
-        if self.isRotateInPlace():
-            return self.linearStepCount() + self.angularStepCount()
-        else:
-            return self.linearStepCount()
+        bodyStepCount = 0
+        for path_section in self.path_sections:
+            bodyStepCount += path_section.bodyStepCount()
+        return floor(bodyStepCount)
+
+    def getBodyStepPose(self, step_num):
+        count = step_num
+        for path_section in self.path_sections:
+            if count <= path_section.bodyStepCount():
+                return path_section.getBodyStepPose(count)
+            count = count - path_section.bodyStepCount()
+        raise Exception("Invalid body step calculation " + str(count))
 
     def duration(self):
-        if self.isRotateInPlace():
-            return self.distance / self.speed + self.angle_distance / self.angular_speed
-        return self.distance / self.speed
+        duration = 0
+        for path_section in self.path_sections:
+            duration += path_section.duration()
+        return duration
 
     # Do not use in the walking engine
     def estimatedPositionAtTime(self, t):
-        estimated_ratio = t / self.duration()
+        estimated_ratio = min(t / self.duration(), 1)
         return self.poseAtRatio(estimated_ratio)
 
     def isFinished(self, t):
@@ -121,128 +84,133 @@ class Path:
     def bodyStepTime(self):
         return self.duration() / self.bodyStepCount()
 
-    @functools.lru_cache
-    def isWalkingBackwards(self):
-        if self.isRotateInPlace():
-            diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-            start_angle = self.start_transform.get_orientation_euler()[0]
-            intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
-            return abs(wrapToPi(intermediate_angle - start_angle)) > np.pi / 2
-        else:
-            start_angle = self.start_transform.get_orientation_euler()[0]
-            del_pose = self.end_transform.get_position() - self.start_transform.get_position()
-            if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
-                return True
-        return False
+    # Return the subpath and the corresponding ratio
+    def getSubPathSectionAndRatio(self, r: float):
+        total_duration = self.duration()
 
-    # If the path is short, rotate in place, go straight and then rotate in place instead
-    @functools.lru_cache
-    def isRotateInPlace(self):
-        return np.linalg.norm(self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]) < self.bodystep_size * self.turn_duration * 3
-        # return False
+        cumulative_ratio = 0
+        for path_section in self.path_sections:
+            ratio = path_section.duration() / total_duration
+            next_cumulative_ratio = cumulative_ratio + ratio
+            if next_cumulative_ratio >= r:
+                return (r - cumulative_ratio)/ratio, path_section
+            cumulative_ratio = next_cumulative_ratio
 
-    def poseAtRatio(self, r):
-        if self.isRotateInPlace():
-            return self.poseAtRatioRotateInPlace(r)
-        else:
-            pose = self.bezierPositionAtRatio(r)
-            pose_del = self.bezierPositionAtRatio(r + 0.001)
+        raise Exception("Invalid ratio " + str(r))
 
-            if self.isWalkingBackwards():
-                del_pose = pose.get_position() - pose_del.get_position()
+    def poseAtRatio(self, r: float):
+        ratio, path_section = self.getSubPathSectionAndRatio(r)
+        return path_section.poseAtRatio(ratio)
+
+    def getTimePathOfNextStepOld(self, t):
+        def getBodyStepTime(step_num):
+            count = step_num
+            time = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    ratio = path_section.getRatioFromStep(count)
+                    time = time + ratio * path_section.duration()
+                    distance = path_section.bodystep_size * count
+                    return time, ratio, distance, path_section
+                count = count - path_section.bodyStepCount()
+                time = time + path_section.duration()
+            raise Exception("Invalid body step calculation " + str(count))
+
+        for i in range(0, self.bodyStepCount(), 1):
+            time, ratio, path_distance, path_section = getBodyStepTime(i)
+            if t < time:
+                return time, ratio, path_distance, path_section, i
+
+    def getTimePathOfNextStep(self, t):
+        ratio = t / self.duration()
+        ratio, path_section = self.getSubPathSectionAndRatio(ratio)
+
+        # Get next bodystep
+        bodystep_count = 0
+        for path in self.path_sections:
+            if path != path_section:
+                bodystep_count = bodystep_count + path.bodyStepCount()
             else:
-                del_pose = pose_del.get_position() - pose.get_position()
+                break
+        subpath_count = (path_section.distance * ratio) / path_section.bodystep_size
+        bodystep_count += subpath_count
+        bodystep_count = ceil(bodystep_count)
 
-            # If walking backwards
-            del_theta = np.arctan2(del_pose[1], del_pose[0])
-            del_psi = np.arctan2(del_pose[2], np.linalg.norm(del_pose[0:2]))
+        # Get information about this body step
+        def getBodyStepTime(step_num):
+            count = step_num
+            time = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    ratio = path_section.getRatioFromStep(count)
+                    time = time + ratio * path_section.duration()
+                    distance = path_section.bodystep_size * count
+                    return time, ratio, distance, path_section
+                count = count - path_section.bodyStepCount()
+                time = time + path_section.duration()
+            raise Exception("Invalid body step calculation " + str(count))
 
-            orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.])
-            pose.set_orientation(orientation)
-        return pose
+        time, ratio, distance, path_section = getBodyStepTime(bodystep_count)
+        return time, ratio, distance, path_section, bodystep_count
 
-    def poseAtRatioRotateInPlace(self, r):
-        diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-        start_angle = self.start_transform.get_orientation_euler()[0]
-        intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
-        if self.isWalkingBackwards():
-            intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-        final_angle = self.end_transform.get_orientation_euler()[0]
+    # Get estimated path ratio from the current time plus one more step, and then find the distance of that ratio and set the distance
+    def terminateWalk(self, t):
+        time, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t)
+        path_section.distance = path_distance
 
-        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
-        step_2_duration = np.linalg.norm(diff_position) / self.speed
-        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / self.angular_speed
+        # Remove any future subsections
+        reached = False
+        for p in self.path_sections:
+            if p == path_section:
+                reached = True
+                continue
+            if reached:
+                self.path_sections.remove(p)
 
-        total_duration = step_1_duration + step_2_duration + step_3_duration
-        t = r * total_duration
+    def dynamicallyUpdateGoalPosition(self, t, end_transform):
+        t_change = t + 1
+        if self.duration() - t_change < 1:
+            raise Exception("There is not enough time to update the position")
 
-        if t == 0:
-            pose = deepcopy(self.start_transform)
-            return pose
-        elif t < step_1_duration != 0:
-            # First turn
-            pose = deepcopy(self.start_transform)
-            percentage = t / step_1_duration
-            angle = start_angle + wrapToPi(intermediate_angle - start_angle) * percentage
-            pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
-            return pose
-        elif step_1_duration < t <= step_1_duration + step_2_duration != 0:
-            # Then go straight
-            pose = deepcopy(self.start_transform)
-            percentage = (t - step_1_duration) / step_2_duration
-            position = diff_position * percentage + self.start_transform.get_position()[0:2]
-            pose.set_position(np.concatenate((position, [pose.get_position()[2]])))
-            pose.set_orientation(Transformation.get_quaternion_from_euler([intermediate_angle, 0, 0]))
-            return pose
-        elif step_1_duration + step_2_duration < t <= step_1_duration + step_2_duration + step_3_duration != 0:
-            # Then turn
-            pose = deepcopy(self.end_transform)
-            percentage = (t - step_1_duration - step_2_duration) / step_3_duration
-            angle = intermediate_angle + wrapToPi(final_angle - intermediate_angle) * percentage
-            pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
-            return pose
-        else:
-            pose = deepcopy(self.end_transform)
-            return pose
+        t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
+        start_transform = self.getBodyStepPose(step)
+        self.terminateWalk(t_new)
+        p = self.createPathSection(start_transform, end_transform)
+        self.path_sections.append(p)
 
-    def bezierPositionAtRatio(self, r):
-        # If the distance is small, use turn in place strategy, otherwise cubic bezier
-
-        p1 = self.start_transform
-        if self.isWalkingBackwards():
-            p2 = np.matmul(self.start_transform, Transformation([- self.speed * self.turn_duration, 0., 0.]))
-            p3 = np.matmul(self.end_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
-        else:
-            p2 = np.matmul(self.start_transform, Transformation([self.speed * self.turn_duration, 0., 0.]))
-            p3 = np.matmul(self.end_transform, Transformation([-self.speed * self.turn_duration, 0., 0.]))
-        p4 = self.end_transform
-
-        p1_pos = p1.get_position()
-        p2_pos = p2.get_position()
-        p3_pos = p3.get_position()
-        p4_pos = p4.get_position()
-
-        position = np.array([0.0, 0.0, 0.0])
-        for d in range(0, 3):
-            bez_param = [p1_pos[d], p2_pos[d], p3_pos[d], p4_pos[d]]
-
-            # Cubic bezier
-            for i in range(0, 4):
-                position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * (
-                            (1 - r) ** (3 - i)) * (r ** i)
-        return Transformation(position)
+        return t_new
 
     def show(self):
-        position = np.zeros((self.bodyStepCount() + 1, 3))
-        orientation = np.zeros((self.bodyStepCount() + 1, 3))
-        for i in range(0, self.bodyStepCount() + 1, 1):  # i = 0:1: obj.bodyStepCount
-            step = self.getBodyStep(i)
+        position = np.zeros((self.bodyStepCount(), 3))
+        orientation = np.zeros((self.bodyStepCount(), 3))
+        colors = np.zeros((self.bodyStepCount(), 4))
+        colors_arrow_ends = np.zeros((self.bodyStepCount()*2, 4))
+
+        section_color_map = {}
+        for i in range(0, len(self.path_sections)):
+            section_color_map[i] = np.append(np.random.rand(3), 1)
+
+
+        for i in range(0, self.bodyStepCount(), 1):  # i = 0:1: obj.bodyStepCount
+            step = self.getBodyStepPose(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = np.matmul(step[0:3, 0:3], np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
+            orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
+
+            count = i
+            section = 0
+            for path_section in self.path_sections:
+                if count <= path_section.bodyStepCount():
+                    break
+                count = count - path_section.bodyStepCount()
+                section = section + 1
+            colors[i] = section_color_map[section]
+            colors_arrow_ends[2*i] = section_color_map[section]
+            colors_arrow_ends[2*i+1] = section_color_map[section]
 
         ax = plt.gca(projection='3d')
         ax.set_autoscale_on(True)
+        colors = np.concatenate((colors, colors_arrow_ends))
         ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
-                  orientation[:, 2])
-        # ax.set_xlim(-0.2,1)
-        # ax.set_ylim(-0.3,0.3)
+                  orientation[:, 2], colors=colors)
+        ax.set_zlim(0, 0.4)
+        return ax
