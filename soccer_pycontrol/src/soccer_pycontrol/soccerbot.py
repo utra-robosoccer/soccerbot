@@ -7,10 +7,7 @@ import math
 from os.path import expanduser
 from copy import deepcopy
 import numpy as np
-import rospy
-
-if os.getenv('ENABLE_PYBULLET', False):
-    import pybullet as pb
+import pybullet as pb
 
 
 class Joints(enum.IntEnum):
@@ -84,42 +81,24 @@ class Soccerbot:
         :param link2: Ending link
         :return: H-transform from starting link to the ending link
         """
-        if os.getenv('ENABLE_PYBULLET', False):
-            if link1 == Links.TORSO:
-                link1world = pb.getBasePositionAndOrientation(self.body)
-                link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
-            else:
-                link1world = pb.getLinkState(self.body, link1)[4:6]
-
-            if link2 == Links.TORSO:
-                link2world = pb.getBasePositionAndOrientation(self.body)
-                link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
-            else:
-                link2world = pb.getLinkState(self.body, link2)[4:6]
-
-            link1worldrev = pb.invertTransform(link1world[0], link1world[1])
-            link2worldrev = pb.invertTransform(link2world[0], link2world[1])
-
-            final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0],
-                                                         link1worldrev[1])
-            return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
+        if link1 == Links.TORSO:
+            link1world = pb.getBasePositionAndOrientation(self.body)
+            link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
         else:
-            if link1 == Links.RIGHT_LEG_4 and link2 == Links.RIGHT_LEG_3:
-                matrix = [[0., -0., 0.089], [0., 0., 0., 1.]]
-            elif link1 == Links.RIGHT_LEG_5 and link2 == Links.RIGHT_LEG_4:
-                matrix = [[0., 0., 0.0827], [0., -0., 0., 1.]]
-            elif link1 == Links.TORSO and link2 == Links.RIGHT_LEG_1:
-                matrix = [[0.0135, -0.035, -0.156], [0., -0., 0., 1.]]
-            elif link1 == Links.LEFT_LEG_1 and link2 == Links.RIGHT_LEG_1:
-                matrix = [[0., -0.07, 0.], [0., -0., 0., 1.]]
-            elif link1 == Links.RIGHT_LEG_1 and link2 == Links.TORSO:
-                matrix = [[-0.0135, 0.035, 0.156], [0., -0., 0., 1.]]
-            elif link1 == Links.TORSO and link2 == Links.RIGHT_LEG_6:
-                matrix = [[0.0135, -0.035, -0.3277], [0., -0., 0., 1.]]
-            elif link1 == Links.TORSO and link2 == Links.LEFT_LEG_6:
-                matrix = [[0.0135, 0.035, -0.3277], [0., -0., 0., 1.]]
+            link1world = pb.getLinkState(self.body, link1)[4:6]
 
-            return tr(matrix[0], matrix[1])  # tr(matrix)
+        if link2 == Links.TORSO:
+            link2world = pb.getBasePositionAndOrientation(self.body)
+            link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+        else:
+            link2world = pb.getLinkState(self.body, link2)[4:6]
+
+        link1worldrev = pb.invertTransform(link1world[0], link1world[1])
+        link2worldrev = pb.invertTransform(link2world[0], link2world[1])
+
+        final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0],
+                                                     link1worldrev[1])
+        return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
 
     def __init__(self, pose, useFixedBase=False):
         """
@@ -128,13 +107,12 @@ class Soccerbot:
         :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
         """
         home = expanduser("~")
-        if os.getenv('ENABLE_PYBULLET', False):
-            self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
-                                    useFixedBase=useFixedBase,
-                                    flags=pb.URDF_USE_INERTIA_FROM_FILE,
-                                    basePosition=[pose.get_position()[0], pose.get_position()[1],
-                                                  Soccerbot.standing_hip_height],
-                                    baseOrientation=pose.get_orientation())
+        self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
+                                useFixedBase=useFixedBase,
+                                flags=pb.URDF_USE_INERTIA_FROM_FILE,
+                                basePosition=[pose.get_position()[0], pose.get_position()[1],
+                                              Soccerbot.standing_hip_height],
+                                baseOrientation=pose.get_orientation())
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
@@ -170,15 +148,14 @@ class Soccerbot:
         self.configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.max_forces = []
-        if os.getenv('ENABLE_PYBULLET', False):
-            for i in range(0, 20):
-                self.max_forces.append(pb.getJointInfo(self.body, i)[10])
+        for i in range(0, 20):
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10])
 
-            pb.setJointMotorControlArray(bodyIndex=self.body,
-                                         controlMode=pb.POSITION_CONTROL,
-                                         jointIndices=list(range(0, 20, 1)),
-                                         targetPositions=self.get_angles(),
-                                         forces=self.max_forces)
+        pb.setJointMotorControlArray(bodyIndex=self.body,
+                                     controlMode=pb.POSITION_CONTROL,
+                                     jointIndices=list(range(0, 20, 1)),
+                                     targetPositions=self.get_angles(),
+                                     forces=self.max_forces)
 
         self.current_step_time = 0
 
@@ -215,12 +192,11 @@ class Soccerbot:
 
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        if os.getenv('ENABLE_PYBULLET', False):
-            pb.setJointMotorControlArray(bodyIndex=self.body,
-                                         controlMode=pb.POSITION_CONTROL,
-                                         jointIndices=list(range(0, 20, 1)),
-                                         targetPositions=self.get_angles(),
-                                         forces=self.max_forces)
+        pb.setJointMotorControlArray(bodyIndex=self.body,
+                                     controlMode=pb.POSITION_CONTROL,
+                                     jointIndices=list(range(0, 20, 1)),
+                                     targetPositions=self.get_angles(),
+                                     forces=self.max_forces)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
@@ -301,15 +277,18 @@ class Soccerbot:
         if os.getenv('ENABLE_PYBULLET', False):
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
 
-    def setGoal(self, finishPosition: tr):
+    def addTorsoHeight(self, position: tr):
+        positionCoordinate = position.get_position()
+        positionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
+        position.set_position(positionCoordinate)
+
+    def createPathToGoal(self, finishPosition: tr):
         """
         Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
         :param finishPosition: #TODO
         :return: #TODO
         """
-        finishPositionCoordinate = finishPosition.get_position()
-        finishPositionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        finishPosition.set_position(finishPositionCoordinate)
+        self.addTorsoHeight(finishPosition)
 
         # Remove the roll and yaw from the designated position
         [r, p, y] = finishPosition.get_orientation_euler()
