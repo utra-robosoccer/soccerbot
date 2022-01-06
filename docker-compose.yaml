@@ -60,7 +60,7 @@ services:
     <<: *soccerbot
     environment:
       X_POS: 4
-      Y_POS: -3.1
+      Y_POS: -3.15
       ANGLE: 1.57
       GOALIE: "true"
       ROBOCUP_ROBOT_ID: 1
@@ -79,7 +79,7 @@ services:
 #    <<: *soccerbot
 #    environment:
 #      X_POS: 1
-#      Y_POS: -3.1
+#      Y_POS: -3.15
 #      ANGLE: 1.57
 #      GOALIE: "false"
 #      ROBOT_NAME: "robot2"
@@ -92,12 +92,12 @@ services:
 #      COMPETITION: "true"
 #      SINGLE_STRATEGY_SOURCE: "true"
 #      PYTHONUNBUFFERED: 1
-
-#  friendly3: # Right midfield
+#
+#  friendly3: # Striker
 #    <<: *soccerbot
 #    environment:
-#      X_POS: 4
-#      Y_POS: 3.1
+#      X_POS: 1
+#      Y_POS: 3.15
 #      ANGLE: -1.57
 #      GOALIE: "false"
 #      ROBOT_NAME: "robot3"
@@ -110,20 +110,37 @@ services:
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 #      SINGLE_STRATEGY_SOURCE: "true"
-
+#
+#  friendly4: # Right midfield
+#    <<: *soccerbot
+#    environment:
+#      X_POS: 4
+#      Y_POS: 3.15
+#      ANGLE: -1.57
+#      GOALIE: "false"
+#      ROBOT_NAME: "robot4"
+#      ROBOCUP_ROBOT_ID: 4
+#      ROBOCUP_TEAM_ID: 16
+#      ROBOCUP_TEAM_COLOR: "red"
+#      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10004"
+#      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
+#      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
+#      SINGLE_STRATEGY_SOURCE: "true"
 
 #  oppponent1: # Goalie
 #    <<: *soccerbot
 #    environment:
 #      X_POS: -4
-#      Y_POS: -3.1
+#      Y_POS: -3.15
 #      ANGLE: 1.57
 #      GOALIE: "true"
 #      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 1
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
-#      ROBOT_NAME: opponent1
+#      ROBOT_NAME: robot5
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 #      SINGLE_STRATEGY_SOURCE: "true"
@@ -132,28 +149,43 @@ services:
 #    <<: *soccerbot
 #    environment:
 #      X_POS: -1
-#      Y_POS: -3.1
-#      ANGLE: -1.57
+#      Y_POS: -3.15
+#      ANGLE: 1.57
 #      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 2
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
-#      ROBOT_NAME: opponent2
+#      ROBOT_NAME: robot6
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 #      SINGLE_STRATEGY_SOURCE: "true"
 
-#  oppponent3: # Right midfield
+#  oppponent3: # Striker
 #    <<: *soccerbot
 #    environment:
-#      X_POS: -4
-#      Y_POS: 3.1
+#      X_POS: -1
+#      Y_POS: 3.15
 #      ANGLE: -1.57
 #      ROBOCUP_TEAM_ID: 25
 #      ROBOCUP_ROBOT_ID: 3
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
-#      ROBOT_NAME: opponent3
+#      ROBOT_NAME: robot7
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1
+#      SINGLE_STRATEGY_SOURCE: "true"
+
+#  oppponent4: # Right midfield
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -4
+#      Y_POS: 3.15
+#      ANGLE: -1.57
+#      ROBOCUP_TEAM_ID: 25
+#      ROBOCUP_ROBOT_ID: 4
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
+#      ROBOT_NAME: robot8
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
 #      SINGLE_STRATEGY_SOURCE: "true"

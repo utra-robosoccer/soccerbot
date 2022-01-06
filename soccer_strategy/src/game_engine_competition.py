@@ -211,6 +211,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                             config.position_map_kickoff(config.PENALTYSHOOT_START_POSITION, self.gameState.hasKickOff)
                         )
                     else:
+                        print("--reset initial position--")
                         robot.reset_initial_position(
                             config.position_map(config.START_POSITION, self.gameState.teamColor, self.gameState.firstHalf, robot.robot_id)
                         )
@@ -254,9 +255,10 @@ class GameEngineCompetition(game_engine.GameEngine):
                     print("opponent have kickoff")
 
             if self.kickoff_started == False:
-                if (rostime - self.rostime_kickoff) > 10:
-                    self.kickoff_started = True
-                    print("kickoff started after 10s")
+                # if (rostime - self.rostime_kickoff) > 10:
+                rospy.sleep(10)
+                self.kickoff_started = True
+                print("kickoff started after 10s")
 
                 # if self.ball.get_position() is not None:
                 #     delta = np.linalg.norm(self.ball.get_position())
