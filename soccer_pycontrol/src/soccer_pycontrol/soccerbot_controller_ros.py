@@ -45,7 +45,7 @@ class SoccerbotControllerRos(SoccerbotController):
         try:
             (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + '/base_footprint', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            return
+            return False
         self.robot_pose = PoseStamped()
         self.robot_pose.pose.position.x = trans[0]
         self.robot_pose.pose.position.y = trans[1]
@@ -54,6 +54,8 @@ class SoccerbotControllerRos(SoccerbotController):
         self.robot_pose.pose.orientation.y = rot[1]
         self.robot_pose.pose.orientation.z = rot[2]
         self.robot_pose.pose.orientation.w = rot[3]
+
+        return True
 
 
     def terminate_walk_callback(self, val):
@@ -142,9 +144,14 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
                 print("Recieved New Goal")
                 time_now = rospy.Time.now()
-                self.goal = self.new_goal
+                pose_updated = self.update_robot_pose()
+                if not pose_updated:
+                    rospy.logwarn_throttle(1, "Unable to get Robot Pose")
+                    r.sleep()
 
-                self.update_robot_pose()
+                    continue
+
+                self.goal = self.new_goal
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
