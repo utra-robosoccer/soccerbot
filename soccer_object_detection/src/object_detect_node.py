@@ -48,7 +48,7 @@ class ObjectDetectionNode(object):
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)
         h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, h], [255, 255, 255], cv2.FILLED)
+        cv2.rectangle(image, [0, 0], [640, h], [0, 165, 255], cv2.FILLED)
 
         if image is not None:
             img = image[:, :, :3]  # get rid of alpha channel
