@@ -26,3 +26,5 @@ cmake-build-debug
 
 /soccer_object_detection/images/*
 /soccer_strategy/game_controller/robocup_extension_pb2.py
+
+/soccer_common/credentials.json

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+
+import numpy as np
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -55,33 +58,33 @@ class DetectorBall(Detector):
         if final_box is not None:
             boundingBoxes = [[final_box.xmin, final_box.ymin], [final_box.xmax, final_box.ymax]]
             position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+            if position.get_position()[0] > 0.0:
+                br = tf2_ros.TransformBroadcaster()
+                ball_pose = TransformStamped()
+                ball_pose.header.frame_id = self.robot_name + "/base_camera"
+                ball_pose.child_frame_id = self.robot_name + "/ball"
+                ball_pose.header.stamp = msg.header.stamp
+                ball_pose.header.seq = msg.header.seq
+                ball_pose.transform.translation.x = position.get_position()[0]
+                ball_pose.transform.translation.y = position.get_position()[1]
+                ball_pose.transform.translation.z = 0
+                ball_pose.transform.rotation.x = 0
+                ball_pose.transform.rotation.y = 0
+                ball_pose.transform.rotation.z = 0
+                ball_pose.transform.rotation.w = 1
+                br.sendTransform(ball_pose)
 
-            br = tf2_ros.TransformBroadcaster()
-            ball_pose = TransformStamped()
-            ball_pose.header.frame_id = self.robot_name + "/base_footprint"
-            ball_pose.child_frame_id = self.robot_name + "/ball"
-            ball_pose.header.stamp = msg.header.stamp
-            ball_pose.header.seq = msg.header.seq
-            ball_pose.transform.translation.x = position.get_position()[0]
-            ball_pose.transform.translation.y = position.get_position()[1]
-            ball_pose.transform.translation.z = 0
-            ball_pose.transform.rotation.x = 0
-            ball_pose.transform.rotation.y = 0
-            ball_pose.transform.rotation.z = 0
-            ball_pose.transform.rotation.w = 1
-            br.sendTransform(ball_pose)
-
-            # TODO remove
-            ball_pixel = PointStamped()
-            ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
-            ball_pixel.header.seq = msg.header.seq
-            ball_pixel.header.stamp = msg.header.stamp
-            x_avg = (final_box.xmin + final_box.xmax) / 2.
-            y_avg = (final_box.ymax + final_box.ymin) / 2.
-            ball_pixel.point.x = x_avg
-            ball_pixel.point.y = y_avg
-            ball_pixel.point.z = 0
-            self.ball_pixel_pub.publish(ball_pixel)
+                # TODO remove
+                ball_pixel = PointStamped()
+                ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
+                ball_pixel.header.seq = msg.header.seq
+                ball_pixel.header.stamp = msg.header.stamp
+                x_avg = (final_box.xmin + final_box.xmax) / 2.
+                y_avg = (final_box.ymax + final_box.ymin) / 2.
+                ball_pixel.point.x = x_avg
+                ball_pixel.point.y = y_avg
+                ball_pixel.point.z = 0
+                self.ball_pixel_pub.publish(ball_pixel)
 
         # Robots
         for box in msg.bounding_boxes:
@@ -148,21 +151,22 @@ class DetectorBall(Detector):
                 floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
                 floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
 
-                br = tf2_ros.TransformBroadcaster()
-                robot_pose = TransformStamped()
-                robot_pose.header.frame_id = self.robot_name + "/base_footprint"
-                robot_pose.child_frame_id = self.robot_name + "/detected_robot_" + str(detected_robots)
-                robot_pose.header.stamp = msg.header.stamp
-                robot_pose.header.seq = msg.header.seq
-                robot_pose.transform.translation.x = floor_x
-                robot_pose.transform.translation.y = floor_y
-                robot_pose.transform.translation.z = 0
-                robot_pose.transform.rotation.x = 0
-                robot_pose.transform.rotation.y = 0
-                robot_pose.transform.rotation.z = 0
-                robot_pose.transform.rotation.w = 1
-                br.sendTransform(robot_pose)
-                detected_robots += 1
+                if floor_x > 0.0:
+                    br = tf2_ros.TransformBroadcaster()
+                    robot_pose = TransformStamped()
+                    robot_pose.header.frame_id = self.robot_name + "/base_camera"
+                    robot_pose.child_frame_id = self.robot_name + "/detected_robot_" + str(detected_robots)
+                    robot_pose.header.stamp = msg.header.stamp
+                    robot_pose.header.seq = msg.header.seq
+                    robot_pose.transform.translation.x = floor_x
+                    robot_pose.transform.translation.y = floor_y
+                    robot_pose.transform.translation.z = 0
+                    robot_pose.transform.rotation.x = 0
+                    robot_pose.transform.rotation.y = 0
+                    robot_pose.transform.rotation.z = 0
+                    robot_pose.transform.rotation.w = 1
+                    br.sendTransform(robot_pose)
+                    detected_robots += 1
 
 if __name__ == "__main__":
     rospy.init_node("ball_detector")

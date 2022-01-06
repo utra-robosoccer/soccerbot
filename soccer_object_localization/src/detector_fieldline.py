@@ -6,7 +6,8 @@ import time
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
-
+import tf2_ros
+from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
 import numpy as np
 import cv2
 from sensor_msgs.msg import Image, PointCloud2
@@ -14,6 +15,8 @@ from std_msgs.msg import Bool, Header
 from detector import Detector
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
+import math
+
 
 class DetectorFieldline(Detector):
     CANNY_THRESHOLD_1 = 400
@@ -30,14 +33,16 @@ class DetectorFieldline(Detector):
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
-        self.trajectory_complete_subscriber = rospy.Subscriber("trajectory_complete", Bool, self.trajectory_complete_callback)
+        self.goal_post_publisher = rospy.Publisher("goal_post", Bool, queue_size=1)
+        self.trajectory_complete_subscriber = rospy.Subscriber("trajectory_complete", Bool,
+                                                               self.trajectory_complete_callback)
         self.trajectory_complete = True
 
         cv2.setRNGSeed(12345)
         pass
 
     def trajectory_complete_callback(self, trajectory_complete: Bool):
-        self.trajectory_complete = trajectory_complete
+        self.trajectory_complete = trajectory_complete.data
 
     def image_callback(self, img: Image):
         t_start = time.time()
@@ -58,56 +63,23 @@ class DetectorFieldline(Detector):
         h = self.camera.calculateHorizonCoverArea()
         cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
 
-        # Original Method using contours
-
-        # mask = cv2.inRange(hsv, lowerb=(45, 115, 45), upperb=(70, 255, 255))
-        # (contours, hierarchy) = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # bound_rects = []
-        #
-        #
-        # for c in contours:
-        #     if cv2.contourArea(c) > 1000:
-        #         hull = cv2.convexHull(c)
-        #         bound_rects.append(cv2.boundingRect(hull))
-        #
-        # # Merge largest contours
-        # if len(bound_rects) > 0:
-        #     def union(a, b):
-        #         x = min(a[0], b[0])
-        #         y = min(a[1], b[1])
-        #         w = max(a[0] + a[2], b[0] + b[2]) - x
-        #         h = max(a[1] + a[3], b[1] + b[3]) - y
-        #         return (x, y, w, h)
-        #
-        #     final = bound_rects[0]
-        #     for rect in bound_rects:
-        #         final = union(final, rect)
-        #     color = [0, 0, 255]
-        #
-        #     tl = final[0:2]
-        #     br = (final[0] + final[2], final[1] + final[3])
-        #     cv2.rectangle(image, tl, br, color, 2)
-        #
-        #     # Top black rectangle
-        #     cv2.rectangle(image, [0, 0], [br[0], tl[1]], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
-        #
-        #     # Bottom black rectangle
-        #     # TODO Hardcoded second point needs to take in camera info
-        #     cv2.rectangle(image, [tl[0], br[1]], [640, 480], [0, 0, 0], cv2.FILLED, cv2.LINE_8)
-
         # Field line detection
         mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
         out = cv2.bitwise_and(image, image, mask=mask2)
+
+        kernel = np.ones((7, 7), np.uint8)
+        out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
 
         cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
         retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
         edges = cv2.Canny(dst, 50, 150)
 
-        lines = cv2.HoughLinesP(edges,rho=DetectorFieldline.HOUGH_RHO,
+        lines = cv2.HoughLinesP(edges, rho=DetectorFieldline.HOUGH_RHO,
                                 theta=DetectorFieldline.HOUGH_THETA,
                                 threshold=DetectorFieldline.HOUGH_THRESHOLD,
                                 minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
                                 maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP)
+
         ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
 
         if lines is None:
@@ -115,9 +87,20 @@ class DetectorFieldline(Detector):
 
         for l in lines:
             x1, y1, x2, y2 = l[0]
+            # computing magnitude and angle of the line
+            if x2 == x1:
+                angle = 0
+            else:
+                angle = np.rad2deg(np.arctan((y2 - y1) / (x2 - x1)))
+
             pt1 = (x1, y1)
             pt2 = (x2, y2)
-            cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
+            if abs(angle) < 10:  # Horizontal
+                cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
+            elif abs(abs(angle) - 90) < 10:  # Vertical
+                cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)
+            else:
+                cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
 
             if (pt2[0] - pt1[0]) == 0:
                 continue
@@ -148,6 +131,7 @@ class DetectorFieldline(Detector):
 
         t_end = time.time()
         rospy.loginfo_throttle(20, "Fieldline detection rate: " + str(t_end - t_start))
+
 
 if __name__ == '__main__':
     rospy.init_node("detector_fieldline")

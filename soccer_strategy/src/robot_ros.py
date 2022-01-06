@@ -104,7 +104,7 @@ class RobotRos(Robot):
 
     def set_navigation_position(self, position):
         # assert (self.status == Robot.Status.WALKING)
-        if self.status == Robot.Status.READY or self.status == Robot.Status.WALKING:
+        if (self.status == Robot.Status.READY or self.status == Robot.Status.WALKING) and self.send_nav:
             super(RobotRos, self).set_navigation_position(position)
             rospy.loginfo("Sending Robot " + self.robot_name + " to position" + str(position))
             p = PoseStamped()
