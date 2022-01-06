@@ -44,7 +44,10 @@ class HumanoidLeagueTeamCommunication:
         # we will try multiple times till we manage to get a connection
         while not rospy.is_shutdown() and self.socket is None:
             self.socket = self.get_connection()
-            rospy.sleep(1)
+            try:
+                rospy.sleep(1)
+            except rospy.exceptions.ROSInterruptException:
+                exit(0)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
         rospy.Timer(rospy.Duration.from_sec(1 / self.config['rate']), self.send_message)
