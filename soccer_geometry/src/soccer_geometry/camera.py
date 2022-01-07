@@ -17,7 +17,7 @@ class Camera:
         self.resolution_x = None
         self.resolution_y = None
         self.camera_info = None
-        self.diagonal_fov = 1.57 # 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
+        self.diagonal_fov = 1.523 # 1.57 # 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
         self.focal_length = 3.67  # 3.67
 
         self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo,
@@ -34,10 +34,10 @@ class Camera:
 
         if from_world_frame:
             base_frame = 'world'
+            target_frame = self.robot_name + '/camera_gt'
         else:
             base_frame = self.robot_name + '/odom'
-
-        target_frame = self.robot_name + '/camera'
+            target_frame = self.robot_name + '/camera'
 
         while not rospy.is_shutdown():
             try:
@@ -45,7 +45,7 @@ class Camera:
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(10,
-                                       "Waiting for transformation from " + self.robot_name + "/odom to " + self.robot_name + "/camera")
+                                       "Waiting for transformation from /world to " + self.robot_name + "/camera")
 
         if rospy.is_shutdown():
             exit(0)

@@ -16,6 +16,7 @@ PROTO simplified_Bez [
   field  SFBool      selfCollision   TRUE        # Is `Robot.selfCollision`.
 
 ]
+
 {
   %{
     local mx28_backlash = 0.01
@@ -768,7 +769,7 @@ PROTO simplified_Bez [
                                                 }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -803,7 +804,7 @@ PROTO simplified_Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -838,7 +839,7 @@ PROTO simplified_Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1344,7 +1345,7 @@ PROTO simplified_Bez [
                                                   }
                                                 ]
                           			            boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1379,7 +1380,7 @@ PROTO simplified_Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1414,7 +1415,7 @@ PROTO simplified_Bez [
                                                 }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1449,7 +1450,7 @@ PROTO simplified_Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1669,7 +1670,7 @@ PROTO simplified_Bez [
                       translation 0.015000 0.001450 0.047400
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
-                        Camera {
+                        DEF CAMERA Camera {
                             rotation 1.0 0.0 0.0 1.5708
                             name "camera"
                             fieldOfView 1.39626
@@ -1779,7 +1780,7 @@ PROTO simplified_Bez [
           }
         }
     ]
-    name IS name 
+    name IS name
     boundingObject Transform {
       translation 0.012 0.0 -0.05
       rotation 0.000000 1.000000 0.000000 0.000000
