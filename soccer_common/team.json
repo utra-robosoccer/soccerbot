@@ -6,11 +6,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot1",
         "halfTimeStartingPose": {
-        "translation": [-1, -3.15, 0.33],
+        "translation": [-4, -3.15, 0.33],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-1, -3.15, 0.33],
+        "translation": [-4, -3.15, 0.33],
         "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
@@ -27,11 +27,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot2",
       "halfTimeStartingPose": {
-        "translation": [-4, -3.6, 0.33],
+        "translation": [-1, -3.15, 0.33],
         "rotation": [0, 0, 1, 1.57]
       },
       "reentryStartingPose": {
-        "translation": [-4, -3.6, 0.33],
+        "translation": [-1, -3.15, 0.33],
         "rotation": [0, 0, 1, 1.57]
       },
       "shootoutStartingPose": {
@@ -48,11 +48,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot3",
       "halfTimeStartingPose": {
-        "translation": [-4, 3.6, 0.33],
+        "translation": [-1, 3.15, 0.33],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-4, 3.6, 0.33],
+        "translation": [-1, 3.15, 0.33],
         "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {
@@ -60,7 +60,7 @@
         "rotation": [0, 0, 1, 0]
       },
       "goalKeeperStartingPose": {
-        "translation": [-4.50, 0, 0.33],
+        "translation": [-4.5, 0, 0.33],
         "rotation": [0, 0, 1, 0]
       }
     },
@@ -69,11 +69,11 @@
       "dockerTag": "latest",
       "dockerCmd": "bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot4",
       "halfTimeStartingPose": {
-        "translation": [-1, 3.6, 0.33],
+        "translation": [-4, 3.15, 0.33],
         "rotation": [0, 0, 1, -1.57]
       },
       "reentryStartingPose": {
-        "translation": [-1, 3.6, 0.33],
+        "translation": [-4, 3.15, 0.33],
         "rotation": [0, 0, 1, -1.57]
       },
       "shootoutStartingPose": {

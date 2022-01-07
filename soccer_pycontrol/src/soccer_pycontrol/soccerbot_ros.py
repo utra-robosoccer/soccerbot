@@ -212,7 +212,7 @@ class SoccerbotRos(Soccerbot):
 
         # The head not moving publisher
         head_not_moving = Bool()
-        head_not_moving.data = False
+        head_not_moving.data = True
 
         # Recenter the head onto the ball
         if recenterCameraOnBall:
@@ -221,7 +221,9 @@ class SoccerbotRos(Soccerbot):
             rospy.loginfo_throttle(5, "Ball found, rotating head {} {}".format(anglelr, angleud))
 
             if anglelr < 0.05 and angleud < 0.05:
-                head_not_moving = True
+                head_not_moving.data = True
+            else:
+                head_not_moving.data = False
 
             self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
             self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015

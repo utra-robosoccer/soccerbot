@@ -126,7 +126,7 @@ class RobotRos(Robot):
             print("Failed to send nav position, robot currently in " + str(self.status))
 
     def imu_callback(self, msg):
-        angle_threshold = 1  # in radian
+        angle_threshold = 1.25  # in radian
         q = msg.orientation
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
         if self.status == Robot.Status.WALKING or self.status == Robot.Status.READY:

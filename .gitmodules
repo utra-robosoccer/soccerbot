@@ -1,7 +1,7 @@
 [submodule "external/webots"]
 	path = external/webots
 	url = https://github.com/utra-robosoccer/webots.git
-	branch = release_utra
+	branch = release
 [submodule "external/GameController"]
 	path = external/GameController
 	url = https://github.com/RoboCup-Humanoid-TC/GameController
