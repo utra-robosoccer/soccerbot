@@ -7,6 +7,7 @@ from geometry_msgs.msg import Quaternion, PoseWithCovarianceStamped, Pose
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from tf.transformations import euler_from_quaternion
+from soccer_geometry.transformation import Transformation
 import tf
 
 G = 9.81
@@ -40,7 +41,7 @@ class SupervisorController:
         self.timestep = int(self.supervisor.getBasicTimeStep())
 
         # resolve the node for corresponding name
-        self.robot_names = ["robot1", "robot2", "robot3", "robot4", "ball"]
+        self.robot_names = ["robot1", "robot2", "robot3", "robot4"]
         self.robot_nodes = {}
         self.translation_fields = {}
         self.rotation_fields = {}
@@ -63,7 +64,7 @@ class SupervisorController:
         self.reset_ball_service = rospy.Subscriber("/reset_ball", Pose, self.reset_ball)
         self.world_info = self.supervisor.getFromDef("world_info")
         self.ball = self.supervisor.getFromDef("ball")
-        self.ball_broadcaster = tf.TransformBroadcaster()
+        self.transform_broadcaster = tf.TransformBroadcaster()
 
     def step_sim(self):
         self.time += self.timestep / 1000
@@ -83,18 +84,10 @@ class SupervisorController:
         self.clock_publisher.publish(self.clock_msg)
 
     def publish_odom(self, name="robot1"):
-        if name == "robot1":
-            base = "robot1"
-        elif name == "robot2":
-            base = "robot2"
-        elif name == "robot3":
-            base = "robot3"
-        elif name == "robot4":
-            base = "robot4"
-        odom = rospy.Publisher('/' + base + '/base_pose_ground_truth', nav_msgs.msg.Odometry, queue_size=1)
+        odom = rospy.Publisher('/' + name + '/base_pose_ground_truth', nav_msgs.msg.Odometry, queue_size=1)
         odometry = nav_msgs.msg.Odometry()
-        odometry.header.frame_id = base + '/odom'
-        odometry.child_frame_id = base + '/base_footprint'
+        odometry.header.frame_id = name + '/odom'
+        odometry.child_frame_id = name + '/base_footprint'
         odometry.header.stamp = rospy.Time.from_seconds(self.time)
         odometry.pose.pose.position.x = self.get_robot_position(name)[0]
         odometry.pose.pose.position.y = self.get_robot_position(name)[1]
@@ -116,16 +109,30 @@ class SupervisorController:
         quat_scalar_first = transforms3d.quaternions.axangle2quat(orient[:3], orient[3])
         quat_scalar_last = np.append(quat_scalar_first[1:], quat_scalar_first[0])
         orient = list(quat_scalar_last)
-        self.ball_broadcaster.sendTransform(
+        self.transform_broadcaster.sendTransform(
             (pos[0], pos[1], pos[2]),
             (orient[0], orient[1], orient[2], orient[3]),
             rospy.Time.from_sec(self.time),
-            base + "/ball",
+            name + "/ball",
             "world"
         )
-        ball = rospy.Publisher('/' + base + '/ball', PoseWithCovarianceStamped, queue_size=1)
+        camera_node = self.supervisor.getFromDef("robot1").getFromProtoDef("CAMERA")
+        camera_pos = camera_node.getPosition()
+        adj_matrix = Transformation.get_matrix_from_euler([0, np.pi/2, -np.pi/2])
+        orient_matrix = np.reshape(camera_node.getOrientation(), (3,3))
+        camera_quat = Transformation.get_quaternion_from_rotation_matrix(orient_matrix @ adj_matrix)
+
+        self.transform_broadcaster.sendTransform(
+            (camera_pos[0], camera_pos[1], camera_pos[2]),
+            (camera_quat[0], camera_quat[1], camera_quat[2], camera_quat[3]),
+            rospy.Time.from_sec(self.time),
+            name + "/camera_gt",
+            "world"
+        )
+
+        ball = rospy.Publisher('/' + name + '/ball', PoseWithCovarianceStamped, queue_size=1)
         ball_pose = PoseWithCovarianceStamped()
-        ball_pose.header.frame_id = base + '/ball'
+        ball_pose.header.frame_id = name + '/ball'
         ball_pose.header.stamp = rospy.Time.from_seconds(self.time)
         ball_pose.pose.pose.position.x = pos[0]
         ball_pose.pose.pose.position.y = pos[1]
@@ -159,10 +166,6 @@ class SupervisorController:
         time.sleep(0.5)
         euler = euler_from_quaternion([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
         self.reset_robot_pose_rpy([pose.position.x, pose.position.y, 0.350], euler, name="robot1")
-
-    def reset_camera(self):
-        viewpoint = self.supervisor.getFromDef("Viewpoint")
-        pass
 
     def get_robot_position(self, name="robot1"):
         if name in self.translation_fields:

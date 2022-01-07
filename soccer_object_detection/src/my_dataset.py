@@ -14,13 +14,15 @@ import pickle
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=12, shuffle=True):
     train_folders = [
-            '/home/robosoccer/dataset/small_images/ball/Ball1-small',
-            '/home/robosoccer/dataset/small_images/ball/Ball2-small',
-            '/home/robosoccer/dataset/small_images/train',
-            '/home/robosoccer/dataset/small_images/ball_jason'
+            '/home/robosoccer/Downloads/small_images/ball/Ball1-small',
+            '/home/robosoccer/Downloads/small_images/ball/Ball2-small',
+            '/home/robosoccer/Downloads/small_images/train',
+            '/home/robosoccer/Downloads/small_images/ball_jason',
+            '/home/robosoccer/catkin_ws/src/soccerbot/soccer_object_detection/autoball1'
             ]
     test_folders = [
-            '/home/robosoccer/dataset/small_images/test']
+            '/home/robosoccer/Downloads/small_images/test']
+
 
     full_dataset = MyDataSet(train_folders, (300, 400), jitter=jitter)
     test_dataset = MyDataSet(test_folders, (300, 400))

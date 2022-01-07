@@ -768,7 +768,7 @@ PROTO Bez [
                                                 }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -803,7 +803,7 @@ PROTO Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -838,7 +838,7 @@ PROTO Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1344,7 +1344,7 @@ PROTO Bez [
                                                   }
                                                 ]
                           			            boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1379,7 +1379,7 @@ PROTO Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1414,7 +1414,7 @@ PROTO Bez [
                                                 }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1449,7 +1449,7 @@ PROTO Bez [
                                               }
                                             ]
                                             boundingObject Transform {
-                                              
+
                                               children [
                                                  Capsule {
                                                    height 0.005
@@ -1779,7 +1779,7 @@ PROTO Bez [
           }
         }
     ]
-    name IS name 
+    name IS name
     boundingObject Transform {
       translation 0.012 0.0 -0.05
       rotation 0.000000 1.000000 0.000000 0.000000
