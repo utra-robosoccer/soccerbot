@@ -12,6 +12,7 @@ construct==2.10.67
 opencv-python
 shapely
 vispy
+pytest
 
 # object detection
 Pillow==8.3.2

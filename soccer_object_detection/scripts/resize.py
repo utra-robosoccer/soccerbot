@@ -3,8 +3,8 @@ import cv2
 import tqdm
 import json
 
-input_folder = '/home/nam/dataset/ball_bounding_boxes_positive'
-output_folder = '/home/nam/dataset/ball_bounding_boxes_positive_small'
+input_folder = '/home/robosoccer/catkin_ws/src/soccerbot/soccer_object_detection/images'
+output_folder = '/home/robosoccer/catkin_ws/src/soccerbot/soccer_object_detection/images_small'
 
 def process_img(img_name):
     path = os.path.join(input_folder, img_name) 

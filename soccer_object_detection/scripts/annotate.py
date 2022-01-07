@@ -77,9 +77,14 @@ class Test(TestCase):
                     self.assertAlmostEqual(position.get_position()[2], ball_pose.get_position()[2], delta=0.001)
 
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
-    # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
+    # Make sure there is a folder soccer_object_detection/images
+    # Make sure the tf tree shows camera_gt frame (ground truth)
+    # If complaining missing opencv make sure LD_LIBRARY_PATH env is set in the runtime environmental variables
     def test_annotate_ball(self, num_samples=10000):
+        j = 0 # Id of the first image
+
         os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
 
         rospy.init_node("soccer_annotate")
         self.camera = Camera("robot1")
@@ -93,7 +98,7 @@ class Test(TestCase):
 
         tf_listener = TransformListener()
 
-        j = 394
+
         for i in range(num_samples):
             robot_x = random.uniform(-field_height, field_height)
             robot_y = random.uniform(-field_width, field_width)
@@ -148,11 +153,11 @@ class Test(TestCase):
             pt2 = (round(label[1][0]), round(label[1][1]))
             image_rect = cv2.rectangle(image.copy(), pt1, pt2, color=(0, 0, 0), thickness=1)
 
-            cv2.imshow("ball", image_rect)
-            key = cv2.waitKey(0)
-            print(key)
-            if key != 32:
-                continue
+            # cv2.imshow("ball", image_rect)
+            # key = cv2.waitKey(0)
+            # print(key)
+            # if key != 32:
+            #     continue
 
             jsonPath = "../images/bb_img_{}.json".format(j)
             with open(jsonPath, 'w') as f:
