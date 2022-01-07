@@ -149,11 +149,11 @@ class Test(TestCase):
             pt2 = (round(label[1][0]), round(label[1][1]))
             image_rect = cv2.rectangle(image.copy(), pt1, pt2, color=(0, 0, 0), thickness=1)
 
-            cv2.imshow("ball", image_rect)
-            key = cv2.waitKey(0)
-            print(key)
-            if key != 32:
-                continue
+            # cv2.imshow("ball", image_rect)
+            # key = cv2.waitKey(0)
+            # print(key)
+            # if key != 32:
+            #     continue
 
             jsonPath = "../images/bb_img_{}.json".format(j)
             with open(jsonPath, 'w') as f:
