@@ -142,6 +142,7 @@ class DetectorGoalPost(DetectorFieldline):
                     robot_pose.transform.rotation.w = 1
                     br.sendTransform(robot_pose)
 
+
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(ccdst)
             img_out.header = img.header

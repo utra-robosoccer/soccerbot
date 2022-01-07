@@ -1,7 +1,7 @@
 import math
 
 from sensor_msgs.msg import JointState, Imu
-from std_msgs.msg import Float64, Bool
+from std_msgs.msg import Float64, Bool, Int32
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
 from soccer_pycontrol.soccerbot import *
@@ -43,17 +43,24 @@ class SoccerbotRos(Soccerbot):
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.head_not_moving_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
-        self.localization_reset_subscriber = rospy.Subscriber("localization_mode", Bool, self.localization_callback,
-                                                              queue_size=1)
-        self.localization_reset = False
+        # self.localization_reset_subscriber = rospy.Subscriber("localization_mode", Bool, self.localization_callback,
+        #                                                       queue_size=1)
+        # self.localization_reset = False
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.head_motor_0 = 0
         self.head_motor_1 = 0
         self.last_ball_found_timestamp = None
+        self.localization_mode = -1
+        self.localization_mode_subscriber = rospy.Subscriber("localization_mode", Int32, self.localization_mode_callback, queue_size=1)
 
-    def localization_callback(self, msg):
-        self.localization_reset = msg.data
+    def localization_mode_callback(self, msg):
+
+        self.localization_mode = msg.data
+        print('self.localization_mode: ', self.localization_mode)
+
+    # def localization_callback(self, msg):
+    #     self.localization_reset = msg.data
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -175,7 +182,6 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-
     def apply_head_rotation(self):
         recenterCameraOnBall = False
         try:
@@ -221,6 +227,13 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
             self.head_motor_0 = self.configuration[Joints.HEAD_1]
             self.head_motor_1 = self.configuration[Joints.HEAD_2]
+
+        if self.localization_mode == 0: # Right
+            self.configuration[Joints.HEAD_2] = 0
+            self.configuration[Joints.HEAD_1] = -0.75
+        elif self.localization_mode == 1: # Left
+            self.configuration[Joints.HEAD_2] = 0
+            self.configuration[Joints.HEAD_1] = 0.75
 
         self.head_not_moving_publisher.publish(head_not_moving)
 

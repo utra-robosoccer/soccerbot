@@ -8,7 +8,7 @@ from soccer_msgs.msg import GameState
 from robot import Robot
 from strategy.utils import *
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 10
+HAVENT_SEEN_THE_BALL_TIMEOUT = 6
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
