@@ -15,7 +15,7 @@ def train_model(load_model=None, num_features=16):
     experiment = {
         'seed': 1234,
         'model_kernel': 3,
-        'model_num_features': 17,
+        'model_num_features': 10,
         'model_dropout_rate': 0.01,
         'train_class_weight': [.18, .02, .80],  # BALL, ROBOT, OTHER
         'train_learn_rate': 1e-2, # 1e-3,

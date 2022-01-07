@@ -87,6 +87,17 @@ class Transformation(np.ndarray):
         return t
 
     @staticmethod
+    def get_matrix_from_euler(euler_array, sequence='ZYX'):
+        """
+        Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
+        :param euler_array: the array of 3 angles
+        :param sequence: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
+        :return: H-transform
+        """
+        r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
+        return r.as_matrix()
+
+    @staticmethod
     def get_transform_from_euler(euler_array, sequence='ZYX'):
         """
         Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
@@ -108,6 +119,17 @@ class Transformation(np.ndarray):
         """
         e = R.from_matrix(r)
         return e.as_euler(orientation, degrees=False)
+
+    @staticmethod
+    def get_quaternion_from_rotation_matrix(r):
+        """
+        Gives euler angles rotation form of rotation matrix
+        :param r: 3x3 rotation matrix
+        :param orientation: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
+        :return: an array of three angles in radians
+        """
+        e = R.from_matrix(r)
+        return e.as_quat()
 
     @staticmethod
     def get_quaternion_from_euler(euler_array, sequence='ZYX'):
