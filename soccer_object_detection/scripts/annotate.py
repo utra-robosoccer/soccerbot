@@ -80,6 +80,8 @@ class Test(TestCase):
     # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
     def test_annotate_ball(self, num_samples=10000):
         os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        j = 0
 
         rospy.init_node("soccer_annotate")
         self.camera = Camera("robot1")
@@ -93,7 +95,6 @@ class Test(TestCase):
 
         tf_listener = TransformListener()
 
-        j = 394
         for i in range(num_samples):
             robot_x = random.uniform(-field_height, field_height)
             robot_y = random.uniform(-field_width, field_width)
