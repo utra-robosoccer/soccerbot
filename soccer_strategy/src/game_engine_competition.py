@@ -4,7 +4,7 @@ import numpy as np
 import math
 import tf
 import rospy
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty, Int32, Bool
 from soccer_msgs.msg import GameState
 from robot_ros import RobotRos
 from robot import Robot
@@ -52,12 +52,18 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.robot_name = os.getenv("ROBOT_NAME", "robot1")
         self.is_goal_keeper = os.getenv("GOALIE", "true") == "true"
         self.team_id = int(os.getenv("TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: { self.robot_id }, robot_name: { self.robot_name }, is goalkeeper: { self.is_goal_keeper }, team id { self.team_id }")
+        rospy.loginfo(
+            f"Initializing strategy with robot id: {self.robot_id}, robot_name: {self.robot_name}, is goalkeeper: {self.is_goal_keeper}, team id {self.team_id}")
 
+        self.localization_mode_publisher = rospy.Publisher("localization_mode", Int32, queue_size=1)
+        self.goal_post_need_publisher = rospy.Publisher("goal_post_need", Bool, queue_size=1)
+        self.field_side = True  # True for red False for blue
+        self.has_localized = False
         # game strategy information
 
         self.robots = [
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")#,
+            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")
+            # ,
             # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
             # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
             # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
@@ -111,11 +117,11 @@ class GameEngineCompetition(game_engine.GameEngine):
         if self.previous_gameState.secondaryState != self.gameState.secondaryState:
             print(" -- SecondaryGamestate transition to " + self.SecondaryGameStateMap[self.gameState.secondaryState])
         if self.previous_gameState.secondaryStateMode != self.gameState.secondaryStateMode:
-            print(" --- SecondaryGameMode transition to " + self.SecondaryStateModeMap[self.gameState.secondaryStateMode])
+            print(
+                " --- SecondaryGameMode transition to " + self.SecondaryStateModeMap[self.gameState.secondaryStateMode])
 
         self.previous_gameState = self.gameState
         self.gameState = gameState
-
 
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
@@ -184,7 +190,8 @@ class GameEngineCompetition(game_engine.GameEngine):
                     for robot in self.friendly:
                         if robot.role == Robot.Role.GOALIE:
                             robot.reset_initial_position(
-                                config.position_map(config.PENALTYKICK_NON_KICKING_POSITION, self.gameState.teamColor, self.gameState.firstHalf, 1)
+                                config.position_map(config.PENALTYKICK_NON_KICKING_POSITION, self.gameState.teamColor,
+                                                    self.gameState.firstHalf, 1)
                             )
                 self.run_freekick(rostime, self.penaltykick_strategy)
 
@@ -194,12 +201,367 @@ class GameEngineCompetition(game_engine.GameEngine):
                 if self.gameState.hasKickOff:
                     self.run_normal(rostime)
 
+    def localization_mode(self, robot):
+        print('before sleep 1')
+        rospy.sleep(1.0)
+        print('After sleep 1')
+        robot.reset_initial_position(
+            config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                self.gameState.firstHalf, robot.robot_id)
+        )
+        print('before sleep 1')
+        rospy.sleep(1.0)
+        print('After sleep 1')
+        if self.gameState.firstHalf:
+            if (robot.robot_id == 1 or robot.robot_id == 2) and self.gameState.teamColor == 1:
+                msg = Int32()
+                msg.data = 0  # right
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = [0]
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                print(goal_post_pose)
+                print(self.gameState.firstHalf)
+                if goal_post_pose[0] < 5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+            elif (robot.robot_id == 1 or robot.robot_id == 2) and self.gameState.teamColor == 0:
+                msg = Int32()
+                msg.data = 1  # left
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = -1
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] > -5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+            elif (robot.robot_id == 3 or robot.robot_id == 4) and self.gameState.teamColor == 1:
+                msg = Int32()
+                msg.data = 1  # left
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] < 5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+                pass
+            elif (robot.robot_id == 3 or robot.robot_id == 4) and self.gameState.teamColor == 0:
+                msg = Int32()
+                msg.data = 0  # right
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] > -5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+        else:
+            if (robot.robot_id == 1 or robot.robot_id == 2) and self.gameState.teamColor == 1:
+                msg = Int32()
+                msg.data = 1  # left
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+                print(goal_post_pose)
+                print(self.gameState.firstHalf)
+                if goal_post_pose[0] > -5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+            elif (robot.robot_id == 1 or robot.robot_id == 2) and self.gameState.teamColor == 0:
+                msg = Int32()
+                msg.data = 0  # right
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] < 5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+            elif (robot.robot_id == 3 or robot.robot_id == 4) and self.gameState.teamColor == 1:
+                msg = Int32()
+                msg.data = 0  # right
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] > -5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the Blue side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: RED is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+                pass
+            elif (robot.robot_id == 3 or robot.robot_id == 4) and self.gameState.teamColor == 0:
+                msg = Int32()
+                msg.data = 1  # Left
+                self.localization_mode_publisher.publish(msg)
+                print('before sleep 2')
+                rospy.sleep(1.0)
+                print('After sleep 2')
+                msg2 = Bool()
+                msg2.data = True
+                self.goal_post_need_publisher.publish(msg2)
+                print('before sleep 3')
+                rospy.sleep(1.0)
+                print('After sleep 3')
+                goal_post_pose = []
+                goal_found = False
+                while not goal_found:
+                    try:
+                        temp_pose = self.listener.lookupTransform('world', robot.robot_name + '/goal_post',
+                                                                  rospy.Time(0))
+                        header = self.listener.getLatestCommonTime('world', robot.robot_name + '/goal_post')
+
+                        goal_post_pose = np.array([temp_pose[0][0], temp_pose[0][1]])
+                        goal_found = True
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                        pass
+
+                if goal_post_pose[0] < 5.0:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the RED side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = True
+                else:
+                    print('Robot ID: ', robot.robot_id, ' Team color: BLUE is on the BLUE side')
+                    robot.reset_initial_position(
+                        config.position_map(config.START_POSITION, self.gameState.teamColor,
+                                            not self.gameState.firstHalf, robot.robot_id)
+                    )
+                    self.field_side = False
+
+        msg = Int32()
+        msg.data = -1  # right
+        self.localization_mode_publisher.publish(msg)
+        print('before sleep 4')
+        rospy.sleep(1.0)
+        print('After sleep 4')
+        msg2 = Bool()
+        msg2.data = False
+        self.goal_post_need_publisher.publish(msg2)
+        print('before sleep 5')
+        rospy.sleep(1.0)
+        print('After sleep 5')
+        self.has_localized = True
 
     def run_normal(self, rostime):
         # INITIAL
+
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             # on state transition
+            self.has_localized = False
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
+
                 # self.stop_all_robot()
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
@@ -211,9 +573,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                             config.position_map_kickoff(config.PENALTYSHOOT_START_POSITION, self.gameState.hasKickOff)
                         )
                     else:
-                        robot.reset_initial_position(
-                            config.position_map(config.START_POSITION, self.gameState.teamColor, self.gameState.firstHalf, robot.robot_id)
-                        )
+                        self.localization_mode(robot)
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -222,13 +582,35 @@ class GameEngineCompetition(game_engine.GameEngine):
                 # rospy.sleep(1)
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_READY
+                if not self.has_localized:
+                    for robot in self.friendly:
+                        self.localization_mode(robot)
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 for robot in self.friendly:
                     if robot.status == Robot.Status.READY:
-                        robot.set_navigation_position(
-                            config.position_map(config.INITIAL_POSITION, self.gameState.teamColor, self.gameState.firstHalf, robot.robot_id)
-                        )
+                        if self.field_side:  # red
+                            if self.gameState.teamColor == 1:  # red
+                                robot.set_navigation_position(
+                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
+                                                        True, robot.robot_id)
+                                )
+                            elif self.gameState.teamColor == 0:  # blue
+                                robot.set_navigation_position(
+                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
+                                                        False, robot.robot_id)
+                                )
+                        else:
+                            if self.gameState.teamColor == 1:  # red
+                                robot.set_navigation_position(
+                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
+                                                        False, robot.robot_id)
+                                )
+                            elif self.gameState.teamColor == 0:  # blue
+                                robot.set_navigation_position(
+                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
+                                                        True, robot.robot_id)
+                                )
 
         # SET
         if self.gameState.gameState == GameState.GAMESTATE_SET:
@@ -236,7 +618,6 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.previous_gameState.gameState != GameState.GAMESTATE_SET:
                 self.stop_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_SET
-
 
         # PLAYING
         if self.gameState.gameState == GameState.GAMESTATE_PLAYING:
@@ -266,15 +647,26 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
+                    temp_firstHalf = self.gameState.firstHalf
+                    if self.field_side:  # red
+                        if self.gameState.teamColor == 1:  # red
+                            temp_firstHalf = True
+                        elif self.gameState.teamColor == 0:  # blue
+                            temp_firstHalf = False
+                    else:
+                        if self.gameState.teamColor == 1:  # red
+                            temp_firstHalf = False
+                        elif self.gameState.teamColor == 0:  # blue
+                            temp_firstHalf = True
                     self.team_strategy.update_team_strategy(
                         self.robots,
                         self.ball,
                         GameProperties(
                             self.gameState.teamColor,
-                            self.gameState.firstHalf,
+                            temp_firstHalf,
                             self.gameState.secondaryState
-                            )
                         )
+                    )
                     pass
                 else:
                     print("kickoff not started, no strategy output")
@@ -296,7 +688,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             robot.get_detected_obstacles()
             robot.obstacles_publisher.publish(robot.obstacles)
 
-    #todo clean up logic
+    # todo clean up logic
     def run_freekick(self, rostime, strategy):
         # PREPARATION
         if self.gameState.secondaryStateMode == GameState.MODE_PREPARATION:
@@ -338,5 +730,3 @@ class GameEngineCompetition(game_engine.GameEngine):
                 closest_dist = dist
                 current_closest = robot
         current_closest.designated_kicker = True
-
-
