@@ -561,7 +561,6 @@ class GameEngineCompetition(game_engine.GameEngine):
             # on state transition
             self.has_localized = False
             if self.previous_gameState.gameState != GameState.GAMESTATE_INITIAL:
-
                 # self.stop_all_robot()
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
@@ -635,9 +634,10 @@ class GameEngineCompetition(game_engine.GameEngine):
                     print("opponent have kickoff")
 
             if self.kickoff_started == False:
-                if (rostime - self.rostime_kickoff) > 10:
-                    self.kickoff_started = True
-                    print("kickoff started after 10s")
+                # if (rostime - self.rostime_kickoff) > 10:
+                rospy.sleep(10)
+                self.kickoff_started = True
+                print("kickoff started after 10s")
 
                 # if self.ball.get_position() is not None:
                 #     delta = np.linalg.norm(self.ball.get_position())

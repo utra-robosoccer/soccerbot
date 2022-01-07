@@ -124,7 +124,8 @@ class DummyStrategy2(Strategy):
                 player_position = player.get_position()[0:2]
 
                 # Haven't seen the ball timeout
-                if self.havent_seen_the_ball_timeout == 0:
+                if self.havent_seen_the_ball_timeout < 0:
+                    print("Ball position timeout")
                     rospy.loginfo("Havent seen the ball for a while. Rototating robot " + player.robot_name)
                     self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                     turn_position = [player_position[0], player_position[1], player_angle + math.pi]
