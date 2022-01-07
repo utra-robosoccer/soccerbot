@@ -171,7 +171,7 @@ def find_batch_bounding_boxes(outputs):
 
         for label in [Label.BALL, Label.ROBOT]:
             img = output[label.value]
-            img_blurred = cv2.GaussianBlur(img.detach().numpy(), (5,5), cv2.BORDER_DEFAULT)
+            img_blurred = cv2.GaussianBlur(img.detach().cpu().numpy(), (5,5), cv2.BORDER_DEFAULT)
             img_blurred_out = torch.from_numpy(img_blurred)
             output_bbxs[label.value] = find_bounding_boxes(img_blurred_out)
 
