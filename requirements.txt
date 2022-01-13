@@ -14,7 +14,7 @@ shapely
 vispy
 
 # object detection
-Pillow==8.3.2
+Pillow==9.0.0
 torch==1.8.1
 torchvision==0.9.1
 tqdm
