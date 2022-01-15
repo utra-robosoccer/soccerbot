@@ -9,12 +9,9 @@ from soccer_msgs.msg import GameState
 from robot_ros import RobotRos
 from robot import Robot
 from ball import Ball
+from team_data import Team_Data
 import game_engine
-from strategy.dummy_strategy import DummyStrategy
-from strategy.dummy_strategy2 import DummyStrategy2
-from strategy.freekick_strategy import FreekickStrategy
-from strategy.penaltykick_strategy import PenaltykickStrategy
-from strategy.utils import GameProperties
+from formation.normal_formation_strategy import NormalFormationStrategy
 import config
 import logging
 
@@ -54,30 +51,15 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.team_id = int(os.getenv("TEAM_ID", "16"))
         rospy.loginfo(
             f"Initializing strategy with robot id: {self.robot_id}, robot_name: {self.robot_name}, is goalkeeper: {self.is_goal_keeper}, team id {self.team_id}")
+        self.team_data = Team_Data()
 
         self.localization_mode_publisher = rospy.Publisher("localization_mode", Int32, queue_size=1)
         self.goal_post_need_publisher = rospy.Publisher("goal_post_need", Bool, queue_size=1)
-        self.field_side = True  # True for red False for blue
+        self.field_side = True  # True for Positive False for Negative
         self.has_localized = False
         # game strategy information
 
-        self.robots = [
-            RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="robot1")
-            # ,
-            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="robot2"),
-            # RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="robot3"),
-            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name="opponent1"),
-            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent2"),
-            # RobotRos(team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY, robot_name="opponent3"),
-        ]
-
-        self.friendly = self.robots[0:3]
-
-        self.this_robot = None
-        for robot in self.robots:
-            if robot.robot_name == self.robot_name:
-                self.this_robot = robot
-        # assert (self.this_robot is not None, "This robot name doesn't exist: " + self.robot_name)
+        self.robot = RobotRos(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name=self.robot_name)
 
         self.ball = Ball(position=None)
 
@@ -103,9 +85,9 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.rostime_previous = 0
         self.listener = tf.TransformListener()
-        self.team_strategy = DummyStrategy2()
-        self.freekick_strategy = FreekickStrategy()
-        self.penaltykick_strategy = PenaltykickStrategy()
+        self.team_strategy = NormalFormationStrategy(self.team_data)
+        #self.freekick_strategy = FreekickStrategy()
+        #self.penaltykick_strategy = PenaltykickStrategy()
 
         self.rostime_kickoff = 0
         self.kickoff_started = False
@@ -127,16 +109,15 @@ class GameEngineCompetition(game_engine.GameEngine):
         # get estimated ball position with tf information from 4 robots and average them
         # this needs to be team-dependent in the future
         ball_positions = []
-        for robot in self.friendly:
-            time_diff = rospy.Duration(10)
-            try:
-                ball_pose = self.listener.lookupTransform('world', robot.robot_name + '/ball', rospy.Time(0))
-                header = self.listener.getLatestCommonTime('world', robot.robot_name + '/ball')
-                time_diff = rospy.Time.now() - header
-                if time_diff < rospy.Duration(0.2):
-                    ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                pass
+
+        try:
+            ball_pose = self.listener.lookupTransform('world', self.robot.robot_name + '/ball', rospy.Time(0))
+            header = self.listener.getLatestCommonTime('world', self.robot.robot_name + '/ball')
+            time_diff = rospy.Time.now() - header
+            if time_diff < rospy.Duration(0.2):
+                ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            pass
 
         if ball_positions:
             self.ball.position = np.array(ball_positions).mean(axis=0)
@@ -148,18 +129,16 @@ class GameEngineCompetition(game_engine.GameEngine):
                 rospy.loginfo_throttle(5, "Ball Position Timed Out")
 
     def stop_all_robot(self):
-        for robot in self.friendly:
-            robot.stop_requested = True
-            print(robot.robot_name + " set to forbid moving")
+        self.robot.stop_requested = True
+        print(self.robot.robot_name + " set to forbid moving")
 
     def resume_all_robot(self):
-        for robot in self.friendly:
-            robot.completed_trajectory_publisher.publish(True)
-            if robot.stop_requested:
-                robot.stop_requested = False
-            if robot.status == Robot.Status.STOPPED:
-                robot.status = Robot.Status.READY
-                print(robot.robot_name + " set to allow moving")
+        self.robot.completed_trajectory_publisher.publish(True)
+        if self.robot.stop_requested:
+            self.robot.stop_requested = False
+        if self.robot.status == Robot.Status.STOPPED:
+            self.robot.status = Robot.Status.READY
+            print(self.robot.robot_name + " set to allow moving")
 
     # run loop
     def run(self):
@@ -170,36 +149,36 @@ class GameEngineCompetition(game_engine.GameEngine):
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 self.run_normal(rostime)
 
-            # free kick
-            elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
-                self.run_freekick(rostime, self.freekick_strategy)
-            elif self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
-                self.run_freekick(rostime, self.freekick_strategy)
-            elif self.gameState.secondaryState == GameState.STATE_CORNER_KICK:
-                self.run_freekick(rostime, self.freekick_strategy)
-            elif self.gameState.secondaryState == GameState.STATE_GOAL_KICK:
-                self.run_freekick(rostime, self.freekick_strategy)
-            elif self.gameState.secondaryState == GameState.STATE_THROW_IN:
-                self.run_freekick(rostime, self.freekick_strategy)
+            # # free kick
+            # elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
+            #     self.run_freekick(rostime, self.freekick_strategy)
+            # elif self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
+            #     self.run_freekick(rostime, self.freekick_strategy)
+            # elif self.gameState.secondaryState == GameState.STATE_CORNER_KICK:
+            #     self.run_freekick(rostime, self.freekick_strategy)
+            # elif self.gameState.secondaryState == GameState.STATE_GOAL_KICK:
+            #     self.run_freekick(rostime, self.freekick_strategy)
+            # elif self.gameState.secondaryState == GameState.STATE_THROW_IN:
+            #     self.run_freekick(rostime, self.freekick_strategy)
 
-            # penalty kick
-            elif self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
-                # reset initial position for goalie
-                # if first time pentalty kick state and we are not kicking
-                if self.previous_gameState.secondaryState != GameState.STATE_PENALTYKICK and self.gameState.secondaryStateTeam != self.team_id:
-                    for robot in self.friendly:
-                        if robot.role == Robot.Role.GOALIE:
-                            robot.reset_initial_position(
-                                config.position_map(config.PENALTYKICK_NON_KICKING_POSITION, self.gameState.teamColor,
-                                                    self.gameState.firstHalf, 1)
-                            )
-                self.run_freekick(rostime, self.penaltykick_strategy)
-
-            # penalty shootout
-            elif self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                # if we have kickoff, run normal game strategy
-                if self.gameState.hasKickOff:
-                    self.run_normal(rostime)
+            # # penalty kick
+            # elif self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
+            #     # reset initial position for goalie
+            #     # if first time pentalty kick state and we are not kicking
+            #     if self.previous_gameState.secondaryState != GameState.STATE_PENALTYKICK and self.gameState.secondaryStateTeam != self.team_id:
+            #         for robot in self.friendly:
+            #             if robot.role == Robot.Role.GOALIE:
+            #                 robot.reset_initial_position(
+            #                     config.position_map(config.PENALTYKICK_NON_KICKING_POSITION, self.gameState.teamColor,
+            #                                         self.gameState.firstHalf, 1)
+            #                 )
+            #     self.run_freekick(rostime, self.penaltykick_strategy)
+            #
+            # # penalty shootout
+            # elif self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+            #     # if we have kickoff, run normal game strategy
+            #     if self.gameState.hasKickOff:
+            #         self.run_normal(rostime)
 
     def localization_mode(self, robot):
         print('before sleep 1')
@@ -566,13 +545,13 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.previous_gameState.gameState = GameState.GAMESTATE_INITIAL
 
                 # reset localization initial pose
-                for robot in self.friendly:
-                    if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                        robot.reset_initial_position(
-                            config.position_map_kickoff(config.PENALTYSHOOT_START_POSITION, self.gameState.hasKickOff)
-                        )
-                    else:
-                        self.localization_mode(robot)
+                if self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+                    self.robot.reset_initial_position(
+                        config.position_map_kickoff(config.PENALTYSHOOT_START_POSITION, self.gameState.hasKickOff)
+                    )
+                else:
+                    self.localization_mode(self.robot)
+
 
         # READY
         if self.gameState.gameState == GameState.GAMESTATE_READY:
@@ -582,34 +561,14 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.resume_all_robot()
                 self.previous_gameState.gameState = GameState.GAMESTATE_READY
                 if not self.has_localized:
-                    for robot in self.friendly:
-                        self.localization_mode(robot)
+                    self.localization_mode(self.robot)
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
-                for robot in self.friendly:
-                    if robot.status == Robot.Status.READY:
-                        if self.field_side:  # red
-                            if self.gameState.teamColor == 1:  # red
-                                robot.set_navigation_position(
-                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
-                                                        True, robot.robot_id)
-                                )
-                            elif self.gameState.teamColor == 0:  # blue
-                                robot.set_navigation_position(
-                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
-                                                        False, robot.robot_id)
-                                )
-                        else:
-                            if self.gameState.teamColor == 1:  # red
-                                robot.set_navigation_position(
-                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
-                                                        False, robot.robot_id)
-                                )
-                            elif self.gameState.teamColor == 0:  # blue
-                                robot.set_navigation_position(
-                                    config.position_map(config.INITIAL_POSITION, self.gameState.teamColor,
-                                                        True, robot.robot_id)
-                                )
+                if self.robot.status == Robot.Status.READY:
+                    self.robot.set_navigation_position(
+                        config.position_map(config.INITIAL_POSITION, self.field_side,
+                                            self.gameState.firstHalf, self.robot.robot_id)
+                    )
 
         # SET
         if self.gameState.gameState == GameState.GAMESTATE_SET:
@@ -647,26 +606,7 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    temp_firstHalf = self.gameState.firstHalf
-                    if self.field_side:  # red
-                        if self.gameState.teamColor == 1:  # red
-                            temp_firstHalf = True
-                        elif self.gameState.teamColor == 0:  # blue
-                            temp_firstHalf = False
-                    else:
-                        if self.gameState.teamColor == 1:  # red
-                            temp_firstHalf = False
-                        elif self.gameState.teamColor == 0:  # blue
-                            temp_firstHalf = True
-                    self.team_strategy.update_team_strategy(
-                        self.robots,
-                        self.ball,
-                        GameProperties(
-                            self.gameState.teamColor,
-                            temp_firstHalf,
-                            self.gameState.secondaryState
-                        )
-                    )
+                    self.team_strategy.update_strategy(self.robot)
                     pass
                 else:
                     print("kickoff not started, no strategy output")
@@ -683,50 +623,50 @@ class GameEngineCompetition(game_engine.GameEngine):
 
         self.rostime_previous = rostime
         self.update_average_ball_position()
-        for robot in self.friendly:
-            robot.update_status()
-            robot.get_detected_obstacles()
-            robot.obstacles_publisher.publish(robot.obstacles)
+
+        self.robot.update_status()
+        self.robot.get_detected_obstacles()
+        self.robot.obstacles_publisher.publish(self.robot.obstacles)
 
     # todo clean up logic
-    def run_freekick(self, rostime, strategy):
-        # PREPARATION
-        if self.gameState.secondaryStateMode == GameState.MODE_PREPARATION:
-            if self.gameState.secondaryStateTeam == self.team_id:
-                # first time running freekick logic
-                if self.previous_gameState.secondaryStateMode == GameState.STATE_NORMAL:
-                    self.designate_kicker()
-
-                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
-                    completed = strategy.update_kicking_strategy(self.friendly, self.ball)
-                    if completed:
-                        self.execute_game_interruption_publisher.publish()
-
-            if self.gameState.secondaryState != self.team_id:
-                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
-                    # strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-                    pass
-        # PLACING
-        if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
-            if self.gameState.secondaryStateTeam == self.team_id:
-                if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
-                    strategy.execute_kicking(self.friendly, self.ball)
-            else:
-                # todo perform goalie trajectory if penalty kick
-                # strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
-                pass
-
-        self.rostime_previous = rostime
-        self.update_average_ball_position()
-        for robot in self.friendly:
-            robot.update_status()
-
-    def designate_kicker(self):
-        closest_dist = math.inf
-        current_closest = None
-        for robot in self.friendly:
-            dist = np.linalg.norm(self.ball.get_position()[0:2] - robot.get_position()[0:2])
-            if dist < closest_dist:
-                closest_dist = dist
-                current_closest = robot
-        current_closest.designated_kicker = True
+    # def run_freekick(self, rostime, strategy):
+    #     # PREPARATION
+    #     if self.gameState.secondaryStateMode == GameState.MODE_PREPARATION:
+    #         if self.gameState.secondaryStateTeam == self.team_id:
+    #             # first time running freekick logic
+    #             if self.previous_gameState.secondaryStateMode == GameState.STATE_NORMAL:
+    #                 self.designate_kicker()
+    #
+    #             if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+    #                 completed = strategy.update_kicking_strategy(self.friendly, self.ball)
+    #                 if completed:
+    #                     self.execute_game_interruption_publisher.publish()
+    #
+    #         if self.gameState.secondaryState != self.team_id:
+    #             if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+    #                 # strategy.update_non_kicking_strategy(self.friendly, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+    #                 pass
+    #     # PLACING
+    #     if self.gameState.secondaryStateMode == GameState.MODE_PLACING:
+    #         if self.gameState.secondaryStateTeam == self.team_id:
+    #             if rostime % self.NAV_GOAL_UPDATE_INTERVAL < self.rostime_previous % self.NAV_GOAL_UPDATE_INTERVAL:
+    #                 strategy.execute_kicking(self.friendly, self.ball)
+    #         else:
+    #             # todo perform goalie trajectory if penalty kick
+    #             # strategy.update_non_kicking_strategy(self.freekick_strategy, self.ball, self.gameState.teamColor, self.gameState.firstHalf)
+    #             pass
+    #
+    #     self.rostime_previous = rostime
+    #     self.update_average_ball_position()
+    #     for robot in self.friendly:
+    #         robot.update_status()
+    #
+    # def designate_kicker(self):
+    #     closest_dist = math.inf
+    #     current_closest = None
+    #     for robot in self.friendly:
+    #         dist = np.linalg.norm(self.ball.get_position()[0:2] - robot.get_position()[0:2])
+    #         if dist < closest_dist:
+    #             closest_dist = dist
+    #             current_closest = robot
+    #     current_closest.designated_kicker = True

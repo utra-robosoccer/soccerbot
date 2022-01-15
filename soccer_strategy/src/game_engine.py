@@ -1,24 +1,18 @@
 import random
 from vispy import scene, app
-from vispy.scene import visuals, transforms
-from vispy.scene.visuals import Polygon, Ellipse, Rectangle, RegularPolygon
 from vispy.color import Color
 
 from robot import Robot
 from ball import Ball
-from strategy.dummy_strategy import DummyStrategy
 # from strategy.team_strategy import TeamStrategy
 from strategy.stationary_strategy import StationaryStrategy
-from strategy.player_strategy import TeamStrategy, ScoreStrategy
+from formation.normal_formation_strategy import NormalFormationStrategy
+from team_data import TeamData2D
 
-from strategy.utils import GameProperties, Field
 import math
 import numpy as np
 import copy
-import itertools
 import _thread
-
-from soccer_pycontrol import path
 
 white = Color("#ecf0f1")
 gray = Color("#121212")
@@ -64,7 +58,8 @@ class Scene:
                                 "path": scene.Arrow(pos=None, width=1, color=color, connect='strip',
                                                     parent=self.view.scene),
                                 "vision_cone": scene.Arrow(pos=None, width=1, color=color, connect='strip',
-                                                           parent=self.view.scene)})
+                                                           parent=self.view.scene),
+                                "id": scene.Text(text="id", parent=self.view.scene, pos=(0, 0))})
 
         self.field_vectors = scene.Arrow(pos=None, width=1, color=blue, connect='segments', arrows=None,
                                          arrow_color=blue, arrow_type='triangle_30', arrow_size=7,
@@ -75,6 +70,8 @@ class Scene:
             x = robots[i].get_position()[0]
             y = robots[i].get_position()[1]
             self.robots[i]['body'].center = (x, y)
+            self.robots[i]['id'].pos = (x, y)
+            self.robots[i]['id'].text = str(robots[i].robot_id)
 
             theta = robots[i].get_position()[2]
             arrow_len = 0.3
@@ -128,18 +125,24 @@ class Scene:
 
 
 class Team:
-    def __init__(self, robots, ball):
+    def __init__(self, robots, strategy):
         # TODO better way to construct team - predefined start positions etc?
         # TODO seperate subclass for opponent and friendly team?
         self.robots = robots if robots is not None else []
         self.observed_ball = Ball(None, '2D')
+        self.team_data = TeamData2D()
+        self.strategy = strategy(self.team_data)
 
     def update(self):
         self.observe_ball()
+        for robot in self.robots:
+            self.team_data.team_data_callback([robot, self.observed_ball])
+        for robot in self.robots:
+            self.strategy.update_strategy(robot)
 
     def observe_ball(self):
         for robot in self.robots:
-            if robot.observed_ball is not None:
+            if robot.observed_ball.position is not None:
                 self.observed_ball.position = robot.observed_ball.position
 
 # TODO seperate the physics from the driver class?
@@ -152,7 +155,7 @@ class GameEngine:
     def __init__(self, display=True):
         self.display = display
         # Initialize robots
-        self.ball = Ball(np.array([2, 2]), '2D')
+        self.ball = Ball(np.array([1, 2]), '2D')
 
         self.robots = [
                 Robot(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
@@ -162,26 +165,27 @@ class GameEngine:
                 Robot(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
                       position=np.array([1.5, 1.5, -math.pi])),
                 Robot(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                      position=np.array([0.8, 0.0, -math.pi])),
-                Robot(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                      position=np.array([-3.5, 0.0, 0])),
-                Robot(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
-                      position=np.array([-1.5, -1.5, 0])),
-                Robot(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
-                      position=np.array([-1.5, 1.5, 0])),
-                Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                      position=np.array([-0.8, 0.0, 0]))]
+                      position=np.array([0.8, 0.0, -math.pi]))]
+            # ,
+            #     Robot(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            #           position=np.array([-3.5, 0.0, 0])),
+            #     Robot(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_MIDFIELD, status=Robot.Status.READY,
+            #           position=np.array([-1.5, -1.5, 0])),
+            #     Robot(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_MIDFIELD, status=Robot.Status.READY,
+            #           position=np.array([-1.5, 1.5, 0])),
+            #     Robot(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            #           position=np.array([-0.8, 0.0, 0]))]
 
         #self.team1_strategy = TeamStrategy(GameEngine.PHYSICS_UPDATE_INTERVAL * GameEngine.STRATEGY_UPDATE_INTERVAL)
-        self.team1_strategy = DummyStrategy()
+        #self.team1_strategy = DummyStrategy()
         self.team2_strategy = StationaryStrategy()
 
         # # Setup the strategy
         self.team1_strategy_rtval = None
         self.team2_strategy_rtval = None
 
-        self.friendly_team = Team([self.robots[0]], self.ball)
-        self.opponent_team = Team(None, self.ball)
+        self.friendly_team = Team(self.robots, NormalFormationStrategy)
+        #self.opponent_team = Team(None, )
 
         self.robots_init = copy.deepcopy(self.robots)
         self.ball_init = copy.deepcopy(self.ball)
@@ -208,12 +212,12 @@ class GameEngine:
 
             self.update_estimated_physics(self.robots, self.ball)
 
-            if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
-                self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.friendly_team.observed_ball,
-                                                                                             GameProperties(0, 1, 0))
-                self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.opponent_team.observed_ball,
-                                                                                             GameProperties(1, 1, 0,
-                                                                                                opponent_team=True))
+            # if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
+            #     self.team1_strategy_rtval = self.team1_strategy.update_team_strategy(self.robots, self.friendly_team.observed_ball,
+            #                                                                                  GameProperties(0, 1, 0))
+            #     self.team2_strategy_rtval = self.team2_strategy.update_team_strategy(self.robots, self.opponent_team.observed_ball,
+            #                                                                                  GameProperties(1, 1, 0,
+            #                                                                                     opponent_team=True))
 
             # Check victory condition
             if self.ball.get_position()[0] > 4.5:
@@ -265,7 +269,7 @@ class GameEngine:
 
         # Ball
         self.friendly_team.update()
-        self.opponent_team.update()
+        #self.opponent_team.update()
         if ball.kick_timeout > 0:
             ball.kick_timeout = ball.kick_timeout - 1
 
@@ -292,4 +296,4 @@ class GameEngine:
         self.robots = copy.deepcopy(self.robots_init)
         self.ball = copy.deepcopy(self.ball_init)
         self.friendly_team = Team([self.robots[0]], self.ball)
-        self.opponent_team = Team(None, self.ball)
+        # self.opponent_team = Team(None, self.ball)

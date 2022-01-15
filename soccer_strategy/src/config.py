@@ -1,14 +1,14 @@
 # nav position for the robot before the game start
 INITIAL_POSITION =\
 {
-    "blue":
+    "Negative":
     {
         1: [-1.5, 0, -3.14],
         2: [-1, -2.5, -3.14],
         3: [-1, 2.5, -3.14],
         4: [-1.5, 1.75, -3.14]
     },
-    "red":
+    "Positive":
     {
         1: [1.5, 0, -3.14],
         2: [1, -2.5, -3.14],
@@ -20,14 +20,14 @@ INITIAL_POSITION =\
 # position where the robot is spawned at
 START_POSITION =\
 {
-    "blue":
+    "Negative":
     {
         1: [-4, -3.15, 1.57],
         2: [-1, -3.15, 1.57],
         3: [-1, 3.15, -1.57],
         4: [-4, 3.15, -1.57]
     },
-    "red":
+    "Positive":
     {
         1: [4, -3.15, 1.57],
         2: [1, -3.15, 1.57],
@@ -39,13 +39,13 @@ START_POSITION =\
 # todo need to be changed
 PENALTYKICK_NON_KICKING_POSITION =\
 {
-    "blue":
+    "Negative":
     {
         1: [-4.5, 0, 0],
         2: [-1, -1, 0],
         3: [-1, 1, 0]
     },
-    "red":
+    "Positive":
     {
         1: [4.5, 0, 3.14],
         2: [1, -1, 3.14],
@@ -61,8 +61,8 @@ PENALTYSHOOT_START_POSITION =\
 
 ENEMY_GOAL_POSITION =\
 {
-    "blue": [5, 0],
-    "red": [-5, 0],
+    "Negative": [5, 0],
+    "Positive": [-5, 0],
     "penalty_shoot": [-4.5, 0]
 }
 
@@ -70,18 +70,14 @@ ENEMY_GOAL_POSITION =\
 def position_map(position_dict, team_color, first_half, robot_id):
     if first_half == 1:
         if team_color == 0:
-            print(position_dict["blue"][robot_id])
-            return position_dict["blue"][robot_id]
+            return position_dict["Negative"][robot_id]
         elif team_color == 1:
-            print(position_dict["red"][robot_id])
-            return position_dict["red"][robot_id]
+            return position_dict["Positive"][robot_id]
     else:
         if team_color == 0:
-            print(position_dict["red"][robot_id])
-            return position_dict["red"][robot_id]
+            return position_dict["Positive"][robot_id]
         elif team_color == 1:
-            print(position_dict["blue"][robot_id])
-            return position_dict["blue"][robot_id]
+            return position_dict["Negative"][robot_id]
 
 
 def position_map_kickoff(position_dict, has_kickoff):
@@ -97,11 +93,11 @@ def position_map_goal(position_dict, team_color, first_half, penalty_shoot):
 
     if first_half == 1:
         if team_color == 0:
-            return position_dict["blue"]
+            return position_dict["Negative"]
         elif team_color == 1:
-            return position_dict["red"]
+            return position_dict["Positive"]
     else:
         if team_color == 0:
-            return position_dict["red"]
+            return position_dict["Positive"]
         elif team_color == 1:
-            return position_dict["blue"]
+            return position_dict["Negative"]
