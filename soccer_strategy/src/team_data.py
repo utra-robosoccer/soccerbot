@@ -2,6 +2,7 @@ import enum
 import rospy
 import tf.transformations
 from soccer_msgs.msg import TeamData
+from soccer_msgs.msg import GameState
 
 
 class Team_Data_Robot():
@@ -22,8 +23,14 @@ class Team_Data_Ball():
         self.position = []
         self.covariance = []
 
+    def is_known(self):
+        if self.position is None:
+            return False
+        return len(self.position) > 0
+
 
 class Team_Data():
+    #TODO print stuff to make sure robots are communicating
     def __init__(self):
         self.team_data_sub = rospy.Subscriber("/team_data", TeamData, self.team_data_callback)
 
@@ -35,6 +42,14 @@ class Team_Data():
         }
 
         self.ball = Team_Data_Ball()
+        self.team_color = None
+        self.is_first_half = None
+        self.secondary_state = None
+
+    def set_gamestate(self, gameState):
+        self.team_color = gameState.teamColor
+        self.is_first_half = gameState.firstHalf
+        self.secondary_state = gameState.secondaryState
 
 
     def team_data_callback(self, data):
@@ -51,7 +66,28 @@ class Team_Data():
 
         #todo filter ball info
         ball_trans = data.robot_position.pose.position
-        self.robots[data.robot_id].position = [ball_trans.x, ball_trans.y]
-        self.robots[data.robot_id].covariance = data.robot_position.covariance
+        self.ball.position = [ball_trans.x, ball_trans.y]
+        self.ball.covariance = data.robot_position.covariance
 
 
+#should make a team_data superclass
+class TeamData2D:
+    def __init__(self):
+        self.robots = {
+            1: Team_Data_Robot(),
+            2: Team_Data_Robot(),
+            3: Team_Data_Robot(),
+            4: Team_Data_Robot()
+        }
+        self.ball = Team_Data_Ball()
+
+    def team_data_callback(self, data):
+        robot = data[0]
+        ball = data[1]
+        if robot.robot_id in self.robots.keys():
+            self.robots[robot.robot_id].player_id = robot.robot_id
+            self.robots[robot.robot_id].position = robot.position
+            self.robots[robot.robot_id].covariance = None
+
+        self.ball.position = ball.position
+        self.ball.covariance = None
