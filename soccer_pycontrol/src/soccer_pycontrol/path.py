@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from soccer_pycontrol.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path_section_short import PathSectionShort
+from soccer_pycontrol.path_section import PathSection
 import time
 
 class Path:
@@ -24,8 +25,7 @@ class Path:
         self.path_sections.append(p)
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
-        # is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
-        is_short_distance = False
+        is_short_distance = np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
         if is_short_distance:
             print("Creating Short Path")
             print("Start Transform")
@@ -170,7 +170,7 @@ class Path:
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
         t_change = t + 1
         if self.duration() - t_change < 1:
-            raise Exception("There is not enough time to update the position")
+            raise Exception(f"There is not enough time to update the position, current time { t } , duration of current path { self.duration()}")
 
         t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
         start_transform = self.getBodyStepPose(step)
