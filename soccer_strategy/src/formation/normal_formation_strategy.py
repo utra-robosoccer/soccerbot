@@ -24,15 +24,13 @@ class NormalFormationStrategy(FormationStrategy):
         if self.team_data.ball.is_known():
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
-            # generate goal pose
-            goal_position = self.generate_goal_position(ball, game_properties)
-
             if abs(self.team_data.ball.position[1]) < 3.5 and abs(self.team_data.ball.position[0]) < 5:
 
                 if robot.robot_id == self.formation.closest_position(self.team_data.ball.position):
 
                     # generate destination pose
-                    ball_position = self.team_data.ball.position
+                    ball_position = np.array(self.team_data.ball.position)
+                    goal_position = np.array(self.enemy_goal_position)
                     player_position = robot.get_position()[0:2]
                     player_angle = robot.get_position()[2]
 
@@ -68,7 +66,7 @@ class NormalFormationStrategy(FormationStrategy):
                         else:
                             robot.kick_with_right_foot = False
 
-                        delta = goal_position - self.team_data.ball.position
+                        delta = goal_position - ball_position
                         unit = delta / np.linalg.norm(delta)
 
                         robot.status = Robot.Status.KICKING

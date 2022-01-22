@@ -29,7 +29,7 @@ class FieldPositions:
 class Formation:
     def __init__(self, positions):
         # array where 0 position is position for robot 0 (goalie) I guess?
-        #TODO: change positions to dictionary with robot_id
+        # TODO: change positions to dictionary with robot_id
         self.positions = positions
 
     def closest_position(self, target):
@@ -43,7 +43,7 @@ def distance(o1, o2):
 
 
 class Formations:
-    #don't go to role
+    # don't go to role
     DEFENSIVE = Formation(
         [FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
     ATTACKING = Formation(
@@ -66,6 +66,7 @@ class FormationStrategy:
     def __init__(self, default_formation, team_data):
         self.formation = default_formation
         self.team_data = team_data
+        self.enemy_goal_position = None
 
     def update_strategy(self, robot):
         self.formation = self.decide_formation()
@@ -77,14 +78,14 @@ class FormationStrategy:
     def act_individual(self, robot):
         raise NotImplementedError("please implement")
 
-    def generate_goal_position(self, game_properties):
+    def update_goal_position(self, field_side, firstHalf):
         goal_position = config.position_map_goal(
             config.ENEMY_GOAL_POSITION,
-            game_properties.team_color,
-            game_properties.is_first_half,
+            field_side,
+            firstHalf,
             1  # game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
         )
 
         if abs(self.team_data.ball.get_position()[1]) < 1.0:
             goal_position[1] = self.team_data.ball.get_position()[1]
-        return goal_position
+        self.enemy_goal_position = goal_position

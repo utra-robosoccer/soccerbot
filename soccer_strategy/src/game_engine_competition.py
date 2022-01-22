@@ -28,6 +28,7 @@ class GameEngineCompetition(game_engine.GameEngine):
     # Seconds
     STRATEGY_UPDATE_INTERVAL = 1
     NAV_GOAL_UPDATE_INTERVAL = 2
+    TEAM_COMMUNICATION_LOG_INTERVAL = 5
 
     GameStateMap = ["GAMESTATE_INITIAL", "GAMESTATE_READY", "GAMESTATE_SET", "GAMESTATE_PLAYING", "GAMESTATE_FINISHED"]
     SecondaryStateModeMap = ["PREPARATION", "PLACING", "END"]
@@ -105,28 +106,28 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.previous_gameState = self.gameState
         self.gameState = gameState
 
-    def update_average_ball_position(self):
-        # get estimated ball position with tf information from 4 robots and average them
-        # this needs to be team-dependent in the future
-        ball_positions = []
-
-        try:
-            ball_pose = self.listener.lookupTransform('world', self.robot.robot_name + '/ball', rospy.Time(0))
-            header = self.listener.getLatestCommonTime('world', self.robot.robot_name + '/ball')
-            time_diff = rospy.Time.now() - header
-            if time_diff < rospy.Duration(0.2):
-                ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            pass
-
-        if ball_positions:
-            self.ball.position = np.array(ball_positions).mean(axis=0)
-            self.ball.position_is_live_timeout = 10
-        else:
-            if self.ball.position_is_live_timeout > 0:
-                self.ball.position_is_live_timeout = self.ball.position_is_live_timeout - 1
-            elif self.ball.position_is_live_timeout == 0:
-                rospy.loginfo_throttle(5, "Ball Position Timed Out")
+    # def update_average_ball_position(self):
+    #     # get estimated ball position with tf information from 4 robots and average them
+    #     # this needs to be team-dependent in the future
+    #     ball_positions = []
+    #
+    #     try:
+    #         ball_pose = self.listener.lookupTransform('world', self.robot.robot_name + '/ball', rospy.Time(0))
+    #         header = self.listener.getLatestCommonTime('world', self.robot.robot_name + '/ball')
+    #         time_diff = rospy.Time.now() - header
+    #         if time_diff < rospy.Duration(0.2):
+    #             ball_positions.append(np.array([ball_pose[0][0], ball_pose[0][1]]))
+    #     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+    #         pass
+    #
+    #     if ball_positions:
+    #         self.ball.position = np.array(ball_positions).mean(axis=0)
+    #         self.ball.position_is_live_timeout = 10
+    #     else:
+    #         if self.ball.position_is_live_timeout > 0:
+    #             self.ball.position_is_live_timeout = self.ball.position_is_live_timeout - 1
+    #         elif self.ball.position_is_live_timeout == 0:
+    #             rospy.loginfo_throttle(5, "Ball Position Timed Out")
 
     def stop_all_robot(self):
         self.robot.stop_requested = True
@@ -144,6 +145,8 @@ class GameEngineCompetition(game_engine.GameEngine):
     def run(self):
         while not rospy.is_shutdown():
             rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
+
+            self.log_team_data(rostime)
 
             # normal game
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
@@ -179,6 +182,10 @@ class GameEngineCompetition(game_engine.GameEngine):
             #     # if we have kickoff, run normal game strategy
             #     if self.gameState.hasKickOff:
             #         self.run_normal(rostime)
+
+    def log_team_data(self, rostime):
+        if rostime % GameEngineCompetition.TEAM_COMMUNICATION_LOG_INTERVAL < self.rostime_previous % GameEngineCompetition.TEAM_COMMUNICATION_LOG_INTERVAL:
+            self.team_data.log()
 
     def localization_mode(self, robot):
         print('before sleep 1')
@@ -606,6 +613,9 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
+                    # update goal position
+                    self.team_strategy.update_goal_position(self.field_side, self.gameState.firstHalf)
+                    # update strategy
                     self.team_strategy.update_strategy(self.robot)
                     pass
                 else:
@@ -622,7 +632,7 @@ class GameEngineCompetition(game_engine.GameEngine):
             pass
 
         self.rostime_previous = rostime
-        self.update_average_ball_position()
+        #self.update_average_ball_position()
 
         self.robot.update_status()
         self.robot.get_detected_obstacles()
