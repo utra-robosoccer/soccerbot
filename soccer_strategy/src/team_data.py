@@ -28,11 +28,17 @@ class Team_Data_Ball():
             return False
         return len(self.position) > 0
 
+    def get_position(self):
+        return self.position
+
 
 class Team_Data():
     #TODO print stuff to make sure robots are communicating
     def __init__(self):
-        self.team_data_sub = rospy.Subscriber("/team_data", TeamData, self.team_data_callback)
+        self.team_data_sub1 = rospy.Subscriber("/robot1/team_data", TeamData, self.team_data_callback)
+        self.team_data_sub2 = rospy.Subscriber("/robot2/team_data", TeamData, self.team_data_callback)
+        self.team_data_sub3 = rospy.Subscriber("/robot3/team_data", TeamData, self.team_data_callback)
+        self.team_data_sub4 = rospy.Subscriber("/robot4/team_data", TeamData, self.team_data_callback)
 
         self.robots = {
             1: Team_Data_Robot(),
@@ -58,7 +64,7 @@ class Team_Data():
             robot_trans = data.robot_position.pose.position
             robot_rot = data.robot_position.pose.orientation
 
-            robot_eul = tf.transformations.euler_from_quaternion(robot_rot)
+            robot_eul = tf.transformations.euler_from_quaternion([robot_rot.w, robot_rot.x, robot_rot.y, robot_rot.z])
             self.robots[data.robot_id].position = [robot_trans.x, robot_trans.y, robot_eul[2]]
             self.robots[data.robot_id].covariance = data.robot_position.covariance
         else:
@@ -68,6 +74,12 @@ class Team_Data():
         ball_trans = data.robot_position.pose.position
         self.ball.position = [ball_trans.x, ball_trans.y]
         self.ball.covariance = data.robot_position.covariance
+
+    def log(self):
+        print("team_data:")
+        for r in self.robots.values():
+            print("robot" + str(r.player_id) + " " + str(r.team) + " " + str(r.position))
+        print("ball " + str(self.ball.get_position()))
 
 
 #should make a team_data superclass
