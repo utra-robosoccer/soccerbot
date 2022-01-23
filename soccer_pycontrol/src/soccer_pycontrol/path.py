@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from soccer_pycontrol.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path_section_short import PathSectionShort
+from soccer_pycontrol.path_section import PathSection
 import time
 
 class Path:
@@ -23,9 +24,11 @@ class Path:
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
 
+    def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
+        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
+
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
-        # is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
-        is_short_distance = False
+        is_short_distance = self.isShortPath(start_transform, end_transform)
         if is_short_distance:
             print("Creating Short Path")
             print("Start Transform")
@@ -169,11 +172,18 @@ class Path:
 
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
         t_change = t + 1
+        if len(self.path_sections) >= 1 and self.path_sections[-1] is PathSectionShort:
+            raise Exception(f"If the last path is a Short paths, it cannot be further modified")
         if self.duration() - t_change < 1:
-            raise Exception("There is not enough time to update the position")
+            raise Exception(f"There is not enough time to update the position, current time { t } , duration of current path { self.duration()}")
 
         t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
         start_transform = self.getBodyStepPose(step)
+
+        # TODO allow bezier paths to go to short paths and vice versa
+        if self.isShortPath(start_transform, end_transform):
+            raise Exception(f"Cannot append a short path to a bezier path")
+
         self.terminateWalk(t_new)
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
