@@ -11,7 +11,7 @@ import config
 
 class StationaryFormationStrategy(FormationStrategy):
     def __init__(self, team_data):
-        super().__init__(Formations.DEFENSIVE, team_data)
+        super().__init__(team_data)
         self.decision_tree = config.StationaryDecisionTree
 
     def decide_formation(self):

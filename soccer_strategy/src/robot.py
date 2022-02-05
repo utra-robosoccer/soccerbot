@@ -59,12 +59,13 @@ class Robot:
     def set_navigation_position(self, position):
         self.status = Robot.Status.WALKING
         self.start_position = self.get_position()
-        self.goal_position = position
-        self.path = path.Path(
-            self.position_to_transformation(self.start_position),
-            self.position_to_transformation(self.goal_position)
-        )
-        self.path_time = 0
+        if not np.allclose(position, self.goal_position):
+            self.goal_position = position
+            self.path = path.Path(
+                self.position_to_transformation(self.start_position),
+                self.position_to_transformation(self.goal_position)
+            )
+            self.path_time = 0
 
     def position_to_transformation(self, position):
         transfrom_position = (position[0], position[1], 0.)

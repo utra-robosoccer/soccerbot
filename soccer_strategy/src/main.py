@@ -5,7 +5,7 @@ from game_engine import GameEngine
 
 # useful sudo apt-get install -y python3-rospy
 
-_IN_ROS = True
+_IN_ROS = False
 
 if _IN_ROS:
     from game_engine_competition import GameEngineCompetition

@@ -14,19 +14,6 @@ class FieldPosition:
     def __init__(self, center):
         self.center = center
 
-#should make a graphical way to do this
-#ex: read an svg file with coloured zones - then can just read pixel value of shaded region for info
-class FieldPositions:
-    CENTER_STRIKER = FieldPosition(np.array([-2, 0]))
-    GOALIE = FieldPosition(np.array([4.5, 0]))
-    RIGHT_WING = FieldPosition(np.array([-2, 2.5]))
-    LEFT_WING = FieldPosition(np.array([-2, -2.5]))
-    RIGHT_BACK = FieldPosition(np.array([3.5, 2]))
-    LEFT_BACK = FieldPosition(np.array([3.5, -2]))
-    CENTER_BACK = FieldPosition(np.array([3, 0]))
-    MID_LEFT = FieldPosition(np.array([0, -3]))
-    MID_RIGHT = FieldPosition(np.array([0, 3]))
-    MID_CENTER = FieldPosition(np.array([0, 0]))
 
 
 # formations can be in a human readable data file?
@@ -34,11 +21,14 @@ class Formation:
     def __init__(self, positions):
         # array where 0 position is position for robot 0 (goalie) I guess?
         # TODO: change positions to dictionary with robot_id
-        self.positions = positions
+        self.positions = []
+        for p in positions:
+            self.positions.append(FieldPosition(p))
 
     def closest_position(self, target):
         a = [distance(position.center, target) for position in self.positions]
         return np.argmin(a) + 1
+
 
 
 # should have a utils class for geometry calculations, geometry file/class?
@@ -47,15 +37,29 @@ def distance(o1, o2):
 
 
 class Formations:
-    # don't go to role
-    DEFENSIVE = Formation(
-        [FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
-    MIDFIELD = Formation(
-        [FieldPositions.GOALIE, FieldPositions.MID_LEFT, FieldPositions.MID_RIGHT, FieldPositions.MID_CENTER]
-    )
-    ATTACKING = Formation(
-        [FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.RIGHT_WING, FieldPositions.CENTER_STRIKER])
 
+    def __init__(self, team_data):
+        self.DEFENSIVE = Formation(
+            config.get_all_formation_positions(
+                team_data.field_side,
+                team_data.is_first_half,
+                "defence",
+            )
+        )
+        self.MIDFIELD = Formation(
+            config.get_all_formation_positions(
+                team_data.field_side,
+                team_data.is_first_half,
+                "midfield",
+            )
+        )
+        self.ATTACKING = Formation(
+            config.get_all_formation_positions(
+                team_data.field_side,
+                team_data.is_first_half,
+                "attack",
+            )
+        )
 
 # class FormationSet:
 #     def __init__(self, formations):
@@ -70,13 +74,12 @@ class Formations:
 
 class FormationStrategy:
 
-    def __init__(self, default_formation, team_data):
-        self.formation = default_formation
+    def __init__(self, team_data):
         self.team_data = team_data
         self.enemy_goal_position = None
 
     def update_strategy(self, robot):
-        self.formation = self.decide_formation()
+        self.decide_formation()
         self.act_individual(robot)
 
     def decide_formation(self):
@@ -85,14 +88,4 @@ class FormationStrategy:
     def act_individual(self, robot):
         raise NotImplementedError("please implement")
 
-    def update_goal_position(self, field_side, firstHalf):
-        goal_position = config.position_map_goal(
-            config.ENEMY_GOAL_POSITION,
-            field_side,
-            firstHalf,
-            1  # game_properties.secondary_state == GameState.STATE_PENALTYSHOOT #is pentalty shot
-        )
 
-        if abs(self.team_data.ball.get_position()[1]) < 1.0:
-            goal_position[1] = self.team_data.ball.get_position()[1]
-        self.enemy_goal_position = goal_position

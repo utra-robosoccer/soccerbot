@@ -106,6 +106,8 @@ class GameEngineCompetition(game_engine.GameEngine):
         self.previous_gameState = self.gameState
         self.gameState = gameState
 
+        self.team_data.set_gamestate(gameState)
+
     # def update_average_ball_position(self):
     #     # get estimated ball position with tf information from 4 robots and average them
     #     # this needs to be team-dependent in the future
@@ -558,6 +560,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                     )
                 else:
                     self.localization_mode(self.robot)
+                    self.team_data.set_field_side(self.field_side)
 
 
         # READY
@@ -569,6 +572,7 @@ class GameEngineCompetition(game_engine.GameEngine):
                 self.previous_gameState.gameState = GameState.GAMESTATE_READY
                 if not self.has_localized:
                     self.localization_mode(self.robot)
+                    self.team_data.set_field_side(self.field_side)
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.robot.status == Robot.Status.READY:
@@ -613,8 +617,6 @@ class GameEngineCompetition(game_engine.GameEngine):
 
             if rostime % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL < self.rostime_previous % GameEngineCompetition.STRATEGY_UPDATE_INTERVAL:
                 if self.kickoff_started:
-                    # update goal position
-                    self.team_strategy.update_goal_position(self.field_side, self.gameState.firstHalf)
                     # update strategy
                     self.team_strategy.update_strategy(self.robot)
                     pass
