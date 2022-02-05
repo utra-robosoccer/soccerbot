@@ -10,8 +10,8 @@ if "ROS_NAMESPACE" not in os.environ:
 from argparse import ArgumentParser
 from sensor_msgs.msg import Image
 import std_msgs
-from cv_bridge import CvBridge
 import cv2
+from cv_bridge import CvBridge
 import torch
 import numpy as np
 from model import CNN, init_weights
