@@ -16,6 +16,14 @@ version: "3.3"
 
 # Note: You never need to build the images a second time as all the code is mounted
 
+# Tips and tricks
+# docker ps - list all of the docker containers that are running
+# docker image ls - list all of the docker images that are built
+# docker rm $(docker ps -aq) - Remove all not running docker containers
+# docker stop $(docker ps -aq) - Stop all not running docker containers
+# docker system prune --all - Delete all docker images
+# docker exec -it <docker image id> bash - SSH into a docker image to see whats going on inside it
+
 x-soccerbot: &soccerbot
   image: utrarobosoccer/soccerbot
   privileged: true
