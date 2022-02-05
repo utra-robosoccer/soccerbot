@@ -6,7 +6,7 @@
 
 Welcome to the software repository, to start working on the robot, follow the instructions to build and run the code
 
-#### Building the code
+#### Building the code (for docker instructions see docker-compose.yaml)
 ```bash
 cd ~/catkin_ws # As long as your current path is in a subdirectory of this folder
 catkin build soccerbot # Use catkin clean to start with a clean build
