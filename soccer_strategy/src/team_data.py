@@ -1,9 +1,10 @@
 import enum
 import rospy
 import tf.transformations
-from soccer_msgs.msg import TeamData
-from soccer_msgs.msg import GameState
 
+#if _IN_ROS:
+from soccer_msgs.msg import GameState
+from soccer_msgs.msg import TeamData
 
 class Team_Data_Robot():
     class Team(enum.IntEnum):
@@ -92,6 +93,8 @@ class TeamData2D:
             4: Team_Data_Robot()
         }
         self.ball = Team_Data_Ball()
+        self.formation = None
+        self.enemy_goal_position = None
 
     def team_data_callback(self, data):
         robot = data[0]

@@ -27,18 +27,18 @@ class Path:
         # is_short_distance = np.linalg.norm(start_transform[0:2] - end_transform[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
         is_short_distance = False
         if is_short_distance:
-            print("Creating Short Path")
-            print("Start Transform")
-            print(start_transform)
-            print("End Transform")
-            print(end_transform)
+            # print("Creating Short Path")
+            # print("Start Transform")
+            # print(start_transform)
+            # print("End Transform")
+            # print(end_transform)
             return PathSectionShort(start_transform, end_transform)
         else:
-            print("Creating Bezier Path")
-            print("Start Transform")
-            print(start_transform)
-            print("End Transform")
-            print(end_transform)
+            # print("Creating Bezier Path")
+            # print("Start Transform")
+            # print(start_transform)
+            # print("End Transform")
+            # print(end_transform)
             return PathSectionBezier(start_transform, end_transform)
 
     def linearStepCount(self):

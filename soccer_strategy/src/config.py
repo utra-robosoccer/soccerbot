@@ -1,4 +1,6 @@
 # nav position for the robot before the game start
+
+
 INITIAL_POSITION =\
 {
     "Negative":
@@ -101,3 +103,29 @@ def position_map_goal(position_dict, team_color, first_half, penalty_shoot):
             return position_dict["Positive"]
         elif team_color == 1:
             return position_dict["Negative"]
+
+
+
+from decisions.is_closest_to_ball import IsClosestToBall
+from actions.go_to_formation_position import GoToFormationPosition
+from actions.go_to_ball import GoToBall
+from tree.decision_tree import DecisionTree
+from actions.kick import Kick
+from decisions.can_kick import CanKick
+from actions.stand_still import StandStill
+
+#TODO different decision tree for each robot, ex: goalie
+
+#don't think this is right because it will only create one instance
+#proper way should be to write the high level data (XML) here then build the tree on the spot in the strategy constructor
+BasicDecisionTree = DecisionTree(
+            IsClosestToBall([
+                CanKick([
+                    Kick(),
+                    GoToBall()
+                ]),
+                GoToFormationPosition()
+            ])
+        )
+
+StationaryDecisionTree = DecisionTree(StandStill())
