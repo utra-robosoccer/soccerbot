@@ -12,21 +12,22 @@ HAVENT_SEEN_THE_BALL_TIMEOUT = 10
 
 class NormalFormationStrategy(FormationStrategy):
     def __init__(self, team_data):
-        super().__init__(Formations.DEFENSIVE, team_data)
+        super().__init__(team_data)
         self.decision_tree = config.BasicDecisionTree
 
 
     # something so there can be different formation deciders like a super defensive biased one
     def decide_formation(self):
+        formation = Formations(self.team_data)
         if self.team_data.ball.is_known():
             if self.team_data.ball.position[0] < -1:  # ball in oppents side
-                self.team_data.formation = Formations.ATTACKING
+                self.team_data.formation = formation.ATTACKING
             elif self.team_data.ball.position[0] < 1:
-                self.team_data.formation = Formations.MIDFIELD
+                self.team_data.formation = formation.MIDFIELD
             else:
-                self.team_data.formation = Formations.DEFENSIVE
+                self.team_data.formation = formation.DEFENSIVE
         else:
-            self.team_data.formation = Formations.DEFENSIVE
+            self.team_data.formation = formation.DEFENSIVE
 
     def act_individual(self, robot):
         self.decision_tree.execute(robot, self.team_data)

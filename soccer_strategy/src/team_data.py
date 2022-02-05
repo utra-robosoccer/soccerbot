@@ -3,8 +3,8 @@ import rospy
 import tf.transformations
 
 #if _IN_ROS:
-from soccer_msgs.msg import GameState
-from soccer_msgs.msg import TeamData
+#from soccer_msgs.msg import GameState
+#from soccer_msgs.msg import TeamData
 
 class Team_Data_Robot():
     class Team(enum.IntEnum):
@@ -49,15 +49,16 @@ class Team_Data():
         }
 
         self.ball = Team_Data_Ball()
-        self.team_color = None
+        self.field_side = None
         self.is_first_half = None
         self.secondary_state = None
 
     def set_gamestate(self, gameState):
-        self.team_color = gameState.teamColor
         self.is_first_half = gameState.firstHalf
         self.secondary_state = gameState.secondaryState
 
+    def set_field_side(self, field_side):
+        self.field_side = field_side
 
     def team_data_callback(self, data):
         if data.robot_id in self.robots.keys():
@@ -95,6 +96,8 @@ class TeamData2D:
         self.ball = Team_Data_Ball()
         self.formation = None
         self.enemy_goal_position = None
+        self.is_first_half = 1
+        self.field_side = 0
 
     def team_data_callback(self, data):
         robot = data[0]
