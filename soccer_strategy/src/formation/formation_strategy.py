@@ -14,15 +14,19 @@ class FieldPosition:
     def __init__(self, center):
         self.center = center
 
-
+#should make a graphical way to do this
+#ex: read an svg file with coloured zones - then can just read pixel value of shaded region for info
 class FieldPositions:
-    CENTER_STRIKER = FieldPosition(np.array([0, 0]))
+    CENTER_STRIKER = FieldPosition(np.array([-2, 0]))
     GOALIE = FieldPosition(np.array([4.5, 0]))
-    RIGHT_WING = FieldPosition(np.array([-2, 3]))
-    LEFT_WING = FieldPosition(np.array([-2, -3]))
+    RIGHT_WING = FieldPosition(np.array([-2, 2.5]))
+    LEFT_WING = FieldPosition(np.array([-2, -2.5]))
     RIGHT_BACK = FieldPosition(np.array([3.5, 2]))
     LEFT_BACK = FieldPosition(np.array([3.5, -2]))
     CENTER_BACK = FieldPosition(np.array([3, 0]))
+    MID_LEFT = FieldPosition(np.array([0, -3]))
+    MID_RIGHT = FieldPosition(np.array([0, 3]))
+    MID_CENTER = FieldPosition(np.array([0, 0]))
 
 
 # formations can be in a human readable data file?
@@ -46,8 +50,11 @@ class Formations:
     # don't go to role
     DEFENSIVE = Formation(
         [FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
+    MIDFIELD = Formation(
+        [FieldPositions.GOALIE, FieldPositions.MID_LEFT, FieldPositions.MID_RIGHT, FieldPositions.MID_CENTER]
+    )
     ATTACKING = Formation(
-        [FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.CENTER_STRIKER, FieldPositions.RIGHT_WING])
+        [FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.RIGHT_WING, FieldPositions.CENTER_STRIKER])
 
 
 # class FormationSet:
