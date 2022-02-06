@@ -170,7 +170,15 @@ class RobotController:
         # rospy.loginfo("fgdg%f", self.pressure_sensors[0].getValues()[0])
 
     def publish_ros(self):
-        self.publish_camera()
+        def limit_rate(times_per_second):
+            rate = 1 / times_per_second
+            if (self.time % rate) > ((self.time + self.timestep / 1000) % rate):
+                return True
+            else:
+                return False
+
+        if limit_rate(30):
+            self.publish_camera()
         self.publish_joint_states()
         self.publish_imu()
         self.get_pressure_message()

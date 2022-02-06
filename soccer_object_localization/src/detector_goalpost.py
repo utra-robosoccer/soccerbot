@@ -41,10 +41,7 @@ class DetectorGoalPost(DetectorFieldline):
 
         self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
 
-        rgb_image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
-        camera_info_D = np.array(self.camera.camera_info.D)
-        image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
+        image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
 
         h = self.camera.calculateHorizonCoverArea()
