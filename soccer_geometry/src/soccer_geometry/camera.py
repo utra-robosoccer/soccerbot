@@ -46,6 +46,7 @@ class Camera:
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(10,
                                        "Waiting for transformation from /world to " + self.robot_name + "/camera")
+                rospy.sleep(0.05)
 
         if rospy.is_shutdown():
             exit(0)
