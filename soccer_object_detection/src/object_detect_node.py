@@ -43,7 +43,8 @@ class ObjectDetectionNode(object):
 
         self.model = CNN(kernel=3, num_features=int(num_feat))
 
-        if 'COMPETITION' in os.environ and os.environ['COMPETITION'] == True:
+        if not torch.cuda.is_available():
+            rospy.logwarn("Warning, using CPU for object detection")
             self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         else:
             self.model.load_state_dict(torch.load(model_path))
