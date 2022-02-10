@@ -26,6 +26,4 @@ jobs:
     - name: Build the Docker image
       run: docker build external --file external/Dockerfile --tag utrarobosoccer/webots
     - name: Build and push Docker images
-      uses: docker/build-push-action@v2.9.0
-      with:
-        tags: utrarobosoccer/webots
+      run: docker push utrarobosoccer/webots
