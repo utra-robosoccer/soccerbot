@@ -38,7 +38,7 @@ x-soccerbot: &soccerbot
   build:
     context: .
     target: builder
-#  network_mode: host
+  network_mode: host
   cap_add:
     - SYS_PTRACE
   pid: "host"
@@ -50,7 +50,7 @@ x-soccerbot: &soccerbot
             count: all
             capabilities: [ gpu, compute, utility, graphics ]
   command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash &&
-    if [[ ! -z "$${GOALIE}" ]] && [[ $${GOALIE} == "true" ]]; then
+    if [[ ! -z "$${ROS_MASTER}" ]] && [[ $${ROS_MASTER} == "true" ]]; then
     roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity; else
     roslaunch --wait soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity; fi"
   volumes:
@@ -94,9 +94,8 @@ services:
 
   friendly:
     <<: *soccerbot
-    networks:
-      - friendly
     environment:
+      ROS_MASTER: "true"
       X_POS: 4
       Y_POS: -3.15
       ANGLE: 1.57
@@ -114,14 +113,12 @@ services:
 
   opponent:
     <<: *soccerbot
-    networks:
-      - opponent
     environment:
       X_POS: -4
       Y_POS: -3.15
       ANGLE: 1.57
       GOALIE: "true"
-      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
@@ -129,9 +126,3 @@ services:
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
       SINGLE_STRATEGY_SOURCE: "true"
-
-networks:
-  friendly:
-    name: friendly
-  opponent:
-    name: opponent

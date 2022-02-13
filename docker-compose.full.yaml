@@ -103,7 +103,7 @@ services:
       Y_POS: -3.15
       ANGLE: 1.57
       GOALIE: "true"
-      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
@@ -120,7 +120,7 @@ services:
       X_POS: -1
       Y_POS: -3.15
       ANGLE: 1.57
-      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
@@ -137,7 +137,7 @@ services:
       X_POS: -1
       Y_POS: 3.15
       ANGLE: -1.57
-      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
@@ -154,7 +154,7 @@ services:
       X_POS: -4
       Y_POS: 3.15
       ANGLE: -1.57
-      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
@@ -162,9 +162,3 @@ services:
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
       SINGLE_STRATEGY_SOURCE: "true"
-
-networks:
-  friendly:
-    name: friendly
-  opponent:
-    name: opponent
