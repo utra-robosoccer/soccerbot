@@ -30,16 +30,9 @@ class DetectorFieldline(Detector):
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
-        self.goal_post_publisher = rospy.Publisher("goal_post", Bool, queue_size=1)
-        self.trajectory_complete_subscriber = rospy.Subscriber("trajectory_complete", Bool,
-                                                               self.trajectory_complete_callback)
-        self.trajectory_complete = True
 
         cv2.setRNGSeed(12345)
         pass
-
-    def trajectory_complete_callback(self, trajectory_complete: Bool):
-        self.trajectory_complete = trajectory_complete.data
 
     def image_callback(self, img: Image):
         rospy.loginfo_once("Recieved Message")
