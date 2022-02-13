@@ -15,9 +15,10 @@ from std_msgs.msg import Bool, Header
 from cv_bridge import CvBridge
 import math
 from detector_fieldline import DetectorFieldline
+from detector import Detector
 
 
-class DetectorGoalPost(DetectorFieldline):
+class DetectorGoalPost(Detector):
 
     def __init__(self):
         super().__init__()
