@@ -15,6 +15,8 @@ version: "3.3"
 # B. To build the images, first follow the instructions below near simulator, then run docker-compose build && docker-compose up, you can then run docker-compose push to update the images
 
 # Note: You never need to build the images a second time as all the code is mounted
+# Note: To run the full game run docker-compose -f docker-compose.full.yaml up
+# Note: To run a one on one run docker-compose up
 
 # Tips and tricks
 
@@ -36,7 +38,7 @@ x-soccerbot: &soccerbot
   build:
     context: .
     target: builder
-  network_mode: host
+#  network_mode: host
   cap_add:
     - SYS_PTRACE
   pid: "host"
@@ -47,7 +49,10 @@ x-soccerbot: &soccerbot
           - driver: nvidia
             count: all
             capabilities: [ gpu, compute, utility, graphics ]
-  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch --wait soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
+  command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash &&
+    if [[ ! -z "$${GOALIE}" ]] && [[ $${GOALIE} == "true" ]]; then
+    roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity; else
+    roslaunch --wait soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity; fi"
   volumes:
     - .:/root/catkin_ws/src/soccerbot
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
@@ -77,7 +82,8 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/:/root/webots/projects/samples/contests/robocup/controllers/referee/:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
@@ -86,8 +92,10 @@ services:
       GAME_CONTROLLER_HOME: /root/GameController
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
-  friendly1: # Goalie
+  friendly:
     <<: *soccerbot
+    networks:
+      - friendly
     environment:
       X_POS: 4
       Y_POS: -3.15
@@ -103,119 +111,27 @@ services:
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-    command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot.launch __ns:=$$ROBOT_NAME || sleep infinity"
 
-#  friendly2: # Left midfield
-#    <<: *soccerbot
-#    environment:
-#      X_POS: 1
-#      Y_POS: -3.15
-#      ANGLE: 1.57
-#      GOALIE: "false"
-#      ROBOT_NAME: "robot2"
-#      ROBOCUP_ROBOT_ID: 2
-#      ROBOCUP_TEAM_ID: 16
-#      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10002"
-#      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-#      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
-#      COMPETITION: "true"
-#      SINGLE_STRATEGY_SOURCE: "true"
-#      PYTHONUNBUFFERED: 1
-#
-#  friendly3: # Striker
-#    <<: *soccerbot
-#    environment:
-#      X_POS: 1
-#      Y_POS: 3.15
-#      ANGLE: -1.57
-#      GOALIE: "false"
-#      ROBOT_NAME: "robot3"
-#      ROBOCUP_ROBOT_ID: 3
-#      ROBOCUP_TEAM_ID: 16
-#      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10003"
-#      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-#      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
-#
-#  friendly4: # Right midfield
-#    <<: *soccerbot
-#    environment:
-#      X_POS: 4
-#      Y_POS: 3.15
-#      ANGLE: -1.57
-#      GOALIE: "false"
-#      ROBOT_NAME: "robot4"
-#      ROBOCUP_ROBOT_ID: 4
-#      ROBOCUP_TEAM_ID: 16
-#      ROBOCUP_TEAM_COLOR: "red"
-#      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10004"
-#      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-#      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
+  opponent:
+    <<: *soccerbot
+    networks:
+      - opponent
+    environment:
+      X_POS: -4
+      Y_POS: -3.15
+      ANGLE: 1.57
+      GOALIE: "true"
+      ROBOCUP_TEAM_ID: 25
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "blue"
+      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
+      ROBOT_NAME: robot5
+      COMPETITION: "true"
+      PYTHONUNBUFFERED: 1
+      SINGLE_STRATEGY_SOURCE: "true"
 
-#  oppponent1: # Goalie
-#    <<: *soccerbot
-#    environment:
-#      X_POS: -4
-#      Y_POS: -3.15
-#      ANGLE: 1.57
-#      GOALIE: "true"
-#      ROBOCUP_TEAM_ID: 25
-#      ROBOCUP_ROBOT_ID: 1
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
-#      ROBOT_NAME: robot5
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
-
-#  oppponent2: # Left midfield
-#    <<: *soccerbot
-#    environment:
-#      X_POS: -1
-#      Y_POS: -3.15
-#      ANGLE: 1.57
-#      ROBOCUP_TEAM_ID: 25
-#      ROBOCUP_ROBOT_ID: 2
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
-#      ROBOT_NAME: robot6
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
-
-#  oppponent3: # Striker
-#    <<: *soccerbot
-#    environment:
-#      X_POS: -1
-#      Y_POS: 3.15
-#      ANGLE: -1.57
-#      ROBOCUP_TEAM_ID: 25
-#      ROBOCUP_ROBOT_ID: 3
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
-#      ROBOT_NAME: robot7
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
-
-#  oppponent4: # Right midfield
-#    <<: *soccerbot
-#    environment:
-#      X_POS: -4
-#      Y_POS: 3.15
-#      ANGLE: -1.57
-#      ROBOCUP_TEAM_ID: 25
-#      ROBOCUP_ROBOT_ID: 4
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
-#      ROBOT_NAME: robot8
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      SINGLE_STRATEGY_SOURCE: "true"
+networks:
+  friendly:
+    name: friendly
+  opponent:
+    name: opponent
