@@ -18,4 +18,3 @@ geometry_msgs/PoseWithCovariance robot_position
 # ball position, rotation is not used (in the map frame)
 geometry_msgs/PoseWithCovariance ball_absolute
 
-float32 time_to_position_at_ball

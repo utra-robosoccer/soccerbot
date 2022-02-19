@@ -15,9 +15,10 @@ from std_msgs.msg import Bool, Header
 from cv_bridge import CvBridge
 import math
 from detector_fieldline import DetectorFieldline
+from detector import Detector
 
 
-class DetectorGoalPost(DetectorFieldline):
+class DetectorGoalPost(Detector):
 
     def __init__(self):
         super().__init__()
@@ -39,12 +40,9 @@ class DetectorGoalPost(DetectorFieldline):
         if not self.camera.ready() or not self.trajectory_complete or not self.goal_post_need:
             return
 
-        self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
+        self.camera.reset_position(publish_basecamera=False, timestamp=img.header.stamp)
 
-        rgb_image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
-        camera_info_D = np.array(self.camera.camera_info.D)
-        image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
+        image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
 
         h = self.camera.calculateHorizonCoverArea()

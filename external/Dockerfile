@@ -38,6 +38,7 @@ COPY webots webots
 SHELL ["/bin/bash", "-c"]
 RUN cd webots && \
    ./scripts/install/linux_compilation_dependencies.sh
+RUN sudo apt-get install -y libxdamage1
 RUN echo WEBOTS_HOME="/root/webots" >> ~/.bashrc && \
     cd webots && \
     make clean || echo "Completed" && \

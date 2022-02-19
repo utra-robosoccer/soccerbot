@@ -20,7 +20,7 @@ class PassStrategy(DummyStrategy):
         return current_closest
 
     def update_next_strategy(self, friendly, opponent, ball):
-        if not self.check_ball_avaliable(ball):
+        if not self.check_ball_available(ball):
             return
 
         # Guess who has the ball

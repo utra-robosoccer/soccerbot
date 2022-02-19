@@ -8,8 +8,10 @@ from strategy.utils import GameProperties, Field
 import numpy as np
 from shapely.geometry import LineString, Point, Polygon
 
-from ball import Ball
 from robot import Robot
+from team import Team
+from ball import Ball
+from soccer_msgs.msg import GameState
 
 np.random.seed(2)
 
@@ -388,7 +390,7 @@ class GoalieStrategy(PlayerStrategy):
             )
         self._move_player_to(crit_pos)
 
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties):
+    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         self._all_robots = list(itertools.chain(friendlies, opponents))
         if self.has_possession():
             # Return ball to offensive players
@@ -581,7 +583,7 @@ class TeamStrategy(Strategy):
     def reset(self):
         pass
 
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties):
+    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, ball: Ball, game_state: GameState):
         # Update substrategies
         # TODO: maybe TeamStrategy could decide which strategy each player
         # should use depending on game conditions. Could maybe also modify
@@ -594,7 +596,7 @@ class TeamStrategy(Strategy):
         ball_pos = ball.get_position()
         dist_to_ball = []
 
-        for robot in friendlies:
+        for robot in friendly_team.robots:
             # Goalie
             if robot.role == Robot.Role.GOALIE:
                 strats.append(GoalieStrategy(robot, ball))
@@ -618,4 +620,4 @@ class TeamStrategy(Strategy):
 
         # Update!
         for strat in strats:
-            strat.update_next_strategy(friendlies, opponents, ball, game_properties)
+            strat.update_next_strategy(friendly_team, opponent_team, ball, game_state)

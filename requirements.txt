@@ -9,9 +9,10 @@ prettytable
 serial
 transforms3d
 construct==2.10.67
-opencv-python
+opencv-python>=4.5.5.62
 shapely
 vispy
+pytest
 
 # object detection
 Pillow==8.3.2

@@ -10,7 +10,7 @@ from robot import Robot
 class FreekickStrategy(DummyStrategy):
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
-        if not self.check_ball_avaliable(ball):
+        if not self.check_ball_available(ball):
             return False
 
         non_kicker = []
@@ -35,7 +35,7 @@ class FreekickStrategy(DummyStrategy):
 
     # kicker actually kick the ball
     def execute_kicking(self, friendly, ball):
-        if not self.check_ball_avaliable(ball):
+        if not self.check_ball_available(ball):
             return
 
         for robot in friendly:
@@ -53,7 +53,7 @@ class FreekickStrategy(DummyStrategy):
 
     # preparation if we are not the kicking team
     def update_non_kicking_strategy(self, friendly, ball, game_properties):
-        if not self.check_ball_avaliable(ball):
+        if not self.check_ball_available(ball):
             return
 
         for robot in friendly:

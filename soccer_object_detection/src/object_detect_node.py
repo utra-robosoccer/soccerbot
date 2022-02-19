@@ -1,17 +1,20 @@
 #!/usr/bin/python3
-import os
-import sys
-import rospy
-from soccer_geometry.camera import Camera
 
+import os
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+
+import sys
+import rospy
+from rospy import ROSException
+
+from soccer_geometry.camera import Camera
 
 from argparse import ArgumentParser
 from sensor_msgs.msg import Image
 import std_msgs
-from cv_bridge import CvBridge
 import cv2
+from cv_bridge import CvBridge
 import torch
 import numpy as np
 from model import CNN, init_weights
@@ -34,16 +37,21 @@ class ObjectDetectionNode(object):
         # Params
         self.br = CvBridge()
 
-        self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=10)
-        self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=10)
+        self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=1)
+        self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=1)
         self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1)
 
         self.model = CNN(kernel=3, num_features=int(num_feat))
 
-        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        if not torch.cuda.is_available():
+            rospy.logwarn("Warning, using CPU for object detection")
+            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        else:
+            self.model.load_state_dict(torch.load(model_path))
         self.model.eval()
 
     def callback(self, msg: Image):
+        rospy.loginfo_throttle(60, "Recieved Image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)
@@ -103,7 +111,11 @@ class ObjectDetectionNode(object):
             header.stamp = rospy.Time.now()
             bbs_msg.header = header
             bbs_msg.image_header = msg.header
-            self.pub_boundingbox.publish(bbs_msg)
+            try:
+                self.pub_boundingbox.publish(bbs_msg)
+            except ROSException as re:
+                print(re)
+                exit(0)
 
             if self.pub_detection.get_num_connections() > 0:
                 img_torch = util.draw_bounding_boxes(img_torch, big_enough_robot_bbxs, (0, 0, 255))
@@ -114,8 +126,8 @@ class ObjectDetectionNode(object):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", help="pytorch model")
-    parser.add_argument("--num-feat", dest="num_feat", help="specify model size of the neural network")
+    parser.add_argument("--model", dest="model_path", default="outputs/model3_feat10", help="pytorch model")
+    parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 
     rospy.init_node("object_detector")

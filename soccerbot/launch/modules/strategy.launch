@@ -8,6 +8,5 @@
 
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(eval goalie and shared_strategy_source)"/>
 
-    <include file="$(find soccerbot)/launch/modules/team_communication.launch"></include>
-
+    <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" />
 </launch>

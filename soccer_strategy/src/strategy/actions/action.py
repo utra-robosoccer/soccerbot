@@ -1,6 +1,10 @@
-from tree.tree_node import TreeNode
+class TreeNode:
+    def __init__(self, children: list):
+        self.children = children
 
-#TODO put each action the robot is performing in team_data under each robot
+    def execute(self, robot, team_data):
+        raise NotImplementedError("please implement")
+
 
 class Action(TreeNode):
     def __init__(self):

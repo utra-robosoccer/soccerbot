@@ -4,6 +4,6 @@ from ball import Ball
 from soccer_msgs.msg import GameState
 
 
-class StationaryStrategy(Strategy):
+class FinishedStrategy(Strategy):
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        return
+        self.stop_all_robots(friendly_team)

@@ -8,45 +8,49 @@ import tf.transformations
 
 from sensor_msgs.msg import Imu
 
-robot_id_map = {"robot1": 1, "robot2": 2, "robot3": 3, "robot4": 4, "opponent1": 1, "opponent2": 2, "opponent3": 3,
-                "opponent4": 4}
 
-
-class RobotRos(Robot):
+class Robot3D(Robot):
     def __init__(self, team, role, status, robot_name):
-        self.robot_pose_sub = rospy.Subscriber('/' + robot_name + "/amcl_pose", PoseWithCovarianceStamped,
-                                               self.robot_pose_callback)
-        self.robot_initial_pose_pub = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped,
-                                                      queue_size=1)
-
-        self.imu_sub = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
-        self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
-        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryCommand, queue_size=1)
-        self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
+        # Subscibers
+        self.imu_subsciber = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
                                                              self.completed_walking_callback)
         self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
+        self.move_head_subscriber = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
+
+        # Publishers
+        self.robot_initial_pose_publisher = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped,
+                                                            queue_size=1)
+        self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
+        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryCommand, queue_size=1)
+        self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool,
                                                               queue_size=1)
-        self.move_head_sub = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
         self.obstacles_publisher = rospy.Publisher('/' + robot_name + "/obstacles", PoseArray,
                                                               queue_size=1)
-        self.tf_listener = tf.TransformListener()
         self.localization_reset_publisher = rospy.Publisher('/' + robot_name + "/localization_mode", Bool, queue_size=1)
+
+        self.tf_listener = tf.TransformListener()
+
         self.team = team
         self.role = role
+        self.robot_name = robot_name
+
+        self.previous_status = Robot.Status.READY
         self.status = status
+
         self.position = np.array([-3, -3, 0])  # 1.57
         self.goal_position = np.array([0.0, 0.0, 0])
         self.ball_position = np.array([0.0, 0.0])
-        self.robot_name = robot_name
-        self.robot_id = robot_id_map[self.robot_name]
+        self.robot_id = int(self.robot_name[-1])
+
+        # Configuration
         self.max_kick_speed = 2
-        self.previous_status = Robot.Status.READY
         self.kick_with_right_foot = True
 
         self.send_nav = False
+
         # terminate all action
         self.stop_requested = False
         self.designated_kicker = False
@@ -54,9 +58,6 @@ class RobotRos(Robot):
 
         self.obstacles = PoseArray()
 
-    def robot_pose_callback(self, data):
-        if self.status == Robot.Status.DISCONNECTED:
-            self.status = Robot.Status.READY
 
     def ball_pose_callback(self, data):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
@@ -100,30 +101,11 @@ class RobotRos(Robot):
 
         eul = tf.transformations.euler_from_quaternion(rot)
         self.position = [trans[0], trans[1], eul[2]]
-        return self.position
 
-    def set_navigation_position(self, position):
-        # assert (self.status == Robot.Status.WALKING)
-        if (self.status == Robot.Status.READY or self.status == Robot.Status.WALKING): #and self.send_nav:
-            super(RobotRos, self).set_navigation_position(position)
-            rospy.loginfo("Sending Robot " + self.robot_name + " to position" + str(position))
-            p = PoseStamped()
-            p.header.stamp = rospy.get_rostime()
-            p.header.frame_id = "world"
-            p.pose.position.x = position[0]
-            p.pose.position.y = position[1]
-            p.pose.position.z = 0
-            angle_fixed = position[2]
-            # print(angle_fixed)
-            q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
-            p.pose.orientation.x = q[0]
-            p.pose.orientation.y = q[1]
-            p.pose.orientation.z = q[2]
-            p.pose.orientation.w = q[3]
-            self.goal_publisher.publish(p)
-            self.status = Robot.Status.WALKING
-        else:
-            print("Failed to send nav position, robot currently in " + str(self.status))
+        if self.status == Robot.Status.DISCONNECTED:
+            self.status = Robot.Status.READY
+
+        return self.position
 
     def imu_callback(self, msg):
         angle_threshold = 1.25  # in radian
@@ -164,7 +146,7 @@ class RobotRos(Robot):
                              0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-        self.robot_initial_pose_pub.publish(p)
+        self.robot_initial_pose_publisher.publish(p)
         # rospy.sleep(1)
 
     def update_status(self):
@@ -172,11 +154,14 @@ class RobotRos(Robot):
             rospy.loginfo(self.robot_name + " status changes to " + str(self.status))
             self.previous_status = self.status
 
-        if self.status == Robot.Status.READY:
+        if self.status == Robot.Status.DISCONNECTED:
+            self.get_position()
+
+        elif self.status == Robot.Status.READY:
             if self.stop_requested:
                 self.status = Robot.Status.STOPPED
 
-        if self.status == Robot.Status.WALKING:
+        elif self.status == Robot.Status.WALKING:
             if self.stop_requested:
                 self.terminate_walking_publisher.publish()
                 self.status = Robot.Status.STOPPED
