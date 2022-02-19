@@ -1,18 +1,19 @@
 import numpy as np
-import math
 import config
+import math
 
 PLAYER_BALL_OFFSET = 0.1
 NAVIGATION_BIAS = 1
 
-class Navigation:
+class Navigate():
 
+    def navigation_to_position(self, robot, position):
+        robot.set_navigation_position(position)
 
-    def navigate_to_position_with_offset(robot, team_data):
+    def navigate_to_position_with_offset(self, robot, ball):
         # generate destination pose
-        ball_position = np.array(team_data.ball.position)
-        # TODO enemy goal position should be stored in team data
-        goal_position = np.array(Navigation.get_goal_position(team_data))
+        ball_position = np.array(ball.position)
+        goal_position = config.ENEMY_GOAL_POSITION
         player_position = robot.get_position()[0:2]
 
         diff = ball_position - goal_position
@@ -29,18 +30,5 @@ class Navigation:
         destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
                                        diff_angle]
 
-        robot.set_navigation_position(destination_position_biased)
+        self.navigation_to_position(position=destination_position_biased)
 
-
-    def get_goal_position(team_data):
-        goal_position = config.position_map_goal(
-            config.ENEMY_GOAL_POSITION,
-            team_data.field_side,
-            team_data.is_first_half,
-            1
-        )
-
-        if abs(team_data.ball.get_position()[1]) < 1.0:
-            goal_position[1] = team_data.ball.get_position()[1]
-
-        return goal_position

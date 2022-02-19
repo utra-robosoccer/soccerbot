@@ -1,13 +1,13 @@
 import config
-from actions.action import Action
 import numpy as np
 import math
 from robot import Robot
 
-class Kick(Action):
-    def execute(self, robot, team_data):
+class Kick():
+
+    def kick(self, robot, ball):
         player_position = robot.get_position()[0:2]
-        ball_position = np.array(team_data.ball.position)
+        ball_position = np.array(ball.position)
         player_angle = robot.get_position()[2]
         goal_position = np.array(config.ENEMY_GOAL_POSITION["Positive"])
         diff = ball_position - goal_position

@@ -18,7 +18,7 @@ FORMATIONS = {
         Robot.Role.RIGHT_WING: [-2, 2.5, 0],
         Robot.Role.LEFT_WING: [-2, -2.5, 0]
     },
-    "defence": {
+    "defensive": {
         Robot.Role.GOALIE: [4.5, 0, 0],
         Robot.Role.STRIKER: [3.5, 0, 0],
         Robot.Role.RIGHT_WING: [3.5, 2, 0],

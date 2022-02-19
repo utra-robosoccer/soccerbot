@@ -1,10 +1,14 @@
+import _thread
+
 from soccer_msgs.msg import GameState
+from vispy import app
 
 from robot import Robot
 from robot_2d import Robot2D
 from ball import Ball
 from strategy.stationary_strategy import StationaryStrategy
 from strategy.dummy_strategy import DummyStrategy
+from strategy.decision_tree.formation_strategy import FormationDecisionTreeStrategy
 from team import Team
 from game_engine_scene import Scene
 
@@ -31,7 +35,7 @@ class GameEngine:
             Robot2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi]))
         ])
-        self.team1.strategy = DummyStrategy()
+        self.team1.strategy = FormationDecisionTreeStrategy()
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team([
@@ -44,7 +48,7 @@ class GameEngine:
             Robot2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ])
-        self.team2.strategy = StationaryStrategy()
+        self.team2.strategy = FormationDecisionTreeStrategy()
         self.team2_init = copy.deepcopy(self.team2)
 
         self.ball = Ball()
@@ -58,6 +62,9 @@ class GameEngine:
         self.gameState.gameState = GameState.GAMESTATE_PLAYING
         self.gameState.secondaryState = GameState.STATE_NORMAL
 
+    def run_loop(self):
+        _thread.start_new_thread(self.run, ())
+        app.run()
 
     # TODO it is slow because it is re-pathing whenever the ball changes its position
     def run(self):

@@ -11,7 +11,7 @@ class Team():
     def __init__(self, robots):
 
         self.robots = robots
-        self.average_ball_position = Ball()
+        self.average_ball_position: Ball = None
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
         self.formation = None
