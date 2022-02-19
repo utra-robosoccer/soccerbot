@@ -1,0 +1,14 @@
+from strategy.strategy import Strategy
+from team import Team
+from ball import Ball
+from soccer_msgs.msg import GameState
+from robot import Robot
+
+class InitialStrategy(Strategy):
+    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        self.resume_all_robots(friendly_team)
+
+        current_robot = self.get_current_robot(friendly_team)
+        current_robot.status = Robot.Status.LOCALIZING
+
+        # TODO localize using goal posts

@@ -26,6 +26,8 @@ class Test(TestCase):
     def setUp(self) -> None:
         if RUN_IN_ROS:
             rospy.init_node("soccer_control")
+            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
             self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
         else:
             self.walker = soccerbot_controller.SoccerbotController()
@@ -128,7 +130,6 @@ class Test(TestCase):
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([0.15, 0.05, 0])
         self.walker.setGoal(goal)
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_2(self):
@@ -138,7 +139,6 @@ class Test(TestCase):
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([-0.3, 0, 0])
         self.walker.setGoal(goal)
-        self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_3(self):
@@ -148,7 +148,6 @@ class Test(TestCase):
         goal = Transformation.get_transform_from_euler([-np.pi/2, 0, 0])
         goal.set_position([-0.2, -0.2, 0])
         self.walker.setGoal(goal)
-        self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_small_movement_4(self):
@@ -448,4 +447,18 @@ class Test(TestCase):
             self.walker.setGoal(Transformation([1.5, -0.5, 0], [0, 0, 0, 1]))
             pass
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
+        self.walker.run()
+
+    def test_path_combination_long_to_short(self):
+        import rospy
+
+        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.ready()
+        self.walker.wait(100)
+        self.walker.setGoal(Transformation([1.0, 0, 0], [0, 0, 0, 1]))
+
+        def send_alternative_trajectory(_):
+            self.walker.setGoal(Transformation([1, 0.1, 0], [0, 0, 0, 1]))
+            pass
+        self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
         self.walker.run()

@@ -23,7 +23,6 @@ class DetectorBall(Detector):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback)
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
-        self.ball_pixel_pub = rospy.Publisher("ball_pixel", PointStamped, queue_size=1)
         self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
 
@@ -74,17 +73,6 @@ class DetectorBall(Detector):
                 ball_pose.transform.rotation.w = 1
                 br.sendTransform(ball_pose)
 
-                # TODO remove
-                ball_pixel = PointStamped()
-                ball_pixel.header.frame_id = self.robot_name + "/base_footprint"
-                ball_pixel.header.seq = msg.header.seq
-                ball_pixel.header.stamp = msg.header.stamp
-                x_avg = (final_box.xmin + final_box.xmax) / 2.
-                y_avg = (final_box.ymax + final_box.ymin) / 2.
-                ball_pixel.point.x = x_avg
-                ball_pixel.point.y = y_avg
-                ball_pixel.point.z = 0
-                self.ball_pixel_pub.publish(ball_pixel)
 
         # Robots
         for box in msg.bounding_boxes:

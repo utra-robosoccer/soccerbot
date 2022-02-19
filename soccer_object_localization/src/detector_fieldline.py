@@ -6,8 +6,6 @@ import time
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
-import tf2_ros
-from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
 import numpy as np
 import cv2
 from sensor_msgs.msg import Image, PointCloud2
@@ -15,7 +13,6 @@ from std_msgs.msg import Bool, Header
 from detector import Detector
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
-import math
 
 
 class DetectorFieldline(Detector):
@@ -33,18 +30,13 @@ class DetectorFieldline(Detector):
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
-        self.goal_post_publisher = rospy.Publisher("goal_post", Bool, queue_size=1)
-        self.trajectory_complete_subscriber = rospy.Subscriber("trajectory_complete", Bool,
-                                                               self.trajectory_complete_callback)
-        self.trajectory_complete = True
 
         cv2.setRNGSeed(12345)
         pass
 
-    def trajectory_complete_callback(self, trajectory_complete: Bool):
-        self.trajectory_complete = trajectory_complete.data
-
     def image_callback(self, img: Image):
+        rospy.loginfo_once("Recieved Message")
+
         t_start = time.time()
 
         if not self.camera.ready() or not self.trajectory_complete:
@@ -54,12 +46,8 @@ class DetectorFieldline(Detector):
 
         self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
 
-        rgb_image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
-        camera_info_D = np.array(self.camera.camera_info.D)
-        image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
+        image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
-
         h = self.camera.calculateHorizonCoverArea()
         cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
 
@@ -72,6 +60,7 @@ class DetectorFieldline(Detector):
 
         cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
         retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
+
         edges = cv2.Canny(dst, 50, 150)
 
         lines = cv2.HoughLinesP(edges, rho=DetectorFieldline.HOUGH_RHO,

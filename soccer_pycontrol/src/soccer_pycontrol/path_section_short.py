@@ -9,7 +9,6 @@ from copy import deepcopy
 class PathSectionShort(PathSection):
 
     def poseAtRatio(self, r):
-        r = self.getCutoffRatio(r)
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
