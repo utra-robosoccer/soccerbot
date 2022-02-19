@@ -3,11 +3,14 @@ import rospy
 import math
 
 import config as config
-from strategy.dummy_strategy import DummyStrategy
+from strategy.strategy import Strategy
+from strategy.interfaces.object_proximity import ObjectProximity
+from strategy.interfaces.kick import Kick
+from strategy.interfaces.kick import Kick
 from robot import Robot
 
 
-class FreekickStrategy(DummyStrategy):
+class FreekickStrategy(Strategy, ObjectProximity, Kick):
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
         if not self.check_ball_available(ball):
