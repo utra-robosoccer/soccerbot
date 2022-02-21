@@ -16,9 +16,6 @@ class Robot2D(Robot):
         FOV = math.pi/4
         VISION_RANGE = 3
 
-    def get_position(self):
-        return self.position
-
     def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED, position=None):
         super().__init__(robot_id, team, role, status, position)
 
@@ -27,7 +24,7 @@ class Robot2D(Robot):
         self.path = None
         self.path_time = 0
         self.robot_id = robot_id
-        self.observed_ball = Ball(None, '2D')
+        self.observed_ball = Ball(None)
         self.speed = 0.20
         self.angular_speed = 0.3
         self.max_kick_speed = 2
@@ -35,7 +32,7 @@ class Robot2D(Robot):
 
     def set_navigation_position(self, position):
         self.status = Robot.Status.WALKING
-        self.start_position = self.get_position()
+        self.start_position = self.position
         if self.goal_position is None or not np.allclose(position, self.goal_position):
             self.goal_position = position
             self.path = path.Path(
@@ -51,7 +48,7 @@ class Robot2D(Robot):
         return transformation.Transformation(transfrom_position, transform_quaternion)
 
     def transformation_to_position(self, transform):
-        transform_position = transform.get_position()
+        transform_position = transform.position
         transform_quaternion = transform.get_orientation()
         transfrom_angle = tf.transformations.euler_from_quaternion([
             transform_quaternion[0],
@@ -81,15 +78,15 @@ class Robot2D(Robot):
         return opponent_goal
 
     def observe_ball(self, ball):
-        if ball is None or ball.get_position() is None:
+        if ball is None or ball.position is None:
             return
-        theta = self.get_position()[2] #TODO change this to direction vector?
+        theta = self.position[2] #TODO change this to direction vector?
         arrow_len = 0.3
         arrow_end_x = math.cos(theta) * arrow_len
         arrow_end_y = math.sin(theta) * arrow_len
         robot_direction = np.array([arrow_end_x, arrow_end_y])
-        ball_position = ball.get_position()
-        ball_to_robot = ball_position - self.position
+        ball_position = ball.position
+        ball_to_robot = ball_position - self.position[0:2]
         angle = np.arccos(np.dot(ball_to_robot[0:2], robot_direction)/(np.linalg.norm(ball_to_robot[0:2])*np.linalg.norm(robot_direction)))
         distance = np.linalg.norm(ball_to_robot)
         if angle < self.ObservationConstants.FOV/2 and distance < self.ObservationConstants.VISION_RANGE:
@@ -97,12 +94,12 @@ class Robot2D(Robot):
         #TODO can add noise here
 
     def can_kick(self, ball):
-        if ball is None or ball.get_position() is None:
+        if ball is None or ball.position is None:
             return False
-        theta = self.get_position()[2]
+        theta = self.position[2]
         robot_direction = np.array([math.cos(theta), math.sin(theta)])
         robot_direction = robot_direction/np.linalg.norm(robot_direction)
-        ball_position = ball.get_position()
+        ball_position = ball.position
         ball_to_robot = (ball_position - self.position)[0:2]
         angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
         distance = np.linalg.norm(ball_to_robot)

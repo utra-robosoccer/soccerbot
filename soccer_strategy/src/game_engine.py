@@ -86,11 +86,11 @@ class GameEngine:
                 self.team2.strategy.update_next_strategy(self.team2, self.team1, self.gameState)
 
             # Check victory condition
-            if self.ball.get_position()[0] > 4.5:
+            if self.ball.position[0] > 4.5:
                 print("Friendly Scores!")
                 friendly_points += 1
                 self.reset_robots()
-            elif self.ball.get_position()[0] < -4.5:
+            elif self.ball.position[0] < -4.5:
                 print("Opponent Scores!")
                 opponent_points += 1
                 self.reset_robots()
@@ -128,10 +128,10 @@ class GameEngine:
 
         # update ball position
         self.ball.position_is_live_timeout = 10
-        self.ball.position = self.ball.get_position() + self.ball.get_velocity() * GameEngine.PHYSICS_UPDATE_INTERVAL
+        self.ball.position = self.ball.position + self.ball.velocity * GameEngine.PHYSICS_UPDATE_INTERVAL
 
         # slow down ball with friction
-        if not np.array_equal(self.ball.velocity, np.array([0, 0, 0])):
+        if not np.array_equal(self.ball.velocity, np.array([0, 0])):
             ball_unit_velocity = self.ball.velocity / np.linalg.norm(self.ball.velocity)
 
             ball_delta_speed = Ball.FRICTION * GameEngine.PHYSICS_UPDATE_INTERVAL
@@ -139,7 +139,7 @@ class GameEngine:
             if ball_speed > ball_delta_speed:
                 self.ball.velocity = self.ball.velocity - ball_delta_speed * ball_unit_velocity
             else:
-                self.ball.velocity = np.array([0, 0, 0])
+                self.ball.velocity = np.array([0, 0])
 
     def reset_robots(self):
         self.team1 = self.team1_init

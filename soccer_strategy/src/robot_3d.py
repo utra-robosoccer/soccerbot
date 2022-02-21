@@ -93,7 +93,7 @@ class Robot3D(Robot):
                 temp.data = False
                 self.localization_reset_publisher.publish(temp)
 
-    def get_position(self):
+    def update_position(self):
         try:
             (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/base_footprint', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
@@ -155,7 +155,7 @@ class Robot3D(Robot):
             self.previous_status = self.status
 
         if self.status == Robot.Status.DISCONNECTED:
-            self.get_position()
+            self.update_position()
 
         elif self.status == Robot.Status.READY:
             if self.stop_requested:

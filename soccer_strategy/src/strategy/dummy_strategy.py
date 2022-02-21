@@ -35,22 +35,22 @@ class DummyStrategy(Strategy):
 
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        if friendly_team.average_ball_position.get_position() is not None:
+        if friendly_team.average_ball_position.position is not None:
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
             # generate goal pose
             goal_position = config.ENEMY_GOAL_POSITION
             ball = friendly_team.average_ball_position
 
-            if abs(ball.get_position()[1]) < 3.5 and abs(ball.get_position()[0]) < 5:
+            if abs(ball.position[1]) < 3.5 and abs(ball.position[0]) < 5:
 
                 current_closest = self.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
                 if current_closest is not None:  # and current_closest.send_nav:
 
                     # generate destination pose
-                    ball_position = ball.get_position()
-                    player_position = current_closest.get_position()
-                    player_angle = current_closest.get_position()[2]
+                    ball_position = ball.position
+                    player_position = current_closest.position
+                    player_angle = current_closest.position[2]
 
                     diff = ball_position - goal_position
                     diff_unit = diff / np.linalg.norm(diff)
@@ -94,7 +94,7 @@ class DummyStrategy(Strategy):
                         else:
                             current_closest.kick_with_right_foot = False
 
-                        delta = goal_position - ball.get_position()
+                        delta = goal_position - ball.position
                         unit = delta / np.linalg.norm(delta)
 
                         current_closest.status = Robot.Status.KICKING
@@ -109,8 +109,8 @@ class DummyStrategy(Strategy):
                 if player.status != Robot.Status.READY:
                     continue
 
-                player_angle = player.get_position()[2]
-                player_position = player.get_position()[0:2]
+                player_angle = player.position[2]
+                player_position = player.position[0:2]
 
                 # Haven't seen the ball timeout
                 if self.havent_seen_the_ball_timeout < 0:
@@ -126,7 +126,7 @@ class DummyStrategy(Strategy):
         # Source:
         # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
         obstacles = np.array(player.get_detected_obstacles())
-        player_position = np.array(player.get_position()[0:2])
+        player_position = np.array(player.position[0:2])
         goal_pos = np.array(destination_position[0:2])
 
         if distance_between(player_position, goal_pos) > EPS:

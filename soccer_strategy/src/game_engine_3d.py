@@ -11,7 +11,7 @@ from team import Team
 import game_engine
 import config
 from strategy.freekick_strategy import FreekickStrategy
-from strategy.formation_strategy import FormationStrategy
+from strategy.decision_tree.formation_strategy import FormationDecisionTreeStrategy
 from strategy.penaltykick_strategy import PenaltykickStrategy
 from strategy.ready_strategy import ReadyStrategy
 from strategy.initial_strategy import InitialStrategy
@@ -83,7 +83,7 @@ class GameEngine3D(game_engine.GameEngine):
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.gameState.hasKickOff:
-                    self.team1.strategy = FormationStrategy()
+                    self.team1.strategy = FormationDecisionTreeStrategy()
                 else:
                     self.team1.strategy = SetStrategy()
             elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
