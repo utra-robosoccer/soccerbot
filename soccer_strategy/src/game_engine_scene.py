@@ -58,13 +58,13 @@ class Scene:
 
     def update(self, robots, ball):
         for i in range(len(robots)):
-            x = robots[i].get_position()[0]
-            y = robots[i].get_position()[1]
+            x = robots[i].position[0]
+            y = robots[i].position[1]
             self.robots[i]['body'].center = (x, y)
             self.robots[i]['id'].pos = (x, y)
             self.robots[i]['id'].text = str(robots[i].robot_id)
 
-            theta = robots[i].get_position()[2]
+            theta = robots[i].position[2]
             arrow_len = 0.3
             arrow_end_x = math.cos(theta) * arrow_len
             arrow_end_y = math.sin(theta) * arrow_len
@@ -87,15 +87,15 @@ class Scene:
             if robots[i].path is not None:
                 verts = []
                 for j in range(0, 11):
-                    path_vert = robots[i].path.poseAtRatio(j / 10).get_position()
+                    path_vert = robots[i].path.poseAtRatio(j / 10).position
                     verts.append([path_vert[0], path_vert[1]])
                 self.robots[i]['path'].set_data(pos=np.array(verts))
 
-        if ball.get_position() is not None:
-            x = ball.get_position()[0]
-            y = ball.get_position()[1]
-            dx = ball.get_velocity()[0]
-            dy = ball.get_velocity()[1]
+        if ball.position is not None:
+            x = ball.position[0]
+            y = ball.position[1]
+            dx = ball.velocity[0]
+            dy = ball.velocity[1]
             self.ball.center = (x, y)
 
         self.canvas.update()

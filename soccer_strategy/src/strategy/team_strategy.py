@@ -164,10 +164,10 @@ class PlayerStrategy(ABC, Strategy):
     def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
         super().__init__()
         self._player = player
-        self._player_pos = player.get_position()[0:2]
+        self._player_pos = player.position[0:2]
         self._team = self._player.team
         self._ball = ball
-        self._ball_pos = ball.get_position()
+        self._ball_pos = ball.position
         self._alpha = alpha
         self._beta = beta
         self._eps = eps
@@ -198,7 +198,7 @@ class PlayerStrategy(ABC, Strategy):
         for robot in self._all_robots:
             if robot == self._player:
                 continue  # A robot is not its own obstacle
-            pos = robot.get_position()[0:2]
+            pos = robot.position[0:2]
             dist = distance_between(ref_pos, pos)
             # TODO: what about obstacles outside this radius? Do they matter?
             if dist <= thresh:
@@ -212,7 +212,7 @@ class PlayerStrategy(ABC, Strategy):
         min_dist = float('inf')
         closest_to_ball = None
         for robot in itertools.chain(friendlies, opponents):
-            robot_pos = robot.get_position()[0:2]
+            robot_pos = robot.position[0:2]
             dist = distance_between(pos, robot_pos)
             if dist < min_dist:
                 min_dist = dist
@@ -235,7 +235,7 @@ class PlayerStrategy(ABC, Strategy):
         min_dist = float('inf')
         for robot in friendlies:
             if robot.role != self._player.role:
-                dist = self._distance_to(robot.get_position()[0:2])
+                dist = self._distance_to(robot.position[0:2])
                 if dist < min_dist:
                     min_dist = dist
                     closest_teammate = robot
@@ -289,7 +289,7 @@ class PlayerStrategy(ABC, Strategy):
         and velocity, what position it will rest at
         """
         coeff = PhysConsts.get_friction_coeff()
-        vel = self._ball.get_velocity()
+        vel = self._ball.velocity
         ball_dest = self._ball_pos + vel * coeff
         return ball_dest
 
@@ -303,7 +303,7 @@ class PlayerStrategy(ABC, Strategy):
 
     def _pass_ball(self, teammate):
         """Pass ball to teammate"""
-        teammate_pos = teammate.get_position()[0:2]
+        teammate_pos = teammate.position[0:2]
         coeff = PhysConsts.get_friction_coeff()
         pass_dist = self._distance_to(teammate_pos)
         magnitude = 100 * min(pass_dist / coeff, 1)
@@ -320,7 +320,7 @@ class PlayerStrategy(ABC, Strategy):
         player_is_open = True
         min_dist = float('inf')
         for robot in opponents:
-            dist = self._distance_to(robot.get_position()[0:2])
+            dist = self._distance_to(robot.position[0:2])
             if dist < min_dist:
                 min_dist = dist
                 if min_dist < Thresholds.POSSESSION:
@@ -359,7 +359,7 @@ class GoalieStrategy(PlayerStrategy):
         Moves the player near the point where the ball's velocity vector
         intersects the goal line
         """
-        vel = self._ball.get_velocity()
+        vel = self._ball.velocity
         ball_dest = self._ball_pos + 2 * Field.X_LENGTH * unit_vec(vel)  # Far away point along ball's direction
         ball_path = LineString([self._ball_pos, ball_dest])
         pt = ball_path.intersection(self._net_line)
@@ -593,7 +593,7 @@ class TeamStrategy(Strategy):
             strat.update_next_strategy(friendlies, opponents, ball, game_properties)"""
         self._cnt += 1
         strats = []
-        ball_pos = ball.get_position()
+        ball_pos = ball.position
         dist_to_ball = []
 
         for robot in friendly_team.robots:
@@ -601,7 +601,7 @@ class TeamStrategy(Strategy):
             if robot.role == Robot.Role.GOALIE:
                 strats.append(GoalieStrategy(robot, ball))
             else:
-                robot_pos = robot.get_position()[0:2]
+                robot_pos = robot.position[0:2]
                 assert not np.isnan(robot_pos).any(), f'nan position on iter {self._cnt}'
                 dist = distance_between(robot_pos, ball_pos)
                 dist_to_ball.append((dist, robot))

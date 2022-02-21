@@ -47,8 +47,8 @@ class DecisionTreeStrategy(Strategy):
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         state = self.getInitialState(friendly_team, opponent_team, game_state)
-        best_move, value = self.DFMiniMax(state, Agent.FRIENDLY, 0)
-        self.executeBestMove(best_move)
+        best_move, value = self.DECISION_ALGORITHM(state, Agent.FRIENDLY, 0)
+        self.executeBestMove(state, best_move)
 
     @abc.abstractmethod
     def getInitialState(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -58,11 +58,16 @@ class DecisionTreeStrategy(Strategy):
     def executeBestMove(self, state: State, action: Action):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def evaluationFunction(self, state: State) -> float:
-        pass
+    def evaluationFunction(self, state) -> float:
+        # Higher score if the ball is closer to the opponent net
+        return state.friendly_team.average_ball_position[0]
 
-    def DFMiniMax(self, state: State, currAgent: Agent, depth: int):
+    # Decision Tree Algorithms
+    @abc.abstractmethod
+    def PredeterminedDecisionTree(self, state: State, currAgent: Agent, depth: int) -> (Action, float):
+        raise NotImplementedError
+
+    def DFMiniMax(self, state: State, currAgent: Agent, depth: int) -> (Action, float):
         best_move = None
         if depth >= self.depth * 2 or state.isWin() or state.isLose():
             return best_move, self.evaluationFunction(state)
@@ -84,3 +89,5 @@ class DecisionTreeStrategy(Strategy):
                 if value > nxt_val:
                     value, best_move = nxt_val, move
         return best_move, value
+
+    DECISION_ALGORITHM = DFMiniMax

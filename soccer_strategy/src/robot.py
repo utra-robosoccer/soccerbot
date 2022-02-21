@@ -45,7 +45,7 @@ class Robot:
         self.status = status
         self.position = position
         self.robot_id = robot_id
-        self.observed_ball = Ball(None, '2D')
+        self.observed_ball = Ball(None)
 
 
 class RobotTeamMate(Robot):
@@ -66,3 +66,6 @@ class RobotTeamMate(Robot):
         # Ball information
         ball_trans = data.robot_position.pose.position
         self.observed_ball.position = [ball_trans.x, ball_trans.y]
+
+    def set_navigation_position(self, position):
+        pass

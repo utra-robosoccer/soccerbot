@@ -4,13 +4,10 @@ import math
 
 import config as config
 from strategy.strategy import Strategy
-from strategy.interfaces.object_proximity import ObjectProximity
-from strategy.interfaces.kick import Kick
-from strategy.interfaces.kick import Kick
 from robot import Robot
 
 
-class FreekickStrategy(Strategy, ObjectProximity, Kick):
+class FreekickStrategy(Strategy):
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
         if not self.check_ball_available(ball):
@@ -28,12 +25,12 @@ class FreekickStrategy(Strategy, ObjectProximity, Kick):
 
         # todo move non-kicking robots
 
-        if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
+        if np.linalg.norm(kicker.position[0:2] - ball.position) < 0.2:
             # Stop moving
-            kicker.set_navigation_position(kicker.get_position())
+            kicker.set_navigation_position(kicker.position)
             return True
         else:
-            kicker.set_navigation_position(np.append(ball.get_position(), 0))
+            kicker.set_navigation_position(np.append(ball.position, 0))
             return False
 
     # kicker actually kick the ball
@@ -48,11 +45,11 @@ class FreekickStrategy(Strategy, ObjectProximity, Kick):
         if kicker is None:
             return
 
-        if np.linalg.norm(kicker.get_position()[0:2] - ball.get_position()) < 0.2:
-            kicker.set_navigation_position(kicker.get_position())
+        if np.linalg.norm(kicker.position[0:2] - ball.position) < 0.2:
+            kicker.set_navigation_position(kicker.position)
             kicker.status = Robot.Status.KICKING
         else:
-            kicker.set_navigation_position(np.append(ball.get_position(), 0))
+            kicker.set_navigation_position(np.append(ball.position, 0))
 
     # preparation if we are not the kicking team
     def update_non_kicking_strategy(self, friendly, ball, game_properties):
@@ -68,22 +65,22 @@ class FreekickStrategy(Strategy, ObjectProximity, Kick):
                     False
                 )
 
-                ball_position = ball.get_position()
+                ball_position = ball.position
                 diff = ball_position - goal_position
                 diff_unit = diff / np.linalg.norm(diff)
                 diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
             if robot.role == Robot.Role.LEFT_MIDFIELD:
-                nav_pose = ball.get_position() + np.array([0.5, 0])
+                nav_pose = ball.position + np.array([0.5, 0])
                 robot.set_navigation_position(np.append(nav_pose, diff_angle))
             if robot.role == Robot.Role.RIGHT_MIDFIELD:
-                nav_pose = ball.get_position() + np.array([-0.5, 0])
+                nav_pose = ball.position + np.array([-0.5, 0])
                 robot.set_navigation_position(np.append(nav_pose, diff_angle))
             if robot.role == Robot.Role.GOALIE:
                 nav_pose = goal_position
                 #check if robot is on the goal line
                 ball_goal_distance = np.linalg.norm(ball.position - goal_position)
-                robot_goal_distance = np.linalg.norm(robot.get_position()[0:2] - goal_position)
+                robot_goal_distance = np.linalg.norm(robot.position[0:2] - goal_position)
                 if robot_goal_distance < 0.5:
                     if ball_goal_distance < 1.5:
                         side_delta = self.ball[0]-robot.position[0]
