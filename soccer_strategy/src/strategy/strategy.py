@@ -1,5 +1,5 @@
 import abc
-from robot_3d import Robot3D
+from robot_controlled_3d import RobotControlled3D
 from team import Team
 from soccer_msgs.msg import GameState
 import math

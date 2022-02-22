@@ -2,7 +2,7 @@ from vispy.color import Color
 from vispy import scene
 import math
 import numpy as np
-from robot_2d import Robot2D
+from robot_controlled_2d import RobotControlled2D
 
 white = Color("#ecf0f1")
 gray = Color("#121212")
@@ -40,7 +40,7 @@ class Scene:
                                   color=blue, parent=self.view.scene)
         self.robots = []
         for robot in robots:
-            color = red if robot.team == Robot2D.Team.OPPONENT else white
+            color = red if robot.team == RobotControlled2D.Team.OPPONENT else white
             self.robots.append({"body": scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
                                                       color=color,
                                                       parent=self.view.scene),
@@ -73,14 +73,14 @@ class Scene:
             self.robots[i]['arrow'].set_data(pos=np.array([[x, y], [x + arrow_end_x, y + arrow_end_y]]))
 
             robot_pos = np.array([x, y])
-            theta = -Robot2D.ObservationConstants.FOV / 2
+            theta = -RobotControlled2D.ObservationConstants.FOV / 2
             c, s = np.cos(theta), np.sin(theta)
             R = np.array(((c, -s), (s, c)))
-            vision_cone_right = np.matmul(R, direction) * Robot2D.ObservationConstants.VISION_RANGE
-            theta = Robot2D.ObservationConstants.FOV / 2
+            vision_cone_right = np.matmul(R, direction) * RobotControlled2D.ObservationConstants.VISION_RANGE
+            theta = RobotControlled2D.ObservationConstants.FOV / 2
             c, s = np.cos(theta), np.sin(theta)
             R = np.array(((c, -s), (s, c)))
-            vision_cone_left = np.matmul(R, direction) * Robot2D.ObservationConstants.VISION_RANGE
+            vision_cone_left = np.matmul(R, direction) * RobotControlled2D.ObservationConstants.VISION_RANGE
             self.robots[i]['vision_cone'].set_data(
                 pos=np.array([robot_pos + vision_cone_left, robot_pos, vision_cone_right + robot_pos]))
 

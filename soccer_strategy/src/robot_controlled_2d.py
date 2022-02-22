@@ -7,10 +7,11 @@ from ball import Ball
 import math
 import numpy as np
 from robot import Robot
+from robot_controlled import RobotControlled
 import tf.transformations
 
-class Robot2D(Robot):
 
+class RobotControlled2D(RobotControlled):
 
     class ObservationConstants:
         FOV = math.pi/4
