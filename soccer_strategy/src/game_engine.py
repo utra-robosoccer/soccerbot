@@ -4,7 +4,7 @@ from soccer_msgs.msg import GameState
 from vispy import app
 
 from robot import Robot
-from robot_2d import Robot2D
+from robot_controlled_2d import RobotControlled2D
 from ball import Ball
 from strategy.stationary_strategy import StationaryStrategy
 from strategy.dummy_strategy import DummyStrategy
@@ -26,26 +26,26 @@ class GameEngine:
 
         # Initialize teams
         self.team1 = Team([
-            Robot2D(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                   position=np.array([3.5, 0.0, math.pi])),
-            Robot2D(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
                   position=np.array([1.5, -1.5, -math.pi])),
-            Robot2D(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
                   position=np.array([1.5, 1.5, -math.pi])),
-            Robot2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi]))
         ])
         self.team1.strategy = FormationDecisionTreeStrategy()
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team([
-            Robot2D(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
                   position=np.array([-3.5, 0.0, 0])),
-            Robot2D(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
                   position=np.array([-1.5, -1.5, 0])),
-            Robot2D(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
                   position=np.array([-1.5, 1.5, 0])),
-            Robot2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
+            RobotControlled2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ])
         self.team2.strategy = FormationDecisionTreeStrategy()

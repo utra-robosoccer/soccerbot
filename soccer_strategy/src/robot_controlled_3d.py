@@ -1,4 +1,6 @@
 from robot import Robot
+from robot_controlled import RobotControlled
+
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
@@ -9,8 +11,10 @@ import tf.transformations
 from sensor_msgs.msg import Imu
 
 
-class Robot3D(Robot):
+class RobotControlled3D(RobotControlled):
     def __init__(self, team, role, status, robot_name):
+        super().__init__(team, role, status)
+
         # Subscibers
         self.imu_subsciber = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
         self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
@@ -37,9 +41,6 @@ class Robot3D(Robot):
         self.role = role
         self.robot_name = robot_name
 
-        self.previous_status = Robot.Status.READY
-        self.status = status
-
         self.position = np.array([-3, -3, 0])  # 1.57
         self.goal_position = np.array([0.0, 0.0, 0])
         self.ball_position = np.array([0.0, 0.0])
@@ -52,12 +53,29 @@ class Robot3D(Robot):
         self.send_nav = False
 
         # terminate all action
-        self.stop_requested = False
         self.designated_kicker = False
         self.relocalization_timeout = 0
 
         self.obstacles = PoseArray()
 
+    def terminate_walk(self):
+        self.terminate_walking_publisher.publish()
+
+    def kick(self):
+        f = FixedTrajectoryCommand()
+        f.trajectory_name = "rightkick"
+        if not self.kick_with_right_foot:
+            f.mirror = True
+        self.trajectory_publisher.publish(f)
+        rospy.loginfo(self.robot_name + " kicking")
+
+    def get_back_up(self, type: str="getupback"):
+        self.terminate_walking_publisher.publish()
+        f = FixedTrajectoryCommand()
+        f.trajectory_name = type
+        self.trajectory_publisher.publish(f)
+        self.relocalization_timeout = 5
+        rospy.loginfo(self.robot_name + type)
 
     def ball_pose_callback(self, data):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])

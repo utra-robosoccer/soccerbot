@@ -4,8 +4,9 @@ import tf
 import rospy
 from std_msgs.msg import Empty, Int32, Bool
 from soccer_msgs.msg import GameState
-from robot_3d import Robot3D
-from robot import Robot, RobotTeamMate
+from robot_controlled_3d import RobotControlled3D
+from robot import Robot
+from robot_observed import RobotObserved
 from ball import Ball
 from team import Team
 import game_engine
@@ -54,12 +55,12 @@ class GameEngine3D(game_engine.GameEngine):
         rospy.loginfo(f"Initializing strategy with robot id: {robot_id}, robot_name: {robot_name},  team id {team_id}")
 
         self.team1 = Team([
-            RobotTeamMate(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotTeamMate(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotTeamMate(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotTeamMate(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY)
+            RobotObserved(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
+            RobotObserved(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
+            RobotObserved(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
+            RobotObserved(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY)
         ])
-        self.team1.robots[robot_id] = Robot3D(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name=robot_name)
+        self.team1.robots[robot_id] = RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name=robot_name)
         self.team2 = Team({})
         self.ball = Ball(position=None)
 
