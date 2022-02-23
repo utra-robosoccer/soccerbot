@@ -56,9 +56,9 @@ x-soccerbot: &soccerbot
     roslaunch soccerbot soccerbot.launch __ns:=robot$$ROBOCUP_ROBOT_ID || sleep infinity; else
     roslaunch --wait soccerbot soccerbot.launch __ns:=robot$$ROBOCUP_ROBOT_ID || sleep infinity; fi"
   volumes:
-#    - .:/root/catkin_ws/src/soccerbot
-    - /home/${USER}/catkin_ws/:/root/catkin_ws/
-    - /home/${USER}/catkin_ws/:/home/${USER}/catkin_ws/
+    - .:/root/catkin_ws/src/soccerbot
+      #    - /home/${USER}/catkin_ws/:/root/catkin_ws/
+      #    - /home/${USER}/catkin_ws/:/home/${USER}/catkin_ws/
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
@@ -117,6 +117,7 @@ services:
   opponent:
     <<: *soccerbot
     environment:
+      ROS_MASTER: "true"
       X_POS: -4
       Y_POS: -3.14
       YAW: 1.57
@@ -126,6 +127,5 @@ services:
       ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      TEAM_ID: 16
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
