@@ -1,5 +1,6 @@
 from team import Team
 from robot import Robot
+from robot_controlled import RobotControlled
 from ball import Ball
 import numpy as np
 import math
@@ -51,7 +52,7 @@ class Actions:
             Actions.navigation_to_position(robot, team.formations[formation][robot.role])
 
     @staticmethod
-    def navigation_to_position(robot, position):
+    def navigation_to_position(robot: RobotControlled, position):
         robot.set_navigation_position(position)
 
     @staticmethod

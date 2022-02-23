@@ -1,8 +1,11 @@
 import abc
 import rospy
-from soccer_msgs.msg import RobotState
 from robot import Robot
 import numpy as np
+import tf
+from soccer_pycontrol import path
+from soccer_geometry import transformation
+import tf.transformations
 
 class RobotControlled(Robot):
 
@@ -13,6 +16,41 @@ class RobotControlled(Robot):
         self.previous_status = self.status
         self.stop_requested = False
 
+        self.start_position = None
+        self.goal_position = None
+        self.path = None
+
+    def set_navigation_position(self, goal_position):
+        self.start_position = self.position
+        if np.linalg.norm(self.goal_position - goal_position) < 0.05:
+            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old" +  str(goal_position))
+
+        if self.goal_position is None or not np.allclose(goal_position, self.goal_position):
+            print("New Goal too close to previous goal: New " + str(goal_position))
+            self.goal_position = goal_position
+            self.path = path.Path(
+                self.position_to_transformation(self.start_position),
+                self.position_to_transformation(self.goal_position)
+            )
+            self.status = Robot.Status.WALKING
+
+    def position_to_transformation(self, position):
+        transfrom_position = (position[0], position[1], 0.)
+        q = tf.transformations.quaternion_about_axis(position[2], (0, 0, 1))
+        transform_quaternion = [q[0], q[1], q[2], q[3]]
+        return transformation.Transformation(transfrom_position, transform_quaternion)
+
+    def transformation_to_position(self, transform):
+        transform_position = transform.get_position()
+        transform_quaternion = transform.get_orientation()
+        transfrom_angle = tf.transformations.euler_from_quaternion([
+            transform_quaternion[0],
+            transform_quaternion[1],
+            transform_quaternion[2],
+            transform_quaternion[3],
+        ])
+
+        return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
 
     @abc.abstractmethod
     def terminate_walk(self):
@@ -25,47 +63,3 @@ class RobotControlled(Robot):
     @abc.abstractmethod
     def get_back_up(self, type: str="getupback"):
         pass
-
-    def transition_to_next_status(self):
-        if self.status != self.previous_status:
-            rospy.loginfo("Robot " + str(self.robot_id) + " status changes to " + str(self.status))
-            self.previous_status = self.status
-
-        if self.status == Robot.Status.DISCONNECTED:
-            self.update_position()
-
-        elif self.status == Robot.Status.READY:
-            if self.stop_requested:
-                self.status = Robot.Status.STOPPED
-
-        elif self.status == Robot.Status.WALKING:
-            if self.stop_requested:
-                self.terminate_walk()
-                self.status = Robot.Status.STOPPED
-
-        elif self.status == Robot.Status.KICKING:
-            self.kick()
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-
-        elif self.status == Robot.Status.FALLEN_BACK:
-            self.get_back_up("getupback")
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-
-        elif self.status == Robot.Status.FALLEN_FRONT:
-            self.get_back_up("getupfront")
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-
-        elif self.status == Robot.Status.FALLEN_SIDE:
-            self.get_back_up("getupside")
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-
-        elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
-            rospy.loginfo_throttle(20, "Robot " + str(self.robot_id) + " trajectory in progress")
-
-        elif self.status == Robot.Status.STOPPED:
-            pass
-        elif self.status == Robot.Status.READY:
-            pass
-
-        else:
-            rospy.logerr_throttle(20, "Robot " + str(self.robot_id) + " is in invalid status " + str(self.status))
