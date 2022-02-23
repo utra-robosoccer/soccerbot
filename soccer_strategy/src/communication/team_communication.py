@@ -28,6 +28,7 @@ if __name__ == '__main__':
         m.timestamp.nanos= robot_state.header.stamp.nsecs
         m.player_id = robot_state.player_id
         m.status = robot_state.status
+        m.role = robot_state.role
         m.pose.position.x = robot_state.pose.position.x
         m.pose.position.y = robot_state.pose.position.y
         m.pose.position.z = robot_state.pose.position.z
@@ -39,17 +40,15 @@ if __name__ == '__main__':
         m.ball_pose.y = robot_state.ball_pose.y
         m.ball_pose.theta = robot_state.ball_pose.theta
         m_str = m.SerializeToString()
-        print(f'\033[96m Sending Message on {mirror_server_ip}\033[0m')
-        rospy.loginfo_once(f'\033[96mSending to 3737 on {mirror_server_ip}\033[0m')
-        s.sendto(m_str, (mirror_server_ip, 3737))
+        id_address = socket.gethostbyname(mirror_server_ip)
+        rospy.loginfo_once(f'\033[96mSending to 3737 on {id_address}\033[0m')
+        s.sendto(m_str, (id_address, 3737))
 
     while not rospy.is_shutdown() and s is None:
         try:
             rospy.loginfo(f"Binding to port 3737")
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.bind(('0.0.0.0', 3737))
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-            time.sleep(3)
         except rospy.exceptions.ROSInterruptException:
             exit(0)
         except OSError as ex:
@@ -59,7 +58,7 @@ if __name__ == '__main__':
 
     state_subscriber = rospy.Subscriber("state", RobotState, robot_state_callback)
     state_publishers = {}
-    for i in range(1, 4):
+    for i in range(1, 5):
         if i is not player_id:
             state_publishers[i] = rospy.Publisher("/robot" + str(i) + "/state", RobotState, queue_size=1)
 
@@ -67,20 +66,25 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         try:
             msg = s.recv(1024)
+            if not msg:
+                continue
         except (struct.error, socket.timeout):
             rate.sleep()
             print("Nothing received")
             continue
 
-        rospy.loginfo_once("\033[96mReceiving Data\033[0m")
+        rospy.loginfo_once("\033[96mReceiving Data Started\033[0m")
         m = robot_state_pb2.Message()
         m.ParseFromString(msg)
+        if m.player_id == player_id:
+            continue
 
         r = RobotState()
         r.header.stamp.secs = m.timestamp.seconds
         r.header.stamp.nsecs = m.timestamp.nanos
         r.player_id = m.player_id
         r.status = m.status
+        r.role = m.role
         r.pose.position.x = m.pose.position.x
         r.pose.position.y = m.pose.position.y
         r.pose.position.z = m.pose.position.z
@@ -91,6 +95,6 @@ if __name__ == '__main__':
         r.ball_pose.x = m.ball_pose.x
         r.ball_pose.y = m.ball_pose.y
         r.ball_pose.theta = m.ball_pose.theta
-        state_publishers[player_id].publish(r)
+        state_publishers[r.player_id].publish(r)
 
         rate.sleep()
