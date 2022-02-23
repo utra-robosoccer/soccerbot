@@ -49,7 +49,7 @@ class DummyStrategy(Strategy):
 
                     # generate destination pose
                     ball_position = ball.position
-                    player_position = current_closest.position
+                    player_position = current_closest.position[0:2]
                     player_angle = current_closest.position[2]
 
                     diff = ball_position - goal_position

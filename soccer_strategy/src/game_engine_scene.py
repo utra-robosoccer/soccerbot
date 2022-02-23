@@ -87,7 +87,7 @@ class Scene:
             if robots[i].path is not None:
                 verts = []
                 for j in range(0, 11):
-                    path_vert = robots[i].path.poseAtRatio(j / 10).position
+                    path_vert = robots[i].path.poseAtRatio(j / 10).get_position()
                     verts.append([path_vert[0], path_vert[1]])
                 self.robots[i]['path'].set_data(pos=np.array(verts))
 
