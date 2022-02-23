@@ -1,3 +1,5 @@
+import math
+
 import rospy
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
@@ -6,6 +8,7 @@ from strategy.strategy import Strategy
 from team import Team
 from soccer_msgs.msg import GameState
 from robot import Robot
+import numpy as np
 from strategy.interfaces.actions import Actions
 
 class StrategyDetermineSide(Strategy):
@@ -46,4 +49,43 @@ class StrategyDetermineSide(Strategy):
             current_robot.status = Robot.Status.READY
 
         if self.measurements > 2:
-            print("Robot Position Determined, Flip Required " + str(self.flip_required))
+            print("Robot Position Determined, Determining Roles, Flip Required " + str(self.flip_required))
+
+            # Determining robot role automatically based on distance to role position and other robots
+            if current_robot.role == Robot.Role.UNASSIGNED:
+                available_roles = []
+                for role in friendly_team.formations['initial']:
+                    available_roles.append(role)
+
+                unassigned_robots = []
+                for robot in friendly_team.robots:
+                    if robot.status == Robot.Status.DISCONNECTED:
+                        continue
+                    if robot.role == Robot.Role.UNASSIGNED:
+                        unassigned_robots.append(robot)
+
+                print(unassigned_robots)
+                print(available_roles)
+                while len(unassigned_robots) > 0:
+                    closest_index = 0
+                    closest_role_index = 0
+                    closest_distance = math.inf
+                    for i in range(len(unassigned_robots)):
+                        for j in range(len(available_roles)):
+                            distance = np.linalg.norm(np.array(friendly_team.formations['initial'][available_roles[j]]) - unassigned_robots[i].position)
+                            if distance < closest_distance:
+                                closest_distance = distance
+                                closest_index = i
+                                closest_role_index = j
+
+                    print(closest_index)
+                    print(closest_role_index)
+                    if unassigned_robots[closest_index].robot_id == current_robot.robot_id:
+                        print("Assigning")
+                        current_robot.role = available_roles[closest_role_index]
+                        break
+                    else:
+                        unassigned_robots.pop(closest_index)
+                        available_roles.pop(closest_role_index)
+
+

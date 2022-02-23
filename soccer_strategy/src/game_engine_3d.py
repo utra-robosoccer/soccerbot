@@ -34,7 +34,7 @@ class GameEngine3D(game_engine.GameEngine):
         for i in range(1, 5):
             if i == robot_id:
                 robots.append(
-                    RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.DISCONNECTED))
+                    RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED))
             else:
                 robots.append(RobotObserved(robot_id=i, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED,
                                             status=Robot.Status.DISCONNECTED))
