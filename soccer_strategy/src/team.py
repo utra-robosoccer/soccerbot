@@ -63,7 +63,7 @@ class Team():
         # this needs to be team-dependent in the future, for now just use the current robot's position
 
         for robot in self.robots:
-            if robot.robot_id == os.getenv('ROBOCUP_ROBOT_ID', 1):
+            if robot.robot_id == int(os.getenv('ROBOCUP_ROBOT_ID', 1)):
                 self.average_ball_position = robot.observed_ball
                 break
 
