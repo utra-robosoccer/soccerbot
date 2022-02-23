@@ -4,7 +4,7 @@ from robot_controlled import RobotControlled
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
-from soccer_msgs.msg import FixedTrajectoryCommand
+from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 import numpy as np
 import tf.transformations
 
@@ -31,9 +31,6 @@ class RobotControlled3D(RobotControlled):
         self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
         self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool,
                                                               queue_size=1)
-        self.obstacles_publisher = rospy.Publisher('/' + robot_name + "/obstacles", PoseArray,
-                                                              queue_size=1)
-        self.localization_reset_publisher = rospy.Publisher('/' + robot_name + "/localization_mode", Bool, queue_size=1)
 
         self.tf_listener = tf.TransformListener()
 
@@ -57,6 +54,57 @@ class RobotControlled3D(RobotControlled):
         self.relocalization_timeout = 0
 
         self.obstacles = PoseArray()
+
+
+        self.update_robot_state_timer = rospy.Timer(rospy.Duration(1), self.update_state, reset=True)
+        self.robot_state_publisher = rospy.Publisher("state", RobotState)
+
+    def update_robot_state(self):
+        # Get Ball Position from TF
+        try:
+            ball_pose = listener.lookupTransform('world', "robot" + str(player_id) + '/ball', rospy.Time(0))
+            header = listener.getLatestCommonTime('world', "robot" + str(player_id) + '/ball')
+            time_diff = rospy.Time.now() - header
+            if time_diff < rospy.Duration(1):
+                ball_position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
+
+                message.ball.position.x = ball_position[0]
+                message.ball.position.y = ball_position[1]
+                message.ball.position.z = ball_position[2]
+                message.ball.covariance.x.x = 1
+                message.ball.covariance.y.y = 1
+                message.ball.covariance.z.z = 1
+            else:
+                rospy.logwarn_throttle(30, "ball position timeout")
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            rospy.logwarn_throttle(30, "cannot get ball position from tf tree")
+
+        # Get Robot Position from TF
+        try:
+            (trans, rot) = listener.lookupTransform('world', "robot" + str(player_id) + '/base_footprint',
+                                                         rospy.Time(0))
+            header = listener.getLatestCommonTime('world', "robot" + str(player_id) + '/base_footprint')
+            time_diff = rospy.Time.now() - header
+            if time_diff < rospy.Duration(1):
+
+                eul = tf.transformations.euler_from_quaternion(rot)
+
+                message.current_pose.position.x = trans[0]
+                message.current_pose.position.y = trans[1]
+                message.current_pose.position.z = eul[2]
+                message.current_pose.covariance.x.x = 1
+                message.current_pose.covariance.y.y = 1
+                message.current_pose.covariance.z.z = 1
+            else:
+                rospy.logwarn_throttle(30, "robot position timeout")
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            rospy.logwarn_throttle(30, "cannot get robot position from tf tree")
+
+        r = RobotState()
+        r.status = self.status
+        r.role = self.role
+        pass
+
 
     def terminate_walk(self):
         self.terminate_walking_publisher.publish()

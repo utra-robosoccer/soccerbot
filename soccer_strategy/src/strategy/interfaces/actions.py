@@ -11,16 +11,12 @@ class Actions:
     @staticmethod
     def stop_all_robots(robots: [Robot]):
         for robot in robots:
-            robot.stop_requested = True
+            robot.status = Robot.Status.STOPPED
 
     @staticmethod
     def resume_all_robots(robots: [Robot]):
         for robot in robots:
-            robot.completed_trajectory_publisher.publish(True)
-            if robot.stop_requested:
-                robot.stop_requested = False
-            if robot.status == Robot.Status.STOPPED:
-                robot.status = Robot.Status.READY
+            robot.status = Robot.Status.READY
 
     @staticmethod
     def kick(robot: [Robot], ball: Ball, target_position):

@@ -6,5 +6,5 @@
 
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" />
 
-    <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" />
+<!--    <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" />-->
 </launch>

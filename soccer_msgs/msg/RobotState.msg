@@ -5,7 +5,7 @@
 
 std_msgs/Header header
 
-uint8 robot_id
+uint8 player_id
 
 uint8 STATUS_DISCONNECTED = 0
 uint8 STATUS_READY = 1
@@ -22,7 +22,6 @@ uint8 STATUS_TRAJECTORY_IN_PROGRESS = 11
 uint8 STATUS_STOPPED = 12
 uint8 status
 
-
 uint8 ROLE_UNASSIGNED = 0
 uint8 ROLE_GOALIE = 1
 uint8 ROLE_STRIKER = 2
@@ -31,8 +30,8 @@ uint8 ROLE_RIGHT_WING = 4
 uint8 role
 
 # Absolute position value (in the map frame)
-geometry_msgs/Pose2D position
+geometry_msgs/Pose pose
 
 # ball position, rotation is not used (in the map frame)
-geometry_msgs/Pose2D ball_estimate
+geometry_msgs/Pose2D ball_pose
 
