@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+
+  simulator:
+    extends:
+      file: docker-compose.yaml
+      service: simulator
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/dri:/dev/dri:rw
+      - /dev/snd:/dev/snd:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_double.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_empty.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
+      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
+
+  friendly1:
+    extends:
+      file: docker-compose.yaml
+      service: friendly
+    environment:
+      X_POS: 4
+      Y_POS: -3.15
+      YAW: 1.57
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "red"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
+      ROBOCUP_MIRROR_SERVER_IP: simulator
+      ROBOCUP_GAMECONTROLLER_IP: simulator
+      ROBOCUP_TEAM_ID: 16
+      ENABLE_PYBULLET: "false"
+      COMPETITION: "true"
+      PYTHONUNBUFFERED: 1
+
+  friendly2: # Left midfield
+    extends:
+      file: docker-compose.yaml
+      service: friendly
+    environment:
+      X_POS: 1
+      Y_POS: -3.15
+      YAW: 1.57
+      ROBOCUP_ROBOT_ID: 2
+      ROBOCUP_TEAM_ID: 16
+      ROBOCUP_TEAM_COLOR: "red"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10002"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      COMPETITION: "true"
+      PYTHONUNBUFFERED: 1

@@ -6,18 +6,18 @@ find_package(Protobuf REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
         soccer_msgs
         soccer_pycontrol
-        soccer_geometry
+        soccer_common
         rospy
         tf
         )
 
 catkin_package()
 
-protobuf_generate_python(PROTO_PY src/game_controller/RobocupProtocol/robocup_extension.proto)
+protobuf_generate_python(PROTO_PY src/communication/robot_state.proto)
 add_custom_target(soccer_strategy ALL DEPENDS ${PROTO_PY})
 add_custom_command(
   TARGET soccer_strategy POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/game_controller
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/communication
 )
 
 include_directories(

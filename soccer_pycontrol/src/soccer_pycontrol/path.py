@@ -30,18 +30,18 @@ class Path:
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)
         if is_short_distance:
-            print("Creating Short Path")
-            print("Start Transform")
-            print(start_transform)
-            print("End Transform")
-            print(end_transform)
+            # print("Creating Short Path")
+            # print("Start Transform")
+            # print(start_transform)
+            # print("End Transform")
+            # print(end_transform)
             return PathSectionShort(start_transform, end_transform)
         else:
-            print("Creating Bezier Path")
-            print("Start Transform")
-            print(start_transform)
-            print("End Transform")
-            print(end_transform)
+            # print("Creating Bezier Path")
+            # print("Start Transform")
+            # print(start_transform)
+            # print("End Transform")
+            # print(end_transform)
             return PathSectionBezier(start_transform, end_transform)
 
     def linearStepCount(self):
