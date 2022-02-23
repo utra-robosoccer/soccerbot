@@ -14,22 +14,20 @@ services:
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
 
-  friendly1: # Goalie
+  friendly1:
     extends:
       file: docker-compose.yaml
       service: friendly
     environment:
       X_POS: 4
       Y_POS: -3.15
-      ANGLE: 1.57
-      GOALIE: "true"
+      YAW: 1.57
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10001"
-      ROBOT_NAME: robot1
-      ROBOCUP_MIRROR_SERVER_IP: 0.0.0.0
-      ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
-      TEAM_ID: 16
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      ROBOCUP_TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
@@ -41,17 +39,14 @@ services:
     environment:
       X_POS: 1
       Y_POS: -3.15
-      ANGLE: 1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot2"
+      YAW: 1.57
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10002"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10002"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
-      SINGLE_STRATEGY_SOURCE: "true"
       PYTHONUNBUFFERED: 1
 
   friendly3: # Striker
@@ -61,18 +56,15 @@ services:
     environment:
       X_POS: 1
       Y_POS: 3.15
-      ANGLE: -1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot3"
+      YAW: -1.57
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10003"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10003"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"
 
   friendly4: # Right midfield
     extends:
@@ -81,18 +73,15 @@ services:
     environment:
       X_POS: 4
       Y_POS: 3.15
-      ANGLE: -1.57
-      GOALIE: "false"
-      ROBOT_NAME: "robot4"
+      YAW: -1.57
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10004"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10004"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"
 
   oppponent1: # Goalie
     extends:
@@ -101,16 +90,15 @@ services:
     environment:
       X_POS: -4
       Y_POS: -3.15
-      ANGLE: 1.57
-      GOALIE: "true"
-      ROBOCUP_TEAM_ID: 16
+      YAW: 1.57
+      ROBOCUP_TEAM_ID: 5
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
-      ROBOT_NAME: robot5
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"
 
   oppponent2: # Left midfield
     extends:
@@ -119,15 +107,15 @@ services:
     environment:
       X_POS: -1
       Y_POS: -3.15
-      ANGLE: 1.57
-      ROBOCUP_TEAM_ID: 16
+      YAW: 1.57
+      ROBOCUP_TEAM_ID: 5
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10022
-      ROBOT_NAME: robot6
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"
 
   oppponent3: # Striker
     extends:
@@ -136,15 +124,15 @@ services:
     environment:
       X_POS: -1
       Y_POS: 3.15
-      ANGLE: -1.57
-      ROBOCUP_TEAM_ID: 16
+      YAW: -1.57
+      ROBOCUP_TEAM_ID: 5
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10023
-      ROBOT_NAME: robot7
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10023"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"
 
   oppponent4: # Right midfield
     extends:
@@ -153,12 +141,12 @@ services:
     environment:
       X_POS: -4
       Y_POS: 3.15
-      ANGLE: -1.57
-      ROBOCUP_TEAM_ID: 16
+      YAW: -1.57
+      ROBOCUP_TEAM_ID: 5
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10024
-      ROBOT_NAME: robot8
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10024"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-      SINGLE_STRATEGY_SOURCE: "true"

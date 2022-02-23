@@ -1,6 +1,7 @@
 import math
 
 from sensor_msgs.msg import JointState, Imu
+from soccer_msgs.msg import RobotState
 from std_msgs.msg import Float64, Bool, Int32
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
@@ -42,25 +43,18 @@ class SoccerbotRos(Soccerbot):
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
-        self.head_not_moving_publisher = rospy.Publisher("move_head", Bool, queue_size=1)
-        # self.localization_reset_subscriber = rospy.Subscriber("localization_mode", Bool, self.localization_callback,
-        #                                                       queue_size=1)
-        # self.localization_reset = False
         self.imu_ready = False
         self.listener = tf.TransformListener()
-        self.head_motor_0 = 0
-        self.head_motor_1 = 0
         self.last_ball_found_timestamp = None
-        self.localization_mode = -1
-        self.localization_mode_subscriber = rospy.Subscriber("localization_mode", Int32, self.localization_mode_callback, queue_size=1)
 
-    def localization_mode_callback(self, msg):
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
+        self.robot_state = RobotState()
+        self.robot_state.status = RobotState.STATUS_DISCONNECTED
 
-        self.localization_mode = msg.data
-        print('self.localization_mode: ', self.localization_mode)
-
-    # def localization_callback(self, msg):
-    #     self.localization_reset = msg.data
+    def state_callback(self, robot_state: RobotState):
+        self.robot_state = robot_state
+        if self.robot_state.status == RobotState.STATUS_TERMINATING_WALK:
+            self.terminate_walk = True
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
@@ -143,24 +137,6 @@ class SoccerbotRos(Soccerbot):
 
     def ready(self):
         super(SoccerbotRos, self).ready()
-        # # hands
-        # self.configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
-        # self.configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
-        # self.configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
-        # self.configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
-        #
-        # # right leg
-        # thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
-        # self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
-        #
-        # # left leg
-        # thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
-        # self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
-        #
-        # # head
-        # self.configuration[Joints.HEAD_1] = 0
-        # self.configuration[Joints.HEAD_2] = 0
-        # self.publishHeight()
 
     def publishHeight(self):
         f = Float64()
@@ -182,60 +158,50 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
+    HEAD_YAW_FREQ = 0.003
+    HEAD_PITCH_FREQ = 0.003
+
     def apply_head_rotation(self):
-        recenterCameraOnBall = False
-        try:
-            (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
-                                                         os.environ["ROS_NAMESPACE"] + '/ball',
-                                                         rospy.Time(0))
-            ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
-                                                                     os.environ["ROS_NAMESPACE"] + '/ball')
-            if rospy.Time.now() - ball_found_timestamp > rospy.Duration(1):
+        if self.robot_state.status == self.robot_state.STATUS_READY:
+            recenterCameraOnBall = False
+            try:
+                (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
+                                                             os.environ["ROS_NAMESPACE"] + '/ball',
+                                                             rospy.Time(0))
+                ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
+                                                                         os.environ["ROS_NAMESPACE"] + '/ball')
+                if rospy.Time.now() - ball_found_timestamp > rospy.Duration(1):
+                    self.last_ball_found_timestamp = None
+                    rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
+                else:
+                    self.last_ball_found_timestamp = ball_found_timestamp
+                    recenterCameraOnBall = True
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 self.last_ball_found_timestamp = None
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
-            else:
-                self.last_ball_found_timestamp = ball_found_timestamp
-                recenterCameraOnBall = True
+                pass
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            self.last_ball_found_timestamp = None
-            rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
-            pass
+            # Search for the ball if can't find the ball
+            if self.last_ball_found_timestamp is None:
+                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+                self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi / 7
+                self.head_step += 1
 
-        # Search for the ball if can't find the ball
-        if self.last_ball_found_timestamp is None:
-            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * Soccerbot.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi / 6 - math.cos(self.head_step * Soccerbot.HEAD_PITCH_FREQ) * math.pi / 6
-            self.head_motor_0 = self.configuration[Joints.HEAD_1]
-            self.head_motor_1 = self.configuration[Joints.HEAD_2]
+            # Recenter the head onto the ball
+            elif recenterCameraOnBall:
+                anglelr = math.atan2(trans[1], trans[0])
+                angleud = math.atan2(trans[2], trans[0])
+                rospy.loginfo_throttle(5, "Ball found")
+
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
+
+        elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
+            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+            self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * (math.pi / 7)
             self.head_step += 1
-
-        # The head not moving publisher
-        head_not_moving = Bool()
-        head_not_moving.data = True
-
-        # Recenter the head onto the ball
-        if recenterCameraOnBall:
-            anglelr = math.atan2(trans[1], trans[0])
-            angleud = math.atan2(trans[2], trans[0])
-            rospy.loginfo_throttle(5, "Ball found, rotating head {} {}".format(anglelr, angleud))
-
-            if anglelr < 0.05 and angleud < 0.05:
-                head_not_moving.data = True
-            else:
-                head_not_moving.data = False
-
-            self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
-            self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
-            self.head_motor_0 = self.configuration[Joints.HEAD_1]
-            self.head_motor_1 = self.configuration[Joints.HEAD_2]
-
-        if self.localization_mode == 0: # Right
+        else:
+            self.configuration[Joints.HEAD_1] = 0
             self.configuration[Joints.HEAD_2] = 0
-            self.configuration[Joints.HEAD_1] = -0.75
-        elif self.localization_mode == 1: # Left
-            self.configuration[Joints.HEAD_2] = 0
-            self.configuration[Joints.HEAD_1] = 0.75
-
-        self.head_not_moving_publisher.publish(head_not_moving)
 

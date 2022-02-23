@@ -3,6 +3,8 @@
 import os
 import time
 
+from soccer_msgs.msg import RobotState
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
@@ -39,7 +41,12 @@ class DetectorFieldline(Detector):
 
         t_start = time.time()
 
-        if not self.camera.ready() or not self.trajectory_complete:
+        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
+                self.robot_state.status is not RobotState.STATUS_WALKING and \
+                self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
+            return
+
+        if not self.camera.ready():
             return
 
         pts = []
@@ -119,7 +126,7 @@ class DetectorFieldline(Detector):
                 self.point_cloud_publisher.publish(point_cloud_msg)
 
         t_end = time.time()
-        rospy.loginfo_throttle(20, "Fieldline detection rate: " + str(t_end - t_start))
+        rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))
 
 
 if __name__ == '__main__':

@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
-import sys
+import os
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
-from game_engine import GameEngine
-from game_engine_competition import GameEngineCompetition
-# useful sudo apt-get install -y python3-rospy
-
-_IN_ROS = True
+from game_engine_3d import GameEngine3D
 
 if __name__ == '__main__':
-    if _IN_ROS:
-        rospy.init_node("soccer_strategy")
-        g = GameEngineCompetition()
-        g.run()
-    else:
-        g = GameEngine()
-        g.run_loop()
-
+    rospy.init_node("soccer_strategy")
+    g = GameEngine3D()
+    g.run()
 

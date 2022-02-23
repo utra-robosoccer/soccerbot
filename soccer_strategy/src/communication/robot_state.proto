@@ -1,0 +1,66 @@
+syntax = "proto3";
+package robocup.humanoid;
+import "google/protobuf/timestamp.proto";
+
+message fvec2 {
+    float x = 1;
+    float y = 2;
+}
+
+message fvec3 {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message fvec4 {
+    float w = 1;
+    float x = 2;
+    float y = 3;
+    float z = 4;
+}
+
+message Pose3D {
+    fvec3 position = 1;
+    fvec4 orientation = 2;
+}
+
+message Pose2D {
+    float x = 1;
+    float y = 2;
+    float theta = 3;
+}
+
+enum Status {
+    STATUS_DISCONNECTED = 0;
+    STATUS_READY = 1;
+    STATUS_LOCALIZING = 2;
+    STATUS_WALKING = 3;
+    STATUS_TERMINATING_WALK = 4;
+    STATUS_KICKING = 5;
+    STATUS_FALLEN_FRONT = 6;
+    STATUS_FALLEN_BACK = 7;
+    STATUS_FALLEN_SIDE = 8;
+    STATUS_PENALTY = 9;
+    STATUS_OUT_OF_BOUNDS = 10;
+    STATUS_TRAJECTORY_IN_PROGRESS = 11;
+    STATUS_STOPPED = 12;
+    STATUS_DETERMINING_SIDE = 13;
+}
+
+enum Role {
+    ROLE_UNASSIGNED = 0;
+    ROLE_GOALIE = 1;
+    ROLE_STRIKER = 2;
+    ROLE_LEFT_WING = 3;
+    ROLE_RIGHT_WING = 4;
+}
+
+message Message {
+    google.protobuf.Timestamp timestamp = 1;
+    uint32 player_id = 2;
+    Status status = 3;
+    Role role = 4;
+    Pose3D pose = 5;
+    Pose2D ball_pose = 6;
+}

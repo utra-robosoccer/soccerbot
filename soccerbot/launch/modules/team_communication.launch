@@ -1,5 +1,0 @@
-<launch>
-    <node name="team_communication" pkg="soccer_strategy" type="team_communication.py"  output="screen">
-        <rosparam file="$(find soccerbot)/config/team_communication_config.yaml" command="load"/>
-    </node>
-</launch>

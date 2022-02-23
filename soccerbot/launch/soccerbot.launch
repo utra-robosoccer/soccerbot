@@ -3,10 +3,9 @@
     <arg name="competition" default="$(optenv COMPETITION false)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
-    <arg name="a_pos" default="$(optenv ANGLE 0)" />
-    <arg name="goalie" default="$(optenv GOALIE true)" />
+    <arg name="a_pos" default="$(optenv YAW 0)" />
     <arg name="fake_localization" default="false" />
-    <arg name="robot_name" default="$(optenv ROBOT_NAME robot1)" />
+    <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <param name="/simulation_active" value="true"/>
@@ -48,8 +47,6 @@
         <arg name="simulation" value="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch" >
-        <arg name="goalie" value="$(arg goalie)" />
-    </include>
+    <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
 </launch>

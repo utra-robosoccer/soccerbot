@@ -1,136 +1,50 @@
 import enum
-from copy import deepcopy
-import tf
-from soccer_pycontrol import path
-from soccer_geometry import transformation
+
+import numpy
+
 from ball import Ball
-import math
-
-import numpy as np
-
+from soccer_msgs.msg import RobotState
+# Root class for robot used by 2D, 3D and 3D friendly robots
 class Robot:
     class Team(enum.IntEnum):
+        UNKNOWN = 0
         FRIENDLY = 1
         OPPONENT = 2
 
+    class TeamColor(enum.IntEnum):
+        UNKNOWN_TEAM = 0
+        BLUE = 1
+        RED = 2
+
+    # https://drive.google.com/file/d/107bBTbxOhYO6FOo8361nhH7ug5c5HON9/view?usp=sharing
     class Role(enum.IntEnum):
-        GOALIE = 1
-        STRIKER = 2
-        LEFT_MIDFIELD = 3
-        RIGHT_MIDFIELD = 4
+        UNASSIGNED = RobotState.ROLE_UNASSIGNED
+        GOALIE = RobotState.ROLE_GOALIE
+        STRIKER = RobotState.ROLE_STRIKER
+        LEFT_WING = RobotState.ROLE_LEFT_WING
+        RIGHT_WING = RobotState.ROLE_RIGHT_WING
 
     class Status(enum.IntEnum):
-        DISCONNECTED = 0
-        READY = 1
-        LOCALIZING = 2
-        WALKING = 3
-        KICKING = 4
-        FALLEN_FRONT = 5
-        FALLEN_BACK = 6
-        FALLEN_SIDE = 7
-        PENALTY = 8
-        OUT_OF_BOUNDS = 9
-        TRAJECTORY_IN_PROGRESS = 10
-        STOPPED = 11  # Game controller
+        DISCONNECTED = RobotState.STATUS_DISCONNECTED
+        DETERMINING_SIDE = RobotState.STATUS_DETERMINING_SIDE
+        READY = RobotState.STATUS_READY
+        LOCALIZING = RobotState.STATUS_LOCALIZING
+        WALKING = RobotState.STATUS_WALKING
+        TERMINATING_WALK = RobotState.STATUS_TERMINATING_WALK
+        KICKING = RobotState.STATUS_KICKING
+        FALLEN_FRONT = RobotState.STATUS_FALLEN_FRONT
+        FALLEN_BACK = RobotState.STATUS_FALLEN_BACK
+        FALLEN_SIDE = RobotState.STATUS_KICKING
+        TRAJECTORY_IN_PROGRESS = RobotState.STATUS_TRAJECTORY_IN_PROGRESS
+        PENALTY = RobotState.STATUS_PENALTY
+        OUT_OF_BOUNDS = RobotState.STATUS_OUT_OF_BOUNDS
+        STOPPED = RobotState.STATUS_STOPPED
 
-    class ObservationConstants:
-        FOV = math.pi/4
-        VISION_RANGE = 3
 
-    def get_position(self):
-        return self.position
-
-    def __init__(self, robot_id, team, role, status, position):
+    def __init__(self, robot_id=0, team=Team.UNKNOWN, role=Role.UNASSIGNED, status=Status.DISCONNECTED, position=numpy.array([0, 0, 0])):
         self.team = team
         self.role = role
         self.status = status
         self.position = position
-        self.start_position = position
-        self.goal_position = position
-        self.path = None
-        self.path_time = 0
         self.robot_id = robot_id
-        self.observed_ball = Ball(None, '2D')
-        self.speed = 0.20
-        self.angular_speed = 0.3#0.3
-        self.max_kick_speed = 2
-        self.robot_name = 'robot %d' % robot_id
-
-    def set_navigation_position(self, position):
-        self.status = Robot.Status.WALKING
-        self.start_position = self.get_position()
-        self.goal_position = position
-        self.path = path.Path(
-            self.position_to_transformation(self.start_position),
-            self.position_to_transformation(self.goal_position)
-        )
-        self.path_time = 0
-
-    def position_to_transformation(self, position):
-        transfrom_position = (position[0], position[1], 0.)
-        q = tf.transformations.quaternion_about_axis(position[2], (0, 0, 1))
-        transform_quaternion = [q[0], q[1], q[2], q[3]]
-        return transformation.Transformation(transfrom_position, transform_quaternion)
-
-    def transformation_to_position(self, transform):
-        transform_position = transform.get_position()
-        transform_quaternion = transform.get_orientation()
-        transfrom_angle = tf.transformations.euler_from_quaternion([
-            transform_quaternion[0],
-            transform_quaternion[1],
-            transform_quaternion[2],
-            transform_quaternion[3],
-        ])
-
-        return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
-
-    def set_kick_velocity(self, kick_velocity):
-        kick_angle_rand = np.random.normal(0, 0.2)
-        kick_force_rand = 1#np.random.normal(1, 0.5)
-
-        rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)],
-                                  [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
-
-        self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
-
-    def get_opponent_net_position(self):
-        if self.team == Robot.Team.FRIENDLY:
-            opponent_goal = np.array([0, 4.5])
-        else:
-            opponent_goal = np.array([0, -4.5])
-        return opponent_goal
-
-    def observe_ball(self, ball):
-        if ball is None or ball.get_position() is None:
-            return
-        theta = self.get_position()[2] #TODO change this to direction vector?
-        arrow_len = 0.3
-        arrow_end_x = math.cos(theta) * arrow_len
-        arrow_end_y = math.sin(theta) * arrow_len
-        robot_direction = np.array([arrow_end_x, arrow_end_y])
-        robot_position = np.array([self.position[0], self.position[1]])
-        ball_position = ball.get_position()
-        ball_to_robot = ball_position - robot_position
-        angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
-        distance = np.linalg.norm(ball_to_robot)
-        if angle < Robot.ObservationConstants.FOV/2 and distance < Robot.ObservationConstants.VISION_RANGE:
-            self.observed_ball.position = ball_position
-        #TODO can add noise here
-
-    def can_kick(self, ball):
-        if ball is None or ball.get_position() is None:
-            return False
-        theta = self.get_position()[2]
-        robot_direction = np.array([math.cos(theta), math.sin(theta)])
-        robot_direction = robot_direction/np.linalg.norm(robot_direction)
-        robot_position = np.array([self.position[0], self.position[1]])
-        ball_position = ball.get_position()
-        ball_to_robot = ball_position - robot_position
-        angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
-        distance = np.linalg.norm(ball_to_robot)
-        if angle < 0.1 and distance < 0.2: #TODO change constants to depend on something
-            return True
-
-
-
-
+        self.observed_ball = Ball()

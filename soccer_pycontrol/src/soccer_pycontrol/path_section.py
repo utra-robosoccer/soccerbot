@@ -45,7 +45,6 @@ class PathSection(ABC):
             j = j + 1
 
         end = time.time()
-        print("Path Creation Time: ", end - start)
 
     @abc.abstractmethod
     def poseAtRatio(self, r):

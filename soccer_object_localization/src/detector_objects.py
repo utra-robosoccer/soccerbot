@@ -3,6 +3,7 @@
 import os
 
 import numpy as np
+from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -27,12 +28,18 @@ class DetectorBall(Detector):
         self.head_motor_1_angle = 0
 
     def jointStatesCallback(self, msg: JointState):
-        index = msg.name.index('head_motor_1')
-        self.head_motor_1_angle =  msg.position[index]
+        if len(msg.name) != 0:
+            index = msg.name.index('head_motor_1')
+            self.head_motor_1_angle =  msg.position[index]
 
     def ballDetectorCallback(self, msg: BoundingBoxes):
+        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
+            self.robot_state.status is not RobotState.STATUS_READY:
+            return
+
         if not self.camera.ready:
             return
+
         self.camera.reset_position(timestamp=msg.header.stamp)
 
         detected_robots = 0
