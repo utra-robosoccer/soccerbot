@@ -7,7 +7,7 @@ from strategy.strategy import Strategy
 from robot import Robot
 
 
-class FreekickStrategy(Strategy):
+class StrategyFreekick(Strategy):
     # preparation if we are the kicking team
     def update_kicking_strategy(self, friendly, ball):
         if not self.check_ball_available(ball):

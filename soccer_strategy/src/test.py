@@ -1,7 +1,7 @@
 from unittest import TestCase
 from game_engine import GameEngine
-from strategy.dummy_strategy import DummyStrategy
-from strategy.decision_tree.formation_strategy import FormationDecisionTreeStrategy
+from strategy.strategy_dummy import StrategyDummy
+from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 
 class Test(TestCase):
     def test_dummy_strategy(self):
@@ -9,8 +9,8 @@ class Test(TestCase):
         opponent_wins = 0
         for i in range(10):
             g = GameEngine()
-            g.team1.strategy = DummyStrategy()
-            g.team2.strategy = DummyStrategy()
+            g.team1.strategy = StrategyDummy()
+            g.team2.strategy = StrategyDummy()
 
             friendly_points, opponent_points = g.run_loop()
             if friendly_points > opponent_points:
@@ -24,8 +24,8 @@ class Test(TestCase):
         opponent_wins = 0
         for i in range(10):
             g = GameEngine()
-            g.team1.strategy = FormationDecisionTreeStrategy()
-            g.team2.strategy = FormationDecisionTreeStrategy()
+            g.team1.strategy = StrategyDecisionTreeLookhead()
+            g.team2.strategy = StrategyDecisionTreeLookhead()
 
             friendly_points, opponent_points = g.run_loop()
             if friendly_points > opponent_points:

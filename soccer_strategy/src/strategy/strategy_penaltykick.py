@@ -2,11 +2,11 @@ import numpy as np
 from soccer_msgs.msg import GameState
 
 import config as config
-from strategy.freekick_strategy import FreekickStrategy
+from strategy.strategy_freekick import StrategyFreekick
 from team import Team
 
 
-class PenaltykickStrategy(FreekickStrategy):
+class StrategyPenaltykick(StrategyFreekick):
     # preparation if we are not the kicking team
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         if friendly_team.average_ball_position is None:

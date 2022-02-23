@@ -4,12 +4,10 @@ import rospy
 
 import config as config
 from strategy.strategy import Strategy
-from soccer_msgs.msg import GameState
-from robot import Robot
 from strategy.utils import *
 from team import Team
-from ball import Ball
 from soccer_msgs.msg import GameState
+from strategy.interfaces.evaluations import Evaluations
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 6
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
@@ -27,11 +25,11 @@ class Thresholds:
     PASSING = 2  # distance for obstacle detection when moving to a position
 
 
-class DummyStrategy(Strategy):
+class StrategyDummy(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        super(DummyStrategy, self).__init__()
+        super(StrategyDummy, self).__init__()
 
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -44,7 +42,7 @@ class DummyStrategy(Strategy):
 
             if abs(ball.position[1]) < 3.5 and abs(ball.position[0]) < 5:
 
-                current_closest = self.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
+                current_closest = Evaluations.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
                 if current_closest is not None:  # and current_closest.send_nav:
 
                     # generate destination pose

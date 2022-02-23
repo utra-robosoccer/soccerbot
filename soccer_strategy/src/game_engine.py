@@ -1,4 +1,5 @@
 import _thread
+import random
 
 from soccer_msgs.msg import GameState
 from vispy import app
@@ -6,9 +7,7 @@ from vispy import app
 from robot import Robot
 from robot_controlled_2d import RobotControlled2D
 from ball import Ball
-from strategy.stationary_strategy import StationaryStrategy
-from strategy.dummy_strategy import DummyStrategy
-from strategy.decision_tree.formation_strategy import FormationDecisionTreeStrategy
+from strategy.strategy_dummy import StrategyDummy
 from team import Team
 from game_engine_scene import Scene
 
@@ -35,7 +34,7 @@ class GameEngine:
             RobotControlled2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi]))
         ])
-        self.team1.strategy = FormationDecisionTreeStrategy()
+        self.team1.strategy = StrategyDummy()
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team([
@@ -48,7 +47,7 @@ class GameEngine:
             RobotControlled2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ])
-        self.team2.strategy = FormationDecisionTreeStrategy()
+        self.team2.strategy = StrategyDummy()
         self.team2_init = copy.deepcopy(self.team2)
 
         self.ball = Ball()
@@ -103,8 +102,7 @@ class GameEngine:
 
     def update_estimated_physics(self, robots, ball):  # TODO why is ball passed here?
         # Robot do action in a random priority order
-        for robot in robots:
-            # for robot in sorted(robots, key=lambda _: random.random()):
+        for robot in sorted(robots, key=lambda _: random.random()):
             robot.observe_ball(ball)  # TODO better place for this?
             if robot.status == Robot.Status.WALKING:
                 robot.path_time = robot.path_time + GameEngine.PHYSICS_UPDATE_INTERVAL

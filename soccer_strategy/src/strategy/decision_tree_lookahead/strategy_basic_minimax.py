@@ -4,6 +4,7 @@ import config
 from team import Team
 from soccer_msgs.msg import GameState
 from strategy.decision_tree_strategy import DecisionTreeStrategy, State, Action, Agent
+from strategy.interfaces.evaluations import Evaluations
 import numpy as np
 
 class FormationAction(Action):
@@ -21,33 +22,37 @@ class FormationAction(Action):
         self.player_4_action = FormationAction.Action.STAND_STILL
 
 # State
-class FormationState(State):
+class FormationState(State, Evaluations):
     def __init__(self, friendly_team=None, opponent_team=None, game_state=None):
         super(FormationState, self).__init__(friendly_team, opponent_team, game_state)
 
-
-class FormationDecisionTreeStrategy(DecisionTreeStrategy):
-
-    def PlayerStrategy(self, robot, team):
-        isClosestToBall = lambda : self.is_closest_to_ball(robot, team)
-        canKick = lambda : self.can_kick_ball(robot, team)
-
-        if isClosestToBall():
-            if canKick():
-                return FormationAction.Action.KICK
-            else:
-                return FormationAction.Action.GO_TO_BALL
+    def getLegalActions(self, currAgent: Agent) -> []:
+        if currAgent == Agent.FRIENDLY:
+            team = self.friendly_team
         else:
-            return FormationAction.Action.GO_TO_FORMATION_POSITION
+            team = self.opponent_team
 
+        def determinePlayerAction(robot):
+            isClosestToBall = lambda: self.is_closest_to_ball(robot, self.friendly_team)
+            canKick = lambda: self.can_kick_ball(robot, self.friendly_team)
 
-    def PredeterminedDecisionTree(self, state: State, currAgent: Agent, depth: int) -> (FormationAction, float):
+            if isClosestToBall():
+                if canKick():
+                    return FormationAction.Action.KICK
+                else:
+                    return FormationAction.Action.GO_TO_BALL
+            else:
+                return FormationAction.Action.GO_TO_FORMATION_POSITION
+
         a = FormationAction()
-        a.player_1_action = self.PlayerStrategy(state.friendly_team.robots[0], state.friendly_team)
-        a.player_2_action = self.PlayerStrategy(state.friendly_team.robots[1], state.friendly_team)
-        a.player_3_action = self.PlayerStrategy(state.friendly_team.robots[2], state.friendly_team)
-        a.player_4_action = self.PlayerStrategy(state.friendly_team.robots[3], state.friendly_team)
-        return a, 0
+        a.player_1_action = determinePlayerAction(team.robots[0])
+        a.player_2_action = determinePlayerAction(team.robots[1])
+        a.player_3_action = determinePlayerAction(team.robots[2])
+        a.player_4_action = determinePlayerAction(team.robots[3])
+        return [a]
+
+
+class StrategyFormationDecisionTree(DecisionTreeStrategy):
 
     def executeBestMove(self, state: FormationState, action: FormationAction):
         # Decide formation
@@ -81,4 +86,4 @@ class FormationDecisionTreeStrategy(DecisionTreeStrategy):
     def getInitialState(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         return FormationState(friendly_team, opponent_team, game_state)
 
-    DECISION_ALGORITHM = PredeterminedDecisionTree
+    TREE_DEPTH = 1
