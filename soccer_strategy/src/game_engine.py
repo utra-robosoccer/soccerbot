@@ -8,6 +8,7 @@ from robot import Robot
 from robot_controlled_2d import RobotControlled2D
 from ball import Ball
 from strategy.strategy_dummy import StrategyDummy
+from strategy.strategy_stationary import StrategyStationary
 from team import Team
 from game_engine_scene import Scene
 
@@ -17,10 +18,11 @@ import copy
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 10  # Every 5 physics steps
-    DISPLAY_UPDATE_INTERVAL = 1  # Every 5 physics steps
+    STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
+    DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 physics steps
 
-    def __init__(self, display=True):
+
+    def __init__(self, display=True, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy):
         self.display = display
 
         # Initialize teams
@@ -34,7 +36,8 @@ class GameEngine:
             RobotControlled2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([0.8, 0.0, -math.pi]))
         ])
-        self.team1.strategy = StrategyDummy()
+        self.team1.strategy = team_1_strategy()
+        self.team1.flip_positions()
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team([
@@ -47,7 +50,7 @@ class GameEngine:
             RobotControlled2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
                   position=np.array([-0.8, 0.0, 0]))
         ])
-        self.team2.strategy = StrategyDummy()
+        self.team2.strategy = team_2_strategy()
         self.team2_init = copy.deepcopy(self.team2)
 
         self.ball = Ball()
@@ -81,15 +84,19 @@ class GameEngine:
             if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
                 self.team1.average_ball_position = self.ball
                 self.team2.average_ball_position = self.ball
+                print("Team 1 Strategy Update")
                 self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
+                print("Team 2 Strategy Update")
                 self.team2.strategy.update_next_strategy(self.team2, self.team1, self.gameState)
 
             # Check victory condition
             if self.ball.position[0] > 4.5:
+                print("----------------------------------------------------------------------")
                 print("Friendly Scores!")
                 friendly_points += 1
                 self.reset_robots()
             elif self.ball.position[0] < -4.5:
+                print("----------------------------------------------------------------------")
                 print("Opponent Scores!")
                 opponent_points += 1
                 self.reset_robots()
@@ -97,6 +104,7 @@ class GameEngine:
             if self.display and step % GameEngine.DISPLAY_UPDATE_INTERVAL == 0:
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
+        print("----------------------------------------------------------------------")
         print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
         return friendly_points, opponent_points
 
@@ -140,6 +148,6 @@ class GameEngine:
                 self.ball.velocity = np.array([0, 0])
 
     def reset_robots(self):
-        self.team1 = self.team1_init
-        self.team2 = self.team2_init
+        self.team1 = copy.deepcopy(self.team1_init)
+        self.team2 = copy.deepcopy(self.team2_init)
         self.ball = copy.deepcopy(self.ball_init)

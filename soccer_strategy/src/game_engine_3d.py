@@ -10,14 +10,13 @@ from robot_observed import RobotObserved
 from ball import Ball
 from team import Team
 import game_engine
-import config
-from strategy.freekick_strategy import FreekickStrategy
-from strategy.decision_tree.formation_strategy import FormationDecisionTreeStrategy
-from strategy.penaltykick_strategy import PenaltykickStrategy
-from strategy.ready_strategy import ReadyStrategy
-from strategy.initial_strategy import InitialStrategy
-from strategy.finished_strategy import FinishedStrategy
-from strategy.set_strategy import SetStrategy
+from strategy.strategy_freekick import StrategyFreekick
+from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
+from strategy.strategy_penaltykick import StrategyPenaltykick
+from strategy.strategy_ready import StrategyReady
+from strategy.strategy_initial import StrategyInitial
+from strategy.strategy_finished import StrategyFinished
+from strategy.strategy_set import StrategySet
 
 
 class GameEngine3D(game_engine.GameEngine):
@@ -78,31 +77,31 @@ class GameEngine3D(game_engine.GameEngine):
 
     def decide_strategy(self):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
-            self.team1.strategy = InitialStrategy()
+            self.team1.strategy = StrategyInitial()
         elif self.gameState.gameState == GameState.GAMESTATE_READY:
-            self.team1.strategy = ReadyStrategy()
+            self.team1.strategy = StrategyReady()
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.gameState.hasKickOff:
-                    self.team1.strategy = FormationDecisionTreeStrategy()
+                    self.team1.strategy = StrategyDecisionTreeLookhead()
                 else:
-                    self.team1.strategy = SetStrategy()
+                    self.team1.strategy = StrategySet()
             elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
-                self.team1.strategy = FreekickStrategy()
+                self.team1.strategy = StrategyFreekick()
             elif self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
-                self.team1.strategy = FreekickStrategy()
+                self.team1.strategy = StrategyFreekick()
             elif self.gameState.secondaryState == GameState.STATE_CORNER_KICK:
-                self.team1.strategy = FreekickStrategy()
+                self.team1.strategy = StrategyFreekick()
             elif self.gameState.secondaryState == GameState.STATE_GOAL_KICK:
-                self.team1.strategy = FreekickStrategy()
+                self.team1.strategy = StrategyFreekick()
             elif self.gameState.secondaryState == GameState.STATE_THROW_IN:
-                self.team1.strategy = FreekickStrategy()
+                self.team1.strategy = StrategyFreekick()
             elif self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
-                self.team1.strategy = PenaltykickStrategy()
+                self.team1.strategy = StrategyPenaltykick()
             elif self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                self.team1.strategy = PenaltykickStrategy()
+                self.team1.strategy = StrategyPenaltykick()
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
-            self.team1.strategy = FinishedStrategy()
+            self.team1.strategy = StrategyFinished()
 
     # run loop
     def run(self):

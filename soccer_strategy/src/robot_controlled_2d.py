@@ -62,7 +62,10 @@ class RobotControlled2D(RobotControlled):
 
     def set_kick_velocity(self, kick_velocity):
         kick_angle_rand = np.random.normal(0, 0.2)
-        kick_force_rand = 1 #np.random.normal(1, 0.5)
+        kick_force_rand = np.random.normal(1, 0.4)
+        miss_ball = np.random.uniform(0, 1)
+        if miss_ball < 0.2:
+            kick_force_rand = 0
 
         rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)],
                                   [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])

@@ -2,7 +2,6 @@ import numpy as np
 import rospy
 import math
 
-import config as config
 from strategy.strategy import Strategy
 from robot import Robot
 

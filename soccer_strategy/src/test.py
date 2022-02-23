@@ -1,6 +1,7 @@
 from unittest import TestCase
 from game_engine import GameEngine
 from strategy.strategy_dummy import StrategyDummy
+from strategy.strategy_stationary import StrategyStationary
 from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 
 class Test(TestCase):
@@ -8,9 +9,7 @@ class Test(TestCase):
         friendly_wins = 0
         opponent_wins = 0
         for i in range(10):
-            g = GameEngine()
-            g.team1.strategy = StrategyDummy()
-            g.team2.strategy = StrategyDummy()
+            g = GameEngine(team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy)
 
             friendly_points, opponent_points = g.run_loop()
             if friendly_points > opponent_points:

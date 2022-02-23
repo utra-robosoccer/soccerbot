@@ -1,10 +1,10 @@
 import enum
 
-import config
 from team import Team
 from soccer_msgs.msg import GameState
-from strategy.decision_tree_strategy import DecisionTreeStrategy, State, Action, Agent
+from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead, State, Action, Agent
 from strategy.interfaces.evaluations import Evaluations
+from strategy.interfaces.actions import Actions
 import numpy as np
 
 class FormationAction(Action):
@@ -52,7 +52,7 @@ class FormationState(State, Evaluations):
         return [a]
 
 
-class StrategyFormationDecisionTree(DecisionTreeStrategy):
+class StrategyFormationDecisionTree(StrategyDecisionTreeLookhead):
 
     def executeBestMove(self, state: FormationState, action: FormationAction):
         # Decide formation
@@ -72,11 +72,11 @@ class StrategyFormationDecisionTree(DecisionTreeStrategy):
             if action == FormationAction.Action.STAND_STILL:
                 pass
             elif action == FormationAction.Action.GO_TO_FORMATION_POSITION:
-                self.navigation_to_position(robot, config.FORMATIONS[formation][robot.role])
+                Actions.navigation_to_position(robot, state.friendly_team.formations[formation][robot.role])
             elif action == FormationAction.Action.KICK:
-                self.kick(robot, state.friendly_team.average_ball_position)
+                Actions.kick(robot, state.friendly_team.average_ball_position, state.friendly_team.enemy_goal_position)
             elif action == FormationAction.Action.GO_TO_BALL:
-                self.navigate_to_position_with_offset(robot, state.friendly_team.average_ball_position)
+                Actions.navigate_to_position_with_offset(robot, state.friendly_team.average_ball_position, state.friendly_team.enemy_goal_position)
 
         executeMove(state.friendly_team.robots[0], action.player_1_action)
         executeMove(state.friendly_team.robots[1], action.player_2_action)
