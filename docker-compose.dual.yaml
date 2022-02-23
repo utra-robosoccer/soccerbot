@@ -41,7 +41,7 @@ services:
       Y_POS: -3.15
       YAW: 1.57
       ROBOCUP_ROBOT_ID: 2
-      ROBOCUP_TEAM_ID: 5
+      ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10002"
       ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
