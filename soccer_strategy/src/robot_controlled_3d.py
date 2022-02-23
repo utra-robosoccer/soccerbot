@@ -48,6 +48,19 @@ class RobotControlled3D(RobotControlled):
         self.update_robot_state_timer = rospy.Timer(rospy.Duration(1), self.update_robot_state, reset=True)
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
+    def set_navigation_position(self, goal_position):
+        super().set_navigation_position(goal_position)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.pose.position.x = self.goal_position[0]
+        p.pose.position.y = self.goal_position[1]
+        p.pose.position.z = 0
+        p.pose.orientation.x = 0
+        p.pose.orientation.y = 0
+        p.pose.orientation.z = 0
+        p.pose.orientation.w = 1
+        self.goal_publisher.publish(p)
+
     def update_robot_state(self, _):
         # Get Ball Position from TF
         try:
