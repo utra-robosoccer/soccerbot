@@ -1,3 +1,4 @@
+import numpy as np
 import tf
 import rospy
 import tf.transformations
@@ -13,10 +14,10 @@ class RobotObserved(Robot):
 
     def robot_state_callback(self, r: RobotState):
         self.robot_id = r.player_id
-        self.status = r.status
-        self.role = r.role
+        self.status = Robot.Status(r.status)
+        self.role = Robot.Role(r.role)
         eul = tf.transformations.euler_from_quaternion([r.pose.orientation.x, r.pose.orientation.y, r.pose.orientation.z, r.pose.orientation.w])
-        self.position = [r.pose.position.x, r.pose.position.y, eul[2]]
+        self.position = np.array([r.pose.position.x, r.pose.position.y, eul[2]])
 
         self.observed_ball.position[0] = r.ball_pose.x
         self.observed_ball.position[1] = r.ball_pose.y
