@@ -47,7 +47,7 @@ if __name__ == '__main__':
         m.ball_pose.theta = robot_state.ball_pose.theta
         m_str = m.SerializeToString()
         for port in send_ports:
-            rospy.logdebug(f'Sending to {port} on 127.0.0.1', logger_name="team_comm")
+            rospy.loginfo(f'Sending to {port} on 127.0.0.1', logger_name="team_comm")
             s.sendto(m_str, ('127.0.0.1', port))
 
     while not rospy.is_shutdown() and s is None:

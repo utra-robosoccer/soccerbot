@@ -1,3 +1,4 @@
+import os
 from robot import Robot
 from robot_controlled import RobotControlled
 
@@ -12,97 +13,85 @@ from sensor_msgs.msg import Imu
 
 
 class RobotControlled3D(RobotControlled):
-    def __init__(self, team, role, status, robot_name):
+    def __init__(self, team, role, status):
         super().__init__(team, role, status)
 
         # Subscibers
-        self.imu_subsciber = rospy.Subscriber('/' + robot_name + "/imu_filtered", Imu, self.imu_callback)
-        self.completed_walking_subscriber = rospy.Subscriber('/' + robot_name + "/completed_walking", Empty,
+        self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
+        self.completed_walking_subscriber = rospy.Subscriber("completed_walking", Empty,
                                                              self.completed_walking_callback)
-        self.completed_trajectory_subscriber = rospy.Subscriber('/' + robot_name + "/trajectory_complete", Bool,
+        self.completed_trajectory_subscriber = rospy.Subscriber("trajectory_complete", Bool,
                                                                 self.completed_trajectory_subscriber)
-        self.move_head_subscriber = rospy.Subscriber('/' + robot_name + "/move_head", Bool, self.move_head_callback)
 
         # Publishers
-        self.robot_initial_pose_publisher = rospy.Publisher('/' + robot_name + "/initialpose", PoseWithCovarianceStamped,
+        self.robot_initial_pose_publisher = rospy.Publisher("/initialpose", PoseWithCovarianceStamped,
                                                             queue_size=1)
-        self.goal_publisher = rospy.Publisher('/' + robot_name + "/goal", PoseStamped, queue_size=1, latch=True)
-        self.trajectory_publisher = rospy.Publisher('/' + robot_name + "/command", FixedTrajectoryCommand, queue_size=1)
-        self.terminate_walking_publisher = rospy.Publisher('/' + robot_name + "/terminate_walking", Empty, queue_size=1)
-        self.completed_trajectory_publisher = rospy.Publisher('/' + robot_name + "/trajectory_complete", Bool,
+        self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
+        self.trajectory_publisher = rospy.Publisher("command", FixedTrajectoryCommand, queue_size=1)
+        self.terminate_walking_publisher = rospy.Publisher("terminate_walking", Empty, queue_size=1)
+        self.completed_trajectory_publisher = rospy.Publisher("/trajectory_complete", Bool,
                                                               queue_size=1)
 
         self.tf_listener = tf.TransformListener()
 
-        self.team = team
-        self.role = role
-        self.robot_name = robot_name
-
-        self.position = np.array([-3, -3, 0])  # 1.57
-        self.goal_position = np.array([0.0, 0.0, 0])
-        self.ball_position = np.array([0.0, 0.0])
-        self.robot_id = int(self.robot_name[-1])
+        self.robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
+        self.robot_name = "robot " + str(self.robot_id)
 
         # Configuration
-        self.max_kick_speed = 2
         self.kick_with_right_foot = True
 
-        self.send_nav = False
-
         # terminate all action
-        self.designated_kicker = False
         self.relocalization_timeout = 0
 
         self.obstacles = PoseArray()
 
 
-        self.update_robot_state_timer = rospy.Timer(rospy.Duration(1), self.update_state, reset=True)
-        self.robot_state_publisher = rospy.Publisher("state", RobotState)
+        self.update_robot_state_timer = rospy.Timer(rospy.Duration(1), self.update_robot_state, reset=True)
+        self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
-    def update_robot_state(self):
+    def update_robot_state(self, _):
         # Get Ball Position from TF
         try:
-            ball_pose = listener.lookupTransform('world', "robot" + str(player_id) + '/ball', rospy.Time(0))
-            header = listener.getLatestCommonTime('world', "robot" + str(player_id) + '/ball')
+            ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball', rospy.Time(0))
+            header = self.tf_listener.getLatestCommonTime('world', "robot" + str(self.robot_id) + '/ball')
             time_diff = rospy.Time.now() - header
             if time_diff < rospy.Duration(1):
-                ball_position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
-
-                message.ball.position.x = ball_position[0]
-                message.ball.position.y = ball_position[1]
-                message.ball.position.z = ball_position[2]
-                message.ball.covariance.x.x = 1
-                message.ball.covariance.y.y = 1
-                message.ball.covariance.z.z = 1
+                self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
             else:
                 rospy.logwarn_throttle(30, "ball position timeout")
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "cannot get ball position from tf tree")
+            rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
 
         # Get Robot Position from TF
+        trans = [self.position[0], self.position[1], 0]
+        rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
         try:
-            (trans, rot) = listener.lookupTransform('world', "robot" + str(player_id) + '/base_footprint',
-                                                         rospy.Time(0))
-            header = listener.getLatestCommonTime('world', "robot" + str(player_id) + '/base_footprint')
-            time_diff = rospy.Time.now() - header
-            if time_diff < rospy.Duration(1):
+            (trans, rot) = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/base_footprint', rospy.Time(0))
+            eul = tf.transformations.euler_from_quaternion(rot)
+            self.position = np.array([trans[0], trans[1], eul[2]])
+            if self.status == Robot.Status.DISCONNECTED:
+                self.status = Robot.Status.READY
 
-                eul = tf.transformations.euler_from_quaternion(rot)
-
-                message.current_pose.position.x = trans[0]
-                message.current_pose.position.y = trans[1]
-                message.current_pose.position.z = eul[2]
-                message.current_pose.covariance.x.x = 1
-                message.current_pose.covariance.y.y = 1
-                message.current_pose.covariance.z.z = 1
-            else:
-                rospy.logwarn_throttle(30, "robot position timeout")
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "cannot get robot position from tf tree")
+            rospy.logwarn_throttle(30, "Unable to locate robot in TF tree")
 
+        # Publish Robot state info
         r = RobotState()
+        r.header.stamp = rospy.Time.now()
+        r.player_id = self.robot_id
         r.status = self.status
         r.role = self.role
+        r.pose.position.x = trans[0]
+        r.pose.position.y = trans[1]
+        r.pose.position.z = trans[2]
+        r.pose.orientation.x = rot[0]
+        r.pose.orientation.y = rot[1]
+        r.pose.orientation.z = rot[2]
+        r.pose.orientation.w = rot[3]
+        r.ball_pose.x = self.observed_ball.position[0]
+        r.ball_pose.y = self.observed_ball.position[1]
+        r.ball_pose.theta = 0
+        self.robot_state_publisher.publish(r)
         pass
 
 
@@ -129,20 +118,12 @@ class RobotControlled3D(RobotControlled):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
 
-    def move_head_callback(self, data):
-        self.send_nav = data.data
-        pass
-
     def completed_walking_callback(self, data):
         rospy.loginfo(f"{self.robot_name} Completed Walking")
         if self.status == Robot.Status.WALKING:
             self.status = Robot.Status.READY
-            temp = Bool()
-            temp.data = True
-            self.localization_reset_publisher.publish(temp)
-            rospy.sleep(1.25)
-            temp.data = False
-            self.localization_reset_publisher.publish(temp)
+        elif self.status == Robot.Status.TERMINATING_WALK:
+            self.status = Robot.Status.READY
 
     def completed_trajectory_subscriber(self, data):
         rospy.loginfo(f"{self.robot_name} Completed Trajectory")
@@ -154,24 +135,8 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.READY
                 temp = Bool()
                 temp.data = True
-                self.localization_reset_publisher.publish(temp)
                 rospy.sleep(1.25)
                 temp.data = False
-                self.localization_reset_publisher.publish(temp)
-
-    def update_position(self):
-        try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', self.robot_name + '/base_footprint', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            return self.position
-
-        eul = tf.transformations.euler_from_quaternion(rot)
-        self.position = [trans[0], trans[1], eul[2]]
-
-        if self.status == Robot.Status.DISCONNECTED:
-            self.status = Robot.Status.READY
-
-        return self.position
 
     def imu_callback(self, msg):
         angle_threshold = 1.25  # in radian
@@ -221,7 +186,7 @@ class RobotControlled3D(RobotControlled):
             self.previous_status = self.status
 
         if self.status == Robot.Status.DISCONNECTED:
-            self.update_position()
+            pass
 
         elif self.status == Robot.Status.READY:
             if self.stop_requested:
@@ -229,8 +194,7 @@ class RobotControlled3D(RobotControlled):
 
         elif self.status == Robot.Status.WALKING:
             if self.stop_requested:
-                self.terminate_walking_publisher.publish()
-                self.status = Robot.Status.STOPPED
+                self.status = Robot.Status.TERMINATING_WALK
 
         elif self.status == Robot.Status.KICKING:
             f = FixedTrajectoryCommand()

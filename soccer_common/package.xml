@@ -7,5 +7,8 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <depend>rospy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>soccer_msgs</depend>
 
 </package>

@@ -3,6 +3,8 @@
 import os
 import time
 
+from soccer_msgs.msg import RobotState
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
@@ -39,7 +41,10 @@ class DetectorFieldline(Detector):
 
         t_start = time.time()
 
-        if not self.camera.ready() or not self.trajectory_complete:
+        if self.robot_state is not RobotState.STATUS_LOCALIZING and self.robot_state is not RobotState.STATUS_WALKING:
+            return
+
+        if not self.camera.ready():
             return
 
         pts = []

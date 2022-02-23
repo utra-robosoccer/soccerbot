@@ -1,4 +1,7 @@
 import enum
+
+import numpy
+
 from ball import Ball
 from soccer_msgs.msg import RobotState
 # Root class for robot used by 2D, 3D and 3D friendly robots
@@ -35,10 +38,11 @@ class Robot:
         OUT_OF_BOUNDS = RobotState.STATUS_OUT_OF_BOUNDS
         STOPPED = RobotState.STATUS_STOPPED
 
-    def __init__(self, robot_id=0, team=Team.UNKNOWN, role=Role.UNASSIGNED, status=Status.DISCONNECTED, position=None):
+
+    def __init__(self, robot_id=0, team=Team.UNKNOWN, role=Role.UNASSIGNED, status=Status.DISCONNECTED, position=numpy.array([0, 0, 0])):
         self.team = team
         self.role = role
         self.status = status
         self.position = position
         self.robot_id = robot_id
-        self.observed_ball = Ball(None)
+        self.observed_ball = Ball()

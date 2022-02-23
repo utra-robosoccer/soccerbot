@@ -21,8 +21,7 @@ from strategy.strategy_set import StrategySet
 
 class GameEngine3D(game_engine.GameEngine):
     # Seconds
-    STRATEGY_UPDATE_INTERVAL = 1
-    TEAM_COMMUNICATION_LOG_INTERVAL = 5
+    STRATEGY_UPDATE_INTERVAL = 5
 
     GameStateMap = ["GAMESTATE_INITIAL",
                     "GAMESTATE_READY",
@@ -49,19 +48,18 @@ class GameEngine3D(game_engine.GameEngine):
 
     def __init__(self):
         robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
-        robot_name = "robot" + str(robot_id)
         team_id = int(os.getenv("TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: {robot_id}, robot_name: {robot_name},  team id {team_id}")
+        rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
 
-        self.team1 = Team([
-            RobotObserved(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotObserved(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotObserved(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY),
-            RobotObserved(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY)
-        ])
-        self.team1.robots[robot_id] = RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY, robot_name=robot_name)
-        self.team2 = Team({})
-        self.ball = Ball(position=None)
+        robots = []
+        for i in range(1, 5):
+            if i == robot_id:
+                robots.append(RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY))
+            else:
+                robots.append(RobotObserved(robot_id=i, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.READY))
+        self.team1 = Team(robots)
+        self.team2 = Team([])
+        self.ball = Ball()
 
         # GameState
         self.gameState = GameState()
@@ -116,6 +114,10 @@ class GameEngine3D(game_engine.GameEngine):
                 self.decide_strategy()
 
                 # Run the strategy
+                print("Replanning Strategy: " + str(type(self.team1.strategy)))
+                self.team1.log()
                 self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
+
+
 
             rostime_previous = rostime
