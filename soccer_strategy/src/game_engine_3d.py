@@ -26,7 +26,7 @@ class GameEngine3D(game_engine.GameEngine):
     SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('MODE')}
 
     def __init__(self):
-        robot_id = os.getenv("ROBOCUP_ROBOT_ID", 1)
+        robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
         team_id = int(os.getenv("TEAM_ID", "16"))
         rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
 
@@ -50,7 +50,7 @@ class GameEngine3D(game_engine.GameEngine):
         self.game_state_subscriber = rospy.Subscriber('gamestate', GameState, self.gamestate_callback)
 
     def robot(self) -> RobotControlled3D:
-        return self.team1.robots[os.getenv("ROBOCUP_ROBOT_ID", 1) - 1]
+        return self.team1.robots[int(os.getenv("ROBOCUP_ROBOT_ID", 1)) - 1]
 
     def gamestate_callback(self, gameState: GameState):
         if self.gameState.gameState != gameState.gameState or self.gameState.secondaryState != gameState.secondaryState or self.gameState.secondaryStateMode != gameState.secondaryStateMode:
@@ -108,7 +108,6 @@ class GameEngine3D(game_engine.GameEngine):
             if rostime % self.team1.strategy.update_frequency < rostime_previous % self.team1.strategy.update_frequency:
                 # Decide what strategy to run
                 self.decide_strategy()
-
                 # Run the strategy
                 print("-----------------------------------------")
                 print(
@@ -119,3 +118,5 @@ class GameEngine3D(game_engine.GameEngine):
                 self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
 
             rostime_previous = rostime
+
+            rospy.sleep(0.2)

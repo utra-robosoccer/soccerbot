@@ -97,6 +97,9 @@ class GameControllerBridge():
             try:
                 if self.socket is None:
                     self.socket = self.get_connection(self.addr)
+                    if self.socket is None:
+                        time.sleep(3)
+                        continue
 
                 msg = self.receive_msg()
                 self.handle_sensor_measurements_msg(msg)
@@ -137,17 +140,21 @@ class GameControllerBridge():
                     # publish the message
                     odom_pub.publish(odom)
             except socket.timeout as s:
-                rospy.logwarn_throttle(5, s)
+                print(s)
                 self.socket = None
-                time.sleep(1)
+                time.sleep(3)
             except ConnectionRefusedError as ex:
-                rospy.logwarn_throttle(5, ex)
+                print(ex)
                 self.socket = None
-                time.sleep(1)
+                time.sleep(3)
             except ConnectionResetError as ex:
-                rospy.logwarn_throttle(5, ex)
+                print(ex)
                 self.socket = None
-                time.sleep(1)
+                time.sleep(3)
+            except socket.gaierror as ex:
+                print(ex)
+                self.socket = None
+                time.sleep(3)
 
         self.close_connection()
 
@@ -181,19 +188,19 @@ class GameControllerBridge():
     def get_connection(self, addr):
         host, port = addr.split(':')
         port = int(port)
-        rospy.loginfo_throttle(5, f"Connecting to '{addr}'", logger_name="rc_api")
+        print(f"Connecting to '{addr}'")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
         response = sock.recv(8).decode('utf8')
         if response == "Welcome\0":
-            rospy.loginfo(f"Successfully connected to '{addr}'", logger_name="rc_api")
+            print(f"Successfully connected to '{addr}'")
             return sock
         elif response == "Refused\0":
-            rospy.logerr(f"Connection refused by '{addr}'", logger_name="rc_api")
-            sys.exit(1)
+            print(f"Connection refused by '{addr}'")
+            return None
         else:
-            rospy.logerr(f"Could not connect to '{addr}'\nGot response '{response}'", logger_name="rc_api")
-            sys.exit(1)
+            print(f"Could not connect to '{addr}'\nGot response '{response}'", logger_name="rc_api")
+            return None
 
     def close_connection(self):
         if hasattr(self, 'socket') and self.socket is not None:

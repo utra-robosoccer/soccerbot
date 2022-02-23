@@ -22,17 +22,18 @@ class RobotControlled(Robot):
 
     def set_navigation_position(self, goal_position):
         self.start_position = self.position
-        if np.linalg.norm(self.goal_position - goal_position) < 0.05:
-            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old" +  str(goal_position))
 
-        if self.goal_position is None or not np.allclose(goal_position, self.goal_position):
-            print("New Goal too close to previous goal: New " + str(goal_position))
-            self.goal_position = goal_position
-            self.path = path.Path(
-                self.position_to_transformation(self.start_position),
-                self.position_to_transformation(self.goal_position)
-            )
-            self.status = Robot.Status.WALKING
+        if self.goal_position is not None and np.linalg.norm(self.goal_position - goal_position) < 0.05:
+            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old" + str(goal_position))
+            return
+
+        print("New Goal: " + str(goal_position))
+        self.goal_position = goal_position
+        self.path = path.Path(
+            self.position_to_transformation(self.start_position),
+            self.position_to_transformation(self.goal_position)
+        )
+        self.status = Robot.Status.WALKING
 
     def position_to_transformation(self, position):
         transfrom_position = (position[0], position[1], 0.)
