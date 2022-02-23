@@ -3,13 +3,13 @@ from robot import Robot
 import math
 import numpy as np
 from team import Team
-import config
+from robot import Robot
 
 
 class Evaluations:
     # Evaluations
     @staticmethod
-    def who_has_the_ball(robots, ball: Ball):
+    def who_has_the_ball(robots: [Robot], ball: Ball) -> Robot:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
@@ -23,11 +23,11 @@ class Evaluations:
         return current_closest
 
     @staticmethod
-    def can_kick_ball(robot: Robot, team: Team):
+    def can_kick_ball(robot: Robot, team: Team) -> bool:
         player_position = robot.position[0:2]
         ball_position = np.array(team.average_ball_position.position)
         player_angle = robot.position[2]
-        goal_position = np.array(config.ENEMY_GOAL_POSITION[0:2])
+        goal_position = np.array(team.enemy_goal_position)
         diff = ball_position - goal_position
         diff_unit = diff / np.linalg.norm(diff)
         diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
@@ -41,7 +41,7 @@ class Evaluations:
         return False
 
     @staticmethod
-    def is_closest_to_ball(robot, friendly_team: Team):
+    def is_closest_to_ball(robot: Robot, friendly_team: Team) -> bool:
         if friendly_team.average_ball_position != None:
             ball_position = np.array(friendly_team.average_ball_position.position)
             a = [np.linalg.norm(ball_position - robot.position[:2]) for robot in friendly_team.robots]

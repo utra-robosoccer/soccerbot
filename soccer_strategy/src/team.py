@@ -1,6 +1,6 @@
 from ball import Ball
 import enum
-import config
+from robot import Robot
 
 class FieldSide(enum.IntEnum):
     NORMAL = 0
@@ -14,10 +14,48 @@ class Team():
         self.average_ball_position: Ball = None
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
-        self.formation = None
         self.strategy = None
+        self.formations = {
+            "initial": {
+                Robot.Role.GOALIE: [-1.5, 0, 0],
+                Robot.Role.STRIKER: [-2, 0, 1.57],
+                Robot.Role.RIGHT_WING: [-1, 2.5, 0],
+                Robot.Role.LEFT_WING: [-1.5, 1.75, 0]
+            },
+            "attack": {
+                Robot.Role.GOALIE: [4.5, 0, 0],
+                Robot.Role.STRIKER: [-2, 0, 0],
+                Robot.Role.RIGHT_WING: [-2, 2.5, 0],
+                Robot.Role.LEFT_WING: [-2, -2.5, 0]
+            },
+            "defensive": {
+                Robot.Role.GOALIE: [4.5, 0, 0],
+                Robot.Role.STRIKER: [3.5, 0, 0],
+                Robot.Role.RIGHT_WING: [3.5, 2, 0],
+                Robot.Role.LEFT_WING: [3, -2, 0]
+            },
+            "midfield": {
+                Robot.Role.GOALIE: [4.5, 0, 0],
+                Robot.Role.STRIKER: [0, 0, 0],
+                Robot.Role.RIGHT_WING: [0, 3, 0],
+                Robot.Role.LEFT_WING: [0, -3, 0]
+            },
+            "penalty_give": {
+                Robot.Role.GOALIE: [-4.5, 0, 0],
+                Robot.Role.STRIKER: [3.5, 0, 0]
+            },
+            "penalty_take": {
+                Robot.Role.GOALIE: [-4.5, 0, 0]
+            }
+        }
+        self.enemy_goal_position = [4.8, 0]
 
-        pass
+    def flip_positions(self):
+        self.enemy_goal_position[0] = -self.enemy_goal_position[0]
+        for formation in self.formations:
+            for role in self.formations[formation]:
+                self.formations[formation][role][0] = -self.formations[formation][role][0]
+                self.formations[formation][role][0] = -3.14
 
     def team_data_callback(self, data):
         robot = data[0]
@@ -40,4 +78,4 @@ class Team():
 
     def log(self):
         print("team_data:")
-        # TODO
+        pass

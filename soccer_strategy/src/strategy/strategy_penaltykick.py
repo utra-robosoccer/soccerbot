@@ -1,7 +1,5 @@
-import numpy as np
 from soccer_msgs.msg import GameState
 
-import config as config
 from strategy.strategy_freekick import StrategyFreekick
 from team import Team
 

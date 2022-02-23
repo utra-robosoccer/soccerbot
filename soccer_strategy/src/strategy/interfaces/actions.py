@@ -2,7 +2,6 @@ from team import Team
 from robot import Robot
 from ball import Ball
 import numpy as np
-import config
 import math
 
 PLAYER_BALL_OFFSET = 0.1
@@ -24,12 +23,11 @@ class Actions:
                 robot.status = Robot.Status.READY
 
     @staticmethod
-    def kick(robot: [Robot], ball: Ball):
+    def kick(robot: [Robot], ball: Ball, target_position):
         player_position = robot.position[0:2]
         ball_position = np.array(ball.position)
         player_angle = robot.position[2]
-        goal_position = np.array(config.ENEMY_GOAL_POSITION["Positive"])
-        diff = ball_position - goal_position
+        diff = ball_position - target_position
         diff_unit = diff / np.linalg.norm(diff)
         diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
@@ -45,7 +43,7 @@ class Actions:
             else:
                 robot.kick_with_right_foot = False
 
-            delta = goal_position - ball_position
+            delta = target_position - ball_position
             unit = delta / np.linalg.norm(delta)
 
             robot.status = Robot.Status.KICKING
@@ -54,20 +52,19 @@ class Actions:
     @staticmethod
     def navigation_to_formation(team: Team, formation: str):
         for robot in team.robots:
-            Actions.navigation_to_position(robot, config.FORMATIONS[formation][robot.role])
+            Actions.navigation_to_position(robot, team.formations[formation][robot.role])
 
     @staticmethod
     def navigation_to_position(robot, position):
         robot.set_navigation_position(position)
 
     @staticmethod
-    def navigate_to_position_with_offset(robot, ball):
+    def navigate_to_position_with_offset(robot, ball, target_position):
         # generate destination pose
         ball_position = np.array(ball.position)
-        goal_position = config.ENEMY_GOAL_POSITION[0:2]
         player_position = robot.position[0:2]
 
-        diff = ball_position - goal_position
+        diff = ball_position - target_position
         diff_unit = diff / np.linalg.norm(diff)
         diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 

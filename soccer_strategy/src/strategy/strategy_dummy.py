@@ -2,7 +2,6 @@ import math
 import numpy as np
 import rospy
 
-import config as config
 from strategy.strategy import Strategy
 from strategy.utils import *
 from team import Team
@@ -37,7 +36,7 @@ class StrategyDummy(Strategy):
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
             # generate goal pose
-            goal_position = config.ENEMY_GOAL_POSITION
+            goal_position = friendly_team.enemy_goal_position
             ball = friendly_team.average_ball_position
 
             if abs(ball.position[1]) < 3.5 and abs(ball.position[0]) < 5:
@@ -66,38 +65,31 @@ class StrategyDummy(Strategy):
                     destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
                                                    diff_angle]
 
-                    print("Position of closest player")
-                    print(player_position)
-                    print("Ball Position")
-                    print(ball_position)
-
                     # difference between robot angle and nav goal angle
                     robot_ball_vector = ball_position - player_position
                     robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
 
-                    nav_angle__diff = (player_angle - robot_ball_angle)
-                    print("Player angle ", player_angle)
-                    print("robot_ball_angle ", robot_ball_angle)
-                    print("Angle between player and ball")
-                    print(nav_angle__diff)
+                    nav_angle_diff = (player_angle - robot_ball_angle)
                     distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.205 and abs(nav_angle__diff) > 0.15:
-                        print("robot ball angle too large, unable to kick " + str(abs(nav_angle__diff)))
-                    print("Distance between player and ball")
-                    print(distance_of_player_to_ball)
+                    if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) > 0.15:
+                        print("robot ball angle too large, unable to kick " + str(abs(nav_angle_diff)))
                     if distance_of_player_to_ball < 0.205:
-                        if nav_angle__diff > 0.03:
+                        if nav_angle_diff > 0.03:
                             # right foot
                             current_closest.kick_with_right_foot = True
                         else:
                             current_closest.kick_with_right_foot = False
 
+                        print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
+                              format(current_closest.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
                         delta = goal_position - ball.position
                         unit = delta / np.linalg.norm(delta)
 
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
                     else:
+                        print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
+                            format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
                         current_closest.set_navigation_position(destination_position_biased)
                         # self.move_player_to(current_closest, destination_position_biased)
         else:
