@@ -45,7 +45,7 @@ class RobotControlled3D(RobotControlled):
         self.obstacles = PoseArray()
 
 
-        self.update_robot_state_timer = rospy.Timer(rospy.Duration(1), self.update_robot_state, reset=True)
+        self.update_robot_state_timer = rospy.Timer(rospy.Duration(0.2), self.update_robot_state, reset=True)
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
     def set_navigation_position(self, goal_position):
@@ -61,6 +61,7 @@ class RobotControlled3D(RobotControlled):
         p.pose.orientation.y = 0
         p.pose.orientation.z = 0
         p.pose.orientation.w = 1
+        print("Sending New Goal: " + str(goal_position))
         self.goal_publisher.publish(p)
         return True
 

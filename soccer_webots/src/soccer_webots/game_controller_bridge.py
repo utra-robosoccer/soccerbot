@@ -193,7 +193,7 @@ class GameControllerBridge():
         sock.connect((host, port))
         response = sock.recv(8).decode('utf8')
         if response == "Welcome\0":
-            print(f"Successfully connected to '{addr}'")
+            print(f"\033[96mConnected to Simulator at '{addr}'\033[0m")
             return sock
         elif response == "Refused\0":
             print(f"Connection refused by '{addr}'")

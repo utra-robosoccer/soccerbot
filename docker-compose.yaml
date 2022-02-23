@@ -73,8 +73,6 @@ services:
     cap_add:
       - SYS_PTRACE
     pid: "host"
-    ports:
-      - 10001:10001
     deploy:
       resources:
         reservations:
@@ -87,6 +85,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/root/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/root/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
@@ -108,8 +107,8 @@ services:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
-      ROBOCUP_MIRROR_SERVER_IP: 0.0.0.0
-      ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
@@ -125,8 +124,8 @@ services:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
-      ROBOCUP_MIRROR_SERVER_IP: 0.0.0.0
-      ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       TEAM_ID: 16
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1

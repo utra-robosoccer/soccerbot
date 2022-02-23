@@ -25,8 +25,8 @@ services:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
-      ROBOCUP_MIRROR_SERVER_IP: 0.0.0.0
-      ROBOCUP_GAMECONTROLLER_IP: 0.0.0.0
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
@@ -44,8 +44,8 @@ services:
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10002"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -61,8 +61,8 @@ services:
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10003"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -78,8 +78,8 @@ services:
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10004"
-      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
-      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -95,6 +95,8 @@ services:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -110,6 +112,8 @@ services:
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -125,6 +129,8 @@ services:
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10023"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
@@ -140,5 +146,7 @@ services:
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10024"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
