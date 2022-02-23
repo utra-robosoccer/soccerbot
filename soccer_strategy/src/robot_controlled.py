@@ -21,13 +21,12 @@ class RobotControlled(Robot):
         self.path = None
 
     def set_navigation_position(self, goal_position):
-        self.start_position = self.position
 
         if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
             print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old" + str(goal_position))
             return False
 
-        print("New Goal: " + str(goal_position))
+        self.start_position = self.position
         self.goal_position = goal_position
         self.path = path.Path(
             self.position_to_transformation(self.start_position),

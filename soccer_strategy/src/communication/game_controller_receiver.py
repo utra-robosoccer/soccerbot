@@ -46,7 +46,7 @@ class GameStateReceiver(object):
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
-                rospy.loginfo_once("Game Controller Connected")
+                rospy.loginfo_once("\033[96mConnected to Game Controller\033[0m")
 
             except AssertionError as ae:
                 rospy.logerr_throttle(10, ae)

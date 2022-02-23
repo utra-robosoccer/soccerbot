@@ -12,7 +12,6 @@ class RobotObserved(Robot):
         self.robot_state_subscriber = rospy.Subscriber("/robot" + str(self.robot_id) + "/state", RobotState, self.robot_state_callback)
 
     def robot_state_callback(self, r: RobotState):
-        return
         self.robot_id = r.player_id
         self.status = r.status
         self.role = r.role
