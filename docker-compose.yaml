@@ -56,7 +56,8 @@ x-soccerbot: &soccerbot
     roslaunch soccerbot soccerbot.launch __ns:=robot$$ROBOCUP_ROBOT_ID || sleep infinity; else
     roslaunch --wait soccerbot soccerbot.launch __ns:=robot$$ROBOCUP_ROBOT_ID || sleep infinity; fi"
   volumes:
-    - .:/root/catkin_ws/src/soccerbot
+    - /home/${USER}/catkin_ws/:/root/catkin_ws/
+    - /home/${USER}/catkin_ws/:/home/${USER}/catkin_ws/
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
@@ -111,15 +112,30 @@ services:
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
-  opponent:
+  friendly2:
     <<: *soccerbot
     environment:
-      X_POS: -4
-      Y_POS: -3.14
+      X_POS: 1
+      Y_POS: -3.15
       YAW: 1.57
+      ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
+      ROBOCUP_TEAM_COLOR: "red"
+      ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10002"
+      ROBOCUP_GAMECONTROLLER_IP: "0.0.0.0"
+      ROBOCUP_MIRROR_SERVER_IP: "0.0.0.0"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
+
+#  opponent:
+#    <<: *soccerbot
+#    environment:
+#      X_POS: -4
+#      Y_POS: -3.14
+#      YAW: 1.57
+#      ROBOCUP_TEAM_ID: 16
+#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: 127.0.0.1:10021
+#      COMPETITION: "true"
+#      PYTHONUNBUFFERED: 1

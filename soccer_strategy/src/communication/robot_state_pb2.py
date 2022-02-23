@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='robocup.humanoid',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11robot_state.proto\x12\x10robocup.humanoid\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1d\n\x05\x66vec2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"(\n\x05\x66vec3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05\x66vec4\x12\t\n\x01w\x18\x01 \x01(\x02\x12\t\n\x01x\x18\x02 \x01(\x02\x12\t\n\x01y\x18\x03 \x01(\x02\x12\t\n\x01z\x18\x04 \x01(\x02\"a\n\x06Pose3D\x12)\n\x08position\x18\x01 \x01(\x0b\x32\x17.robocup.humanoid.fvec3\x12,\n\x0borientation\x18\x02 \x01(\x0b\x32\x17.robocup.humanoid.fvec4\"-\n\x06Pose2D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\r\n\x05theta\x18\x03 \x01(\x02\"\xca\x01\n\x07Message\x12-\n\ttimestamp\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tplayer_id\x18\x02 \x01(\r\x12(\n\x06status\x18\x03 \x01(\x0e\x32\x18.robocup.humanoid.Status\x12&\n\x04pose\x18\x04 \x01(\x0b\x32\x18.robocup.humanoid.Pose3D\x12+\n\tball_pose\x18\x05 \x01(\x0b\x32\x18.robocup.humanoid.Pose2D*\xbd\x02\n\x06Status\x12\x17\n\x13STATUS_DISCONNECTED\x10\x00\x12\x10\n\x0cSTATUS_READY\x10\x01\x12\x15\n\x11STATUS_LOCALIZING\x10\x02\x12\x12\n\x0eSTATUS_WALKING\x10\x03\x12\x1b\n\x17STATUS_TERMINATING_WALK\x10\x04\x12\x12\n\x0eSTATUS_KICKING\x10\x05\x12\x17\n\x13STATUS_FALLEN_FRONT\x10\x06\x12\x16\n\x12STATUS_FALLEN_BACK\x10\x07\x12\x16\n\x12STATUS_FALLEN_SIDE\x10\x08\x12\x12\n\x0eSTATUS_PENALTY\x10\t\x12\x18\n\x14STATUS_OUT_OF_BOUNDS\x10\n\x12!\n\x1dSTATUS_TRAJECTORY_IN_PROGRESS\x10\x0b\x12\x12\n\x0eSTATUS_STOPPED\x10\x0c*g\n\x04Role\x12\x13\n\x0fROLE_UNASSIGNED\x10\x00\x12\x0f\n\x0bROLE_GOALIE\x10\x01\x12\x10\n\x0cROLE_STRIKER\x10\x02\x12\x12\n\x0eROLE_LEFT_WING\x10\x03\x12\x13\n\x0fROLE_RIGHT_WING\x10\x04\x62\x06proto3')
+  serialized_pb=_b('\n\x11robot_state.proto\x12\x10robocup.humanoid\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1d\n\x05\x66vec2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"(\n\x05\x66vec3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05\x66vec4\x12\t\n\x01w\x18\x01 \x01(\x02\x12\t\n\x01x\x18\x02 \x01(\x02\x12\t\n\x01y\x18\x03 \x01(\x02\x12\t\n\x01z\x18\x04 \x01(\x02\"a\n\x06Pose3D\x12)\n\x08position\x18\x01 \x01(\x0b\x32\x17.robocup.humanoid.fvec3\x12,\n\x0borientation\x18\x02 \x01(\x0b\x32\x17.robocup.humanoid.fvec4\"-\n\x06Pose2D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\r\n\x05theta\x18\x03 \x01(\x02\"\xca\x01\n\x07Message\x12-\n\ttimestamp\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tplayer_id\x18\x02 \x01(\r\x12(\n\x06status\x18\x03 \x01(\x0e\x32\x18.robocup.humanoid.Status\x12&\n\x04pose\x18\x04 \x01(\x0b\x32\x18.robocup.humanoid.Pose3D\x12+\n\tball_pose\x18\x05 \x01(\x0b\x32\x18.robocup.humanoid.Pose2D*\xda\x02\n\x06Status\x12\x17\n\x13STATUS_DISCONNECTED\x10\x00\x12\x10\n\x0cSTATUS_READY\x10\x01\x12\x15\n\x11STATUS_LOCALIZING\x10\x02\x12\x12\n\x0eSTATUS_WALKING\x10\x03\x12\x1b\n\x17STATUS_TERMINATING_WALK\x10\x04\x12\x12\n\x0eSTATUS_KICKING\x10\x05\x12\x17\n\x13STATUS_FALLEN_FRONT\x10\x06\x12\x16\n\x12STATUS_FALLEN_BACK\x10\x07\x12\x16\n\x12STATUS_FALLEN_SIDE\x10\x08\x12\x12\n\x0eSTATUS_PENALTY\x10\t\x12\x18\n\x14STATUS_OUT_OF_BOUNDS\x10\n\x12!\n\x1dSTATUS_TRAJECTORY_IN_PROGRESS\x10\x0b\x12\x12\n\x0eSTATUS_STOPPED\x10\x0c\x12\x1b\n\x17STATUS_DETERMINING_SIDE\x10\r*g\n\x04Role\x12\x13\n\x0fROLE_UNASSIGNED\x10\x00\x12\x0f\n\x0bROLE_GOALIE\x10\x01\x12\x10\n\x0cROLE_STRIKER\x10\x02\x12\x12\n\x0eROLE_LEFT_WING\x10\x03\x12\x13\n\x0fROLE_RIGHT_WING\x10\x04\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -83,11 +83,15 @@ _STATUS = _descriptor.EnumDescriptor(
       name='STATUS_STOPPED', index=12, number=12,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='STATUS_DETERMINING_SIDE', index=13, number=13,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
   serialized_start=550,
-  serialized_end=867,
+  serialized_end=896,
 )
 _sym_db.RegisterEnumDescriptor(_STATUS)
 
@@ -121,8 +125,8 @@ _ROLE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=869,
-  serialized_end=972,
+  serialized_start=898,
+  serialized_end=1001,
 )
 _sym_db.RegisterEnumDescriptor(_ROLE)
 
@@ -140,6 +144,7 @@ STATUS_PENALTY = 9
 STATUS_OUT_OF_BOUNDS = 10
 STATUS_TRAJECTORY_IN_PROGRESS = 11
 STATUS_STOPPED = 12
+STATUS_DETERMINING_SIDE = 13
 ROLE_UNASSIGNED = 0
 ROLE_GOALIE = 1
 ROLE_STRIKER = 2
