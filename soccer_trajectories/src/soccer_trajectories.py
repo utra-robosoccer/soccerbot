@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import copy
 import os
-from std_msgs.msg import String, Bool
+from std_msgs.msg import Empty
 from soccer_msgs.msg import FixedTrajectoryCommand
 import csv
 from scipy.interpolate import interp1d
@@ -63,7 +63,7 @@ class Trajectory:
         """Returns a list of joints in this trajectory."""
         return self.splines.keys()
 
-    def publish(self):
+    def run(self):
         pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
         rate = rospy.Rate(100)
         t = 0
@@ -103,28 +103,28 @@ class SoccerTrajectoryClass:
         self.simulation = True
         self.trajectory_complete = True
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
-        self.complete_sub = rospy.Subscriber("trajectory_complete", Bool, self.trajectory_callback, queue_size=1)
-        self.finish_trajectory = rospy.Publisher('trajectory_complete', Bool, queue_size=1)
-
-    def trajectory_callback(self, data):
-        self.trajectory_complete = data.data
-        pass
+        self.finish_trajectory = rospy.Publisher('action_complete', Empty, queue_size=1)
 
     def run_trajectory(self, command: FixedTrajectoryCommand):
+        if not self.trajectory_complete:
+            return
+        self.trajectory_complete = False
+
         if self.simulation:
             path = self.trajectory_path + "/" + "simulation_" + command.trajectory_name + ".csv"
         else:
             path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
+            self.trajectory_complete = True
             return
-        if self.trajectory_complete:
-            print("Now publishing: ", command.trajectory_name)
-            self.finish_trajectory.publish(False)
-            trajectory = Trajectory(path, command.mirror)
-            trajectory.publish()
-            print("Finished publishing:", command.trajectory_name)
-            self.finish_trajectory.publish(True)
+
+        print("Running : ", command.trajectory_name)
+        trajectory = Trajectory(path, command.mirror)
+        trajectory.run()
+        print("Finished running:", command.trajectory_name)
+        self.finish_trajectory.publish()
+        self.trajectory_complete = True
 
     def run(self):
         rospy.init_node("soccer_trajectories")

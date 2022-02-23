@@ -18,7 +18,6 @@ import copy
 
 class GameEngine:
     PHYSICS_UPDATE_INTERVAL = 0.1
-    STRATEGY_UPDATE_INTERVAL = 5  # Every 5 physics steps
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 physics steps
 
 
@@ -81,7 +80,7 @@ class GameEngine:
 
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
 
-            if step % GameEngine.STRATEGY_UPDATE_INTERVAL == 0:
+            if step % self.team1.strategy.update_frequency == 0:
                 self.team1.average_ball_position = self.ball
                 self.team2.average_ball_position = self.ball
                 print("Team 1 Strategy Update")

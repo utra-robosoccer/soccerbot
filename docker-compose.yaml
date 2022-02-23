@@ -11,8 +11,10 @@ version: "3.3"
 
 # Running instructions
 # Run xhost +local:docker everytime before running docker-compose up
-# A. To run using prebuild images, use xhost +local:docker && docker-compose pull && docker-compose up
-# B. To build the images, first follow the instructions below near simulator, then run docker-compose build && docker-compose up, you can then run docker-compose push to update the images
+# A. First build or pull the images using docker-compose build or docker-compose pull
+# B1. To run regular xhost +local:docker && docker-compose up
+# B2. To run just simulation xhost +local:docker && docker-compose up simulator
+
 
 # Note: You never need to build the images a second time as all the code is mounted
 # Note: To run the full game run docker-compose -f docker-compose.full.yaml up
@@ -97,8 +99,8 @@ services:
     environment:
       ROS_MASTER: "true"
       X_POS: 4
-      Y_POS: -3.15
-      ANGLE: 1.57
+      Y_POS: -3.14
+      YAW: 1.57
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "127.0.0.1:10001"
@@ -113,8 +115,8 @@ services:
     <<: *soccerbot
     environment:
       X_POS: -4
-      Y_POS: -3.15
-      ANGLE: 1.57
+      Y_POS: -3.14
+      YAW: 1.57
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"

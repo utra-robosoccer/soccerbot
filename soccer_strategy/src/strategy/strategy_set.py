@@ -5,4 +5,4 @@ from strategy.interfaces.actions import Actions
 
 class StrategySet(Strategy):
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        Actions.stop_all_robots(friendly_team)
+        Actions.stop_all_robots(friendly_team.robots)

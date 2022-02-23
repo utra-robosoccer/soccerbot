@@ -41,7 +41,9 @@ class DetectorFieldline(Detector):
 
         t_start = time.time()
 
-        if self.robot_state is not RobotState.STATUS_LOCALIZING and self.robot_state is not RobotState.STATUS_WALKING:
+        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
+                self.robot_state.status is not RobotState.STATUS_WALKING and \
+                self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
             return
 
         if not self.camera.ready():
@@ -124,7 +126,7 @@ class DetectorFieldline(Detector):
                 self.point_cloud_publisher.publish(point_cloud_msg)
 
         t_end = time.time()
-        rospy.loginfo_throttle(20, "Fieldline detection rate: " + str(t_end - t_start))
+        rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))
 
 
 if __name__ == '__main__':

@@ -68,7 +68,6 @@ class Team():
                 break
 
     def log(self):
-        print("-----------------------------------------")
         print("Team Data")
         np.set_printoptions(precision=3)
         for robot in self.robots:

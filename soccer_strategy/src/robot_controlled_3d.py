@@ -14,23 +14,22 @@ from sensor_msgs.msg import Imu
 
 class RobotControlled3D(RobotControlled):
     def __init__(self, team, role, status):
-        super().__init__(team, role, status)
+        x_pos_default = float(os.getenv('X_POS', 4))
+        y_pos_default = float(os.getenv('Y_POS', -3.15))
+        yaw_default = float(os.getenv('YAW', 1.57))
+        self.position_default = [x_pos_default, y_pos_default, yaw_default]
+
+        super().__init__(team=team, role=role, status=status, position=self.position_default)
 
         # Subscibers
         self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
-        self.completed_walking_subscriber = rospy.Subscriber("completed_walking", Empty,
-                                                             self.completed_walking_callback)
-        self.completed_trajectory_subscriber = rospy.Subscriber("trajectory_complete", Bool,
-                                                                self.completed_trajectory_subscriber)
+        self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty,
+                                                             self.action_completed_callback)
 
         # Publishers
-        self.robot_initial_pose_publisher = rospy.Publisher("/initialpose", PoseWithCovarianceStamped,
-                                                            queue_size=1)
+        self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
-        self.trajectory_publisher = rospy.Publisher("command", FixedTrajectoryCommand, queue_size=1)
-        self.terminate_walking_publisher = rospy.Publisher("terminate_walking", Empty, queue_size=1)
-        self.completed_trajectory_publisher = rospy.Publisher("/trajectory_complete", Bool,
-                                                              queue_size=1)
+        self.trajectory_publisher = rospy.Publisher("command", FixedTrajectoryCommand, queue_size=1, latch=True)
 
         self.tf_listener = tf.TransformListener()
 
@@ -57,8 +56,6 @@ class RobotControlled3D(RobotControlled):
             time_diff = rospy.Time.now() - header
             if time_diff < rospy.Duration(1):
                 self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
-            else:
-                rospy.logwarn_throttle(30, "ball position timeout")
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
 
@@ -118,44 +115,32 @@ class RobotControlled3D(RobotControlled):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
 
-    def completed_walking_callback(self, data):
-        rospy.loginfo(f"{self.robot_name} Completed Walking")
-        if self.status == Robot.Status.WALKING:
+    def action_completed_callback(self, data):
+        if self.status == Robot.Status.TERMINATING_WALK:
             self.status = Robot.Status.READY
-        elif self.status == Robot.Status.TERMINATING_WALK:
+        elif self.status == Robot.Status.KICKING:
             self.status = Robot.Status.READY
-
-    def completed_trajectory_subscriber(self, data):
-        rospy.loginfo(f"{self.robot_name} Completed Trajectory")
-        # assert self.status == Robot.Status.TRAJECTORY_IN_PROGRESS, self.status
-        if data.data and self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
-            if self.stop_requested:
-                self.status = Robot.Status.STOPPED
-            else:
-                self.status = Robot.Status.READY
-                temp = Bool()
-                temp.data = True
-                rospy.sleep(1.25)
-                temp.data = False
+        elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+            self.status = Robot.Status.READY
+        else:
+            rospy.logerr("Invalid Action Completed " + str(self.status))
 
     def imu_callback(self, msg):
         angle_threshold = 1.25  # in radian
         q = msg.orientation
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
-        if self.status == Robot.Status.WALKING or self.status == Robot.Status.READY:
-            # We want to publish once on state transition
+        if self.status in [Robot.Status.DETERMINING_SIDE, Robot.Status.READY, Robot.Status.WALKING, Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.LOCALIZING]:
             if pitch > angle_threshold:
-                print("fall back triggered")
+                rospy.logwarn("Fallen Back")
                 self.status = Robot.Status.FALLEN_BACK
 
             elif pitch < -angle_threshold:
-                print("fall front triggered")
+                rospy.logwarn("Fallen Front")
                 self.status = Robot.Status.FALLEN_FRONT
 
             elif yaw < -angle_threshold or yaw > angle_threshold:
-                print("fall side triggered")
+                rospy.logwarn("Fallen Side")
                 self.status = Robot.Status.FALLEN_SIDE
-        pass
 
     def reset_initial_position(self, position):
         rospy.loginfo("Setting initial Robot " + self.robot_name + " position " + str(position))
@@ -178,7 +163,6 @@ class RobotControlled3D(RobotControlled):
                              0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         self.robot_initial_pose_publisher.publish(p)
-        # rospy.sleep(1)
 
     def update_status(self):
         if self.status != self.previous_status:
