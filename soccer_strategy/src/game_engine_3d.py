@@ -27,7 +27,7 @@ class GameEngine3D(game_engine.GameEngine):
 
     def __init__(self):
         robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
-        team_id = int(os.getenv("TEAM_ID", "16"))
+        team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
         rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
 
         robots = []

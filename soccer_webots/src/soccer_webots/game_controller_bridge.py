@@ -142,19 +142,19 @@ class GameControllerBridge():
             except socket.timeout as s:
                 print(s)
                 self.socket = None
-                time.sleep(3)
+                time.sleep(6)
             except ConnectionRefusedError as ex:
                 print(ex)
                 self.socket = None
-                time.sleep(3)
+                time.sleep(6)
             except ConnectionResetError as ex:
                 print(ex)
                 self.socket = None
-                time.sleep(3)
+                time.sleep(6)
             except socket.gaierror as ex:
                 print(ex)
                 self.socket = None
-                time.sleep(3)
+                time.sleep(6)
 
         self.close_connection()
 
