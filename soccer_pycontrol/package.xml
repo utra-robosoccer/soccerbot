@@ -8,5 +8,6 @@
 
     <buildtool_depend>catkin</buildtool_depend>
     <depend>rospy</depend>
+    <depend>soccer_common</depend>
 
 </package>

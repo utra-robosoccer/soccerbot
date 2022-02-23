@@ -10,8 +10,9 @@ import tf2_ros
 from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
 import numpy as np
 import cv2
-from sensor_msgs.msg import Image, PointCloud2
-from std_msgs.msg import Bool, Header
+from sensor_msgs.msg import Image
+from soccer_msgs.msg import RobotState
+from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 import math
 from detector_fieldline import DetectorFieldline
@@ -25,19 +26,16 @@ class DetectorGoalPost(Detector):
 
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
         self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
-        self.goal_post_need_subscriber = rospy.Subscriber("goal_post_need", Bool, self.goal_post_need_callback, queue_size=1)
-        self.goal_post_need = False
         cv2.setRNGSeed(12345)
-        pass
-
-    def goal_post_need_callback (self, data: Bool):
-        self.goal_post_need = data.data
         pass
 
     def image_callback(self, img: Image):
         t_start = time.time()
 
-        if not self.camera.ready() or not self.trajectory_complete or not self.goal_post_need:
+        if self.robot_state is not RobotState.STATUS_LOCALIZING:
+            return
+
+        if not self.camera.ready():
             return
 
         self.camera.reset_position(publish_basecamera=False, timestamp=img.header.stamp)

@@ -21,7 +21,7 @@
     <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen"/>
     <node pkg="soccer_object_localization" type="detector_goalpost.py" name="detector_goalpost" output="screen"/>
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
-        <rosparam file="$(find soccer_fieldline_detection)/config/pointcloud_to_laserscan.yaml" command="load" />
+        <rosparam file="$(find soccer_common)/config/pointcloud_to_laserscan.yaml" command="load" />
 <!--         <rosparam file="$(find soccer_object_localization)/config/pointcloud_to_laserscan.yaml" command="load" /> -->
         <remap from="cloud_in" to="field_point_cloud" />
     </node>

@@ -1,6 +1,8 @@
 from ball import Ball
 import enum
+import os
 from robot import Robot
+import numpy as np
 
 class FieldSide(enum.IntEnum):
     NORMAL = 0
@@ -9,7 +11,6 @@ class FieldSide(enum.IntEnum):
 class Team():
 
     def __init__(self, robots):
-
         self.robots = robots
         self.average_ball_position: Ball = None
         self.field_side = FieldSide.NORMAL
@@ -57,25 +58,18 @@ class Team():
                 self.formations[formation][role][0] = -self.formations[formation][role][0]
                 self.formations[formation][role][0] = -3.14
 
-    def team_data_callback(self, data):
-        robot = data[0]
-        ball = data[1]
-        if robot.robot_id in self.robots.keys():
-            self.robots[robot.robot_id].robot_id = robot.robot_id
-            self.robots[robot.robot_id].position = robot.position
-            self.robots[robot.robot_id].covariance = None
-
-            self.robots[robot.robot_id].observed_ball.position = ball.position
-
     def update_average_ball_position(self):
         # get estimated ball position with tf information from 4 robots and average them
-        # this needs to be team-dependent in the future
-        ball_positions = []
+        # this needs to be team-dependent in the future, for now just use the current robot's position
 
         for robot in self.robots:
-            # TODO
-            pass
+            if robot.robot_id == os.getenv('ROBOCUP_ROBOT_ID', 1):
+                self.average_ball_position = robot.observed_ball
+                break
 
     def log(self):
-        print("team_data:")
-        pass
+        print("-----------------------------------------")
+        print("Team Data")
+        np.set_printoptions(precision=3)
+        for robot in self.robots:
+            print("  Robot {}: Position: {}, Role: {}, Status: {}, Estimated Ball: {}".format(robot.robot_id, robot.position, robot.role.name, robot.status.name, robot.observed_ball.position))

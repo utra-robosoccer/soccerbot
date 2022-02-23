@@ -2,19 +2,17 @@ import abc
 import rospy
 from soccer_msgs.msg import RobotState
 from robot import Robot
+import numpy as np
 
 class RobotControlled(Robot):
 
     def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED,
-                 status=Robot.Status.DISCONNECTED, position=None):
+                 status=Robot.Status.DISCONNECTED, position=np.array([0, 0, 0])):
         super().__init__(robot_id, team, role, status, position)
 
         self.previous_status = self.status
         self.stop_requested = False
 
-    @abc.abstractmethod
-    def update_position(self):
-        pass
 
     @abc.abstractmethod
     def terminate_walk(self):

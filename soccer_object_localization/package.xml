@@ -12,7 +12,7 @@
     <buildtool_depend>catkin</buildtool_depend>
     <depend>rospy</depend>
     <depend>std_msgs</depend>
-    <depend>soccer_geometry</depend>
+    <depend>soccer_common</depend>
     <depend>sensor_msgs</depend>
     <depend>geometry_msgs</depend>
     <depend>cv_bridge</depend>

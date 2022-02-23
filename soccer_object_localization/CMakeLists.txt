@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(PKG_DEPS
     rospy
-    soccer_geometry
+    soccer_common
     sensor_msgs
     geometry_msgs
     cv_bridge

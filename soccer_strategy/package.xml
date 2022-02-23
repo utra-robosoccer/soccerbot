@@ -10,7 +10,7 @@
     <depend>rospy</depend>
     <depend>soccer_msgs</depend>
     <depend>soccer_pycontrol</depend>
-    <depend>soccer_geometry</depend>
+    <depend>soccer_common</depend>
     <depend>tf</depend>
 
 </package>
