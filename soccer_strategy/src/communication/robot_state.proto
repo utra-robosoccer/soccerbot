@@ -60,6 +60,7 @@ message Message {
     google.protobuf.Timestamp timestamp = 1;
     uint32 player_id = 2;
     Status status = 3;
-    Pose3D pose = 4;
-    Pose2D ball_pose = 5;
+    Role role = 4;
+    Pose3D pose = 5;
+    Pose2D ball_pose = 6;
 }

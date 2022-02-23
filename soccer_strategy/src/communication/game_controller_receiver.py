@@ -12,7 +12,6 @@ from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 class GameStateReceiver(object):
     team_id = int(os.getenv('ROBOCUP_TEAM_ID', 16))
     robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
-    is_goal_keeper = os.getenv("GOALIE", "true") == "true"
 
     DEFAULT_LISTENING_HOST = '0.0.0.0'
     GAME_CONTROLLER_LISTEN_PORT = 3838
@@ -70,10 +69,7 @@ class GameStateReceiver(object):
         self.send_socket.close()
 
     def answer_to_gamecontroller(self, peer):
-        if self.is_goal_keeper:
-            return_message = 3
-        else:
-            return_message = 2
+        return_message = 2
 
         if self.execute_game_interruption:
             return_message = 4

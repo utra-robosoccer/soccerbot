@@ -67,6 +67,7 @@ if __name__ == '__main__':
         try:
             msg = s.recv(1024)
             if not msg:
+                rate.sleep()
                 continue
         except (struct.error, socket.timeout):
             rate.sleep()
@@ -77,6 +78,7 @@ if __name__ == '__main__':
         m = robot_state_pb2.Message()
         m.ParseFromString(msg)
         if m.player_id == player_id:
+            rate.sleep()
             continue
 
         r = RobotState()
