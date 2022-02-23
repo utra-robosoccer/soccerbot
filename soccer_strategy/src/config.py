@@ -39,7 +39,7 @@ FORMATIONS = {
     }
 }
 
-ENEMY_GOAL_POSITION = [4.8, 0, 0]
+ENEMY_GOAL_POSITION = [4.8, 0]
 
 def flip_positions():
     ENEMY_GOAL_POSITION[0] = -ENEMY_GOAL_POSITION[0]
