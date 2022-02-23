@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package()
 
-protobuf_generate_python(PROTO_PY src/communication/RobocupProtocol/robocup_extension.proto)
+protobuf_generate_python(PROTO_PY src/communication/robot_state.proto)
 add_custom_target(soccer_strategy ALL DEPENDS ${PROTO_PY})
 add_custom_command(
   TARGET soccer_strategy POST_BUILD

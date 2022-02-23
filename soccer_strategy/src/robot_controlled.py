@@ -1,7 +1,7 @@
 import abc
 import rospy
+from soccer_msgs.msg import RobotState
 from robot import Robot
-
 
 class RobotControlled(Robot):
 

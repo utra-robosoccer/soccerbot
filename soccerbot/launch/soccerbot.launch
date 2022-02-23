@@ -47,8 +47,6 @@
         <arg name="simulation" value="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch" >
-        <arg name="goalie" value="$(arg goalie)" />
-    </include>
+    <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
 </launch>

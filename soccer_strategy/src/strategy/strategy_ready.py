@@ -2,8 +2,7 @@ from strategy.strategy import Strategy
 from team import Team
 from soccer_msgs.msg import GameState
 from robot import Robot
-import config
-from interfaces.actions import Actions
+from strategy.interfaces.actions import Actions
 
 class StrategyReady(Strategy):
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -14,4 +13,4 @@ class StrategyReady(Strategy):
             # Continue to localize
             pass
         else:
-            this_robot.set_navigation_position(config.FORMATIONS[this_robot.role])
+            this_robot.set_navigation_position(friendly_team.formations[this_robot.role])
