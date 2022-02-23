@@ -13,11 +13,11 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package()
 
-protobuf_generate_python(PROTO_PY src/game_controller/RobocupProtocol/robocup_extension.proto)
+protobuf_generate_python(PROTO_PY src/communication/RobocupProtocol/robocup_extension.proto)
 add_custom_target(soccer_strategy ALL DEPENDS ${PROTO_PY})
 add_custom_command(
   TARGET soccer_strategy POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/game_controller
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY} ${CMAKE_SOURCE_DIR}/src/communication
 )
 
 include_directories(

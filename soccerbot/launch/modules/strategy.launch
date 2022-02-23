@@ -1,12 +1,10 @@
 <launch>
-    <arg name="goalie" default="true" />
-    <arg name="shared_strategy_source" value="$(optenv SINGLE_STRATEGY_SOURCE true) "/>
     <env name="ROBOCUP_TEAM_ID" value="$(optenv ROBOCUP_TEAM_ID 16)" />
     <env name="ROBOCUP_TEAM_COLOR" value="$(optenv ROBOCUP_TEAM_COLOR red)" />
     <env name="ROBOCUP_GAMECONTROLLER_IP" value="$(optenv ROBOCUP_GAMECONTROLLER_IP 127.0.1.1)" />
 
 
-    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" if="$(eval goalie and shared_strategy_source)"/>
+    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" />
 
     <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" />
 </launch>

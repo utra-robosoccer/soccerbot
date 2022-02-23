@@ -14,7 +14,7 @@ add_message_files(
     FILES
     GameState.msg
     FixedTrajectoryCommand.msg
-    RobotInfo.msg
+    RobotState.msg
 )
 
 generate_messages(
