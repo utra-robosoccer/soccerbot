@@ -8,6 +8,7 @@ from soccer_geometry.transformation import Transformation
 from tf import TransformListener
 import rospy
 import numpy as np
+from rospy.exceptions import ROSInterruptException
 
 
 class Camera:
@@ -46,7 +47,10 @@ class Camera:
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(60,
                                        "Waiting for transformation from /world to " + self.robot_name + "/camera")
-                rospy.sleep(0.05)
+                try:
+                    rospy.sleep(0.05)
+                except ROSInterruptException:
+                    exit(0)
 
         if rospy.is_shutdown():
             exit(0)
