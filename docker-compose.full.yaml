@@ -111,7 +111,7 @@ services:
       ROBOCUP_TEAM_ID: 5
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10022"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       COMPETITION: "true"
