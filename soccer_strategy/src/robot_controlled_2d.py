@@ -18,7 +18,7 @@ class RobotControlled2D(RobotControlled):
         VISION_RANGE = 3
 
     def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED, position=None):
-        super().__init__(robot_id, team, role, status, position)
+        super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
         self.start_position = None
         self.goal_position = None

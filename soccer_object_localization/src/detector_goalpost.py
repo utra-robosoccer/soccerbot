@@ -32,7 +32,7 @@ class DetectorGoalPost(Detector):
     def image_callback(self, img: Image):
         t_start = time.time()
 
-        if self.robot_state is not RobotState.STATUS_LOCALIZING:
+        if self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
             return
 
         if not self.camera.ready():
@@ -145,7 +145,7 @@ class DetectorGoalPost(Detector):
             self.image_publisher.publish(img_out)
 
         t_end = time.time()
-        rospy.loginfo_throttle(20, "GoalPost detection rate: " + str(t_end - t_start))
+        rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
 
 
 if __name__ == '__main__':

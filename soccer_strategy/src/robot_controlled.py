@@ -8,7 +8,7 @@ class RobotControlled(Robot):
 
     def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED,
                  status=Robot.Status.DISCONNECTED, position=np.array([0, 0, 0])):
-        super().__init__(robot_id, team, role, status, position)
+        super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
         self.previous_status = self.status
         self.stop_requested = False

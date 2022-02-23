@@ -1,4 +1,5 @@
 import tf
+from rospy import ROSInterruptException
 
 from soccer_pycontrol.soccerbot_controller import *
 import rospy
@@ -24,7 +25,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
 
-        self.completed_walk_publisher = rospy.Publisher("completed_walking", Empty, queue_size=1)
+        self.completed_walk_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
         self.goal = PoseStamped()
         self.robot_pose = None
         self.new_goal = self.goal
@@ -125,7 +126,10 @@ class SoccerbotControllerRos(SoccerbotController):
         stable_count = 5
 
         while self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
-            r.sleep()
+            try:
+                r.sleep()
+            except ROSInterruptException:
+                exit(0)
 
         self.soccerbot.ready()
         self.soccerbot.reset_imus()
@@ -133,7 +137,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
-                print("Recieved New Goal")
+                print("Received New Goal")
                 time_now = rospy.Time.now()
                 pose_updated = self.update_robot_pose()
                 if not pose_updated:

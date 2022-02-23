@@ -44,7 +44,7 @@ class Camera:
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                rospy.logwarn_throttle(10,
+                rospy.logwarn_throttle(60,
                                        "Waiting for transformation from /world to " + self.robot_name + "/camera")
                 rospy.sleep(0.05)
 

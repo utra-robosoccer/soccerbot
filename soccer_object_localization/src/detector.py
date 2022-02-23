@@ -10,7 +10,7 @@ class Detector:
         self.camera = Camera(self.robot_name)
         self.camera.reset_position()
 
-        self.robot_state_subscriber = rospy.Subscriber("robot_state", RobotState,
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState,
                                                                self.robot_state_callbeck)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
