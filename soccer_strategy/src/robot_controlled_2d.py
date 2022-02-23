@@ -49,7 +49,7 @@ class RobotControlled2D(RobotControlled):
         return transformation.Transformation(transfrom_position, transform_quaternion)
 
     def transformation_to_position(self, transform):
-        transform_position = transform.position
+        transform_position = transform.get_position()
         transform_quaternion = transform.get_orientation()
         transfrom_angle = tf.transformations.euler_from_quaternion([
             transform_quaternion[0],
@@ -64,9 +64,8 @@ class RobotControlled2D(RobotControlled):
         kick_angle_rand = np.random.normal(0, 0.2)
         kick_force_rand = 1 #np.random.normal(1, 0.5)
 
-        rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand), 0],
-                                  [np.sin(kick_angle_rand), np.cos(kick_angle_rand), 0],
-                                  [0, 0, 0]])
+        rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)],
+                                  [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
 
         self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
 
@@ -101,7 +100,7 @@ class RobotControlled2D(RobotControlled):
         robot_direction = np.array([math.cos(theta), math.sin(theta)])
         robot_direction = robot_direction/np.linalg.norm(robot_direction)
         ball_position = ball.position
-        ball_to_robot = (ball_position - self.position)[0:2]
+        ball_to_robot = (ball_position - self.position[0:2])
         angle = np.arccos(np.dot(ball_to_robot, robot_direction)/(np.linalg.norm(ball_to_robot)*np.linalg.norm(robot_direction)))
         distance = np.linalg.norm(ball_to_robot)
         if angle < 0.1 and distance < 0.2: #TODO change constants to depend on something

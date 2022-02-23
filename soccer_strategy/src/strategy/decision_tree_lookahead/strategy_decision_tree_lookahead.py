@@ -5,6 +5,7 @@ from soccer_msgs.msg import GameState
 from copy import deepcopy
 import abc
 
+
 class Agent(enum.IntEnum):
     FRIENDLY = 0
     OPPONENT = 1
@@ -40,10 +41,10 @@ class State:
     def isLose(self):
         return False
 
-class DecisionTreeStrategy(Strategy):
+class StrategyDecisionTreeLookhead(Strategy):
     def __init__(self):
         super().__init__()
-        self.depth = 4  # Max depth traversal
+        self.depth = self.TREE_DEPTH  # Max depth traversal
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         state = self.getInitialState(friendly_team, opponent_team, game_state)
@@ -91,3 +92,4 @@ class DecisionTreeStrategy(Strategy):
         return best_move, value
 
     DECISION_ALGORITHM = DFMiniMax
+    TREE_DEPTH = 4

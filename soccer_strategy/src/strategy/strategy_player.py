@@ -37,7 +37,7 @@ class PhysConsts:
         return coeff
 
 
-class PlayerStrategy(ABC, Strategy):
+class StrategyPlayer(ABC, Strategy):
 
     def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5): # 0.5, 0.5 0.5
         super().__init__()
@@ -297,7 +297,7 @@ class PlayerStrategy(ABC, Strategy):
 
 
 
-class ScoreStrategy(PlayerStrategy):
+class ScoreStrategy(StrategyPlayer):
     """
     Objective: score on the other team
     """

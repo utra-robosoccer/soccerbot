@@ -391,14 +391,14 @@ class GoalieStrategy(PlayerStrategy):
         self._move_player_to(crit_pos)
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        self._all_robots = list(itertools.chain(friendlies, opponents))
+        self._all_robots = list(itertools.chain(friendly_team.robots, opponent_team.robots))
         if self.has_possession():
             # Return ball to offensive players
-            self._pass_to_offense(friendlies) #todo need to do stuff when no offence player is there
+            self._pass_to_offense(friendly_team.robots) #todo need to do stuff when no offence player is there
         elif self._shot_on_net():
             # Intercept shot on net
             self._defend_shot()
-        elif self._is_closest_to_ball_dest(friendlies, opponents):
+        elif self._is_closest_to_ball_dest(friendly_team.robots, opponent_team.robots):
             # Intercept nearby ball
             # Assumes ALL robots have same speed
             self._pursue_ball()
@@ -415,8 +415,8 @@ class ScoreStrategy(PlayerStrategy):
     def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):
         super().__init__(player, ball, alpha, beta, eps)
 
-    def update_next_strategy(self, friendlies, opponents, ball, game_properties):
-        self._all_robots = list(itertools.chain(friendlies, opponents))
+    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        self._all_robots = list(itertools.chain(friendly_team.robots, opponent_team.robots))
         if self.has_possession():
             # Try kicking to nearest point on goal line
             # TODO: account for kick angle uncertainty; play it safe
@@ -426,7 +426,7 @@ class ScoreStrategy(PlayerStrategy):
                 opp_net_line[Field.Y_COORD]
             )
             self._kick_ball(goal_pos)
-        elif self._is_closest_to_ball_dest(friendlies, []):
+        elif self._is_closest_to_ball_dest(friendly_team.robots, []):
             # TODO: ^ not the best way. Should ideally have a function like
             # _can_intercept_ball_quickest(). Figuring out how to compute
             # that needs work though

@@ -117,6 +117,6 @@ class GameEngine3D(game_engine.GameEngine):
                 self.decide_strategy()
 
                 # Run the strategy
-                self.team1.strategy.update_next_strategy(self.team1, self.team2, self.ball, self.gameState)
+                self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
 
             rostime_previous = rostime
