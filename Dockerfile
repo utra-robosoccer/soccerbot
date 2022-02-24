@@ -43,7 +43,7 @@ RUN apt update && apt-fast install -y \
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
-RUN pip install -r /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
 RUN pip install --upgrade protobuf
 RUN pip install tqdm
 # Build
