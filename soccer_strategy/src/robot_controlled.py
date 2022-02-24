@@ -23,7 +23,7 @@ class RobotControlled(Robot):
     def set_navigation_position(self, goal_position):
 
         if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
-            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old" + str(goal_position))
+            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
             return False
 
         self.start_position = self.position

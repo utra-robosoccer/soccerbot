@@ -98,7 +98,7 @@ class GameControllerBridge():
                 if self.socket is None:
                     self.socket = self.get_connection(self.addr)
                     if self.socket is None:
-                        time.sleep(3)
+                        time.sleep(8)
                         continue
 
                 msg = self.receive_msg()
