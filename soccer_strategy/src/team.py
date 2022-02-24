@@ -19,9 +19,9 @@ class Team():
         self.formations = {
             "initial": {
                 Robot.Role.GOALIE: [-1.5, 0, 0],
-                Robot.Role.STRIKER: [-2, 0, 1.57],
-                Robot.Role.RIGHT_WING: [-1, 2.5, 0],
-                Robot.Role.LEFT_WING: [-1.5, 1.75, 0]
+                Robot.Role.STRIKER: [-0.5, 0, 0],
+                Robot.Role.RIGHT_WING: [-1, 1.5, 0],
+                Robot.Role.LEFT_WING: [-1, -1.5, 0]
             },
             "attack": {
                 Robot.Role.GOALIE: [4.5, 0, 0],
