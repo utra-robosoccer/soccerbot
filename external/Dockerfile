@@ -1,4 +1,6 @@
-FROM ros:noetic
+FROM nvidia/cudagl:11.4.2-base
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
@@ -14,13 +16,11 @@ RUN apt update && apt-fast install -y \
     screen \
     vim \
     python3-pip \
-    python3-catkin-tools \
     python3-protobuf \
     protobuf-compiler \
     libprotobuf-dev \
     libjpeg9-dev \
     wget \
-    ccache \
     dirmngr \
     gnupg2 \
     lsb-release \
@@ -29,22 +29,25 @@ RUN apt update && apt-fast install -y \
     apt-utils \
     software-properties-common \
     sudo \
-    ros-noetic-robot-state-publisher \
-    curl
+    curl \
+    libxdamage1 \
+    mesa-utils \
+    default-jre \
+    xvfb
 
-WORKDIR /root
+RUN pip3 install transforms3d
+
+WORKDIR /usr/local
 COPY GameController GameController
 COPY webots webots
-SHELL ["/bin/bash", "-c"]
 RUN cd webots && \
    ./scripts/install/linux_compilation_dependencies.sh
-RUN sudo apt-get install -y libxdamage1
-RUN echo WEBOTS_HOME="/root/webots" >> ~/.bashrc && \
+RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
     make clean || echo "Completed" && \
     make -j10
 
-RUN apt update && apt-get -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
+RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd GameController && \
     ant
 
@@ -54,10 +57,13 @@ RUN cd webots/projects/samples/contests/robocup/controllers/referee && \
 
 RUN apt-get install -y protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd webots/projects/samples/contests/robocup && \
-    WEBOTS_HOME=/root/webots make clean && \
-    WEBOTS_HOME=/root/webots make
+    WEBOTS_HOME=/usr/local/webots make clean && \
+    WEBOTS_HOME=/usr/local/webots make
 
-RUN apt-get install -y mesa-utils
+RUN pip3 install pyyaml
 
-RUN pip3 install transforms3d
-RUN apt install -y default-jre
+ENV QTWEBENGINE_DISABLE_SANDBOX=1
+ENV WEBOTS_HOME /usr/local/webots
+ENV GAME_CONTROLLER_HOME /usr/local/GameController
+
+SHELL ["/bin/bash", "-c"]

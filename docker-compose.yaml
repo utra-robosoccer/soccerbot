@@ -78,21 +78,19 @@ services:
           - driver: nvidia
             count: all
             capabilities: [gpu, compute, utility, graphics]
-    command: bash -c "cd webots && WEBOTS_HOME=/root/webots ./webots --batch --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
+    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/root/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/root/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/root/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/root/webots/projects/samples/contests/robocup/protos/:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
+      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
-      WEBOTS_HOME: /root/webots
       JAVA_HOME: /usr
-      GAME_CONTROLLER_HOME: /root/GameController
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
   friendly:
