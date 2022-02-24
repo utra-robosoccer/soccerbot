@@ -18,6 +18,7 @@
 
   <!-- Localization -->
   <depend>amcl</depend>
+  <depend>pointcloud_to_laserscan</depend>
   <depend>soccer_object_detection</depend>
   <depend>soccer_object_localization</depend>
   <depend>map_server</depend>
