@@ -1,4 +1,5 @@
 webots/.*
+webots/!.git
 GameController/.*
 *.md
 external
