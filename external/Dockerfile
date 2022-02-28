@@ -39,13 +39,12 @@ RUN pip3 install transforms3d
 
 WORKDIR /usr/local
 COPY GameController GameController
+COPY webots/scripts webots/scripts
+RUN ./webots/scripts/install/linux_compilation_dependencies.sh
 COPY webots webots
-RUN cd webots && \
-   ./scripts/install/linux_compilation_dependencies.sh
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
-    make clean || echo "Completed" && \
-    make -j10
+    make
 
 RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd GameController && \
