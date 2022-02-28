@@ -27,12 +27,11 @@ version: "3.3"
 # --------------------
 # docker-compose build or docker-compose pull
 # xhost +local:docker # Must be run every time before starting
-# docker-compose up # To run a specific file run docker-compose -f docker-compose.something.yaml up
+# docker-compose up
 
 # Note: To run just simulator run xhost +local:docker && docker-compose up simulator
 # Note: You never need to build the images a second time as all the code is mounted
 # Note: To run the full game run docker-compose -f docker-compose.full.yaml up
-# Note: To run a one on one run docker-compose up
 
 # Tips and tricks
 # --------------------
