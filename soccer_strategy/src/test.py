@@ -4,6 +4,8 @@ from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
 from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 
+# Under Build, Execution, Deployment > PyQt Compatible, select PyQt5
+
 class Test(TestCase):
     def test_dummy_strategy(self):
         friendly_wins = 0
