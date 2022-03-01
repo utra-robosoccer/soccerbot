@@ -119,10 +119,10 @@ class SoccerTrajectoryClass:
             self.trajectory_complete = True
             return
 
-        print("Running : ", command.trajectory_name)
+        rospy.loginfo("Running Trajectory: " + command.trajectory_name)
         trajectory = Trajectory(path, command.mirror)
         trajectory.run()
-        print("Finished running:", command.trajectory_name)
+        rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
 

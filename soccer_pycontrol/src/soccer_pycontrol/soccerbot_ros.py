@@ -53,8 +53,6 @@ class SoccerbotRos(Soccerbot):
 
     def state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
-        if self.robot_state.status == RobotState.STATUS_TERMINATING_WALK:
-            self.terminate_walk = True
 
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
