@@ -64,10 +64,10 @@ class GameEngine3D(game_engine.GameEngine):
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             new_strategy = StrategyDetermineSide
         elif self.gameState.gameState == GameState.GAMESTATE_READY:
-            if self.robot().status == Robot.Status.READY:
-                new_strategy = StrategyReady
-            else:
+            if self.robot().status in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED]:
                 new_strategy = StrategyDetermineSide
+            else:
+                new_strategy = StrategyReady
         elif self.gameState.gameState == GameState.GAMESTATE_SET:
             new_strategy = StrategySet
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
@@ -94,6 +94,8 @@ class GameEngine3D(game_engine.GameEngine):
                 new_strategy = StrategyPenaltykick
             elif self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
                 new_strategy = StrategyPenaltykick
+        else:
+            raise Exception("No strategy covered by the current states")
 
         if type(self.team1.strategy) != new_strategy:
             self.team1.strategy = new_strategy()
