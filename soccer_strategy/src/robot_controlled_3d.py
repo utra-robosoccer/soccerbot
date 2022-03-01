@@ -108,26 +108,6 @@ class RobotControlled3D(RobotControlled):
         self.robot_state_publisher.publish(r)
         pass
 
-
-    def terminate_walk(self):
-        self.terminate_walking_publisher.publish()
-
-    def kick(self):
-        f = FixedTrajectoryCommand()
-        f.trajectory_name = "rightkick"
-        if not self.kick_with_right_foot:
-            f.mirror = True
-        self.trajectory_publisher.publish(f)
-        rospy.loginfo(self.robot_name + " kicking")
-
-    def get_back_up(self, type: str="getupback"):
-        self.terminate_walking_publisher.publish()
-        f = FixedTrajectoryCommand()
-        f.trajectory_name = type
-        self.trajectory_publisher.publish(f)
-        self.relocalization_timeout = 5
-        rospy.loginfo(self.robot_name + type)
-
     def ball_pose_callback(self, data):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
@@ -148,15 +128,15 @@ class RobotControlled3D(RobotControlled):
         roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
         if self.status in [Robot.Status.DETERMINING_SIDE, Robot.Status.READY, Robot.Status.WALKING, Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.LOCALIZING]:
             if pitch > angle_threshold:
-                rospy.logwarn("Fallen Back")
+                rospy.logwarn_throttle(1, "Fallen Back")
                 self.status = Robot.Status.FALLEN_BACK
 
             elif pitch < -angle_threshold:
-                rospy.logwarn("Fallen Front")
+                rospy.logwarn_throttle(1, "Fallen Front")
                 self.status = Robot.Status.FALLEN_FRONT
 
             elif yaw < -angle_threshold or yaw > angle_threshold:
-                rospy.logwarn("Fallen Side")
+                rospy.logwarn_throttle(1, "Fallen Side")
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, position):
@@ -181,65 +161,17 @@ class RobotControlled3D(RobotControlled):
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         self.robot_initial_pose_publisher.publish(p)
 
-    def update_status(self):
-        if self.status != self.previous_status:
-            rospy.loginfo(self.robot_name + " status changes to " + str(self.status))
-            self.previous_status = self.status
+    def kick(self):
+        return self.run_fixed_trajectory("rightkick")
 
-        if self.status == Robot.Status.DISCONNECTED:
-            pass
-
-        elif self.status == Robot.Status.READY:
-            if self.stop_requested:
-                self.status = Robot.Status.STOPPED
-
-        elif self.status == Robot.Status.WALKING:
-            if self.stop_requested:
-                self.status = Robot.Status.TERMINATING_WALK
-
-        elif self.status == Robot.Status.KICKING:
-            f = FixedTrajectoryCommand()
-            f.trajectory_name = "rightkick"
-            if not self.kick_with_right_foot:
-                f.mirror = True
-            self.trajectory_publisher.publish(f)
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-            rospy.loginfo(self.robot_name + " kicking")
-
-        elif self.status == Robot.Status.FALLEN_BACK:
-            self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryCommand()
-            f.trajectory_name = "getupback"
-            self.trajectory_publisher.publish(f)
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-            self.relocalization_timeout = 5
-            rospy.loginfo(self.robot_name + "getupback")
-
-        elif self.status == Robot.Status.FALLEN_FRONT:
-            self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryCommand()
-            f.trajectory_name = "getupfront"
-            self.trajectory_publisher.publish(f)
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-            self.relocalization_timeout = 5
-            rospy.loginfo(self.robot_name + "getupfront")
-
-        elif self.status == Robot.Status.FALLEN_SIDE:
-            self.terminate_walking_publisher.publish()
-            f = FixedTrajectoryCommand()
-            f.trajectory_name = "getupside"
-            self.trajectory_publisher.publish(f)
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
-            rospy.loginfo(self.robot_name + "getupside")
-
-        elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
-            rospy.loginfo_throttle(20, self.robot_name + " trajectory in progress")
-
-        elif self.status == Robot.Status.STOPPED or self.status == Robot.Status.READY:
-            pass
-
-        else:
-            rospy.logerr_throttle(20, self.robot_name + " is in invalid status " + str(self.status))
+    def run_fixed_trajectory(self, trajectory_name="rightkick"):
+        f = FixedTrajectoryCommand()
+        f.trajectory_name = trajectory_name
+        if not self.kick_with_right_foot:
+            f.mirror = True
+        self.trajectory_publisher.publish(f)
+        self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+        rospy.loginfo(self.robot_name + " " + f.trajectory_name)
 
     def get_detected_obstacles(self):
         # TODO know if they are friendly or enemy robot
