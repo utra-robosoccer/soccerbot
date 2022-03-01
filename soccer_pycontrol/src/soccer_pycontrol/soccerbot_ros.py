@@ -160,7 +160,10 @@ class SoccerbotRos(Soccerbot):
     HEAD_PITCH_FREQ = 0.003
 
     def apply_head_rotation(self):
-        if self.robot_state.status == self.robot_state.STATUS_READY:
+        if self.robot_state.status == self.robot_state.STATUS_DETERMINING_SIDE:
+            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 10)
+            self.head_step += 1
+        elif self.robot_state.status == self.robot_state.STATUS_READY:
             recenterCameraOnBall = False
             try:
                 (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
