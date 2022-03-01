@@ -136,14 +136,14 @@ class SoccerbotControllerRos(SoccerbotController):
 
         while not rospy.is_shutdown():
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
-                print("Received New Goal")
-                time_now = rospy.Time.now()
                 pose_updated = self.update_robot_pose()
                 if not pose_updated:
                     rospy.logwarn_throttle(1, "Unable to get Robot Pose")
                     r.sleep()
-
                     continue
+
+                rospy.loginfo("Received New Goal: " + str(self.new_goal))
+                time_now = rospy.Time.now()
 
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
@@ -158,7 +158,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.terminated = False
 
             if self.new_goal != self.goal and self.soccerbot.robot_path is not None and self.t > self.t_new_path:
-                print("Updating Existing Goal and Path")
+                print("Updating Existing Goal and Path" + str(self.new_goal))
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
