@@ -29,13 +29,14 @@ class SoccerbotControllerRos(SoccerbotController):
         self.goal = PoseStamped()
         self.robot_pose = None
         self.new_goal = self.goal
-        self.terminate_walk = False
+        self.terminated = None
 
         self.tf_listener = tf.TransformListener()
 
     def update_robot_pose(self):
         try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + '/base_footprint', rospy.Time(0))
+            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + '/base_footprint',
+                                                            rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return False
         self.robot_pose = PoseStamped()
@@ -48,7 +49,6 @@ class SoccerbotControllerRos(SoccerbotController):
         self.robot_pose.pose.orientation.w = rot[3]
 
         return True
-
 
     def pose_to_transformation(self, pose: Pose) -> Transformation:
         t = Transformation([pose.position.x, pose.position.y, pose.position.z],
@@ -119,7 +119,6 @@ class SoccerbotControllerRos(SoccerbotController):
             pass
         self.new_goal = pose
 
-
     def run(self, stop_on_completed_trajectory=False):
         self.t = 0
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
@@ -156,17 +155,22 @@ class SoccerbotControllerRos(SoccerbotController):
                 print("End Pose: ", self.goal.pose)
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
-
+                self.terminated = False
 
             if self.new_goal != self.goal and self.soccerbot.robot_path is not None and self.t > self.t_new_path:
                 print("Updating Existing Goal and Path")
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.soccerbot.robot_path is not None and self.terminate_walk:
-                print("Terminating Walk at time " + str(self.t))
-                self.soccerbot.robot_path.terminateWalk(self.t)
-                self.terminate_walk = False
+            if self.soccerbot.robot_state.status in [RobotState.STATUS_TERMINATING_WALK, RobotState.STATUS_FALLEN_FRONT,
+                                                     RobotState.STATUS_FALLEN_BACK, RobotState.STATUS_FALLEN_SIDE,
+                                                     RobotState.STATUS_PENALTY, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
+                if not self.terminated:
+                    print("Terminating Walk at time " + str(self.t))
+                    self.soccerbot.robot_path.terminateWalk(self.t)
+                    self.terminated = True
+                r.sleep()
+                continue
 
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
@@ -184,7 +188,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP:
                 rospy.loginfo("Completed Walk")
-                walk_time = (rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000)))
+                walk_time = (rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (
+                            time_now.secs + (time_now.nsecs / 100000000)))
                 print(walk_time)
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
@@ -197,7 +202,8 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(pitch - self.soccerbot.DESIRED_PITCH_2))
+                    rospy.logwarn_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
+                        pitch - self.soccerbot.DESIRED_PITCH_2))
                     if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:
@@ -226,4 +232,3 @@ class SoccerbotControllerRos(SoccerbotController):
                 r.sleep()
             except rospy.exceptions.ROSInterruptException:
                 break
-
