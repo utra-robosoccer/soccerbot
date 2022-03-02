@@ -46,7 +46,7 @@ class GameEngine3D(game_engine.GameEngine):
 
         # GameState
         self.gameState = GameState()
-        self.gameState.gameState = GameState.GAMESTATE_FINISHED
+        self.gameState.gameState = GameState.GAMESTATE_READY
         self.game_state_subscriber = rospy.Subscriber('gamestate', GameState, self.gamestate_callback)
 
     def robot(self) -> RobotControlled3D:
@@ -73,7 +73,7 @@ class GameEngine3D(game_engine.GameEngine):
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
-            if self.robot().status == Robot.Status.READY:
+            if self.robot().status in [Robot.Status.READY, Robot.Status.LOCALIZING]:
                 new_strategy = StrategyReady
             elif self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.gameState.hasKickOff:

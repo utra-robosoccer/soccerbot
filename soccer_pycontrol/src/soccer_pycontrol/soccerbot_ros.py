@@ -161,7 +161,7 @@ class SoccerbotRos(Soccerbot):
 
     def apply_head_rotation(self):
         if self.robot_state.status == self.robot_state.STATUS_DETERMINING_SIDE:
-            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 10)
+            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 16)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             recenterCameraOnBall = False
