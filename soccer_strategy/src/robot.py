@@ -16,7 +16,6 @@ class Robot:
         BLUE = 1
         RED = 2
 
-    # https://drive.google.com/file/d/107bBTbxOhYO6FOo8361nhH7ug5c5HON9/view?usp=sharing
     class Role(enum.IntEnum):
         UNASSIGNED = RobotState.ROLE_UNASSIGNED
         GOALIE = RobotState.ROLE_GOALIE
@@ -24,6 +23,8 @@ class Robot:
         LEFT_WING = RobotState.ROLE_LEFT_WING
         RIGHT_WING = RobotState.ROLE_RIGHT_WING
 
+    # Status flow diagram
+    # https://drive.google.com/file/d/107bBTbxOhYO6FOo8361nhH7ug5c5HON9/view?usp=sharing
     class Status(enum.IntEnum):
         DISCONNECTED = RobotState.STATUS_DISCONNECTED
         DETERMINING_SIDE = RobotState.STATUS_DETERMINING_SIDE

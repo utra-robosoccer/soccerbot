@@ -22,9 +22,10 @@ class RobotControlled3D(RobotControlled):
         super().__init__(team=team, role=role, status=status, position=self.position_default)
 
         # Subscibers
+        self.amcl_pose_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
         self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty,
-                                                             self.action_completed_callback)
+                                                             self.action_completed_callback, queue_size=1)
 
         # Publishers
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1)
@@ -39,11 +40,9 @@ class RobotControlled3D(RobotControlled):
         # Configuration
         self.kick_with_right_foot = True
 
-        # terminate all action
-        self.relocalization_timeout = 0
+        self.time_since_action_completed = rospy.Time(0)
 
         self.obstacles = PoseArray()
-
 
         self.update_robot_state_timer = rospy.Timer(rospy.Duration(0.2), self.update_robot_state, reset=True)
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
@@ -54,14 +53,17 @@ class RobotControlled3D(RobotControlled):
 
         p = PoseStamped()
         p.header.stamp = rospy.Time.now()
-        p.pose.position.x = self.goal_position[0]
-        p.pose.position.y = self.goal_position[1]
+        p.pose.position.x = goal_position[0]
+        p.pose.position.y = goal_position[1]
         p.pose.position.z = 0
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
+        angle_fixed = goal_position[2]
+        q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
+        p.pose.orientation.x = q[0]
+        p.pose.orientation.y = q[1]
+        p.pose.orientation.z = q[2]
+        p.pose.orientation.w = q[3]
         print("Sending New Goal: " + str(goal_position))
+        self.goal_position = goal_position
         self.goal_publisher.publish(p)
         return True
 
@@ -112,13 +114,21 @@ class RobotControlled3D(RobotControlled):
         self.ball_position = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
         pass
 
+    def amcl_pose_callback(self, amcl_pose: PoseWithCovarianceStamped):
+        if self.status == Robot.Status.LOCALIZING:
+            covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
+            rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
+            if covariance_trace < 0.4:
+                rospy.loginfo("Relocalized")
+                self.status = Robot.Status.READY
+            elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(5): # Timeout localization after 5 seconds
+                rospy.logwarn("Relocalization timeout hit")
+                self.status = Robot.Status.READY
+
     def action_completed_callback(self, data):
-        if self.status == Robot.Status.TERMINATING_WALK:
-            self.status = Robot.Status.READY
-        elif self.status == Robot.Status.KICKING:
-            self.status = Robot.Status.READY
-        elif self.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
-            self.status = Robot.Status.READY
+        if self.status in [Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.TRAJECTORY_IN_PROGRESS]:
+            self.status = Robot.Status.LOCALIZING
+            self.time_since_action_completed = rospy.Time.now()
         else:
             rospy.logerr("Invalid Action Completed " + str(self.status))
 
@@ -140,7 +150,7 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, position):
-        rospy.loginfo("Setting initial Robot " + self.robot_name + " position " + str(position))
+        print("Setting initial Robot " + self.robot_name + " position " + str(position))
         p = PoseWithCovarianceStamped()
         p.header.frame_id = 'world'
         p.header.stamp = rospy.get_rostime()

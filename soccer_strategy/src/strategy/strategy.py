@@ -19,6 +19,9 @@ def get_back_up(update_next_strategy):
             return
         elif current_robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             return
+        elif current_robot.status == Robot.Status.LOCALIZING:
+            # Wait for localization status
+            return
         return update_next_strategy(self, friendly_team, opponent_team, game_state)
     return get_back_up_strategy
 
