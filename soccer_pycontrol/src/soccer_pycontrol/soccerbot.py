@@ -267,7 +267,6 @@ class Soccerbot:
         except:
             self.pose = pose
             last_hip_height = Soccerbot.standing_hip_height
-
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
 
         # Remove the roll and yaw from the pose

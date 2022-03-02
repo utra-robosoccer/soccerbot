@@ -11,7 +11,7 @@ services:
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_double.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_empty.json:/usr/local/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_empty.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
 
   friendly1:
