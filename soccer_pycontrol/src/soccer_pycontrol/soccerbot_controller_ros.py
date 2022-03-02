@@ -93,7 +93,6 @@ class SoccerbotControllerRos(SoccerbotController):
     def wait(self, steps: int):
         for i in range(steps):
             rospy.sleep(SoccerbotController.PYBULLET_STEP)
-            pb.stepSimulation()
 
     def goal_callback(self, pose: PoseStamped):
 
@@ -135,6 +134,19 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
 
         while not rospy.is_shutdown():
+            if self.soccerbot.robot_state.status in [RobotState.STATUS_TERMINATING_WALK, RobotState.STATUS_FALLEN_FRONT,
+                                                     RobotState.STATUS_FALLEN_BACK, RobotState.STATUS_FALLEN_SIDE,
+                                                     RobotState.STATUS_PENALTY, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
+                if not self.terminated:
+                    rospy.loginfo("Terminating Walk at time " + str(self.t))
+                    self.soccerbot.robot_path.terminateWalk(self.t)
+                    self.terminated = True
+
+                self.goal = self.new_goal
+                r.sleep()
+                continue
+
+            # New goal added
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
                 pose_updated = self.update_robot_pose()
                 if not pose_updated:
@@ -142,7 +154,7 @@ class SoccerbotControllerRos(SoccerbotController):
                     r.sleep()
                     continue
 
-                rospy.loginfo("Received New Goal: " + str(self.new_goal))
+                rospy.loginfo("Received New Goal")
                 time_now = rospy.Time.now()
 
                 self.goal = self.new_goal
@@ -157,40 +169,27 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.publishPath()
                 self.terminated = False
 
+            # Existing goal updated
             if self.new_goal != self.goal and self.soccerbot.robot_path is not None and self.t > self.t_new_path:
                 print("Updating Existing Goal and Path" + str(self.new_goal))
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.soccerbot.robot_state.status in [RobotState.STATUS_TERMINATING_WALK, RobotState.STATUS_FALLEN_FRONT,
-                                                     RobotState.STATUS_FALLEN_BACK, RobotState.STATUS_FALLEN_SIDE,
-                                                     RobotState.STATUS_PENALTY, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
-                if not self.terminated:
-                    print("Terminating Walk at time " + str(self.t))
-                    self.soccerbot.robot_path.terminateWalk(self.t)
-                    self.terminated = True
-                r.sleep()
-                continue
-
+            # IMU feedback while walking
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
 
                 forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
-                pb.setJointMotorControlArray(bodyIndex=self.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 20, 1)),
-                                             targetPositions=self.soccerbot.get_angles(),
-                                             forces=forces
-                                             )
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
                 self.soccerbot.publishOdometry()
 
-            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP:
-                rospy.loginfo("Completed Walk")
+            # Walk completed
+            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP and not self.terminated:
                 walk_time = (rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (
                             time_now.secs + (time_now.nsecs / 100000000)))
-                print(walk_time)
+                rospy.loginfo("Completed Walk, Took: " + str(walk_time))
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
@@ -224,7 +223,6 @@ class SoccerbotControllerRos(SoccerbotController):
                     break
 
             self.soccerbot.publishAngles()  # Disable to stop walking
-            pb.stepSimulation()
 
             self.t = self.t + SoccerbotController.PYBULLET_STEP
 
