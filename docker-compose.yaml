@@ -25,14 +25,14 @@ version: "3.3"
 # sudo apt-get update
 # sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit mesa-utils
 # sudo systemctl restart docker
+# echo "xhost +local:docker" >> ~/.bashrc && source ~/.bashrc
 
 # Running Instructions
 # --------------------
 # docker-compose build or docker-compose pull
-# xhost +local:docker # Must be run every time before starting
 # docker-compose up
 
-# Note: To run just simulator run xhost +local:docker && docker-compose up simulator
+# Note: To run just simulator run docker-compose up simulator
 # Note: You never need to build the images a second time as all the code is mounted
 # Note: To run the full game run docker-compose -f docker-compose.full.yaml up
 
