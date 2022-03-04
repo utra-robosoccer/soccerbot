@@ -1,11 +1,16 @@
 import math
 import numpy as np
-import rospy
+#import rospy
 
 from strategy.strategy import Strategy
 from strategy.utils import *
 from team import Team
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    class GameState:
+        GAMESTATE_PLAYING = 1
+        STATE_NORMAL = 2
 from strategy.interfaces.evaluations import Evaluations
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 6
@@ -80,17 +85,18 @@ class StrategyDummy(Strategy):
                         else:
                             current_closest.kick_with_right_foot = False
 
-                        print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                              format(current_closest.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
+                        #print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
+                        #      format(current_closest.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
                         delta = goal_position - ball.position
                         unit = delta / np.linalg.norm(delta)
 
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
-                    else:
-                        print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                            format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
-                        current_closest.set_navigation_position(destination_position_biased)
+                    #else:
+                        #print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
+                        #    format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
+                        #current_closest.set_navigation_position(destination_position_biased)
+                        #TODO only works with ros
                         # self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
@@ -105,10 +111,12 @@ class StrategyDummy(Strategy):
                 # Haven't seen the ball timeout
                 if self.havent_seen_the_ball_timeout < 0:
                     print("Ball position timeout")
-                    rospy.loginfo("Havent seen the ball for a while. Rototating robot " + player.robot_name)
+                    #TODO need ros for this
+                    #rospy.loginfo("Havent seen the ball for a while. Rototating robot " + player.robot_name)
                     self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                     turn_position = [player_position[0], player_position[1], player_angle + math.pi]
-                    player.set_navigation_position(turn_position)
+                    #TODO only works with ros
+                    #player.set_navigation_position(turn_position)
 
 
     def move_player_to(self, player, destination_position):

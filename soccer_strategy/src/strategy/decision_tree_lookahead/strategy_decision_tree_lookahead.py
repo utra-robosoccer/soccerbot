@@ -1,7 +1,12 @@
 import enum
 from strategy.strategy import Strategy
 from team import Team
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    class GameState:
+        GAMESTATE_PLAYING = 1
+        STATE_NORMAL = 2
 from copy import deepcopy
 import abc
 

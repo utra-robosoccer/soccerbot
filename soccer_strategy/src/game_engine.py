@@ -1,7 +1,13 @@
 import _thread
 import random
 
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    class GameState:
+        GAMESTATE_PLAYING = 1
+        STATE_NORMAL = 2
+
 from vispy import app
 
 from robot import Robot
@@ -83,9 +89,9 @@ class GameEngine:
             if step % self.team1.strategy.update_frequency == 0:
                 self.team1.average_ball_position = self.ball
                 self.team2.average_ball_position = self.ball
-                print("Team 1 Strategy Update")
+                # print("Team 1 Strategy Update")
                 self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
-                print("Team 2 Strategy Update")
+                # print("Team 2 Strategy Update")
                 self.team2.strategy.update_next_strategy(self.team2, self.team1, self.gameState)
 
             # Check victory condition
