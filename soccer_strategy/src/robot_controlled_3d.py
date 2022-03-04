@@ -53,6 +53,7 @@ class RobotControlled3D(RobotControlled):
 
         p = PoseStamped()
         p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
         p.pose.position.x = goal_position[0]
         p.pose.position.y = goal_position[1]
         p.pose.position.z = 0
