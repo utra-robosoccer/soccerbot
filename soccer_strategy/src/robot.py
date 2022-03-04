@@ -3,7 +3,31 @@ import enum
 import numpy
 
 from ball import Ball
-from soccer_msgs.msg import RobotState
+
+try:
+    from soccer_msgs.msg import RobotState
+except:
+    class RobotState:
+        ROLE_UNASSIGNED = 1
+        ROLE_GOALIE = 2
+        ROLE_STRIKER = 3
+        ROLE_LEFT_WING = 4
+        ROLE_RIGHT_WING = 5
+        STATUS_DISCONNECTED = 6
+        STATUS_DETERMINING_SIDE = 7
+        STATUS_READY = 8
+        STATUS_LOCALIZING = 9
+        STATUS_WALKING = 10
+        STATUS_TERMINATING_WALK = 11
+        STATUS_KICKING = 12
+        STATUS_FALLEN_FRONT = 13
+        STATUS_FALLEN_BACK = 14
+        STATUS_KICKING = 15
+        STATUS_TRAJECTORY_IN_PROGRESS = 16
+        STATUS_PENALTY = 17
+        STATUS_OUT_OF_BOUNDS = 18
+        STATUS_STOPPED = 19
+
 # Root class for robot used by 2D, 3D and 3D friendly robots
 class Robot:
     class Team(enum.IntEnum):
