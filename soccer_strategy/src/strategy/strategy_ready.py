@@ -16,5 +16,5 @@ class StrategyReady(Strategy):
         this_robot = self.get_current_robot(friendly_team)
 
         navigation_position = friendly_team.formations["initial"][this_robot.role]
-        if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.25:
+        if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
             Actions.navigation_to_position(this_robot, navigation_position)

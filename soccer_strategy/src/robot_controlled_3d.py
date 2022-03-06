@@ -127,7 +127,8 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.READY
 
     def action_completed_callback(self, data):
-        if self.status in [Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.TRAJECTORY_IN_PROGRESS]:
+        if self.status in [Robot.Status.WALKING, Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.TRAJECTORY_IN_PROGRESS]:
+            self.goal_position = None
             self.status = Robot.Status.LOCALIZING
             self.time_since_action_completed = rospy.Time.now()
         else:
