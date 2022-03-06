@@ -21,11 +21,12 @@ class RobotControlled(Robot):
         self.path = None
 
     def set_navigation_position(self, goal_position):
-
         if self.status == Robot.Status.WALKING:
-            if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
+            if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position[0:2]) - np.array(goal_position[0:2])) < 0.05:
                 print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
                 return False
+            else:
+                print("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
 
         self.start_position = self.position
         self.goal_position = goal_position
