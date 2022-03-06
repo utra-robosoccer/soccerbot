@@ -17,7 +17,8 @@ class Actions:
     @staticmethod
     def resume_all_robots(robots: [Robot]):
         for robot in robots:
-            robot.status = Robot.Status.READY
+            if robot.status == Robot.Status.STOPPED:
+                robot.status = Robot.Status.READY
 
     @staticmethod
     def kick(robot: [Robot], ball: Ball, target_position):
