@@ -139,7 +139,8 @@ class SoccerbotControllerRos(SoccerbotController):
                                                      RobotState.STATUS_PENALTY, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
                 if not self.terminated:
                     rospy.loginfo("Terminating Walk at time " + str(self.t))
-                    self.soccerbot.robot_path.terminateWalk(self.t)
+                    if self.soccerbot.robot_path is not None:
+                        self.soccerbot.robot_path.terminateWalk(self.t)
                     self.terminated = True
 
                 self.goal = self.new_goal

@@ -5,6 +5,12 @@ from soccer_msgs.msg import GameState
 from team import Team
 from robot import Robot
 
+def update_average_ball_position(update_next_strategy):
+    def update_average_ball_position_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        friendly_team.update_average_ball_position()
+        return update_next_strategy(self, friendly_team, opponent_team, game_state)
+    return update_average_ball_position_strategy
+
 def get_back_up(update_next_strategy):
     def get_back_up_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         current_robot = self.get_current_robot(friendly_team)
