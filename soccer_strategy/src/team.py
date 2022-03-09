@@ -65,7 +65,8 @@ class Team():
         for robot in self.robots:
             if robot.robot_id == int(os.getenv('ROBOCUP_ROBOT_ID', 1)):
                 self.average_ball_position = robot.observed_ball
-                break
+                return True
+        return False
 
     def log(self):
         print("Team Data")

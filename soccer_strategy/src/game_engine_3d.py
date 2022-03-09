@@ -73,13 +73,11 @@ class GameEngine3D(game_engine.GameEngine):
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
-            if self.robot().status in [Robot.Status.READY, Robot.Status.LOCALIZING]:
-                new_strategy = StrategyReady
-            elif self.gameState.secondaryState == GameState.STATE_NORMAL:
+            if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.gameState.hasKickOff:
                     new_strategy = StrategyDummy
                 else:
-                    new_strategy = StrategySet
+                    new_strategy = StrategyDummy
             elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
                 new_strategy = StrategyFreekick
             elif self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:

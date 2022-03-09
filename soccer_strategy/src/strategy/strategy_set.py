@@ -7,4 +7,4 @@ class StrategySet(Strategy):
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        Actions.stop_all_robots(friendly_team.robots)
+        pass

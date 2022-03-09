@@ -2,7 +2,8 @@ import math
 import numpy as np
 import rospy
 
-from strategy.strategy import Strategy
+from strategy.interfaces.actions import Actions
+from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 from strategy.utils import *
 from team import Team
 from soccer_msgs.msg import GameState
@@ -28,10 +29,14 @@ class StrategyDummy(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+        self.update_frequency = 5
         super(StrategyDummy, self).__init__()
 
-
+    @get_back_up
+    @update_average_ball_position
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        this_robot = self.get_current_robot(friendly_team)
+
         if friendly_team.average_ball_position.position is not None:
             self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
 
@@ -42,12 +47,14 @@ class StrategyDummy(Strategy):
             if abs(ball.position[1]) < 3.5 and abs(ball.position[0]) < 5:
 
                 current_closest = Evaluations.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
-                if current_closest is not None:  # and current_closest.send_nav:
+                if current_closest is None:
+                    pass
+                elif current_closest.robot_id == this_robot.robot_id:
 
                     # generate destination pose
-                    ball_position = ball.position
-                    player_position = current_closest.position[0:2]
-                    player_angle = current_closest.position[2]
+                    ball_position = ball.position[0:2]
+                    player_position = this_robot.position[0:2]
+                    player_angle = this_robot.position[2]
 
                     diff = ball_position - goal_position
                     diff_unit = diff / np.linalg.norm(diff)
@@ -76,39 +83,37 @@ class StrategyDummy(Strategy):
                     if distance_of_player_to_ball < 0.205:
                         if nav_angle_diff > 0.03:
                             # right foot
-                            current_closest.kick_with_right_foot = True
+                            this_robot.kick_with_right_foot = True
                         else:
-                            current_closest.kick_with_right_foot = False
+                            this_robot.kick_with_right_foot = False
 
                         print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                              format(current_closest.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
+                              format(this_robot.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
                         delta = goal_position - ball.position
                         unit = delta / np.linalg.norm(delta)
 
-                        current_closest.status = Robot.Status.KICKING
-                        current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
+                        this_robot.status = Robot.Status.KICKING
+                        this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
                     else:
                         print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
                             format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
-                        current_closest.set_navigation_position(destination_position_biased)
+                        if this_robot.status != Robot.Status.WALKING:
+                            this_robot.set_navigation_position(destination_position_biased) # TODO dynamic walking
                         # self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
-            for player in friendly_team.robots:
-                if player.status != Robot.Status.READY:
-                    continue
 
-                player_angle = player.position[2]
-                player_position = player.position[0:2]
+            player_angle = this_robot.position[2]
+            player_position = this_robot.position[0:2]
 
-                # Haven't seen the ball timeout
-                if self.havent_seen_the_ball_timeout < 0:
-                    print("Ball position timeout")
-                    rospy.loginfo("Havent seen the ball for a while. Rototating robot " + player.robot_name)
-                    self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-                    turn_position = [player_position[0], player_position[1], player_angle + math.pi]
-                    player.set_navigation_position(turn_position)
+            # Haven't seen the ball timeout
+            if self.havent_seen_the_ball_timeout < 0:
+                rospy.loginfo("Ball position timeout")
+                rospy.loginfo("Havent seen the ball for a while. Rotating robot " + this_robot.robot_name)
+                self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi]
+                this_robot.set_navigation_position(turn_position)
 
 
     def move_player_to(self, player, destination_position):
