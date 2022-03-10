@@ -69,7 +69,7 @@ class Team():
         return False
 
     def log(self):
-        print("Team Data")
         np.set_printoptions(precision=3)
         for robot in self.robots:
-            print("  Robot {}: Position: {}, Role: {}, Status: {}, Estimated Ball: {}".format(robot.robot_id, robot.position, robot.role.name, robot.status.name, robot.observed_ball.position))
+            if robot.status != Robot.Status.DISCONNECTED:
+                print("  Robot Id {}: Position: {}, Role: {}, Status: {}, Estimated Ball: {}".format(robot.robot_id, robot.position, robot.role.name, robot.status.name, robot.observed_ball.position))

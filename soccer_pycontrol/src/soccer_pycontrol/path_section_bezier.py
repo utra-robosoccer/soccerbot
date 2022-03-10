@@ -5,7 +5,7 @@ from scipy.special import comb
 from soccer_pycontrol.path_section import PathSection
 
 class PathSectionBezier(PathSection):
-    turn_duration = 4  # Number of body steps to turn
+    turn_duration = 5  # Number of body steps to turn
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)

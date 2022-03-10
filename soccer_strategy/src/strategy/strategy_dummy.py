@@ -89,7 +89,7 @@ class StrategyDummy(Strategy):
 
                         print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
                               format(this_robot.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
-                        delta = goal_position - ball.position
+                        delta = goal_position - ball.position[0:2]
                         unit = delta / np.linalg.norm(delta)
 
                         this_robot.status = Robot.Status.KICKING

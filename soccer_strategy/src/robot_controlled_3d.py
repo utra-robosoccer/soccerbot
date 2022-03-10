@@ -47,6 +47,9 @@ class RobotControlled3D(RobotControlled):
         self.update_robot_state_timer = rospy.Timer(rospy.Duration(0.2), self.update_robot_state, reset=True)
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
+    def set_kick_velocity(self, kick_velocity):
+        pass
+
     def set_navigation_position(self, goal_position):
         if not super().set_navigation_position(goal_position):
             return False

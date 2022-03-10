@@ -117,7 +117,7 @@ services:
     ports:
       - 11311:11311
     environment:
-      X_POS: 4
+      X_POS: 2
       Y_POS: -3.14
       YAW: 1.57
       ROBOCUP_ROBOT_ID: 1
@@ -136,7 +136,7 @@ services:
       - 11312:11311
     environment:
       ROS_MASTER: "true"
-      X_POS: -4
+      X_POS: -2
       Y_POS: -3.14
       YAW: 1.57
       ROBOCUP_TEAM_ID: 5

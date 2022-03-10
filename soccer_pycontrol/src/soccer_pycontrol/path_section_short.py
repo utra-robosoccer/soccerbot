@@ -7,9 +7,9 @@ from soccer_pycontrol.utils import wrapToPi
 from copy import deepcopy
 
 class PathSectionShort(PathSection):
-    bodystep_size = 0.02 # Reduce body step size
-    angular_bodystep_size = 0.25  # radians Radians per angular step
-    steps_per_second = 2.2 # try 6 motors P = 09.25
+    bodystep_size = 0.03 # Reduce body step size
+    angular_bodystep_size = 0.35  # radians Radians per angular step
+    steps_per_second = 2.5 # try 6 motors P = 09.25
 
     def poseAtRatio(self, r):
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
