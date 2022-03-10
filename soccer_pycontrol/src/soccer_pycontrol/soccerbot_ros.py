@@ -41,7 +41,7 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
-        self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.listener = tf.TransformListener()
@@ -193,10 +193,10 @@ class SoccerbotRos(Soccerbot):
             elif recenterCameraOnBall:
                 anglelr = math.atan2(trans[1], trans[0])
                 angleud = math.atan2(trans[2], trans[0])
-                rospy.loginfo_throttle(5, "Ball found")
+                rospy.loginfo_throttle(5, "\033[1mCamera Centered on Ball\033[0m")
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0060
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0060
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0030
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0030
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
