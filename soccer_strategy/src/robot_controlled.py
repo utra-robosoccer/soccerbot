@@ -3,8 +3,9 @@ from robot import Robot
 import numpy as np
 #import tf
 from soccer_pycontrol import path
-# from soccer_geometry import transformation
-# import tf.transformations
+from soccer_geometry import transformation
+#import tf.transformations
+import transformations
 
 class RobotControlled(Robot):
 
@@ -21,10 +22,11 @@ class RobotControlled(Robot):
 
     def set_navigation_position(self, goal_position):
 
-        if self.status == Robot.Status.WALKING:
-            if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
-                print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
-                return False
+        #if self.status == Robot.Status.WALKING:
+            #if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
+        if self.goal_position is not None and np.allclose(np.array(self.goal_position), np.array(goal_position)):
+            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+            return False
 
         self.start_position = self.position
         self.goal_position = goal_position
@@ -37,23 +39,23 @@ class RobotControlled(Robot):
 
     #TODO move to 3D?
 
-    # def position_to_transformation(self, position):
-    #     transfrom_position = (position[0], position[1], 0.)
-    #     q = tf.transformations.quaternion_about_axis(position[2], (0, 0, 1))
-    #     transform_quaternion = [q[0], q[1], q[2], q[3]]
-    #     return transformation.Transformation(transfrom_position, transform_quaternion)
-    #
-    # def transformation_to_position(self, transform):
-    #     transform_position = transform.get_position()
-    #     transform_quaternion = transform.get_orientation()
-    #     transfrom_angle = tf.transformations.euler_from_quaternion([
-    #         transform_quaternion[0],
-    #         transform_quaternion[1],
-    #         transform_quaternion[2],
-    #         transform_quaternion[3],
-    #     ])
-    #
-    #     return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
+    def position_to_transformation(self, position):
+        transfrom_position = (position[0], position[1], 0.)
+        q = transformations.quaternion_about_axis(position[2], (0, 0, 1))
+        transform_quaternion = [q[0], q[1], q[2], q[3]]
+        return transformation.Transformation(transfrom_position, transform_quaternion)
+
+    def transformation_to_position(self, transform):
+        transform_position = transform.get_position()
+        transform_quaternion = transform.get_orientation()
+        transfrom_angle = transformations.euler_from_quaternion([
+            transform_quaternion[0],
+            transform_quaternion[1],
+            transform_quaternion[2],
+            transform_quaternion[3],
+        ])
+
+        return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
 
     @abc.abstractmethod
     def terminate_walk(self):
