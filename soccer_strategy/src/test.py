@@ -26,7 +26,7 @@ class Test(TestCase):
             g.team1.strategy = StrategyDecisionTreeLookhead()
             g.team2.strategy = StrategyDecisionTreeLookhead()
 
-            friendly_points, opponent_points = g.run_loop()
+            friendly_points, opponent_points = g.run()
             if friendly_points > opponent_points:
                 friendly_wins += 1
             elif friendly_points < opponent_points:
