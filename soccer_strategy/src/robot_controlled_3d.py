@@ -37,9 +37,6 @@ class RobotControlled3D(RobotControlled):
         self.robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
         self.robot_name = "robot " + str(self.robot_id)
 
-        # Configuration
-        self.kick_with_right_foot = True
-
         self.time_since_action_completed = rospy.Time(0)
 
         self.obstacles = PoseArray()

@@ -9,7 +9,6 @@ from robot import Robot
 from robot_observed import RobotObserved
 from ball import Ball
 from team import Team
-import game_engine
 from strategy.strategy_freekick import StrategyFreekick
 from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 from strategy.strategy_dummy import StrategyDummy
@@ -20,7 +19,7 @@ from strategy.strategy_finished import StrategyFinished
 from strategy.strategy_set import StrategySet
 
 
-class GameEngine3D(game_engine.GameEngine):
+class GameEngine3D():
     GAMESTATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('GAMESTATE')}
     SECONDARY_STATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('STATE')}
     SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('MODE')}

@@ -1,5 +1,7 @@
 import abc
 from robot_controlled_3d import RobotControlled3D
+from robot_controlled_2d import RobotControlled2D
+from robot_controlled import RobotControlled
 
 from soccer_msgs.msg import GameState
 from team import Team
@@ -39,8 +41,10 @@ class Strategy():
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         raise NotImplementedError
 
-    def get_current_robot(self, friendly_team: Team) -> RobotControlled3D:
+    def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:
             if type(robot) is RobotControlled3D:
+                return robot
+            if type(robot) is RobotControlled2D and robot.active == True:
                 return robot
         raise AssertionError
