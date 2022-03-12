@@ -1,5 +1,6 @@
 from vispy.color import Color
-from vispy import scene
+from vispy import scene, app
+from ball import Ball
 import math
 import numpy as np
 from robot_controlled_2d import RobotControlled2D
@@ -16,7 +17,7 @@ black = Color("#000000")
 # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 class Scene:
     def __init__(self, robots, ball):
-        self.canvas = scene.SceneCanvas(keys='interactive')
+        self.canvas = scene.SceneCanvas()
         self.canvas.size = 800, 400
         self.view = self.canvas.central_widget.add_view()
         self.view.bgcolor = black
@@ -35,13 +36,28 @@ class Scene:
         goals = scene.Line(pos=np.array([[-4.5, 1.3], [-4.5, -1.3], [4.5, 1.3], [4.5, -1.3]]), connect='segments',
                            width=2, color=white, parent=self.view.scene)
 
-    def init_actors(self, robots, ball):
-        self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
+    def get_robot_polygon(self, robot: RobotControlled2D):
+        l = 0.085000 / 2
+        w = (0.145000 + 0.047760 * 2) / 2
+        a = robot.position[0:2]
+        t = robot.position[2]
+        rotm = np.array([[np.cos(t), -np.sin(t)],
+                         [np.sin(t), np.cos(t)]])
+        p1 = a + rotm @ np.array([l, w])
+        p2 = a + rotm @ np.array([l, -w])
+        p3 = a + rotm @ np.array([-l, -w])
+        p4 = a + rotm @ np.array([-l, w])
+
+        return [p1, p2, p3, p4]
+
+    def init_actors(self, robots: [RobotControlled2D], ball: Ball):
+        self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.07,
                                   color=blue, parent=self.view.scene)
         self.robots = []
         for robot in robots:
             color = red if robot.team == RobotControlled2D.Team.OPPONENT else white
-            self.robots.append({"body": scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
+
+            self.robots.append({"body": scene.Polygon(pos=self.get_robot_polygon(robot),
                                                       color=color,
                                                       parent=self.view.scene),
                                 "arrow": scene.Arrow(pos=np.array([[0, 0], [0, 0]]), width=1, color=color,
@@ -60,7 +76,7 @@ class Scene:
         for i in range(len(robots)):
             x = robots[i].position[0]
             y = robots[i].position[1]
-            self.robots[i]['body'].center = (x, y)
+            self.robots[i]['body'].pos = self.get_robot_polygon(robots[i])
             self.robots[i]['id'].pos = (x, y)
             self.robots[i]['id'].text = str(robots[i].robot_id)
 
@@ -99,6 +115,7 @@ class Scene:
             self.ball.center = (x, y)
 
         self.canvas.update()
+        app.process_events()
 
     def plot_vectors(self, field_vectors):
         arrows = []

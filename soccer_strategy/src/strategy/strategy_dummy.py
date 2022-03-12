@@ -29,7 +29,7 @@ class StrategyDummy(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        self.update_frequency = 5
+        self.update_frequency = 10
         super(StrategyDummy, self).__init__()
 
     @get_back_up
@@ -50,56 +50,36 @@ class StrategyDummy(Strategy):
                 if current_closest is None:
                     pass
                 elif current_closest.robot_id == this_robot.robot_id:
-
-                    # generate destination pose
-                    ball_position = ball.position[0:2]
-                    player_position = this_robot.position[0:2]
-                    player_angle = this_robot.position[2]
-
-                    diff = ball_position - goal_position
-                    diff_unit = diff / np.linalg.norm(diff)
-                    diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
-
-                    distance_of_player_goal_to_ball = 0.1
-                    destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
-
-                    navigation_bias = 1
-                    diff = destination_position - player_position
-                    # nav bias offset nav goal to be behind the ball
-                    destination_position_biased = player_position + diff * navigation_bias
-
-                    # nav goal behind the ball
-                    destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
-                                                   diff_angle]
-
-                    # difference between robot angle and nav goal angle
-                    robot_ball_vector = ball_position - player_position
-                    robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
-
-                    nav_angle_diff = (player_angle - robot_ball_angle)
-                    distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-                    if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) > 0.15:
-                        print("robot ball angle too large, unable to kick " + str(abs(nav_angle_diff)))
-                    if distance_of_player_to_ball < 0.205:
-                        if nav_angle_diff > 0.03:
-                            # right foot
-                            this_robot.kick_with_right_foot = True
-                        else:
-                            this_robot.kick_with_right_foot = False
-
-                        print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                              format(this_robot.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
+                    if this_robot.can_kick(ball, goal_position):
                         delta = goal_position - ball.position[0:2]
                         unit = delta / np.linalg.norm(delta)
 
                         this_robot.status = Robot.Status.KICKING
                         this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
                     else:
-                        print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                            format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
                         if this_robot.status != Robot.Status.WALKING:
+                            ball_position = ball.position[0:2]
+                            player_position = this_robot.position[0:2]
+                            diff = ball_position - goal_position
+                            diff_unit = diff / np.linalg.norm(diff)
+                            diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+
+                            distance_of_player_goal_to_ball = 0.1
+                            destination_position = ball_position + diff_unit * distance_of_player_goal_to_ball
+
+                            navigation_bias = 1
+                            diff = destination_position - player_position
+                            # nav bias offset nav goal to be behind the ball
+                            destination_position_biased = player_position + diff * navigation_bias
+
+                            # nav goal behind the ball
+                            destination_position_biased = [destination_position_biased[0],
+                                                           destination_position_biased[1],
+                                                           diff_angle]
+                            np.set_printoptions(precision=3)
+                            print(
+                                "Player {}: Navigation | Destination position biased {}".format(current_closest.robot_id, destination_position_biased))
                             this_robot.set_navigation_position(destination_position_biased) # TODO dynamic walking
-                        # self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1

@@ -6,6 +6,7 @@ import tf
 from soccer_pycontrol import path
 from soccer_geometry import transformation
 import tf.transformations
+import math
 
 class RobotControlled(Robot):
 
@@ -19,6 +20,8 @@ class RobotControlled(Robot):
         self.start_position = None
         self.goal_position = None
         self.path = None
+
+        self.kick_with_right_foot = True
 
     def set_navigation_position(self, goal_position):
         if self.status == Robot.Status.WALKING:
@@ -54,6 +57,33 @@ class RobotControlled(Robot):
         ])
 
         return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
+
+    def can_kick(self, ball, goal_position):
+        if ball is None or ball.position is None:
+            return False
+
+        # generate destination pose
+        ball_position = ball.position[0:2]
+        player_position = self.position[0:2]
+        player_angle = self.position[2]
+
+
+        # difference between robot angle and nav goal angle
+        robot_ball_vector = ball_position - player_position
+        robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
+
+        nav_angle_diff = (player_angle - robot_ball_angle)
+        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+
+        if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) < 0.15:
+            print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
+                format(self.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
+            if nav_angle_diff > 0.03:
+                self.kick_with_right_foot = True
+            else:
+                self.kick_with_right_foot = False
+            return True
+        return False
 
     @abc.abstractmethod
     def terminate_walk(self):

@@ -66,6 +66,12 @@ class Team():
             if robot.robot_id == int(os.getenv('ROBOCUP_ROBOT_ID', 1)):
                 self.average_ball_position = robot.observed_ball
                 return True
+
+        # Backup by getting any other robot's ball position
+        for robot in self.robots:
+            if robot.observed_ball is not None:
+                self.average_ball_position = robot.observed_ball
+                return True
         return False
 
     def log(self):
