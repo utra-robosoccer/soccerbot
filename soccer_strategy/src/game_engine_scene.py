@@ -1,5 +1,7 @@
 from vispy.color import Color
 from vispy import scene
+import vispy
+#vispy.use(app='pyglet')
 import math
 import numpy as np
 from robot_controlled_2d import RobotControlled2D
@@ -16,24 +18,25 @@ black = Color("#000000")
 # Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 class Scene:
     def __init__(self, robots, ball):
-        self.canvas = scene.SceneCanvas(keys='interactive')
+        self.canvas = scene.SceneCanvas(keys='interactive', show=True)
         self.canvas.size = 800, 400
         self.view = self.canvas.central_widget.add_view()
         self.view.bgcolor = black
-        # self.view.camera = 'turntable'
+        #self.view.camera = 'turntable'
         self.view.camera = scene.cameras.panzoom.PanZoomCamera(rect=(-5, -3.5, 10, 7))
         self.canvas.show()
         self.draw_field()
         self.init_actors(robots, ball)
 
     def draw_field(self):
-        field = scene.Rectangle(center=(0, 0), width=10, height=7,
+        field = scene.visuals.Rectangle(center=(0, 0), width=10, height=7,
                                 color=green, parent=self.view.scene)
-        center_circle = scene.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2,
+        center_circle = scene.visuals.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2,
                                       parent=self.view.scene)
-        center_line = scene.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
-        goals = scene.Line(pos=np.array([[-4.5, 1.3], [-4.5, -1.3], [4.5, 1.3], [4.5, -1.3]]), connect='segments',
+        center_line = scene.visuals.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
+        goals = scene.visuals.Line(pos=np.array([[-4.5, 1.3], [-4.5, -1.3], [4.5, 1.3], [4.5, -1.3]]), connect='segments',
                            width=2, color=white, parent=self.view.scene)
+
 
     def init_actors(self, robots, ball):
         self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.1,
@@ -73,6 +76,7 @@ class Scene:
             self.robots[i]['arrow'].set_data(pos=np.array([[x, y], [x + arrow_end_x, y + arrow_end_y]]))
 
             robot_pos = np.array([x, y])
+
             theta = -RobotControlled2D.ObservationConstants.FOV / 2
             c, s = np.cos(theta), np.sin(theta)
             R = np.array(((c, -s), (s, c)))

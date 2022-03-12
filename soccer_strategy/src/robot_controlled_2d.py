@@ -21,6 +21,7 @@ class RobotControlled2D(RobotControlled):
         self.angular_speed = 0.3
         self.max_kick_speed = 2
         self.robot_name = 'robot %d' % robot_id
+        self.path_time = 0
 
     def set_kick_velocity(self, kick_velocity):
         kick_angle_rand = np.random.normal(0, 0.2)

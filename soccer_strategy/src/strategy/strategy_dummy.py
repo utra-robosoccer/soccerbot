@@ -92,12 +92,12 @@ class StrategyDummy(Strategy):
 
                         current_closest.status = Robot.Status.KICKING
                         current_closest.set_kick_velocity(unit * current_closest.max_kick_speed)
-                    #else:
+                    else:
                         #print("Player {}: Navigation | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
                         #    format(current_closest.robot_id, float(player_angle), robot_ball_angle, nav_angle_diff,distance_of_player_to_ball))
                         #current_closest.set_navigation_position(destination_position_biased)
                         #TODO only works with ros
-                        # self.move_player_to(current_closest, destination_position_biased)
+                        self.move_player_to(current_closest, destination_position_biased)
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
@@ -123,23 +123,23 @@ class StrategyDummy(Strategy):
         # Path planning with obstacle avoidance via potential functions
         # Source:
         # - http://www.cs.columbia.edu/~allen/F17/NOTES/potentialfield.pdf
-        obstacles = np.array(player.get_detected_obstacles())
+        #obstacles = np.array(player.get_detected_obstacles())
         player_position = np.array(player.position[0:2])
         goal_pos = np.array(destination_position[0:2])
 
         if distance_between(player_position, goal_pos) > EPS:
             grad = grad_att(ALPHA, player_position, goal_pos)
-            if len(obstacles) > 0:
-                r_rep = 2 * Thresholds.POSSESSION
-                d_rep = float('inf')
-                obs_rep = None
-                for obs in obstacles:
-                    dist = distance_between(obs[0:2], player_position)
-                    if dist < d_rep:
-                        d_rep = dist
-                        obs_rep = obs
-                        # grad -= grad_rep(self._beta, r_rep, dist, obs, self._player_pos)
-                grad -= grad_rep(BETA, r_rep, d_rep, obs_rep, player_position)
+            # if len(obstacles) > 0:
+            #     r_rep = 2 * Thresholds.POSSESSION
+            #     d_rep = float('inf')
+            #     obs_rep = None
+            #     for obs in obstacles:
+            #         dist = distance_between(obs[0:2], player_position)
+            #         if dist < d_rep:
+            #             d_rep = dist
+            #             obs_rep = obs
+            #             # grad -= grad_rep(self._beta, r_rep, dist, obs, self._player_pos)
+            #     grad -= grad_rep(BETA, r_rep, d_rep, obs_rep, player_position)
             # Perturb out of local minima
             angle_rand = np.random.uniform(low=-np.pi / 12, high=np.pi / 12)
             rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
@@ -155,4 +155,4 @@ class StrategyDummy(Strategy):
 
         # send player to new position
         player.set_navigation_position(np.append(goal_pos, diff_angle))
-        print(str(goal_pos) + "  " + str(diff_angle))
+        #print(str(goal_pos) + "  " + str(diff_angle))
