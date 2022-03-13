@@ -1,7 +1,10 @@
 from strategy.strategy import Strategy, get_back_up
 from team import Team
 from ball import Ball
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    from soccer_msgs.fake_msg import GameState
 
 
 class StrategyStationary(Strategy):

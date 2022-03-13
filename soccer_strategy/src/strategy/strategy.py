@@ -1,9 +1,17 @@
 import abc
-from robot_controlled_3d import RobotControlled3D
+try:
+    from robot_controlled_3d import RobotControlled3D
+except:
+    print("not using robot controlled 3D")
+
 from robot_controlled_2d import RobotControlled2D
 from robot_controlled import RobotControlled
 
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    from soccer_msgs.fake_msg import GameState
+
 from team import Team
 from robot import Robot
 
@@ -43,8 +51,10 @@ class Strategy():
 
     def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:
-            if type(robot) is RobotControlled3D:
+            if robot.active:
                 return robot
-            if type(robot) is RobotControlled2D and robot.active == True:
-                return robot
+            # if type(robot) is RobotControlled3D:
+            #     return robot
+            # if type(robot) is RobotControlled2D and robot.active == True:
+            #     return robot
         raise AssertionError
