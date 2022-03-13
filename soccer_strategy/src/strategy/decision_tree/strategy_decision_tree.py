@@ -1,94 +1,69 @@
 import enum
 from strategy.strategy import Strategy
 from team import Team
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    from soccer_msgs.fake_msg import GameState
 from copy import deepcopy
 import abc
+import numpy as np
 
-class Agent(enum.IntEnum):
-    FRIENDLY = 0
-    OPPONENT = 1
-
-class Action:
-    def __init__(self):
-        self.player_1_action = None
-        self.player_2_action = None
-        self.player_3_action = None
-        self.player_4_action = None
-
-
-# State
-class State:
-    def __init__(self, friendly_team: Team = None, opponent_team: Team = None, game_state: GameState = None):
-        self.friendly_team = deepcopy(friendly_team)
-        self.opponent_team = deepcopy(opponent_team)
-        self.game_state = deepcopy(game_state)
-
-    @abc.abstractmethod
-    def getLegalActions(self, currAgent: Agent) -> []:
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def generateSuccessor(self, currAgent: Agent, move: Action):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def isWin(self):
-        return False
-
-    @abc.abstractmethod
-    def isLose(self):
-        return False
 
 class StrategyDecisionTree(Strategy):
+    #can we just give pointers to friendly_teeam, opponent_team, and game_state here so we don't need to keep passing them?
     def __init__(self):
         super().__init__()
-        self.depth = self.TREE_DEPTH  # Max depth traversal
+        self.current_formation = Formations.DEFENSIVE
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        state = self.getInitialState(friendly_team, opponent_team, game_state)
-        best_move, value = self.DECISION_ALGORITHM(state, Agent.FRIENDLY, 0)
-        self.executeBestMove(state, best_move)
+        self.current_formation = self.decide_formation()
 
-    @abc.abstractmethod
-    def getInitialState(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def executeBestMove(self, state: State, action: Action):
-        raise NotImplementedError
-
-    def evaluationFunction(self, state) -> float:
-        # Higher score if the ball is closer to the opponent net
-        return state.friendly_team.average_ball_position[0]
-
-    # Decision Tree Algorithms
-    @abc.abstractmethod
-    def PredeterminedDecisionTree(self, state: State, currAgent: Agent, depth: int) -> (Action, float):
-        raise NotImplementedError
-
-    def DFMiniMax(self, state: State, currAgent: Agent, depth: int) -> (Action, float):
-        best_move = None
-        if depth >= self.depth * 2 or state.isWin() or state.isLose():
-            return best_move, self.evaluationFunction(state)
-        if currAgent == Agent.FRIENDLY:
-            value = float("-inf")
-            nextAgent = Agent.OPPONENT
+    # something so there can be different formation deciders like a super defensive biased one
+    def decide_formation(self):
+        if self.team_data.ball.is_known() and self.team_data.ball.position[0] < 0:  # ball in oppents side
+            return Formations.ATTACKING
         else:
-            value = float("inf")
-            nextAgent = Agent.FRIENDLY
+            return Formations.DEFENSIVE
 
-        for move in state.getLegalActions(currAgent):
-            next_pos = state.generateSuccessor(currAgent, move)
 
-            next_move, nxt_val = self.DFMiniMax(next_pos, nextAgent, depth + 1)
-            if currAgent == 0:
-                if value < nxt_val:
-                    value, best_move = nxt_val, move
-            else:
-                if value > nxt_val:
-                    value, best_move = nxt_val, move
-        return best_move, value
+class FieldPosition:
+    # can add other stuff like shape later
+    def __init__(self, center):
+        self.center = center
 
-    DECISION_ALGORITHM = DFMiniMax
-    TREE_DEPTH = 4
+
+class FieldPositions:
+    CENTER_STRIKER = FieldPosition(np.array([0, 0]))
+    GOALIE = FieldPosition(np.array([4.5, 0]))
+    RIGHT_WING = FieldPosition(np.array([-2, 3]))
+    LEFT_WING = FieldPosition(np.array([-2, -3]))
+    RIGHT_BACK = FieldPosition(np.array([3.5, 2]))
+    LEFT_BACK = FieldPosition(np.array([3.5, -2]))
+    CENTER_BACK = FieldPosition(np.array([3, 0]))
+
+
+# formations can be in a human readable data file?
+class Formation:
+    def __init__(self, positions):
+        # array where 0 position is position for robot 0 (goalie) I guess?
+        #TODO: change positions to dictionary with robot_id
+        self.positions = positions
+
+    def closest_position(self, target):
+        a = [distance(position.center, target) for position in self.positions]
+        return np.argmin(a) + 1
+
+
+# should have a utils class for geometry calculations, geometry file/class?
+def distance(o1, o2):
+    return np.linalg.norm(o1 - o2)
+
+
+class Formations:
+    #don't go to role
+    DEFENSIVE = Formation(
+        [FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
+    ATTACKING = Formation(
+        [FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.CENTER_STRIKER, FieldPositions.RIGHT_WING])
+

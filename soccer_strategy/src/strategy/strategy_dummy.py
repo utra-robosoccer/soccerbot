@@ -1,13 +1,16 @@
 import math
-import numpy as np
-import rospy
+#import rospy
+#rospy only used here for rospy.loginfo
 
-from strategy.interfaces.actions import Actions
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 from strategy.utils import *
 from team import Team
-from soccer_msgs.msg import GameState
 from strategy.interfaces.evaluations import Evaluations
+
+try:
+    from soccer_msgs.msg import GameState
+except:
+    from soccer_msgs.fake_msg import  GameState
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 6
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
@@ -89,8 +92,8 @@ class StrategyDummy(Strategy):
 
             # Haven't seen the ball timeout
             if self.havent_seen_the_ball_timeout < 0:
-                rospy.loginfo("Ball position timeout")
-                rospy.loginfo("Havent seen the ball for a while. Rotating robot " + this_robot.robot_name)
+                # rospy.loginfo("Ball position timeout")
+                # rospy.loginfo("Havent seen the ball for a while. Rotating robot " + this_robot.robot_name)
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi]
                 this_robot.set_navigation_position(turn_position)
