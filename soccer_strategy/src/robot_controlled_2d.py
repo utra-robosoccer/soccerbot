@@ -17,10 +17,6 @@ class RobotControlled2D(RobotControlled):
 
         self.active = True # Used only for switching which active robot for strategy stuff
         self.robot_id = robot_id
-        self.observed_ball = Ball(None)
-        self.speed = 0.20
-        self.angular_speed = 0.3
-        self.max_kick_speed = 2
         self.robot_name = 'robot %d' % robot_id
         self.path_time = 0
 

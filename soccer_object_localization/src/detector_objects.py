@@ -53,32 +53,48 @@ class DetectorBall(Detector):
             return box_final
 
         # Ball
-        final_box = None
+        distance_to_robot = math.inf
+        final_ball_position = None
         for box in msg.bounding_boxes:
             if box.Class == "ball":
-                if final_box == None:
-                    final_box = box
-                else:
-                    final_box = box_union(final_box, box)
+                boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+                if ball_pose.get_position()[0] < 0.0:
+                    continue
 
-        if final_box is not None:
-            boundingBoxes = [[final_box.xmin, final_box.ymin], [final_box.xmax, final_box.ymax]]
-            position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
-            if position.get_position()[0] > 0.0:
-                br = tf2_ros.TransformBroadcaster()
-                ball_pose = TransformStamped()
-                ball_pose.header.frame_id = self.robot_name + "/base_camera"
-                ball_pose.child_frame_id = self.robot_name + "/ball"
-                ball_pose.header.stamp = msg.header.stamp
-                ball_pose.header.seq = msg.header.seq
-                ball_pose.transform.translation.x = position.get_position()[0]
-                ball_pose.transform.translation.y = position.get_position()[1]
-                ball_pose.transform.translation.z = 0
-                ball_pose.transform.rotation.x = 0
-                ball_pose.transform.rotation.y = 0
-                ball_pose.transform.rotation.z = 0
-                ball_pose.transform.rotation.w = 1
-                br.sendTransform(ball_pose)
+                # Ignore balls outside of the field
+                world_ball = ball_pose @ self.camera.pose
+                world_ball_x = world_ball.get_position()[0]
+                world_ball_y = world_ball.get_position()[1]
+                print("World Ball Position: {} {}".format(world_ball_x, world_ball_y))
+                print("Ball Position: {} {}".format(ball_pose.get_position()[0], ball_pose.get_position()[1]))
+                print("Camera Position: {} {}".format(self.camera.pose.get_position()[0], self.camera.pose.get_position()[0]))
+
+                if abs(world_ball_x) > 4.5 or abs(world_ball_y) > 3:
+                    continue
+
+                # Get the closest ball to the player
+                distance = np.linalg.norm([ball_pose.get_position()[0], ball_pose.get_position()[1]])
+                if distance < distance_to_robot:
+                    final_ball_position = ball_pose
+                    pass
+
+
+        if final_ball_position is not None:
+            br = tf2_ros.TransformBroadcaster()
+            ball_pose = TransformStamped()
+            ball_pose.header.frame_id = self.robot_name + "/base_camera"
+            ball_pose.child_frame_id = self.robot_name + "/ball"
+            ball_pose.header.stamp = msg.header.stamp
+            ball_pose.header.seq = msg.header.seq
+            ball_pose.transform.translation.x = final_ball_position.get_position()[0]
+            ball_pose.transform.translation.y = final_ball_position.get_position()[1]
+            ball_pose.transform.translation.z = 0
+            ball_pose.transform.rotation.x = 0
+            ball_pose.transform.rotation.y = 0
+            ball_pose.transform.rotation.z = 0
+            ball_pose.transform.rotation.w = 1
+            br.sendTransform(ball_pose)
 
 
         # Robots
