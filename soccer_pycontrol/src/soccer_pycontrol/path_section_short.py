@@ -7,7 +7,7 @@ from soccer_pycontrol.utils import wrapToPi
 from copy import deepcopy
 
 class PathSectionShort(PathSection):
-    bodystep_size = 0.03 # Reduce body step size
+    bodystep_size = 0.035 # Reduce body step size
     angular_bodystep_size = 0.35  # radians Radians per angular step
     steps_per_second = 2.5 # try 6 motors P = 09.25
 

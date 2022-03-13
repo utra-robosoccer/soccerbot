@@ -49,7 +49,7 @@ class Team():
                 Robot.Role.GOALIE: [-4.5, 0, 0]
             }
         }
-        self.enemy_goal_position = [4.8, 0]
+        self.enemy_goal_position = [-4.8, 0]
 
     def flip_positions(self):
         self.enemy_goal_position[0] = -self.enemy_goal_position[0]

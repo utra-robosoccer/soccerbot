@@ -21,6 +21,8 @@ class RobotControlled(Robot):
         self.goal_position = None
         self.path = None
 
+        self.max_kick_speed = 2
+
         self.kick_with_right_foot = True
 
     def set_navigation_position(self, goal_position):
