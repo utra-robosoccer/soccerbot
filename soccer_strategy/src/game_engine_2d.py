@@ -1,7 +1,10 @@
 import _thread
 import random
 
-from soccer_msgs.msg import GameState
+try:
+    from soccer_msgs.msg import GameState
+except:
+    from soccer_msgs.fake_msg import GameState
 
 from robot import Robot
 from robot_controlled_2d import RobotControlled2D
