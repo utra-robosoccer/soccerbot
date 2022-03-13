@@ -3,7 +3,10 @@ import enum
 import numpy
 
 from ball import Ball
-from soccer_msgs.msg import RobotState
+try:
+    from soccer_msgs.msg import RobotState
+except:
+    from soccer_msgs.fake_msg import RobotState
 # Root class for robot used by 2D, 3D and 3D friendly robots
 class Robot:
     class Team(enum.IntEnum):
