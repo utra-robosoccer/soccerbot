@@ -53,6 +53,7 @@ class Strategy():
         for robot in friendly_team.robots:
             if robot.active:
                 return robot
+            #TODO is this right?
             # if type(robot) is RobotControlled3D:
             #     return robot
             # if type(robot) is RobotControlled2D and robot.active == True:
