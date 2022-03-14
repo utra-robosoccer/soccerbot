@@ -38,7 +38,7 @@ class GameEngine2D:
                   position=np.array([0.8, 0.0, -math.pi]))
         ])
         self.team1.strategy = team_1_strategy()
-        self.team1.flip_positions()
+
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team([
@@ -52,6 +52,7 @@ class GameEngine2D:
                   position=np.array([-0.8, 0.0, 0]))
         ])
         self.team2.strategy = team_2_strategy()
+        self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
 
         self.ball = Ball()
