@@ -3,6 +3,7 @@
 import os
 import time
 
+from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -29,7 +30,7 @@ class DetectorFieldline(Detector):
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
 

@@ -33,48 +33,40 @@ class DetectorBall(Detector):
             self.head_motor_1_angle =  msg.position[index]
 
     def ballDetectorCallback(self, msg: BoundingBoxes):
-        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
-            self.robot_state.status is not RobotState.STATUS_READY:
+        if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
             return
 
         if not self.camera.ready:
             return
 
-        self.camera.reset_position(timestamp=msg.header.stamp)
-
-        detected_robots = 0
-
-        def box_union(box1: BoundingBox, box2: BoundingBox) -> BoundingBox:
-            box_final = box1
-            box_final.ymin = min(box_final.ymin, box2.ymin)
-            box_final.xmin = min(box_final.xmin, box2.xmin)
-            box_final.ymax = max(box_final.ymax, box2.ymax)
-            box_final.xmax = max(box_final.xmax, box2.xmax)
-            return box_final
+        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True)
 
         # Ball
         distance_to_robot = math.inf
         final_ball_position = None
+        candidate_ball = 1
         for box in msg.bounding_boxes:
             if box.Class == "ball":
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                 ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
-                if ball_pose.get_position()[0] < 0.0:
-                    continue
 
                 # Ignore balls outside of the field
                 world_ball = ball_pose @ self.camera.pose
                 world_ball_x = world_ball.get_position()[0]
                 world_ball_y = world_ball.get_position()[1]
-                print("World Ball Position: {} {}".format(world_ball_x, world_ball_y))
-                print("Ball Position: {} {}".format(ball_pose.get_position()[0], ball_pose.get_position()[1]))
-                print("Camera Position: {} {}".format(self.camera.pose.get_position()[0], self.camera.pose.get_position()[0]))
+                distance = np.linalg.norm([ball_pose.get_position()[0], ball_pose.get_position()[1]])
 
+                print(f"Candidate Ball Position { candidate_ball }: { world_ball_x } { world_ball_y }, distance { distance }")
+                candidate_ball = candidate_ball + 1
+
+                if ball_pose.get_position()[0] < 0.0:
+                    continue
+
+                # Exclude balls outside the field
                 if abs(world_ball_x) > 4.5 or abs(world_ball_y) > 3:
                     continue
 
                 # Get the closest ball to the player
-                distance = np.linalg.norm([ball_pose.get_position()[0], ball_pose.get_position()[1]])
                 if distance < distance_to_robot:
                     final_ball_position = ball_pose
                     pass
@@ -98,6 +90,7 @@ class DetectorBall(Detector):
 
 
         # Robots
+        detected_robots = 0
         for box in msg.bounding_boxes:
             if box.Class == "robot":
                 if self.head_motor_1_angle > 0.6:

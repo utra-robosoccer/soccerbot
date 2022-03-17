@@ -1,8 +1,9 @@
 FROM ros:noetic as dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
+RUN apt update && rosdep update --rosdistro noetic
 ADD . .
-RUN apt update && rosdep update --rosdistro noetic && rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
+RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
 WORKDIR /root/dependencies
 
@@ -40,12 +41,13 @@ RUN apt update && apt-fast install -y \
     sudo \
     ros-noetic-robot-state-publisher \
     curl
-COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
+
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
-RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
 RUN pip install -r /tmp/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
-RUN pip install --upgrade protobuf
-RUN pip install tqdm
+
+COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
+RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
+
 # Build
 WORKDIR /root/catkin_ws
 COPY --from=dependencies /root/src src/soccerbot

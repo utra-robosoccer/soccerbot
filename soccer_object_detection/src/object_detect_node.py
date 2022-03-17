@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 
 import os
+
+from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -39,7 +42,7 @@ class ObjectDetectionNode(object):
 
         self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=1)
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=1)
-        self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
 
         self.model = CNN(kernel=3, num_features=int(num_feat))
 
@@ -107,12 +110,10 @@ class ObjectDetectionNode(object):
                     bbs_msg.bounding_boxes.append(bb_msg)
                     big_enough_robot_bbxs.append(robot_bb)
 
-            header = std_msgs.msg.Header()
-            header.stamp = rospy.Time.now()
-            bbs_msg.header = header
-            bbs_msg.image_header = msg.header
+            bbs_msg.header = msg.header
             try:
-                self.pub_boundingbox.publish(bbs_msg)
+                if self.pub_boundingbox.get_num_connections() > 0:
+                    self.pub_boundingbox.publish(bbs_msg)
             except ROSException as re:
                 print(re)
                 exit(0)

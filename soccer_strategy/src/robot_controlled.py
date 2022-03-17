@@ -19,7 +19,7 @@ class RobotControlled(Robot):
         self.path = None
 
         self.max_kick_speed = 2
-
+        self.navigation_goal_localized = False # Whether the goal for navigation is clear
         self.kick_with_right_foot = True
 
     def set_navigation_position(self, goal_position):
@@ -37,6 +37,7 @@ class RobotControlled(Robot):
             self.position_to_transformation(self.goal_position)
         )
         self.status = Robot.Status.WALKING
+        self.navigation_goal_localized = False
         return True
 
     def position_to_transformation(self, position):

@@ -2,7 +2,7 @@ import math
 
 from sensor_msgs.msg import JointState, Imu
 from soccer_msgs.msg import RobotState
-from std_msgs.msg import Float64, Bool, Int32
+from std_msgs.msg import Float64, Empty
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
 from soccer_pycontrol.soccerbot import *
@@ -46,6 +46,7 @@ class SoccerbotRos(Soccerbot):
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
+        self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
@@ -193,10 +194,14 @@ class SoccerbotRos(Soccerbot):
             elif recenterCameraOnBall:
                 anglelr = math.atan2(trans[1], trans[0])
                 angleud = math.atan2(trans[2], trans[0])
-                rospy.loginfo_throttle(5, "\033[1mCamera Centered on Ball\033[0m")
+                rospy.loginfo_throttle(1, f"\033[1mCentering Camera on Ball ({ anglelr }, { angleud })\033[0m")
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0030
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0030
+                if abs(anglelr) < 0.05 and abs(angleud) < 0.05:
+                    rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
+                    self.head_centered_on_ball_publisher.publish()
+
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2]
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
