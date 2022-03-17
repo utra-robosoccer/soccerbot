@@ -302,7 +302,7 @@ class GameControllerBridge():
 
                 img_msg = Image()
                 img_msg.header.stamp = self.stamp
-                img_msg.header.frame_id = self.base_frame + "camera"
+                img_msg.header.frame_id = self.base_frame + "/camera"
                 img_msg.height = height
                 img_msg.width = width
                 img_msg.encoding = "bgr8"

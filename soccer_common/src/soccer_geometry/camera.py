@@ -35,7 +35,7 @@ class Camera:
 
         if from_world_frame:
             base_frame = 'world'
-            target_frame = self.robot_name + '/camera_gt'
+            target_frame = self.robot_name + '/camera'
         else:
             base_frame = self.robot_name + '/odom'
             target_frame = self.robot_name + '/camera'

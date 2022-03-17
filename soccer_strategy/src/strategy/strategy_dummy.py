@@ -10,7 +10,7 @@ from strategy.interfaces.evaluations import Evaluations
 try:
     from soccer_msgs.msg import GameState
 except:
-    from soccer_msgs.fake_msg import  GameState
+    from soccer_msgs.fake_msg import GameState
 
 HAVENT_SEEN_THE_BALL_TIMEOUT = 6
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
@@ -60,7 +60,7 @@ class StrategyDummy(Strategy):
                         this_robot.status = Robot.Status.KICKING
                         this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
                     else:
-                        if this_robot.status != Robot.Status.WALKING:
+                        if this_robot.navigation_goal_localized and this_robot.status != Robot.Status.WALKING:
                             ball_position = ball.position[0:2]
                             player_position = this_robot.position[0:2]
                             diff = ball_position - goal_position
@@ -92,8 +92,6 @@ class StrategyDummy(Strategy):
 
             # Haven't seen the ball timeout
             if self.havent_seen_the_ball_timeout < 0:
-                # rospy.loginfo("Ball position timeout")
-                # rospy.loginfo("Havent seen the ball for a while. Rotating robot " + this_robot.robot_name)
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi]
                 this_robot.set_navigation_position(turn_position)

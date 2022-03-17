@@ -172,22 +172,20 @@ def find_batch_bounding_boxes(outputs):
         for label in [Label.BALL, Label.ROBOT]:
             img = output[label.value]
             img_blurred = cv2.GaussianBlur(img.detach().cpu().numpy(), (5,5), cv2.BORDER_DEFAULT)
-            img_blurred_out = torch.from_numpy(img_blurred)
-            output_bbxs[label.value] = find_bounding_boxes(img_blurred_out)
+            output_bbxs[label.value] = find_bounding_boxes(img_blurred)
 
         batch_bbxs.append(output_bbxs)
 
     return batch_bbxs
 
 
-def find_bounding_boxes(img):
+def find_bounding_boxes(img_blurred):
     """
     Find bounding boxes for blobs in the picture
     :param img - numpy array 1xWxH, values 0 to 1
     :return:  bounding boxes of blobs [x0, y0, x1, y1]
     """
-    img = util.torch_to_cv(img)
-    img = np.round(img)
+    img = np.round(img_blurred)
     img = img.astype(np.uint8)
     contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # params copied from tutorial
 
