@@ -42,8 +42,8 @@ class DetectorFieldline(Detector):
 
         t_start = time.time()
 
-        if self.robot_state.status not in [RobotState.STATUS_READY, RobotState.STATUS_LOCALIZING, RobotState.STATUS_WALKING, RobotState.STATUS_DETERMINING_SIDE]:
-            return
+        # if self.robot_state.status not in [RobotState.STATUS_READY, RobotState.STATUS_LOCALIZING, RobotState.STATUS_WALKING, RobotState.STATUS_DETERMINING_SIDE]:
+        #     return
 
         if not self.camera.ready():
             return
