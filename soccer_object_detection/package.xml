@@ -10,7 +10,6 @@
     <buildtool_depend>catkin</buildtool_depend>
     <depend>rospy</depend>
     <depend>std_msgs</depend>
-    <depend>soccer_geometry</depend>
     <build_depend>message_generation</build_depend>
     <exec_depend>message_runtime</exec_depend>
 
