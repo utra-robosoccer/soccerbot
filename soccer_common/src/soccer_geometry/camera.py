@@ -40,8 +40,12 @@ class Camera:
             base_frame = self.robot_name + '/odom'
             target_frame = self.robot_name + '/camera'
 
+        attempt = 0
         while not rospy.is_shutdown():
             try:
+                attempt = attempt + 1
+                if attempt > 20:
+                    timestamp = rospy.Time(0)
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):

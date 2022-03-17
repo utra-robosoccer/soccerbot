@@ -112,7 +112,7 @@ class ObjectDetectionNode(object):
 
             bbs_msg.header = msg.header
             try:
-                if self.pub_boundingbox.get_num_connections() > 0:
+                if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
             except ROSException as re:
                 print(re)
