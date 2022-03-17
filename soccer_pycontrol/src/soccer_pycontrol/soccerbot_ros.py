@@ -200,7 +200,7 @@ class SoccerbotRos(Soccerbot):
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
                     self.head_centered_on_ball_publisher.publish()
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0003
                 self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2]
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:

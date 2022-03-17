@@ -51,24 +51,22 @@ class DetectorBall(Detector):
                 ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
                 # Ignore balls outside of the field
-                world_ball = ball_pose @ self.camera.pose
+                world_ball = self.camera.pose @ ball_pose
                 world_ball_x = world_ball.get_position()[0]
-                world_ball_y = world_ball.get_position()[1]
+                world_ball_z = world_ball.get_position()[1]
                 distance = np.linalg.norm([ball_pose.get_position()[0], ball_pose.get_position()[1]])
 
-                print(f"Candidate Ball Position { candidate_ball }: { world_ball_x } { world_ball_y }, distance { distance }")
+                print(f"Candidate Ball Position { candidate_ball }: { world_ball_x } { world_ball_z }, distance { distance }")
                 candidate_ball = candidate_ball + 1
 
-                if ball_pose.get_position()[0] < 0.0:
-                    continue
-
                 # Exclude balls outside the field
-                if abs(world_ball_x) > 4.5 or abs(world_ball_y) > 3:
+                if abs(world_ball_x) > 4.5 or abs(world_ball_z) > 3:
                     continue
 
                 # Get the closest ball to the player
                 if distance < distance_to_robot:
                     final_ball_position = ball_pose
+                    distance_to_robot = distance
                     pass
 
 
@@ -81,7 +79,7 @@ class DetectorBall(Detector):
             ball_pose.header.seq = msg.header.seq
             ball_pose.transform.translation.x = final_ball_position.get_position()[0]
             ball_pose.transform.translation.y = final_ball_position.get_position()[1]
-            ball_pose.transform.translation.z = 0
+            ball_pose.transform.translation.z = 0.07
             ball_pose.transform.rotation.x = 0
             ball_pose.transform.rotation.y = 0
             ball_pose.transform.rotation.z = 0
