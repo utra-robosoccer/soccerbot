@@ -33,8 +33,8 @@ class DetectorBall(Detector):
             self.head_motor_1_angle =  msg.position[index]
 
     def ballDetectorCallback(self, msg: BoundingBoxes):
-        # if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
-        #     return
+        if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
+            return
 
         if not self.camera.ready:
             return
