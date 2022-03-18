@@ -18,7 +18,7 @@ class Team():
         self.strategy = None
         self.formation = None
         self.formations = {
-            "initial": {
+            "ready": {
                 Robot.Role.GOALIE: [4, 0, np.pi],
                 Robot.Role.STRIKER: [0.5, 0, np.pi],
                 Robot.Role.RIGHT_WING: [1, 1, np.pi],

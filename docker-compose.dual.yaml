@@ -1,5 +1,11 @@
 version: "3.3"
 
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
 services:
 
   simulator:
@@ -18,6 +24,9 @@ services:
     extends:
       file: docker-compose.yaml
       service: friendly
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.2
     environment:
       X_POS: 4
       Y_POS: -3.15
@@ -36,6 +45,9 @@ services:
     extends:
       file: docker-compose.yaml
       service: friendly
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.3
     environment:
       X_POS: 1
       Y_POS: -3.15
