@@ -75,8 +75,8 @@ services:
 
   friendly:
     <<: *soccerbot
-    ports:
-      - 11311:11311
+    expose:
+      - 11311
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
@@ -90,11 +90,9 @@ services:
       ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
-
+#
 #  opponent:
 #    <<: *soccerbot
-#    ports:
-#      - 11312:11311
 #    networks:
 #      soccer_network:
 #        ipv4_address: 172.18.0.6
