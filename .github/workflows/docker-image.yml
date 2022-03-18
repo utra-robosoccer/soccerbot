@@ -11,6 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+        submodules: recursive
+    - name: Docker Login
+      uses: docker/login-action@v1.12.0
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag utrarobosoccer/soccerbot
+    - name: Build and push Docker images
+      run: docker push utrarobosoccer/soccerbot
     - name: Push to AWS repository
       run: |
         aws configure set aws_access_key_id AKIAQWIRC64VTJ553HUF
@@ -18,6 +31,4 @@ jobs:
         aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
         docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
         docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-
-
         
