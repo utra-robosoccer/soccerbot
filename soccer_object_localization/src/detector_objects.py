@@ -43,7 +43,7 @@ class DetectorBall(Detector):
 
         # Ball
         distance_to_robot = math.inf
-        final_ball_position = None
+        final_camera_to_ball = None
         candidate_ball = 1
         for box in msg.bounding_boxes:
             if box.Class == "ball":
@@ -51,35 +51,33 @@ class DetectorBall(Detector):
                 ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
                 # Ignore balls outside of the field
-                world_ball = self.camera.pose @ ball_pose
-                world_ball_x = world_ball.get_position()[0]
-                world_ball_z = world_ball.get_position()[1]
-                distance = np.linalg.norm([ball_pose.get_position()[0], ball_pose.get_position()[1]])
+                camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
+                distance = np.linalg.norm(camera_to_ball[0:2])
 
-                print(f"Candidate Ball Position { candidate_ball }: { world_ball_x } { world_ball_z }, distance { distance }")
+                rospy.loginfo_throttle(5, f"Candidate Ball Position { candidate_ball }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, distance { distance }")
                 candidate_ball = candidate_ball + 1
 
                 # Exclude balls outside the field
-                if abs(world_ball_x) > 4.5 or abs(world_ball_z) > 3:
+                if abs(ball_pose.get_position()[0]) > 4.5 or abs(ball_pose.get_position()[1]) > 3:
                     continue
 
                 # Get the closest ball to the player
                 if distance < distance_to_robot:
-                    final_ball_position = ball_pose
+                    final_camera_to_ball = camera_to_ball
                     distance_to_robot = distance
                     pass
 
 
-        if final_ball_position is not None:
+        if final_camera_to_ball is not None:
             br = tf2_ros.TransformBroadcaster()
             ball_pose = TransformStamped()
             ball_pose.header.frame_id = self.robot_name + "/base_camera"
             ball_pose.child_frame_id = self.robot_name + "/ball"
             ball_pose.header.stamp = msg.header.stamp
             ball_pose.header.seq = msg.header.seq
-            ball_pose.transform.translation.x = final_ball_position.get_position()[0]
-            ball_pose.transform.translation.y = final_ball_position.get_position()[1]
-            ball_pose.transform.translation.z = 0.07
+            ball_pose.transform.translation.x = final_camera_to_ball.get_position()[0]
+            ball_pose.transform.translation.y = final_camera_to_ball.get_position()[1]
+            ball_pose.transform.translation.z = 0
             ball_pose.transform.rotation.x = 0
             ball_pose.transform.rotation.y = 0
             ball_pose.transform.rotation.z = 0
