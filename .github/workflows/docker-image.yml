@@ -26,8 +26,8 @@ jobs:
       run: docker push utrarobosoccer/soccerbot
     - name: Push to AWS repository
       run: |
-        aws configure set aws_access_key_id AKIAQWIRC64VTJ553HUF
-        aws configure set aws_secret_access_key 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
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
         docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
         docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
