@@ -55,7 +55,7 @@ class StrategyDetermineSide(Strategy):
             # Determining robot role automatically based on distance to role position and other robots
             if current_robot.role == Robot.Role.UNASSIGNED:
                 available_roles = []
-                for role in friendly_team.formations['initial']:
+                for role in friendly_team.formations['ready']:
                     available_roles.append(role)
 
                 unassigned_robots = []
@@ -67,20 +67,20 @@ class StrategyDetermineSide(Strategy):
 
                 print("Available Robots", unassigned_robots)
                 print("Available Roles", available_roles)
-                print("Available Roles Positions", [friendly_team.formations['initial'][role][0:2] for role in available_roles])
+                print("Available Roles Positions", [friendly_team.formations['ready'][role][0:2] for role in available_roles])
                 while len(unassigned_robots) > 0:
                     closest_index = 0
                     closest_role_index = 0
                     closest_distance = math.inf
                     for i in range(len(unassigned_robots)):
                         for j in range(len(available_roles)):
-                            distance = np.linalg.norm(np.array(friendly_team.formations['initial'][available_roles[j]][0:2]) - unassigned_robots[i].position[0:2])
+                            distance = np.linalg.norm(np.array(friendly_team.formations['ready'][available_roles[j]][0:2]) - unassigned_robots[i].position[0:2])
                             if distance < closest_distance:
                                 closest_distance = distance
                                 closest_index = i
                                 closest_role_index = j
 
-                    print(f"Assigning Robot {closest_index + 1} to {available_roles[closest_role_index].name} with location {friendly_team.formations['initial'][available_roles[closest_role_index]][0:2]}")
+                    print(f"Assigning Robot {closest_index + 1} to {available_roles[closest_role_index].name} with location {friendly_team.formations['ready'][available_roles[closest_role_index]][0:2]}")
                     if unassigned_robots[closest_index].robot_id == current_robot.robot_id:
                         current_robot.role = available_roles[closest_role_index]
                         print("Completed Assignment")
