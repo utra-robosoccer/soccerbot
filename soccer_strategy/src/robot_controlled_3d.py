@@ -81,6 +81,7 @@ class RobotControlled3D(RobotControlled):
                 self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
+            self.observed_ball.position = None
 
         # Get Robot Position from TF
         trans = [self.position[0], self.position[1], 0]
@@ -109,9 +110,14 @@ class RobotControlled3D(RobotControlled):
         r.pose.orientation.y = rot[1]
         r.pose.orientation.z = rot[2]
         r.pose.orientation.w = rot[3]
-        r.ball_pose.x = self.observed_ball.position[0]
-        r.ball_pose.y = self.observed_ball.position[1]
-        r.ball_pose.theta = 0
+        if self.observed_ball.position is not None:
+            r.ball_pose.x = self.observed_ball.position[0]
+            r.ball_pose.y = self.observed_ball.position[1]
+            r.ball_pose.theta = 0
+        else:
+            r.ball_pose.x = 0
+            r.ball_pose.y = 0
+            r.ball_pose.theta = 0
         self.robot_state_publisher.publish(r)
         pass
 

@@ -12,7 +12,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 6
+HAVENT_SEEN_THE_BALL_TIMEOUT = 10
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
@@ -41,7 +41,7 @@ class StrategyDummy(Strategy):
         this_robot = self.get_current_robot(friendly_team)
 
         if friendly_team.average_ball_position.position is not None:
-            self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
+            self.havent_seen_the_ball_timeout = min(HAVENT_SEEN_THE_BALL_TIMEOUT, self.havent_seen_the_ball_timeout + 3)
 
             # generate goal pose
             goal_position = friendly_team.enemy_goal_position
@@ -85,15 +85,18 @@ class StrategyDummy(Strategy):
                             this_robot.set_navigation_position(destination_position_biased) # TODO dynamic walking
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
+            print("Player {}: Cannot find the ball".format(this_robot.robot_id))
             self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
 
             player_angle = this_robot.position[2]
             player_position = this_robot.position[0:2]
 
             # Haven't seen the ball timeout
-            if self.havent_seen_the_ball_timeout < 0:
+            if self.havent_seen_the_ball_timeout < 0 and this_robot.status != Robot.Status.WALKING:
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-                turn_position = [player_position[0], player_position[1], player_angle + math.pi]
+                print("Player {}: Rotating to locate ball".format(this_robot.robot_id))
+
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi/2]
                 this_robot.set_navigation_position(turn_position)
 
 
