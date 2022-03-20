@@ -80,7 +80,7 @@ class SoccerbotControllerRos(SoccerbotController):
         pose_stamped = self.transformation_to_pose(pose)
         resetPublisher.publish(pose_stamped.pose)
         self.robot_pose = pose_stamped
-        sleep(3)
+        rospy.sleep(0.5)
 
         p = PoseWithCovarianceStamped()
         p.pose.pose = pose_stamped.pose

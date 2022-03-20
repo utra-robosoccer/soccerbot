@@ -188,7 +188,7 @@ class SoccerbotRos(Soccerbot):
             # Search for the ball if can't find the ball
             if self.last_ball_found_timestamp is None:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi * 0.165 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
                 self.head_step += 1
 
             # Recenter the head onto the ball
@@ -198,9 +198,9 @@ class SoccerbotRos(Soccerbot):
 
                 rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
 
-                if abs(anglelr) < 0.05 and abs(angleud) < 0.1:
+                if abs(anglelr) < 0.05 and abs(angleud) < 0.05:
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
-                    time.sleep(1)
+                    rospy.sleep(1)
                     self.head_centered_on_ball_publisher.publish()
 
                 self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
@@ -208,7 +208,7 @@ class SoccerbotRos(Soccerbot):
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * 0.15
+            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0
