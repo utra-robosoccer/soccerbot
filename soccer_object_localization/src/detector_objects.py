@@ -3,6 +3,8 @@
 import os
 
 import numpy as np
+np.set_printoptions(precision=3)
+
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -16,8 +18,7 @@ from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
 from sensor_msgs.msg import JointState
 from soccer_object_detection.msg import BoundingBoxes, BoundingBox
 from detector import Detector
-
-
+from soccer_geometry.transformation import Transformation
 class DetectorBall(Detector):
 
     def __init__(self):
@@ -26,7 +27,7 @@ class DetectorBall(Detector):
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
         self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
-        self.last_ball_pose = None
+        self.last_ball_pose = Transformation()
         self.last_ball_pose_counter = 0
 
     def jointStatesCallback(self, msg: JointState):
@@ -44,43 +45,54 @@ class DetectorBall(Detector):
         self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True)
 
         # Ball
-        distance_to_robot = math.inf
+        max_detection_size = 0
         final_camera_to_ball = None
-        candidate_ball = 1
+        candidate_ball_counter = 1
         for box in msg.bounding_boxes:
             if box.Class == "ball":
+                # Exclude weirdly shaped balls
+                ratio = (box.ymax - box.ymin) / (box.xmax - box.xmin)
+                if ratio > 2 or ratio < 0.5:
+                    rospy.logwarn_throttle(1, "Excluding weirdly shaped ball")
+                    continue
+
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                 ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
 
-                if self.last_ball_pose is not None:
-                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
-                        pass
-                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose[0:2]) > 2: # Ignore detections too far from the last detected pose
-                        self.last_ball_pose_counter = self.last_ball_pose_counter + 1
-                        if self.last_ball_pose_counter > 20: # Counter to prevent being stuck when the ball is in a different location
-                            self.last_ball_pose_counter = 0
-                            self.last_ball_pose = None
-                        continue
-
                 # Ignore balls outside of the field
                 camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
-                distance = np.linalg.norm(camera_to_ball[0:2])
+                detection_size = (box.ymax - box.ymin) * (box.xmax - box.xmin)
 
-                rospy.loginfo_throttle(5, f"Candidate Ball Position { candidate_ball }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, distance { distance }")
-                candidate_ball = candidate_ball + 1
+                rospy.loginfo_throttle(5, f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, detection_size { detection_size }")
+                candidate_ball_counter = candidate_ball_counter + 1
 
                 # Exclude balls outside the field
                 if abs(ball_pose.get_position()[0]) > 4.5 or abs(ball_pose.get_position()[1]) > 3:
                     continue
 
-                # Get the closest ball to the player
-                if distance < distance_to_robot:
+                # Exclude balls that are too far from the previous location
+                if self.last_ball_pose is not None:
+                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
+                        pass
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1: # meters from previous position
+                        rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
+                        self.last_ball_pose_counter = self.last_ball_pose_counter + 1
+                        if self.last_ball_pose_counter > 5: # Counter to prevent being stuck when the ball is in a different location
+                            self.last_ball_pose_counter = 0
+                            self.last_ball_pose = None
+                        continue
+
+
+                # Get the largest detection
+                if detection_size > max_detection_size:
                     final_camera_to_ball = camera_to_ball
-                    distance_to_robot = distance
+                    self.last_ball_pose = ball_pose
+                    self.last_ball_pose_counter = 0
+                    max_detection_size = detection_size
                     pass
 
-
         if final_camera_to_ball is not None:
+            rospy.loginfo_throttle(1, f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m")
             br = tf2_ros.TransformBroadcaster()
             ball_pose = TransformStamped()
             ball_pose.header.frame_id = self.robot_name + "/base_camera"

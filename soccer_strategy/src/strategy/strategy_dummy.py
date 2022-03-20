@@ -12,7 +12,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 10
+HAVENT_SEEN_THE_BALL_TIMEOUT = 8
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
@@ -86,7 +86,9 @@ class StrategyDummy(Strategy):
         else:
             # If player is not facing the right direction, and not seeing the ball, then face the goal
             print("Player {}: Cannot find the ball".format(this_robot.robot_id))
-            self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
+
+            if this_robot.status not in [Robot.Status.WALKING, Robot.Status.KICKING]:
+                self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
 
             player_angle = this_robot.position[2]
             player_position = this_robot.position[0:2]
@@ -96,7 +98,7 @@ class StrategyDummy(Strategy):
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 print("Player {}: Rotating to locate ball".format(this_robot.robot_id))
 
-                turn_position = [player_position[0], player_position[1], player_angle + math.pi/2]
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.9]
                 this_robot.set_navigation_position(turn_position)
 
 
