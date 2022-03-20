@@ -12,7 +12,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 8
+HAVENT_SEEN_THE_BALL_TIMEOUT = 2
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
@@ -32,7 +32,7 @@ class StrategyDummy(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        self.update_frequency = 10
+        self.update_frequency = 3
         super(StrategyDummy, self).__init__()
 
     @get_back_up
@@ -41,7 +41,7 @@ class StrategyDummy(Strategy):
         this_robot = self.get_current_robot(friendly_team)
 
         if friendly_team.average_ball_position.position is not None:
-            self.havent_seen_the_ball_timeout = min(HAVENT_SEEN_THE_BALL_TIMEOUT, self.havent_seen_the_ball_timeout + 3)
+            self.havent_seen_the_ball_timeout = min(HAVENT_SEEN_THE_BALL_TIMEOUT, self.havent_seen_the_ball_timeout + 1)
 
             # generate goal pose
             goal_position = friendly_team.enemy_goal_position

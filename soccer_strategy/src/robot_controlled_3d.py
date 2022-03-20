@@ -125,7 +125,7 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.05:
+            if covariance_trace < 0.03:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
             elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(
@@ -178,12 +178,12 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.y = q[1]
         p.pose.pose.orientation.z = q[2]
         p.pose.pose.orientation.w = q[3]
-        p.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+        p.pose.covariance = [0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
         self.robot_initial_pose_publisher.publish(p)
 
     def kick(self):
