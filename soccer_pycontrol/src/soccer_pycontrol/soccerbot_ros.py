@@ -200,11 +200,11 @@ class SoccerbotRos(Soccerbot):
 
                 if abs(anglelr) < 0.05 and abs(angleud) < 0.05:
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
-                    rospy.sleep(1)
+                    rospy.sleep(0.5)
                     self.head_centered_on_ball_publisher.publish()
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0008
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0025
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0016
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)

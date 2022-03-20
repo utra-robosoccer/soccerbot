@@ -8,9 +8,9 @@ from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 from abc import ABC
 
 class PathSection(ABC):
-    bodystep_size = 0.04 #try 0.05  # m Not absolutely fixed, will be modified slightly when
+    bodystep_size = 0.06 #try 0.05  # m Not absolutely fixed, will be modified slightly when
     angular_bodystep_size = 0.4  # radians Radians per angular step
-    steps_per_second = 2.4 # try 6 motors P = 09.25
+    steps_per_second = 3.5 # try 6 motors P = 09.25
     speed = steps_per_second * bodystep_size  # m/s
     angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
 
