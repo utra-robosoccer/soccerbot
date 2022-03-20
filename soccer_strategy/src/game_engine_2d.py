@@ -1,6 +1,8 @@
 import _thread
 import random
 
+import rospy
+
 try:
     from soccer_msgs.msg import GameState
 except:
@@ -80,13 +82,13 @@ class GameEngine2D:
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
 
             if step % self.team1.strategy.update_frequency == 0:
-
                 for robot in self.team1.robots:
                     robot.active = True
                     robot.observed_ball = self.ball
                     self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
+            if step % self.team2.strategy.update_frequency == 0:
                 for robot in self.team2.robots:
                     robot.active = True
                     robot.observed_ball = self.ball

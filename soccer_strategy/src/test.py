@@ -11,7 +11,6 @@ class Test(TestCase):
         opponent_wins = 0
         for i in range(10):
             g = GameEngine2D(team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy)
-
             friendly_points, opponent_points = g.run()
             if friendly_points > opponent_points:
                 friendly_wins += 1
