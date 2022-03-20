@@ -95,21 +95,15 @@ class GameEngine3D():
 
     # run loop
     def run(self):
-        rostime_previous = 0
-
         while not rospy.is_shutdown():
-            rostime = rospy.get_rostime().secs + rospy.get_rostime().nsecs * 1e-9
 
-            if rostime % self.team1.strategy.update_frequency < rostime_previous % self.team1.strategy.update_frequency:
-                # Decide what strategy to run
-                self.decide_strategy()
-                # Run the strategy
-                print("-----------------------------------------")
-                print(
-                    f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]}")
-                self.team1.log()
-                self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
+            # Decide what strategy to run
+            self.decide_strategy()
+            # Run the strategy
+            print("-----------------------------------------")
+            print(
+                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]}")
+            self.team1.log()
+            self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
 
-            rostime_previous = rostime
-
-            rospy.sleep(0.2)
+            rospy.sleep(self.team1.strategy.update_frequency)
