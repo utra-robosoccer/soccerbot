@@ -1,4 +1,5 @@
 import math
+import time
 
 from sensor_msgs.msg import JointState, Imu
 from soccer_msgs.msg import RobotState
@@ -197,16 +198,17 @@ class SoccerbotRos(Soccerbot):
 
                 rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
 
-                if abs(anglelr) < 0.1 and abs(angleud) < 0.2:
+                if abs(anglelr) < 0.05 and abs(angleud) < 0.1:
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
+                    time.sleep(1)
                     self.head_centered_on_ball_publisher.publish()
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.002
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.001
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0008
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi / 4 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * (math.pi / 6)
+            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * 0.15
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0
