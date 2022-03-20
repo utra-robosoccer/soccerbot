@@ -1,3 +1,5 @@
+import math
+
 from strategy.strategy import Strategy, get_back_up
 from team import Team
 from soccer_msgs.msg import GameState
@@ -18,4 +20,7 @@ class StrategyReady(Strategy):
         navigation_position = friendly_team.formations["ready"][this_robot.role]
         if this_robot.status != Robot.Status.WALKING: # TODO use dynamic walking to adjust position
             if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
+                Actions.navigation_to_position(this_robot, navigation_position)
+            elif abs((this_robot.position[2] - navigation_position.position[2]) % math.pi) > 0.2: # Rotate only
+                navigation_position[0:2] = this_robot.position[0:2]
                 Actions.navigation_to_position(this_robot, navigation_position)
