@@ -187,25 +187,26 @@ class SoccerbotRos(Soccerbot):
             # Search for the ball if can't find the ball
             if self.last_ball_found_timestamp is None:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi / 7
+                self.configuration[Joints.HEAD_2] = math.pi * 0.165 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
                 self.head_step += 1
 
             # Recenter the head onto the ball
             elif recenterCameraOnBall:
                 anglelr = math.atan2(trans[1], trans[0])
                 angleud = math.atan2(trans[2], trans[0])
-                rospy.loginfo_throttle(1, f"\033[1mCentering Camera on Ball ({ anglelr }, { angleud })\033[0m")
+
+                rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
 
                 if abs(anglelr) < 0.1 and abs(angleud) < 0.2:
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
                     self.head_centered_on_ball_publisher.publish()
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.001
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0005
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.002
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.001
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * (math.pi / 7)
+            self.configuration[Joints.HEAD_2] = math.pi / 4 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * (math.pi / 6)
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0

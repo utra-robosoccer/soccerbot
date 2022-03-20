@@ -21,6 +21,6 @@ class StrategyReady(Strategy):
         if this_robot.status != Robot.Status.WALKING: # TODO use dynamic walking to adjust position
             if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
                 Actions.navigation_to_position(this_robot, navigation_position)
-            elif abs((this_robot.position[2] - navigation_position.position[2]) % math.pi) > 0.2: # Rotate only
+            elif abs((this_robot.position[2] - navigation_position[2]) % math.pi) > 0.2: # Rotate only
                 navigation_position[0:2] = this_robot.position[0:2]
                 Actions.navigation_to_position(this_robot, navigation_position)
