@@ -75,8 +75,9 @@ services:
 
   friendly:
     <<: *soccerbot
-    expose:
-      - 11311
+    # Uncomment to view rviz
+    ports:
+      - 11311:11311
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
