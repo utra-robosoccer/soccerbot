@@ -37,7 +37,6 @@ services:
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
-      ENABLE_PYBULLET: "false"
       COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 

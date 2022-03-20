@@ -15,11 +15,9 @@ class Ramp:
                          spinningFriction=spinningFriction, rollingFriction=rollingFriction)
 
     def setOrientation(self, orientation):
-        if os.getenv('ENABLE_PYBULLET', False):
-            p.removeBody(self.plane)
+        p.removeBody(self.plane)
         self.__init__(self.path, self.position, orientation)
 
     def setPosition(self, position):
-        if os.getenv('ENABLE_PYBULLET', False):
-            p.removeBody(self.plane)
+        p.removeBody(self.plane)
         self.__init__(self.path, position, self.orientation)
