@@ -12,7 +12,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 2
+HAVENT_SEEN_THE_BALL_TIMEOUT = 3
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
