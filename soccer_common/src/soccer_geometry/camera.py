@@ -43,14 +43,14 @@ class Camera:
         attempts = 0
         while not rospy.is_shutdown():
             try:
-                if attempts >= 20:
+                attempts = attempts + 1
+                if attempts >= 5:
                     rospy.logerr_throttle(1, f"Resetting camera transform timestamp {timestamp.secs}")
                     timestamp = rospy.Time(0)
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}")
-                attempts = attempts + 1
                 try:
                     rospy.sleep(0.05)
                 except ROSInterruptException:
