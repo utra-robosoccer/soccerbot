@@ -26,6 +26,8 @@ class DetectorBall(Detector):
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
         self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
+        self.last_ball_pose = None
+        self.last_ball_pose_counter = 0
 
     def jointStatesCallback(self, msg: JointState):
         if len(msg.name) != 0:
@@ -49,6 +51,16 @@ class DetectorBall(Detector):
             if box.Class == "ball":
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                 ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+
+                if self.last_ball_pose is not None:
+                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
+                        pass
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose[0:2]) > 2: # Ignore detections too far from the last detected pose
+                        self.last_ball_pose_counter = self.last_ball_pose_counter + 1
+                        if self.last_ball_pose_counter > 20: # Counter to prevent being stuck when the ball is in a different location
+                            self.last_ball_pose_counter = 0
+                            self.last_ball_pose = None
+                        continue
 
                 # Ignore balls outside of the field
                 camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
