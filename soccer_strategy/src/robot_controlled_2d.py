@@ -1,7 +1,9 @@
+import time
 
 from ball import Ball
 import math
 import numpy as np
+import rospy
 from robot import Robot
 from robot_controlled import RobotControlled
 
@@ -39,7 +41,7 @@ class RobotControlled2D(RobotControlled):
             opponent_goal = np.array([0, -4.5])
         return opponent_goal
 
-    def observe_ball(self, ball):
+    def observe_ball(self, ball) -> bool:
         if ball is None or ball.position is None:
             return
         theta = self.position[2] #TODO change this to direction vector?
@@ -53,6 +55,8 @@ class RobotControlled2D(RobotControlled):
         distance = np.linalg.norm(ball_to_robot)
         if angle < self.ObservationConstants.FOV/2 and distance < self.ObservationConstants.VISION_RANGE:
             self.observed_ball.position = ball_position
+            self.navigation_goal_localized_time = time.time()
+
         #TODO can add noise here
 
 

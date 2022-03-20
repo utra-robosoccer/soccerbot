@@ -1,6 +1,9 @@
 import math
 #import rospy
 #rospy only used here for rospy.loginfo
+import time
+
+import rospy
 
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 from strategy.utils import *
@@ -60,7 +63,7 @@ class StrategyDummy(Strategy):
                         this_robot.status = Robot.Status.KICKING
                         this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
                     else:
-                        if this_robot.navigation_goal_localized and this_robot.status != Robot.Status.WALKING:
+                        if (time.time() - this_robot.navigation_goal_localized_time) < 1 and this_robot.status != Robot.Status.WALKING:
                             ball_position = ball.position[0:2]
                             player_position = this_robot.position[0:2]
                             diff = ball_position - goal_position
