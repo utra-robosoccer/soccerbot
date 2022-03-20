@@ -125,7 +125,7 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.5:
+            if covariance_trace < 0.05:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
             elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(

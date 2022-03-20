@@ -114,6 +114,8 @@ Visualization Manager:
           Value: true
         robot2/torso:
           Value: true
+        world:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF
@@ -121,7 +123,38 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        world:
+          robot2/odom:
+            robot2/base_camera:
+              {}
+            robot2/base_footprint:
+              robot2/torso:
+                robot2/imu_link:
+                  {}
+                robot2/left_bicep:
+                  robot2/left_forearm:
+                    {}
+                robot2/left_hip_side:
+                  robot2/left_hip_front:
+                    robot2/left_thigh:
+                      robot2/left_calve:
+                        robot2/left_ankle:
+                          robot2/left_foot:
+                            {}
+                robot2/neck:
+                  robot2/head:
+                    robot2/camera:
+                      {}
+                robot2/right_bicep:
+                  robot2/right_forearm:
+                    {}
+                robot2/right_hip_side:
+                  robot2/right_hip_front:
+                    robot2/right_thigh:
+                      robot2/right_calve:
+                        robot2/right_ankle:
+                          robot2/right_foot:
+                            {}
       Update Interval: 0
       Value: true
     - Class: rviz/Group
@@ -460,7 +493,7 @@ Visualization Manager:
               Color: 255; 0; 0
               Color Transformer: FlatColor
               Decay Time: 0
-              Enabled: false
+              Enabled: true
               Invert Rainbow: true
               Max Color: 255; 255; 255
               Min Color: 0; 0; 0
@@ -469,13 +502,13 @@ Visualization Manager:
               Queue Size: 10
               Selectable: true
               Size (Pixels): 3
-              Size (m): 0.009999999776482582
+              Size (m): 0.029999999329447746
               Style: Spheres
               Topic: /robot2/scan
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: false
-              Value: false
+              Value: true
             - Alpha: 0.30000001192092896
               Class: rviz/Map
               Color Scheme: raw
@@ -944,7 +977,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: -100
+      Scale: -96.6158676147461
       Target Frame: <Fixed Frame>
       X: 0
       Y: 0
