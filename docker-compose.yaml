@@ -82,7 +82,7 @@ services:
       soccer_network:
         ipv4_address: 172.18.0.2
     environment:
-      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_ROBOT_ID: 2 # (see startup.sh for positions)
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
@@ -103,7 +103,7 @@ services:
 #      Y_POS: -3.14
 #      YAW: 1.57
 #      ROBOCUP_TEAM_ID: 5
-#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_ROBOT_ID: 2
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
 #      ROBOCUP_GAMECONTROLLER_IP: "simulator"
