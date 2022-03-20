@@ -69,12 +69,13 @@ class RobotControlled(Robot):
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
         if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) < 0.15:
-            print("Player {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}".
-                format(self.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball))
             if nav_angle_diff > 0.03:
                 self.kick_with_right_foot = True
             else:
                 self.kick_with_right_foot = False
+            print(
+                "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".
+                format(self.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball, self.kick_with_right_foot))
             return True
         return False
 

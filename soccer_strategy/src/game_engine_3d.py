@@ -1,8 +1,5 @@
 import os
-import numpy as np
-import tf
 import rospy
-from std_msgs.msg import Empty, Int32, Bool
 from soccer_msgs.msg import GameState
 from robot_controlled_3d import RobotControlled3D
 from robot import Robot
@@ -10,7 +7,6 @@ from robot_observed import RobotObserved
 from ball import Ball
 from team import Team
 from strategy.strategy_freekick import StrategyFreekick
-from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_penaltykick import StrategyPenaltykick
 from strategy.strategy_ready import StrategyReady

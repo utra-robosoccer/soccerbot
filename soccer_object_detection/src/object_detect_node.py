@@ -7,15 +7,14 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-import sys
 import rospy
 from rospy import ROSException
+from soccer_msgs.msg import RobotState
 
 from soccer_geometry.camera import Camera
 
 from argparse import ArgumentParser
 from sensor_msgs.msg import Image
-import std_msgs
 import cv2
 from cv_bridge import CvBridge
 import torch
@@ -43,6 +42,9 @@ class ObjectDetectionNode(object):
         self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=1)
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=1)
         self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState,
+                                                               self.robot_state_callback)
+        self.robot_state = RobotState()
 
         self.model = CNN(kernel=3, num_features=int(num_feat))
 
@@ -53,7 +55,13 @@ class ObjectDetectionNode(object):
             self.model.load_state_dict(torch.load(model_path))
         self.model.eval()
 
+    def robot_state_callback(self, robot_state: RobotState):
+        self.robot_state = robot_state
+
     def callback(self, msg: Image):
+        if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY, RobotState.ROLE_UNASSIGNED]:
+            return
+
         rospy.loginfo_throttle(60, "Recieved Image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
