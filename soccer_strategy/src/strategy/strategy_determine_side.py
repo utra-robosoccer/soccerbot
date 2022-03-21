@@ -37,7 +37,7 @@ class StrategyDetermineSide(Strategy):
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
 
-        if self.measurements == 2:
+        if self.measurements == 1:
 
             # Determine robot position
             self.measurements = self.measurements + 1
@@ -89,7 +89,7 @@ class StrategyDetermineSide(Strategy):
                         unassigned_robots.pop(closest_index)
                         available_roles.pop(closest_role_index)
 
-        if self.measurements > 2:
+        if self.measurements > 1:
             current_robot.status = Robot.Status.LOCALIZING
             current_robot.time_since_action_completed = rospy.Time.now()
 
