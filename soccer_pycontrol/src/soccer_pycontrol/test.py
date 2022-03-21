@@ -203,7 +203,7 @@ class Test(TestCase):
                                              targetPositions=self.walker.soccerbot.get_angles(),
                                              forces=forces
                                              )
-                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_size
+                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
             t = t + self.walker.PYBULLET_STEP
@@ -251,7 +251,7 @@ class Test(TestCase):
                                              targetPositions=self.walker.soccerbot.get_angles(),
                                              forces=forces
                                              )
-                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_size
+                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
             self.walker.soccerbot.publishAngles()
@@ -273,7 +273,7 @@ class Test(TestCase):
         self.walker.wait(100)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
 
-        times = np.linspace(0, self.walker.soccerbot.robot_path.duration(), num=math.ceil(self.walker.soccerbot.robot_path.duration() / self.walker.soccerbot.robot_path.step_size) + 1)
+        times = np.linspace(0, self.walker.soccerbot.robot_path.duration(), num=math.ceil(self.walker.soccerbot.robot_path.duration() / self.walker.soccerbot.robot_path.step_precision) + 1)
         lfp = np.zeros((4, 4, len(times)))
         rfp = np.zeros((4, 4, len(times)))
         i = 0
@@ -318,7 +318,7 @@ class Test(TestCase):
                                              targetPositions=self.walker.soccerbot.get_angles(),
                                              forces=forces
                                              )
-                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_size
+                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
             t = t + self.walker.PYBULLET_STEP

@@ -8,8 +8,7 @@ import math
 class PathCrotch(PathFoot):
 
     crotch_zdiff_sway = 0.000
-    crotch_sidediff_sway = -0.03
-    crotch_sidediff_sway_decay = 5
+    crotch_sidediff_sway = -0.02
     crotch_thetadiff_sway = [0., 0., 0.] # [0, 0, 0.08]
 
     first_step_left = 0
@@ -94,7 +93,7 @@ class PathCrotch(PathFoot):
     def show(self, fig=None):
         # Draw the crotch position
         i = 0
-        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size) + 1)
+        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         tfInterp = np.zeros((4, 4, len(iterator)))
         for t in iterator:
             tfInterp[:, :, i] = self.crotchPosition(t)
