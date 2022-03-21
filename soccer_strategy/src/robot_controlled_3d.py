@@ -8,6 +8,7 @@ from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 import numpy as np
 import tf.transformations
+import time
 
 from sensor_msgs.msg import Imu
 
@@ -29,7 +30,7 @@ class RobotControlled3D(RobotControlled):
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty,
                                                                  self.head_centered_on_ball_callback, queue_size=1)
         # Publishers
-        self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1)
+        self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher("command", FixedTrajectoryCommand, queue_size=1, latch=True)
 
@@ -125,7 +126,7 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.03:
+            if covariance_trace < 0.04:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
             elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(

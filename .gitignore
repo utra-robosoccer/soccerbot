@@ -28,3 +28,6 @@ cmake-build-debug
 /soccer_strategy/game_controller/robocup_extension_pb2.py
 
 /soccer_common/credentials.json
+
+soccerbot/bags/
+!soccerbot/bags/view_rosbag.sh

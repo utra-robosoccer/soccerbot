@@ -50,4 +50,25 @@
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
+    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/rosbag.bag
+        state
+        action_complete
+        amcl_pose
+        command
+        detected_robot_pose
+        execute_game_interruption
+        gamestate
+        goal
+        head_centered_on_ball
+        imu_filtered
+        initialpose
+        joint_command
+        odom
+        path
+        scan
+        set_pose
+        state
+        torso_height
+    " />
+
 </launch>

@@ -158,8 +158,8 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    HEAD_YAW_FREQ = 0.003
-    HEAD_PITCH_FREQ = 0.003
+    HEAD_YAW_FREQ = 0.004
+    HEAD_PITCH_FREQ = 0.004
 
     def apply_head_rotation(self):
         if self.robot_state.status == self.robot_state.STATUS_DETERMINING_SIDE:
