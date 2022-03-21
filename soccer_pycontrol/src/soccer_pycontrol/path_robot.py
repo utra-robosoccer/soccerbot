@@ -11,14 +11,14 @@ class PathRobot(PathCrotch):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
 
     def show(self):
-        fig = plt.figure()
+        fig = plt.figure(tight_layout=True, figsize=(10, 10))
         Path.show(self)
         PathFoot.show(self, fig)
         # Crotchpath.show(self, fig)
         plt.show() # to interact with the path graph uncomment this
 
     def showTimingDiagram(self):
-        times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size) + 1)
+        times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         i = 0
         step_num = np.zeros(len(times))
         right_foot_step_ratio = np.zeros(len(times))
@@ -64,7 +64,7 @@ class PathRobot(PathCrotch):
         plt.grid(b=True, which='both', axis='both')
 
         # Music????
-        times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size) + 1)
+        times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         lfp = np.zeros((4,4,len(times)))
         rfp = np.zeros((4, 4, len(times)))
         crp = np.zeros((4,4,len(times)))

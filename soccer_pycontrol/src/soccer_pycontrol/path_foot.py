@@ -18,7 +18,7 @@ class PathFoot(Path):
 
     foot_separation = 0.044 # seperation between feet and center
     step_height = 0.065 # height of step
-    step_outwardness = 0.015
+    step_outwardness = 0.010
     step_rotation = 0.05
 
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
@@ -303,7 +303,7 @@ class PathFoot(Path):
         i = 0
         # for t = 0:obj.step_size:obj.duration
         # TODO: make a generator?
-        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size)+1)
+        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         tfInterp_l = np.zeros((4, 4, len(iterator)))
         tfInterp_r = np.zeros((4, 4, len(iterator)))
         for t in iterator:
@@ -324,7 +324,7 @@ class PathFoot(Path):
         :return: None
         """
         if fig is None:
-            fig = plt.figure()
+            fig = plt.figure(tight_layout=True)
         ax = fig.gca(projection='3d')
         tfInterp_axis = np.zeros((3, length))
         axes = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]

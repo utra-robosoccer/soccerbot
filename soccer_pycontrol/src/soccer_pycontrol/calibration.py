@@ -23,9 +23,10 @@ if __name__ == '__main__':
 
     np.set_printoptions(precision=3)
     clear = True
-    x_range = np.array([-1.0, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0])
+    x_range = np.flip(np.array([-1.0, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0]))
     y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5])
-    ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8])
+    # ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8])
+    ang_range = np.pi * np.array([0])
 
     if clear:
         files = glob.glob('calibration/*')
@@ -39,7 +40,7 @@ if __name__ == '__main__':
                 if os.path.exists(file_name):
                     continue
 
-                quat = Transformation.get_quaternion_from_euler([0, 0, yaw])
+                quat = Transformation.get_quaternion_from_euler([yaw, 0, 0])
 
                 print(f"Getting Calibration for x: {x} y: {y} yaw: {yaw:.2f}")
 

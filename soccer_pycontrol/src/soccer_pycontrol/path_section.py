@@ -8,19 +8,20 @@ from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 from abc import ABC
 
 class PathSection(ABC):
-    bodystep_size = 0.06 #try 0.05  # m Not absolutely fixed, will be modified slightly when
-    angular_bodystep_size = 0.4  # radians Radians per angular step
-    steps_per_second = 3.5 # try 6 motors P = 09.25
-    speed = steps_per_second * bodystep_size  # m/s
-    angular_speed = steps_per_second * angular_bodystep_size  # Rotational speed in radians per second
+    backwards_bodystep_size_ratio = 0.5 # How much smaller the body step is for backwards movement
+    bodystep_size_default = 0.035
+    steps_per_second_default = 2.7
 
-    precision = 0.05 * bodystep_size
-
-    def __init__(self, start_transform: Transformation,  end_transform: Transformation):
-        start = time.time()
-
+    def __init__(self, start_transform: Transformation,  end_transform: Transformation,
+                 bodystep_size=bodystep_size_default):
         self.start_transform = start_transform
         self.end_transform = end_transform
+
+        self.bodystep_size = bodystep_size
+        self.steps_per_second = PathSection.steps_per_second_default
+        self.speed = self.steps_per_second * self.bodystep_size
+        self.precision = 0.05 * self.bodystep_size
+
 
         # Calculate distance and angular distance
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
@@ -33,7 +34,6 @@ class PathSection(ABC):
         j = 1
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         prev_pose = self.poseAtRatio(0)
-        start = time.time()
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
@@ -44,34 +44,16 @@ class PathSection(ABC):
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
 
-        end = time.time()
 
     @abc.abstractmethod
     def poseAtRatio(self, r):
         pass
 
     def linearStepCount(self):
-        return self.distance / PathSection.bodystep_size
+        return self.distance / self.bodystep_size
 
     def angularStepCount(self):
-        return self.angle_distance / PathSection.angular_bodystep_size
-
-    def adjustBodyStepSizes(self):
-        # Round to nearest step
-        s_count = self.linearStepCount()
-        if self.distance != 0:
-            if self.distance % self.bodystep_size < (self.bodystep_size / 2):
-                self.bodystep_size = self.distance / s_count
-            else:
-                self.bodystep_size = self.distance / (s_count + 1)
-
-        s_count = self.angularStepCount()
-        if self.angle_distance != 0 and s_count != 0:
-            if self.angle_distance != 0 and self.angle_distance % self.angular_bodystep_size < (
-                    self.angular_bodystep_size / 2):
-                self.angular_bodystep_size = self.angle_distance / s_count
-            else:
-                self.angular_bodystep_size = self.angle_distance / (s_count + 1)
+        return 0
 
     @abc.abstractmethod
     def getRatioFromStep(self, step_num):

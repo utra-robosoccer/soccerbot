@@ -129,7 +129,6 @@ class SoccerbotControllerRos(SoccerbotController):
             except ROSInterruptException:
                 exit(0)
 
-        self.soccerbot.ready()
         self.soccerbot.reset_imus()
         time_now = 0
 
@@ -163,7 +162,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.ready()
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                 self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
-                self.t = -0.5
+                self.t = -0.8
 
                 def print_pose(name: str, pose: Pose):
                     print(f"{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]")
@@ -180,14 +179,15 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            # IMU feedback while walking
             if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
+
+                # IMU feedback while walking
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
 
                 forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
-                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
+                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
                 self.soccerbot.publishOdometry()
 
             # Walk completed
