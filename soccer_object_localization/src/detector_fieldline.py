@@ -14,6 +14,7 @@ import cv2
 from sensor_msgs.msg import Image, PointCloud2
 from std_msgs.msg import Bool, Header
 from detector import Detector
+from geometry_msgs.msg import PoseWithCovarianceStamped
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
 
@@ -30,12 +31,16 @@ class DetectorFieldline(Detector):
     def __init__(self):
         super().__init__()
 
+        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback)
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
-
+        self.publish_point_cloud = False
         cv2.setRNGSeed(12345)
         pass
+
+    def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
+        self.publish_point_cloud = True
 
     def image_callback(self, img: Image):
         rospy.loginfo_once("Recieved Message")
@@ -112,7 +117,7 @@ class DetectorFieldline(Detector):
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 
-        if self.point_cloud_publisher.get_num_connections() > 0:
+        if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
             for p in pts:
                 points3d.append(self.camera.findFloorCoordinate(p))

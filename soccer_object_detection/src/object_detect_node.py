@@ -32,6 +32,8 @@ class ObjectDetectionNode(object):
     '''
 
     def __init__(self, model_path, num_feat):
+        self.model = CNN(kernel=3, num_features=int(num_feat))
+
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         self.camera = Camera(self.robot_name)
         self.camera.reset_position()
@@ -46,7 +48,6 @@ class ObjectDetectionNode(object):
                                                                self.robot_state_callback)
         self.robot_state = RobotState()
 
-        self.model = CNN(kernel=3, num_features=int(num_feat))
 
         if not torch.cuda.is_available():
             rospy.logwarn("Warning, using CPU for object detection")

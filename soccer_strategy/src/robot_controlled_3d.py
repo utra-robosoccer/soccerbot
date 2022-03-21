@@ -165,7 +165,6 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, position):
-        print("Setting initial Robot " + self.robot_name + " position " + str(position))
         p = PoseWithCovarianceStamped()
         p.header.frame_id = 'world'
         p.header.stamp = rospy.get_rostime()
@@ -178,8 +177,10 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.y = q[1]
         p.pose.pose.orientation.z = q[2]
         p.pose.pose.orientation.w = q[3]
-        p.pose.covariance = [0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
+        print("Setting initial Robot " + self.robot_name + " position " + str(position) + " orientation " + str(q))
+        print(p.pose.pose.orientation)
+        p.pose.covariance = [0.0025, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0025, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,

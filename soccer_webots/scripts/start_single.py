@@ -69,5 +69,5 @@ while not rospy.is_shutdown():
                                  0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
         # publish the message
-        # odom_pub.publish(odom)
+        odom_pub.publish(odom)
         last_time = current_time
