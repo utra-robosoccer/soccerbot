@@ -1,11 +1,11 @@
 import functools
 
 import numpy as np
-from soccer_pycontrol.footpath import Footpath
+from soccer_pycontrol.path_foot import PathFoot
 from soccer_geometry.transformation import Transformation as tr
 import math
 
-class Crotchpath(Footpath):
+class PathCrotch(PathFoot):
 
     crotch_zdiff_sway = 0.000
     crotch_sidediff_sway = -0.03
