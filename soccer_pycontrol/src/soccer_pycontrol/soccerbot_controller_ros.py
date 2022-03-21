@@ -27,7 +27,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.completed_walk_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
         self.goal = PoseStamped()
-        self.robot_pose = None
+        self.robot_pose: PoseStamped = None
         self.new_goal = self.goal
         self.terminated = None
 
@@ -118,12 +118,12 @@ class SoccerbotControllerRos(SoccerbotController):
             pass
         self.new_goal = pose
 
-    def run(self, stop_on_completed_trajectory=False):
+    def run(self, single_trajectory=False):
         self.t = 0
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
         stable_count = 5
 
-        while self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
+        while not single_trajectory and self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
             try:
                 r.sleep()
             except ROSInterruptException:
@@ -164,8 +164,12 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                 self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
                 self.t = -0.5
-                print("Start Pose: ", self.robot_pose.pose)
-                print("End Pose: ", self.goal.pose)
+
+                def print_pose(name: str, pose: Pose):
+                    print(f"{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]")
+                print_pose("Start Pose", self.robot_pose.pose)
+                print_pose("End Pose", self.goal.pose)
+
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
                 self.terminated = False
@@ -218,10 +222,26 @@ class SoccerbotControllerRos(SoccerbotController):
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     pass
 
-            if stop_on_completed_trajectory:
-                if (self.soccerbot.robot_path is not None and self.t > self.soccerbot.robot_path.duration()):
+            if single_trajectory:
+                if self.soccerbot.robot_path is None:
                     rospy.loginfo(1, "Trajectory Stopped")
-                    break
+                    return True
+
+                if self.soccerbot.imu_ready:
+                    q = self.soccerbot.imu_msg.orientation
+                    angle_threshold = 1.25  # in radian
+                    [roll, pitch, yaw] = Transformation.get_euler_from_quaternion([q.w, q.x, q.y, q.z])
+                    if pitch > angle_threshold:
+                        print("Fallen Back")
+                        return False
+
+                    elif pitch < -angle_threshold:
+                        print("Fallen Front")
+                        return False
+
+                    elif roll < -angle_threshold or roll > angle_threshold:
+                        print("Fallen Side")
+                        return False
 
             self.soccerbot.publishAngles()  # Disable to stop walking
 

@@ -1,4 +1,6 @@
+import glob
 import os
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -26,6 +28,7 @@ class Test(TestCase):
     def setUp(self) -> None:
         if RUN_IN_ROS:
             rospy.init_node("soccer_control")
+            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
             os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
             os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
             self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
@@ -323,35 +326,6 @@ class Test(TestCase):
         axs[0].scatter(scatter_pts_x, scatter_pts_y, s=3)
         axs[1].scatter(scatter_pts_x_1, scatter_pts_y_1, s=3)
         plt.show()
-
-    def test_calculate_accuracy_matrix(self):
-
-        x_range = np.arange(-1, 1, 0.2)
-        y_range = np.arange(-1, 1, 0.2)
-        ang_range = np.arange(-np.pi, np.pi, np.pi/6)
-
-        x, y, ang = np.meshgrid(x_range, y_range, ang_range)
-
-        fake_localization_pose_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
-
-        for i in x_range:
-            for j in y_range:
-                for k in ang_range:
-                    b = String()
-                    b.data = ""
-                    self.resetPublisher.publish(b)
-
-                    self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-                    self.walker.ready()
-                    t = Transformation.get_transform_from_euler([k, 0, 0])
-                    t.set_position([i, j, 0])
-                    self.walker.setGoal(t)
-                    # self.walker.updateGoal()
-                    # self.walker.soccerbot.robot_path.show()
-                    self.walker.wait(100)
-                    self.walker.run(True)
-
-        pass
 
     def amcl_pose_callback(self, amcl_pose):
         self.amcl_pose = amcl_pose
