@@ -31,7 +31,7 @@ class DetectorFieldline(Detector):
     def __init__(self):
         super().__init__()
 
-        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback)
+        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
         self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
@@ -107,7 +107,7 @@ class DetectorFieldline(Detector):
             slope = (pt2[1] - pt1[1]) / (pt2[0] - pt1[0])
             b = y1 - slope * x1
 
-            for i in range(x1, x2, 15):
+            for i in range(x1, x2, 10):
                 y = slope * i + b
                 pt = [i, y]
                 pts.append(pt)

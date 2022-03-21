@@ -38,7 +38,7 @@ class SoccerbotController:
             time.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
-    def run(self, stop_on_completed_trajectory=False):
+    def run(self, single_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
             return
 
