@@ -2,7 +2,7 @@ import os
 import enum
 from soccer_geometry.transformation import Transformation as tr
 import matplotlib.pyplot as plt
-from soccer_pycontrol.robotpath import Robotpath
+from soccer_pycontrol.path_robot import PathRobot
 import math
 from os.path import expanduser
 from copy import deepcopy
@@ -293,7 +293,7 @@ class Soccerbot:
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         finishPosition.set_orientation(q_new)
 
-        self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
+        self.robot_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_size

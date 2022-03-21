@@ -13,7 +13,7 @@ class PostPreSetting(enum.IntEnum):
     NO_POST_NOR_PRE = 3
 
 # TODO: where is first_step_left????
-class Footpath(Path):
+class PathFoot(Path):
     half_to_full_step_time_ratio = 0.7 # Duration difference between half and full step
 
     foot_separation = 0.044 # seperation between feet and center

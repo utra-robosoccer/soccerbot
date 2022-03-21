@@ -1,19 +1,19 @@
-from crotchpath import Crotchpath
+from path_crotch import PathCrotch
 from path import Path
-from footpath import Footpath
+from path_foot import PathFoot
 import matplotlib as plt
 import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-class Robotpath(Crotchpath):
+class PathRobot(PathCrotch):
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
 
     def show(self):
         fig = plt.figure()
         Path.show(self)
-        Footpath.show(self, fig)
+        PathFoot.show(self, fig)
         # Crotchpath.show(self, fig)
         plt.show() # to interact with the path graph uncomment this
 
