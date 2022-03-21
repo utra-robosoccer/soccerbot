@@ -49,10 +49,11 @@ class Camera:
                     timestamp = rospy.Time(0)
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}")
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
+                rospy.logwarn(str(ex))
+                rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}, attempts {attempts}")
                 try:
-                    rospy.sleep(0.05)
+                    rospy.sleep(0.1)
                 except ROSInterruptException:
                     exit(0)
 

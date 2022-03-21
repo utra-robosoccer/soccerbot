@@ -10,7 +10,7 @@ import numpy as np
 class StrategyReady(Strategy):
     def __init__(self):
         super().__init__()
-        self.update_frequency = 5
+        self.update_frequency = 1
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):

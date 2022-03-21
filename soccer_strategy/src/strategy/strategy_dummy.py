@@ -15,7 +15,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 3
+HAVENT_SEEN_THE_BALL_TIMEOUT = 9
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
@@ -35,7 +35,7 @@ class StrategyDummy(Strategy):
 
     def __init__(self):
         self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
-        self.update_frequency = 3
+        self.update_frequency = 1
         super(StrategyDummy, self).__init__()
 
     @get_back_up
@@ -63,7 +63,7 @@ class StrategyDummy(Strategy):
                         this_robot.status = Robot.Status.KICKING
                         this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
                     else:
-                        if (time.time() - this_robot.navigation_goal_localized_time) < 1 and this_robot.status != Robot.Status.WALKING:
+                        if (time.time() - this_robot.navigation_goal_localized_time) < 2 and this_robot.status != Robot.Status.WALKING:
                             ball_position = ball.position[0:2]
                             player_position = this_robot.position[0:2]
                             diff = ball_position - goal_position
