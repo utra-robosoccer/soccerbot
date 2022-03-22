@@ -203,8 +203,8 @@ class SoccerbotControllerRos(SoccerbotController):
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                     rospy.logwarn_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
-                        pitch - self.soccerbot.DESIRED_PITCH_2))
-                    if abs(pitch - self.soccerbot.DESIRED_PITCH_2) < 0.025:
+                        pitch - self.soccerbot.standing_pid.setpoint))
+                    if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:
                             t = 0
