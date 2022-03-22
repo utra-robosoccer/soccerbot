@@ -3,8 +3,6 @@ import math
 #rospy only used here for rospy.loginfo
 import time
 
-import rospy
-
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 from strategy.utils import *
 from team import Team
