@@ -80,22 +80,23 @@ class Shoot(Action):
 
 class CanKick(Decision):
     def execute(self, robot, friendly_team, opponent_team, game_state):
-        #TODO should make navigation class to help with all this so the math doesn't need to be repeated everywhere
-        player_position = robot.position[0:2]
-        goal_position = friendly_team.enemy_goal_position
-        ball_position = friendly_team.average_ball_position.position[0:2]
-        player_angle = robot.position[2]
-        diff = ball_position - goal_position
-        diff_unit = diff / np.linalg.norm(diff)
-        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
-
-        nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle),
-                                     math.cos(player_angle - diff_angle))
-        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-
-        if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15:
-            return True
-        return False
+        # #TODO should make navigation class to help with all this so the math doesn't need to be repeated everywhere
+        # player_position = robot.position[0:2]
+        # goal_position = friendly_team.enemy_goal_position
+        # ball_position = friendly_team.average_ball_position.position[0:2]
+        # player_angle = robot.position[2]
+        # diff = ball_position - goal_position
+        # diff_unit = diff / np.linalg.norm(diff)
+        # diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+        #
+        # nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle),
+        #                              math.cos(player_angle - diff_angle))
+        # distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+        #
+        # if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15:
+        #     return True
+        # return False
+        return robot.can_kick(friendly_team.average_ball_position, friendly_team.enemy_goal_position)
 
 class IsClosestToBall(Decision):
     def execute(self, robot, friendly_team, opponent_team, game_state):
@@ -122,7 +123,6 @@ class DecisionTree:
                 curr = curr.children[1]
         # action
         curr.execute(robot, friendly_team, opponent_team, game_state)
-
 
 
 class FieldPosition:
