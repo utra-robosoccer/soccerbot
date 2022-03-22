@@ -162,7 +162,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.ready()
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
                 self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
-                self.t = -0.8
+                self.t = -0.5
 
                 def print_pose(name: str, pose: Pose):
                     print(f"{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]")

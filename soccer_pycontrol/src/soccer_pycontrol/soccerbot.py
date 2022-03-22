@@ -195,10 +195,11 @@ class Soccerbot:
         configuration[Joints.HEAD_2] = 0
 
         # Slowly ease into the ready position
-        for r in np.arange(0, 1, 0.05):
-            self.configuration = (np.array(configuration) * r).tolist()
-            self.publishAngles()
-            rospy.sleep(0.05)
+        if self.configuration == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
+            for r in np.arange(0, 1, 0.05):
+                self.configuration = (np.array(configuration) * r).tolist()
+                self.publishAngles()
+                rospy.sleep(0.05)
 
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -512,9 +513,6 @@ class Soccerbot:
 
         self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
-        if F > 0:
-            self.configuration_offset[Joints.LEFT_ARM_2] = -7 * F
-            self.configuration_offset[Joints.RIGHT_ARM_2] = -7 * F
 
         self.last_F1 = F
         self.lastError1 = error
@@ -524,7 +522,7 @@ class Soccerbot:
     Kp2 = 0.15
     Kd2 = 0.0
     Ki2 = 0.001
-    DESIRED_PITCH_2 = 0
+    DESIRED_PITCH_2 = -0.05
     integral2 = 0.0
     last_F2 = 0
     lastError2 = 0

@@ -18,7 +18,7 @@ class PathFoot(Path):
 
     foot_separation = 0.044 # seperation between feet and center
     step_height = 0.065 # height of step
-    step_outwardness = 0.010
+    step_outwardness = 0.015
     step_rotation = 0.05
 
     def __init__(self, start_transform, end_transform, foot_center_to_floor):

@@ -16,9 +16,9 @@ class PathSectionShort(PathSection):
         if self.isWalkingBackwards():
             bodystep_size = 0.025
         else:
-            bodystep_size = 0.05
+            bodystep_size = 0.035
 
-        self.angular_bodystep_size = 0.35  # radians Radians per angular step
+        self.angular_bodystep_size = 0.25  # radians Radians per angular step
         self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
         super().__init__(start_transform, end_transform, bodystep_size)
 
