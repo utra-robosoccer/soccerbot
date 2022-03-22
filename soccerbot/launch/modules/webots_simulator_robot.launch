@@ -1,6 +1,6 @@
 <launch>
     <arg name="robot_name" default="robot1" />
-    <arg name="competition" default="$(optenv COMPETITION false)" />
+    <arg name="competition" default="$(optenv COMPETITION true)" />
 
     <node pkg="soccer_webots" type="start_single.sh" name="webots_ros_interface" output="screen"
         args="--robot_name $(arg robot_name) --robot_tag /$(arg robot_name)" unless="$(arg competition)"/>
