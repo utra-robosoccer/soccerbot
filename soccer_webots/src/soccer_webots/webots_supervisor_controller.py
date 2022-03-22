@@ -7,7 +7,7 @@ from geometry_msgs.msg import Quaternion, PoseWithCovarianceStamped, Pose
 from std_srvs.srv import Empty
 from rosgraph_msgs.msg import Clock
 from tf.transformations import euler_from_quaternion
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 import tf
 
 G = 9.81

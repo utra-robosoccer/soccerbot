@@ -1,6 +1,6 @@
 import functools
 
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 import numpy as np
 from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.utils import wrapToPi

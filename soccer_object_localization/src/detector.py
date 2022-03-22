@@ -1,4 +1,4 @@
-from soccer_geometry.camera import Camera
+from soccer_common.camera import Camera
 import rospy
 from soccer_msgs.msg import RobotState
 

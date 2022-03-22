@@ -11,7 +11,7 @@ from path import Path
 
 import soccerbot_controller
 
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 
 RUN_IN_ROS = True
 if RUN_IN_ROS:

@@ -1,5 +1,5 @@
 import functools
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 import numpy as np
 from scipy.special import comb
 from soccer_pycontrol.path_section import PathSection
