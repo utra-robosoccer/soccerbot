@@ -12,9 +12,6 @@ from copy import deepcopy
 import abc
 import numpy as np
 
-
-
-
 class TreeNode:
     def __init__(self, children):
         self.children = children

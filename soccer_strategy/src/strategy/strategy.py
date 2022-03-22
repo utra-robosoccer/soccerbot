@@ -51,8 +51,10 @@ class Strategy():
 
     def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:
-            if type(robot) is RobotControlled3D:
+            if type(robot) is RobotControlled2D:
+                if robot.active:
+                    return robot
+            else:
                 return robot
-            if type(robot) is RobotControlled2D and robot.active == True:
-                return robot
+
         raise AssertionError

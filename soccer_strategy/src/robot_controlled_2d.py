@@ -3,7 +3,6 @@ import time
 from ball import Ball
 import math
 import numpy as np
-import rospy
 from robot import Robot
 from robot_controlled import RobotControlled
 

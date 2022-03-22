@@ -1,8 +1,6 @@
 import abc
 import time
 
-import rospy
-
 from robot import Robot
 import numpy as np
 from soccer_pycontrol import path
