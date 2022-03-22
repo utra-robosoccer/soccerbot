@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export COMPETITION=true
+
 if [ "$ROBOCUP_ROBOT_ID" == "1" ]; then
   export X_POS=4
   export Y_POS=-3.14
