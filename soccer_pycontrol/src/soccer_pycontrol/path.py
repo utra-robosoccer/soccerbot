@@ -1,6 +1,6 @@
 from math import floor, ceil
 
-from soccer_geometry import Transformation
+from soccer_common import Transformation
 import numpy as np
 import matplotlib.pyplot as plt
 from soccer_pycontrol.path_section_bezier import PathSectionBezier

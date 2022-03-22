@@ -11,7 +11,7 @@ import rospy
 from rospy import ROSException
 from soccer_msgs.msg import RobotState
 
-from soccer_geometry.camera import Camera
+from soccer_common.camera import Camera
 
 from argparse import ArgumentParser
 from sensor_msgs.msg import Image
