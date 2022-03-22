@@ -9,8 +9,8 @@ from abc import ABC
 
 class PathSection(ABC):
     backwards_bodystep_size_ratio = 0.5 # How much smaller the body step is for backwards movement
-    bodystep_size_default = 0.035
-    steps_per_second_default = 2.7
+    bodystep_size_default = 0.04
+    steps_per_second_default = 3.5
 
     def __init__(self, start_transform: Transformation,  end_transform: Transformation,
                  bodystep_size=bodystep_size_default):
