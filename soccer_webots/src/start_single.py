@@ -2,7 +2,6 @@
 import argparse
 import os
 import rospy
-import time
 from soccer_webots.webots_robot_controller import RobotController
 import tf
 from nav_msgs.msg import Odometry
