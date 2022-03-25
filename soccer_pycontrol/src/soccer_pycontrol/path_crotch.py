@@ -8,7 +8,7 @@ import math
 class PathCrotch(PathFoot):
 
     crotch_zdiff_sway = 0.000
-    crotch_sidediff_sway = -0.03
+    crotch_sidediff_sway = -0.025
     crotch_thetadiff_sway = [0., 0., 0.] # [0, 0, 0.08]
 
     first_step_left = 0
