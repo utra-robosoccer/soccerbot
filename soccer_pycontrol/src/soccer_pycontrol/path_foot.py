@@ -13,7 +13,7 @@ class PostPreSetting(enum.IntEnum):
     NO_POST_NOR_PRE = 3
 
 # TODO: where is first_step_left????
-class Footpath(Path):
+class PathFoot(Path):
     half_to_full_step_time_ratio = 0.7 # Duration difference between half and full step
 
     foot_separation = 0.044 # seperation between feet and center
@@ -303,7 +303,7 @@ class Footpath(Path):
         i = 0
         # for t = 0:obj.step_size:obj.duration
         # TODO: make a generator?
-        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_size)+1)
+        iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         tfInterp_l = np.zeros((4, 4, len(iterator)))
         tfInterp_r = np.zeros((4, 4, len(iterator)))
         for t in iterator:
@@ -324,7 +324,7 @@ class Footpath(Path):
         :return: None
         """
         if fig is None:
-            fig = plt.figure()
+            fig = plt.figure(tight_layout=True)
         ax = fig.gca(projection='3d')
         tfInterp_axis = np.zeros((3, length))
         axes = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]

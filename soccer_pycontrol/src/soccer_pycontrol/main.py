@@ -14,4 +14,7 @@ if __name__ == '__main__':
     rospy.logwarn("Initializing Soccer Control")
     walker = soccerbot_controller_ros.SoccerbotControllerRos()
     rospy.logwarn("Starting Control Loop")
-    walker.run()
+    try:
+        walker.run()
+    except rospy.exceptions.ROSInterruptException as ex:
+        exit(0)

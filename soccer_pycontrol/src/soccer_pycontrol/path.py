@@ -1,3 +1,4 @@
+import math
 from math import floor, ceil
 
 from soccer_common import Transformation
@@ -6,11 +7,11 @@ import matplotlib.pyplot as plt
 from soccer_pycontrol.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path_section_short import PathSectionShort
 from soccer_pycontrol.path_section import PathSection
-import time
+from soccer_pycontrol.utils import wrapToPi
+
 
 class Path:
-    steps_per_second = PathSectionBezier.steps_per_second
-    step_size = 0.02  # Time for a single time step
+    step_precision = 0.02  # Time for a single time step
 
     pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
     post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
@@ -25,23 +26,16 @@ class Path:
         self.path_sections.append(p)
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
-        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size * PathSectionBezier.turn_duration * 3
+        if abs(wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])) > math.pi / 2:
+            return True
+
+        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 2
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)
         if is_short_distance:
-            # print("Creating Short Path")
-            # print("Start Transform")
-            # print(start_transform)
-            # print("End Transform")
-            # print(end_transform)
             return PathSectionShort(start_transform, end_transform)
         else:
-            # print("Creating Bezier Path")
-            # print("Start Transform")
-            # print(start_transform)
-            # print("End Transform")
-            # print(end_transform)
             return PathSectionBezier(start_transform, end_transform)
 
     def linearStepCount(self):
@@ -223,4 +217,21 @@ class Path:
         ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
                   orientation[:, 2], colors=colors)
         ax.set_zlim(0, 0.4)
+
+        # Equalize X and Y axes
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+
+        xlen = xlim[1] - xlim[0]
+        ylen = ylim[1] - ylim[0]
+        if xlen > ylen:
+            ymid = 0.5 * (ylim[0] + ylim[1])
+            ylim_new = [ymid - xlen / 2, ymid + xlen / 2]
+            ax.set_ylim(ylim_new)
+        else:
+            xmid = 0.5 * (xlim[0] + xlim[1])
+            xlim_new = [xmid - ylen / 2, xmid + ylen / 2]
+            ax.set_xlim(xlim_new)
+
+        ax.view_init(90, 0)
         return ax
