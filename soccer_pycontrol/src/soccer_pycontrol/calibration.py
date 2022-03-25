@@ -8,7 +8,7 @@ if "ROS_NAMESPACE" not in os.environ:
 
 import numpy as np
 
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 
 import rospy
 import soccerbot_controller_ros
@@ -17,9 +17,8 @@ import soccerbot_controller_ros
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+    for node in ['soccer_strategy', 'soccer_pycontrol', 'soccer_trajectories', 'ball_detector', 'detector_goalpost', 'object_detector', 'amcl']:
+        os.system(f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/{node}'")
 
     np.set_printoptions(precision=3)
     clear = True
