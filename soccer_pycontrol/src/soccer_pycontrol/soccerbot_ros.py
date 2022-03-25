@@ -19,7 +19,7 @@ class SoccerbotRos(Soccerbot):
         super().__init__(position, useFixedBase)
 
         self.motor_publishers = {}
-        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.motor_names = [
             "left_arm_motor_0",
             "left_arm_motor_1",
