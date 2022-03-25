@@ -10,7 +10,7 @@ import pybullet_data
 
 
 class SoccerbotController:
-    PYBULLET_STEP = 0.004
+    PYBULLET_STEP = 0.01
 
     def __init__(self):
         pb.connect(pb.GUI)
