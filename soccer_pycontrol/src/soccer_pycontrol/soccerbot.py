@@ -1,8 +1,11 @@
 import os
 import enum
+
+import rospy
+
 from soccer_common.transformation import Transformation as tr
 import matplotlib.pyplot as plt
-from soccer_pycontrol.robotpath import Robotpath
+from soccer_pycontrol.path_robot import PathRobot
 import math
 from os.path import expanduser
 from copy import deepcopy
@@ -68,11 +71,11 @@ class Soccerbot:
 
     def get_angles(self):
         """
-        Function for getting all the feet angles (for now?) #TODO
-        :return: All 12 angles in the dictionary form??? #TODO
+        Function for getting all the feet angles (for now?)
+        :return: All 12 angles in the dictionary form???
         """
-
-        return [a + b for a, b in zip(self.configuration, self.configuration_offset)]
+        angles = [a + b for a, b in zip(self.configuration, self.configuration_offset)]
+        return angles
 
     def get_link_transformation(self, link1, link2):
         """
@@ -173,22 +176,30 @@ class Soccerbot:
         self.pose.set_position(position)
 
         # hands
-        self.configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
-        self.configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
-        self.configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
-        self.configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
+        configuration = self.configuration
+        configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
+        configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
+        configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
+        configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
 
         # right leg
         thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
-        self.configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
+        configuration[Links.RIGHT_LEG_1:Links.RIGHT_LEG_6 + 1] = thetas[0:6]
 
         # left leg
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
-        self.configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
+        configuration[Links.LEFT_LEG_1:Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         # head
-        self.configuration[Joints.HEAD_1] = 0
-        self.configuration[Joints.HEAD_2] = 0
+        configuration[Joints.HEAD_1] = 0
+        configuration[Joints.HEAD_2] = 0
+
+        # Slowly ease into the ready position
+        if self.configuration == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
+            for r in np.arange(0, 1, 0.05):
+                self.configuration = (np.array(configuration) * r).tolist()
+                self.publishAngles()
+                rospy.sleep(0.05)
 
         self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -293,11 +304,11 @@ class Soccerbot:
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         finishPosition.set_orientation(q_new)
 
-        self.robot_path = Robotpath(self.pose, finishPosition, self.foot_center_to_floor)
+        self.robot_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
-        self.rate = 1 / self.robot_path.step_size
-        self.period = self.robot_path.step_size
+        self.rate = 1 / self.robot_path.step_precision
+        self.period = self.robot_path.step_precision
 
         self.current_step_time = 0
         return self.robot_path
@@ -329,7 +340,7 @@ class Soccerbot:
     def calculate_angles(self, show=True):
         angles = []
         iterator = np.linspace(0, self.robot_path.duration(),
-                               num=math.ceil(self.robot_path.duration() / self.robot_path.step_size) + 1)
+                               num=math.ceil(self.robot_path.duration() / self.robot_path.step_precision) + 1)
         if show:
             plot_angles = np.zeros((len(iterator), 20))
         i = 0
@@ -501,3 +512,6 @@ class Soccerbot:
         # Synchronise walking speed
 
         return motor_forces
+
+    def publishAngles(self):
+        pass

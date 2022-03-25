@@ -38,7 +38,7 @@ class SoccerbotController:
             time.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
-    def run(self, stop_on_completed_trajectory=False):
+    def run(self, single_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
             return
 
@@ -53,7 +53,7 @@ class SoccerbotController:
                                          targetPositions=self.soccerbot.get_angles(),
                                          forces=forces
                                          )
-                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_size
+                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
             pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP
             sleep(SoccerbotController.PYBULLET_STEP)

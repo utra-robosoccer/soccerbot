@@ -33,7 +33,6 @@ class SupervisorController:
         self.time = 0
         self.clock_msg = Clock()
         self.supervisor = Supervisor()
-        self.localization = fake
         self.supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_REAL_TIME)
 
         self.motors = []
@@ -74,10 +73,8 @@ class SupervisorController:
         self.step_sim()
         self.publish_clock()
         for name in self.robot_names:
-            temp_node = self.supervisor.getFromDef(name)
-            if temp_node is not None:
-                if self.localization:
-                    self.publish_odom(name)
+            if self.supervisor.getFromDef(name) is not None:
+                self.publish_odom(name)
 
     def publish_clock(self):
         self.clock_msg.clock = rospy.Time.from_seconds(self.time)

@@ -7,9 +7,20 @@ from soccer_pycontrol.utils import wrapToPi
 from copy import deepcopy
 
 class PathSectionShort(PathSection):
-    bodystep_size = 0.035 # Reduce body step size
-    angular_bodystep_size = 0.35  # radians Radians per angular step
-    steps_per_second = 2.5 # try 6 motors P = 09.25
+    steps_per_second_default = 2.5 # try 6 motors P = 09.25
+
+    def __init__(self, start_transform: Transformation, end_transform: Transformation):
+        self.start_transform = start_transform
+        self.end_transform = end_transform
+
+        if self.isWalkingBackwards():
+            bodystep_size = 0.025
+        else:
+            bodystep_size = 0.035
+
+        self.angular_bodystep_size = 0.25  # radians Radians per angular step
+        self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
+        super().__init__(start_transform, end_transform, bodystep_size)
 
     def poseAtRatio(self, r):
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
@@ -19,9 +30,9 @@ class PathSectionShort(PathSection):
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
         final_angle = self.end_transform.get_orientation_euler()[0]
 
-        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / PathSection.angular_speed
-        step_2_duration = np.linalg.norm(diff_position) / PathSection.speed
-        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / PathSection.angular_speed
+        step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
+        step_2_duration = np.linalg.norm(diff_position) / self.speed
+        step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / self.angular_speed
 
         total_duration = step_1_duration + step_2_duration + step_3_duration
         t = r * total_duration
@@ -77,7 +88,7 @@ class PathSectionShort(PathSection):
         return ratio
 
     def duration(self):
-        return self.distance / PathSection.speed + self.angle_distance / PathSection.angular_speed
+        return self.distance / self.speed + self.angle_distance / self.angular_speed
 
     @functools.lru_cache
     def isWalkingBackwards(self):
@@ -88,3 +99,6 @@ class PathSectionShort(PathSection):
 
     def bodyStepCount(self):
         return self.linearStepCount() + self.angularStepCount()
+
+    def angularStepCount(self):
+        return self.angle_distance / self.angular_bodystep_size
