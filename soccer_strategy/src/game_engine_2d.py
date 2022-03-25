@@ -1,8 +1,6 @@
 import _thread
 import random
 
-import rospy
-
 try:
     from soccer_msgs.msg import GameState
 except:

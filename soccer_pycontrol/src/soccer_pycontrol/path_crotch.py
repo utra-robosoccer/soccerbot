@@ -2,7 +2,7 @@ import functools
 
 import numpy as np
 from soccer_pycontrol.path_foot import PathFoot
-from soccer_geometry.transformation import Transformation as tr
+from soccer_common.transformation import Transformation as tr
 import math
 
 class PathCrotch(PathFoot):

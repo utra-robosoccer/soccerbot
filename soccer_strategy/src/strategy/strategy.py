@@ -1,9 +1,4 @@
 import abc
-try:
-    from robot_controlled_3d import RobotControlled3D
-except:
-    print("not using robot controlled 3D")
-
 from robot_controlled_2d import RobotControlled2D
 from robot_controlled import RobotControlled
 
@@ -51,8 +46,9 @@ class Strategy():
 
     def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:
-            if type(robot) is RobotControlled3D:
+            if robot.__class__.__name__ == 'RobotControlled3D':
                 return robot
-            if type(robot) is RobotControlled2D and robot.active == True:
+            if robot.__class__.__name__ == 'RobotControlled2D' and robot.active == True:
                 return robot
+
         raise AssertionError

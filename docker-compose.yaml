@@ -88,7 +88,6 @@ services:
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
-      COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
 #  opponent:
@@ -98,14 +97,10 @@ services:
 #        ipv4_address: 172.18.0.6
 #    environment:
 #      ROS_MASTER: "true"
-#      X_POS: -2
-#      Y_POS: -3.14
-#      YAW: 1.57
 #      ROBOCUP_TEAM_ID: 5
 #      ROBOCUP_ROBOT_ID: 2
 #      ROBOCUP_TEAM_COLOR: "blue"
 #      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
 #      ROBOCUP_GAMECONTROLLER_IP: "simulator"
 #      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-#      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1

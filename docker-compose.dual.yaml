@@ -28,16 +28,12 @@ services:
       soccer_network:
         ipv4_address: 172.18.0.2
     environment:
-      X_POS: 4
-      Y_POS: -3.15
-      YAW: 1.57
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
-      COMPETITION: "true"
       PYTHONUNBUFFERED: 1
 
   friendly2: # Left midfield
@@ -48,14 +44,10 @@ services:
       soccer_network:
         ipv4_address: 172.18.0.3
     environment:
-      X_POS: 1
-      Y_POS: -3.15
-      YAW: 1.57
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10002"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      COMPETITION: "true"
       PYTHONUNBUFFERED: 1
