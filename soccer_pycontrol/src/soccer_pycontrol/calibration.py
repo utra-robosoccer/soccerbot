@@ -17,7 +17,7 @@ import soccerbot_controller_ros
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
-    for node in ['soccer_strategy', 'soccer_pycontrol', 'soccer_trajectories', 'ball_detector', 'detector_goalpost', 'object_detector', 'amcl']:
+    for node in ['soccer_strategy', 'soccer_pycontrol', 'soccer_trajectories', 'ball_detector', 'detector_goalpost', 'object_detector']:
         os.system(f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/{node}'")
 
     np.set_printoptions(precision=3)
@@ -47,8 +47,6 @@ if __name__ == '__main__':
                 while attempt < 5:
                     walker = soccerbot_controller_ros.SoccerbotControllerRos()
                     walker.setPose(Transformation())
-                    walker.ready()
-                    walker.wait(300)
                     walker.setGoal(Transformation([x, y, 0.0], quat))
                     success = walker.run(single_trajectory=True)
                     if success:

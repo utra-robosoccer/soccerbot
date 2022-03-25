@@ -148,8 +148,8 @@ class Soccerbot:
         self.torso_offset = tr()
         self.robot_path = None
 
-        self.configuration = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.configuration = [0.0] * len(Joints)
+        self.configuration_offset = [0.0] * len(Joints)
         self.max_forces = []
         for i in range(0, 20):
             self.max_forces.append(pb.getJointInfo(self.body, i)[10])
@@ -176,7 +176,7 @@ class Soccerbot:
         self.pose.set_position(position)
 
         # hands
-        configuration = self.configuration
+        configuration = [0.0] * len(Joints)
         configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
         configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
         configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
@@ -195,13 +195,14 @@ class Soccerbot:
         configuration[Joints.HEAD_2] = 0
 
         # Slowly ease into the ready position
-        if self.configuration == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
-            for r in np.arange(0, 1, 0.05):
+        if sum(self.configuration[Links.LEFT_LEG_6:Links.RIGHT_LEG_6 + 1]) == 0:
+            for r in np.arange(0, 1, 0.040):
+                rospy.loginfo_throttle(1, "Going into ready position")
                 self.configuration = (np.array(configuration) * r).tolist()
                 self.publishAngles()
-                rospy.sleep(0.05)
+                rospy.sleep(0.020)
 
-        self.configuration_offset = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.configuration_offset = [0] * len(Joints)
 
         pb.setJointMotorControlArray(bodyIndex=self.body,
                                      controlMode=pb.POSITION_CONTROL,
@@ -467,7 +468,7 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    walking_pid = PID(Kp=0.8, Kd=0.0, Ki=0.0005, setpoint=-0.05, output_limits=(-1.57, 1.57))
+    walking_pid = PID(Kp=0.8, Kd=0.0, Ki=0.0005, setpoint=-0.01, output_limits=(-1.57, 1.57))
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
             return
@@ -478,7 +479,7 @@ class Soccerbot:
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
         return F
 
-    standing_pid = PID(Kp=0.15, Kd=0.0, Ki=0.001, setpoint=-0.05, output_limits=(-1.57, 1.57))
+    standing_pid = PID(Kp=0.15, Kd=0.0, Ki=0.001, setpoint=-0.01, output_limits=(-1.57, 1.57))
     def apply_imu_feedback_standing(self, pose: tr):
         if pose is None:
             return

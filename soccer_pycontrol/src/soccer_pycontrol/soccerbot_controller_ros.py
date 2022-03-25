@@ -80,12 +80,16 @@ class SoccerbotControllerRos(SoccerbotController):
         pose_stamped = self.transformation_to_pose(pose)
         resetPublisher.publish(pose_stamped.pose)
         self.robot_pose = pose_stamped
+
         rospy.sleep(0.5)
 
         p = PoseWithCovarianceStamped()
+        p.header.frame_id = "world"
+        p.header.stamp = rospy.Time.now()
         p.pose.pose = pose_stamped.pose
         initialPosePublisher.publish(p)
-        pass
+
+        rospy.sleep(0.5)
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))
@@ -148,11 +152,12 @@ class SoccerbotControllerRos(SoccerbotController):
 
             # New goal added
             if self.new_goal != self.goal and self.soccerbot.robot_path is None:
-                pose_updated = self.update_robot_pose()
-                if not pose_updated:
-                    rospy.logwarn_throttle(1, "Unable to get Robot Pose")
-                    r.sleep()
-                    continue
+                if not single_trajectory:
+                    pose_updated = self.update_robot_pose()
+                    if not pose_updated:
+                        rospy.logwarn_throttle(1, "Unable to get Robot Pose")
+                        r.sleep()
+                        continue
 
                 rospy.loginfo("Received New Goal")
                 time_now = rospy.Time.now()
