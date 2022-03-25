@@ -2,7 +2,7 @@ import numpy as np
 import math
 import enum
 from soccer_pycontrol.path import Path
-from soccer_geometry.transformation import Transformation as tr
+from soccer_common.transformation import Transformation as tr
 import matplotlib.pyplot as plt
 from copy import deepcopy
 

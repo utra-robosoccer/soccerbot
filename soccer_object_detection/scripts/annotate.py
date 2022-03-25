@@ -12,10 +12,10 @@ from geometry_msgs.msg import Pose
 from tf import TransformListener
 
 import json
-from soccer_geometry.camera import Camera
+from soccer_common.camera import Camera
 from sensor_msgs.msg import Image
 import os
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 
 class Test(TestCase):
 

@@ -1,8 +1,8 @@
 import math
 from unittest import TestCase
 
-from soccer_geometry.camera import Camera
-from soccer_geometry.transformation import Transformation
+from soccer_common.camera import Camera
+from soccer_common.transformation import Transformation
 import rospy
 
 class Test(TestCase):

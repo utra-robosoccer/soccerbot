@@ -1,6 +1,5 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" default="$(optenv COMPETITION false)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
@@ -21,7 +20,7 @@
         "
     />
 
-    <node launch-prefix="nice --5" pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
         <param name="publish_frequency" type="double" value="120.0" />
     </node>
 
@@ -31,7 +30,6 @@
 
     <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
-        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
