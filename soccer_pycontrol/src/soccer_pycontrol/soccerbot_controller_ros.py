@@ -33,9 +33,9 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.tf_listener = tf.TransformListener()
 
-    def update_robot_pose(self):
+    def update_robot_pose(self, footprint_name="/base_footprint"):
         try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + '/base_footprint',
+            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + footprint_name,
                                                             rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return False
@@ -229,7 +229,6 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if single_trajectory:
                 if self.soccerbot.robot_path is None:
-                    rospy.loginfo(1, "Trajectory Stopped")
                     return True
 
                 if self.soccerbot.imu_ready:
