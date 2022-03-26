@@ -48,7 +48,7 @@
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
-    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(arg robot_name).bag
+    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
         state
         action_complete
         amcl_pose
