@@ -155,7 +155,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 if not single_trajectory:
                     pose_updated = self.update_robot_pose()
                     if not pose_updated:
-                        rospy.logwarn_throttle(1, "Unable to get Robot Pose")
+                        rospy.loginfo_throttle(1, "Unable to get Robot Pose")
                         r.sleep()
                         continue
 
@@ -166,13 +166,13 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
-                self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
-                self.t = -0.5
 
                 def print_pose(name: str, pose: Pose):
-                    print(f"{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]")
+                    print(f"\033[92m{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]\033[0m")
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
+                self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
+                self.t = -0.5
 
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
@@ -211,7 +211,7 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
+                    rospy.loginfo_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
                         pitch - self.soccerbot.standing_pid.setpoint))
                     if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
                         stable_count = stable_count - 1

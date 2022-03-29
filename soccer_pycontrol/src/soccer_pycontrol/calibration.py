@@ -3,6 +3,7 @@ import copy
 import functools
 import glob
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -257,7 +258,12 @@ class Calibration:
 
     @functools.cached_property
     def adjust_navigation_goal(self):
-        calib_file = rospy.get_param("~calibration_file", self.model_name + "_inverse")
+        calib_file = self.model_name + "_inverse"
+        try:
+            calib_file = rospy.get_param("~calibration_file", calib_file)
+        except ConnectionRefusedError as ce:
+            pass
+
         print("Loading from model " + calib_file)
         model = keras.models.load_model(calib_file)
         return model
@@ -275,16 +281,17 @@ class Calibration:
         plt.quiver(start_points[:, 0], start_points[:, 1], end_points[:,0] - start_points[:,0], end_points[:,1] - start_points[:,1], width=0.0005, scale=1, scale_units='xy', angles='xy')
         plt.show()
 
-    def adjust_navigation_transform(self, start_transform: Transformation, end_transform: Transformation) -> np.array:
+    def adjust_navigation_transform(self, start_transform: Transformation, end_transform: Transformation) -> Transformation:
 
-        diff_transform = end_transform @ np.linalg.inv(start_transform)
+        diff_transform = np.linalg.inv(start_transform) @ end_transform
         diff_position = diff_transform[0:2, 3]
         [diff_yaw, diff_pitch, diff_roll] = Transformation.get_euler_from_rotation_matrix(diff_transform[0:3,0:3])
         scale = 1
-        if abs(diff_position[0]) > 1:
-            scale = abs(diff_position[0])
-        elif abs(diff_position[1]) > 1:
-            scale = abs(diff_position[1])
+        boundary = 0.7
+        if abs(diff_position[0]) > boundary:
+            scale = abs(diff_position[0]) / boundary
+        elif abs(diff_position[1]) > boundary:
+            scale = abs(diff_position[1]) / boundary
 
         diff_position = diff_position / scale
 
@@ -292,12 +299,12 @@ class Calibration:
         new_position = np.array(self.adjust_navigation_goal(np.array([diff_position])))[0]
         new_position = new_position * scale
 
-        diff_yaw = max(min(diff_yaw * yaw_scale, np.pi), np.pi)
+        diff_yaw = max(min(diff_yaw * yaw_scale, np.pi), -np.pi)
 
         diff_transform_new = copy.deepcopy(diff_transform)
         diff_transform_new[0:2, 3] = new_position
         diff_transform_new.set_orientation(Transformation.get_quaternion_from_euler([diff_yaw, 0, 0]))
-        end_transform_new = diff_transform_new @ start_transform
+        end_transform_new = start_transform @ diff_transform_new
         return end_transform_new
 
     def test_adjust_navigation_transform(self):

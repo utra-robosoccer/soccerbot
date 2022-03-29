@@ -311,9 +311,12 @@ class Soccerbot:
         finishPosition.set_orientation(q_new)
 
         # Add calibration
-        finishPosition = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+        finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
 
-        self.robot_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
+        print(f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.get_position()[0]:.3f} {finishPositionCalibrated.get_position()[1]:.3f} {finishPositionCalibrated.get_position()[2]:.3f}], "
+              f"Orientation (xyzw) [{finishPositionCalibrated.get_orientation()[0]:.3f} {finishPositionCalibrated.get_orientation()[1]:.3f} {finishPositionCalibrated.get_orientation()[2]:.3f} {finishPositionCalibrated.get_orientation()[3]:.3f}]\033[0m")
+
+        self.robot_path = PathRobot(self.pose, finishPositionCalibrated, self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision
