@@ -11,9 +11,9 @@ np.set_printoptions(precision=3)
 if __name__ == '__main__':
 
     rospy.init_node("soccer_control")
-    rospy.logwarn("Initializing Soccer Control")
+    rospy.loginfo("Initializing Soccer Control")
     walker = soccerbot_controller_ros.SoccerbotControllerRos()
-    rospy.logwarn("Starting Control Loop")
+    rospy.loginfo("Starting Control Loop")
     try:
         walker.run()
     except rospy.exceptions.ROSInterruptException as ex:
