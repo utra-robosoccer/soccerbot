@@ -7,4 +7,7 @@
     <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" />
 
     <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" if="$(optenv COMPETITION false)"/>
+
+    <node pkg="soccerbot" type="publish_gamestate_ready.sh" launch-prefix="bash -c 'sleep 20; $0 $@' " name="automatically_set_playing" unless="$(optenv COMPETITION false)" output="screen"/>
+
 </launch>
