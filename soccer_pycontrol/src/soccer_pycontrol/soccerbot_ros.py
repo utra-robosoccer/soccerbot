@@ -43,6 +43,7 @@ class SoccerbotRos(Soccerbot):
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
+        self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.listener = tf.TransformListener()
@@ -89,26 +90,31 @@ class SoccerbotRos(Soccerbot):
         if robot_path is None:
             robot_path = self.robot_path
 
-        p = Path()
-        p.header.frame_id = "world"
-        p.header.stamp = rospy.Time.now()
-        for i in range(0, robot_path.bodyStepCount() + 1, 1):
-            step = robot_path.getBodyStepPose(i)
-            position = step.get_position()
-            orientation = step.get_orientation()
-            pose = PoseStamped()
-            pose.header.seq = i
-            pose.header.frame_id = "world"
-            pose.pose.position.x = position[0]
-            pose.pose.position.y = position[1]
-            pose.pose.position.z = position[2]
+        def createPath(robot_path) -> Path:
+            p = Path()
+            p.header.frame_id = "world"
+            p.header.stamp = rospy.Time.now()
+            for i in range(0, robot_path.bodyStepCount() + 1, 1):
+                step = robot_path.getBodyStepPose(i)
+                position = step.get_position()
+                orientation = step.get_orientation()
+                pose = PoseStamped()
+                pose.header.seq = i
+                pose.header.frame_id = "world"
+                pose.pose.position.x = position[0]
+                pose.pose.position.y = position[1]
+                pose.pose.position.z = position[2]
 
-            pose.pose.orientation.x = orientation[0]
-            pose.pose.orientation.y = orientation[1]
-            pose.pose.orientation.z = orientation[2]
-            pose.pose.orientation.w = orientation[3]
-            p.poses.append(pose)
-        self.path_publisher.publish(p)
+                pose.pose.orientation.x = orientation[0]
+                pose.pose.orientation.y = orientation[1]
+                pose.pose.orientation.z = orientation[2]
+                pose.pose.orientation.w = orientation[3]
+                p.poses.append(pose)
+            return p
+
+        self.path_publisher.publish(createPath(robot_path))
+        if self.robot_odom_path is not None:
+            self.path_odom_publisher.publish(createPath(self.robot_odom_path))
 
     def publishOdometry(self):
         o = Odometry()

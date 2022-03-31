@@ -70,12 +70,9 @@ class Soccerbot:
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
-    def __init__(self, pose, useFixedBase=False):
-        """
-        Contsructor for the soccerbot. Loads the robot into the pybullet simulation.
-        :param position: transformation
-        :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
-        """
+    def __init__(self, pose, useFixedBase=False, useCalibration=True):
+        self.useCalibration = useCalibration
+
         home = expanduser("~")
         self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                 useFixedBase=useFixedBase,
@@ -114,6 +111,7 @@ class Soccerbot:
         self.setPose(pose)
         self.torso_offset = tr()
         self.robot_path : PathRobot = None
+        self.robot_odom_path: PathRobot = None
 
         self.configuration = [0.0] * len(Joints)
         self.configuration_offset = [0.0] * len(Joints)
@@ -311,12 +309,16 @@ class Soccerbot:
         finishPosition.set_orientation(q_new)
 
         # Add calibration
-        finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+        if self.useCalibration:
+            finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+        else:
+            finishPositionCalibrated = finishPosition
 
         print(f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.get_position()[0]:.3f} {finishPositionCalibrated.get_position()[1]:.3f} {finishPositionCalibrated.get_position()[2]:.3f}], "
               f"Orientation (xyzw) [{finishPositionCalibrated.get_orientation()[0]:.3f} {finishPositionCalibrated.get_orientation()[1]:.3f} {finishPositionCalibrated.get_orientation()[2]:.3f} {finishPositionCalibrated.get_orientation()[3]:.3f}]\033[0m")
 
         self.robot_path = PathRobot(self.pose, finishPositionCalibrated, self.foot_center_to_floor)
+        self.robot_odom_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision

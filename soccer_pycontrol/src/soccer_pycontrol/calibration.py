@@ -21,13 +21,14 @@ import tensorflow as tf
 import keras
 from keras.utils.vis_utils import plot_model
 
+
 class Calibration:
     x_range = np.flip(
-        np.array([-1.0, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0]))
-    y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0])
+        np.array([-2.0, -1.5, -1.0, -0.8, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 0.8, 1.0, 1.5, 2.0]))
+    y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0])
     ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1])
 
-    model_name = f"calibration_models/model.45"
+    model_name = f"calibration_models/model.995"
 
     # Runs a series of movements to collect data in the calibration folder
     def obtain_calibration(self):
@@ -63,6 +64,7 @@ class Calibration:
                         attempt = 0
                         while attempt < 5:
                             walker = soccerbot_controller_ros.SoccerbotControllerRos()
+                            walker.soccerbot.useCalibration = False
                             walker.setPose(Transformation())
                             walker.setGoal(Transformation([x, y, 0.0], quat))
                             success = walker.run(single_trajectory=True)
@@ -88,17 +90,36 @@ class Calibration:
         except (KeyboardInterrupt, rospy.exceptions.ROSException):
             exit(1)
 
-    def load_data(self):
+    def load_data(self, combine_yaw=False):
         files = glob.glob('calibration/*')
         goal_positions = []
         end_positions = []
         for f in files:
             goal_position = np.array(f.replace("calibration/", "").replace(".npy", "").split("_")).astype(float)
             end_position = np.load(f)
-            goal_positions.append(goal_position)
-            end_positions.append(end_position)
+
+            if combine_yaw:
+                has = False
+                for i in range(len(goal_positions)):
+                    if goal_positions[i][0] == goal_position[0] and goal_positions[i][1] == goal_position[1]:
+                        end_positions[i][0:2] = end_positions[i][0:2] + end_position[0:2]
+                        has = True
+                if not has:
+                    goal_positions.append(goal_position)
+                    end_positions.append(end_position)
+
+            else:
+                goal_positions.append(goal_position)
+                end_positions.append(end_position)
+
         goal_positions = np.array(goal_positions)
         end_positions = np.array(end_positions)
+
+        if combine_yaw:
+            end_positions[:,0:2] = end_positions[:,0:2] / len(Calibration.ang_range)
+            goal_positions[:,2] = 0
+            end_positions[:,2] = 0
+
         return goal_positions, end_positions
 
 
@@ -106,7 +127,7 @@ class Calibration:
         last_epoch = 0
         model_name = f"calibration_models/model.{last_epoch}"
 
-        goal_positions, end_positions = self.load_data()
+        goal_positions, end_positions = self.load_data(combine_yaw=True)
 
         # define the model
         if os.path.exists(model_name):
@@ -114,10 +135,11 @@ class Calibration:
             model = keras.models.load_model(model_name)
         else:
             inputs = keras.Input(shape=(2), name="end_positions")
-            x1 = tf.keras.layers.Dense(16, activation="relu")(inputs)
-            outputs = tf.keras.layers.Dense(2, name="goal_positions")(x1)
+            x1 = tf.keras.layers.Dense(64, activation="leaky_relu")(inputs)
+            x2 = tf.keras.layers.Dense(64, activation="leaky_relu")(x1)
+            outputs = tf.keras.layers.Dense(2, name="goal_positions")(x2)
             model = keras.Model(inputs=inputs, outputs=outputs)
-            model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.001))
+            model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.003))
 
         # plot it
         plot_model(
@@ -132,7 +154,7 @@ class Calibration:
         )
 
         # optimizer and per-prediction error
-        optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+        optimizer = tf.keras.optimizers.SGD(learning_rate=0.003)
         f_ppError = tf.keras.losses.MeanSquaredError()
 
 
@@ -141,7 +163,7 @@ class Calibration:
         train_dataset = tf.data.Dataset.from_tensor_slices((goal_positions[:,0:2], end_positions[:,0:2]))
         train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
 
-        epochs = 50
+        epochs = 1000
         ppError_avg_list = []
         for epoch in range(last_epoch, epochs):
             ppError_avg = 0
@@ -162,7 +184,7 @@ class Calibration:
                 keras.models.save_model(model, f'calibration_models/model.{epoch}')
 
     def view_calibration(self):
-        goal_positions, end_positions = self.load_data()
+        goal_positions, end_positions = self.load_data(True)
 
 
         # plt.quiver(end_positions[:,0], end_positions[:,1], np.cos(end_positions[:,2]), np.sin(end_positions[:,2]), color="red", width=0.001)
@@ -190,12 +212,12 @@ class Calibration:
         pass
 
     def invert_model(self):
-        precision = 0.05
+        precision = 0.1
         print("Loading from model " + self.model_name)
         model = keras.models.load_model(self.model_name)
 
         points = []
-        for x in np.arange(-1, 1, precision):
+        for x in np.arange(-2, 2, precision):
             for y in np.arange(0, 1, precision):
                 points.append([x, y])
 
@@ -225,11 +247,11 @@ class Calibration:
         plt.show()
 
         inputs = keras.Input(shape=(2), name="end_points")
-        x1 = tf.keras.layers.Dense(16, activation="relu")(inputs)
-        x2 = tf.keras.layers.Dense(16, activation="relu")(x1)
+        x1 = tf.keras.layers.Dense(64, activation="leaky_relu")(inputs)
+        x2 = tf.keras.layers.Dense(64, activation="leaky_relu")(x1)
         outputs = tf.keras.layers.Dense(2, name="start_points")(x2)
         model = keras.Model(inputs=inputs, outputs=outputs)
-        model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.001))
+        model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.003))
 
         # optimizer and per-prediction error
         optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
@@ -295,7 +317,7 @@ class Calibration:
 
         diff_position = diff_position / scale
 
-        yaw_scale = 1.5 # TODO get this yaw scale
+        yaw_scale = 1
         new_position = np.array(self.adjust_navigation_goal(np.array([diff_position])))[0]
         new_position = new_position * scale
 
