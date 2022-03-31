@@ -33,9 +33,9 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.tf_listener = tf.TransformListener()
 
-    def update_robot_pose(self):
+    def update_robot_pose(self, footprint_name="/base_footprint"):
         try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + '/base_footprint',
+            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + footprint_name,
                                                             rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return False
@@ -147,6 +147,7 @@ class SoccerbotControllerRos(SoccerbotController):
                     self.terminated = True
 
                 self.goal = self.new_goal
+                self.soccerbot.reset_imus()
                 r.sleep()
                 continue
 
@@ -155,7 +156,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 if not single_trajectory:
                     pose_updated = self.update_robot_pose()
                     if not pose_updated:
-                        rospy.logwarn_throttle(1, "Unable to get Robot Pose")
+                        rospy.loginfo_throttle(1, "Unable to get Robot Pose")
                         r.sleep()
                         continue
 
@@ -166,13 +167,13 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
-                self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
-                self.t = -0.5
 
                 def print_pose(name: str, pose: Pose):
-                    print(f"{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]")
+                    print(f"\033[92m{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]\033[0m")
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
+                self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
+                self.t = -0.5
 
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
@@ -211,7 +212,7 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.logwarn_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
+                    rospy.loginfo_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
                         pitch - self.soccerbot.standing_pid.setpoint))
                     if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
                         stable_count = stable_count - 1
@@ -219,9 +220,7 @@ class SoccerbotControllerRos(SoccerbotController):
                             t = 0
                     else:
                         stable_count = 5
-
-            # Post walk stabilization
-            if self.soccerbot.robot_path is not None and self.t > self.soccerbot.robot_path.duration():
+            elif self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
                 rospy.loginfo_throttle_identical(1, "Performing post stabilization")
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
@@ -229,7 +228,6 @@ class SoccerbotControllerRos(SoccerbotController):
 
             if single_trajectory:
                 if self.soccerbot.robot_path is None:
-                    rospy.loginfo(1, "Trajectory Stopped")
                     return True
 
                 if self.soccerbot.imu_ready:

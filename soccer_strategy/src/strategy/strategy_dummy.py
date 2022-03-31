@@ -13,7 +13,7 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
-HAVENT_SEEN_THE_BALL_TIMEOUT = 9
+HAVENT_SEEN_THE_BALL_TIMEOUT = 6
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 
 ALPHA = 0.5
@@ -99,7 +99,7 @@ class StrategyDummy(Strategy):
                 self.havent_seen_the_ball_timeout = HAVENT_SEEN_THE_BALL_TIMEOUT
                 print("Player {}: Rotating to locate ball".format(this_robot.robot_id))
 
-                turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.9]
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi /2]
                 this_robot.set_navigation_position(turn_position)
 
 

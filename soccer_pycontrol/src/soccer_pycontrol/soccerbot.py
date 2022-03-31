@@ -12,6 +12,7 @@ from copy import deepcopy
 import numpy as np
 import pybullet as pb
 from soccer_common.pid import PID
+from calibration import Calibration
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -69,46 +70,9 @@ class Soccerbot:
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
-    def get_angles(self):
-        """
-        Function for getting all the feet angles (for now?)
-        :return: All 12 angles in the dictionary form???
-        """
-        angles = [a + b for a, b in zip(self.configuration, self.configuration_offset)]
-        return angles
+    def __init__(self, pose, useFixedBase=False, useCalibration=True):
+        self.useCalibration = useCalibration
 
-    def get_link_transformation(self, link1, link2):
-        """
-        Gives the H-trasnform between two links
-        :param link1: Starting link
-        :param link2: Ending link
-        :return: H-transform from starting link to the ending link
-        """
-        if link1 == Links.TORSO:
-            link1world = pb.getBasePositionAndOrientation(self.body)
-            link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
-        else:
-            link1world = pb.getLinkState(self.body, link1)[4:6]
-
-        if link2 == Links.TORSO:
-            link2world = pb.getBasePositionAndOrientation(self.body)
-            link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
-        else:
-            link2world = pb.getLinkState(self.body, link2)[4:6]
-
-        link1worldrev = pb.invertTransform(link1world[0], link1world[1])
-        link2worldrev = pb.invertTransform(link2world[0], link2world[1])
-
-        final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0],
-                                                     link1worldrev[1])
-        return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
-
-    def __init__(self, pose, useFixedBase=False):
-        """
-        Contsructor for the soccerbot. Loads the robot into the pybullet simulation.
-        :param position: transformation
-        :param useFixedBase: If true, it will fix the base link in space, thus preventing the robot falling. For testing purpose.
-        """
         home = expanduser("~")
         self.body = pb.loadURDF(home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
                                 useFixedBase=useFixedBase,
@@ -146,7 +110,8 @@ class Soccerbot:
 
         self.setPose(pose)
         self.torso_offset = tr()
-        self.robot_path = None
+        self.robot_path : PathRobot = None
+        self.robot_odom_path: PathRobot = None
 
         self.configuration = [0.0] * len(Joints)
         self.configuration_offset = [0.0] * len(Joints)
@@ -164,6 +129,44 @@ class Soccerbot:
 
         # For head rotation
         self.head_step = 0.0
+
+        self.calibration = Calibration()
+        # self.calibration.adjust_navigation_goal(np.array([[0, 0]]))
+
+    def get_angles(self):
+        """
+        Function for getting all the feet angles (for now?)
+        :return: All 12 angles in the dictionary form???
+        """
+        angles = [a + b for a, b in zip(self.configuration, self.configuration_offset)]
+        return angles
+
+    def get_link_transformation(self, link1, link2):
+        """
+        Gives the H-trasnform between two links
+        :param link1: Starting link
+        :param link2: Ending link
+        :return: H-transform from starting link to the ending link
+        """
+        if link1 == Links.TORSO:
+            link1world = pb.getBasePositionAndOrientation(self.body)
+            link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+        else:
+            link1world = pb.getLinkState(self.body, link1)[4:6]
+
+        if link2 == Links.TORSO:
+            link2world = pb.getBasePositionAndOrientation(self.body)
+            link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+        else:
+            link2world = pb.getLinkState(self.body, link2)[4:6]
+
+        link1worldrev = pb.invertTransform(link1world[0], link1world[1])
+        link2worldrev = pb.invertTransform(link2world[0], link2world[1])
+
+        final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0],
+                                                     link1worldrev[1])
+        return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
+
 
     def ready(self):
         """
@@ -305,7 +308,17 @@ class Soccerbot:
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         finishPosition.set_orientation(q_new)
 
-        self.robot_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
+        # Add calibration
+        if self.useCalibration:
+            finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+        else:
+            finishPositionCalibrated = finishPosition
+
+        print(f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.get_position()[0]:.3f} {finishPositionCalibrated.get_position()[1]:.3f} {finishPositionCalibrated.get_position()[2]:.3f}], "
+              f"Orientation (xyzw) [{finishPositionCalibrated.get_orientation()[0]:.3f} {finishPositionCalibrated.get_orientation()[1]:.3f} {finishPositionCalibrated.get_orientation()[2]:.3f} {finishPositionCalibrated.get_orientation()[3]:.3f}]\033[0m")
+
+        self.robot_path = PathRobot(self.pose, finishPositionCalibrated, self.foot_center_to_floor)
+        self.robot_odom_path = PathRobot(self.pose, finishPosition, self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision

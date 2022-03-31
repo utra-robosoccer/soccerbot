@@ -14,6 +14,8 @@ shapely
 vispy
 pytest
 protobuf>=3.19.4
+tensorflow
+keras
 
 # object detection
 Pillow==9.0.1
