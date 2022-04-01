@@ -2,6 +2,7 @@
 import copy
 import os
 
+from rospy import ROSException
 from soccer_msgs.msg import RobotState
 from std_msgs.msg import Empty
 from soccer_msgs.msg import FixedTrajectoryCommand
@@ -145,4 +146,8 @@ class SoccerTrajectoryClass:
 if __name__ == '__main__':
     trajectory_class = SoccerTrajectoryClass()
 
-    trajectory_class.run()
+    try:
+        trajectory_class.run()
+    except ROSException as ex:
+        print(ex)
+        exit(0)

@@ -14,7 +14,7 @@ rivalScore: 0
 secondsRemaining: 0
 secondary_seconds_remaining: 0
 hasKickOff: false
-penalized: false
+penalty: 0
 secondsTillUnpenalized: 0
 teamColor: 0
 dropInTeam: false
