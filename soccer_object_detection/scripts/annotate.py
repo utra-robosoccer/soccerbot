@@ -12,10 +12,10 @@ from geometry_msgs.msg import Pose
 from tf import TransformListener
 
 import json
-from soccer_geometry.camera import Camera
+from soccer_common.camera import Camera
 from sensor_msgs.msg import Image
 import os
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 
 class Test(TestCase):
 
@@ -52,6 +52,7 @@ class Test(TestCase):
         resetPublisher.publish(p)
 
     def test_calculate_bounding_boxes_from_ball(self):
+        rospy.init_node("test_soccer_bounding_boxes")
 
         for cam_angle in [0, 0.1, -0.1]:
             q = Transformation.get_quaternion_from_euler([cam_angle, 0, 0])
@@ -66,7 +67,7 @@ class Test(TestCase):
                 positions = [[0.5, 0, 0.1], [0.5, 0, 0], [0.5, 0, 0.1]]
                 for position in positions:
                     ball_pose = Transformation(position)
-                    ball_radius = 0.1
+                    ball_radius = 0.07
 
                     bounding_boxes = c.calculateBoundingBoxesFromBall(ball_pose, ball_radius)
                     # [[135.87634651355825, 75.87634651355823], [224.12365348644175, 164.12365348644175]]

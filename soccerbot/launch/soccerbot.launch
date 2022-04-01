@@ -1,12 +1,12 @@
 <launch>
     <arg name="simulation" default="true" />
-    <arg name="competition" default="$(optenv COMPETITION false)" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
-    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf"/>
 
     <param name="/simulation_active" value="true"/>
     <param name="/use_sim_time" value="true"/>
@@ -20,7 +20,7 @@
         "
     />
 
-    <node launch-prefix="nice --5" pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
         <param name="publish_frequency" type="double" value="120.0" />
     </node>
 
@@ -30,7 +30,6 @@
 
     <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
-        <arg name="competition" value="$(arg competition)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
@@ -48,5 +47,26 @@
     </include>
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" />
+
+    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
+        state
+        action_complete
+        amcl_pose
+        command
+        detected_robot_pose
+        execute_game_interruption
+        gamestate
+        goal
+        head_centered_on_ball
+        imu_filtered
+        initialpose
+        joint_command
+        odom
+        path
+        scan
+        set_pose
+        state
+        torso_height
+    " />
 
 </launch>

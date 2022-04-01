@@ -3,6 +3,8 @@
 import os
 import time
 
+from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import rospy
@@ -24,7 +26,7 @@ class DetectorGoalPost(Detector):
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
         cv2.setRNGSeed(12345)
         pass

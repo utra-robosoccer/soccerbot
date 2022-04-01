@@ -3,6 +3,8 @@
 import os
 
 import numpy as np
+np.set_printoptions(precision=3)
+
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -16,8 +18,7 @@ from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
 from sensor_msgs.msg import JointState
 from soccer_object_detection.msg import BoundingBoxes, BoundingBox
 from detector import Detector
-
-
+from soccer_common.transformation import Transformation
 class DetectorBall(Detector):
 
     def __init__(self):
@@ -26,6 +27,8 @@ class DetectorBall(Detector):
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
         self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
+        self.last_ball_pose = Transformation()
+        self.last_ball_pose_counter = 0
 
     def jointStatesCallback(self, msg: JointState):
         if len(msg.name) != 0:
@@ -33,55 +36,81 @@ class DetectorBall(Detector):
             self.head_motor_1_angle =  msg.position[index]
 
     def ballDetectorCallback(self, msg: BoundingBoxes):
-        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
-            self.robot_state.status is not RobotState.STATUS_READY:
+        if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
             return
 
         if not self.camera.ready:
             return
 
-        self.camera.reset_position(timestamp=msg.header.stamp)
-
-        detected_robots = 0
-
-        def box_union(box1: BoundingBox, box2: BoundingBox) -> BoundingBox:
-            box_final = box1
-            box_final.ymin = min(box_final.ymin, box2.ymin)
-            box_final.xmin = min(box_final.xmin, box2.xmin)
-            box_final.ymax = max(box_final.ymax, box2.ymax)
-            box_final.xmax = max(box_final.xmax, box2.xmax)
-            return box_final
+        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True)
 
         # Ball
-        final_box = None
+        max_detection_size = 0
+        final_camera_to_ball = None
+        candidate_ball_counter = 1
         for box in msg.bounding_boxes:
             if box.Class == "ball":
-                if final_box == None:
-                    final_box = box
-                else:
-                    final_box = box_union(final_box, box)
+                # Exclude weirdly shaped balls
+                ratio = (box.ymax - box.ymin) / (box.xmax - box.xmin)
+                if ratio > 2 or ratio < 0.5:
+                    rospy.logwarn_throttle(1, "Excluding weirdly shaped ball")
+                    continue
 
-        if final_box is not None:
-            boundingBoxes = [[final_box.xmin, final_box.ymin], [final_box.xmax, final_box.ymax]]
-            position = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
-            if position.get_position()[0] > 0.0:
-                br = tf2_ros.TransformBroadcaster()
-                ball_pose = TransformStamped()
-                ball_pose.header.frame_id = self.robot_name + "/base_camera"
-                ball_pose.child_frame_id = self.robot_name + "/ball"
-                ball_pose.header.stamp = msg.header.stamp
-                ball_pose.header.seq = msg.header.seq
-                ball_pose.transform.translation.x = position.get_position()[0]
-                ball_pose.transform.translation.y = position.get_position()[1]
-                ball_pose.transform.translation.z = 0
-                ball_pose.transform.rotation.x = 0
-                ball_pose.transform.rotation.y = 0
-                ball_pose.transform.rotation.z = 0
-                ball_pose.transform.rotation.w = 1
-                br.sendTransform(ball_pose)
+                boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+
+                # Ignore balls outside of the field
+                camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
+                detection_size = (box.ymax - box.ymin) * (box.xmax - box.xmin)
+
+                rospy.loginfo_throttle(5, f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, detection_size { detection_size }")
+                candidate_ball_counter = candidate_ball_counter + 1
+
+                # Exclude balls outside the field
+                if abs(ball_pose.get_position()[0]) > 4.5 or abs(ball_pose.get_position()[1]) > 3:
+                    continue
+
+                # Exclude balls that are too far from the previous location
+                if self.last_ball_pose is not None:
+                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
+                        pass
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1: # meters from previous position
+                        rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
+                        self.last_ball_pose_counter = self.last_ball_pose_counter + 1
+                        if self.last_ball_pose_counter > 20: # Counter to prevent being stuck when the ball is in a different location
+                            self.last_ball_pose_counter = 0
+                            self.last_ball_pose = None
+                        continue
+
+
+                # Get the largest detection
+                if detection_size > max_detection_size:
+                    final_camera_to_ball = camera_to_ball
+                    self.last_ball_pose = ball_pose
+                    self.last_ball_pose_counter = 0
+                    max_detection_size = detection_size
+                    pass
+
+        if final_camera_to_ball is not None:
+            rospy.loginfo_throttle(1, f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m")
+            br = tf2_ros.TransformBroadcaster()
+            ball_pose = TransformStamped()
+            ball_pose.header.frame_id = self.robot_name + "/base_camera"
+            ball_pose.child_frame_id = self.robot_name + "/ball"
+            ball_pose.header.stamp = msg.header.stamp
+            ball_pose.header.seq = msg.header.seq
+            ball_pose.transform.translation.x = final_camera_to_ball.get_position()[0]
+            ball_pose.transform.translation.y = final_camera_to_ball.get_position()[1]
+            ball_pose.transform.translation.z = 0
+            ball_pose.transform.rotation.x = 0
+            ball_pose.transform.rotation.y = 0
+            ball_pose.transform.rotation.z = 0
+            ball_pose.transform.rotation.w = 1
+            br.sendTransform(ball_pose)
 
 
         # Robots
+        detected_robots = 0
         for box in msg.bounding_boxes:
             if box.Class == "robot":
                 if self.head_motor_1_angle > 0.6:

@@ -1,8 +1,9 @@
 import math
+import time
 
 from sensor_msgs.msg import JointState, Imu
 from soccer_msgs.msg import RobotState
-from std_msgs.msg import Float64, Bool, Int32
+from std_msgs.msg import Float64, Empty
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped, PointStamped
 from soccer_pycontrol.soccerbot import *
@@ -18,7 +19,7 @@ class SoccerbotRos(Soccerbot):
         super().__init__(position, useFixedBase)
 
         self.motor_publishers = {}
-        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.motor_names = [
             "left_arm_motor_0",
             "left_arm_motor_1",
@@ -41,11 +42,13 @@ class SoccerbotRos(Soccerbot):
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
-        self.path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
+        self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
         self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
+        self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
@@ -87,26 +90,31 @@ class SoccerbotRos(Soccerbot):
         if robot_path is None:
             robot_path = self.robot_path
 
-        p = Path()
-        p.header.frame_id = "world"
-        p.header.stamp = rospy.Time.now()
-        for i in range(0, robot_path.bodyStepCount() + 1, 1):
-            step = robot_path.getBodyStepPose(i)
-            position = step.get_position()
-            orientation = step.get_orientation()
-            pose = PoseStamped()
-            pose.header.seq = i
-            pose.header.frame_id = "world"
-            pose.pose.position.x = position[0]
-            pose.pose.position.y = position[1]
-            pose.pose.position.z = position[2]
+        def createPath(robot_path) -> Path:
+            p = Path()
+            p.header.frame_id = "world"
+            p.header.stamp = rospy.Time.now()
+            for i in range(0, robot_path.bodyStepCount() + 1, 1):
+                step = robot_path.getBodyStepPose(i)
+                position = step.get_position()
+                orientation = step.get_orientation()
+                pose = PoseStamped()
+                pose.header.seq = i
+                pose.header.frame_id = "world"
+                pose.pose.position.x = position[0]
+                pose.pose.position.y = position[1]
+                pose.pose.position.z = position[2]
 
-            pose.pose.orientation.x = orientation[0]
-            pose.pose.orientation.y = orientation[1]
-            pose.pose.orientation.z = orientation[2]
-            pose.pose.orientation.w = orientation[3]
-            p.poses.append(pose)
-        self.path_publisher.publish(p)
+                pose.pose.orientation.x = orientation[0]
+                pose.pose.orientation.y = orientation[1]
+                pose.pose.orientation.z = orientation[2]
+                pose.pose.orientation.w = orientation[3]
+                p.poses.append(pose)
+            return p
+
+        self.path_publisher.publish(createPath(robot_path))
+        if self.robot_odom_path is not None:
+            self.path_odom_publisher.publish(createPath(self.robot_odom_path))
 
     def publishOdometry(self):
         o = Odometry()
@@ -156,12 +164,12 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    HEAD_YAW_FREQ = 0.003
-    HEAD_PITCH_FREQ = 0.003
+    HEAD_YAW_FREQ = 0.004
+    HEAD_PITCH_FREQ = 0.004
 
     def apply_head_rotation(self):
         if self.robot_state.status == self.robot_state.STATUS_DETERMINING_SIDE:
-            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 10)
+            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi * 0.05)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             recenterCameraOnBall = False
@@ -186,21 +194,27 @@ class SoccerbotRos(Soccerbot):
             # Search for the ball if can't find the ball
             if self.last_ball_found_timestamp is None:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi / 7
+                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
                 self.head_step += 1
 
             # Recenter the head onto the ball
             elif recenterCameraOnBall:
                 anglelr = math.atan2(trans[1], trans[0])
                 angleud = math.atan2(trans[2], trans[0])
-                rospy.loginfo_throttle(5, "Ball found")
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0015
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0015
+                rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
+
+                if abs(anglelr) < 0.05 and abs(angleud) < 0.05:
+                    rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
+                    rospy.sleep(0.5)
+                    self.head_centered_on_ball_publisher.publish()
+
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0025
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0016
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi / 7 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * (math.pi / 7)
+            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0

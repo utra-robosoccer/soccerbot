@@ -9,5 +9,7 @@
         <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
     </node>
 
-    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output = "screen"/>
+    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output = "screen">
+        <param name="calibration_file" value="$(find soccer_pycontrol)/src/soccer_pycontrol/calibration_models/model.995_inverse" />
+    </node>
 </launch>

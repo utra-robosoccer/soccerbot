@@ -3,6 +3,7 @@
 import os
 import time
 
+from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -13,6 +14,7 @@ import cv2
 from sensor_msgs.msg import Image, PointCloud2
 from std_msgs.msg import Bool, Header
 from detector import Detector
+from geometry_msgs.msg import PoseWithCovarianceStamped
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
 
@@ -29,21 +31,23 @@ class DetectorFieldline(Detector):
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1)
+        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
-
+        self.publish_point_cloud = False
         cv2.setRNGSeed(12345)
         pass
+
+    def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
+        self.publish_point_cloud = True
 
     def image_callback(self, img: Image):
         rospy.loginfo_once("Recieved Message")
 
         t_start = time.time()
 
-        if self.robot_state.status is not RobotState.STATUS_LOCALIZING and \
-                self.robot_state.status is not RobotState.STATUS_WALKING and \
-                self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
+        if self.robot_state.status not in [RobotState.STATUS_READY, RobotState.STATUS_LOCALIZING, RobotState.STATUS_WALKING, RobotState.STATUS_DETERMINING_SIDE]:
             return
 
         if not self.camera.ready():
@@ -103,7 +107,7 @@ class DetectorFieldline(Detector):
             slope = (pt2[1] - pt1[1]) / (pt2[0] - pt1[0])
             b = y1 - slope * x1
 
-            for i in range(x1, x2, 15):
+            for i in range(x1, x2, 10):
                 y = slope * i + b
                 pt = [i, y]
                 pts.append(pt)
@@ -113,7 +117,7 @@ class DetectorFieldline(Detector):
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 
-        if self.point_cloud_publisher.get_num_connections() > 0:
+        if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
             for p in pts:
                 points3d.append(self.camera.findFloorCoordinate(p))

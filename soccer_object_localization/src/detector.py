@@ -1,6 +1,5 @@
-from soccer_geometry.camera import Camera
+from soccer_common.camera import Camera
 import rospy
-from std_msgs.msg import Bool
 from soccer_msgs.msg import RobotState
 
 class Detector:
@@ -11,11 +10,11 @@ class Detector:
         self.camera.reset_position()
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState,
-                                                               self.robot_state_callbeck)
+                                                               self.robot_state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
         pass
 
-    def robot_state_callbeck(self, robot_state: RobotState):
+    def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
 

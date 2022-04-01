@@ -1,11 +1,21 @@
 import functools
-from soccer_geometry.transformation import Transformation
+from soccer_common.transformation import Transformation
 import numpy as np
 from scipy.special import comb
 from soccer_pycontrol.path_section import PathSection
 
 class PathSectionBezier(PathSection):
-    turn_duration = 4  # Number of body steps to turn
+    turn_duration = 3  # Number of body steps to turn
+
+    def __init__(self, start_transform: Transformation, end_transform: Transformation):
+        self.start_transform = start_transform
+        self.end_transform = end_transform
+        if self.isWalkingBackwards():
+            bodystep_size = PathSection.bodystep_size_default * PathSection.backwards_bodystep_size_ratio
+        else:
+            bodystep_size = PathSection.bodystep_size_default
+
+        super().__init__(start_transform, end_transform, bodystep_size)
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)
@@ -29,11 +39,11 @@ class PathSectionBezier(PathSection):
 
         p1 = start_transform
         if self.isWalkingBackwards():
-            p2 = np.matmul(start_transform, Transformation([- PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([- self.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0., 0.]))
         else:
-            p2 = np.matmul(start_transform, Transformation([PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([-PathSection.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p3 = np.matmul(end_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0., 0.]))
         p4 = end_transform
 
         p1_pos = p1.get_position()
@@ -56,7 +66,7 @@ class PathSectionBezier(PathSection):
         return self.distanceMap[idx, 0]
 
     def duration(self):
-        return self.distance / PathSection.speed
+        return self.distance / self.speed
 
     @functools.lru_cache
     def isWalkingBackwards(self):

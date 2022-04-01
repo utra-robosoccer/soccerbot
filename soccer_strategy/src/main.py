@@ -8,5 +8,8 @@ from game_engine_3d import GameEngine3D
 if __name__ == '__main__':
     rospy.init_node("soccer_strategy")
     g = GameEngine3D()
-    g.run()
-
+    try:
+        g.run()
+    except rospy.exceptions.ROSException as ex:
+        print(ex)
+        exit(0)
