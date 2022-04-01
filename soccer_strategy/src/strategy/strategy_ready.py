@@ -11,6 +11,7 @@ class StrategyReady(Strategy):
     def __init__(self):
         super().__init__()
         self.update_frequency = 1
+        self.reached_ready_position = False
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -24,3 +25,5 @@ class StrategyReady(Strategy):
             elif abs((this_robot.position[2] - navigation_position[2]) % math.pi) > 0.2: # Rotate only
                 navigation_position[0:2] = this_robot.position[0:2]
                 Actions.navigation_to_position(this_robot, navigation_position)
+            else:
+                self.reached_ready_position = True

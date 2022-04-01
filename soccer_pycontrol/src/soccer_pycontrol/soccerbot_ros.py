@@ -71,6 +71,7 @@ class SoccerbotRos(Soccerbot):
             js.name.append(n)
             js.position.append(self.get_angles()[i])
         try:
+            rospy.loginfo_once("Started Publishing Motors")
             self.pub_all_motor.publish(js)
         except rospy.exceptions.ROSException as ex:
             print(ex)
@@ -168,8 +169,8 @@ class SoccerbotRos(Soccerbot):
     HEAD_PITCH_FREQ = 0.004
 
     def apply_head_rotation(self):
-        if self.robot_state.status == self.robot_state.STATUS_DETERMINING_SIDE:
-            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi * 0.05)
+        if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
+            self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * SoccerbotRos.HEAD_YAW_FREQ * 3) * (math.pi * 0.05)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             recenterCameraOnBall = False

@@ -11,7 +11,7 @@ from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 
 class GameStateReceiver(object):
     team_id = int(os.getenv('ROBOCUP_TEAM_ID', 16))
-    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
+    robot_id = int(os.getenv('ROBOCUP_ROBOT_ID', 2))
 
     DEFAULT_LISTENING_HOST = '0.0.0.0'
     GAME_CONTROLLER_LISTEN_PORT = 3838
@@ -117,7 +117,7 @@ class GameStateReceiver(object):
         msg.secondsRemaining = state.seconds_remaining
         msg.secondary_seconds_remaining = state.secondary_seconds_remaining
         msg.hasKickOff = state.kick_of_team == self.team_id
-        msg.penalized = me.penalty != 0
+        msg.penalty = me.penalty
         msg.secondsTillUnpenalized = me.secs_till_unpenalized
 
         msg.secondaryStateTeam = state.secondary_state_info[0]

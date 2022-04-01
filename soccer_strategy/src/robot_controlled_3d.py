@@ -140,6 +140,9 @@ class RobotControlled3D(RobotControlled):
             self.goal_position = None
             self.status = Robot.Status.LOCALIZING
             self.time_since_action_completed = rospy.Time.now()
+        elif self.status == Robot.Status.PENALIZED:
+            self.goal_position = None
+            self.time_since_action_completed = rospy.Time.now()
         else:
             rospy.logerr("Invalid Action Completed " + str(self.status))
 
@@ -178,7 +181,6 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.z = q[2]
         p.pose.pose.orientation.w = q[3]
         print("Setting initial Robot " + self.robot_name + " position " + str(position) + " orientation " + str(q))
-        print(p.pose.pose.orientation)
         p.pose.covariance = [0.0025, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0025, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0, 0.0, 0.0, 0.0,

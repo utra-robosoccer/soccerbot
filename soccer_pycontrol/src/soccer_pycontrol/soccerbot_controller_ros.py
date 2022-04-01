@@ -137,9 +137,17 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
 
         while not rospy.is_shutdown():
-            if self.soccerbot.robot_state.status in [RobotState.STATUS_TERMINATING_WALK, RobotState.STATUS_FALLEN_FRONT,
+            if self.soccerbot.robot_state.status in [RobotState.STATUS_DISCONNECTED, RobotState.STATUS_DETERMINING_SIDE,
+                                                     RobotState.STATUS_FALLEN_FRONT,
                                                      RobotState.STATUS_FALLEN_BACK, RobotState.STATUS_FALLEN_SIDE,
-                                                     RobotState.STATUS_PENALTY, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
+                                                     RobotState.STATUS_PENALIZED, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
+                self.soccerbot.robot_path = None
+                self.goal = self.new_goal
+                self.soccerbot.reset_imus()
+                r.sleep()
+                continue
+
+            if self.soccerbot.robot_state.status in [RobotState.STATUS_TERMINATING_WALK]:
                 if not self.terminated:
                     rospy.loginfo("Terminating Walk at time " + str(self.t))
                     if self.soccerbot.robot_path is not None:

@@ -53,23 +53,37 @@ class GameEngine3D():
                 f"\033[92mGame State Changed: {GameEngine3D.GAMESTATE_LOOKUP[gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[gameState.secondaryStateMode]}\033[0m")
 
         self.gameState = gameState
+        if self.gameState.penalty != GameState.PENALTY_NONE:
+            self.robot().status = Robot.Status.PENALIZED
+            self.robot().update_robot_state(None) # Publish immediately to stop actuators
 
     def decide_strategy(self):
         new_strategy = StrategyDetermineSide
+        current_strategy = type(self.team1.strategy)
+
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             new_strategy = StrategyDetermineSide
         elif self.gameState.gameState == GameState.GAMESTATE_READY:
-            if self.robot().status in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED]:
+            if self.robot().status in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:
                 new_strategy = StrategyDetermineSide
             else:
                 new_strategy = StrategyReady
         elif self.gameState.gameState == GameState.GAMESTATE_SET:
-            new_strategy = StrategySet
+            if self.robot().status == Robot.Status.PENALIZED:
+                new_strategy = StrategyDetermineSide
+            else:
+                new_strategy = StrategySet
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
-                if self.gameState.hasKickOff:
+                if self.robot().status == Robot.Status.PENALIZED:
+                    new_strategy = StrategyDetermineSide
+                elif current_strategy == StrategyDetermineSide and self.robot().status not in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED]:
+                    new_strategy = StrategyReady
+                elif current_strategy == StrategyReady and self.team1.strategy.reached_ready_position:
+                    new_strategy = StrategyDummy
+                elif self.gameState.hasKickOff:
                     new_strategy = StrategyDummy
                 else:
                     new_strategy = StrategyDummy
@@ -101,8 +115,9 @@ class GameEngine3D():
             self.decide_strategy()
             # Run the strategy
             print("-----------------------------------------")
+            penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]}")
+                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str}")
             self.team1.log()
             self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
 
