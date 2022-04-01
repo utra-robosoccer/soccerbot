@@ -1,14 +1,20 @@
 import abc
-#from robot_controlled_3d import RobotControlled3D
+from robot_controlled_2d import RobotControlled2D
+from robot_controlled import RobotControlled
 
 try:
     from soccer_msgs.msg import GameState
 except:
-    class GameState:
-        GAMESTATE_PLAYING = 1
-        STATE_NORMAL = 2
+    from soccer_msgs.fake_msg import GameState
+
 from team import Team
 from robot import Robot
+
+def update_average_ball_position(update_next_strategy):
+    def update_average_ball_position_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        friendly_team.update_average_ball_position()
+        return update_next_strategy(self, friendly_team, opponent_team, game_state)
+    return update_average_ball_position_strategy
 
 def get_back_up(update_next_strategy):
     def get_back_up_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -24,6 +30,9 @@ def get_back_up(update_next_strategy):
             return
         elif current_robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
             return
+        elif current_robot.status == Robot.Status.LOCALIZING:
+            # Wait for localization status
+            return
         return update_next_strategy(self, friendly_team, opponent_team, game_state)
     return get_back_up_strategy
 
@@ -35,8 +44,11 @@ class Strategy():
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         raise NotImplementedError
 
-    # def get_current_robot(self, friendly_team: Team) -> RobotControlled3D:
-    #     for robot in friendly_team.robots:
-    #         if type(robot) is RobotControlled3D:
-    #             return robot
-    #     raise AssertionError
+    def get_current_robot(self, friendly_team: Team) -> RobotControlled:
+        for robot in friendly_team.robots:
+            if robot.__class__.__name__ == 'RobotControlled3D':
+                return robot
+            if robot.__class__.__name__ == 'RobotControlled2D' and robot.active == True:
+                return robot
+
+        raise AssertionError

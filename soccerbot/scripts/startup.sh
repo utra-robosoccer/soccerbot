@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 sleep 20
 source ~/.bashrc
 MY_IP=$(ifconfig wlan0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')

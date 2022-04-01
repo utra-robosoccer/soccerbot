@@ -13,7 +13,7 @@ class Evaluations:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
-            if robot.status != Robot.Status.READY:
+            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING]:
                 continue
 
             dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])

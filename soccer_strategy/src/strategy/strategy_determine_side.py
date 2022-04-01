@@ -33,28 +33,29 @@ class StrategyDetermineSide(Strategy):
             else:
                 self.average_goal_post_y = self.average_goal_post_y - 1
             self.measurements = self.measurements + 1
-            print("Goal Post detected " + str(goal_post_pose))
+            rospy.loginfo("Goal Post detected " + str(goal_post_pose))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
+            rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
 
-        if self.measurements == 2:
-            print("Determining Robot Position based on measurements")
+        if self.measurements == 1:
+
+            # Determine robot position
             self.measurements = self.measurements + 1
+            x = abs(current_robot.position_default[0])
+            y = -abs(current_robot.position_default[1])
+            theta = abs(current_robot.position_default[2])
             if self.average_goal_post_y > 0:
                 self.flip_required = True
-                current_robot.position[1] = -current_robot.position_default[1]
-                current_robot.position[2] = -current_robot.position_default[1]
-            self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped,
-                                                                queue_size=1)
-            current_robot.status = Robot.Status.READY
-
-        if self.measurements > 2:
-            print("Robot Position Determined, Determining Roles, Flip Required " + str(self.flip_required))
+                y = -y
+                theta = -theta
+            rospy.loginfo("Robot Position Determined, Determining Roles, Flip Required " + str(self.flip_required))
+            current_robot.reset_initial_position([x, y, theta])
+            current_robot.position = [x, y, theta]
 
             # Determining robot role automatically based on distance to role position and other robots
             if current_robot.role == Robot.Role.UNASSIGNED:
                 available_roles = []
-                for role in friendly_team.formations['initial']:
+                for role in friendly_team.formations['ready']:
                     available_roles.append(role)
 
                 unassigned_robots = []
@@ -66,20 +67,20 @@ class StrategyDetermineSide(Strategy):
 
                 print("Available Robots", unassigned_robots)
                 print("Available Roles", available_roles)
-                print("Available Roles Positions", [friendly_team.formations['initial'][role][0:2] for role in available_roles])
+                print("Available Roles Positions", [friendly_team.formations['ready'][role][0:2] for role in available_roles])
                 while len(unassigned_robots) > 0:
                     closest_index = 0
                     closest_role_index = 0
                     closest_distance = math.inf
                     for i in range(len(unassigned_robots)):
                         for j in range(len(available_roles)):
-                            distance = np.linalg.norm(np.array(friendly_team.formations['initial'][available_roles[j]][0:2]) - unassigned_robots[i].position[0:2])
+                            distance = np.linalg.norm(np.array(friendly_team.formations['ready'][available_roles[j]][0:2]) - unassigned_robots[i].position[0:2])
                             if distance < closest_distance:
                                 closest_distance = distance
                                 closest_index = i
                                 closest_role_index = j
 
-                    print(f"Assigning Robot {closest_index + 1} to {available_roles[closest_role_index].name} with location {friendly_team.formations['initial'][available_roles[closest_role_index]][0:2]}")
+                    print(f"Assigning Robot {closest_index + 1} to {available_roles[closest_role_index].name} with location {friendly_team.formations['ready'][available_roles[closest_role_index]][0:2]}")
                     if unassigned_robots[closest_index].robot_id == current_robot.robot_id:
                         current_robot.role = available_roles[closest_role_index]
                         print("Completed Assignment")
@@ -88,4 +89,7 @@ class StrategyDetermineSide(Strategy):
                         unassigned_robots.pop(closest_index)
                         available_roles.pop(closest_role_index)
 
+        if self.measurements > 1:
+            current_robot.status = Robot.Status.LOCALIZING
+            current_robot.time_since_action_completed = rospy.Time.now()
 

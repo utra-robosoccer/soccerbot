@@ -4,9 +4,7 @@ from ball import Ball
 try:
     from soccer_msgs.msg import GameState
 except:
-    class GameState:
-        GAMESTATE_PLAYING = 1
-        STATE_NORMAL = 2
+    from soccer_msgs.fake_msg import GameState
 
 
 class StrategyStationary(Strategy):

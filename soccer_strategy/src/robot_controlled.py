@@ -1,11 +1,11 @@
 import abc
+import time
+
 from robot import Robot
 import numpy as np
-#import tf
 from soccer_pycontrol import path
-from soccer_geometry import transformation
-#import tf.transformations
-import transformations
+from soccer_common.transformation import Transformation
+import math
 
 class RobotControlled(Robot):
 
@@ -20,13 +20,17 @@ class RobotControlled(Robot):
         self.goal_position = None
         self.path = None
 
-    def set_navigation_position(self, goal_position):
+        self.max_kick_speed = 2
+        self.navigation_goal_localized_time = time.time()
+        self.kick_with_right_foot = True
 
-        #if self.status == Robot.Status.WALKING:
-            #if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position) - np.array(goal_position)) < 0.05:
-        if self.goal_position is not None and np.allclose(np.array(self.goal_position), np.array(goal_position)):
-            print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
-            return False
+    def set_navigation_position(self, goal_position):
+        if self.status == Robot.Status.WALKING:
+            if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position[0:2]) - np.array(goal_position[0:2])) < 0.05:
+                print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+                return False
+            else:
+                print("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
 
         self.start_position = self.position
         self.goal_position = goal_position
@@ -37,25 +41,44 @@ class RobotControlled(Robot):
         self.status = Robot.Status.WALKING
         return True
 
-    #TODO move to 3D?
-
     def position_to_transformation(self, position):
         transfrom_position = (position[0], position[1], 0.)
-        q = transformations.quaternion_about_axis(position[2], (0, 0, 1))
-        transform_quaternion = [q[0], q[1], q[2], q[3]]
-        return transformation.Transformation(transfrom_position, transform_quaternion)
+        q = Transformation.get_quaternion_from_euler([position[2], 0, 0])
+        return Transformation(transfrom_position, q)
 
     def transformation_to_position(self, transform):
         transform_position = transform.get_position()
         transform_quaternion = transform.get_orientation()
-        transfrom_angle = transformations.euler_from_quaternion([
-            transform_quaternion[0],
-            transform_quaternion[1],
-            transform_quaternion[2],
-            transform_quaternion[3],
-        ])
+        transform_angle = Transformation.get_euler_from_quaternion(transform_quaternion)
+        return np.array([transform_position[0], transform_position[1], transform_angle[0]])
 
-        return np.array([transform_position[0], transform_position[1], transfrom_angle[2]])
+    def can_kick(self, ball, goal_position):
+        if ball is None or ball.position is None:
+            return False
+
+        # generate destination pose
+        ball_position = ball.position[0:2]
+        player_position = self.position[0:2]
+        player_angle = self.position[2]
+
+
+        # difference between robot angle and nav goal angle
+        robot_ball_vector = ball_position - player_position
+        robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
+
+        nav_angle_diff = (player_angle - robot_ball_angle)
+        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+
+        if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) < 0.15:
+            if nav_angle_diff > 0.03:
+                self.kick_with_right_foot = True
+            else:
+                self.kick_with_right_foot = False
+            print(
+                "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".
+                format(self.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball, self.kick_with_right_foot))
+            return True
+        return False
 
     @abc.abstractmethod
     def terminate_walk(self):
