@@ -1,7 +1,6 @@
 import os
 from robot import Robot
 from robot_controlled import RobotControlled
-
 import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
