@@ -2,6 +2,8 @@ import os
 import enum
 
 import rospy
+from rospy import ROSException
+from sensor_msgs.msg import JointState
 
 from soccer_common.transformation import Transformation as tr
 import matplotlib.pyplot as plt
@@ -198,12 +200,18 @@ class Soccerbot:
         configuration[Joints.HEAD_2] = 0
 
         # Slowly ease into the ready position
-        if sum(self.configuration[Links.LEFT_LEG_6:Links.RIGHT_LEG_6 + 1]) == 0:
-            for r in np.arange(0, 1, 0.040):
-                rospy.loginfo_throttle(1, "Going into ready position")
-                self.configuration = (np.array(configuration) * r).tolist()
-                self.publishAngles()
-                rospy.sleep(0.020)
+        previous_configuration = self.configuration
+        try:
+            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+            previous_configuration = joint_state.position
+        except ROSException as ex:
+            rospy.logerr(ex)
+
+        for r in np.arange(0, 1, 0.040):
+            rospy.loginfo_throttle(1, "Going into ready position")
+            self.configuration[0:18] = (np.array(np.array(configuration[0:18]) - np.array(previous_configuration)) * r + np.array(previous_configuration)).tolist()
+            self.publishAngles()
+            rospy.sleep(0.020)
 
         self.configuration_offset = [0] * len(Joints)
 
@@ -212,6 +220,11 @@ class Soccerbot:
                                      jointIndices=list(range(0, 20, 1)),
                                      targetPositions=self.get_angles(),
                                      forces=self.max_forces)
+
+    def updateRobotConfiguration(self):
+        joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+        self.configuration[0:18] = joint_state.position
+        pass
 
     def inverseKinematicsRightFoot(self, transformation):
         """

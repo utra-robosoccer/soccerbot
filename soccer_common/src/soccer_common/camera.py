@@ -1,4 +1,5 @@
 import tf
+import tf2_py
 import tf2_ros
 from geometry_msgs.msg import Pose, TransformStamped
 from sensor_msgs.msg import CameraInfo
@@ -46,7 +47,7 @@ class Camera:
                 latest_time = min(latest_time, timestamp)
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, latest_time)
                 break
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException) as ex:
                 rospy.logwarn_throttle(10, str(ex))
                 rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}")
                 try:

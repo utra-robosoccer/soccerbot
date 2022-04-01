@@ -134,6 +134,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 exit(0)
 
         self.soccerbot.reset_imus()
+        self.soccerbot.updateRobotConfiguration()
         time_now = 0
 
         while not rospy.is_shutdown():
@@ -228,7 +229,7 @@ class SoccerbotControllerRos(SoccerbotController):
                             t = 0
                     else:
                         stable_count = 5
-            elif self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
+            elif self.soccerbot.robot_state.status == RobotState.STATUS_WALKING and self.t > self.soccerbot.robot_path.duration():
                 rospy.loginfo_throttle_identical(1, "Performing post stabilization")
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
