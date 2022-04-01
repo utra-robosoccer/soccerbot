@@ -41,15 +41,19 @@ class Camera:
             base_frame = self.robot_name + '/odom'
             target_frame = self.robot_name + '/camera'
 
+        attempt = 0
         while not rospy.is_shutdown():
             try:
                 latest_time = self.tf_listener.getLatestCommonTime(base_frame, target_frame)
-                latest_time = min(latest_time, timestamp)
+                if attempt < 20:
+                    latest_time = min(latest_time, timestamp)
+
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, latest_time)
                 break
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException) as ex:
                 rospy.logwarn_throttle(10, str(ex))
                 rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}")
+                attempt = attempt + 1
                 try:
                     rospy.sleep(0.1)
                 except ROSInterruptException:
