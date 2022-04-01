@@ -45,7 +45,16 @@ int16 secondsRemaining
 int32 secondary_seconds_remaining
 
 bool hasKickOff
-bool penalized
+
+uint8 PENALTY_NONE = 0
+uint8 PENALTY_HL_BALL_MANIPULATION = 30
+uint8 PENALTY_HL_PHYSICAL_CONTACT = 31
+uint8 PENALTY_HL_ILLEGAL_ATTACK = 32
+uint8 PENALTY_HL_ILLEGAL_DEFENSE = 33
+uint8 PENALTY_HL_PICKUP_OR_INCAPABLE = 34
+uint8 PENALTY_HL_SERVICE = 35
+uint16 penalty
+
 uint16 secondsTillUnpenalized
 
 # Team colors
