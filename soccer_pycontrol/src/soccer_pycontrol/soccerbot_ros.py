@@ -184,7 +184,6 @@ class SoccerbotRos(Soccerbot):
                 self.last_ball_found_timestamp = ball_found_timestamp
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                self.last_ball_found_timestamp = None
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
@@ -196,9 +195,8 @@ class SoccerbotRos(Soccerbot):
 
                 rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
 
-                if abs(anglelr) < 0.05 and abs(angleud) < 0.05:
+                if abs(anglelr) < 0.1 and abs(angleud) < 0.1:
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
-                    rospy.sleep(0.5)
                     self.head_centered_on_ball_publisher.publish()
 
                 self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0025
