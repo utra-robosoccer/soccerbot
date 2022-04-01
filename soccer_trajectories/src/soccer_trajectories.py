@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import copy
 import os
+
+from soccer_msgs.msg import RobotState
 from std_msgs.msg import Empty
 from soccer_msgs.msg import FixedTrajectoryCommand
 import csv
@@ -16,6 +18,7 @@ class Trajectory:
         """Initialize a Trajectory from a CSV file at trajectory_path.
         if it's getup trajectory append the desired final pose so the robot is ready for next action
         expects rectangular shape for csv table"""
+        self.terminate = False
         self.mirror = mirror
         self.splines = {}
         self.step_map = {}
@@ -67,7 +70,7 @@ class Trajectory:
         pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
         rate = rospy.Rate(100)
         t = 0
-        while not rospy.is_shutdown() and t < self.max_time:
+        while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()
             js.name = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
                        "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
@@ -102,8 +105,14 @@ class SoccerTrajectoryClass:
         self.trajectory_path = ""
         self.simulation = True
         self.trajectory_complete = True
+        self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
+        self.robot_state_sub = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
         self.finish_trajectory = rospy.Publisher('action_complete', Empty, queue_size=1)
+
+    def robot_state_callback(self, state: RobotState):
+        if state.status in [RobotState.STATUS_PENALIZED]:
+            self.trajectory.terminate = True
 
     def run_trajectory(self, command: FixedTrajectoryCommand):
         if not self.trajectory_complete:
@@ -120,8 +129,8 @@ class SoccerTrajectoryClass:
             return
 
         rospy.loginfo("Running Trajectory: " + command.trajectory_name)
-        trajectory = Trajectory(path, command.mirror)
-        trajectory.run()
+        self.trajectory = Trajectory(path, command.mirror)
+        self.trajectory.run()
         rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
