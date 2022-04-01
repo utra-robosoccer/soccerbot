@@ -5,6 +5,7 @@ import rospy
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, PoseArray, Pose
 from std_msgs.msg import Empty, Bool
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
+from soccer_common import Transformation
 import numpy as np
 import tf.transformations
 import time
@@ -149,16 +150,17 @@ class RobotControlled3D(RobotControlled):
         self.navigation_goal_localized_time = time.time()
 
     def imu_callback(self, msg):
-        angle_threshold = 1.25  # in radian
-        q = msg.orientation
-        roll, pitch, yaw = tf.transformations.euler_from_quaternion([q.w, q.x, q.y, q.z])
+        angle_threshold = 1.1  # in radian
+        t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z,
+                       msg.orientation.w])
+        roll, pitch, yaw = t.get_orientation_euler()
         if self.status in [Robot.Status.DETERMINING_SIDE, Robot.Status.READY, Robot.Status.WALKING,
                            Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.LOCALIZING]:
-            if pitch > angle_threshold:
+            if pitch < -angle_threshold:
                 rospy.logwarn_throttle(1, "Fallen Back")
                 self.status = Robot.Status.FALLEN_BACK
 
-            elif pitch < -angle_threshold:
+            elif pitch > angle_threshold:
                 rospy.logwarn_throttle(1, "Fallen Front")
                 self.status = Robot.Status.FALLEN_FRONT
 

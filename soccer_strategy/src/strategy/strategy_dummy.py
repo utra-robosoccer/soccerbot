@@ -85,9 +85,6 @@ class StrategyDummy(Strategy):
                                 "Player {}: Navigation | Destination position biased {}".format(current_closest.robot_id, destination_position_biased))
                             this_robot.set_navigation_position(destination_position_biased) # TODO dynamic walking
         else:
-            # If player is not facing the right direction, and not seeing the ball, then face the goal
-            print("Player {}: Cannot find the ball".format(this_robot.robot_id))
-
             if this_robot.status not in [Robot.Status.WALKING, Robot.Status.KICKING]:
                 self.havent_seen_the_ball_timeout = self.havent_seen_the_ball_timeout - 1
 

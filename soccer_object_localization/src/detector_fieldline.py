@@ -43,7 +43,6 @@ class DetectorFieldline(Detector):
         self.publish_point_cloud = True
 
     def image_callback(self, img: Image):
-        rospy.loginfo_once("Recieved Message")
 
         t_start = time.time()
 
@@ -56,6 +55,7 @@ class DetectorFieldline(Detector):
         pts = []
 
         self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
+        rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)

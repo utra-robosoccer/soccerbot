@@ -28,7 +28,7 @@ class Path:
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
         theta_diff = wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])
         pos_theta_diff = math.atan2(end_transform.get_position()[1] - start_transform.get_position()[1], end_transform.get_position()[0] - start_transform.get_position()[0])
-        if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 3:
+        if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 4:
             return True
 
         return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
