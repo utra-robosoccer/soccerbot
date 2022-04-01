@@ -48,6 +48,7 @@ class SoccerbotRos(Soccerbot):
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
+        self.last_ball_pose = (None, None)
         self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
@@ -173,33 +174,23 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * SoccerbotRos.HEAD_YAW_FREQ * 3) * (math.pi * 0.05)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
-            recenterCameraOnBall = False
             try:
                 (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
                                                              os.environ["ROS_NAMESPACE"] + '/ball',
                                                              rospy.Time(0))
                 ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
                                                                          os.environ["ROS_NAMESPACE"] + '/ball')
-                if rospy.Time.now() - ball_found_timestamp > rospy.Duration(1):
-                    self.last_ball_found_timestamp = None
-                    rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
-                else:
-                    self.last_ball_found_timestamp = ball_found_timestamp
-                    recenterCameraOnBall = True
+                self.last_ball_pose = (trans, rot)
+                self.last_ball_found_timestamp = ball_found_timestamp
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 self.last_ball_found_timestamp = None
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
-            # Search for the ball if can't find the ball
-            if self.last_ball_found_timestamp is None:
-                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
-                self.head_step += 1
-
-            # Recenter the head onto the ball
-            elif recenterCameraOnBall:
+            # If the last time it saw the ball was 10 seconds ago
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
+                (trans, rot) = self.last_ball_pose
                 anglelr = math.atan2(trans[1], trans[0])
                 angleud = math.atan2(trans[2], trans[0])
 
@@ -212,6 +203,10 @@ class SoccerbotRos(Soccerbot):
 
                 self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0025
                 self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0016
+            else:
+                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+                self.head_step += 1
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)

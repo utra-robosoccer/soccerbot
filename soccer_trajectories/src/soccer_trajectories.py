@@ -113,7 +113,8 @@ class SoccerTrajectoryClass:
 
     def robot_state_callback(self, state: RobotState):
         if state.status in [RobotState.STATUS_PENALIZED]:
-            self.trajectory.terminate = True
+            if self.trajectory is not None:
+                self.trajectory.terminate = True
 
     def run_trajectory(self, command: FixedTrajectoryCommand):
         if not self.trajectory_complete:

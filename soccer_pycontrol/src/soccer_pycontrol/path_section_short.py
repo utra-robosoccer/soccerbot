@@ -14,13 +14,6 @@ class PathSectionShort(PathSection):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
-        # Scale Yaw
-        start_angle = self.start_transform.get_orientation_euler()[0]
-        final_angle = self.end_transform.get_orientation_euler()[0]
-        angle_diff = wrapToPi(final_angle - start_angle)
-        angle_diff = max(min(start_angle + angle_diff * self.scale_yaw, np.pi), -np.pi)
-        self.end_transform.set_orientation(Transformation.get_quaternion_from_euler([angle_diff, 0, 0]))
-
         if self.isWalkingBackwards():
             bodystep_size = 0.025
         else:
@@ -34,6 +27,7 @@ class PathSectionShort(PathSection):
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
+        intermediate_angle = wrapToPi(intermediate_angle - start_angle) * self.scale_yaw + start_angle
         if self.isWalkingBackwards():
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
         final_angle = self.end_transform.get_orientation_euler()[0]
