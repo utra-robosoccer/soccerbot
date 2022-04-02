@@ -48,7 +48,7 @@ RobocupSoccerField {
 }
 DEF robot1 simplified_Bez {
 
-  translation 3.5 -3.06 0.362568
+  translation 4 -3.15 0.362568
   rotation 0 0 1 1.57
   name "robot1"
   controller "<extern>"

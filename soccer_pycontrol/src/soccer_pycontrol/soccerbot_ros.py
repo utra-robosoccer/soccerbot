@@ -81,11 +81,12 @@ class SoccerbotRos(Soccerbot):
     def stepPath(self, t, verbose=False):
         super(SoccerbotRos, self).stepPath(t, verbose=verbose)
 
-        # base_pose, base_orientation = pb.getBasePositionAndOrientation(self.body) # Get odometry from the simulator itself >:)
-        # Get odometry from the simulator itself >:)
+        # Get odom from odom_path
+        t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
+        crotch_position = self.robot_odom_path.crotchPosition(t_adjusted) @ self.torso_offset
 
-        base_pose = self.pose.get_position()
-        base_orientation = self.pose.get_orientation()
+        base_pose = crotch_position.get_position()
+        base_orientation = crotch_position.get_orientation()
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self, robot_path=None):
@@ -199,8 +200,8 @@ class SoccerbotRos(Soccerbot):
                     rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
                     self.head_centered_on_ball_publisher.publish()
 
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.0025
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.0016
+                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.005
+                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.003
             else:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15

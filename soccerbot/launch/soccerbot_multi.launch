@@ -10,7 +10,7 @@
         <arg name="fake_localization" value="$(arg fake_localization)" />
     </include>
 
-<!--    <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1" >
         <arg name="simulation" value="$(arg simulation)" />
