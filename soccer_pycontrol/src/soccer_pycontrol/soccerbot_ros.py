@@ -176,11 +176,12 @@ class SoccerbotRos(Soccerbot):
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             try:
-                (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
-                                                             os.environ["ROS_NAMESPACE"] + '/ball',
-                                                             rospy.Time(0))
                 ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
                                                                          os.environ["ROS_NAMESPACE"] + '/ball')
+                (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
+                                                             os.environ["ROS_NAMESPACE"] + '/ball',
+                                                             ball_found_timestamp)
+
                 self.last_ball_pose = (trans, rot)
                 self.last_ball_found_timestamp = ball_found_timestamp
 
@@ -203,15 +204,16 @@ class SoccerbotRos(Soccerbot):
                 self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.005
                 self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.003
             else:
-                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+                self.configuration[Joints.HEAD_1] = math.cos(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+                self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.sin(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
                 self.head_step += 1
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
-            self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.sin(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0
             self.configuration[Joints.HEAD_2] = 0
+            self.head_step = 0
 

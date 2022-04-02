@@ -8,7 +8,7 @@ from copy import deepcopy
 
 class PathSectionShort(PathSection):
     steps_per_second_default = 2.5 # try 6 motors P = 09.25
-    scale_yaw = 1.7 # Increase the rotation by angle
+    scale_yaw = 1.0 # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform

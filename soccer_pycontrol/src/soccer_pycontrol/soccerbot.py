@@ -222,9 +222,11 @@ class Soccerbot:
                                      forces=self.max_forces)
 
     def updateRobotConfiguration(self):
-        joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-        self.configuration[0:18] = joint_state.position
-        pass
+        try:
+            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+            self.configuration[0:18] = joint_state.position
+        except ROSException as ex:
+            rospy.logerr(ex)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
