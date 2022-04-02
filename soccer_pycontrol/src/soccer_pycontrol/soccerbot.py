@@ -225,7 +225,7 @@ class Soccerbot:
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
             self.configuration[0:18] = joint_state.position
-        except ROSException as ex:
+        except (ROSException, KeyError) as ex:
             rospy.logerr(ex)
 
     def inverseKinematicsRightFoot(self, transformation):

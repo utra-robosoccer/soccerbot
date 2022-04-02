@@ -126,7 +126,7 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.06:
+            if covariance_trace < 0.05:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
             elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(
@@ -140,7 +140,7 @@ class RobotControlled3D(RobotControlled):
             self.goal_position = None
             covariance_trace = np.sqrt(self.amcl_pose.pose.covariance[0] ** 2 + self.amcl_pose.pose.covariance[7] ** 2)
             if covariance_trace > 0.2:
-                rospy.logwarn(1, "Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
+                rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
             else:
                 self.status = Robot.Status.READY

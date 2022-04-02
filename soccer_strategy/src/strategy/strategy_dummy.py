@@ -42,7 +42,7 @@ class StrategyDummy(Strategy):
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         this_robot = self.get_current_robot(friendly_team)
 
-        if this_robot.status in [Robot.Status.WALKING, Robot.Status.KICKING]:
+        if this_robot.status in [Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_FRONT, Robot.Status.FALLEN_SIDE, Robot.Status.TRAJECTORY_IN_PROGRESS]:
             self.time_of_end_of_action = rospy.Time.now()
 
         if friendly_team.average_ball_position.position is not None:
@@ -61,6 +61,7 @@ class StrategyDummy(Strategy):
 
                     this_robot.status = Robot.Status.KICKING
                     this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
+                    this_robot.kick()
                 else:
                     # Ball localized, move to ball
                     if (time.time() - this_robot.navigation_goal_localized_time) < 2 and this_robot.status != Robot.Status.WALKING:
@@ -76,7 +77,7 @@ class StrategyDummy(Strategy):
                 # Haven't seen the ball timeout
                 print("Player {}: Rotating to locate ball".format(this_robot.robot_id))
 
-                turn_position = [player_position[0], player_position[1], player_angle + math.pi /2]
+                turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.8]
                 this_robot.set_navigation_position(turn_position)
 
 
