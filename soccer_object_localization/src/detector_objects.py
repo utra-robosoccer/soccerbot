@@ -77,7 +77,7 @@ class DetectorBall(Detector):
                     elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1.6: # meters from previous position
                         rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
                         self.last_ball_pose_counter = self.last_ball_pose_counter + 1
-                        if self.last_ball_pose_counter > 3: # Counter to prevent being stuck when the ball is in a different location
+                        if self.last_ball_pose_counter > 8: # Counter to prevent being stuck when the ball is in a different location
                             self.last_ball_pose_counter = 0
                             self.last_ball_pose = None
                         continue

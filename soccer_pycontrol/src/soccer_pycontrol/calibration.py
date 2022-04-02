@@ -304,6 +304,8 @@ class Calibration:
         plt.show()
 
     def adjust_navigation_transform(self, start_transform: Transformation, end_transform: Transformation) -> Transformation:
+        if np.linalg.norm(start_transform.get_transform()[0:2] - end_transform.get_transform()[0:2]) < 0.05:
+            return end_transform
 
         diff_transform = np.linalg.inv(start_transform) @ end_transform
         diff_position = diff_transform[0:2, 3]
