@@ -24,6 +24,7 @@ class RobotControlled3D(RobotControlled):
 
         # Subscibers
         self.amcl_pose_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
+        self.amcl_pose = None
         self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty,
                                                             self.action_completed_callback, queue_size=1)
@@ -75,11 +76,9 @@ class RobotControlled3D(RobotControlled):
     def update_robot_state(self, _):
         # Get Ball Position from TF
         try:
-            ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball', rospy.Time(0))
-            header = self.tf_listener.getLatestCommonTime('world', "robot" + str(self.robot_id) + '/ball')
-            time_diff = rospy.Time.now() - header
-            if time_diff < rospy.Duration(1):
-                self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
+            self.observed_ball.last_observed_time_stamp = self.tf_listener.getLatestCommonTime('world', "robot" + str(self.robot_id) + '/ball')
+            ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball', self.observed_ball.last_observed_time_stamp)
+            self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
             self.observed_ball.position = None
@@ -123,10 +122,11 @@ class RobotControlled3D(RobotControlled):
         pass
 
     def amcl_pose_callback(self, amcl_pose: PoseWithCovarianceStamped):
+        self.amcl_pose = amcl_pose
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.04:
+            if covariance_trace < 0.06:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
             elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(
@@ -138,7 +138,13 @@ class RobotControlled3D(RobotControlled):
         if self.status in [Robot.Status.WALKING, Robot.Status.TERMINATING_WALK, Robot.Status.KICKING,
                            Robot.Status.TRAJECTORY_IN_PROGRESS]:
             self.goal_position = None
-            self.status = Robot.Status.LOCALIZING
+            covariance_trace = np.sqrt(self.amcl_pose.pose.covariance[0] ** 2 + self.amcl_pose.pose.covariance[7] ** 2)
+            if covariance_trace > 0.2:
+                rospy.logwarn(1, "Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
+                self.status = Robot.Status.LOCALIZING
+            else:
+                self.status = Robot.Status.READY
+
             self.time_since_action_completed = rospy.Time.now()
         elif self.status == Robot.Status.PENALIZED:
             self.goal_position = None
