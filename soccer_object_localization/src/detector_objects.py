@@ -71,16 +71,16 @@ class DetectorBall(Detector):
                     continue
 
                 # Exclude balls that are too far from the previous location
-                # if self.last_ball_pose is not None:
-                #     if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
-                #         pass
-                #     elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1: # meters from previous position
-                #         rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
-                #         self.last_ball_pose_counter = self.last_ball_pose_counter + 1
-                #         if self.last_ball_pose_counter > 20: # Counter to prevent being stuck when the ball is in a different location
-                #             self.last_ball_pose_counter = 0
-                #             self.last_ball_pose = None
-                #         continue
+                if self.last_ball_pose is not None:
+                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
+                        pass
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1.5: # meters from previous position
+                        rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
+                        self.last_ball_pose_counter = self.last_ball_pose_counter + 1
+                        if self.last_ball_pose_counter > 3: # Counter to prevent being stuck when the ball is in a different location
+                            self.last_ball_pose_counter = 0
+                            self.last_ball_pose = None
+                        continue
 
 
                 # Get the largest detection
