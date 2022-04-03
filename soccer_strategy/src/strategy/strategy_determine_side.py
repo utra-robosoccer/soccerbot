@@ -90,6 +90,6 @@ class StrategyDetermineSide(Strategy):
                         available_roles.pop(closest_role_index)
 
         if self.measurements > 1:
-            current_robot.status = Robot.Status.LOCALIZING
+            current_robot.status = Robot.Status.READY
             current_robot.time_since_action_completed = rospy.Time.now()
 
