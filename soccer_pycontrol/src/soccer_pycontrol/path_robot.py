@@ -119,5 +119,3 @@ class PathRobot(PathCrotch):
         fig.canvas.draw()
         plt.show(block=False)
         #plt.show()
-
-

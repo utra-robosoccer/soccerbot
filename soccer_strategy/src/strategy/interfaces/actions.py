@@ -82,4 +82,3 @@ class Actions:
             "Player {}: Navigation | Destination position biased {}".format(robot.robot_id,
                                                                             destination_position_biased))
         Actions.navigation_to_position(robot, destination_position_biased)
-

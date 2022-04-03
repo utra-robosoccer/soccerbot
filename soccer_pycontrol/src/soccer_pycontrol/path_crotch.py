@@ -99,4 +99,3 @@ class PathCrotch(PathFoot):
             tfInterp[:, :, i] = self.crotchPosition(t)
             i = i + 1
         self.show_tf(fig, tfInterp, len(iterator))
-

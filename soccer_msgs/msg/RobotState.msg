@@ -35,4 +35,3 @@ geometry_msgs/Pose pose
 # ball position, rotation is not used (in the map frame)
 # TODO indicate whether observed ball value is valid
 geometry_msgs/Pose2D ball_pose
-

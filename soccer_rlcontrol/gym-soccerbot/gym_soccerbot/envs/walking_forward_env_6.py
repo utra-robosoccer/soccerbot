@@ -608,11 +608,11 @@ class WalkingForwardV6(gym.Env):
         height = np.array([self._global_pos()[2]], dtype=self.DTYPE)
         orn = self._global_orn()
         observation = np.concatenate((joints_pos, joints_vel, imu, orn, height, feet))
-        
+
         # To keep up with the pipeline - 120Hz
         p.stepSimulation()
         p.stepSimulation()
-        
+
         if self._renders:
             pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         return observation

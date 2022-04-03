@@ -7,8 +7,8 @@ input_folder = '/home/nam/dataset/ball_bounding_boxes_positive'
 output_folder = '/home/nam/dataset/ball_bounding_boxes_positive_small'
 
 def process_img(img_name):
-    path = os.path.join(input_folder, img_name) 
-    
+    path = os.path.join(input_folder, img_name)
+
     img = cv2.imread(path)
     img = img[:,:,:3] # get rid of alpha channel
     scale = 480 / 300 # ~3.6
@@ -21,7 +21,7 @@ def process_img(img_name):
     y_offset = y/2 - h/2
 
     crop_img = img[int(y_offset):int(y_offset+h), int(x_offset):int(x_offset+w)]
-    
+
     new_path = os.path.join(output_folder, img_name)
     cv2.imwrite(new_path, crop_img)
 
