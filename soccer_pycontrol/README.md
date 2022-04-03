@@ -1,13 +1,16 @@
 #### Control Code
+
 The code here takes joint states from a robot and executes control code
 
 IDE Setup
+
 ```shell script
 Change your project python intepretor to the system python 3.6
 Mark the folder soccer_pycontrol/src as a root directory
 ```
 
 Installation
+
 ```shell script
 # Make sure you are in the same directory as the README
 sudo apt-get install python3-tk

@@ -1,4 +1,5 @@
 # Undegraduate Thesis Project
+
 Convolutional Neural Networks for Ball and Robot detection in Robocup Humanoid Kid-Size league.
 
 ![Alt text](outputs/sample.png?raw=true "Activations with bounding boxes")
@@ -6,6 +7,7 @@ Convolutional Neural Networks for Ball and Robot detection in Robocup Humanoid K
 ## Download Dataset
 
 ### train dataset
+
 1. https://imagetagger.bit-bots.de/images/imageset/13/ #bitbots-set00-05
 2. https://imagetagger.bit-bots.de/images/imageset/836/ #sequences-jasper-euro-ball-1
 3. https://imagetagger.bit-bots.de/images/imageset/153/ #sequences-euro-ball-robot-1
@@ -19,6 +21,7 @@ Convolutional Neural Networks for Ball and Robot detection in Robocup Humanoid K
 11. https://imagetagger.bit-bots.de/images/imageset/154/ #sequences-misc-ball-1
 
 ### test dataset
+
 1. https://imagetagger.bit-bots.de/images/imageset/833/ #test-wolves-01
 2. https://imagetagger.bit-bots.de/images/imageset/835/ #test-nagoya-game-02
 

@@ -21,10 +21,7 @@
   "lr_schedule": null,
   "model": {
     "fcnet_activation": "tanh",
-    "fcnet_hiddens": [
-      64,
-      64
-    ],
+    "fcnet_hiddens": [64, 64],
     "free_log_std": false,
     "vf_share_layers": false
   },

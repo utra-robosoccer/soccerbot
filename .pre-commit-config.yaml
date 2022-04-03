@@ -2,6 +2,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
+      - id: check-symlinks
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+      - id: check-xml
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: check-yaml
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: end-of-file-fixer
@@ -15,12 +19,17 @@ repos:
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
         args:
           - --line-length=150
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: ""
+    hooks:
+      - id: prettier
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
   - repo: https://github.com/pycqa/isort
     rev: 5.10.1
     hooks:
       - id: isort
         name: isort
-        args: [ "--profile", "black" ]
+        args: ["--profile", "black"]
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
