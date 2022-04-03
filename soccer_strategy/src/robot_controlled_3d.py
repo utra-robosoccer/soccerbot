@@ -156,22 +156,22 @@ class RobotControlled3D(RobotControlled):
         self.navigation_goal_localized_time = time.time()
 
     def imu_callback(self, msg):
-        angle_threshold = 1.1  # in radian
+        angle_threshold = 1.2  # in radian
         t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z,
                        msg.orientation.w])
         roll, pitch, yaw = t.get_orientation_euler()
         if self.status in [Robot.Status.DETERMINING_SIDE, Robot.Status.READY, Robot.Status.WALKING,
                            Robot.Status.TERMINATING_WALK, Robot.Status.KICKING, Robot.Status.LOCALIZING]:
             if pitch < -angle_threshold:
-                rospy.logwarn_throttle(1, "Fallen Back")
+                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw})")
                 self.status = Robot.Status.FALLEN_BACK
 
             elif pitch > angle_threshold:
-                rospy.logwarn_throttle(1, "Fallen Front")
+                rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw})")
                 self.status = Robot.Status.FALLEN_FRONT
 
             elif yaw < -angle_threshold or yaw > angle_threshold:
-                rospy.logwarn_throttle(1, "Fallen Side")
+                rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw})")
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, position):
