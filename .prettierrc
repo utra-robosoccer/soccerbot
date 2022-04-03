@@ -4,6 +4,7 @@ overrides:
     options:
       parser: "html"
       printWidth: 1000
+      tabWidth: 4
   - files: "*.yaml"
     options:
       tabWidth: 2

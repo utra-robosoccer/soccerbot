@@ -1,14 +1,14 @@
 <launch>
-  <arg name="robot_name" default="robot1" />
-  <arg name="competition" default="$(optenv COMPETITION false)" />
+    <arg name="robot_name" default="robot1" />
+    <arg name="competition" default="$(optenv COMPETITION false)" />
 
-  <env name="WEBOTS_HOME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots" />
-  <env name="LD_LIBRARY_PATH" value="$(env LD_LIBRARY_PATH):$HOME/catkin_ws/src/soccerbot/external/webots/lib/controller" />
-  <env name="PYTHONPATH" value="$(env PYTHONPATH):$(env HOME)/catkin_ws/src/soccerbot/external/webots/lib/controller/python38" />
+    <env name="WEBOTS_HOME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots" />
+    <env name="LD_LIBRARY_PATH" value="$(env LD_LIBRARY_PATH):$HOME/catkin_ws/src/soccerbot/external/webots/lib/controller" />
+    <env name="PYTHONPATH" value="$(env PYTHONPATH):$(env HOME)/catkin_ws/src/soccerbot/external/webots/lib/controller/python38" />
 
-  <node pkg="soccer_webots" type="start_single.py" name="webots_ros_interface" output="screen" args="--robot_name $(arg robot_name) --robot_tag /$(arg robot_name)" unless="$(arg competition)" />
+    <node pkg="soccer_webots" type="start_single.py" name="webots_ros_interface" output="screen" args="--robot_name $(arg robot_name) --robot_tag /$(arg robot_name)" unless="$(arg competition)" />
 
-  <!-- Competition -->
-  <node pkg="soccer_webots" type="game_controller_bridge.py" name="game_controller_bridge" output="screen" args="--robot_name $(arg robot_name)" if="$(arg competition)"> </node>
-  <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" if="$(arg competition)" />
+    <!-- Competition -->
+    <node pkg="soccer_webots" type="game_controller_bridge.py" name="game_controller_bridge" output="screen" args="--robot_name $(arg robot_name)" if="$(arg competition)"> </node>
+    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" if="$(arg competition)" />
 </launch>

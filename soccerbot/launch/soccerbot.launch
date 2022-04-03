@@ -1,19 +1,19 @@
 <launch>
-  <arg name="simulation" default="true" />
-  <arg name="x_pos" default="$(optenv X_POS 0)" />
-  <arg name="y_pos" default="$(optenv Y_POS 0)" />
-  <arg name="a_pos" default="$(optenv YAW 0)" />
-  <arg name="fake_localization" default="false" />
-  <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
-  <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
-  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
+    <arg name="simulation" default="true" />
+    <arg name="x_pos" default="$(optenv X_POS 0)" />
+    <arg name="y_pos" default="$(optenv Y_POS 0)" />
+    <arg name="a_pos" default="$(optenv YAW 0)" />
+    <arg name="fake_localization" default="false" />
+    <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
 
-  <param name="/simulation_active" value="true" />
-  <param name="/use_sim_time" value="true" />
+    <param name="/simulation_active" value="true" />
+    <param name="/use_sim_time" value="true" />
 
-  <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
-  <!-- prettier-ignore -->
-  <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
+    <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
+    <!-- prettier-ignore -->
+    <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
         file_path:=package://soccer_description
@@ -22,36 +22,36 @@
         "
     />
 
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="120.0" />
-  </node>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="120.0" />
+    </node>
 
-  <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
-    <arg name="robot_name" value="$(arg robot_name)" />
-  </include>
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
 
-  <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
-    <arg name="robot_name" value="$(arg robot_name)" />
-  </include>
+    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
 
-  <include file="$(find soccerbot)/launch/modules/localization.launch">
-    <arg name="fake_localization" value="$(arg fake_localization)" />
-    <arg name="robot_name" value="$(arg robot_name)" />
-    <arg name="x_pos" value="$(arg x_pos)" />
-    <arg name="y_pos" value="$(arg y_pos)" />
-    <arg name="a_pos" value="$(arg a_pos)" />
-    <arg name="map_name" value="robocup" if="$(arg simulation)" />
-    <arg name="map_name" value="test" unless="$(arg simulation)" />
-  </include>
+    <include file="$(find soccerbot)/launch/modules/localization.launch">
+        <arg name="fake_localization" value="$(arg fake_localization)" />
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="a_pos" value="$(arg a_pos)" />
+        <arg name="map_name" value="robocup" if="$(arg simulation)" />
+        <arg name="map_name" value="test" unless="$(arg simulation)" />
+    </include>
 
-  <include file="$(find soccerbot)/launch/modules/navigation.launch">
-    <arg name="simulation" value="$(arg simulation)" />
-  </include>
+    <include file="$(find soccerbot)/launch/modules/navigation.launch">
+        <arg name="simulation" value="$(arg simulation)" />
+    </include>
 
-  <include file="$(find soccerbot)/launch/modules/strategy.launch" />
+    <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
-  <!-- prettier-ignore -->
-  <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
+    <!-- prettier-ignore -->
+    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
         state
         action_complete
         amcl_pose
