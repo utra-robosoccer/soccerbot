@@ -42,3 +42,10 @@ repos:
         additional_dependencies:
           - flake8-black>=0.3.2
         language_version: python3
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+      - id: cmake-format
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        additional_dependencies:
+          - pyyaml

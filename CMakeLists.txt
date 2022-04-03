@@ -1,23 +1,34 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 project(Soccerbot)
-set(CMAKE_PREFIX_PATH $ENV{HOME}/catkin_ws/devel;/opt/ros/noetic)
-set(PYTHON_EXECUTABLE /usr/bin/python3)
-set(CATKIN_TOPLEVEL TRUE)
-set(_cmd "catkin_find_pkg" "catkin" "${CMAKE_SOURCE_DIR}")
+set(CMAKE_PREFIX_PATH
+    $ENV{HOME}/catkin_ws/devel;/opt/ros/noetic
+)
+set(PYTHON_EXECUTABLE
+    /usr/bin/python3
+)
+set(CATKIN_TOPLEVEL
+    TRUE
+)
+set(_cmd
+    "catkin_find_pkg" "catkin" "${CMAKE_SOURCE_DIR}"
+)
 
 # search for catkin within the workspace
-execute_process(COMMAND ${_cmd}
-        RESULT_VARIABLE _res
-        OUTPUT_VARIABLE _out
-        ERROR_VARIABLE _err
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        ERROR_STRIP_TRAILING_WHITESPACE
-        )
+execute_process(
+    COMMAND ${_cmd}
+    RESULT_VARIABLE _res
+    OUTPUT_VARIABLE _out
+    ERROR_VARIABLE _err
+    OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE
+)
 if(NOT _res EQUAL 0 AND NOT _res EQUAL 2)
     # searching fot catkin resulted in an error
     string(REPLACE ";" " " _cmd_str "${_cmd}")
-    message(FATAL_ERROR "Search for 'catkin' in workspace failed (${_cmd_str}): ${_err}")
+    message(
+        FATAL_ERROR
+            "Search for 'catkin' in workspace failed (${_cmd_str}): ${_err}"
+    )
 endif()
 
 # include catkin from workspace or via find_package()
@@ -28,12 +39,14 @@ if(_res EQUAL 0)
     add_subdirectory("${_out}")
 
 else()
-    # use either CMAKE_PREFIX_PATH explicitly passed to CMake as a command line argument
-    # or CMAKE_PREFIX_PATH from the environment
+    # use either CMAKE_PREFIX_PATH explicitly passed to CMake as a command line
+    # argument or CMAKE_PREFIX_PATH from the environment
     if(NOT DEFINED CMAKE_PREFIX_PATH)
         if(NOT "$ENV{CMAKE_PREFIX_PATH}" STREQUAL "")
             if(NOT WIN32)
-                string(REPLACE ":" ";" CMAKE_PREFIX_PATH $ENV{CMAKE_PREFIX_PATH})
+                string(REPLACE ":" ";" CMAKE_PREFIX_PATH
+                               $ENV{CMAKE_PREFIX_PATH}
+                )
             else()
                 set(CMAKE_PREFIX_PATH $ENV{CMAKE_PREFIX_PATH})
             endif()
@@ -53,14 +66,17 @@ else()
 
     # search for catkin in all workspaces
     set(CATKIN_TOPLEVEL_FIND_PACKAGE TRUE)
-    find_package(catkin QUIET
-            NO_POLICY_SCOPE
-            PATHS ${catkin_search_path}
-            NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+    find_package(
+        catkin QUIET NO_POLICY_SCOPE PATHS ${catkin_search_path}
+               NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
+    )
     unset(CATKIN_TOPLEVEL_FIND_PACKAGE)
 
     if(NOT catkin_FOUND)
-        message(FATAL_ERROR "find_package(catkin) failed. catkin was neither found in the workspace nor in the CMAKE_PREFIX_PATH. One reason may be that no ROS setup.sh was sourced before.")
+        message(
+            FATAL_ERROR
+                "find_package(catkin) failed. catkin was neither found in the workspace nor in the CMAKE_PREFIX_PATH. One reason may be that no ROS setup.sh was sourced before."
+        )
     endif()
 endif()
 
