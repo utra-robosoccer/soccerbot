@@ -24,47 +24,39 @@ class CNN(nn.Module):
 
         pad = kernel // 2  # ensure output will have the same dimensions as input
 
-        self.conv1 = nn.Sequential(
-            nn.Conv2d(3, num_features, kernel, padding=pad),
-            nn.BatchNorm2d(num_features)
-        )
+        self.conv1 = nn.Sequential(nn.Conv2d(3, num_features, kernel, padding=pad), nn.BatchNorm2d(num_features))
 
-        self.maxpool1 = nn.Sequential(
-            nn.LeakyReLU(),
-            nn.MaxPool2d(2)
-        )
+        self.maxpool1 = nn.Sequential(nn.LeakyReLU(), nn.MaxPool2d(2))
 
         self.conv2 = nn.Sequential(
             nn.Conv2d(num_features, 2 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(2 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv3 = nn.Sequential(
             nn.Conv2d(2 * num_features, 2 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(2 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
-        self.maxpool2 = nn.Sequential(
-            nn.MaxPool2d(2)
-        )
+        self.maxpool2 = nn.Sequential(nn.MaxPool2d(2))
 
         # concat 16 + 32
         self.conv4 = nn.Sequential(
             nn.Conv2d(3 * num_features, 4 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(4 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv5 = nn.Sequential(
             nn.Conv2d(4 * num_features, 4 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(4 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         # concat 48 + 32
@@ -72,7 +64,7 @@ class CNN(nn.Module):
             nn.Conv2d(7 * num_features, 8 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(8 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv7 = nn.Sequential(
@@ -80,22 +72,22 @@ class CNN(nn.Module):
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(8 * num_features),
             nn.LeakyReLU(),
-            nn.UpsamplingBilinear2d(size=(150, 200))  # assume input was 250x200pxl
-        )
+            nn.UpsamplingBilinear2d(size=(150, 200)),
+        )  # assume input was 250x200pxl
 
         # concat 48 + 128
         self.conv8 = nn.Sequential(
             nn.Conv2d(11 * num_features, 4 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(4 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv9 = nn.Sequential(
             nn.Conv2d(4 * num_features, 2 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(2 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv10 = nn.Sequential(
@@ -103,27 +95,25 @@ class CNN(nn.Module):
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(2 * num_features),
             nn.LeakyReLU(),
-            nn.UpsamplingBilinear2d(size=(300, 400))  # assume input was 150x200pxl
-        )
+            nn.UpsamplingBilinear2d(size=(300, 400)),
+        )  # assume input was 150x200pxl
 
         # concat 16 + 32
         self.conv11 = nn.Sequential(
             nn.Conv2d(3 * num_features, 1 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(1 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
         self.conv12 = nn.Sequential(
             nn.Conv2d(1 * num_features, 1 * num_features, kernel, padding=pad),
             nn.Dropout2d(p=dropout),
             nn.BatchNorm2d(1 * num_features),
-            nn.LeakyReLU()
+            nn.LeakyReLU(),
         )
 
-        self.conv13 = nn.Sequential(
-            nn.Conv2d(1 * num_features, 3, kernel, padding=pad)
-        )
+        self.conv13 = nn.Sequential(nn.Conv2d(1 * num_features, 3, kernel, padding=pad))
 
     def forward(self, x):
         conv1_out = self.conv1(x)
@@ -171,7 +161,7 @@ def find_batch_bounding_boxes(outputs):
 
         for label in [Label.BALL, Label.ROBOT]:
             img = output[label.value]
-            img_blurred = cv2.GaussianBlur(img.detach().cpu().numpy(), (5,5), cv2.BORDER_DEFAULT)
+            img_blurred = cv2.GaussianBlur(img.detach().cpu().numpy(), (5, 5), cv2.BORDER_DEFAULT)
             output_bbxs[label.value] = find_bounding_boxes(img_blurred)
 
         batch_bbxs.append(output_bbxs)

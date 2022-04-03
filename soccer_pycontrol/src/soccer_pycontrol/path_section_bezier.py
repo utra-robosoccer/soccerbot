@@ -4,6 +4,7 @@ import numpy as np
 from scipy.special import comb
 from soccer_pycontrol.path_section import PathSection
 
+
 class PathSectionBezier(PathSection):
     turn_duration = 3  # Number of body steps to turn
 
@@ -30,7 +31,7 @@ class PathSectionBezier(PathSection):
         del_theta = np.arctan2(del_pose[1], del_pose[0])
         del_psi = np.arctan2(del_pose[2], np.linalg.norm(del_pose[0:2]))
 
-        orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.])
+        orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.0])
         pose.set_orientation(orientation)
         return pose
 
@@ -39,11 +40,11 @@ class PathSectionBezier(PathSection):
 
         p1 = start_transform
         if self.isWalkingBackwards():
-            p2 = np.matmul(start_transform, Transformation([- self.speed * PathSectionBezier.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
+            p3 = np.matmul(end_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
         else:
-            p2 = np.matmul(start_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0., 0.]))
-            p3 = np.matmul(end_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0., 0.]))
+            p2 = np.matmul(start_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
+            p3 = np.matmul(end_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
         p4 = end_transform
 
         p1_pos = p1.get_position()
@@ -57,8 +58,7 @@ class PathSectionBezier(PathSection):
 
             # Cubic bezier
             for i in range(0, 4):
-                position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * (
-                            (1 - r) ** (3 - i)) * (r ** i)
+                position[d] = position[d] + bez_param[i] * comb(3, i, exact=True, repetition=False) * ((1 - r) ** (3 - i)) * (r**i)
         return Transformation(position)
 
     def getRatioFromStep(self, step_num):

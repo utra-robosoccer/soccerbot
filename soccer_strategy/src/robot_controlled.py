@@ -7,10 +7,16 @@ from soccer_pycontrol import path
 from soccer_common.transformation import Transformation
 import math
 
-class RobotControlled(Robot):
 
-    def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED,
-                 status=Robot.Status.DISCONNECTED, position=np.array([0, 0, 0])):
+class RobotControlled(Robot):
+    def __init__(
+        self,
+        robot_id=0,
+        team=Robot.Team.UNKNOWN,
+        role=Robot.Role.UNASSIGNED,
+        status=Robot.Status.DISCONNECTED,
+        position=np.array([0, 0, 0]),
+    ):
         super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
         self.previous_status = self.status
@@ -34,15 +40,12 @@ class RobotControlled(Robot):
 
         self.start_position = self.position
         self.goal_position = goal_position
-        self.path = path.Path(
-            self.position_to_transformation(self.start_position),
-            self.position_to_transformation(self.goal_position)
-        )
+        self.path = path.Path(self.position_to_transformation(self.start_position), self.position_to_transformation(self.goal_position))
         self.status = Robot.Status.WALKING
         return True
 
     def position_to_transformation(self, position):
-        transfrom_position = (position[0], position[1], 0.)
+        transfrom_position = (position[0], position[1], 0.0)
         q = Transformation.get_quaternion_from_euler([position[2], 0, 0])
         return Transformation(transfrom_position, q)
 
@@ -61,12 +64,11 @@ class RobotControlled(Robot):
         player_position = self.position[0:2]
         player_angle = self.position[2]
 
-
         # difference between robot angle and nav goal angle
         robot_ball_vector = ball_position - player_position
         robot_ball_angle = math.atan2(robot_ball_vector[1], robot_ball_vector[0])
 
-        nav_angle_diff = (player_angle - robot_ball_angle)
+        nav_angle_diff = player_angle - robot_ball_angle
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
         if distance_of_player_to_ball < 0.205 and abs(nav_angle_diff) < 0.15:
@@ -75,8 +77,15 @@ class RobotControlled(Robot):
             else:
                 self.kick_with_right_foot = False
             print(
-                "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".
-                format(self.robot_id, player_angle, robot_ball_angle, nav_angle_diff, distance_of_player_to_ball, self.kick_with_right_foot))
+                "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".format(
+                    self.robot_id,
+                    player_angle,
+                    robot_ball_angle,
+                    nav_angle_diff,
+                    distance_of_player_to_ball,
+                    self.kick_with_right_foot,
+                )
+            )
             return True
         return False
 
@@ -89,5 +98,5 @@ class RobotControlled(Robot):
         pass
 
     @abc.abstractmethod
-    def get_back_up(self, type: str="getupback"):
+    def get_back_up(self, type: str = "getupback"):
         pass

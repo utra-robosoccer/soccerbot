@@ -31,9 +31,10 @@ class Evaluations:
         diff = ball_position - goal_position
         diff_unit = diff / np.linalg.norm(diff)
         diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
-
+        # fmt: off
         nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle),
                                      math.cos(player_angle - diff_angle))
+        # fmt: on
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
         if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15:

@@ -32,19 +32,19 @@ class Receiver(Thread):
         return self._stop_event.is_set()
 
     def _decode(self, raw):
-        """ Decodes raw bytes received from the microcontroller. As per the agreed
-            upon protocol, the first 4 bytes are for a header while the remaining
-            80 bytes contain floats for each motor.
+        """Decodes raw bytes received from the microcontroller. As per the agreed
+        upon protocol, the first 4 bytes are for a header while the remaining
+        80 bytes contain floats for each motor.
         """
         motors = list()
         imu = list()
         for i in range(12):
             # Here, we only unpack for 12 motors since that's all we have connected
             # in our current setup
-            motors.append(struct.unpack('<f', raw[4 + i * 4:8 + i * 4])[0])
+            motors.append(struct.unpack("<f", raw[4 + i * 4 : 8 + i * 4])[0])
         for i in range(6):
             # Unpack IMU Data
-            imu.append(struct.unpack('<f', raw[52 + i * 4: 56 + i * 4])[0])
+            imu.append(struct.unpack("<f", raw[52 + i * 4 : 56 + i * 4])[0])
         return motors, imu
 
     def _receive_packet_from_mcu(self, timeout):
@@ -66,7 +66,7 @@ class Receiver(Thread):
 
         total_bytes_read = 0
         start_seq_count = 0
-        buff = bytes(''.encode())
+        buff = bytes("".encode())
 
         time_start = time.time()
         time_curr = time_start
@@ -76,14 +76,11 @@ class Receiver(Thread):
         while not rp.is_shutdown():
             # First, we wait until we have received some data. If data has
             # already been received, then we quit if the timeout has elapsed
-            while ((num_bytes_available == 0) and
-                   not (data_received and (time_curr - time_start >= timeout)) and
-                   not self._stop_requested()):
+            while (num_bytes_available == 0) and not (data_received and (time_curr - time_start >= timeout)) and not self._stop_requested():
                 time.sleep(0.01)
                 time_curr = time.time()
                 num_bytes_available = self._ser.in_waiting
-            if self._stop_requested() or ((num_bytes_available == 0) and
-                                          (data_received and (time_curr - time_start >= timeout))):
+            if self._stop_requested() or ((num_bytes_available == 0) and (data_received and (time_curr - time_start >= timeout))):
                 break
             else:
                 data_received = True
@@ -93,7 +90,7 @@ class Receiver(Thread):
                 for i in range(num_bytes_available):
                     if start_seq_count == 4:
 
-                        buff = buff + rawData[i:i + 1]
+                        buff = buff + rawData[i : i + 1]
                         total_bytes_read = total_bytes_read + 1
 
                         if total_bytes_read == 84:
@@ -101,7 +98,7 @@ class Receiver(Thread):
                             receive_succeeded = True
                             break
                     else:
-                        if struct.unpack('<B', rawData[i:i + 1])[0] == 0xFF:
+                        if struct.unpack("<B", rawData[i : i + 1])[0] == 0xFF:
                             start_seq_count = start_seq_count + 1
                         else:
                             start_seq_count = 0

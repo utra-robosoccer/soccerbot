@@ -5,6 +5,7 @@ from strategy.strategy_stationary import StrategyStationary
 from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
 from strategy.decision_tree.strategy_decision_tree import StrategyDecisionTree
 
+
 class Test(TestCase):
     def test_dummy_strategy(self):
         friendly_wins = 0
@@ -16,7 +17,7 @@ class Test(TestCase):
                 friendly_wins += 1
             elif friendly_points < opponent_points:
                 opponent_wins += 1
-        print(f'Friendly: {friendly_wins}, opponent: {opponent_wins}')
+        print(f"Friendly: {friendly_wins}, opponent: {opponent_wins}")
 
     def test_formation_strategy(self):
         friendly_wins = 0
@@ -29,4 +30,4 @@ class Test(TestCase):
                 friendly_wins += 1
             elif friendly_points < opponent_points:
                 opponent_wins += 1
-        print(f'Friendly: {friendly_wins}, opponent: {opponent_wins}')
+        print(f"Friendly: {friendly_wins}, opponent: {opponent_wins}")

@@ -29,16 +29,17 @@ import gluoncv
 from gluoncv import model_zoo, data, utils
 import mxnet as mx
 
+
 class ObjectDetectionNode(object):
-    '''
+    """
     Detect ball, robot
     publish bounding boxes
     input: 480x640x4 bgra8 -> output: 3x200x150
-    '''
+    """
 
     def __init__(self, model_path, num_feat):
-        self.model = model_zoo.get_model('yolo3_mobilenet1.0_coco', pretrained=True)
-        self.model.reset_class(classes=['sports ball'], reuse_weights=['sports ball'])
+        self.model = model_zoo.get_model("yolo3_mobilenet1.0_coco", pretrained=True)
+        self.model.reset_class(classes=["sports ball"], reuse_weights=["sports ball"])
 
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         self.camera = Camera(self.robot_name)
@@ -47,18 +48,23 @@ class ObjectDetectionNode(object):
         # Params
         self.br = CvBridge()
 
-        self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=1)
-        self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=1)
-        self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
-        self.robot_state_subscriber = rospy.Subscriber("state", RobotState,
-                                                               self.robot_state_callback)
+        self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1)
+        self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1)
+        self.image_subscriber = rospy.Subscriber(
+            "camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+        )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
 
     def callback(self, msg: Image):
-        if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY, RobotState.ROLE_UNASSIGNED]:
+        if self.robot_state.status not in [
+            RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_READY,
+            RobotState.ROLE_UNASSIGNED,
+        ]:
             return
 
         rospy.loginfo_throttle(60, "Recieved Image")
@@ -85,8 +91,8 @@ class ObjectDetectionNode(object):
             #
             # img_norm = img_torch / 255  # model expects normalized img
 
-            #outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
-            #bbxs = find_batch_bounding_boxes(outputs)[0]
+            # outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
+            # bbxs = find_batch_bounding_boxes(outputs)[0]
 
             x = mx.nd.array(img)
             x, orig_img = data.transforms.presets.rcnn.transform_test([x])
@@ -110,7 +116,7 @@ class ObjectDetectionNode(object):
             bb_msg.xmax = round(ball_bb[2].asscalar() * xratio)
             bb_msg.ymax = round(ball_bb[3].asscalar() * yratio)
             bb_msg.id = Label.BALL.value
-            bb_msg.Class = 'ball'
+            bb_msg.Class = "ball"
             bbs_msg.bounding_boxes.append(bb_msg)
 
             bbs_msg.header = msg.header
@@ -126,7 +132,7 @@ class ObjectDetectionNode(object):
                 self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--model", dest="model_path", default="outputs/model3_feat10", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")

@@ -13,7 +13,6 @@ import tf
 
 
 class SoccerbotRos(Soccerbot):
-
     def __init__(self, position, useFixedBase=False):
 
         super().__init__(position, useFixedBase)
@@ -38,7 +37,7 @@ class SoccerbotRos(Soccerbot):
             "right_leg_motor_4",
             "right_leg_motor_5",
             "head_motor_0",
-            "head_motor_1"
+            "head_motor_1",
         ]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
@@ -136,12 +135,44 @@ class SoccerbotRos(Soccerbot):
         o.pose.pose.orientation.z = orientation[2]
         o.pose.pose.orientation.w = orientation[3]
 
-        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
-                             0, 1E-2, 0, 0, 0, 0,
-                             0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
-                             0, 0, 0, 0, 0, 1E-2]
+        o.pose.covariance = [
+            1e-2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1e-2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1e-6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1e-6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1e-6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1e-2,
+        ]
         self.odom_publisher.publish(o)
         self.publishHeight()
         pass
@@ -156,9 +187,16 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def get_imu(self):
-        assert(self.imu_ready)
-        return tr([0, 0, 0], [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z,
-                              self.imu_msg.orientation.w])
+        assert self.imu_ready
+        return tr(
+            [0, 0, 0],
+            [
+                self.imu_msg.orientation.x,
+                self.imu_msg.orientation.y,
+                self.imu_msg.orientation.z,
+                self.imu_msg.orientation.w,
+            ],
+        )
 
     def is_fallen(self) -> bool:
         pose = self.get_imu()
@@ -178,11 +216,12 @@ class SoccerbotRos(Soccerbot):
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             try:
-                ball_found_timestamp = self.listener.getLatestCommonTime(os.environ["ROS_NAMESPACE"] + '/camera',
-                                                                         os.environ["ROS_NAMESPACE"] + '/ball')
-                (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
-                                                             os.environ["ROS_NAMESPACE"] + '/ball',
-                                                             ball_found_timestamp)
+                ball_found_timestamp = self.listener.getLatestCommonTime(
+                    os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball"
+                )
+                (trans, rot) = self.listener.lookupTransform(
+                    os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp
+                )
                 if self.last_ball_found_timestamp is None or ball_found_timestamp - self.last_ball_found_timestamp > rospy.Duration(2):
                     self.last_ball_pose = (trans, rot)
                     self.anglelr = math.atan2(trans[1], trans[0])

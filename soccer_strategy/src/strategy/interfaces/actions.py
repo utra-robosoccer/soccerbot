@@ -5,6 +5,7 @@ from ball import Ball
 import numpy as np
 import math
 
+
 class Actions:
     @staticmethod
     def stop_all_robots(robots: [Robot]):
@@ -26,12 +27,10 @@ class Actions:
         diff_unit = diff / np.linalg.norm(diff)
         diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
 
-        nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle),
-                                     math.cos(player_angle - diff_angle))
+        nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle), math.cos(player_angle - diff_angle))
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
-        if distance_of_player_to_ball < 0.18 and abs(
-                nav_angle__diff) < 0.15 and robot.path.isFinished(robot.path_time):
+        if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15 and robot.path.isFinished(robot.path_time):
             if nav_angle__diff > 0.03:
                 # right foot
                 robot.kick_with_right_foot = True
@@ -74,11 +73,8 @@ class Actions:
         destination_position_biased = player_position + diff
 
         # nav goal behind the ball
-        destination_position_biased = [destination_position_biased[0], destination_position_biased[1],
-                                       diff_angle]
+        destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
 
         np.set_printoptions(precision=3)
-        print(
-            "Player {}: Navigation | Destination position biased {}".format(robot.robot_id,
-                                                                            destination_position_biased))
+        print("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
         Actions.navigation_to_position(robot, destination_position_biased)

@@ -5,11 +5,12 @@ from soccer_pycontrol.path_foot import PathFoot
 from soccer_common.transformation import Transformation as tr
 import math
 
+
 class PathCrotch(PathFoot):
 
     crotch_zdiff_sway = 0.000
     crotch_sidediff_sway = -0.025
-    crotch_thetadiff_sway = [0., 0., 0.] # [0, 0, 0.08]
+    crotch_thetadiff_sway = [0.0, 0.0, 0.0]  # [0, 0, 0.08]
 
     first_step_left = 0
 
@@ -25,7 +26,6 @@ class PathCrotch(PathFoot):
             self.first_step_left = 0
         else:
             self.first_step_left = 1
-
 
     def crotchPosition(self, t):
         [step_num, right_foot_ratio, left_foot_ratio] = self.footHeightRatio(t, 1)
@@ -45,7 +45,7 @@ class PathCrotch(PathFoot):
             _to = self.getBodyStepPose(step_num)
             body_movement_ratio = (ratio / 2) + (1 / 2)
         else:
-            if (ratio < 0.5):
+            if ratio < 0.5:
                 _from = self.getBodyStepPose(step_num - 1)
                 _to = self.getBodyStepPose(step_num)
                 body_movement_ratio = ratio + 0.5
@@ -79,11 +79,11 @@ class PathCrotch(PathFoot):
             ratio = left_foot_ratio
             is_right_foot = 1
 
-        r = -4 * (ratio ** 2) + 4 * ratio
+        r = -4 * (ratio**2) + 4 * ratio
         ydiff = r * self.crotch_sidediff_sway * is_right_foot
         thetadiff = ydiff / self.crotch_sidediff_sway * np.array(self.crotch_thetadiff_sway)
 
-        H = tr.get_transform_from_euler(thetadiff) # H = eul2tform(thetadiff)
+        H = tr.get_transform_from_euler(thetadiff)  # H = eul2tform(thetadiff)
         H.set_position([-0.005, ydiff, zdiff])
 
         position = np.matmul(position, H)

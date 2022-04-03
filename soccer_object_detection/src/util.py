@@ -34,9 +34,9 @@ def draw_bounding_boxes(img, bbxs, colour):
 
 
 def display_image(to_plot):
-    '''
+    """
     :param to_plot: list of tuples of the form (img [(cxhxw) numpy array], cmap [str], title [str])
-    '''
+    """
     fig, ax = plt.subplots(3, 2, figsize=(8, 10))
     for i, plot_info in enumerate(to_plot):
         img = torch_to_cv(plot_info[0])
@@ -53,9 +53,10 @@ def stream_image(img, wait, scale):
     width, height, _ = img.shape
     img = cv2.resize(img, (height * scale, width * scale))
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    cv2.imshow('my_window', img)
+    cv2.imshow("my_window", img)
     cv2.waitKey(wait)
     cv2.destroyAllWindows()
+
 
 def read_image(path):
     # using opencv imread crashes Pytorch DataLoader for some reason
@@ -74,5 +75,5 @@ def subset_label_count(subset, ball, robot):
             elif bbx[4] == robot:
                 robot_count += 1
             else:
-                print('subset_label_count PROBLEM!')
+                print("subset_label_count PROBLEM!")
     return ball_count, robot_count

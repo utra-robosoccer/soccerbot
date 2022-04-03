@@ -11,17 +11,14 @@ import copy
 
 
 class SoccerbotControllerRos(SoccerbotController):
-
     def __init__(self):
         pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0,
-                                      cameraTargetPosition=[0, 0, 0.25])
+        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
 
         self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9,
-                         rollingFriction=0.0)
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
 
@@ -35,8 +32,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def update_robot_pose(self, footprint_name="/base_footprint"):
         try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', os.environ["ROS_NAMESPACE"] + footprint_name,
-                                                            rospy.Time(0))
+            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return False
         self.robot_pose = PoseStamped()
@@ -51,8 +47,10 @@ class SoccerbotControllerRos(SoccerbotController):
         return True
 
     def pose_to_transformation(self, pose: Pose) -> Transformation:
-        t = Transformation([pose.position.x, pose.position.y, pose.position.z],
-                           [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
+        t = Transformation(
+            [pose.position.x, pose.position.y, pose.position.z],
+            [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w],
+        )
         return t
 
     def transformation_to_pose(self, trans: Transformation) -> PoseStamped:
@@ -138,10 +136,15 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
 
         while not rospy.is_shutdown():
-            if self.soccerbot.robot_state.status in [RobotState.STATUS_DISCONNECTED, RobotState.STATUS_DETERMINING_SIDE,
-                                                     RobotState.STATUS_FALLEN_FRONT,
-                                                     RobotState.STATUS_FALLEN_BACK, RobotState.STATUS_FALLEN_SIDE,
-                                                     RobotState.STATUS_PENALIZED, RobotState.STATUS_TRAJECTORY_IN_PROGRESS]:
+            if self.soccerbot.robot_state.status in [
+                RobotState.STATUS_DISCONNECTED,
+                RobotState.STATUS_DETERMINING_SIDE,
+                RobotState.STATUS_FALLEN_FRONT,
+                RobotState.STATUS_FALLEN_BACK,
+                RobotState.STATUS_FALLEN_SIDE,
+                RobotState.STATUS_PENALIZED,
+                RobotState.STATUS_TRAJECTORY_IN_PROGRESS,
+            ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
@@ -180,7 +183,10 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
 
                 def print_pose(name: str, pose: Pose):
-                    print(f"\033[92m{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]\033[0m")
+                    print(
+                        f"\033[92m{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]\033[0m"
+                    )
+
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
                 self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
@@ -208,9 +214,12 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.publishOdometry()
 
             # Walk completed
-            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP and not self.terminated:
-                walk_time = (rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (
-                            time_now.secs + (time_now.nsecs / 100000000)))
+            if (
+                self.soccerbot.robot_path is not None
+                and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP
+                and not self.terminated
+            ):
+                walk_time = rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000))
                 rospy.loginfo("Completed Walk, Took: " + str(walk_time))
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
@@ -224,15 +233,19 @@ class SoccerbotControllerRos(SoccerbotController):
             if self.t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-                    rospy.loginfo_throttle(0.3, "Performing prewalk stabilization, distance to desired pitch: " + str(
-                        pitch - self.soccerbot.standing_pid.setpoint))
+                    rospy.loginfo_throttle(
+                        0.3,
+                        "Performing prewalk stabilization, distance to desired pitch: " + str(pitch - self.soccerbot.standing_pid.setpoint),
+                    )
                     if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
                         stable_count = stable_count - 1
                         if stable_count == 0:
                             t = 0
                     else:
                         stable_count = 5
-            elif self.soccerbot.robot_state.status == RobotState.STATUS_WALKING and (self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration()):
+            elif self.soccerbot.robot_state.status == RobotState.STATUS_WALKING and (
+                self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration()
+            ):
                 rospy.loginfo_throttle_identical(1, "Performing post stabilization")
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
