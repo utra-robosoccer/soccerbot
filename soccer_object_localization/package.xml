@@ -1,4 +1,4 @@
-<package format="2">
+<package format="3">
     <name>soccer_object_localization</name>
     <version>0.0.0</version>
     <description>The soccer_object_detection package</description>

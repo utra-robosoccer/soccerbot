@@ -7,7 +7,6 @@ networks:
         - subnet: 172.18.0.0/24
 
 services:
-
   simulator:
     extends:
       file: docker-compose.yaml

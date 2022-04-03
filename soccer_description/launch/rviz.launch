@@ -5,6 +5,6 @@
     </node>
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-    <arg name="rvizconfig"  default="$(find soccer_description)/rviz/soccerbot.rviz" />
+    <arg name="rvizconfig" default="$(find soccer_description)/rviz/soccerbot.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 </launch>
