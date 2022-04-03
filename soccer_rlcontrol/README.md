@@ -48,7 +48,7 @@ To visually observer the trained agent, consider one of the checkpoints of your 
 ```
 Use the following command in the terminal while in the virtualenv created earlier:
 ```shell script
-rllib rollout --run <algo> --env <env> --steps <num_steps> --config '{"num_envs_per_worker": 0, "num_workers": 0, "env_config": {"renders": true}}' <checkpoint_path> 
+rllib rollout --run <algo> --env <env> --steps <num_steps> --config '{"num_envs_per_worker": 0, "num_workers": 0, "env_config": {"renders": true}}' <checkpoint_path>
 ```
 
 Where:

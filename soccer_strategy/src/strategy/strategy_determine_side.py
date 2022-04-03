@@ -92,4 +92,3 @@ class StrategyDetermineSide(Strategy):
         if self.measurements > 1:
             current_robot.status = Robot.Status.READY
             current_robot.time_since_action_completed = rospy.Time.now()
-

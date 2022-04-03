@@ -21,4 +21,3 @@ include_directories(
 )
 
 catkin_python_setup()
-

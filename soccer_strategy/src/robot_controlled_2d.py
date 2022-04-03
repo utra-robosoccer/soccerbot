@@ -57,6 +57,3 @@ class RobotControlled2D(RobotControlled):
             self.navigation_goal_localized_time = time.time()
 
         #TODO can add noise here
-
-
-
