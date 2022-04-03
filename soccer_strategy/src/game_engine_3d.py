@@ -15,10 +15,10 @@ from strategy.strategy_finished import StrategyFinished
 from strategy.strategy_set import StrategySet
 
 
-class GameEngine3D():
-    GAMESTATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('GAMESTATE')}
-    SECONDARY_STATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('STATE')}
-    SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith('MODE')}
+class GameEngine3D:
+    GAMESTATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("GAMESTATE")}
+    SECONDARY_STATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("STATE")}
+    SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("MODE")}
 
     def __init__(self):
         robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
@@ -28,11 +28,16 @@ class GameEngine3D():
         robots = []
         for i in range(1, 5):
             if i == robot_id:
-                robots.append(
-                    RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED))
+                robots.append(RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED))
             else:
-                robots.append(RobotObserved(robot_id=i, team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED,
-                                            status=Robot.Status.DISCONNECTED))
+                robots.append(
+                    RobotObserved(
+                        robot_id=i,
+                        team=Robot.Team.FRIENDLY,
+                        role=Robot.Role.UNASSIGNED,
+                        status=Robot.Status.DISCONNECTED,
+                    )
+                )
         self.team1 = Team(robots)
         self.team1.strategy = StrategyDetermineSide()
         self.team2 = Team([])
@@ -42,20 +47,25 @@ class GameEngine3D():
         # GameState
         self.gameState = GameState()
         self.gameState.gameState = GameState.GAMESTATE_READY
-        self.game_state_subscriber = rospy.Subscriber('gamestate', GameState, self.gamestate_callback)
+        self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.gamestate_callback)
 
     def robot(self) -> RobotControlled3D:
         return self.team1.robots[int(os.getenv("ROBOCUP_ROBOT_ID", 1)) - 1]
 
     def gamestate_callback(self, gameState: GameState):
-        if self.gameState.gameState != gameState.gameState or self.gameState.secondaryState != gameState.secondaryState or self.gameState.secondaryStateMode != gameState.secondaryStateMode:
+        if (
+            self.gameState.gameState != gameState.gameState
+            or self.gameState.secondaryState != gameState.secondaryState
+            or self.gameState.secondaryStateMode != gameState.secondaryStateMode
+        ):
             print(
-                f"\033[92mGame State Changed: {GameEngine3D.GAMESTATE_LOOKUP[gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[gameState.secondaryStateMode]}\033[0m")
+                f"\033[92mGame State Changed: {GameEngine3D.GAMESTATE_LOOKUP[gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[gameState.secondaryStateMode]}\033[0m"
+            )
 
         self.gameState = gameState
         if self.gameState.penalty != GameState.PENALTY_NONE:
             self.robot().status = Robot.Status.PENALIZED
-            self.robot().update_robot_state(None) # Publish immediately to stop actuators
+            self.robot().update_robot_state(None)  # Publish immediately to stop actuators
 
     def decide_strategy(self):
         new_strategy = StrategyDetermineSide
@@ -64,7 +74,11 @@ class GameEngine3D():
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
             new_strategy = StrategyDetermineSide
         elif self.gameState.gameState == GameState.GAMESTATE_READY:
-            if self.robot().status in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:
+            if self.robot().status in [
+                Robot.Status.DETERMINING_SIDE,
+                Robot.Status.DISCONNECTED,
+                Robot.Status.PENALIZED,
+            ]:
                 new_strategy = StrategyDetermineSide
             else:
                 new_strategy = StrategyReady
@@ -79,7 +93,10 @@ class GameEngine3D():
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.robot().status == Robot.Status.PENALIZED:
                     new_strategy = StrategyDetermineSide
-                elif current_strategy == StrategyDetermineSide and self.robot().status not in [Robot.Status.DETERMINING_SIDE, Robot.Status.DISCONNECTED]:
+                elif current_strategy == StrategyDetermineSide and self.robot().status not in [
+                    Robot.Status.DETERMINING_SIDE,
+                    Robot.Status.DISCONNECTED,
+                ]:
                     new_strategy = StrategyReady
                 elif current_strategy == StrategyReady and self.team1.strategy.reached_ready_position:
                     new_strategy = StrategyDummy
@@ -117,7 +134,8 @@ class GameEngine3D():
             print("-----------------------------------------")
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str}")
+                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str}"
+            )
             self.team1.log()
             self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
 

@@ -23,7 +23,7 @@ class DetectorFieldline(Detector):
     CANNY_THRESHOLD_1 = 400
     CANNY_THRESHOLD_2 = 1000
     HOUGH_RHO = 1
-    HOUGH_THETA = (np.pi / 180)
+    HOUGH_THETA = np.pi / 180
     HOUGH_THRESHOLD = 50
     HOUGH_MIN_LINE_LENGTH = 50
     HOUGH_MAX_LINE_GAP = 50
@@ -32,7 +32,9 @@ class DetectorFieldline(Detector):
         super().__init__()
 
         self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        self.image_subscriber = rospy.Subscriber(
+            "camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+        )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
         self.publish_point_cloud = False
@@ -46,7 +48,12 @@ class DetectorFieldline(Detector):
 
         t_start = time.time()
 
-        if self.robot_state.status not in [RobotState.STATUS_READY, RobotState.STATUS_LOCALIZING, RobotState.STATUS_WALKING, RobotState.STATUS_DETERMINING_SIDE]:
+        if self.robot_state.status not in [
+            RobotState.STATUS_READY,
+            RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_WALKING,
+            RobotState.STATUS_DETERMINING_SIDE,
+        ]:
             return
 
         if not self.camera.ready():
@@ -74,11 +81,14 @@ class DetectorFieldline(Detector):
 
         edges = cv2.Canny(dst, 50, 150)
 
-        lines = cv2.HoughLinesP(edges, rho=DetectorFieldline.HOUGH_RHO,
-                                theta=DetectorFieldline.HOUGH_THETA,
-                                threshold=DetectorFieldline.HOUGH_THRESHOLD,
-                                minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-                                maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP)
+        lines = cv2.HoughLinesP(
+            edges,
+            rho=DetectorFieldline.HOUGH_RHO,
+            theta=DetectorFieldline.HOUGH_THETA,
+            threshold=DetectorFieldline.HOUGH_THRESHOLD,
+            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
+            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
+        )
 
         ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
 
@@ -133,7 +143,7 @@ class DetectorFieldline(Detector):
         rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     rospy.init_node("detector_fieldline")
     fieldline_detector = DetectorFieldline()
     rospy.spin()

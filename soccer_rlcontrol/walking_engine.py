@@ -14,7 +14,6 @@ checkpoint_path = "./demos/checkpoint-14450"
 import enum
 
 
-
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
     LEFT_ARM_2 = 1
@@ -59,7 +58,7 @@ _joint_limit_high[Joints.RIGHT_ARM_2] = 0.8
 _joint_limit_high[Joints.LEFT_ARM_1] = 0.95
 _joint_limit_high[Joints.LEFT_ARM_2] = 0.8
 
-_joint_limit_high *= (np.pi)
+_joint_limit_high *= np.pi
 
 _joint_limit_low = np.zeros(16)
 
@@ -80,7 +79,7 @@ _joint_limit_low[Joints.RIGHT_ARM_2] = 0.0
 _joint_limit_low[Joints.LEFT_ARM_1] = 0.4
 _joint_limit_low[Joints.LEFT_ARM_2] = 0.0
 
-_joint_limit_low *= (-np.pi)
+_joint_limit_low *= -np.pi
 
 
 js_position = np.zeros((16,))
@@ -187,7 +186,7 @@ def pose_callback(msg):
     robot_orn[3] = msg.pose.pose.orientation.w
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ### Setup
     ray.init(local_mode=False)
     trainer, trainer_class = es.ESTrainer, es
@@ -227,10 +226,9 @@ if __name__ == '__main__':
         height = np.zeros((1,))
         height[0] = 0.28
         observation = np.concatenate((js_position, js_velocity, imu_values, robot_orn, height, feet_values))  # Expect 18 +
-        #print(observation)
+        # print(observation)
         ### normalize & unnormalize the vectors for the model - make use of the model
-        observation = env.normalize(observation, env.env.observation_limit_low, env.env.observation_limit_high,
-                                    env.observation_plus_range)
+        observation = env.normalize(observation, env.env.observation_limit_low, env.env.observation_limit_high, env.observation_plus_range)
         action = agent.compute_action(observation)
         action = env.denormalize(action, env.env.action_space.low, env.env.action_space.high, env.action_plus_range)
 
@@ -246,12 +244,24 @@ if __name__ == '__main__':
             action[i] = velocity
 
         pub_all_motor = rospy.Publisher("/robot1/joint_command", JointState, queue_size=10)
-        motor_names = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-                       "left_leg_motor_0", "left_leg_motor_1",
-                       "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                       "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                       "right_leg_motor_4", "right_leg_motor_5"
-                       ]
+        motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+        ]
         js = JointState()
         js.name = []
         js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)

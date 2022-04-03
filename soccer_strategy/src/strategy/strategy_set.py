@@ -3,6 +3,7 @@ from team import Team
 from soccer_msgs.msg import GameState
 from strategy.interfaces.actions import Actions
 
+
 class StrategySet(Strategy):
     def __init__(self):
         super().__init__()

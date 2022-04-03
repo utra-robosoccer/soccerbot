@@ -14,7 +14,7 @@ from soccer_webots.webots_supervisor_controller import SupervisorController
 rospack = rospkg.RosPack()
 path = rospack.get_path("soccer_webots")
 parser = argparse.ArgumentParser()
-parser.add_argument('--single', help="which robot should be started")
+parser.add_argument("--single", help="which robot should be started")
 args, unknown = parser.parse_known_args()
 
 mode = "normal"
@@ -25,13 +25,10 @@ if args.single == "true":
     world_name = "kid.wbt"
 else:
     world_name = "kid_4.wbt"
-arguments = [os.path.join(os.environ['WEBOTS_HOME'], 'webots'),
-             batch,
-             no_rendering,
-             path + "/worlds/" + world_name]
+arguments = [os.path.join(os.environ["WEBOTS_HOME"], "webots"), batch, no_rendering, path + "/worlds/" + world_name]
 sim_proc = subprocess.Popen(arguments)
 
-rospy.init_node("webots_ros_supervisor", argv=['clock:=/clock'])
+rospy.init_node("webots_ros_supervisor", argv=["clock:=/clock"])
 rospy.set_param("/webots_pid", str(sim_proc.pid))
 rospy.set_param("send_odom", "true")
 

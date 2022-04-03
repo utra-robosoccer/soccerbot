@@ -3,6 +3,7 @@ import enum
 import numpy
 
 from ball import Ball
+
 try:
     from soccer_msgs.msg import RobotState
 except:
@@ -43,8 +44,14 @@ class Robot:
         PENALIZED = RobotState.STATUS_PENALIZED
         STOPPED = RobotState.STATUS_STOPPED
 
-
-    def __init__(self, robot_id=0, team=Team.UNKNOWN, role=Role.UNASSIGNED, status=Status.DISCONNECTED, position=numpy.array([0, 0, 0])):
+    def __init__(
+        self,
+        robot_id=0,
+        team=Team.UNKNOWN,
+        role=Role.UNASSIGNED,
+        status=Status.DISCONNECTED,
+        position=numpy.array([0, 0, 0]),
+    ):
         self.team = team
         self.role = role
         self.status = status

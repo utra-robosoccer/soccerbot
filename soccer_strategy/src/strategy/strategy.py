@@ -10,11 +10,14 @@ except:
 from team import Team
 from robot import Robot
 
+
 def update_average_ball_position(update_next_strategy):
     def update_average_ball_position_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         friendly_team.update_average_ball_position()
         return update_next_strategy(self, friendly_team, opponent_team, game_state)
+
     return update_average_ball_position_strategy
+
 
 def get_back_up(update_next_strategy):
     def get_back_up_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
@@ -34,9 +37,11 @@ def get_back_up(update_next_strategy):
             # Wait for localization status
             return
         return update_next_strategy(self, friendly_team, opponent_team, game_state)
+
     return get_back_up_strategy
 
-class Strategy():
+
+class Strategy:
     def __init__(self):
         self.update_frequency = 1
 
@@ -46,9 +51,9 @@ class Strategy():
 
     def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:
-            if robot.__class__.__name__ == 'RobotControlled3D':
+            if robot.__class__.__name__ == "RobotControlled3D":
                 return robot
-            if robot.__class__.__name__ == 'RobotControlled2D' and robot.active == True:
+            if robot.__class__.__name__ == "RobotControlled2D" and robot.active == True:
                 return robot
 
         raise AssertionError

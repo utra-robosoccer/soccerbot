@@ -17,12 +17,14 @@ np.random.seed(2)
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 Field.init()
 
+
 class Thresholds:
     POSSESSION = 0.2  # How close player has to be to ball to have possession
     GOALIE_ANGLE = 5  # How close goalie has to be to defense line
     PASS = -1  # Maximum distance between players trying to pass to each other
     OBSTACLE = 1  # Size of player obstacles
     PASSING = 2  # distance for obstacle detection when moving to a position
+
 
 class PhysConsts:
     DELTA_T = -1
@@ -38,8 +40,7 @@ class PhysConsts:
 
 
 class StrategyPlayer(ABC, Strategy):
-
-    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5): # 0.5, 0.5 0.5
+    def __init__(self, player, ball, alpha=0.5, beta=0.5, eps=0.5):  # 0.5, 0.5 0.5
         super().__init__()
         self._player = player
         self._player_pos = player.position[0:2]
@@ -88,7 +89,7 @@ class StrategyPlayer(ABC, Strategy):
         """
         Gets the player who is closest to the specified position
         """
-        min_dist = float('inf')
+        min_dist = float("inf")
         closest_to_ball = None
         for robot in itertools.chain(friendlies, opponents):
             robot_pos = robot.position[0:2]
@@ -111,7 +112,7 @@ class StrategyPlayer(ABC, Strategy):
         them
         """
         closest_teammate = None
-        min_dist = float('inf')
+        min_dist = float("inf")
         for robot in friendlies:
             if robot.role != self._player.role:
                 dist = self._distance_to(robot.position[0:2])
@@ -121,7 +122,7 @@ class StrategyPlayer(ABC, Strategy):
         return closest_teammate, min_dist
 
     def _move_player_to(self, pos):
-        assert self._all_robots is not None, 'all_robots not set!'
+        assert self._all_robots is not None, "all_robots not set!"
         self.target_pos = pos
         # Path planning with obstacle avoidance via potential functions
         # Source:
@@ -133,7 +134,7 @@ class StrategyPlayer(ABC, Strategy):
             grad = grad_att(self._alpha, self._player_pos, pos)
             if len(obstacles) > 0:
                 r_rep = 2 * Thresholds.POSSESSION
-                d_rep = float('inf')
+                d_rep = float("inf")
                 obs_rep = None
                 for obs in obstacles:
                     dist = self._distance_to(obs)
@@ -144,8 +145,7 @@ class StrategyPlayer(ABC, Strategy):
                 grad -= grad_rep(self._beta, r_rep, d_rep, obs_rep, self._player_pos)
             # Perturb out of local minima
             angle_rand = np.random.uniform(low=-np.pi / 12, high=np.pi / 12)
-            rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
-                                      [np.sin(angle_rand), np.cos(angle_rand)]])
+            rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)], [np.sin(angle_rand), np.cos(angle_rand)]])
             grad_perturbed = rotation_rand @ grad
             # Gradient descent update
             goal_pos = self._player_pos - GRADIENT_UPDATE_INTERVAL_LENGTH * grad_perturbed
@@ -230,7 +230,7 @@ class StrategyPlayer(ABC, Strategy):
             grad = grad_att(self._alpha, sample_point, self.target_pos)
             if len(obstacles) > 0:
                 r_rep = 2 * Thresholds.POSSESSION
-                d_rep = float('inf')
+                d_rep = float("inf")
                 obs_rep = None
                 for obs in obstacles:
                     dist = np.linalg.norm(sample_point - obs)
@@ -239,7 +239,7 @@ class StrategyPlayer(ABC, Strategy):
                         obs_rep = obs
                 grad -= grad_rep(self._beta, r_rep, d_rep, obs_rep, sample_point)
             # Gradient descent update
-            potential_field_vector = - grad
+            potential_field_vector = -grad
 
             unit_field_vector = potential_field_vector / np.linalg.norm(potential_field_vector) / 10
 
@@ -279,7 +279,7 @@ class StrategyPlayer(ABC, Strategy):
     def is_open(self, opponents):
         """Return True if the player is open, otherwise False"""
         player_is_open = True
-        min_dist = float('inf')
+        min_dist = float("inf")
         for robot in opponents:
             dist = self._distance_to(robot.position[0:2])
             if dist < min_dist:
@@ -296,7 +296,6 @@ class StrategyPlayer(ABC, Strategy):
             self._pass_ball(closest_teammate)
 
 
-
 class ScoreStrategy(StrategyPlayer):
     """
     Objective: score on the other team
@@ -311,10 +310,7 @@ class ScoreStrategy(StrategyPlayer):
             # Try kicking to nearest point on goal line
             # TODO: account for kick angle uncertainty; play it safe
             opp_net_line = np.array(self._opponent_net_line)
-            goal_pos, dist = closest_point_on_line(
-                self._player_pos, opp_net_line[Field.X_COORD],
-                opp_net_line[Field.Y_COORD]
-            )
+            goal_pos, dist = closest_point_on_line(self._player_pos, opp_net_line[Field.X_COORD], opp_net_line[Field.Y_COORD])
             self._kick_ball(goal_pos)
         elif self._is_closest_to_ball_dest(friendlies, []):
             # TODO: ^ not the best way. Should ideally have a function like
@@ -328,7 +324,6 @@ class ScoreStrategy(StrategyPlayer):
 
 
 class TeamStrategy(Strategy):
-
     def __init__(self, delta_t):
         super().__init__()
         self._dt = delta_t

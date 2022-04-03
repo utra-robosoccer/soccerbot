@@ -18,11 +18,11 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 
-class GameControllerBridge():
+class GameControllerBridge:
     def __init__(self):
         rospy.init_node("game_controller_bridge")
         parser = argparse.ArgumentParser()
-        parser.add_argument('--robot_name', help="which robot should be started")
+        parser.add_argument("--robot_name", help="which robot should be started")
 
         args, unknown = parser.parse_known_args()
         rospy.set_param("name", args.robot_name)
@@ -30,53 +30,93 @@ class GameControllerBridge():
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
         self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
-        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
-                            "right_arm_motor_1",
-                            "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
-                            ]
+        self.motor_names = [
+            "left_arm_motor_0 [shoulder]",
+            "left_arm_motor_1",
+            "right_arm_motor_0 [shoulder]",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1 [hip]",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1 [hip]",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1",
+        ]
 
         self.motor_count = len(self.motor_names)
-        self.external_motor_names = \
-            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-             "head_motor_0", "head_motor_1"
-             ]
+        self.external_motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1",
+        ]
 
-        self.sensor_names = ["left_arm_motor_0_sensor", "left_arm_motor_1_sensor", "right_arm_motor_0_sensor",
-                             "right_arm_motor_1_sensor",
-                             "right_leg_motor_0_sensor", "right_leg_motor_1_sensor", "right_leg_motor_2_sensor",
-                             "right_leg_motor_3_sensor",
-                             "right_leg_motor_4_sensor", "right_leg_motor_5_sensor", "left_leg_motor_0_sensor",
-                             "left_leg_motor_1_sensor",
-                             "left_leg_motor_2_sensor", "left_leg_motor_3_sensor", "left_leg_motor_4_sensor",
-                             "left_leg_motor_5_sensor",
-                             "head_motor_0_sensor", "head_motor_1_sensor"
-                             ]
-        self.regular_sensor_names = ["imu accelerometer", "imu gyro", "imu accelerometer", "camera"
-
-                                     ]
+        self.sensor_names = [
+            "left_arm_motor_0_sensor",
+            "left_arm_motor_1_sensor",
+            "right_arm_motor_0_sensor",
+            "right_arm_motor_1_sensor",
+            "right_leg_motor_0_sensor",
+            "right_leg_motor_1_sensor",
+            "right_leg_motor_2_sensor",
+            "right_leg_motor_3_sensor",
+            "right_leg_motor_4_sensor",
+            "right_leg_motor_5_sensor",
+            "left_leg_motor_0_sensor",
+            "left_leg_motor_1_sensor",
+            "left_leg_motor_2_sensor",
+            "left_leg_motor_3_sensor",
+            "left_leg_motor_4_sensor",
+            "left_leg_motor_5_sensor",
+            "head_motor_0_sensor",
+            "head_motor_1_sensor",
+        ]
+        self.regular_sensor_names = ["imu accelerometer", "imu gyro", "imu accelerometer", "camera"]
         self.sensor_names.extend(self.regular_sensor_names)
-        self.pressure_sensor_names = ["right_leg_foot_sensor_1", "right_leg_foot_sensor_2", "right_leg_foot_sensor_3",
-                                      "right_leg_foot_sensor_4",
-                                      "left_leg_foot_sensor_1", "left_leg_foot_sensor_2", "left_leg_foot_sensor_3",
-                                      "left_leg_foot_sensor_4"]
+        self.pressure_sensor_names = [
+            "right_leg_foot_sensor_1",
+            "right_leg_foot_sensor_2",
+            "right_leg_foot_sensor_3",
+            "right_leg_foot_sensor_4",
+            "left_leg_foot_sensor_1",
+            "left_leg_foot_sensor_2",
+            "left_leg_foot_sensor_3",
+            "left_leg_foot_sensor_4",
+        ]
         self.sensor_names.extend(self.pressure_sensor_names)
 
         self.create_publishers()
         self.create_subscribers()
 
-        self.addr = os.getenv('ROBOCUP_SIMULATOR_ADDR', '127.0.0.1:10001')
+        self.addr = os.getenv("ROBOCUP_SIMULATOR_ADDR", "127.0.0.1:10001")
 
         self.socket = None
         self.first_run = True
         self.published_camera_info = False
         self.amcl_received = False
-        rospy.Subscriber("/" + self.base_frame + '/amcl_pose', PoseWithCovarianceStamped, self.amcl_callback)
+        rospy.Subscriber("/" + self.base_frame + "/amcl_pose", PoseWithCovarianceStamped, self.amcl_callback)
         self.run()
 
     def receive_msg(self):
@@ -122,12 +162,14 @@ class GameControllerBridge():
 
                     # set the position
                     odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
+                    # fmt: off
                     odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
                                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
                                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
                                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+
                     # set the velocity
                     odom.child_frame_id = self.base_frame + "/base_footprint"
                     odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
@@ -137,6 +179,7 @@ class GameControllerBridge():
                                              0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                              0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                              0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                    # fmt: on
                     # publish the message
                     odom_pub.publish(odom)
             except socket.timeout as s:
@@ -162,14 +205,13 @@ class GameControllerBridge():
         self.amcl_received = True
 
     def create_publishers(self):
-        self.pub_clock = rospy.Publisher('/clock', Clock, queue_size=1)
-        self.pub_server_time_clock = rospy.Publisher('/server_time_clock', Clock, queue_size=1)
-        self.pub_camera = rospy.Publisher('camera/image_raw', Image, queue_size=1)
-        self.pub_camera_info = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=1, latch=True)
-        self.pub_imu = rospy.Publisher('imu_raw', Imu, queue_size=1)
-        self.pressure_sensors_pub = {
-            i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
-        self.pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
+        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
+        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
+        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
+        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
+        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
+        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
+        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
 
     def create_subscribers(self):
         self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
@@ -186,12 +228,12 @@ class GameControllerBridge():
                 self.joint_command[i] = 0
 
     def get_connection(self, addr):
-        host, port = addr.split(':')
+        host, port = addr.split(":")
         port = int(port)
         print(f"Connecting to '{addr}'")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, port))
-        response = sock.recv(8).decode('utf8')
+        response = sock.recv(8).decode("utf8")
         if response == "Welcome\0":
             print(f"\033[96mConnected to Simulator at '{addr}'\033[0m")
             return sock
@@ -203,7 +245,7 @@ class GameControllerBridge():
             return None
 
     def close_connection(self):
-        if hasattr(self, 'socket') and self.socket is not None:
+        if hasattr(self, "socket") and self.socket is not None:
             self.socket.close()
 
     def handle_sensor_measurements_msg(self, msg):
@@ -232,12 +274,11 @@ class GameControllerBridge():
 
         self.pub_clock.publish(msg)
 
-
     def handle_real_time(self, time):
         # real unix time stamp at which the measurements were performed in [ms]
         msg = Clock()
         msg.clock.secs = time // 1000
-        msg.clock.nsecs = (time % 1000) * 10 ** 6
+        msg.clock.nsecs = (time % 1000) * 10**6
         # if self.base_frame == 'robot1':
         self.pub_server_time_clock.publish(msg)
 
@@ -318,16 +359,10 @@ class GameControllerBridge():
         camera_info_msg.header.frame_id = self.base_frame + "camera"
         camera_info_msg.height = height
         camera_info_msg.width = width
-        f_y = self.mat_from_fov_and_resolution(
-            self.h_fov_to_v_fov(1.39626, height, width),
-            height)
+        f_y = self.mat_from_fov_and_resolution(self.h_fov_to_v_fov(1.39626, height, width), height)
         f_x = self.mat_from_fov_and_resolution(1.39626, width)
-        camera_info_msg.K = [f_x, 0, width / 2,
-                             0, f_y, height / 2,
-                             0, 0, 1]
-        camera_info_msg.P = [f_x, 0, width / 2, 0,
-                             0, f_y, height / 2, 0,
-                             0, 0, 1, 0]
+        camera_info_msg.K = [f_x, 0, width / 2, 0, f_y, height / 2, 0, 0, 1]
+        camera_info_msg.P = [f_x, 0, width / 2, 0, 0, f_y, height / 2, 0, 0, 0, 1, 0]
         self.pub_camera_info.publish(camera_info_msg)
 
     def mat_from_fov_and_resolution(self, fov, res):
@@ -353,7 +388,7 @@ class GameControllerBridge():
         state_msg.header.stamp = self.stamp
 
         for position_sensor in position_sensors:
-            state_msg.name.append(position_sensor.name[:len(position_sensor.name) - 7])
+            state_msg.name.append(position_sensor.name[: len(position_sensor.name) - 7])
             state_msg.position.append(position_sensor.value)
         self.pub_joint_states.publish(state_msg)
 
@@ -379,11 +414,19 @@ class GameControllerBridge():
         for i, name in enumerate(self.motor_names):
             motor_position = messages_pb2.MotorPosition()
             motor_position.name = name
-            assert (len(self.joint_command) == len(self.motor_names))
+            assert len(self.joint_command) == len(self.motor_names)
             motor_position.position = self.joint_command[i]
             actuator_requests.motor_positions.append(motor_position)
 
-            if not (name in ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]", "right_arm_motor_1"]):
+            if not (
+                name
+                in [
+                    "left_arm_motor_0 [shoulder]",
+                    "left_arm_motor_1",
+                    "right_arm_motor_0 [shoulder]",
+                    "right_arm_motor_1",
+                ]
+            ):
                 # print(name)
                 # print(not (name in ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]))
                 motor_pid = messages_pb2.MotorPID()
@@ -406,5 +449,5 @@ class GameControllerBridge():
         self.socket.send(msg_size + msg)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     GameControllerBridge()

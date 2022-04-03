@@ -24,34 +24,60 @@ class Trajectory:
         self.splines = {}
         self.step_map = {}
         self.time_to_last_pose = 2  # seconds
-        self.motor_names = ["left_arm_motor_0 [shoulder]", "left_arm_motor_1", "right_arm_motor_0 [shoulder]",
-                            "right_arm_motor_1",
-                            "right_leg_motor_0", "right_leg_motor_1 [hip]", "right_leg_motor_2", "right_leg_motor_3",
-                            "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1 [hip]",
-                            "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                            "head_motor_0", "head_motor_1"
-                            ]
+        self.motor_names = [
+            "left_arm_motor_0 [shoulder]",
+            "left_arm_motor_1",
+            "right_arm_motor_0 [shoulder]",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1 [hip]",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1 [hip]",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1",
+        ]
 
-        self.external_motor_names = \
-            ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-             "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-             "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-             "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-             "head_motor_0", "head_motor_1"
-             ]
+        self.external_motor_names = [
+            "left_arm_motor_0",
+            "left_arm_motor_1",
+            "right_arm_motor_0",
+            "right_arm_motor_1",
+            "right_leg_motor_0",
+            "right_leg_motor_1",
+            "right_leg_motor_2",
+            "right_leg_motor_3",
+            "right_leg_motor_4",
+            "right_leg_motor_5",
+            "left_leg_motor_0",
+            "left_leg_motor_1",
+            "left_leg_motor_2",
+            "left_leg_motor_3",
+            "left_leg_motor_4",
+            "left_leg_motor_5",
+            "head_motor_0",
+            "head_motor_1",
+        ]
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
                 joint_name = row[0]
-                if joint_name == 'comment':
+                if joint_name == "comment":
                     continue
-                if joint_name == 'time':
+                if joint_name == "time":
                     self.times = list(map(float, row[1:]))
                     self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
-                    param = '~motor_mapping/{}/initial_state'.format(joint_name)
+                    param = "~motor_mapping/{}/initial_state".format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -73,12 +99,26 @@ class Trajectory:
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()
-            js.name = ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1",
-                       "right_leg_motor_0", "right_leg_motor_1", "right_leg_motor_2", "right_leg_motor_3",
-                       "right_leg_motor_4", "right_leg_motor_5", "left_leg_motor_0", "left_leg_motor_1",
-                       "left_leg_motor_2", "left_leg_motor_3", "left_leg_motor_4", "left_leg_motor_5",
-                       "head_motor_0", "head_motor_1"
-                       ]
+            js.name = [
+                "left_arm_motor_0",
+                "left_arm_motor_1",
+                "right_arm_motor_0",
+                "right_arm_motor_1",
+                "right_leg_motor_0",
+                "right_leg_motor_1",
+                "right_leg_motor_2",
+                "right_leg_motor_3",
+                "right_leg_motor_4",
+                "right_leg_motor_5",
+                "left_leg_motor_0",
+                "left_leg_motor_1",
+                "left_leg_motor_2",
+                "left_leg_motor_3",
+                "left_leg_motor_4",
+                "left_leg_motor_5",
+                "head_motor_0",
+                "head_motor_1",
+            ]
             js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
             js.position = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -109,7 +149,7 @@ class SoccerTrajectoryClass:
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
         self.robot_state_sub = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
-        self.finish_trajectory = rospy.Publisher('action_complete', Empty, queue_size=1)
+        self.finish_trajectory = rospy.Publisher("action_complete", Empty, queue_size=1)
 
     def robot_state_callback(self, state: RobotState):
         if state.status in [RobotState.STATUS_PENALIZED]:
@@ -144,7 +184,7 @@ class SoccerTrajectoryClass:
         rospy.spin()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     trajectory_class = SoccerTrajectoryClass()
 
     try:

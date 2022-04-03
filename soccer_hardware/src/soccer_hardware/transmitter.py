@@ -30,16 +30,15 @@ class Transmitter(Thread):
         return self._stop_event.is_set()
 
     def _send_packet_to_mcu(self, byteStream):
-        """ Sends bytes to the MCU with the header sequence attached.
-        """
-        header = struct.pack('<L', 0xFFFFFFFF)
-        id = struct.pack('<I', 0x1234)
-        padding = bytes(''.encode())
-        footer = struct.pack('<L', 0x00000000)
+        """Sends bytes to the MCU with the header sequence attached."""
+        header = struct.pack("<L", 0xFFFFFFFF)
+        id = struct.pack("<I", 0x1234)
+        padding = bytes("".encode())
+        footer = struct.pack("<L", 0x00000000)
 
         num_bytes = len(byteStream)
         if num_bytes < 80:
-            padding = struct.pack('<B', 0x00) * (80 - num_bytes)
+            padding = struct.pack("<B", 0x00) * (80 - num_bytes)
 
         packet = header + id + byteStream + padding + footer
         if self._dry_run:
@@ -48,12 +47,12 @@ class Transmitter(Thread):
             self._ser.write(packet)
 
     def _vec2bytes(self, vec):
-        """ Transforms a numpy vector to a byte array, with entries interpreted as
-            32-bit floats.
+        """Transforms a numpy vector to a byte array, with entries interpreted as
+        32-bit floats.
         """
-        byte_arr = bytes(''.encode())
+        byte_arr = bytes("".encode())
         for element in vec:
-            byte_arr = byte_arr + struct.pack('f', element)
+            byte_arr = byte_arr + struct.pack("f", element)
         return byte_arr
 
     def get_num_tx(self):

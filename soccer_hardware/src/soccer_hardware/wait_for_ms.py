@@ -60,6 +60,8 @@ class WaitForMs:
 
         if self._debug:
             print(
-                np.round(t_wait * 1000, 4), np.round(t_waited * 1000, 4),
-                np.round(err * 1000, 4), np.round(self._t_err * 1000, 4)
+                np.round(t_wait * 1000, 4),
+                np.round(t_waited * 1000, 4),
+                np.round(err * 1000, 4),
+                np.round(self._t_err * 1000, 4),
             )

@@ -4,12 +4,13 @@ import os
 from robot import Robot
 import numpy as np
 
+
 class FieldSide(enum.IntEnum):
     NORMAL = 0
     REVERSED = 1
 
-class Team():
 
+class Team:
     def __init__(self, robots):
         self.robots = robots
         self.average_ball_position: Ball = None
@@ -22,33 +23,28 @@ class Team():
                 Robot.Role.GOALIE: [4, 0, np.pi],
                 Robot.Role.STRIKER: [0.5, 0, np.pi],
                 Robot.Role.RIGHT_WING: [1, 1, np.pi],
-                Robot.Role.LEFT_WING: [1, -1, np.pi]
+                Robot.Role.LEFT_WING: [1, -1, np.pi],
             },
             "attack": {
                 Robot.Role.GOALIE: [4.5, 0, np.pi],
                 Robot.Role.STRIKER: [-2, 0, np.pi],
                 Robot.Role.RIGHT_WING: [-2, 2.5, np.pi],
-                Robot.Role.LEFT_WING: [-2, -2.5, np.pi]
+                Robot.Role.LEFT_WING: [-2, -2.5, np.pi],
             },
             "defensive": {
                 Robot.Role.GOALIE: [4.5, 0, np.pi],
                 Robot.Role.STRIKER: [3.5, 0, np.pi],
                 Robot.Role.RIGHT_WING: [3.5, 2, np.pi],
-                Robot.Role.LEFT_WING: [3, -2, np.pi]
+                Robot.Role.LEFT_WING: [3, -2, np.pi],
             },
             "midfield": {
                 Robot.Role.GOALIE: [4.5, 0, np.pi],
                 Robot.Role.STRIKER: [0, 0, np.pi],
                 Robot.Role.RIGHT_WING: [0, 3, np.pi],
-                Robot.Role.LEFT_WING: [0, -3, np.pi]
+                Robot.Role.LEFT_WING: [0, -3, np.pi],
             },
-            "penalty_give": {
-                Robot.Role.GOALIE: [-4.5, 0, 0],
-                Robot.Role.STRIKER: [3.5, 0, 0]
-            },
-            "penalty_take": {
-                Robot.Role.GOALIE: [-4.5, 0, 0]
-            }
+            "penalty_give": {Robot.Role.GOALIE: [-4.5, 0, 0], Robot.Role.STRIKER: [3.5, 0, 0]},
+            "penalty_take": {Robot.Role.GOALIE: [-4.5, 0, 0]},
         }
         self.enemy_goal_position = [-4.8, 0]
 
@@ -64,7 +60,7 @@ class Team():
         # this needs to be team-dependent in the future, for now just use the current robot's position
 
         for robot in self.robots:
-            if robot.robot_id == int(os.getenv('ROBOCUP_ROBOT_ID', 1)):
+            if robot.robot_id == int(os.getenv("ROBOCUP_ROBOT_ID", 1)):
                 self.average_ball_position = robot.observed_ball
                 return True
 
@@ -79,4 +75,8 @@ class Team():
         np.set_printoptions(precision=3)
         for robot in self.robots:
             if robot.status != Robot.Status.DISCONNECTED:
-                print("  Robot Id {}: Position: {}, Role: {}, Status: {}, Estimated Ball: {}".format(robot.robot_id, robot.position, robot.role.name, robot.status.name, robot.observed_ball.position))
+                print(
+                    "  Robot Id {}: Position: {}, Role: {}, Status: {}, Estimated Ball: {}".format(
+                        robot.robot_id, robot.position, robot.role.name, robot.status.name, robot.observed_ball.position
+                    )
+                )

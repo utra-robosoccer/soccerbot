@@ -82,10 +82,10 @@ class SupervisorController:
         for name in self.robot_names:
             if self.supervisor.getFromDef(name) is not None:
                 # Robot Position Odom
-                odom = rospy.Publisher('/' + name + '/base_pose_ground_truth', nav_msgs.msg.Odometry, queue_size=1)
+                odom = rospy.Publisher("/" + name + "/base_pose_ground_truth", nav_msgs.msg.Odometry, queue_size=1)
                 odometry = nav_msgs.msg.Odometry()
-                odometry.header.frame_id = name + '/odom'
-                odometry.child_frame_id = name + '/base_footprint'
+                odometry.header.frame_id = name + "/odom"
+                odometry.child_frame_id = name + "/base_footprint"
                 odometry.header.stamp = rospy.Time.from_seconds(self.time)
                 odometry.pose.pose.position.x = self.get_robot_position(name)[0]
                 odometry.pose.pose.position.y = self.get_robot_position(name)[1]
@@ -94,33 +94,40 @@ class SupervisorController:
                 odometry.pose.pose.orientation.y = self.get_robot_orientation_quat(name)[1]
                 odometry.pose.pose.orientation.z = self.get_robot_orientation_quat(name)[2]
                 odometry.pose.pose.orientation.w = self.get_robot_orientation_quat(name)[3]
+                # fmt: off
                 odometry.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
                                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
                                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
                                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+                # fmt: on
                 odom.publish(odometry)
                 self.transform_broadcaster.sendTransform(
                     (odometry.pose.pose.position.x, odometry.pose.pose.position.y, odometry.pose.pose.position.z),
-                    (odometry.pose.pose.orientation.x, odometry.pose.pose.orientation.y, odometry.pose.pose.orientation.z, odometry.pose.pose.orientation.w),
+                    (
+                        odometry.pose.pose.orientation.x,
+                        odometry.pose.pose.orientation.y,
+                        odometry.pose.pose.orientation.z,
+                        odometry.pose.pose.orientation.w,
+                    ),
                     rospy.Time.from_sec(self.time),
                     name + "/base_footprint_gt",
-                    "world"
+                    "world",
                 )
 
                 # Robot Camera Position
                 camera_node = self.supervisor.getFromDef("robot1").getFromProtoDef("CAMERA")
                 camera_pos = camera_node.getPosition()
-                adj_matrix = Transformation.get_matrix_from_euler([0, np.pi/2, -np.pi/2])
-                orient_matrix = np.reshape(camera_node.getOrientation(), (3,3))
+                adj_matrix = Transformation.get_matrix_from_euler([0, np.pi / 2, -np.pi / 2])
+                orient_matrix = np.reshape(camera_node.getOrientation(), (3, 3))
                 camera_quat = Transformation.get_quaternion_from_rotation_matrix(orient_matrix @ adj_matrix)
                 self.transform_broadcaster.sendTransform(
                     (camera_pos[0], camera_pos[1], camera_pos[2]),
                     (camera_quat[0], camera_quat[1], camera_quat[2], camera_quat[3]),
                     rospy.Time.from_sec(self.time),
                     name + "/camera_gt",
-                    "world"
+                    "world",
                 )
 
                 # Ball Position
@@ -134,7 +141,7 @@ class SupervisorController:
                     (orient[0], orient[1], orient[2], orient[3]),
                     rospy.Time.from_sec(self.time),
                     name + "/ball_gt",
-                    "world"
+                    "world",
                 )
 
     def reset_ball(self, pose: Pose):
@@ -187,7 +194,7 @@ class SupervisorController:
             self.robot_nodes[name].resetPhysics()
 
     def set_robot_rpy(self, rpy, name="robot1"):
-        axis, angle = transforms3d.euler.euler2axangle(rpy[0], rpy[1], rpy[2], axes='sxyz')
+        axis, angle = transforms3d.euler.euler2axangle(rpy[0], rpy[1], rpy[2], axes="sxyz")
         self.set_robot_axis_angle(axis, angle, name)
 
     def set_robot_quat(self, quat, name="robot1"):

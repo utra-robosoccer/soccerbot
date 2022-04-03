@@ -12,8 +12,8 @@ class WalkingForwardNorm(WalkingForwardV2):
         self.joint_limit_low = self._joint_limit_low()
         self.reward_normal_factor = reward_normal_factor
         self.reward_range = [float(-2), float(2)]
-        self.observation_space = spaces.Box(low=-1., high=1., shape=(self.observation_dim, ) , dtype=np.float32)
-        self.action_space = spaces.Box(low=-1., high=1., shape=(self.JOINT_DIM, ), dtype=np.float32)
+        self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(self.observation_dim,), dtype=np.float32)
+        self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(self.JOINT_DIM,), dtype=np.float32)
 
     def step(self, action):
         action = self.unnormalize(action, self.joint_limit_low, self.joint_limit_high)

@@ -3,7 +3,7 @@ from shapely.geometry import LineString, Point, Polygon
 from robot import Robot
 
 
-class GameProperties():
+class GameProperties:
     def __init__(self, team_color, is_first_half, secondary_state, opponent_team=False):
         self.team_color = team_color
         self.is_first_half = is_first_half
@@ -99,21 +99,21 @@ def tangent_lines_to_circle_through_pt(c, r, pt):
     x_c, y_c = c - pt  # Translate to origin and read out coordinates
 
     # Find values of k that result in a tangent line
-    a_k = (r ** 2 - x_c ** 2)
+    a_k = r**2 - x_c**2
     b_k = 2 * x_c * y_c
-    c_k = (r ** 2 - y_c ** 2)
-    disc = b_k ** 2 - 4 * a_k * c_k
+    c_k = r**2 - y_c**2
+    disc = b_k**2 - 4 * a_k * c_k
     k1 = (-b_k - np.sqrt(disc)) / (2 * a_k)
     k2 = (-b_k + np.sqrt(disc)) / (2 * a_k)
 
     # Compute x values corresponding to each k
-    a_x1 = 1 + k1 ** 2
+    a_x1 = 1 + k1**2
     b_x1 = 2 * (x_c + k1 * y_c)
-    a_x2 = 1 + k2 ** 2
+    a_x2 = 1 + k2**2
     b_x2 = 2 * (x_c + k2 * y_c)
-    c_x = x_c ** 2 + y_c ** 2 - r ** 2
-    disc_x1 = b_x1 ** 2 - 4 * a_x1 * c_x
-    disc_x2 = b_x2 ** 2 - 4 * a_x2 * c_x
+    c_x = x_c**2 + y_c**2 - r**2
+    disc_x1 = b_x1**2 - 4 * a_x1 * c_x
+    disc_x2 = b_x2**2 - 4 * a_x2 * c_x
     x1 = (-b_x1 - np.sqrt(max(disc_x1, 0))) / (2 * a_x1)
     x2 = (-b_x2 - np.sqrt(max(disc_x2, 0))) / (2 * a_x2)
 
@@ -149,7 +149,7 @@ def func_rep(beta, r_rep, d_rep):
     val = 0
     if d_rep <= r_rep:
         t1 = (1 / d_rep) - (1 / r_rep)
-        val = 0.5 * beta * t1 ** 2
+        val = 0.5 * beta * t1**2
     return val
 
 

@@ -3,6 +3,7 @@
 import os
 
 import numpy as np
+
 np.set_printoptions(precision=3)
 
 from soccer_msgs.msg import RobotState
@@ -19,8 +20,9 @@ from sensor_msgs.msg import JointState
 from soccer_object_detection.msg import BoundingBoxes, BoundingBox
 from detector import Detector
 from soccer_common.transformation import Transformation
-class DetectorBall(Detector):
 
+
+class DetectorBall(Detector):
     def __init__(self):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback, queue_size=1)
@@ -32,8 +34,8 @@ class DetectorBall(Detector):
 
     def jointStatesCallback(self, msg: JointState):
         if len(msg.name) != 0:
-            index = msg.name.index('head_motor_1')
-            self.head_motor_1_angle =  msg.position[index]
+            index = msg.name.index("head_motor_1")
+            self.head_motor_1_angle = msg.position[index]
 
     def ballDetectorCallback(self, msg: BoundingBoxes):
         if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
@@ -63,7 +65,10 @@ class DetectorBall(Detector):
                 camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
                 detection_size = (box.ymax - box.ymin) * (box.xmax - box.xmin)
 
-                rospy.loginfo_throttle(5, f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, detection_size { detection_size }")
+                rospy.loginfo_throttle(
+                    5,
+                    f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, detection_size { detection_size }",
+                )
                 candidate_ball_counter = candidate_ball_counter + 1
 
                 # Exclude balls outside the field
@@ -72,16 +77,18 @@ class DetectorBall(Detector):
 
                 # Exclude balls that are too far from the previous location
                 if self.last_ball_pose is not None:
-                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
+                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1:  # In the start position
                         pass
-                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 3: # meters from previous position
-                        rospy.logwarn_throttle(0.5, f"Detected a ball too far away ({ self.last_ball_pose_counter }), Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 3:  # meters from previous position
+                        rospy.logwarn_throttle(
+                            0.5,
+                            f"Detected a ball too far away ({ self.last_ball_pose_counter }), Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }",
+                        )
                         self.last_ball_pose_counter = self.last_ball_pose_counter + 1
-                        if self.last_ball_pose_counter > 5: # Counter to prevent being stuck when the ball is in a different location
+                        if self.last_ball_pose_counter > 5:  # Counter to prevent being stuck when the ball is in a different location
                             self.last_ball_pose_counter = 0
                             self.last_ball_pose = None
                         continue
-
 
                 # Get the largest detection
                 if detection_size > max_detection_size:
@@ -92,7 +99,10 @@ class DetectorBall(Detector):
                     pass
 
         if final_camera_to_ball is not None:
-            rospy.loginfo_throttle(1, f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m")
+            rospy.loginfo_throttle(
+                1,
+                f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m",
+            )
             br = tf2_ros.TransformBroadcaster()
             ball_pose = TransformStamped()
             ball_pose.header.frame_id = self.robot_name + "/base_camera"
@@ -108,7 +118,6 @@ class DetectorBall(Detector):
             ball_pose.transform.rotation.w = 1
             br.sendTransform(ball_pose)
 
-
         # Robots
         detected_robots = 0
         for box in msg.bounding_boxes:
@@ -116,8 +125,8 @@ class DetectorBall(Detector):
                 if self.head_motor_1_angle > 0.6:
                     continue  # probably looking at own hands
 
-                x_avg = (box.xmin + box.xmax) / 2.
-                y_avg = (box.ymax + box.ymin) / 2.
+                x_avg = (box.xmin + box.xmax) / 2.0
+                y_avg = (box.ymax + box.ymin) / 2.0
                 y_close = box.ymax
 
                 robot_length = abs(box.xmax - box.xmin)
@@ -125,7 +134,7 @@ class DetectorBall(Detector):
                 if robot_length <= 0 or robot_width <= 0:
                     continue
 
-                length_to_width_ratio_in_full_view = 68 / 22.
+                length_to_width_ratio_in_full_view = 68 / 22.0
                 foot_ratio_of_length = 0.2
                 foot_pixel = box.ymax
 
@@ -164,8 +173,7 @@ class DetectorBall(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (
-                             floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
+                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
                 theta = math.atan2(distance, camera_pose.get_position()[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
@@ -191,6 +199,7 @@ class DetectorBall(Detector):
                     robot_pose.transform.rotation.w = 1
                     br.sendTransform(robot_pose)
                     detected_robots += 1
+
 
 if __name__ == "__main__":
     rospy.init_node("ball_detector")

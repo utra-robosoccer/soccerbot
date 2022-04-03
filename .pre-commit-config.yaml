@@ -3,18 +3,18 @@ repos:
     rev: v2.3.0
     hooks:
       - id: check-yaml
-        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: end-of-file-fixer
-        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: trailing-whitespace
-        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-#  - repo: https://github.com/psf/black
-#    rev: 22.3.0
-#    hooks:
-#      - id: black
-#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-#        args:
-#          - --line-length=300
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        args:
+          - --line-length=150
 #  - repo: https://github.com/pycqa/isort
 #    rev: 5.10.1
 #    hooks:

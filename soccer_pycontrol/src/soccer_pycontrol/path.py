@@ -16,7 +16,7 @@ class Path:
     pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
     post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
-    def __init__(self, start_transform: Transformation,  end_transform: Transformation):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
@@ -27,11 +27,17 @@ class Path:
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
         theta_diff = wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])
-        pos_theta_diff = math.atan2(end_transform.get_position()[1] - start_transform.get_position()[1], end_transform.get_position()[0] - start_transform.get_position()[0])
+        pos_theta_diff = math.atan2(
+            end_transform.get_position()[1] - start_transform.get_position()[1],
+            end_transform.get_position()[0] - start_transform.get_position()[0],
+        )
         if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 4:
             return True
 
-        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
+        return (
+            np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2])
+            < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
+        )
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)
@@ -92,7 +98,7 @@ class Path:
             ratio = path_section.duration() / total_duration
             next_cumulative_ratio = cumulative_ratio + ratio
             if next_cumulative_ratio >= r:
-                return (r - cumulative_ratio)/ratio, path_section
+                return (r - cumulative_ratio) / ratio, path_section
             cumulative_ratio = next_cumulative_ratio
 
         raise Exception("Invalid ratio " + str(r))
@@ -190,17 +196,16 @@ class Path:
         position = np.zeros((self.bodyStepCount(), 3))
         orientation = np.zeros((self.bodyStepCount(), 3))
         colors = np.zeros((self.bodyStepCount(), 4))
-        colors_arrow_ends = np.zeros((self.bodyStepCount()*2, 4))
+        colors_arrow_ends = np.zeros((self.bodyStepCount() * 2, 4))
 
         section_color_map = {}
         for i in range(0, len(self.path_sections)):
             section_color_map[i] = np.append(np.random.rand(3), 1)
 
-
         for i in range(0, self.bodyStepCount(), 1):  # i = 0:1: obj.bodyStepCount
             step = self.getBodyStepPose(i)
             position[i, 0:3] = step.get_position()
-            orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0., 0.]), (3, 1)))[:, 0]
+            orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0.0, 0.0]), (3, 1)))[:, 0]
 
             count = i
             section = 0
@@ -210,14 +215,21 @@ class Path:
                 count = count - path_section.bodyStepCount()
                 section = section + 1
             colors[i] = section_color_map[section]
-            colors_arrow_ends[2*i] = section_color_map[section]
-            colors_arrow_ends[2*i+1] = section_color_map[section]
+            colors_arrow_ends[2 * i] = section_color_map[section]
+            colors_arrow_ends[2 * i + 1] = section_color_map[section]
 
-        ax = plt.gca(projection='3d')
+        ax = plt.gca(projection="3d")
         ax.set_autoscale_on(True)
         colors = np.concatenate((colors, colors_arrow_ends))
-        ax.quiver(position[:, 0], position[:, 1], position[:, 2], orientation[:, 0], orientation[:, 1],
-                  orientation[:, 2], colors=colors)
+        ax.quiver(
+            position[:, 0],
+            position[:, 1],
+            position[:, 2],
+            orientation[:, 0],
+            orientation[:, 1],
+            orientation[:, 2],
+            colors=colors,
+        )
         ax.set_zlim(0, 0.4)
 
         # Equalize X and Y axes

@@ -4,12 +4,13 @@ import gym
 import ray
 from ray import tune
 from ray.rllib.utils.framework import try_import_tf
+
 tf1, tf, tfv = try_import_tf()
 
 
 checkpoint_path = "./demos/es-april26/checkpoint-1180"
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ray.init(local_mode=False)
     trainer, trainer_class = es.ESTrainer, es
     # load
@@ -19,7 +20,6 @@ if __name__ == '__main__':
     config["num_workers"] = 1
     agent = trainer(env="gym_soccerbot:walk-forward-norm-v1", config=config)
     agent.load_checkpoint(checkpoint_path)
-
 
     # instantiate env class
     env_id = "walk-forward-norm-v1"
@@ -37,6 +37,6 @@ if __name__ == '__main__':
             episode_reward += reward
 
             i += 1
-        print(f'episode_reward: {episode_reward:.3f}, episode_len: {i}, info: {info}')
+        print(f"episode_reward: {episode_reward:.3f}, episode_len: {i}, info: {info}")
 
     ray.shutdown()
