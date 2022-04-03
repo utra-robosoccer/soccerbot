@@ -146,7 +146,10 @@ class RobotControlled3D(RobotControlled):
                 rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
             else:
-                self.status = Robot.Status.READY
+                if self.role == Robot.Role.UNASSIGNED:
+                    self.status = Robot.Status.DETERMINING_SIDE
+                else:
+                    self.status = Robot.Status.READY
 
             self.time_since_action_completed = rospy.Time.now()
         elif self.status == Robot.Status.PENALIZED:
