@@ -163,6 +163,7 @@ class WalkingForwardV6(gym.Env):
     _AX_12_velocity = (59 / 60) * 2 * np.pi
     _MX_28_velocity = 2 * np.pi
     _ENABLE_HANDS = True
+
     #### End of Joint Limits HARD CODE
     @classmethod
     def joint_limit_high_val(cls):
@@ -249,7 +250,7 @@ class WalkingForwardV6(gym.Env):
 
     # IMU NOISE
     _IMU_LIN_STDDEV_BIAS = 0.0  # 0.02 * _MAX_LIN_ACC
-    _IMU_ANG_STDDEV_BIAS = 0.0  #  0.02 * _MAX_ANG_VEL
+    _IMU_ANG_STDDEV_BIAS = 0.0  # 0.02 * _MAX_ANG_VEL
     _IMU_LIN_STDDEV = 0.00203 * _MAX_LIN_ACC
     _IMU_ANG_STDDEV = 0.00804 * _MAX_ANG_VEL
 

@@ -20,13 +20,18 @@ repos:
     hooks:
       - id: isort
         name: isort
-        args: ["--profile", "black"]
-        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-#  - repo: https://gitlab.com/pycqa/flake8
-#    rev: 4.0.1
-#    hooks:
-#      - id: flake8
-#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-#        additional_dependencies:
-#          - flake8-black>=0.3.2
-#        language_version: python3
+        args: [ "--profile", "black" ]
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        args:
+          - "--max-line-length=150"
+          - "--max-complexity=40"
+          - "--select=B,C,E,F,W,T4,B9"
+          - "--ignore=E203,E266,E501,W503,F403,F401,E402,BLK100,F405,E722,E712,E741,F841,E731" # https://flake8.pycqa.org/en/latest/user/error-codes.html
+        additional_dependencies:
+          - flake8-black>=0.3.2
+        language_version: python3
