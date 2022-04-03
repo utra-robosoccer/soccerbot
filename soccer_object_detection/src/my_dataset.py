@@ -1,16 +1,17 @@
-import os
 import copy
+import os
+import pickle
+import time
+
 import cv2
 import numpy as np
 import torch
 import torchvision
-import yaml
-from PIL import Image
-from torch.utils.data import Dataset, DataLoader, random_split
-from model import Label, find_batch_bounding_boxes
 import util
-import time
-import pickle
+import yaml
+from model import Label, find_batch_bounding_boxes
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset, random_split
 
 
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=12, shuffle=True):

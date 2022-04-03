@@ -1,11 +1,12 @@
 import abc
 import functools
 import time
+from abc import ABC
+
+import numpy as np
 
 from soccer_common.transformation import Transformation
-import numpy as np
 from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
-from abc import ABC
 
 
 class PathSection(ABC):

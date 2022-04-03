@@ -1,11 +1,12 @@
 import math
 
-from strategy.strategy import Strategy, get_back_up
-from team import Team
-from soccer_msgs.msg import GameState
+import numpy as np
 from robot import Robot
 from strategy.interfaces.actions import Actions
-import numpy as np
+from strategy.strategy import Strategy, get_back_up
+from team import Team
+
+from soccer_msgs.msg import GameState
 
 
 class StrategyReady(Strategy):

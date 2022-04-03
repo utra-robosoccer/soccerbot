@@ -1,12 +1,13 @@
+import enum
 import os
 import time
-import enum
+
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from model import Label, find_batch_bounding_boxes
 from my_dataset import initialize_loader
 from util import display_image, draw_bounding_boxes
-import matplotlib.pyplot as plt
 
 
 class Trainer:

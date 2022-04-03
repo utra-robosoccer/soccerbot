@@ -1,13 +1,14 @@
-import ray.rllib.agents.es as es
 from time import sleep
+
 import gym
-import ray
-from ray import tune
-import rospy
-from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
-from geometry_msgs.msg import PoseWithCovarianceStamped
-from std_msgs.msg import Int32
 import numpy as np
+import ray
+import ray.rllib.agents.es as es
+import rospy
+from geometry_msgs.msg import PoseWithCovarianceStamped
+from ray import tune
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
+from std_msgs.msg import Int32
 from visualization_msgs.msg import Marker
 
 checkpoint_path = "./demos/checkpoint-14450"

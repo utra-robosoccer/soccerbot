@@ -1,8 +1,9 @@
-from ball import Ball
 import enum
 import os
-from robot import Robot
+
 import numpy as np
+from ball import Ball
+from robot import Robot
 
 
 class FieldSide(enum.IntEnum):

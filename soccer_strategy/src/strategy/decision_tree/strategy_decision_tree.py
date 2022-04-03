@@ -9,8 +9,10 @@ try:
     from soccer_msgs.msg import GameState
 except:
     from soccer_msgs.fake_msg import GameState
-from copy import deepcopy
+
 import abc
+from copy import deepcopy
+
 import numpy as np
 
 

@@ -5,12 +5,11 @@ import math
 import time
 
 import rospy
-
+from strategy.interfaces.actions import Actions
+from strategy.interfaces.evaluations import Evaluations
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 from strategy.utils import *
 from team import Team
-from strategy.interfaces.evaluations import Evaluations
-from strategy.interfaces.actions import Actions
 
 try:
     from soccer_msgs.msg import GameState

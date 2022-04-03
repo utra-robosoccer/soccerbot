@@ -1,10 +1,11 @@
-from path_crotch import PathCrotch
-from path import Path
-from path_foot import PathFoot
+import math
+
 import matplotlib as plt
 import matplotlib.pyplot as plt
 import numpy as np
-import math
+from path import Path
+from path_crotch import PathCrotch
+from path_foot import PathFoot
 
 
 class PathRobot(PathCrotch):

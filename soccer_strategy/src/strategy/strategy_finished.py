@@ -1,7 +1,8 @@
+from strategy.interfaces.actions import Actions
 from strategy.strategy import Strategy
 from team import Team
+
 from soccer_msgs.msg import GameState
-from strategy.interfaces.actions import Actions
 
 
 class StrategyFinished(Strategy):

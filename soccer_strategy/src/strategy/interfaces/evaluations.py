@@ -1,9 +1,9 @@
+import math
+
+import numpy as np
 from ball import Ball
 from robot import Robot
-import math
-import numpy as np
 from team import Team
-from robot import Robot
 
 
 class Evaluations:

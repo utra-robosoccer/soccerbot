@@ -1,8 +1,8 @@
+import math
 import time
 
-from ball import Ball
-import math
 import numpy as np
+from ball import Ball
 from robot import Robot
 from robot_controlled import RobotControlled
 

@@ -9,17 +9,16 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1"
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-import numpy as np
-
-from soccer_common.transformation import Transformation
-
-import rospy
 import argparse
+
+import keras
 import matplotlib.pyplot as plt
 import numpy as np
+import rospy
 import tensorflow as tf
-import keras
 from keras.utils.vis_utils import plot_model
+
+from soccer_common.transformation import Transformation
 
 
 class Calibration:

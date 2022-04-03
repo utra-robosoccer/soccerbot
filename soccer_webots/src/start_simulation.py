@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
+import argparse
 import os
 import subprocess
 import sys
 
 import rospkg
 import rospy
-
-import argparse
 
 from soccer_webots.webots_supervisor_controller import SupervisorController
 

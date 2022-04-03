@@ -7,18 +7,20 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+import math
+
+import cv2
+import numpy as np
 import rospy
 import tf2_ros
-from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
-import numpy as np
-import cv2
-from sensor_msgs.msg import Image
-from soccer_msgs.msg import RobotState
-from std_msgs.msg import Bool
 from cv_bridge import CvBridge
-import math
-from detector_fieldline import DetectorFieldline
 from detector import Detector
+from detector_fieldline import DetectorFieldline
+from geometry_msgs.msg import PointStamped, PoseStamped, TransformStamped
+from sensor_msgs.msg import Image
+from std_msgs.msg import Bool
+
+from soccer_msgs.msg import RobotState
 
 
 class DetectorGoalPost(Detector):

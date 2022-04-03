@@ -7,23 +7,22 @@ if "ROS_NAMESPACE" not in os.environ:
 import math
 from unittest import TestCase
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from path import Path
 
+from soccer_common.transformation import Transformation
+from soccer_msgs.msg import RobotState
+from soccer_pycontrol.soccerbot import Soccerbot
 from soccer_pycontrol.soccerbot_controller import SoccerbotController
 from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
-from soccer_pycontrol.soccerbot import Soccerbot
-from soccer_msgs.msg import RobotState
-
-from soccer_common.transformation import Transformation
 
 RUN_IN_ROS = True
 if RUN_IN_ROS:
     import rospy
     import soccerbot_controller_ros
-    from std_msgs.msg import String
     from geometry_msgs.msg import PoseWithCovarianceStamped
+    from std_msgs.msg import String
 
 
 class Test(TestCase):

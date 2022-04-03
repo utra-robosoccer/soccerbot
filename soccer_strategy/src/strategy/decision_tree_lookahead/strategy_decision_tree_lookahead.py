@@ -1,4 +1,5 @@
 import enum
+
 from strategy.strategy import Strategy
 from team import Team
 
@@ -6,8 +7,9 @@ try:
     from soccer_msgs.msg import GameState
 except:
     from soccer_msgs.fake_msg import GameState
-from copy import deepcopy
+
 import abc
+from copy import deepcopy
 
 
 class Agent(enum.IntEnum):

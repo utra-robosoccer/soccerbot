@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 import argparse
-import os
-import sys
 import math
+import os
 import socket
+import struct
+import sys
 import time
 
+import messages_pb2
 import rospy
-import struct
 import tf
+from geometry_msgs.msg import (
+    Point,
+    Pose,
+    PoseWithCovarianceStamped,
+    Quaternion,
+    Twist,
+    Vector3,
+)
+from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
-
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool, Float64
-import messages_pb2
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseWithCovarianceStamped
 
 
 class GameControllerBridge:

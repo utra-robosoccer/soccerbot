@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 
+import os
 import socket
+import struct
 import time
 
+import robot_state_pb2
 import rospy
-import struct
-import os
 
 from soccer_msgs.msg import RobotState
-
-import robot_state_pb2
-
 
 if __name__ == "__main__":
     rospy.init_node("team_communication")

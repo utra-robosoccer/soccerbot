@@ -1,7 +1,8 @@
-import pytest
+from time import sleep
+
 import gym
 import numpy as np
-from time import sleep
+import pytest
 
 # env_id = 'gym_soccerbot:walk-forward-norm-v0'
 env_id = "gym_soccerbot:walk-forward-v2"

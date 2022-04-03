@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
-import socket
-import rospy
 import os
+import socket
+
+import rospy
+from construct import ConstError, Container
+from gamestate import GAME_CONTROLLER_RESPONSE_VERSION, GameState, ReturnData
 from std_msgs.msg import Empty
+
 from soccer_msgs.msg import GameState as GameStateMsg
-from construct import Container, ConstError
-from gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
 
 
 class GameStateReceiver(object):

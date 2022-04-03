@@ -1,20 +1,20 @@
-import os
 import enum
+import math
+import os
+from copy import deepcopy
+from os.path import expanduser
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pybullet as pb
 import rospy
 from rospy import ROSException
 from sensor_msgs.msg import JointState
 
-from soccer_common.transformation import Transformation as tr
-import matplotlib.pyplot as plt
-from soccer_pycontrol.path_robot import PathRobot
-import math
-from os.path import expanduser
-from copy import deepcopy
-import numpy as np
-import pybullet as pb
 from soccer_common.pid import PID
+from soccer_common.transformation import Transformation as tr
 from soccer_pycontrol.calibration import Calibration
+from soccer_pycontrol.path_robot import PathRobot
 from soccer_pycontrol.utils import wrapToPi
 
 
