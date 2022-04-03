@@ -23,36 +23,12 @@ from keras.utils.vis_utils import plot_model
 
 
 class Calibration:
+    # fmt: off
     x_range = np.flip(
-        np.array(
-            [
-                -2.0,
-                -1.5,
-                -1.0,
-                -0.8,
-                -0.5,
-                -0.3,
-                -0.2,
-                -0.15,
-                -0.1,
-                -0.05,
-                0,
-                0.05,
-                0.1,
-                0.15,
-                0.3,
-                0.4,
-                0.5,
-                0.8,
-                1.0,
-                1.5,
-                2.0,
-            ]
-        )
-    )
+        np.array([-2.0, -1.5, -1.0, -0.8, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 0.8, 1.0, 1.5, 2.0]))
     y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0])
     ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1])
-
+    # fmt: on
     model_name = f"calibration_models/model.995"
 
     # Runs a series of movements to collect data in the calibration folder

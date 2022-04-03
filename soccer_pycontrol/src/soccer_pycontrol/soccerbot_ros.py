@@ -135,44 +135,14 @@ class SoccerbotRos(Soccerbot):
         o.pose.pose.orientation.z = orientation[2]
         o.pose.pose.orientation.w = orientation[3]
 
-        o.pose.covariance = [
-            1e-2,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1e-2,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1e-6,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1e-6,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1e-6,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1e-2,
-        ]
+        # fmt: off
+        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
+                             0, 1E-2, 0, 0, 0, 0,
+                             0, 0, 1E-6, 0, 0, 0,
+                             0, 0, 0, 1E-6, 0, 0,
+                             0, 0, 0, 0, 1E-6, 0,
+                             0, 0, 0, 0, 0, 1E-2]
+        # fmt: on
         self.odom_publisher.publish(o)
         self.publishHeight()
         pass

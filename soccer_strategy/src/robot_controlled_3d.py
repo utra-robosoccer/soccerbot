@@ -212,44 +212,14 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.z = q[2]
         p.pose.pose.orientation.w = q[3]
         print("Setting initial Robot " + self.robot_name + " position " + str(position) + " orientation " + str(q))
-        p.pose.covariance = [
-            0.0025,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0025,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.01,
-        ]
+        # fmt: off
+        p.pose.covariance = [0.0025, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0025, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
+        # fmt: on
         self.robot_initial_pose_publisher.publish(p)
 
     def kick(self):
