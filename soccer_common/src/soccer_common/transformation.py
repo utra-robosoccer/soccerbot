@@ -4,8 +4,7 @@ from scipy.spatial.transform import Slerp
 
 
 class Transformation(np.ndarray):
-
-    def __new__(cls, position=(0., 0., 0.), quaternion=(0., 0., 0., 1.), *args, **kwargs):
+    def __new__(cls, position=(0.0, 0.0, 0.0), quaternion=(0.0, 0.0, 0.0, 1.0), *args, **kwargs):
         """
         Constructor for the H-transform object, inherits from numpy array
         :param position: translation component of the transform, defaults to zero
@@ -67,12 +66,12 @@ class Transformation(np.ndarray):
         t = Transformation()
 
         t[0, 0] = np.cos(theta)
-        t[0, 1] = - np.sin(theta) * np.cos(alpha)
+        t[0, 1] = -np.sin(theta) * np.cos(alpha)
         t[0, 2] = np.sin(theta) * np.sin(alpha)
         t[0, 3] = a * np.cos(theta)
         t[1, 0] = np.sin(theta)
         t[1, 1] = np.cos(theta) * np.cos(alpha)
-        t[1, 2] = - np.cos(theta) * np.sin(alpha)
+        t[1, 2] = -np.cos(theta) * np.sin(alpha)
         t[1, 3] = a * np.sin(theta)
         t[2, 1] = np.sin(alpha)
         t[2, 2] = np.cos(alpha)
@@ -87,7 +86,7 @@ class Transformation(np.ndarray):
         return t
 
     @staticmethod
-    def get_matrix_from_euler(euler_array, sequence='ZYX'):
+    def get_matrix_from_euler(euler_array, sequence="ZYX"):
         """
         Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
         :param euler_array: the array of 3 angles
@@ -98,7 +97,7 @@ class Transformation(np.ndarray):
         return r.as_matrix()
 
     @staticmethod
-    def get_transform_from_euler(euler_array, sequence='ZYX'):
+    def get_transform_from_euler(euler_array, sequence="ZYX"):
         """
         Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
         :param euler_array: the array of 3 angles
@@ -110,7 +109,7 @@ class Transformation(np.ndarray):
         return t
 
     @staticmethod
-    def get_euler_from_rotation_matrix(r, orientation='ZYX'):
+    def get_euler_from_rotation_matrix(r, orientation="ZYX"):
         """
         Gives euler angles rotation form of rotation matrix
         :param r: 3x3 rotation matrix
@@ -132,7 +131,7 @@ class Transformation(np.ndarray):
         return e.as_quat()
 
     @staticmethod
-    def get_quaternion_from_euler(euler_array, sequence='ZYX'):
+    def get_quaternion_from_euler(euler_array, sequence="ZYX"):
         """
         Get the quaternion representation of euler angle rotations
         :param euler_array: array of 3 angles for rotation
@@ -143,7 +142,7 @@ class Transformation(np.ndarray):
         return r.as_quat()
 
     @staticmethod
-    def get_euler_from_quaternion(quaternion, seq='ZYX'):
+    def get_euler_from_quaternion(quaternion, seq="ZYX"):
         """
         Get the quaternion representation of euler angle rotations
         :param euler_array: array of 3 angles for rotation
@@ -161,7 +160,7 @@ class Transformation(np.ndarray):
         :param angle: angle by which is rotated around the vector
         :return: quaternion in the form of [x y z w]
         """
-        r = R.from_rotvec(np.array(vector).reshape((1,3)) * (angle / np.linalg.norm(vector)))
+        r = R.from_rotvec(np.array(vector).reshape((1, 3)) * (angle / np.linalg.norm(vector)))
         return r.as_quat()
 
     @staticmethod
@@ -173,7 +172,7 @@ class Transformation(np.ndarray):
         """
         r = R.from_quat(quaternion)
         angle = np.linalg.norm(r.as_rotvec())
-        np.seterr(invalid = "raise")
+        np.seterr(invalid="raise")
         try:
             vector = r.as_rotvec() / np.linalg.norm(r.as_rotvec())
         except:
@@ -188,7 +187,7 @@ class Transformation(np.ndarray):
         :param t2: second H-transform
         :return:
         """
-        return np.linalg.norm(t1[0:3, 3] - t2[0: 3, 3])
+        return np.linalg.norm(t1[0:3, 3] - t2[0:3, 3])
 
     @staticmethod
     def get_rotation_matrix_from_transformation(transformation):

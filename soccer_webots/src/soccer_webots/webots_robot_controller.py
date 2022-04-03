@@ -51,7 +51,7 @@ class RobotController:
             "left_leg_motor_4",
             "left_leg_motor_5",
             "head_motor_0",
-            "head_motor_1"
+            "head_motor_1",
         ]
         self.sensor_names = [
             "left_arm_motor_0_sensor",
@@ -71,7 +71,7 @@ class RobotController:
             "left_leg_motor_4_sensor",
             "left_leg_motor_5_sensor",
             "head_motor_0_sensor",
-            "head_motor_1_sensor"
+            "head_motor_1_sensor",
         ]
         self.motor_count = len(self.motor_names)
         self.external_motor_names = [
@@ -92,16 +92,22 @@ class RobotController:
             "left_leg_motor_4",
             "left_leg_motor_5",
             "head_motor_0",
-            "head_motor_1"
-         ]
+            "head_motor_1",
+        ]
         accel_name = "imu accelerometer"
         gyro_name = "imu gyro"
         camera_name = "camera"
 
-        self.pressure_sensor_names = ["right_leg_foot_sensor_1", "right_leg_foot_sensor_2", "right_leg_foot_sensor_3",
-                                      "right_leg_foot_sensor_4",
-                                      "left_leg_foot_sensor_1", "left_leg_foot_sensor_2", "left_leg_foot_sensor_3",
-                                      "left_leg_foot_sensor_4"]
+        self.pressure_sensor_names = [
+            "right_leg_foot_sensor_1",
+            "right_leg_foot_sensor_2",
+            "right_leg_foot_sensor_3",
+            "right_leg_foot_sensor_4",
+            "left_leg_foot_sensor_1",
+            "left_leg_foot_sensor_2",
+            "left_leg_foot_sensor_3",
+            "left_leg_foot_sensor_4",
+        ]
         self.pressure_sensors = []
         self.external_pressure_names = self.pressure_sensor_names
         for name in self.pressure_sensor_names:
@@ -124,14 +130,13 @@ class RobotController:
         self.camera.enable(self.timestep)
 
         clock_topic = base_ns + "/clock"
-        rospy.Subscriber(base_ns + '/joint_command', JointState, self.all_motor_callback)
+        rospy.Subscriber(base_ns + "/joint_command", JointState, self.all_motor_callback)
         self.pub_imu = rospy.Publisher(base_ns + "/imu_raw", Imu, queue_size=1)
         self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
         self.pub_cam_info = rospy.Publisher(base_ns + "/camera/camera_info", CameraInfo, queue_size=1, latch=True)
 
-        self.pressure_sensors_pub = {
-            i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
+        self.pressure_sensors_pub = {i: rospy.Publisher(base_ns + "/foot_pressure_{}".format(i), Marker, queue_size=10) for i in range(8)}
 
         # publish camera info once, it will be latched
         self.cam_info = CameraInfo()
@@ -140,15 +145,11 @@ class RobotController:
         self.cam_info.height = self.camera.getHeight()
         self.cam_info.width = self.camera.getWidth()
         f_y = self.mat_from_fov_and_resolution(
-            self.h_fov_to_v_fov(self.camera.getFov(), self.cam_info.height, self.cam_info.width),
-            self.cam_info.height)
+            self.h_fov_to_v_fov(self.camera.getFov(), self.cam_info.height, self.cam_info.width), self.cam_info.height
+        )
         f_x = self.mat_from_fov_and_resolution(self.camera.getFov(), self.cam_info.width)
-        self.cam_info.K = [f_x, 0, self.cam_info.width / 2,
-                           0, f_y, self.cam_info.height / 2,
-                           0, 0, 1]
-        self.cam_info.P = [f_x, 0, self.cam_info.width / 2, 0,
-                           0, f_y, self.cam_info.height / 2, 0,
-                           0, 0, 1, 0]
+        self.cam_info.K = [f_x, 0, self.cam_info.width / 2, 0, f_y, self.cam_info.height / 2, 0, 0, 1]
+        self.cam_info.P = [f_x, 0, self.cam_info.width / 2, 0, 0, f_y, self.cam_info.height / 2, 0, 0, 0, 1, 0]
         self.pub_cam_info.publish(self.cam_info)
         self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
         for i, name in enumerate(self.external_motor_names):
@@ -188,7 +189,7 @@ class RobotController:
             motor_index = self.external_motor_names.index(name)
             # self.motors[motor_index].setPosition(msg.position[i])
             if len(msg.velocity) > 0:
-                self.motors[motor_index].setPosition(float('inf'))  # turn on velocity control for both motors
+                self.motors[motor_index].setPosition(float("inf"))  # turn on velocity control for both motors
                 self.motors[motor_index].setVelocity(msg.velocity[i])
 
             else:

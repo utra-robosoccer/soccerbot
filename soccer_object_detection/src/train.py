@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 class Trainer:
-    '''Assume model is trained on GPU enabled computer'''
+    """Assume model is trained on GPU enabled computer"""
 
     class ErrorType(enum.Enum):
         TRUE_POSITIVE = 0
@@ -18,8 +18,7 @@ class Trainer:
         TRUE_NEGATIVE = 2
         FALSE_NEGATIVE = 3
 
-    def __init__(self, model, learn_rate, weight_decay, batch_size, epochs, class_weights, colour_jitter, seed,
-                 output_folder):
+    def __init__(self, model, learn_rate, weight_decay, batch_size, epochs, class_weights, colour_jitter, seed, output_folder):
         self.model = model
         self.learn_rate = learn_rate
         self.batch_size = batch_size
@@ -41,30 +40,29 @@ class Trainer:
         self.valid_ious = []
         self.valid_radius_losses = []
 
-        self.valid_stats = {'BALL': [], 'ROBOT': []}
+        self.valid_stats = {"BALL": [], "ROBOT": []}
         self.precision = 0
         self.recall = 0
 
         loaders, datasets = initialize_loader(batch_size, jitter=colour_jitter)
         self.train_loader, self.valid_loader, self.test_loader = loaders
         self.train_dataset, self.test_dataset = datasets
-        print('Datasets Loaded! # of batches train:{} valid:{} test:{}'.format(
-            len(self.train_loader), len(self.valid_loader), len(self.test_loader)))
+        print("Datasets Loaded! # of batches train:{} valid:{} test:{}".format(len(self.train_loader), len(self.valid_loader), len(self.test_loader)))
 
     def train(self):
-        print('Starting Training')
+        print("Starting Training")
         start_train = time.time()
 
         self.model.cuda()
         for epoch in range(self.epochs):
             self.train_epoch(epoch)
-            self.test_model('valid', epoch)
-            torch.save(self.model.state_dict(), self.output_folder+'/model'+str(epoch))
+            self.test_model("valid", epoch)
+            torch.save(self.model.state_dict(), self.output_folder + "/model" + str(epoch))
 
-        self.test_model('test', 'test')
+        self.test_model("test", "test")
 
         time_elapsed = time.time() - start_train
-        print('Finished training in: {: 4.2f}min'.format(time_elapsed / 60))
+        print("Finished training in: {: 4.2f}min".format(time_elapsed / 60))
 
         self.plot_losses()
 
@@ -91,18 +89,17 @@ class Trainer:
         self.train_losses.append(sum(losses) / len(losses))
 
         time_elapsed = time.time() - start_epoch
-        print('Epoch [{:2d}/{:2d}]: Train Loss: {: 4.6f}, Avg. Batch Load (s): {:.4f}, Epoch (s): {: 4.2f}'.format(
-            epoch + 1,
-            self.epochs,
-            self.train_losses[-1],
-            sum(batchload_times) / len(batchload_times),
-            time_elapsed))
+        print(
+            "Epoch [{:2d}/{:2d}]: Train Loss: {: 4.6f}, Avg. Batch Load (s): {:.4f}, Epoch (s): {: 4.2f}".format(
+                epoch + 1, self.epochs, self.train_losses[-1], sum(batchload_times) / len(batchload_times), time_elapsed
+            )
+        )
 
     def test_model(self, test_type, epoch):
         dataset, loader = None, None
-        if test_type == 'valid':
+        if test_type == "valid":
             dataset, loader = self.train_dataset, self.valid_loader
-        elif test_type == 'test':
+        elif test_type == "test":
             dataset, loader = self.test_dataset, self.test_loader
 
         self.model.eval()
@@ -118,7 +115,7 @@ class Trainer:
 
             bbxs = find_batch_bounding_boxes(outputs)
             self.update_batch_stats(stats, bbxs, masks, dataset, indexes)
-        '''
+        """
         # Show sample image with bounding boxes to get feel for what model is learning
         for i in range(1):
             img = draw_bounding_boxes(images[i], bbxs[i][Label.BALL.value], (255, 0, 0))  # balls
@@ -132,22 +129,18 @@ class Trainer:
                 (outputs[i][Label.BALL.value], 'gray', 'Ball'),
                 (outputs[i][Label.ROBOT.value], 'gray', 'Robot')
             ])
-        '''
+        """
         self.valid_losses.append(np.sum(losses) / len(losses))
         time_elapsed = time.time() - start_valid
 
-        print('{:>20} Loss: {: 4.6f}, , {} time (s): {: 4.2f}'.format(
-            test_type,
-            self.valid_losses[-1],
-            test_type,
-            time_elapsed))
+        print("{:>20} Loss: {: 4.6f}, , {} time (s): {: 4.2f}".format(test_type, self.valid_losses[-1], test_type, time_elapsed))
 
         for label in [Label.BALL, Label.ROBOT]:
             total = {}  # number of labels
-            if test_type == 'test':
+            if test_type == "test":
                 total[Label.BALL] = dataset.num_ball_labels
                 total[Label.ROBOT] = dataset.num_robot_labels
-            elif test_type == 'valid':
+            elif test_type == "valid":
                 total[Label.BALL] = dataset.num_ball_labels - dataset.num_train_ball_labels
                 total[Label.ROBOT] = dataset.num_robot_labels - dataset.num_train_robot_labels
 
@@ -162,11 +155,10 @@ class Trainer:
             if tp + fn > 0:
                 self.recall = tp / (tp + fn)
 
-            print('{:>20} {} tp:{:6d}, fp:{:6d}, tn:{:6d}, proxy_fn:{:6d}, ' \
-                  'precision:{:.4f}, recall:{:.4f}, total {}'.format(
-                '', label.name, tp, fp, tn, fn,
-                self.precision, self.recall, total[label]
-            ))
+            print(
+                "{:>20} {} tp:{:6d}, fp:{:6d}, tn:{:6d}, proxy_fn:{:6d}, "
+                "precision:{:.4f}, recall:{:.4f}, total {}".format("", label.name, tp, fp, tn, fn, self.precision, self.recall, total[label])
+            )
 
     def update_batch_stats(self, stats, batch_bounding_boxes, batch_masks, dataset, batch_img_indexes):
         """
@@ -185,15 +177,14 @@ class Trainer:
                     else:
                         stats[pred_class][self.ErrorType.FALSE_POSITIVE.value] += 1
 
-
     def training_name(self):
-        name = 'lr{:.6f}_bs{}_ep{}_w{:.2f}-{:.2f}-{:.2f}'.format(
+        name = "lr{:.6f}_bs{}_ep{}_w{:.2f}-{:.2f}-{:.2f}".format(
             self.learn_rate,
             self.batch_size,
             self.epochs,
             self.class_weights[0],
             self.class_weights[1],
-            self.class_weights[2]
+            self.class_weights[2],
         )
         return name
 

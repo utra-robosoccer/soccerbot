@@ -5,15 +5,13 @@ from time import sleep
 
 
 class WalkingForwardNormAgn(Env):
-    def __init__(self, reward_plus_range=1e1,
-                 action_plus_range=1e1, observation_plus_range=1e1, env_name=None, **kwargs):
-        if type(env_name).__name__ == 'str':
+    def __init__(self, reward_plus_range=1e1, action_plus_range=1e1, observation_plus_range=1e1, env_name=None, **kwargs):
+        if type(env_name).__name__ == "str":
             env_spec = spec(env_name)
         elif env_name is None:
-            raise ValueError('Error: No envs has been passed.')
+            raise ValueError("Error: No envs has been passed.")
         self.env = env_spec.make(**kwargs)
         # assert 0, type(env)
-
 
         if "dtype" in kwargs.keys():
             self.dtype = eval(kwargs["dtype"])
@@ -22,40 +20,40 @@ class WalkingForwardNormAgn(Env):
 
         # Observation Space
         self.observation_plus_range = observation_plus_range
-        self.observation_space = spaces.Box(low=-self.observation_plus_range, high=self.observation_plus_range,
-                                            shape=self.env.observation_space.shape , dtype=self.dtype)
+        self.observation_space = spaces.Box(
+            low=-self.observation_plus_range,
+            high=self.observation_plus_range,
+            shape=self.env.observation_space.shape,
+            dtype=self.dtype,
+        )
         # Action Space
         self.action_plus_range = action_plus_range
-        self.action_space = spaces.Box(low=-self.action_plus_range, high=self.action_plus_range,
-                                       shape=self.env.action_space.shape, dtype=self.dtype)
+        self.action_space = spaces.Box(
+            low=-self.action_plus_range,
+            high=self.action_plus_range,
+            shape=self.env.action_space.shape,
+            dtype=self.dtype,
+        )
         # Reward
         self.reward_plus_range = self.dtype(reward_plus_range)
         self.reward_range = [-reward_plus_range, reward_plus_range]
 
     def step(self, action):
-        action = self.denormalize(action,
-                                  self.env.action_space.low, self.env.action_space.high,
-                                  self.action_plus_range)
+        action = self.denormalize(action, self.env.action_space.low, self.env.action_space.high, self.action_plus_range)
         # assert np.logical_and.reduce(np.less_equal(action, self.joint_limit_high)), "Joint action max limit exceeded"
         # assert np.logical_and.reduce(np.greater_equal(action, self.joint_limit_low)), "Joint action min limit exceeded"
         # action = np.clip(action, self.env.joint_limit_low, self.env.joint_limit_high)
         observation, reward, done, info = self.env.step(action)
-        observation = self.normalize(observation,
-                                     self.env.observation_limit_low, self.env.observation_limit_high,
-                                     self.observation_plus_range)
+        observation = self.normalize(observation, self.env.observation_limit_low, self.env.observation_limit_high, self.observation_plus_range)
         observation = np.clip(observation, -self.observation_plus_range, self.observation_plus_range)
         # reward = reward / float(self.reward_normal_factor)
-        reward = self.normalize(reward,
-                                self.env.reward_limit_low, self.env.reward_limit_high,
-                                self.reward_plus_range)
+        reward = self.normalize(reward, self.env.reward_limit_low, self.env.reward_limit_high, self.reward_plus_range)
         reward = np.clip(reward, -self.reward_plus_range, self.reward_plus_range)
         return observation, reward, done, info
 
     def reset(self):
         observation = self.env.reset()
-        observation = self.normalize(observation,
-                                     self.env.observation_limit_low, self.env.observation_limit_high,
-                                     self.observation_plus_range)
+        observation = self.normalize(observation, self.env.observation_limit_low, self.env.observation_limit_high, self.observation_plus_range)
         observation = np.clip(observation, -self.observation_plus_range, self.observation_plus_range)
         return observation
 

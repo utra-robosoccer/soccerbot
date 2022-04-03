@@ -1,6 +1,4 @@
-
 class PID:
-
     def __init__(self, Kd: float, Kp: float, Ki: float, setpoint=0.0, output_limits=None):
 
         self.Kd = Kd

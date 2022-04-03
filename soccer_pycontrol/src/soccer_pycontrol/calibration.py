@@ -3,7 +3,8 @@ import copy
 import functools
 import glob
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1"
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -22,11 +23,12 @@ from keras.utils.vis_utils import plot_model
 
 
 class Calibration:
+    # fmt: off
     x_range = np.flip(
         np.array([-2.0, -1.5, -1.0, -0.8, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 0.8, 1.0, 1.5, 2.0]))
     y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0])
     ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1])
-
+    # fmt: on
     model_name = f"calibration_models/model.995"
 
     # Runs a series of movements to collect data in the calibration folder
@@ -34,20 +36,27 @@ class Calibration:
         from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
         rospy.init_node("soccer_control")
-        for node in ['soccer_strategy', 'soccer_pycontrol', 'soccer_trajectories', 'ball_detector', 'detector_goalpost',
-                     'object_detector', 'rosbag']:
+        for node in [
+            "soccer_strategy",
+            "soccer_pycontrol",
+            "soccer_trajectories",
+            "ball_detector",
+            "detector_goalpost",
+            "object_detector",
+            "rosbag",
+        ]:
             os.system(f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/{node}'")
 
         try:
             np.set_printoptions(precision=3)
 
             # ang_range = np.pi * np.array([0])
-            if not os.path.exists('calibration'):
-                os.makedirs('calibration')
+            if not os.path.exists("calibration"):
+                os.makedirs("calibration")
 
             clear = False
             if clear:
-                files = glob.glob('calibration/*')
+                files = glob.glob("calibration/*")
                 for f in files:
                     os.remove(f)
 
@@ -72,10 +81,18 @@ class Calibration:
                             if success:
                                 walker.update_robot_pose(footprint_name="/base_footprint_gt")
                                 euler = Transformation.get_euler_from_quaternion(
-                                    [walker.robot_pose.pose.orientation.x, walker.robot_pose.pose.orientation.y,
-                                     walker.robot_pose.pose.orientation.z, walker.robot_pose.pose.orientation.w])
-                                final_position = [walker.robot_pose.pose.position.x, walker.robot_pose.pose.position.y,
-                                                  euler[0]]
+                                    [
+                                        walker.robot_pose.pose.orientation.x,
+                                        walker.robot_pose.pose.orientation.y,
+                                        walker.robot_pose.pose.orientation.z,
+                                        walker.robot_pose.pose.orientation.w,
+                                    ]
+                                )
+                                final_position = [
+                                    walker.robot_pose.pose.position.x,
+                                    walker.robot_pose.pose.position.y,
+                                    euler[0],
+                                ]
                                 print("Final Position is " + str(final_position))
                                 np.save(file_name, final_position)
                                 break
@@ -92,7 +109,7 @@ class Calibration:
             exit(1)
 
     def load_data(self, combine_yaw=False):
-        files = glob.glob('calibration/*')
+        files = glob.glob("calibration/*")
         goal_positions = []
         end_positions = []
         for f in files:
@@ -117,12 +134,11 @@ class Calibration:
         end_positions = np.array(end_positions)
 
         if combine_yaw:
-            end_positions[:,0:2] = end_positions[:,0:2] / len(Calibration.ang_range)
-            goal_positions[:,2] = 0
-            end_positions[:,2] = 0
+            end_positions[:, 0:2] = end_positions[:, 0:2] / len(Calibration.ang_range)
+            goal_positions[:, 2] = 0
+            end_positions[:, 2] = 0
 
         return goal_positions, end_positions
-
 
     def calibrate(self):
         last_epoch = 0
@@ -158,10 +174,9 @@ class Calibration:
         optimizer = tf.keras.optimizers.SGD(learning_rate=0.003)
         f_ppError = tf.keras.losses.MeanSquaredError()
 
-
         # for stochastic gradient descent, create batches
         batch_size = 1
-        train_dataset = tf.data.Dataset.from_tensor_slices((goal_positions[:,0:2], end_positions[:,0:2]))
+        train_dataset = tf.data.Dataset.from_tensor_slices((goal_positions[:, 0:2], end_positions[:, 0:2]))
         train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
 
         epochs = 1000
@@ -182,32 +197,52 @@ class Calibration:
             ppError_avg_list.append(ppError_avg)
             print(f"Epoch {epoch}: Average ppError: {ppError_avg}")
             if epoch % 5 == 0:
-                keras.models.save_model(model, f'calibration_models/model.{epoch}')
+                keras.models.save_model(model, f"calibration_models/model.{epoch}")
 
     def view_calibration(self):
         goal_positions, end_positions = self.load_data(True)
 
-
         # plt.quiver(end_positions[:,0], end_positions[:,1], np.cos(end_positions[:,2]), np.sin(end_positions[:,2]), color="red", width=0.001)
-        plt.quiver(end_positions[:, 0], end_positions[:, 1], goal_positions[:,0] - end_positions[:, 0], goal_positions[:,1] - end_positions[:, 1],
-                   color="green", scale=1, scale_units='xy', angles='xy', width=0.0003)
-        plt.quiver(goal_positions[:,0], goal_positions[:,1], np.cos(goal_positions[:,2]), np.sin(goal_positions[:,2]), width=0.001)
+        plt.quiver(
+            end_positions[:, 0],
+            end_positions[:, 1],
+            goal_positions[:, 0] - end_positions[:, 0],
+            goal_positions[:, 1] - end_positions[:, 1],
+            color="green",
+            scale=1,
+            scale_units="xy",
+            angles="xy",
+            width=0.0003,
+        )
+        plt.quiver(
+            goal_positions[:, 0],
+            goal_positions[:, 1],
+            np.cos(goal_positions[:, 2]),
+            np.sin(goal_positions[:, 2]),
+            width=0.001,
+        )
 
         if os.path.exists(self.model_name):
             print("Loading from model " + self.model_name)
             model = keras.models.load_model(self.model_name)
-            end_positions_model = np.array(model(goal_positions[:,0:2]))
+            end_positions_model = np.array(model(goal_positions[:, 0:2]))
             # plt.quiver(end_positions_model[:, 0], end_positions_model[:, 1], np.cos(end_positions_model[:, 2]),
             #            np.sin(end_positions_model[:, 2]), color="orange", width=0.001)
-            plt.quiver(goal_positions[:, 0], goal_positions[:, 1],
-                       end_positions_model[:, 0] - goal_positions[:, 0],
-                       end_positions_model[:, 1] - goal_positions[:, 1],
-                       color="red", scale=1, scale_units='xy', angles='xy', width=0.0003)
+            plt.quiver(
+                goal_positions[:, 0],
+                goal_positions[:, 1],
+                end_positions_model[:, 0] - goal_positions[:, 0],
+                end_positions_model[:, 1] - goal_positions[:, 1],
+                color="red",
+                scale=1,
+                scale_units="xy",
+                angles="xy",
+                width=0.0003,
+            )
             # plt.quiver(end_positions_model[:, 0], end_positions_model[:, 1],
             #            end_positions[:, 0] - end_positions_model[:, 0],
             #            end_positions[:, 1] - end_positions_model[:, 1],
             #            color="purple", scale=1, scale_units='xy', angles='xy', width=0.0003)
-
 
         plt.show()
         pass
@@ -243,8 +278,16 @@ class Calibration:
         end_points_filter = np.array(end_points_filter)
         start_points_filter = np.array(start_points_filter)
 
-
-        plt.quiver(start_points_filter[:, 0], start_points_filter[:, 1], end_points_filter[:,0] - start_points_filter[:,0], end_points_filter[:,1] - start_points_filter[:,1], width=0.0002, scale=1, scale_units='xy', angles='xy')
+        plt.quiver(
+            start_points_filter[:, 0],
+            start_points_filter[:, 1],
+            end_points_filter[:, 0] - start_points_filter[:, 0],
+            end_points_filter[:, 1] - start_points_filter[:, 1],
+            width=0.0002,
+            scale=1,
+            scale_units="xy",
+            angles="xy",
+        )
         plt.show()
 
         inputs = keras.Input(shape=(2), name="end_points")
@@ -301,7 +344,16 @@ class Calibration:
         start_points = np.array(points)
         end_points = np.array(self.adjust_navigation_goal(start_points))
 
-        plt.quiver(start_points[:, 0], start_points[:, 1], end_points[:,0] - start_points[:,0], end_points[:,1] - start_points[:,1], width=0.0005, scale=1, scale_units='xy', angles='xy')
+        plt.quiver(
+            start_points[:, 0],
+            start_points[:, 1],
+            end_points[:, 0] - start_points[:, 0],
+            end_points[:, 1] - start_points[:, 1],
+            width=0.0005,
+            scale=1,
+            scale_units="xy",
+            angles="xy",
+        )
         plt.show()
 
     def adjust_navigation_transform(self, start_transform: Transformation, end_transform: Transformation) -> Transformation:
@@ -310,7 +362,7 @@ class Calibration:
 
         diff_transform = np.linalg.inv(start_transform) @ end_transform
         diff_position = diff_transform[0:2, 3]
-        [diff_yaw, diff_pitch, diff_roll] = Transformation.get_euler_from_rotation_matrix(diff_transform[0:3,0:3])
+        [diff_yaw, diff_pitch, diff_roll] = Transformation.get_euler_from_rotation_matrix(diff_transform[0:3, 0:3])
         scale = 1
         boundary = 0.7
         if abs(diff_position[0]) > boundary:
@@ -355,15 +407,23 @@ class Calibration:
         start_points = np.array(start_points)
         end_points = np.array(end_points)
 
-        plt.quiver(start_points[:, 0], start_points[:, 1], end_points[:, 0] - start_points[:, 0],
-                   end_points[:, 1] - start_points[:, 1], width=0.0005, scale=1, scale_units='xy', angles='xy')
+        plt.quiver(
+            start_points[:, 0],
+            start_points[:, 1],
+            end_points[:, 0] - start_points[:, 0],
+            end_points[:, 1] - start_points[:, 1],
+            width=0.0005,
+            scale=1,
+            scale_units="xy",
+            angles="xy",
+        )
         plt.show()
 
 
 # Run calibration
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Run Soccer calibration')
-    parser.add_argument('--collect', help='Collect', action='store_true')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run Soccer calibration")
+    parser.add_argument("--collect", help="Collect", action="store_true")
     args = parser.parse_args()
 
     c = Calibration()

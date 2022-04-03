@@ -1,6 +1,7 @@
 import math
-#import rospy
-#rospy only used here for rospy.loginfo
+
+# import rospy
+# rospy only used here for rospy.loginfo
 import time
 
 import rospy
@@ -10,6 +11,7 @@ from strategy.utils import *
 from team import Team
 from strategy.interfaces.evaluations import Evaluations
 from strategy.interfaces.actions import Actions
+
 try:
     from soccer_msgs.msg import GameState
 except:
@@ -31,7 +33,6 @@ class Thresholds:
 
 
 class StrategyDummy(Strategy):
-
     def __init__(self):
         self.time_of_end_of_action = rospy.Time.now()
         self.update_frequency = 1
@@ -42,7 +43,14 @@ class StrategyDummy(Strategy):
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         this_robot = self.get_current_robot(friendly_team)
 
-        if this_robot.status in [Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_FRONT, Robot.Status.FALLEN_SIDE, Robot.Status.TRAJECTORY_IN_PROGRESS]:
+        if this_robot.status in [
+            Robot.Status.WALKING,
+            Robot.Status.KICKING,
+            Robot.Status.FALLEN_BACK,
+            Robot.Status.FALLEN_FRONT,
+            Robot.Status.FALLEN_SIDE,
+            Robot.Status.TRAJECTORY_IN_PROGRESS,
+        ]:
             self.time_of_end_of_action = rospy.Time.now()
 
         if friendly_team.average_ball_position.position is not None:
@@ -70,8 +78,9 @@ class StrategyDummy(Strategy):
                         Actions.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), goal_position)
 
             pass
-        elif rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp > rospy.Duration(10) and \
-            rospy.Time.now() - self.time_of_end_of_action > rospy.Duration(10):
+        elif rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp > rospy.Duration(
+            10
+        ) and rospy.Time.now() - self.time_of_end_of_action > rospy.Duration(10):
             if this_robot.status not in [Robot.Status.WALKING, Robot.Status.KICKING]:
                 player_angle = this_robot.position[2]
                 player_position = this_robot.position[0:2]
@@ -81,7 +90,6 @@ class StrategyDummy(Strategy):
 
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.8]
                 this_robot.set_navigation_position(turn_position)
-
 
     def move_player_to(self, player, destination_position):
         # Path planning with obstacle avoidance via potential functions
@@ -95,7 +103,7 @@ class StrategyDummy(Strategy):
             grad = grad_att(ALPHA, player_position, goal_pos)
             if len(obstacles) > 0:
                 r_rep = 2 * Thresholds.POSSESSION
-                d_rep = float('inf')
+                d_rep = float("inf")
                 obs_rep = None
                 for obs in obstacles:
                     dist = distance_between(obs[0:2], player_position)
@@ -106,8 +114,10 @@ class StrategyDummy(Strategy):
                 grad -= grad_rep(BETA, r_rep, d_rep, obs_rep, player_position)
             # Perturb out of local minima
             angle_rand = np.random.uniform(low=-np.pi / 12, high=np.pi / 12)
+            # fmt: off
             rotation_rand = np.array([[np.cos(angle_rand), -np.sin(angle_rand)],
                                       [np.sin(angle_rand), np.cos(angle_rand)]])
+            # fmt: on
             grad_perturbed = rotation_rand @ grad
             # Gradient descent update
             goal_pos = player_position - GRADIENT_UPDATE_INTERVAL_LENGTH * grad_perturbed

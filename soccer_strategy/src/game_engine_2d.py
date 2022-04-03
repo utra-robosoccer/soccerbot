@@ -18,39 +18,83 @@ import math
 import numpy as np
 import copy
 
-class GameEngine2D:
-    PHYSICS_UPDATE_INTERVAL = 0.25 # 4 Times per second
-    DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
+class GameEngine2D:
+    PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
+    DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
     def __init__(self, display=True, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy):
         self.display = display
 
         # Initialize teams
-        self.team1 = Team([
-            RobotControlled2D(robot_id=1, team=Robot.Team.FRIENDLY, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                  position=np.array([3.5, 0.0, math.pi])),
-            RobotControlled2D(robot_id=2, team=Robot.Team.FRIENDLY, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
-                  position=np.array([1.5, -1.5, -math.pi])),
-            RobotControlled2D(robot_id=3, team=Robot.Team.FRIENDLY, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
-                  position=np.array([1.5, 1.5, -math.pi])),
-            RobotControlled2D(robot_id=4, team=Robot.Team.FRIENDLY, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                  position=np.array([0.8, 0.0, -math.pi]))
-        ])
+        self.team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([3.5, 0.0, math.pi]),
+                ),
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.LEFT_WING,
+                    status=Robot.Status.READY,
+                    position=np.array([1.5, -1.5, -math.pi]),
+                ),
+                RobotControlled2D(
+                    robot_id=3,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.RIGHT_WING,
+                    status=Robot.Status.READY,
+                    position=np.array([1.5, 1.5, -math.pi]),
+                ),
+                RobotControlled2D(
+                    robot_id=4,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([0.8, 0.0, -math.pi]),
+                ),
+            ]
+        )
         self.team1.strategy = team_1_strategy()
 
         self.team1_init = copy.deepcopy(self.team1)
 
-        self.team2 = Team([
-            RobotControlled2D(robot_id=5, team=Robot.Team.OPPONENT, role=Robot.Role.GOALIE, status=Robot.Status.READY,
-                  position=np.array([-3.5, 0.0, 0])),
-            RobotControlled2D(robot_id=6, team=Robot.Team.OPPONENT, role=Robot.Role.LEFT_WING, status=Robot.Status.READY,
-                  position=np.array([-1.5, -1.5, 0])),
-            RobotControlled2D(robot_id=7, team=Robot.Team.OPPONENT, role=Robot.Role.RIGHT_WING, status=Robot.Status.READY,
-                  position=np.array([-1.5, 1.5, 0])),
-            RobotControlled2D(robot_id=8, team=Robot.Team.OPPONENT, role=Robot.Role.STRIKER, status=Robot.Status.READY,
-                  position=np.array([-0.8, 0.0, 0]))
-        ])
+        self.team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=5,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([-3.5, 0.0, 0]),
+                ),
+                RobotControlled2D(
+                    robot_id=6,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.LEFT_WING,
+                    status=Robot.Status.READY,
+                    position=np.array([-1.5, -1.5, 0]),
+                ),
+                RobotControlled2D(
+                    robot_id=7,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.RIGHT_WING,
+                    status=Robot.Status.READY,
+                    position=np.array([-1.5, 1.5, 0]),
+                ),
+                RobotControlled2D(
+                    robot_id=8,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([-0.8, 0.0, 0]),
+                ),
+            ]
+        )
         self.team2.strategy = team_2_strategy()
         self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
@@ -109,7 +153,7 @@ class GameEngine2D:
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
         print("----------------------------------------------------------------------")
-        print(F"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
+        print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
         return friendly_points, opponent_points
 
     def update_estimated_physics(self, robots, ball):

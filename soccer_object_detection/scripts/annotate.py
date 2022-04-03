@@ -17,8 +17,8 @@ from sensor_msgs.msg import Image
 import os
 from soccer_common.transformation import Transformation
 
-class Test(TestCase):
 
+class Test(TestCase):
     def wrapToPi(num: float) -> float:
         rem = (num + np.pi) % (2 * np.pi) - np.pi
         return rem
@@ -41,7 +41,7 @@ class Test(TestCase):
         p.position.y = y
         p.position.z = 0
 
-        r = R.from_euler('ZYX', [theta, 0, 0], degrees=False)
+        r = R.from_euler("ZYX", [theta, 0, 0], degrees=False)
         q = r.as_quat()
 
         p.orientation.x = q[0]
@@ -87,9 +87,9 @@ class Test(TestCase):
         rospy.init_node("soccer_annotate")
         self.camera = Camera("robot1")
 
-        field_width = 2.5 # m
+        field_width = 2.5  # m
         field_height = 1.5
-        ball_radius = 0.07 # 0.0753 # 0.07 # 0.0962 # 0.0783
+        ball_radius = 0.07  # 0.0753 # 0.07 # 0.0962 # 0.0783
 
         while not rospy.is_shutdown() and not self.camera.ready():
             print("Waiting for camera info")
@@ -104,16 +104,15 @@ class Test(TestCase):
             robot_theta = random.uniform(-math.pi, math.pi)
 
             ball_distance_offset = random.uniform(0.8, 3)
-            ball_angle_offset = random.uniform(-math.pi/5, math.pi/5)
+            ball_angle_offset = random.uniform(-math.pi / 5, math.pi / 5)
 
-            ball_offset = [math.cos(robot_theta + ball_angle_offset) * ball_distance_offset,
-                           math.sin(robot_theta + ball_angle_offset) * ball_distance_offset,
-                           0]
+            ball_offset = [
+                math.cos(robot_theta + ball_angle_offset) * ball_distance_offset,
+                math.sin(robot_theta + ball_angle_offset) * ball_distance_offset,
+                0,
+            ]
 
-            ball_position = [ball_offset[0] + robot_position[0],
-                             ball_offset[1] + robot_position[1],
-                             0.0783]
-
+            ball_position = [ball_offset[0] + robot_position[0], ball_offset[1] + robot_position[1], 0.0783]
 
             head_angle_1 = 0
             head_angle_2 = 0
@@ -136,8 +135,8 @@ class Test(TestCase):
             # Set the camera
             while not rospy.is_shutdown():
                 try:
-                    (ball_position, rot) = tf_listener.lookupTransform('world', 'robot1/ball', image_msg.header.stamp)
-                    header = tf_listener.getLatestCommonTime('world', 'robot1/ball')
+                    (ball_position, rot) = tf_listener.lookupTransform("world", "robot1/ball", image_msg.header.stamp)
+                    header = tf_listener.getLatestCommonTime("world", "robot1/ball")
                     break
                 except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                     rospy.logwarn_throttle(2, "Cannot find ball transform")
@@ -157,7 +156,7 @@ class Test(TestCase):
             #     continue
 
             jsonPath = "../images/bb_img_{}.json".format(j)
-            with open(jsonPath, 'w') as f:
+            with open(jsonPath, "w") as f:
                 json.dump((pt1, pt2), f)
             filePath = "../images/img_{}.jpg".format(j)
             if os.path.exists(filePath):

@@ -12,17 +12,16 @@ import util
 import time
 import pickle
 
+
 def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=12, shuffle=True):
     train_folders = [
-            '/home/robosoccer/Downloads/small_images/ball/Ball1-small',
-            '/home/robosoccer/Downloads/small_images/ball/Ball2-small',
-            '/home/robosoccer/Downloads/small_images/train',
-            '/home/robosoccer/Downloads/small_images/ball_jason',
-            '/home/robosoccer/catkin_ws/src/soccerbot/soccer_object_detection/autoball1'
-            ]
-    test_folders = [
-            '/home/robosoccer/Downloads/small_images/test']
-
+        "/home/robosoccer/Downloads/small_images/ball/Ball1-small",
+        "/home/robosoccer/Downloads/small_images/ball/Ball2-small",
+        "/home/robosoccer/Downloads/small_images/train",
+        "/home/robosoccer/Downloads/small_images/ball_jason",
+        "/home/robosoccer/catkin_ws/src/soccerbot/soccer_object_detection/autoball1",
+    ]
+    test_folders = ["/home/robosoccer/Downloads/small_images/test"]
 
     full_dataset = MyDataSet(train_folders, (300, 400), jitter=jitter)
     test_dataset = MyDataSet(test_folders, (300, 400))
@@ -31,52 +30,43 @@ def initialize_loader(batch_size, jitter=[0, 0, 0, 0], num_workers=12, shuffle=T
     valid_size = len(full_dataset) - train_size
     train_dataset, valid_dataset = random_split(full_dataset, [train_size, valid_size])
 
-    train_loader = DataLoader(train_dataset,
-                              batch_size=batch_size,
-                              num_workers=num_workers,
-                              shuffle=shuffle)
-    valid_loader = DataLoader(valid_dataset,
-                              batch_size=batch_size,
-                              num_workers=num_workers,
-                              shuffle=shuffle)
-    test_loader = DataLoader(test_dataset,
-                             batch_size=batch_size,
-                             num_workers=num_workers,
-                             shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=shuffle)
+    valid_loader = DataLoader(valid_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=shuffle)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=False)
 
-    full_dataset.num_train_ball_labels, full_dataset.num_train_robot_labels = util.subset_label_count(train_dataset,
-                                                                                                      Label.BALL,
-                                                                                                      Label.ROBOT)
-    valid_ball, valid_robot = util.subset_label_count(valid_dataset,
-                                                      Label.BALL,
-                                                      Label.ROBOT)
+    full_dataset.num_train_ball_labels, full_dataset.num_train_robot_labels = util.subset_label_count(train_dataset, Label.BALL, Label.ROBOT)
+    valid_ball, valid_robot = util.subset_label_count(valid_dataset, Label.BALL, Label.ROBOT)
 
     assert full_dataset.num_ball_labels == full_dataset.num_train_ball_labels + valid_ball
     assert full_dataset.num_robot_labels == full_dataset.num_train_robot_labels + valid_robot
 
-    print('full dataset: # images {:>6}, # robots {:>6}, # balls {:>6}'.format(
-        len(full_dataset),
-        full_dataset.num_robot_labels,
-        full_dataset.num_ball_labels
-    ))
+    print(
+        "full dataset: # images {:>6}, # robots {:>6}, # balls {:>6}".format(
+            len(full_dataset), full_dataset.num_robot_labels, full_dataset.num_ball_labels
+        )
+    )
 
-    print('   train dataset: # images {:>6}, # robots {:>6}, # balls {:>6}'.format(
-        len(train_dataset),
-        full_dataset.num_train_robot_labels,
-        full_dataset.num_train_ball_labels,
-    ))
+    print(
+        "   train dataset: # images {:>6}, # robots {:>6}, # balls {:>6}".format(
+            len(train_dataset),
+            full_dataset.num_train_robot_labels,
+            full_dataset.num_train_ball_labels,
+        )
+    )
 
-    print('   valid dataset: # images {:>6}, # robots {:>6}, # balls {:>6}'.format(
-        len(valid_dataset),
-        valid_robot,
-        valid_ball,
-    ))
+    print(
+        "   valid dataset: # images {:>6}, # robots {:>6}, # balls {:>6}".format(
+            len(valid_dataset),
+            valid_robot,
+            valid_ball,
+        )
+    )
 
-    print('test dataset:  # images {:>6}, # robots {:>6}, # balls {:>6}'.format(
-        len(test_dataset),
-        test_dataset.num_robot_labels,
-        test_dataset.num_ball_labels
-    ))
+    print(
+        "test dataset:  # images {:>6}, # robots {:>6}, # balls {:>6}".format(
+            len(test_dataset), test_dataset.num_robot_labels, test_dataset.num_ball_labels
+        )
+    )
 
     return (train_loader, valid_loader, test_loader), (full_dataset, test_dataset)
 
@@ -89,16 +79,19 @@ class MyDataSet(Dataset):
         self.target_height = target_dim[0]
         self.target_width = target_dim[1]
         # seems useful: https://datduyng.github.io/2019/03/20/data-augmentation-for-semantic-segmantation-with-pytorch.html
-        self.img_transform = torchvision.transforms.Compose([
-            torchvision.transforms.ColorJitter(brightness=jitter[0], contrast=jitter[1], saturation=jitter[2],
-                                               hue=jitter[3]),
-            #torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR), # assume images already preprocessed
-            #torchvision.transforms.CenterCrop((self.target_height, self.target_width)), # assume images already preprocessed
-        ])
-        self.mask_transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize(self.target_height, interpolation=Image.NEAREST),
-            torchvision.transforms.CenterCrop((self.target_height, self.target_width)),
-        ])
+        self.img_transform = torchvision.transforms.Compose(
+            [
+                torchvision.transforms.ColorJitter(brightness=jitter[0], contrast=jitter[1], saturation=jitter[2], hue=jitter[3]),
+                # torchvision.transforms.Resize(self.target_height, interpolation=Image.BILINEAR), # assume images already preprocessed
+                # torchvision.transforms.CenterCrop((self.target_height, self.target_width)), # assume images already preprocessed
+            ]
+        )
+        self.mask_transform = torchvision.transforms.Compose(
+            [
+                torchvision.transforms.Resize(self.target_height, interpolation=Image.NEAREST),
+                torchvision.transforms.CenterCrop((self.target_height, self.target_width)),
+            ]
+        )
 
         # label statistics
         self.num_ball_labels = 0  # for full dataset
@@ -106,30 +99,29 @@ class MyDataSet(Dataset):
         self.num_train_robot_labels = 0  # for subset of full dataset
         self.num_train_ball_labels = 0
 
-        '''# add paths for train data with labels
+        """# add paths for train data with labels
         if '.txt' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'txt')
         elif '.yaml' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'yaml')
         elif '.pkl' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'pkl')
-        '''
+        """
 
         for path in folder_paths:
             annot = None
             for file in os.listdir(path):
-                if 'annotations' in file:
+                if "annotations" in file:
                     annot = file
 
             file_labels = os.path.join(path, annot)
-            path = os.path.join(path, 'images')
-            if '.txt' in annot:
-                self.read_labels(path, file_labels, 'txt')
-            elif '.yaml' in annot:
-                self.read_labels(path, file_labels, 'yaml')
-            elif '.pkl' in annot:
-                self.read_labels(path, file_labels, 'pkl')
-
+            path = os.path.join(path, "images")
+            if ".txt" in annot:
+                self.read_labels(path, file_labels, "txt")
+            elif ".yaml" in annot:
+                self.read_labels(path, file_labels, "yaml")
+            elif ".pkl" in annot:
+                self.read_labels(path, file_labels, "pkl")
 
     def read_labels(self, path, file_labels, file_type):
         """
@@ -139,26 +131,26 @@ class MyDataSet(Dataset):
         :return: None
         """
 
-        if file_type == 'txt':
+        if file_type == "txt":
             with open(file_labels) as labels:
                 for i, line in enumerate(labels):
                     if i <= 5:  # ignore first few metadata lines
                         continue
 
                     try:
-                        label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split('|')
+                        label, img, _, _, x1, y1, x2, y2, _, _, _, _ = line.split("|")
                     except:
                         # ignore unknown format
                         continue
 
-                    if label == 'label::ball':
+                    if label == "label::ball":
                         label = Label.BALL
                         self.num_ball_labels += 1
-                    elif label == 'label::robot':
+                    elif label == "label::robot":
                         label = Label.ROBOT
                         self.num_robot_labels += 1
                     else:
-                        print('Unexpected Label:', label)
+                        print("Unexpected Label:", label)
 
                     img_path = os.path.join(path, img)
                     if img_path not in self.img_paths:
@@ -167,26 +159,26 @@ class MyDataSet(Dataset):
 
                     self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
 
-        elif file_type == 'yaml':
+        elif file_type == "yaml":
             with open(file_labels) as labels:
                 t0 = time.time()
                 documents = yaml.full_load(labels)
                 t1 = time.time()
-                print(f'Yaml Load Took: {(t1 - t0)} s')
-                image_list = documents['images']
+                print(f"Yaml Load Took: {(t1 - t0)} s")
+                image_list = documents["images"]
                 t0 = time.time()
                 for image in image_list:
-                    annotations = image_list[image]['annotations']
+                    annotations = image_list[image]["annotations"]
                     for annotation in annotations:
-                        if annotation['in_image'] == True:
-                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
-                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                        if annotation["in_image"] == True:
+                            if annotation["type"] == "ball" or annotation["type"] == "robot":
+                                location = annotation["vector"]  # [[x1,y1],[x2,y2]]
                                 x1 = location[0][0]
                                 y1 = location[0][1]
                                 x2 = location[1][0]
                                 y2 = location[1][1]
 
-                                if annotation['type'] == 'ball':
+                                if annotation["type"] == "ball":
                                     label = Label.BALL
                                     self.num_ball_labels += 1
                                 else:
@@ -200,22 +192,22 @@ class MyDataSet(Dataset):
 
                                 self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
                 t1 = time.time()
-                print(f'Yaml Loop Took: {(t1 - t0)} s')
+                print(f"Yaml Loop Took: {(t1 - t0)} s")
 
-        elif file_type == 'pkl':
-            with open(file_labels, 'rb') as labels:
+        elif file_type == "pkl":
+            with open(file_labels, "rb") as labels:
                 t0 = time.time()
-                documents = pickle.load(labels) #, encoding='bytes')
+                documents = pickle.load(labels)  # , encoding='bytes')
                 t1 = time.time()
-                print(f'Pickle Load Took: {(t1 - t0)} s')
-                image_list = documents['images']
+                print(f"Pickle Load Took: {(t1 - t0)} s")
+                image_list = documents["images"]
                 t0 = time.time()
                 for image in image_list:
-                    annotations = image_list[image]['annotations']
+                    annotations = image_list[image]["annotations"]
                     for annotation in annotations:
-                        if annotation['in_image'] == True:
-                            if annotation['type'] == 'ball' or annotation['type'] == 'robot':
-                                location = annotation['vector'] #[[x1,y1],[x2,y2]]
+                        if annotation["in_image"] == True:
+                            if annotation["type"] == "ball" or annotation["type"] == "robot":
+                                location = annotation["vector"]  # [[x1,y1],[x2,y2]]
                                 x1 = location[0][0]
                                 y1 = location[0][1]
                                 x2 = location[1][0]
@@ -223,16 +215,16 @@ class MyDataSet(Dataset):
 
                                 # hacks: convert label 1920x1080 -> 400x300 (center crop)
                                 scale = 1080 / 300
-                                x1 = x1 // scale # scale-down
+                                x1 = x1 // scale  # scale-down
                                 y1 = y1 // scale
                                 x2 = x2 // scale
                                 y2 = y2 // scale
                                 offset = (1920 // scale - 400) // 2
-                                x1 -= offset # center-crop
+                                x1 -= offset  # center-crop
                                 x2 -= offset
                                 # end hacks
 
-                                if annotation['type'] == 'ball':
+                                if annotation["type"] == "ball":
                                     label = Label.BALL
                                     self.num_ball_labels += 1
                                 else:
@@ -246,9 +238,7 @@ class MyDataSet(Dataset):
 
                                 self.bounding_boxes[img_path].append([int(x1), int(y1), int(x2), int(y2), label])
                 t1 = time.time()
-                print(f'Pickle Loop Took: {(t1 - t0)} s')
-
-
+                print(f"Pickle Loop Took: {(t1 - t0)} s")
 
     def __len__(self):
         return len(self.bounding_boxes)
@@ -279,14 +269,14 @@ class MyDataSet(Dataset):
                 if label == Label.ROBOT:
                     mask = cv2.rectangle(mask, tuple(pt1), tuple(pt2), label.value, -1)
 
-        mask = Image.fromarray(mask.astype('uint8'))
+        mask = Image.fromarray(mask.astype("uint8"))
 
         # Apply transformations to get desired dimensions
         img = np.array(self.img_transform(img))
         mask = np.array(self.mask_transform(mask))
         if depth == 4:
-            img = img[:,:,:3]
-        img = img/255
+            img = img[:, :, :3]
+        img = img / 255
 
         # flip to channel*W*H - how Pytorch expects it
         img = np.moveaxis(img, -1, 0)
@@ -295,7 +285,7 @@ class MyDataSet(Dataset):
         return img, mask, index
 
     def visualize_images(self, start=0, end=None, delay=10, scale=4, model=None):
-        """ display dataset as video sequence
+        """display dataset as video sequence
         :param start: start frame
         :param end: end frame
         :param delay: time dealy between displaying frames

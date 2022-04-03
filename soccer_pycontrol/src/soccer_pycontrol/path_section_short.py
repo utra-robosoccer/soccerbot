@@ -6,9 +6,10 @@ from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.utils import wrapToPi
 from copy import deepcopy
 
+
 class PathSectionShort(PathSection):
-    steps_per_second_default = 2.5 # try 6 motors P = 09.25
-    scale_yaw = 1.0 # Increase the rotation by angle
+    steps_per_second_default = 2.5  # try 6 motors P = 09.25
+    scale_yaw = 1.0  # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform

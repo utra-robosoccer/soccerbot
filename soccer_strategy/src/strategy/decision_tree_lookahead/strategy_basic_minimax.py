@@ -2,10 +2,16 @@ import enum
 
 from team import Team
 from soccer_msgs.msg import GameState
-from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead, State, Action, Agent
+from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import (
+    StrategyDecisionTreeLookhead,
+    State,
+    Action,
+    Agent,
+)
 from strategy.interfaces.evaluations import Evaluations
 from strategy.interfaces.actions import Actions
 import numpy as np
+
 
 class FormationAction(Action):
     class Action(enum.IntEnum):
@@ -20,6 +26,7 @@ class FormationAction(Action):
         self.player_2_action = FormationAction.Action.STAND_STILL
         self.player_3_action = FormationAction.Action.STAND_STILL
         self.player_4_action = FormationAction.Action.STAND_STILL
+
 
 # State
 class FormationState(State, Evaluations):
@@ -53,7 +60,6 @@ class FormationState(State, Evaluations):
 
 
 class StrategyFormationDecisionTree(StrategyDecisionTreeLookhead):
-
     def executeBestMove(self, state: FormationState, action: FormationAction):
         # Decide formation
         formation = "defensive"

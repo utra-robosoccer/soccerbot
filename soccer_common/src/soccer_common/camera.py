@@ -19,11 +19,10 @@ class Camera:
         self.resolution_x = None
         self.resolution_y = None
         self.camera_info = None
-        self.diagonal_fov = 1.523 # 1.57 # 1.523  # 1.57 #1.523 # 1.39626 # 1.523 # 1.723# 1.39626 # 1.5231001536981417 # old: 1.57
+        self.diagonal_fov = 1.523
         self.focal_length = 3.67  # 3.67
 
-        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo,
-                                                 self.cameraInfoCallback)
+        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
 
         self.tf_listener = TransformListener()
 
@@ -35,11 +34,11 @@ class Camera:
         rot = None
 
         if from_world_frame:
-            base_frame = 'world'
-            target_frame = self.robot_name + '/camera'
+            base_frame = "world"
+            target_frame = self.robot_name + "/camera"
         else:
-            base_frame = self.robot_name + '/odom'
-            target_frame = self.robot_name + '/camera'
+            base_frame = self.robot_name + "/odom"
+            target_frame = self.robot_name + "/camera"
 
         attempt = 0
         while not rospy.is_shutdown():
@@ -50,9 +49,17 @@ class Camera:
 
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, latest_time)
                 break
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException) as ex:
+            except (
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+                tf2_py.TransformException,
+            ) as ex:
                 rospy.logwarn_throttle(10, str(ex))
-                rospy.logwarn_throttle(10, f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}")
+                rospy.logwarn_throttle(
+                    10,
+                    f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}",
+                )
                 attempt = attempt + 1
                 try:
                     rospy.sleep(0.1)
@@ -131,18 +138,18 @@ class Camera:
         return [x, y]
 
     def verticalFOV(self):
-        f = math.sqrt(self.resolution_x ** 2 + self.resolution_y ** 2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
-        return 2 * math.atan2(self.resolution_y / 2., f)
+        f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
+        return 2 * math.atan2(self.resolution_y / 2.0, f)
 
     def horizontalFOV(self):
-        f = math.sqrt(self.resolution_x ** 2 + self.resolution_y ** 2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
+        f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
         return 2 * math.atan2(self.resolution_x / 2, f)
 
     def imageSensorHeight(self):
-        return math.tan(self.verticalFOV() / 2.) * 2. * self.focal_length
+        return math.tan(self.verticalFOV() / 2.0) * 2.0 * self.focal_length
 
     def imageSensorWidth(self):
-        return math.tan(self.horizontalFOV() / 2.) * 2. * self.focal_length
+        return math.tan(self.horizontalFOV() / 2.0) * 2.0 * self.focal_length
 
     def pixelHeight(self):
         return self.imageSensorHeight() / self.resolution_y
@@ -152,12 +159,16 @@ class Camera:
         pass
 
     def imageToWorldFrame(self, pos_x: int, pos_y: int) -> tuple:
-        return ((self.resolution_x / 2. - pos_x) * self.pixelWidth(),
-                (self.resolution_y / 2. - pos_y) * self.pixelHeight())
+        return (
+            (self.resolution_x / 2.0 - pos_x) * self.pixelWidth(),
+            (self.resolution_y / 2.0 - pos_y) * self.pixelHeight(),
+        )
 
     def worldToImageFrame(self, pos_x: float, pos_y: float) -> tuple:
-        return ((self.resolution_x / 2. + pos_x / self.pixelWidth()),
-                (self.resolution_y / 2. + pos_y / self.pixelHeight()))
+        return (
+            (self.resolution_x / 2.0 + pos_x / self.pixelWidth()),
+            (self.resolution_y / 2.0 + pos_y / self.pixelHeight()),
+        )
 
     def calculateBoundingBoxesFromBall(self, ball_position: Transformation, ball_radius: float):
         camera_pose = self.pose
@@ -169,14 +180,14 @@ class Camera:
         r = ball_radius
 
         thetay = math.atan2(y, x)
-        dy = math.sqrt(x ** 2 + y ** 2)
+        dy = math.sqrt(x**2 + y**2)
         phiy = math.asin(r / dy)
 
         xyfar = [x - math.sin(thetay + phiy) * r, y + math.cos(thetay + phiy) * r]
         xynear = [x + math.sin(thetay - phiy) * r, y - math.cos(thetay - phiy) * r]
 
         thetaz = math.atan2(z, x)
-        dz = math.sqrt(x ** 2 + z ** 2)
+        dz = math.sqrt(x**2 + z**2)
         phiz = math.asin(r / dz)
 
         xzfar = [x - math.sin(thetaz + phiz) * r, z + math.cos(thetaz + phiz) * r]
@@ -197,8 +208,7 @@ class Camera:
         top_border_y = ball_top_point_cam[1]
         bottom_border_y = ball_bottom_point_cam[1]
 
-        bounding_box = [[left_border_x, top_border_y],
-                        [right_border_x, bottom_border_y]]
+        bounding_box = [[left_border_x, top_border_y], [right_border_x, bottom_border_y]]
 
         return bounding_box
 
@@ -214,8 +224,8 @@ class Camera:
         # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
         ym = (y1 + y2) / 2
         zm = (z1 + z2) / 2
-        length = (z2 - z1)
-        width = (y2 - y1)
+        length = z2 - z1
+        width = y2 - y1
         y1 = ym - (width / 2)
         z1 = zm - (length / 2)
         y2 = ym + (width / 2)

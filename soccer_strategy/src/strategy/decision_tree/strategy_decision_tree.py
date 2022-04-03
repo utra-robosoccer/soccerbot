@@ -4,6 +4,7 @@ import math
 from robot import Robot
 from strategy.strategy import Strategy
 from team import Team
+
 try:
     from soccer_msgs.msg import GameState
 except:
@@ -12,6 +13,7 @@ from copy import deepcopy
 import abc
 import numpy as np
 
+
 class TreeNode:
     def __init__(self, children):
         self.children = children
@@ -19,10 +21,12 @@ class TreeNode:
     def execute(self, robot, friendly_team, opponent_team, game_state):
         raise NotImplementedError("please implement")
 
+
 class Decision(TreeNode):
-    #returns true or false
+    # returns true or false
     def execute(self, robot, friendly_team, opponent_team, game_state):
         raise NotImplementedError("please implement")
+
 
 class Action(TreeNode):
     def __init__(self):
@@ -31,6 +35,7 @@ class Action(TreeNode):
 
     def execute(self, robot, friendly_team, opponent_team, game_state):
         raise NotImplementedError("please implement")
+
 
 class GoToBall(Action):
     def execute(self, robot, friendly_team, opponent_team, game_state):
@@ -55,18 +60,18 @@ class GoToBall(Action):
         destination_position_biased = player_position + diff * navigation_bias
 
         # nav goal behind the ball
-        destination_position_biased = [destination_position_biased[0],
-                                       destination_position_biased[1],
-                                       diff_angle]
+        destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
         robot.set_navigation_position(destination_position_biased)
+
 
 class GoToFormationPosition(Action):
     def execute(self, robot, friendly_team, opponent_team, game_state):
-        #TODO this fails when robot ID doesnt match, this is pre bad in general, should make a change to formation
+        # TODO this fails when robot ID doesnt match, this is pre bad in general, should make a change to formation
         # player_position = robot.position
         # target_position = friendly_team.formation.closest_position(player_position).center
-        target_position = friendly_team.formations['attack'][robot.role]
+        target_position = friendly_team.formations["attack"][robot.role]
         robot.set_navigation_position(target_position)
+
 
 class Shoot(Action):
     def execute(self, robot, friendly_team, opponent_team, game_state):
@@ -77,6 +82,7 @@ class Shoot(Action):
 
         robot.status = Robot.Status.KICKING
         robot.set_kick_velocity(unit * robot.max_kick_speed)
+
 
 class CanKick(Decision):
     def execute(self, robot, friendly_team, opponent_team, game_state):
@@ -98,17 +104,19 @@ class CanKick(Decision):
         # return False
         return robot.can_kick(friendly_team.average_ball_position, friendly_team.enemy_goal_position)
 
+
 class IsClosestToBall(Decision):
     def execute(self, robot, friendly_team, opponent_team, game_state):
         ball = friendly_team.average_ball_position
         if ball is not None:
-            #TODO take into account rotation
+            # TODO take into account rotation
             ball_position = ball.position[0:2]
             a = [np.linalg.norm(ball_position - robot.position[:2]) for robot in friendly_team.robots]
             closest = friendly_team.robots[np.argmin(a)]
             if robot.robot_id == closest.robot_id:
                 return True
         return False
+
 
 class DecisionTree:
     def __init__(self, root: TreeNode):
@@ -130,6 +138,7 @@ class FieldPosition:
     def __init__(self, center):
         self.center = center
 
+
 class FieldPositions:
     CENTER_STRIKER = FieldPosition(np.array([0, 0, np.pi]))
     GOALIE = FieldPosition(np.array([4.5, 0, np.pi]))
@@ -139,53 +148,46 @@ class FieldPositions:
     LEFT_BACK = FieldPosition(np.array([3.5, -2, np.pi]))
     CENTER_BACK = FieldPosition(np.array([3, 0, np.pi]))
 
+
 # formations can be in a human readable data file?
 class Formation:
     def __init__(self, positions):
         # array where 0 position is position for robot 0 (goalie) I guess?
-        #TODO: change positions to dictionary with robot_id
+        # TODO: change positions to dictionary with robot_id
         self.positions = positions
 
     def closest_position(self, target):
         a = [distance(position.center[:2], target[:2]) for position in self.positions]
         return self.positions[np.argmin(a)]
 
+
 # should have a utils class for geometry calculations, geometry file/class?
 def distance(o1, o2):
     return np.linalg.norm(o1 - o2)
 
+
 class Formations:
-    #don't go to role
-    DEFENSIVE = Formation(
-        [FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
-    ATTACKING = Formation(
-        [FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.CENTER_STRIKER, FieldPositions.RIGHT_WING])
+    # don't go to role
+    DEFENSIVE = Formation([FieldPositions.GOALIE, FieldPositions.LEFT_BACK, FieldPositions.RIGHT_BACK, FieldPositions.CENTER_BACK])
+    ATTACKING = Formation([FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.CENTER_STRIKER, FieldPositions.RIGHT_WING])
 
 
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
 
+
 class StrategyDecisionTree(Strategy):
-    #can we just give pointers to friendly_teeam, opponent_team, and game_state here so we don't need to keep passing them?
+    # can we just give pointers to friendly_teeam, opponent_team, and game_state here so we don't need to keep passing them?
     def __init__(self):
         super().__init__()
         self.current_formation = Formations.ATTACKING
-        #have dictionary from robot role to decision tree
-        self.decision_tree = DecisionTree(
-            IsClosestToBall([
-                CanKick([
-                    Shoot(),
-                    GoToBall()
-                ]),
-                GoToFormationPosition()
-            ])
-        )
+        # have dictionary from robot role to decision tree
+        self.decision_tree = DecisionTree(IsClosestToBall([CanKick([Shoot(), GoToBall()]), GoToFormationPosition()]))
 
     @update_average_ball_position
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         self.current_formation = self.decide_formation(friendly_team)
         friendly_team.formation = self.current_formation
         self.act_individual(friendly_team, opponent_team, game_state)
-
 
     # something so there can be different formation deciders like a super defensive biased one
     def decide_formation(self, friendly_team):

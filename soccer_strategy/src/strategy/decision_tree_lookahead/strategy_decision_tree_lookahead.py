@@ -1,6 +1,7 @@
 import enum
 from strategy.strategy import Strategy
 from team import Team
+
 try:
     from soccer_msgs.msg import GameState
 except:
@@ -8,9 +9,11 @@ except:
 from copy import deepcopy
 import abc
 
+
 class Agent(enum.IntEnum):
     FRIENDLY = 0
     OPPONENT = 1
+
 
 class Action:
     def __init__(self):
@@ -42,6 +45,7 @@ class State:
     @abc.abstractmethod
     def isLose(self):
         return False
+
 
 class StrategyDecisionTreeLookhead(Strategy):
     def __init__(self):

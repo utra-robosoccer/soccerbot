@@ -7,13 +7,13 @@ import numpy as np
 from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 from abc import ABC
 
+
 class PathSection(ABC):
-    backwards_bodystep_size_ratio = 0.5 # How much smaller the body step is for backwards movement
+    backwards_bodystep_size_ratio = 0.5  # How much smaller the body step is for backwards movement
     bodystep_size_default = 0.04
     steps_per_second_default = 3.5
 
-    def __init__(self, start_transform: Transformation,  end_transform: Transformation,
-                 bodystep_size=bodystep_size_default):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, bodystep_size=bodystep_size_default):
         self.start_transform = start_transform
         self.end_transform = end_transform
 
@@ -22,14 +22,13 @@ class PathSection(ABC):
         self.speed = self.steps_per_second * self.bodystep_size
         self.precision = 0.05 * self.bodystep_size
 
-
         # Calculate distance and angular distance
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
         self.distance = 0
         self.distance_original = 0
         self.angle_distance = 0
         self.distanceMap = np.zeros((len(precisions) + 1, 2))
-        self.distanceMap[0, 0:2] = [0., 0.]
+        self.distanceMap[0, 0:2] = [0.0, 0.0]
 
         j = 1
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
@@ -37,13 +36,11 @@ class PathSection(ABC):
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
-            self.angle_distance = self.angle_distance + abs(
-                wrapToPi(new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0]))
+            self.angle_distance = self.angle_distance + abs(wrapToPi(new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0]))
             prev_pose = new_pose
 
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
-
 
     @abc.abstractmethod
     def poseAtRatio(self, r):

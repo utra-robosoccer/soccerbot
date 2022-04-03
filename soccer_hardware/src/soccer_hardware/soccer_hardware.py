@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # Try all ranges in port
     i = 0
     ser = serial.Serial()
-    for i in range(0,10):
+    for i in range(0, 10):
         try:
             ser = serial.Serial(port + str(i), baud, timeout=0)
             break
@@ -27,7 +27,6 @@ if __name__ == "__main__":
     if i == 9:
         rospy.logerr("No serial port found: " + port)
         exit(0)
-
 
     attempt = 0
     rate = rospy.Rate(1)
@@ -39,6 +38,6 @@ if __name__ == "__main__":
 
         except serial.serialutil.SerialException as e:
             ser.close()
-            log_string("Serial exception. " + e.strerror  + " Retrying...(attempt {0})".format(attempt))
+            log_string("Serial exception. " + e.strerror + " Retrying...(attempt {0})".format(attempt))
             attempt = attempt + 1
             rate.sleep()

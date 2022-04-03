@@ -27,7 +27,6 @@ if RUN_IN_ROS:
 
 
 class Test(TestCase):
-
     def setUp(self) -> None:
         if RUN_IN_ROS:
             rospy.init_node("soccer_control")
@@ -37,7 +36,6 @@ class Test(TestCase):
             self.walker = SoccerbotControllerRos()
         else:
             self.walker = SoccerbotController()
-
 
     def test_walk_1(self):
         self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
@@ -88,7 +86,12 @@ class Test(TestCase):
         self.walker.run()
 
     def test_walk_7(self):
-        self.walker.setPose(Transformation([2.082603318747387, 0.04499586647232634, 0.0], [0.07888602209666294, -0.03018659995378454, 0.9054426772657052, 0.41597995490997813]))
+        self.walker.setPose(
+            Transformation(
+                [2.082603318747387, 0.04499586647232634, 0.0],
+                [0.07888602209666294, -0.03018659995378454, 0.9054426772657052, 0.41597995490997813],
+            )
+        )
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
@@ -123,7 +126,7 @@ class Test(TestCase):
         self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        goal = Transformation.get_transform_from_euler([np.pi/5, 0, 0])
+        goal = Transformation.get_transform_from_euler([np.pi / 5, 0, 0])
         goal.set_position([0.05, 0.05, 0])
         self.walker.setGoal(goal)
         # self.walker.soccerbot.robot_path.show()
@@ -151,7 +154,7 @@ class Test(TestCase):
         self.walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        goal = Transformation.get_transform_from_euler([-np.pi/2, 0, 0])
+        goal = Transformation.get_transform_from_euler([-np.pi / 2, 0, 0])
         goal.set_position([-0.2, -0.2, 0])
         self.walker.setGoal(goal)
         self.walker.run()
@@ -165,7 +168,12 @@ class Test(TestCase):
         self.walker.run()
 
     def test_small_movement_5(self):
-        self.walker.setPose(Transformation([0.3096807057334623, 0.09374110438873018, 0.0], [0.03189331238935847, -0.0065516868290173, 0.9990119776602083, 0.03024831426656374]))
+        self.walker.setPose(
+            Transformation(
+                [0.3096807057334623, 0.09374110438873018, 0.0],
+                [0.03189331238935847, -0.0065516868290173, 0.9990119776602083, 0.03024831426656374],
+            )
+        )
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0.14076394628045208, -0.034574636811865296, 0], [0, 0, -0.9999956132297835, -0.002962013029887055]))
@@ -201,11 +209,13 @@ class Test(TestCase):
                 self.walker.soccerbot.apply_imu_feedback(self.walker.soccerbot.get_imu())
 
                 forces = self.walker.soccerbot.apply_foot_pressure_sensor_feedback(self.walker.ramp.plane)
-                pb.setJointMotorControlArray(bodyIndex=self.walker.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 20, 1)),
-                                             targetPositions=self.walker.soccerbot.get_angles(),
-                                             forces=forces
-                                             )
+                pb.setJointMotorControlArray(
+                    bodyIndex=self.walker.soccerbot.body,
+                    controlMode=pb.POSITION_CONTROL,
+                    jointIndices=list(range(0, 20, 1)),
+                    targetPositions=self.walker.soccerbot.get_angles(),
+                    forces=forces,
+                )
                 self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
@@ -214,7 +224,7 @@ class Test(TestCase):
         plt.plot(times, pitches)
         plt.xlabel("Time (t)")
         plt.ylabel("Forward pitch of robot in radians")
-        plt.grid(which='minor')
+        plt.grid(which="minor")
         plt.show()
 
     def test_imu_feedback_webots(self):
@@ -237,7 +247,7 @@ class Test(TestCase):
         pitches = []
         times = []
         t = 0
-        r = rospy.Rate(1/SoccerbotController.PYBULLET_STEP)
+        r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
 
         while t <= self.walker.soccerbot.robot_path.duration():
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
@@ -249,11 +259,13 @@ class Test(TestCase):
                 pitches.append((pitch, f))
 
                 forces = self.walker.soccerbot.apply_foot_pressure_sensor_feedback(self.walker.ramp.plane)
-                pb.setJointMotorControlArray(bodyIndex=self.walker.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 20, 1)),
-                                             targetPositions=self.walker.soccerbot.get_angles(),
-                                             forces=forces
-                                             )
+                pb.setJointMotorControlArray(
+                    bodyIndex=self.walker.soccerbot.body,
+                    controlMode=pb.POSITION_CONTROL,
+                    jointIndices=list(range(0, 20, 1)),
+                    targetPositions=self.walker.soccerbot.get_angles(),
+                    forces=forces,
+                )
                 self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
@@ -264,11 +276,12 @@ class Test(TestCase):
         plt.plot(times, pitches)
         plt.xlabel("Time (t)")
         plt.ylabel("Forward pitch of robot in radians")
-        plt.grid(which='minor')
+        plt.grid(which="minor")
         plt.show()
 
     def test_foot_pressure_synchronization(self):
         import pybullet as pb
+
         fig, axs = plt.subplots(2)
 
         self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
@@ -276,21 +289,25 @@ class Test(TestCase):
         self.walker.wait(100)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
 
-        times = np.linspace(0, self.walker.soccerbot.robot_path.duration(), num=math.ceil(self.walker.soccerbot.robot_path.duration() / self.walker.soccerbot.robot_path.step_precision) + 1)
+        times = np.linspace(
+            0,
+            self.walker.soccerbot.robot_path.duration(),
+            num=math.ceil(self.walker.soccerbot.robot_path.duration() / self.walker.soccerbot.robot_path.step_precision) + 1,
+        )
         lfp = np.zeros((4, 4, len(times)))
         rfp = np.zeros((4, 4, len(times)))
         i = 0
         for t in times:
-            [lfp[:,:, i], rfp[:,:, i]] = self.walker.soccerbot.robot_path.footPosition(t)
+            [lfp[:, :, i], rfp[:, :, i]] = self.walker.soccerbot.robot_path.footPosition(t)
             i = i + 1
 
         right = rfp[2, 3, :].ravel()
         left = lfp[2, 3, :].ravel()
         right = 0.1 - right
         left = left - 0.1
-        axs[1].plot(times, left, label='Left')
-        axs[1].plot(times, right, label='Right')
-        axs[1].grid(b=True, which='both', axis='both')
+        axs[1].plot(times, left, label="Left")
+        axs[1].plot(times, right, label="Right")
+        axs[1].grid(b=True, which="both", axis="both")
         axs[1].legend()
 
         t = 0
@@ -316,11 +333,13 @@ class Test(TestCase):
                     scatter_pts_y_1.append(0.1)
 
                 forces = self.walker.soccerbot.apply_foot_pressure_sensor_feedback(self.walker.ramp.plane)
-                pb.setJointMotorControlArray(bodyIndex=self.walker.soccerbot.body, controlMode=pb.POSITION_CONTROL,
-                                             jointIndices=list(range(0, 20, 1)),
-                                             targetPositions=self.walker.soccerbot.get_angles(),
-                                             forces=forces
-                                             )
+                pb.setJointMotorControlArray(
+                    bodyIndex=self.walker.soccerbot.body,
+                    controlMode=pb.POSITION_CONTROL,
+                    jointIndices=list(range(0, 20, 1)),
+                    targetPositions=self.walker.soccerbot.get_angles(),
+                    forces=forces,
+                )
                 self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
 
             pb.stepSimulation()
@@ -345,6 +364,7 @@ class Test(TestCase):
         def send_terminate_walk(_):
             self.walker.terminate_walk = True
             pass
+
         self.send_terminate_walk = rospy.Timer(rospy.Duration(5), send_terminate_walk, oneshot=True)
         self.walker.run()
 
@@ -359,6 +379,7 @@ class Test(TestCase):
         def send_alternative_trajectory(_):
             self.walker.setGoal(Transformation([2.5, 0.5, 0], [0, 0, 0, 1]))
             pass
+
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
@@ -411,7 +432,6 @@ class Test(TestCase):
         self.walker.run()
         pass
 
-
     def test_path_combination_2(self):
         import rospy
 
@@ -423,6 +443,7 @@ class Test(TestCase):
         def send_alternative_trajectory(_):
             self.walker.setGoal(Transformation([1.5, -0.5, 0], [0, 0, 0, 1]))
             pass
+
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
@@ -437,11 +458,13 @@ class Test(TestCase):
         def send_alternative_trajectory(_):
             self.walker.setGoal(Transformation([1, 0.1, 0], [0, 0, 0, 1]))
             pass
+
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
     def test_camera_rotation(self):
         import rospy
+
         self.walker.setPose(Transformation([0.5, 0.5, 0], [0, 0, 0, 1]))
         self.walker.soccerbot.robot_state.status = RobotState.STATUS_READY
         self.state_publisher = rospy.Publisher("/robot1/state", RobotState)

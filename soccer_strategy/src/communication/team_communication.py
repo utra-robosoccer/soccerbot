@@ -12,20 +12,20 @@ from soccer_msgs.msg import RobotState
 import robot_state_pb2
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     rospy.init_node("team_communication")
     rospy.loginfo("Initializing team_communication...", logger_name="team_comm")
 
-    player_id = int(os.getenv('ROBOCUP_ROBOT_ID', 1))
-    team_id = int(os.getenv('ROBOCUP_TEAM_ID', 16))
-    mirror_server_ip = os.getenv('ROBOCUP_MIRROR_SERVER_IP', '127.0.0.1')
+    player_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+    team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+    mirror_server_ip = os.getenv("ROBOCUP_MIRROR_SERVER_IP", "127.0.0.1")
 
     s = None
 
     def robot_state_callback(robot_state: RobotState):
         m = robot_state_pb2.Message()
         m.timestamp.seconds = robot_state.header.stamp.secs
-        m.timestamp.nanos= robot_state.header.stamp.nsecs
+        m.timestamp.nanos = robot_state.header.stamp.nsecs
         m.player_id = robot_state.player_id
         m.status = robot_state.status
         m.role = robot_state.role
@@ -41,14 +41,14 @@ if __name__ == '__main__':
         m.ball_pose.theta = robot_state.ball_pose.theta
         m_str = m.SerializeToString()
         id_address = socket.gethostbyname(mirror_server_ip)
-        rospy.loginfo_once(f'\033[96mSending to 3737 on {id_address}\033[0m')
+        rospy.loginfo_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
         s.sendto(m_str, (id_address, 3737))
 
     while not rospy.is_shutdown() and s is None:
         try:
             rospy.loginfo(f"Binding to port 3737")
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.bind(('0.0.0.0', 3737))
+            s.bind(("0.0.0.0", 3737))
         except rospy.exceptions.ROSInterruptException:
             exit(0)
         except OSError as ex:

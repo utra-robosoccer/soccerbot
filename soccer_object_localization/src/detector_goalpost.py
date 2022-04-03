@@ -22,11 +22,12 @@ from detector import Detector
 
 
 class DetectorGoalPost(Detector):
-
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber("camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        self.image_subscriber = rospy.Subscriber(
+            "camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+        )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
         cv2.setRNGSeed(12345)
         pass
@@ -59,11 +60,14 @@ class DetectorGoalPost(Detector):
         retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
         edges = cv2.Canny(dst, 50, 150)
 
-        lines = cv2.HoughLinesP(edges, rho=DetectorFieldline.HOUGH_RHO,
-                                theta=DetectorFieldline.HOUGH_THETA,
-                                threshold=DetectorFieldline.HOUGH_THRESHOLD,
-                                minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-                                maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP)
+        lines = cv2.HoughLinesP(
+            edges,
+            rho=DetectorFieldline.HOUGH_RHO,
+            theta=DetectorFieldline.HOUGH_THETA,
+            threshold=DetectorFieldline.HOUGH_THRESHOLD,
+            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
+            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
+        )
 
         ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
 
@@ -75,7 +79,7 @@ class DetectorGoalPost(Detector):
         for l in lines:
             x1, y1, x2, y2 = l[0]
             # computing magnitude and angle of the line
-            mag = np.sqrt((x2 - x1) ** 2. + (y2 - y1) ** 2.)
+            mag = np.sqrt((x2 - x1) ** 2.0 + (y2 - y1) ** 2.0)
             if x2 == x1:
                 angle = 0
             else:
@@ -113,13 +117,12 @@ class DetectorGoalPost(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (
-                        floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
+                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
                 theta = math.atan2(distance, camera_pose.get_position()[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
                 if 1 < ratio2 < 0:
-                    print('here')  # TODO
+                    print("here")  # TODO
 
                 floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
                 floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
@@ -140,7 +143,6 @@ class DetectorGoalPost(Detector):
                     robot_pose.transform.rotation.w = 1
                     br.sendTransform(robot_pose)
 
-
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(ccdst)
             img_out.header = img.header
@@ -150,7 +152,7 @@ class DetectorGoalPost(Detector):
         rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     rospy.init_node("detector_goalpost")
     fieldline_detector = DetectorGoalPost()
     rospy.spin()
