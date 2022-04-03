@@ -15,7 +15,7 @@ x-soccerbot: &soccerbot
   build:
     context: .
     target: builder
-#  network_mode: host
+  #  network_mode: host
   cap_add:
     - SYS_PTRACE
   pid: "host"
@@ -25,8 +25,9 @@ x-soccerbot: &soccerbot
         devices:
           - driver: nvidia
             count: all
-            capabilities: [ gpu, compute, utility, graphics ]
-  command: /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
+            capabilities: [gpu, compute, utility, graphics]
+  command:
+    /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
     - .:/root/catkin_ws/src/soccerbot
@@ -37,7 +38,6 @@ x-soccerbot: &soccerbot
     - /dev/snd:/dev/snd:rw
 
 services:
-
   simulator:
     image: utrarobosoccer/webots
     privileged: true
@@ -53,9 +53,9 @@ services:
       resources:
         reservations:
           devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu, compute, utility, graphics]
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility, graphics]
     command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
@@ -89,7 +89,6 @@ services:
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
-
 #  opponent:
 #    <<: *soccerbot
 #    networks:

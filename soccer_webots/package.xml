@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>soccer_webots</name>
   <version>0.0.0</version>
   <description>The soccer_webots package</description>

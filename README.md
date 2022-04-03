@@ -1,4 +1,5 @@
 ## Soccerbot
+
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Travis build](https://travis-ci.org/utra-robosoccer/soccerbot.svg?branch=master)](https://travis-ci.org/utra-robosoccer/soccerbot)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccerbot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccerbot/alerts/)
@@ -7,7 +8,9 @@
 Welcome to Soccerbot
 
 #### Join Us
+
 https://github.com/utra-robosoccer/soccerbot/wiki
 
 #### Getting Started
+
 https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>soccer_hardware</name>
   <version>0.0.0</version>
-    <description>Contains the soccer-communication python code for communicating with the robot using the
+  <description>Contains the soccer-communication python code for communicating with the robot using the
         microcontroller
-    </description>
+  </description>
 
-    <author email="jiashen.wang@mail.utoronto.ca">Jason</author>
-    <maintainer email="ty.gamvrelis@mail.utoronto.ca">Tyler</maintainer>
+  <author email="jiashen.wang@mail.utoronto.ca">Jason</author>
+  <maintainer email="ty.gamvrelis@mail.utoronto.ca">Tyler</maintainer>
 
   <license>BSD</license>
 

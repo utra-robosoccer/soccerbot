@@ -6,11 +6,13 @@
     <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
-    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf"/>
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
 
-    <param name="/simulation_active" value="true"/>
-    <param name="/use_sim_time" value="true"/>
+    <param name="/simulation_active" value="true" />
+    <param name="/use_sim_time" value="true" />
+
     <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
+    <!-- prettier-ignore -->
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
@@ -34,7 +36,7 @@
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="fake_localization" value="$(arg fake_localization)" />
-        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="robot_name" value="$(arg robot_name)" />
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
@@ -48,6 +50,7 @@
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch" />
 
+    <!-- prettier-ignore -->
     <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
         state
         action_complete
@@ -67,6 +70,6 @@
         set_pose
         state
         torso_height
-    " />
-
+    "
+    />
 </launch>
