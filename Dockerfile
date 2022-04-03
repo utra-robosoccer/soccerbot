@@ -43,7 +43,8 @@ RUN apt update && apt-fast install -y \
     curl
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+RUN pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
+    -r /tmp/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
