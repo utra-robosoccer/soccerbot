@@ -75,9 +75,16 @@ class RobotControlled3D(RobotControlled):
 
     def update_robot_state(self, _):
         # Get Ball Position from TF
+        ground_truth = not bool(os.getenv('COMPETITION', False))
+
         try:
-            self.observed_ball.last_observed_time_stamp = self.tf_listener.getLatestCommonTime('world', "robot" + str(self.robot_id) + '/ball')
-            ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball', self.observed_ball.last_observed_time_stamp)
+            if ground_truth:
+                self.observed_ball.last_observed_time_stamp = self.tf_listener.getLatestCommonTime('world', "robot" + str(self.robot_id) + '/ball_gt')
+                ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball_gt', self.observed_ball.last_observed_time_stamp)
+            else:
+                self.observed_ball.last_observed_time_stamp = self.tf_listener.getLatestCommonTime('world',"robot" + str(self.robot_id) + '/ball')
+                ball_pose = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/ball',
+                                                             self.observed_ball.last_observed_time_stamp)
             self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
@@ -87,8 +94,13 @@ class RobotControlled3D(RobotControlled):
         trans = [self.position[0], self.position[1], 0]
         rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
         try:
-            (trans, rot) = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/base_footprint',
-                                                            rospy.Time(0))
+            if ground_truth:
+                (trans, rot) = self.tf_listener.lookupTransform('world',
+                                                                "robot" + str(self.robot_id) + '/base_footprint_gt',
+                                                                rospy.Time(0))
+            else:
+                (trans, rot) = self.tf_listener.lookupTransform('world', "robot" + str(self.robot_id) + '/base_footprint',
+                                                                rospy.Time(0))
             eul = tf.transformations.euler_from_quaternion(rot)
             self.position = np.array([trans[0], trans[1], eul[2]])
             if self.status == Robot.Status.DISCONNECTED:

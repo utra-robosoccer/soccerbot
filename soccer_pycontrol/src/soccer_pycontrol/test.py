@@ -11,7 +11,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from path import Path
 
-import soccerbot_controller
+from soccer_pycontrol.soccerbot_controller import SoccerbotController
+from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+from soccer_pycontrol.soccerbot import Soccerbot
+from soccer_msgs.msg import RobotState
 
 from soccer_common.transformation import Transformation
 
@@ -31,9 +34,9 @@ class Test(TestCase):
             os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
             os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
             os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-            self.walker = soccerbot_controller_ros.SoccerbotControllerRos()
+            self.walker = SoccerbotControllerRos()
         else:
-            self.walker = soccerbot_controller.SoccerbotController()
+            self.walker = SoccerbotController()
 
 
     def test_walk_1(self):
@@ -435,4 +438,17 @@ class Test(TestCase):
             self.walker.setGoal(Transformation([1, 0.1, 0], [0, 0, 0, 1]))
             pass
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
+        self.walker.run()
+
+    def test_camera_rotation(self):
+        import rospy
+        self.walker.setPose(Transformation([0.5, 0.5, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.robot_state.status = RobotState.STATUS_READY
+        self.state_publisher = rospy.Publisher("/robot1/state", RobotState)
+        s = RobotState()
+        s.status = RobotState.STATUS_READY
+        for i in range(1, 10):
+            self.state_publisher.publish(s)
+            rospy.sleep(0.1)
+
         self.walker.run()

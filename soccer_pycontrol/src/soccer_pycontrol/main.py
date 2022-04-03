@@ -16,5 +16,5 @@ if __name__ == '__main__':
     rospy.loginfo("Starting Control Loop")
     try:
         walker.run()
-    except rospy.exceptions.ROSInterruptException as ex:
+    except rospy.exceptions.ROSException as ex:
         exit(0)
