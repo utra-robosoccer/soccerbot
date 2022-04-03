@@ -1,21 +1,19 @@
-import gym
-from gym import spaces
-from gym.utils import seeding
-
+import enum
+import logging
+import math
 import os
+
+import gym
+import gym_soccerbot
+import numpy as np
 import pybullet as pb
 import pybullet_data
-import math
-import numpy as np
-import enum
-from pybullet_utils import bullet_client as bc
-import logging
-
-import gym_soccerbot
-
 import rospy
+from gym import spaces
+from gym.utils import seeding
+from pybullet_utils import bullet_client as bc
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Float64
-from sensor_msgs.msg import JointState, Imu, Image, CameraInfo
 
 logger = logging.getLogger(__name__)
 

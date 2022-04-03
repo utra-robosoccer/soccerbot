@@ -1,16 +1,17 @@
 import enum
 
-from team import Team
-from soccer_msgs.msg import GameState
+import numpy as np
 from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import (
-    StrategyDecisionTreeLookhead,
-    State,
     Action,
     Agent,
+    State,
+    StrategyDecisionTreeLookhead,
 )
-from strategy.interfaces.evaluations import Evaluations
 from strategy.interfaces.actions import Actions
-import numpy as np
+from strategy.interfaces.evaluations import Evaluations
+from team import Team
+
+from soccer_msgs.msg import GameState
 
 
 class FormationAction(Action):

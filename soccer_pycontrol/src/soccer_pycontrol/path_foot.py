@@ -1,10 +1,12 @@
-import numpy as np
-import math
 import enum
-from soccer_pycontrol.path import Path
-from soccer_common.transformation import Transformation as tr
-import matplotlib.pyplot as plt
+import math
 from copy import deepcopy
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from soccer_common.transformation import Transformation as tr
+from soccer_pycontrol.path import Path
 
 
 class PostPreSetting(enum.IntEnum):

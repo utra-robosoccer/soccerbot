@@ -1,9 +1,10 @@
 import numpy as np
-import tf
 import rospy
+import tf
 import tf.transformations
-from soccer_msgs.msg import RobotState
 from robot import Robot
+
+from soccer_msgs.msg import RobotState
 
 
 class RobotObserved(Robot):

@@ -6,17 +6,17 @@ try:
 except:
     from soccer_msgs.fake_msg import GameState
 
+import copy
+import math
+
+import numpy as np
+from ball import Ball
+from game_engine_scene import Scene
 from robot import Robot
 from robot_controlled_2d import RobotControlled2D
-from ball import Ball
 from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
 from team import Team
-from game_engine_scene import Scene
-
-import math
-import numpy as np
-import copy
 
 
 class GameEngine2D:

@@ -1,9 +1,12 @@
 from unittest import TestCase
+
 from game_engine_2d import GameEngine2D
+from strategy.decision_tree.strategy_decision_tree import StrategyDecisionTree
+from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import (
+    StrategyDecisionTreeLookhead,
+)
 from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
-from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import StrategyDecisionTreeLookhead
-from strategy.decision_tree.strategy_decision_tree import StrategyDecisionTree
 
 
 class Test(TestCase):

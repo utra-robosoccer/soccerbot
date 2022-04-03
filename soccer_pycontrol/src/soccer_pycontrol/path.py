@@ -1,12 +1,13 @@
 import math
-from math import floor, ceil
+from math import ceil, floor
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 from soccer_common import Transformation
-import numpy as np
-import matplotlib.pyplot as plt
+from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path_section_short import PathSectionShort
-from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.utils import wrapToPi
 
 

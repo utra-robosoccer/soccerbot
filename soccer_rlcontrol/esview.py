@@ -1,7 +1,8 @@
-import ray.rllib.agents.es as es
 from time import sleep
+
 import gym
 import ray
+import ray.rllib.agents.es as es
 from ray import tune
 from ray.rllib.utils.framework import try_import_tf
 

@@ -7,27 +7,25 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
+from argparse import ArgumentParser
+
+import cv2
+import gluoncv
+import mxnet as mx
+import numpy as np
 import rospy
+import torch
+import util
+from cv_bridge import CvBridge
+from gluoncv import data, model_zoo, utils
+from matplotlib import pyplot as plt
+from model import CNN, Label, find_batch_bounding_boxes, init_weights
 from rospy import ROSException
-from soccer_msgs.msg import RobotState
+from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
-
-from argparse import ArgumentParser
-from sensor_msgs.msg import Image
-import cv2
-from cv_bridge import CvBridge
-import torch
-import numpy as np
-from model import CNN, init_weights
-import util
-from model import find_batch_bounding_boxes, Label
+from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
-
-from matplotlib import pyplot as plt
-import gluoncv
-from gluoncv import model_zoo, data, utils
-import mxnet as mx
 
 
 class ObjectDetectionNode(object):

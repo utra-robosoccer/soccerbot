@@ -1,18 +1,20 @@
 import os
+
 import rospy
-from soccer_msgs.msg import GameState
-from robot_controlled_3d import RobotControlled3D
-from robot import Robot
-from robot_observed import RobotObserved
 from ball import Ball
-from team import Team
-from strategy.strategy_freekick import StrategyFreekick
+from robot import Robot
+from robot_controlled_3d import RobotControlled3D
+from robot_observed import RobotObserved
+from strategy.strategy_determine_side import StrategyDetermineSide
 from strategy.strategy_dummy import StrategyDummy
+from strategy.strategy_finished import StrategyFinished
+from strategy.strategy_freekick import StrategyFreekick
 from strategy.strategy_penaltykick import StrategyPenaltykick
 from strategy.strategy_ready import StrategyReady
-from strategy.strategy_determine_side import StrategyDetermineSide
-from strategy.strategy_finished import StrategyFinished
 from strategy.strategy_set import StrategySet
+from team import Team
+
+from soccer_msgs.msg import GameState
 
 
 class GameEngine3D:

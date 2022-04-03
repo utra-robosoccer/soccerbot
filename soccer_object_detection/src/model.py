@@ -1,8 +1,9 @@
-import torch
-import torch.nn as nn
+import enum
+
 import cv2
 import numpy as np
-import enum
+import torch
+import torch.nn as nn
 import util
 
 

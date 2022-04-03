@@ -1,7 +1,8 @@
-import numpy as np
-from gym import spaces, Env
-from gym.envs.registration import spec, load
 from time import sleep
+
+import numpy as np
+from gym import Env, spaces
+from gym.envs.registration import load, spec
 
 
 class WalkingForwardNormAgn(Env):

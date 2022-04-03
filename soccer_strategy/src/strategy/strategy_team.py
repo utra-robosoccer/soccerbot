@@ -1,16 +1,16 @@
-from abc import ABC
-from enum import IntEnum
 import itertools
 import math
-from strategy.strategy import Strategy
-from strategy.utils import GameProperties, Field
+from abc import ABC
+from enum import IntEnum
 
 import numpy as np
-from shapely.geometry import LineString, Point, Polygon
-
-from robot import Robot
-from team import Team
 from ball import Ball
+from robot import Robot
+from shapely.geometry import LineString, Point, Polygon
+from strategy.strategy import Strategy
+from strategy.utils import Field, GameProperties
+from team import Team
+
 from soccer_msgs.msg import GameState
 
 np.random.seed(2)

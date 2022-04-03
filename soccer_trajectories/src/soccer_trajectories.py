@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import copy
+import csv
 import os
 
-from rospy import ROSException
-from soccer_msgs.msg import RobotState
-from std_msgs.msg import Empty
-from soccer_msgs.msg import FixedTrajectoryCommand
-import csv
-from scipy.interpolate import interp1d
 import rospy
+from rospy import ROSException
+from scipy.interpolate import interp1d
 from sensor_msgs.msg import JointState
+from std_msgs.msg import Empty
+
+from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 
 
 class Trajectory:

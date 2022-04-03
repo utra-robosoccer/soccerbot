@@ -1,7 +1,6 @@
 import enum
 
 import numpy
-
 from ball import Ball
 
 try:

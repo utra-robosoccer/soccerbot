@@ -1,15 +1,15 @@
 import math
 
+import numpy as np
 import rospy
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
-
+from robot import Robot
+from strategy.interfaces.actions import Actions
 from strategy.strategy import Strategy, get_back_up
 from team import Team
+
 from soccer_msgs.msg import GameState
-from robot import Robot
-import numpy as np
-from strategy.interfaces.actions import Actions
 
 
 class StrategyDetermineSide(Strategy):
