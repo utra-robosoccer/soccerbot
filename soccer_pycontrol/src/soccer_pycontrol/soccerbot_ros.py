@@ -217,4 +217,3 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.HEAD_1] = 0
             self.configuration[Joints.HEAD_2] = 0
             self.head_step = 0
-

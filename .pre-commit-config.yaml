@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+      - id: end-of-file-fixer
+        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+      - id: trailing-whitespace
+        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+#  - repo: https://github.com/psf/black
+#    rev: 22.3.0
+#    hooks:
+#      - id: black
+#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+#        args:
+#          - --line-length=300
+#  - repo: https://github.com/pycqa/isort
+#    rev: 5.10.1
+#    hooks:
+#      - id: isort
+#        name: isort
+#        args: ["--profile", "black"]
+#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+#  - repo: https://gitlab.com/pycqa/flake8
+#    rev: 4.0.1
+#    hooks:
+#      - id: flake8
+#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+#        additional_dependencies:
+#          - flake8-black>=0.3.2
+#        language_version: python3

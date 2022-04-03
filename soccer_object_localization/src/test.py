@@ -48,4 +48,3 @@ class Test(TestCase):
         p3 = c.findCameraCoordinate([0.5, 0, 0.5])
         self.assertAlmostEqual(p3[0], 360/2)
         self.assertAlmostEqual(p3[1], 240/2)
-

@@ -398,7 +398,7 @@ class WalkingForward(gym.Env):
 
         """
         From core.py in gym:
-        Returns: 
+        Returns:
             observation (object): the initial observation.
         """
         if self._renders:

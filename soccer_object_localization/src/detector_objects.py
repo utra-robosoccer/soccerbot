@@ -119,7 +119,7 @@ class DetectorBall(Detector):
                 x_avg = (box.xmin + box.xmax) / 2.
                 y_avg = (box.ymax + box.ymin) / 2.
                 y_close = box.ymax
-                
+
                 robot_length = abs(box.xmax - box.xmin)
                 robot_width = abs(box.ymax - box.ymin)
                 if robot_length <= 0 or robot_width <= 0:

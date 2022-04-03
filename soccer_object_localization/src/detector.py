@@ -17,4 +17,3 @@ class Detector:
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
-

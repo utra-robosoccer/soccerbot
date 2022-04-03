@@ -114,7 +114,7 @@ class MyDataSet(Dataset):
         elif '.pkl' in label_file:
             self.read_labels(self.folder_paths[0], label_file, 'pkl')
         '''
-        
+
         for path in folder_paths:
             annot = None
             for file in os.listdir(path):
@@ -129,7 +129,7 @@ class MyDataSet(Dataset):
                 self.read_labels(path, file_labels, 'yaml')
             elif '.pkl' in annot:
                 self.read_labels(path, file_labels, 'pkl')
-                
+
 
     def read_labels(self, path, file_labels, file_type):
         """

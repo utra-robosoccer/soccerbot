@@ -17,6 +17,7 @@ protobuf>=3.19.4
 tensorflow
 keras
 gluoncv
+pre-commit
 
 # object detection
 Pillow==9.0.1

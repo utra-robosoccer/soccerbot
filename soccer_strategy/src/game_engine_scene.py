@@ -131,4 +131,3 @@ class Scene:
                     pos.append([x1, y1])
                     pos.append([x2, y2])
         self.field_vectors.set_data(pos=np.array(pos), arrows=np.array(arrows))
-

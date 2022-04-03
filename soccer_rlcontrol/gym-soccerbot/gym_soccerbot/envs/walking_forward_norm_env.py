@@ -57,9 +57,3 @@ class WalkingForwardNorm(WalkingForwardV2):
         val = (val / 2) * (high_end - low_end)
         val = val + low_end
         return val
-
-
-
-
-
-
