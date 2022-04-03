@@ -1,10 +1,11 @@
 import functools
+from copy import deepcopy
+
+import numpy as np
 
 from soccer_common.transformation import Transformation
-import numpy as np
 from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.utils import wrapToPi
-from copy import deepcopy
 
 
 class PathSectionShort(PathSection):

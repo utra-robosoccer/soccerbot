@@ -1,9 +1,10 @@
-from vispy.color import Color
-from vispy import scene, app
-from ball import Ball
 import math
+
 import numpy as np
+from ball import Ball
 from robot_controlled_2d import RobotControlled2D
+from vispy import app, scene
+from vispy.color import Color
 
 white = Color("#ecf0f1")
 gray = Color("#121212")

@@ -1,14 +1,14 @@
 import os
-import torch
-import numpy as np
-from model import CNN, init_weights
-from my_dataset import initialize_loader
-from train import Trainer
+
 import cv2
-import util
+import numpy as np
+import torch
 import torchvision
+import util
+from model import CNN, Label, find_batch_bounding_boxes, init_weights
+from my_dataset import initialize_loader
 from PIL import Image
-from model import find_batch_bounding_boxes, Label
+from train import Trainer
 
 
 def train_model(load_model=None, num_features=16):

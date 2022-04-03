@@ -1,9 +1,10 @@
 # Transmitter.py
 
+import struct
+from threading import Event, Lock, Thread
+
 import rospy as rp
 import serial
-import struct
-from threading import Thread, Event, Lock
 from Queue import Queue
 from utility import log_string
 

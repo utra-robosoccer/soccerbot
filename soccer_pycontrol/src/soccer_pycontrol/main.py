@@ -3,9 +3,9 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+import numpy as np
 import rospy
 import soccerbot_controller_ros
-import numpy as np
 
 np.set_printoptions(precision=3)
 

@@ -1,6 +1,7 @@
 import argparse
-import yaml
 import pickle
+
+import yaml
 
 
 def main():

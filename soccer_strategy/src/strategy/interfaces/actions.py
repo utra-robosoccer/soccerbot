@@ -1,9 +1,10 @@
-from team import Team
+import math
+
+import numpy as np
+from ball import Ball
 from robot import Robot
 from robot_controlled import RobotControlled
-from ball import Ball
-import numpy as np
-import math
+from team import Team
 
 
 class Actions:

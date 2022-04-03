@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import serial.tools.list_ports
 import rospy
+import serial.tools.list_ports
 from communication import Communication
 from utility import *
 

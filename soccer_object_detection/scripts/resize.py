@@ -1,7 +1,8 @@
+import json
 import os
+
 import cv2
 import tqdm
-import json
 
 input_folder = "/home/nam/dataset/ball_bounding_boxes_positive"
 output_folder = "/home/nam/dataset/ball_bounding_boxes_positive_small"

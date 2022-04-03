@@ -4,19 +4,20 @@ import os
 import time
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-import rospy
-import numpy as np
 import cv2
-from sensor_msgs.msg import Image, PointCloud2
-from std_msgs.msg import Bool, Header
-from detector import Detector
-from geometry_msgs.msg import PoseWithCovarianceStamped
+import numpy as np
+import rospy
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
+from detector import Detector
+from geometry_msgs.msg import PoseWithCovarianceStamped
+from sensor_msgs.msg import Image, PointCloud2
+from std_msgs.msg import Bool, Header
 
 
 class DetectorFieldline(Detector):

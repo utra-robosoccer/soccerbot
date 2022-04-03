@@ -1,11 +1,12 @@
 import abc
+import math
 import time
 
-from robot import Robot
 import numpy as np
-from soccer_pycontrol import path
+from robot import Robot
+
 from soccer_common.transformation import Transformation
-import math
+from soccer_pycontrol import path
 
 
 class RobotControlled(Robot):

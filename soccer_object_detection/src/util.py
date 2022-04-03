@@ -1,7 +1,7 @@
-import numpy as np
-import PIL
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
+import PIL
 
 
 def torch_to_cv(img):

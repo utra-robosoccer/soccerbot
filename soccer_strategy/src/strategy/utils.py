@@ -1,6 +1,6 @@
 import numpy as np
-from shapely.geometry import LineString, Point, Polygon
 from robot import Robot
+from shapely.geometry import LineString, Point, Polygon
 
 
 class GameProperties:

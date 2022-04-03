@@ -1,7 +1,7 @@
-from soccer_msgs.msg import GameState
-
 from strategy.strategy_freekick import StrategyFreekick
 from team import Team
+
+from soccer_msgs.msg import GameState
 
 
 class StrategyPenaltykick(StrategyFreekick):

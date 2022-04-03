@@ -1,6 +1,6 @@
 # utility.py
-from threading import Lock
 from datetime import datetime
+from threading import Lock
 
 print_lock = Lock()
 

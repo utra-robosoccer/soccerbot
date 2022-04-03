@@ -1,13 +1,14 @@
-import tf
-from rospy import ROSInterruptException
-
-from soccer_pycontrol.soccerbot_controller import *
-import rospy
-from soccer_pycontrol.soccerbot_ros import SoccerbotRos
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Pose, PoseArray
-from std_msgs.msg import Empty, Bool
-from soccer_msgs.msg import RobotState
 import copy
+
+import rospy
+import tf
+from geometry_msgs.msg import Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped
+from rospy import ROSInterruptException
+from std_msgs.msg import Bool, Empty
+
+from soccer_msgs.msg import RobotState
+from soccer_pycontrol.soccerbot_controller import *
+from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
 
 class SoccerbotControllerRos(SoccerbotController):

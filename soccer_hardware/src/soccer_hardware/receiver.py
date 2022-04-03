@@ -1,12 +1,13 @@
 # game_controller_receiver.py
 
-import serial
 import struct
 import time
-from threading import Thread, Event, Lock
+from threading import Event, Lock, Thread
+
+import rospy as rp
+import serial
 from transformations import *
 from utility import log_string
-import rospy as rp
 
 
 class Receiver(Thread):

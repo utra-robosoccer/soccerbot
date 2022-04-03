@@ -15,11 +15,12 @@ import math
 
 import rospy
 import tf2_ros
-from geometry_msgs.msg import PointStamped, TransformStamped, PoseStamped
-from sensor_msgs.msg import JointState
-from soccer_object_detection.msg import BoundingBoxes, BoundingBox
 from detector import Detector
+from geometry_msgs.msg import PointStamped, PoseStamped, TransformStamped
+from sensor_msgs.msg import JointState
+
 from soccer_common.transformation import Transformation
+from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
 
 class DetectorBall(Detector):

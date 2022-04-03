@@ -1,15 +1,14 @@
-from abc import ABC
-from enum import IntEnum
 import itertools
 import math
-from strategy.strategy import Strategy
-from strategy.utils import *
+from abc import ABC
+from enum import IntEnum
 
 import numpy as np
-from shapely.geometry import LineString, Point, Polygon
-
 from ball import Ball
 from robot import Robot
+from shapely.geometry import LineString, Point, Polygon
+from strategy.strategy import Strategy
+from strategy.utils import *
 
 np.random.seed(2)
 

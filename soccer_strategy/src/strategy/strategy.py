@@ -1,14 +1,15 @@
 import abc
-from robot_controlled_2d import RobotControlled2D
+
 from robot_controlled import RobotControlled
+from robot_controlled_2d import RobotControlled2D
 
 try:
     from soccer_msgs.msg import GameState
 except:
     from soccer_msgs.fake_msg import GameState
 
-from team import Team
 from robot import Robot
+from team import Team
 
 
 def update_average_ball_position(update_next_strategy):
