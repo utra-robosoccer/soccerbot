@@ -1,0 +1,24 @@
+line_width: 80
+tab_size: 4
+separate_ctrl_name_with_space: False
+separate_fn_name_with_space: False
+dangle_parens: True
+always_wrap:
+  - find_package
+  - set
+autosort: True
+additional_commands:
+  find_package:
+    pargs: 1
+    flags:
+      - REQUIRED
+    kwargs:
+      COMPONENTS: "*"
+  set:
+    pargs: 1
+    flags:
+      - PKG_DEPS
+  add_message_files:
+    pargs: 0
+    kwargs:
+      FILES: "*"
