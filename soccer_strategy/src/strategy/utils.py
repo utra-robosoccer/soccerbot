@@ -161,7 +161,3 @@ def grad_rep(beta, r_rep, d_rep, x2, x1):
         t2 = (x2 - x1) / (2 * distance_between(x2, x1) ** 3)
         val = beta * t1 * t2
     return val
-
-
-def distance_between(a, b):
-    return np.linalg.norm(a - b)

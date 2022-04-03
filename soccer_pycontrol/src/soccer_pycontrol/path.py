@@ -176,16 +176,16 @@ class Path:
     def dynamicallyUpdateGoalPosition(self, t, end_transform):
         t_change = t + 1
         if len(self.path_sections) >= 1 and self.path_sections[-1] is PathSectionShort:
-            raise Exception(f"If the last path is a Short paths, it cannot be further modified")
+            raise Exception("If the last path is a Short paths, it cannot be further modified")
         if self.duration() - t_change < 1:
-            raise Exception(f"There is not enough time to update the position, current time { t } , duration of current path { self.duration()}")
+            raise Exception("There is not enough time to update the position, current time { t } , duration of current path { self.duration()}")
 
         t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
         start_transform = self.getBodyStepPose(step)
 
         # TODO allow bezier paths to go to short paths and vice versa
         if self.isShortPath(start_transform, end_transform):
-            raise Exception(f"Cannot append a short path to a bezier path")
+            raise Exception("Cannot append a short path to a bezier path")
 
         self.terminateWalk(t_new)
         p = self.createPathSection(start_transform, end_transform)

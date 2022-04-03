@@ -155,6 +155,7 @@ class WalkingForwardV4(gym.Env):
     _MX_28_force = 6.0  # 2.5
     _AX_12_velocity = (59 / 60) * 2 * np.pi
     _MX_28_velocity = 2 * np.pi  # (55 / 60) * 2 * np.pi
+
     #### End of Joint Limits HARD CODE
     @classmethod
     def joint_limit_high_val(cls):
