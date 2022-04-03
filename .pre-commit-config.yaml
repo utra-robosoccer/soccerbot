@@ -15,13 +15,13 @@ repos:
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
         args:
           - --line-length=150
-#  - repo: https://github.com/pycqa/isort
-#    rev: 5.10.1
-#    hooks:
-#      - id: isort
-#        name: isort
-#        args: ["--profile", "black"]
-#        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: isort
+        args: ["--profile", "black"]
+        exclude: ^(external|docs|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
 #  - repo: https://gitlab.com/pycqa/flake8
 #    rev: 4.0.1
 #    hooks:
