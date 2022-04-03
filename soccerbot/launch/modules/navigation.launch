@@ -1,15 +1,15 @@
 <launch>
-    <arg name="simulation" />
+  <arg name="simulation" />
 
+  <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+
+  <node pkg="soccer_trajectories" type="soccer_trajectories.py" name="soccer_trajectories" output="screen">
+    <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
+    <param name="simulation" value="$(arg simulation)" />
     <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+  </node>
 
-    <node pkg="soccer_trajectories" type="soccer_trajectories.py" name="soccer_trajectories" output="screen">
-        <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories" />
-        <param name="simulation" value="$(arg simulation)" />
-        <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
-    </node>
-
-    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output = "screen">
-        <param name="calibration_file" value="$(find soccer_pycontrol)/src/soccer_pycontrol/calibration_models/model.995_inverse" />
-    </node>
+  <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen">
+    <param name="calibration_file" value="$(find soccer_pycontrol)/src/soccer_pycontrol/calibration_models/model.995_inverse" />
+  </node>
 </launch>
