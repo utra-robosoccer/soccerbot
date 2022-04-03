@@ -14,7 +14,9 @@ from copy import deepcopy
 import numpy as np
 import pybullet as pb
 from soccer_common.pid import PID
-from calibration import Calibration
+from soccer_pycontrol.calibration import Calibration
+from soccer_pycontrol.utils import wrapToPi
+
 
 class Joints(enum.IntEnum):
     LEFT_ARM_1 = 0
@@ -140,7 +142,7 @@ class Soccerbot:
         Function for getting all the feet angles (for now?)
         :return: All 12 angles in the dictionary form???
         """
-        angles = [a + b for a, b in zip(self.configuration, self.configuration_offset)]
+        angles = [wrapToPi(a + b) for a, b in zip(self.configuration, self.configuration_offset)]
         return angles
 
     def get_link_transformation(self, link1, link2):

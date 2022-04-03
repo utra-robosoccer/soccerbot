@@ -23,8 +23,8 @@ class DetectorBall(Detector):
 
     def __init__(self):
         super().__init__()
-        self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback)
-        self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback)
+        self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback, queue_size=1)
+        self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback, queue_size=1)
         self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
         self.head_motor_1_angle = 0
         self.last_ball_pose = None
@@ -74,10 +74,10 @@ class DetectorBall(Detector):
                 if self.last_ball_pose is not None:
                     if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1: # In the start position
                         pass
-                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 1.6: # meters from previous position
-                        rospy.logwarn_throttle(5, f"Detected a ball too far away, Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
+                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 3: # meters from previous position
+                        rospy.logwarn_throttle(0.5, f"Detected a ball too far away ({ self.last_ball_pose_counter }), Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }")
                         self.last_ball_pose_counter = self.last_ball_pose_counter + 1
-                        if self.last_ball_pose_counter > 8: # Counter to prevent being stuck when the ball is in a different location
+                        if self.last_ball_pose_counter > 5: # Counter to prevent being stuck when the ball is in a different location
                             self.last_ball_pose_counter = 0
                             self.last_ball_pose = None
                         continue

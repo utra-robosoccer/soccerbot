@@ -49,7 +49,7 @@ class ObjectDetectionNode(object):
 
         self.pub_detection = rospy.Publisher('detection_image', Image, queue_size=1)
         self.pub_boundingbox = rospy.Publisher('object_bounding_boxes', BoundingBoxes, queue_size=1)
-        self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1, buff_size=2**24)#DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        self.image_subscriber = rospy.Subscriber("camera/image_raw",Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE*64) # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState,
                                                                self.robot_state_callback)
         self.robot_state = RobotState()
@@ -101,10 +101,14 @@ class ObjectDetectionNode(object):
             bbs_msg = BoundingBoxes()
             bb_msg = BoundingBox()
             ball_bb = bbxs[0][0]
-            bb_msg.xmin = round(ball_bb[0].asscalar())
-            bb_msg.ymin = round(ball_bb[1].asscalar())
-            bb_msg.xmax = round(ball_bb[2].asscalar())
-            bb_msg.ymax = round(ball_bb[3].asscalar())
+
+            xratio = msg.width / orig_img.shape[1]
+            yratio = msg.height / orig_img.shape[0]
+
+            bb_msg.xmin = round(ball_bb[0].asscalar() * xratio)
+            bb_msg.ymin = round(ball_bb[1].asscalar() * yratio)
+            bb_msg.xmax = round(ball_bb[2].asscalar() * xratio)
+            bb_msg.ymax = round(ball_bb[3].asscalar() * yratio)
             bb_msg.id = Label.BALL.value
             bb_msg.Class = 'ball'
             bbs_msg.bounding_boxes.append(bb_msg)

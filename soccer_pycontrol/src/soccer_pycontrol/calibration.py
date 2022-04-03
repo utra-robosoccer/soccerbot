@@ -13,7 +13,6 @@ import numpy as np
 from soccer_common.transformation import Transformation
 
 import rospy
-import soccerbot_controller_ros
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,6 +31,8 @@ class Calibration:
 
     # Runs a series of movements to collect data in the calibration folder
     def obtain_calibration(self):
+        from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+
         rospy.init_node("soccer_control")
         for node in ['soccer_strategy', 'soccer_pycontrol', 'soccer_trajectories', 'ball_detector', 'detector_goalpost',
                      'object_detector', 'rosbag']:
@@ -63,7 +64,7 @@ class Calibration:
 
                         attempt = 0
                         while attempt < 5:
-                            walker = soccerbot_controller_ros.SoccerbotControllerRos()
+                            walker = SoccerbotControllerRos()
                             walker.soccerbot.useCalibration = False
                             walker.setPose(Transformation())
                             walker.setGoal(Transformation([x, y, 0.0], quat))

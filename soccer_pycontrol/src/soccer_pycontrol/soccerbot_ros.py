@@ -49,6 +49,8 @@ class SoccerbotRos(Soccerbot):
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
         self.last_ball_pose = (None, None)
+        self.anglelr = 0
+        self.angleud = 0
         self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
@@ -181,29 +183,27 @@ class SoccerbotRos(Soccerbot):
                 (trans, rot) = self.listener.lookupTransform(os.environ["ROS_NAMESPACE"] + '/camera',
                                                              os.environ["ROS_NAMESPACE"] + '/ball',
                                                              ball_found_timestamp)
-
-                self.last_ball_pose = (trans, rot)
-                self.last_ball_found_timestamp = ball_found_timestamp
+                if self.last_ball_found_timestamp is None or ball_found_timestamp - self.last_ball_found_timestamp > rospy.Duration(2):
+                    self.last_ball_pose = (trans, rot)
+                    self.anglelr = math.atan2(trans[1], trans[0])
+                    self.angleud = math.atan2(trans[2], trans[0])
+                    self.last_ball_found_timestamp = ball_found_timestamp
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
-            # If the last time it saw the ball was 10 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
-                (trans, rot) = self.last_ball_pose
-                anglelr = math.atan2(trans[1], trans[0])
-                angleud = math.atan2(trans[2], trans[0])
+            # If the last time it saw the ball was 5 seconds ago
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(5):
 
-                rospy.loginfo_throttle(2, f"Centering Camera on Ball ({ anglelr }, { angleud })")
+                self.configuration[Joints.HEAD_1] += self.anglelr
+                self.configuration[Joints.HEAD_2] -= self.angleud
+                self.anglelr = 0
+                self.angleud = 0
 
-                if abs(anglelr) < 0.1 and abs(angleud) < 0.1:
-                    rospy.loginfo_throttle(10, "\033[1mCamera Centered on ball\033[0m")
-                    rospy.sleep(2)
-                    self.head_centered_on_ball_publisher.publish()
-
-                self.configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1] + anglelr * 0.003
-                self.configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2] - angleud * 0.003
+                rospy.loginfo_throttle(0.1, f"Centered Camera on Ball ({ self.anglelr }, { self.angleud })")
+                rospy.sleep(1.0)
+                self.head_centered_on_ball_publisher.publish()
             else:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * 0.185 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
