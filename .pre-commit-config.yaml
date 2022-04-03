@@ -4,10 +4,6 @@ repos:
     hooks:
       - id: check-symlinks
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-      - id: check-xml
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
-      - id: check-yaml
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: end-of-file-fixer
         exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
       - id: trailing-whitespace
