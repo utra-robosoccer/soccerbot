@@ -138,7 +138,10 @@ class RobotControlled3D(RobotControlled):
         if self.status in [Robot.Status.WALKING, Robot.Status.TERMINATING_WALK, Robot.Status.KICKING,
                            Robot.Status.TRAJECTORY_IN_PROGRESS]:
             self.goal_position = None
-            covariance_trace = np.sqrt(self.amcl_pose.pose.covariance[0] ** 2 + self.amcl_pose.pose.covariance[7] ** 2)
+            if self.amcl_pose is not None:
+                covariance_trace = np.sqrt(self.amcl_pose.pose.covariance[0] ** 2 + self.amcl_pose.pose.covariance[7] ** 2)
+            else:
+                covariance_trace = 0
             if covariance_trace > 0.2:
                 rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
