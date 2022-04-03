@@ -43,7 +43,7 @@ class Evaluations:
 
     @staticmethod
     def is_closest_to_ball(robot: Robot, friendly_team: Team) -> bool:
-        if friendly_team.average_ball_position != None:
+        if friendly_team.average_ball_position is not None:
             ball_position = np.array(friendly_team.average_ball_position.position)
             a = [np.linalg.norm(ball_position - robot.position[:2]) for robot in friendly_team.robots]
             closest = friendly_team.robots[np.argmin(a)]

@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     while not rospy.is_shutdown() and s is None:
         try:
-            rospy.loginfo(f"Binding to port 3737")
+            rospy.loginfo("Binding to port 3737")
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.bind(("0.0.0.0", 3737))
         except rospy.exceptions.ROSInterruptException:

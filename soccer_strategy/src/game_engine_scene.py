@@ -29,10 +29,10 @@ class Scene:
         self.init_actors(robots, ball)
 
     def draw_field(self):
-        field = scene.Rectangle(center=(0, 0), width=10, height=7, color=green, parent=self.view.scene)
-        center_circle = scene.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2, parent=self.view.scene)
-        center_line = scene.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
-        goals = scene.Line(
+        scene.Rectangle(center=(0, 0), width=10, height=7, color=green, parent=self.view.scene)
+        scene.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2, parent=self.view.scene)
+        scene.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
+        scene.Line(
             pos=np.array([[-4.5, 1.3], [-4.5, -1.3], [4.5, 1.3], [4.5, -1.3]]),
             connect="segments",
             width=2,
