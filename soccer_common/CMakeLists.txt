@@ -12,7 +12,7 @@ find_package(
     REQUIRED ${PKG_DEPS}
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS soccer_msgs)
 
 # ##############################################################################
 # Build ##
