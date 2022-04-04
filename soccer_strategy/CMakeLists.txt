@@ -12,7 +12,7 @@ find_package(
     COMPONENTS soccer_msgs soccer_pycontrol soccer_common rospy tf
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS soccer_msgs)
 
 protobuf_generate_python(PROTO_PY src/communication/robot_state.proto)
 add_custom_target(soccer_strategy ALL DEPENDS ${PROTO_PY})
