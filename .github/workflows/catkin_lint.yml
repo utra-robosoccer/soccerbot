@@ -1,4 +1,4 @@
-name: CMake
+name: catkin_lint
 
 on:
   push:
@@ -20,5 +20,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Configure CMake
-      run: sudo apt-get install python-catkin-lint && pip install -r ${{github.workspace}}/requirements.txt && catkin_lint ${{github.workspace}}
+    - name: Install catkin_lint
+      run: sudo apt-get update && sudo apt-get install python-catkin-lint && pip install -r ${{github.workspace}}/requirements.txt
+      
+    - name: Run catkin_lint
+      run: catkin_lint ${{github.workspace}}
