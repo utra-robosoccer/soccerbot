@@ -21,4 +21,4 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Configure CMake
-      run: sudo apt-get install python-catkin_lint && catkin_lint ${{github.workspace}}
+      run: sudo apt-get install python-catkin-lint && pip install -r ${{github.workspace}}/requirements.txt && catkin_lint ${{github.workspace}}
