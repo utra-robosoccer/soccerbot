@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install catkin_lint
-      run: sudo apt update && sudo apt install catkin-lint && pip install -r ${{github.workspace}}/requirements.txt
+      run: sudo apt update && sudo apt install catkin-lint
       
     - name: Run catkin_lint
       run: catkin_lint ${{github.workspace}}
