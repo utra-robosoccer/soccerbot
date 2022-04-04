@@ -11,6 +11,6 @@ add_message_files(FILES BoundingBox.msg BoundingBoxes.msg)
 
 generate_messages(DEPENDENCIES std_msgs)
 
-catkin_package(CATKIN_DEPENDS message_runtime)
+catkin_package(CATKIN_DEPENDS message_runtime std_msgs)
 
 include_directories(${catkin_INCLUDE_DIRS})

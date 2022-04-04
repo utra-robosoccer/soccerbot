@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(soccer_object_localization)
 
-set(CMAKE_CXX_FLAGS
-    "-std=c++17"
-)
+add_compile_options("-std=c++17")
 
 set(PKG_DEPS
     rospy soccer_common sensor_msgs geometry_msgs cv_bridge

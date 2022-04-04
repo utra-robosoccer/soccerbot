@@ -9,6 +9,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>message_generation</depend>
+  <depend>geometry_msgs</depend>
   <depend>message_runtime</depend>
   <depend>roscpp</depend>
   <depend>rospy</depend>
