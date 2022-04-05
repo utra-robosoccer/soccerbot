@@ -1,4 +1,4 @@
-name: catkin_lint
+name: build_lint
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         submodules: recursive
 
     - name: Install catkin_lint
-      run: sudo apt update && sudo apt install catkin-lint
+      run: sudo apt update && sudo apt install catkin-lint && pip3 install -r ${{github.workspace}}/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
       
     - name: Run catkin_lint
-      run: catkin_lint ${{github.workspace}}
+      run: catkin_lint ${{github.workspace}} && cd ${{github.workspace}} && pre-commit install
