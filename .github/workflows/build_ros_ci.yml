@@ -13,13 +13,13 @@ jobs:
         with:
           lfs: true
           submodules: recursive
+      - uses: ros-tooling/setup-ros@v0.2
+        with:
+          required-ros-distributions: noetic
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
         with:
           limit-access-to-actor: false
-      - uses: ros-tooling/setup-ros@v0.2
-        with:
-          required-ros-distributions: noetic
       - uses: ros-tooling/action-ros-ci@v0.2
         with:
           package-name: soccerbot
