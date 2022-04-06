@@ -9,6 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+          submodules: recursive
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: false
       - uses: ros-tooling/setup-ros@v0.2
         with:
           required-ros-distributions: noetic
