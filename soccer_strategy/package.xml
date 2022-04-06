@@ -12,5 +12,6 @@
     <depend>soccer_pycontrol</depend>
     <depend>soccer_common</depend>
     <depend>tf</depend>
+    <depend>protobuf-dev</depend>
 
 </package>
