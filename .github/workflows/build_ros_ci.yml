@@ -5,11 +5,12 @@ on:
     branches: [master]
 
 env:
-  GITHUB_WORKSPACE: $HOME/catkin_ws/src/soccerbot
+  GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
       - uses: ros-tooling/setup-ros@v0.2
