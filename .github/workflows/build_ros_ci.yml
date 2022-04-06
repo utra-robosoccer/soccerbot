@@ -9,10 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          lfs: true
-          submodules: recursive
       - uses: ros-tooling/setup-ros@v0.2
         with:
           required-ros-distributions: noetic
