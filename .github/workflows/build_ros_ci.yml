@@ -24,7 +24,21 @@ jobs:
         uses: lhotari/action-upterm@v1
         with:
           limit-access-to-actor: false
-      - uses: ros-tooling/action-ros-ci@v0.2
-        with:
-          package-name: soccerbot
-          target-ros1-distro: noetic
+      - name: Move directory
+        run: |
+          mkdir -p $HOME/catkin_ws/src
+          mv $GITHUB_WORKSPACE $HOME/catkin_ws/src/soccerbot
+      - name: Install dependencies
+        run: |
+          cd $HOME/catkin_ws/src/soccerbot
+          source /opt/ros/noetic/setup.bash
+          rosdep update
+          rosdep install --from-path -i -y .
+          pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
+            -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+          sudo apt-get install -y python3-catkin-tools
+          cd $HOME/catkin_ws
+      - name: Build Soccerbot
+          catkin init
+          catkin build
+          catkin test
