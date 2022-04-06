@@ -20,10 +20,6 @@ jobs:
         with:
           lfs: true
           submodules: recursive
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: false
       - name: Move directory
         run: |
           mkdir -p $HOME/catkin_ws/src
