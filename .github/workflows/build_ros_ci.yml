@@ -23,10 +23,12 @@ jobs:
         with:
           lfs: true
           submodules: recursive
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
       - name: Move directory
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
-          mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot/*
+          cp $GITHUB_WORKSPACE/ $HOME/catkin_ws/src/soccerbot
       - name: Install dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
