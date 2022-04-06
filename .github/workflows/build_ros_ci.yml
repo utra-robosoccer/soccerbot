@@ -1,4 +1,4 @@
-name: catkin_lint
+name: ros_ci
 
 on:
   pull_request:
