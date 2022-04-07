@@ -3,10 +3,7 @@ import enum
 from strategy.strategy import Strategy
 from team import Team
 
-try:
-    from soccer_msgs.msg import GameState
-except:
-    from fake_msg import GameState
+from soccer_msgs.msg import GameState
 
 import abc
 from copy import deepcopy

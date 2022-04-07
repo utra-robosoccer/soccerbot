@@ -1,10 +1,7 @@
 import _thread
 import random
 
-try:
-    from soccer_msgs.msg import GameState
-except:
-    from fake_msg import GameState
+from soccer_msgs.msg import GameState
 
 import copy
 import math

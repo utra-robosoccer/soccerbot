@@ -1,7 +1,13 @@
 import unittest
 from unittest import TestCase
 
+from unittest.mock import MagicMock
+import sys
+sys.modules['rospy'] = MagicMock()
+sys.modules['soccer_msgs'] =  __import__('soccer_msgs_mock')
 import rospy
+rospy.Time = MagicMock()
+
 
 from game_engine_2d import GameEngine2D
 from strategy.decision_tree.strategy_decision_tree import StrategyDecisionTree
@@ -12,9 +18,11 @@ from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
 
 
+
+
+
 class Test(TestCase):
     def test_dummy_strategy(self):
-        rospy.init_node("dummy_strategy")
         friendly_wins = 0
         opponent_wins = 0
         for i in range(1):
