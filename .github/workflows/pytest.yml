@@ -33,9 +33,8 @@ jobs:
           source /opt/ros/noetic/setup.bash
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
       - name: Pytest
         run: |
+          cd $HOME/catkin_ws/src/soccerbot
           export PYTHONPATH=$PYTHONPATH:soccer_common/src:soccer_pycontrol/src
-          pytest --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol
+          pytest -s --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol
