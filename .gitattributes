@@ -6,3 +6,4 @@
 *.stl filter=lfs diff=lfs merge=lfs -binary
 *.dae filter=lfs diff=lfs merge=lfs -binary
 *.npy filter=lfs diff=lfs merge=lfs -binary
+*.elf filter=lfs diff=lfs merge=lfs -binary
