@@ -31,4 +31,3 @@ cmake-build-debug
 
 soccerbot/bags/*
 !soccerbot/bags/view_rosbag.sh
-/soccer_description/meshes/

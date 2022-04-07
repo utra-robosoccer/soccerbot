@@ -18,7 +18,6 @@ tensorflow
 keras
 gluoncv
 pre-commit
-gdown
 
 # object detection
 Pillow==9.0.1
