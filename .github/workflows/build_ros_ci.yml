@@ -26,7 +26,7 @@ jobs:
       - name: Move directory
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
-          mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot/*
+          mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
       - name: Install dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
@@ -36,9 +36,10 @@ jobs:
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
           sudo apt-get install -y python3-catkin-tools
-          cd $HOME/catkin_ws
       - name: Build Soccerbot
         run: |
+          cd $HOME/catkin_ws
+          source /opt/ros/noetic/setup.bash
           catkin init
           catkin build
           catkin test
