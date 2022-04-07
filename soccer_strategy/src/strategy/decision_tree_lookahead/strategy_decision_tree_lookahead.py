@@ -1,15 +1,11 @@
+import abc
 import enum
+from copy import deepcopy
 
 from strategy.strategy import Strategy
 from team import Team
 
-try:
-    from soccer_msgs.msg import GameState
-except:
-    from soccer_msgs.fake_msg import GameState
-
-import abc
-from copy import deepcopy
+from soccer_msgs.msg import GameState
 
 
 class Agent(enum.IntEnum):

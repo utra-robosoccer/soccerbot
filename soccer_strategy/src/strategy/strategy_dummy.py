@@ -11,10 +11,7 @@ from strategy.strategy import Strategy, get_back_up, update_average_ball_positio
 from strategy.utils import *
 from team import Team
 
-try:
-    from soccer_msgs.msg import GameState
-except:
-    from soccer_msgs.fake_msg import GameState
+from soccer_msgs.msg import GameState
 
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 

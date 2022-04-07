@@ -1,19 +1,14 @@
+import abc
 import enum
 import math
+from copy import deepcopy
 
+import numpy as np
 from robot import Robot
 from strategy.strategy import Strategy
 from team import Team
 
-try:
-    from soccer_msgs.msg import GameState
-except:
-    from soccer_msgs.fake_msg import GameState
-
-import abc
-from copy import deepcopy
-
-import numpy as np
+from soccer_msgs.msg import GameState
 
 
 class TreeNode:

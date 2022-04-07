@@ -1,4 +1,4 @@
-name: ros_ci
+name: pytest
 
 on:
   pull_request:
@@ -31,15 +31,10 @@ jobs:
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
-          rosdep update
-          rosdep install --from-path -i -y .
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
-          sudo apt-get install -y python3-catkin-tools
-      - name: Build Soccerbot
+      - name: Pytest
         run: |
-          cd $HOME/catkin_ws
-          source /opt/ros/noetic/setup.bash
-          catkin init
-          catkin build
-          catkin test
+          cd $HOME/catkin_ws/src/soccerbot
+          export PYTHONPATH=$PYTHONPATH:soccer_common/src:soccer_pycontrol/src
+          pytest -s --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol
