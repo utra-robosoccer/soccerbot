@@ -14,7 +14,7 @@ from team import Team
 try:
     from soccer_msgs.msg import GameState
 except:
-    from soccer_msgs.fake_msg import GameState
+    from fake_msg import GameState
 
 GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
 

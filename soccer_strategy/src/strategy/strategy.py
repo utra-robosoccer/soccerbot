@@ -6,7 +6,7 @@ from robot_controlled_2d import RobotControlled2D
 try:
     from soccer_msgs.msg import GameState
 except:
-    from soccer_msgs.fake_msg import GameState
+    from fake_msg import GameState
 
 from robot import Robot
 from team import Team
