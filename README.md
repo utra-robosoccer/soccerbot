@@ -10,9 +10,7 @@
 Welcome to Soccerbot
 
 #### Join Us
-
 https://github.com/utra-robosoccer/soccerbot/wiki
 
 #### Getting Started
-
 https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
