@@ -1,10 +1,7 @@
 import _thread
-import random
-
-from soccer_msgs.msg import GameState
-
 import copy
 import math
+import random
 
 import numpy as np
 from ball import Ball
@@ -14,6 +11,8 @@ from robot_controlled_2d import RobotControlled2D
 from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
 from team import Team
+
+from soccer_msgs.msg import GameState
 
 
 class GameEngine2D:

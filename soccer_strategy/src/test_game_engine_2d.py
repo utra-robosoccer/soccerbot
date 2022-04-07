@@ -1,11 +1,12 @@
+import sys
 import unittest
 from unittest import TestCase
-
 from unittest.mock import MagicMock
-import sys
-sys.modules['rospy'] = MagicMock()
-sys.modules['soccer_msgs'] =  __import__('soccer_msgs_mock')
+
+sys.modules["rospy"] = MagicMock()
+sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
 import rospy
+
 rospy.Time = MagicMock()
 
 
@@ -16,9 +17,6 @@ from strategy.decision_tree_lookahead.strategy_decision_tree_lookahead import (
 )
 from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
-
-
-
 
 
 class Test(TestCase):

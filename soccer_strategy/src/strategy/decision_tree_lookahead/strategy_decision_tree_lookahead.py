@@ -1,12 +1,11 @@
+import abc
 import enum
+from copy import deepcopy
 
 from strategy.strategy import Strategy
 from team import Team
 
 from soccer_msgs.msg import GameState
-
-import abc
-from copy import deepcopy
 
 
 class Agent(enum.IntEnum):
