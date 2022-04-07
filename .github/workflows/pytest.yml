@@ -1,4 +1,4 @@
-name: ros_ci
+name: pytest
 
 on:
   pull_request:
