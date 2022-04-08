@@ -114,7 +114,10 @@ class GameEngine2D:
 
         for step in range(game_period_seconds):
             if step == int(game_period_seconds / 2):
-                print("Second Half Started: ")
+                print("\033[96m----- Second Half Started -----\033[0m")
+                self.reset_robots()
+            if step % int(game_period_seconds / 2 / 20) == 0:
+                print(f"\033[96mTime Elapsed: {step } / {game_period_seconds}\033[0m")
                 self.reset_robots()
 
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)

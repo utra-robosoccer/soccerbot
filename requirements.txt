@@ -18,6 +18,7 @@ tensorflow
 keras
 gluoncv
 pre-commit
+timeout_decorator
 
 # object detection
 Pillow==9.0.1
