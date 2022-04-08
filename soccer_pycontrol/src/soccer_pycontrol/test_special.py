@@ -1,41 +1,59 @@
-import glob
+import math
 import os
+import sys
+import unittest
+
+import numpy as np
+from matplotlib import pyplot as plt
+from soccer_msgs_mock.msg import RobotState
+
+from soccer_pycontrol.path import Path
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-import math
 from unittest import TestCase
-
-import matplotlib.pyplot as plt
-import numpy as np
-from path import Path
+from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
-from soccer_msgs.msg import RobotState
-from soccer_pycontrol.soccerbot import Soccerbot
-from soccer_pycontrol.soccerbot_controller import SoccerbotController
-from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
-RUN_IN_ROS = True
-if RUN_IN_ROS:
+run_in_ros = False
+display = True
+if "pytest" in sys.argv[0]:
+    run_in_ros = False
+    display = False
+else:
     import rospy
-    import soccerbot_controller_ros
-    from geometry_msgs.msg import PoseWithCovarianceStamped
-    from std_msgs.msg import String
+
+if run_in_ros:
+    rospy.init_node("soccer_control")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+else:
+    sys.modules["rospy"] = MagicMock()
+    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
+    import rospy
+
+    rospy.Time = MagicMock()
+    joint_state = MagicMock()
+    joint_state.position = [0.0] * 18
+    rospy.wait_for_message = MagicMock(return_value=joint_state)
+    rospy.loginfo_throttle = lambda a, b: None
+    rospy.get_param = lambda a, b: b
+    from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
 class TestSpecial(TestCase):
     def setUp(self) -> None:
-        if RUN_IN_ROS:
-            rospy.init_node("soccer_control")
-            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-            os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        if run_in_ros:
             self.walker = SoccerbotControllerRos()
         else:
-            self.walker = SoccerbotController()
+            self.walker = SoccerbotController(display=display)
+        super().setUp()
 
+    @unittest.skip("Not integrated in CI")
     def test_imu_feedback(self):
         import pybullet as pb
 
@@ -74,6 +92,7 @@ class TestSpecial(TestCase):
         plt.grid(which="minor")
         plt.show()
 
+    @unittest.skip("Not integrated in CI")
     def test_imu_feedback_webots(self):
         import pybullet as pb
         from soccerbot_controller import SoccerbotController
@@ -126,6 +145,7 @@ class TestSpecial(TestCase):
         plt.grid(which="minor")
         plt.show()
 
+    @unittest.skip("Not integrated in CI")
     def test_foot_pressure_synchronization(self):
         import pybullet as pb
 
@@ -200,6 +220,7 @@ class TestSpecial(TestCase):
         self.amcl_pose = amcl_pose
         pass
 
+    @unittest.skip("Not integrated in CI")
     def test_terminate_walk(self):
         import rospy
 
@@ -215,6 +236,7 @@ class TestSpecial(TestCase):
         self.send_terminate_walk = rospy.Timer(rospy.Duration(5), send_terminate_walk, oneshot=True)
         self.walker.run()
 
+    @unittest.skip("Not integrated in CI")
     def test_dynamic_walking_1(self):
         import rospy
 
@@ -230,6 +252,7 @@ class TestSpecial(TestCase):
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
+    @unittest.skip("Not integrated in CI")
     def test_path_combination_basic(self):
         plt.figure()
 
@@ -247,6 +270,7 @@ class TestSpecial(TestCase):
 
         plt.show()
 
+    @unittest.skip("Not integrated in CI")
     def test_path_combination(self):
 
         height = 0.321
@@ -279,6 +303,7 @@ class TestSpecial(TestCase):
         self.walker.run()
         pass
 
+    @unittest.skip("Not integrated in CI")
     def test_path_combination_2(self):
         import rospy
 
@@ -294,6 +319,7 @@ class TestSpecial(TestCase):
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(5), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
+    @unittest.skip("Not integrated in CI")
     def test_path_combination_long_to_short(self):
         import rospy
 
@@ -309,6 +335,7 @@ class TestSpecial(TestCase):
         self.send_alternative_trajectory = rospy.Timer(rospy.Duration(3), send_alternative_trajectory, oneshot=True)
         self.walker.run()
 
+    @unittest.skip("Not integrated in CI")
     def test_camera_rotation(self):
         import rospy
 

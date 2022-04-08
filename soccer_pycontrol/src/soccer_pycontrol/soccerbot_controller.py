@@ -1,10 +1,8 @@
-import os
 import time
 from time import sleep
 
 import pybullet as pb
 import pybullet_data
-import rospy
 
 from soccer_common.transformation import Transformation
 from soccer_pycontrol.ramp import Ramp
@@ -14,8 +12,12 @@ from soccer_pycontrol.soccerbot import Soccerbot
 class SoccerbotController:
     PYBULLET_STEP = 0.01
 
-    def __init__(self):
-        pb.connect(pb.GUI)
+    def __init__(self, display=True):
+        self.display = display
+        if display:
+            pb.connect(pb.GUI)
+        else:
+            pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
@@ -35,30 +37,57 @@ class SoccerbotController:
 
     def wait(self, steps):
         for i in range(steps):
-            time.sleep(SoccerbotController.PYBULLET_STEP)
+            if self.display:
+                time.sleep(SoccerbotController.PYBULLET_STEP)
             pb.stepSimulation()
 
     def run(self, single_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
             return
 
-        t = 0
+        t = -5
+        stable_count = 20
+
         while t <= self.soccerbot.robot_path.duration():
-            if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(t, verbose=False)
-                self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
-                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
-                pb.setJointMotorControlArray(
-                    bodyIndex=self.soccerbot.body,
-                    controlMode=pb.POSITION_CONTROL,
-                    jointIndices=list(range(0, 20, 1)),
-                    targetPositions=self.soccerbot.get_angles(),
-                    forces=forces,
-                )
-                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
+            if t < 0:
+                pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
+                    stable_count = stable_count - 1
+                    if stable_count == 0:
+                        t = 0
+                else:
+                    stable_count = 5
+            else:
+                if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
+                    self.soccerbot.stepPath(t, verbose=False)
+                    self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
+                    self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
+
+            angle_threshold = 1.25  # in radian
+            [roll, pitch, yaw] = self.soccerbot.get_imu().get_orientation_euler()
+            if pitch > angle_threshold:
+                print("Fallen Back")
+                return False
+
+            elif pitch < -angle_threshold:
+                print("Fallen Front")
+                return False
+
+            elif roll < -angle_threshold or roll > angle_threshold:
+                print("Fallen Side")
+                return False
+
+            pb.setJointMotorControlArray(
+                bodyIndex=self.soccerbot.body,
+                controlMode=pb.POSITION_CONTROL,
+                jointIndices=list(range(0, 20, 1)),
+                targetPositions=self.soccerbot.get_angles(),
+            )
             pb.stepSimulation()
             t = t + SoccerbotController.PYBULLET_STEP
-            sleep(SoccerbotController.PYBULLET_STEP)
+            if self.display:
+                sleep(SoccerbotController.PYBULLET_STEP)
+        return True
 
     def updateGoal(self):
         pass

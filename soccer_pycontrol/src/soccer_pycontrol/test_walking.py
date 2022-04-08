@@ -1,19 +1,21 @@
 import os
 import sys
 
+import numpy as np
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-import numpy as np
-
 from soccer_common.transformation import Transformation
 
 run_in_ros = False
+display = True
 if "pytest" in sys.argv[0]:
     run_in_ros = False
+    display = False
 else:
     import rospy
 
@@ -29,6 +31,11 @@ else:
     import rospy
 
     rospy.Time = MagicMock()
+    joint_state = MagicMock()
+    joint_state.position = [0.0] * 18
+    rospy.wait_for_message = MagicMock(return_value=joint_state)
+    rospy.loginfo_throttle = lambda a, b: None
+    rospy.get_param = lambda a, b: b
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
@@ -37,23 +44,22 @@ class TestWalking(TestCase):
         if run_in_ros:
             self.walker = SoccerbotControllerRos()
         else:
-            self.walker = SoccerbotController()
+            self.walker = SoccerbotController(display=display)
         super().setUp()
 
     def test_walk_1(self):
-        self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
-        # self.walker.soccerbot.robot_path.show()
-        self.walker.run()
+        self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        walk_success = self.walker.run()
+        self.assertTrue(walk_success)
 
     def test_walk_2(self):
         self.walker.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_3(self):
@@ -61,7 +67,6 @@ class TestWalking(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([-2.26, -1.27, 0], [0, 0, 0.997836202477347, 0.06574886330262358]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_4(self):
@@ -69,7 +74,6 @@ class TestWalking(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([-0.12015226, -0.19813691, 0.321], [0, 0, 0.95993011, -0.28023953]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_5(self):
@@ -77,15 +81,13 @@ class TestWalking(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([0.0859, -0.016, 0.0], [0, 0, 0.998, 0.0176]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_6(self):
         self.walker.setPose(Transformation([2.008, -0.646, 0.0], [0.0149, -0.0474, 0.99985, -0.0072]))
-        self.walker.ready()
         self.walker.wait(100)
+        self.walker.ready()
         self.walker.setGoal(Transformation([0.00736, 0.0356, 0.0], [0, 0, 0.998, 0.0176]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_7(self):
@@ -98,7 +100,6 @@ class TestWalking(TestCase):
         self.walker.ready()
         self.walker.wait(100)
         self.walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
-        # self.walker.soccerbot.robot_path.show()
         self.walker.run()
 
     def test_walk_side(self):

@@ -2,9 +2,10 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
-from path import Path
-from path_crotch import PathCrotch
-from path_foot import PathFoot
+
+from soccer_pycontrol.path import Path
+from soccer_pycontrol.path_crotch import PathCrotch
+from soccer_pycontrol.path_foot import PathFoot
 
 
 class PathRobot(PathCrotch):
