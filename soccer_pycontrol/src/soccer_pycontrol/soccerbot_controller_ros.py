@@ -268,10 +268,6 @@ class SoccerbotControllerRos(SoccerbotController):
                         print("Fallen Front")
                         return False
 
-                    elif roll < -angle_threshold or roll > angle_threshold:
-                        print("Fallen Side")
-                        return False
-
             self.soccerbot.publishAngles()  # Disable to stop walking
 
             self.t = self.t + SoccerbotController.PYBULLET_STEP

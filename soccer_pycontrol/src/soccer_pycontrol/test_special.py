@@ -53,6 +53,10 @@ class TestSpecial(TestCase):
             self.walker = SoccerbotController(display=display)
         super().setUp()
 
+    def tearDown(self) -> None:
+        super().tearDown()
+        del self.walker
+
     @unittest.skip("Not integrated in CI")
     def test_imu_feedback(self):
         import pybullet as pb

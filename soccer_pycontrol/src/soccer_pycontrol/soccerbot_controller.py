@@ -15,9 +15,9 @@ class SoccerbotController:
     def __init__(self, display=True):
         self.display = display
         if display:
-            pb.connect(pb.GUI)
+            self.client_id = pb.connect(pb.GUI)
         else:
-            pb.connect(pb.DIRECT)
+            self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
@@ -25,6 +25,9 @@ class SoccerbotController:
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
         self.terminate_walk = False
+
+    def __del__(self):
+        pb.disconnect(self.client_id)
 
     def ready(self):
         self.soccerbot.ready()
@@ -43,7 +46,7 @@ class SoccerbotController:
 
     def run(self, single_trajectory=False):
         if self.soccerbot.robot_path.duration() == 0:
-            return
+            return True
 
         t = -5
         stable_count = 20
@@ -71,10 +74,6 @@ class SoccerbotController:
 
             elif pitch < -angle_threshold:
                 print("Fallen Front")
-                return False
-
-            elif roll < -angle_threshold or roll > angle_threshold:
-                print("Fallen Side")
                 return False
 
             pb.setJointMotorControlArray(

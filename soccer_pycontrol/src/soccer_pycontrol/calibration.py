@@ -323,7 +323,8 @@ class Calibration:
 
     @functools.cached_property
     def adjust_navigation_goal(self):
-        calib_file = self.model_name + "_inverse"
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        calib_file = dir_path + "/" + self.model_name + "_inverse"
         try:
             calib_file = rospy.get_param("~calibration_file", calib_file)
         except ConnectionRefusedError as ce:
