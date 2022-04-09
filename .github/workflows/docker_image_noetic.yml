@@ -20,6 +20,6 @@ jobs:
       - name: Build the Docker image
         run: |
           docker pull ros:noetic
-          docker tag ros:noetic utrarobosoccer:noetic
-          docker push utrarobosoccer:noetic
+          docker tag ros:noetic utrarobosoccer/noetic
+          docker push utrarobosoccer/noetic
               
