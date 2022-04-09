@@ -7,7 +7,7 @@ RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' |
 RUN mv requirements.txt /tmp/requirements.txt
 WORKDIR /root/dependencies
 
-FROM ros:noetic as builder
+FROM utrarobosoccer/noetic as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
