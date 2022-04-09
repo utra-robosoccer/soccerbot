@@ -1,4 +1,4 @@
-FROM ros:noetic as dependencies
+FROM utrarobosoccer/noetic as dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
 RUN apt update && rosdep update --rosdistro noetic
@@ -55,3 +55,5 @@ COPY --from=dependencies /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build soccerbot
 RUN echo "source /root/catkin_ws/devel/setup.bash" >> ~/.bashrc
+RUN pip install PyQt6
+RUN sudo apt install -y xvfb

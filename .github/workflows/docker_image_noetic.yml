@@ -1,4 +1,4 @@
-name: Monthly ROS Image Build
+name: ROS Image Build
 
 on:
   workflow_dispatch:
@@ -6,9 +6,7 @@ on:
     - cron: "0 0 1 * *"
 
 jobs:
-
-  build:
-
+  update_ros_image:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,4 +20,3 @@ jobs:
           docker pull ros:noetic
           docker tag ros:noetic utrarobosoccer/noetic
           docker push utrarobosoccer/noetic
-              
