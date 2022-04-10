@@ -18,4 +18,4 @@ class Ball:
         return len(self.position) > 0
 
     def is_moving(self):
-        return np.linalg.norm(self.velocity) < 0.1  # compensate for noise
+        return np.linalg.norm(self.velocity) < 0.1  # Compensate for noise
