@@ -24,7 +24,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker image
-        run: docker pull utrarobosoccer/webots
-          docker build external --file external/Dockerfile --tag utrarobosoccer/webots
+        run: |
+          docker pull utrarobosoccer/webots
+          docker build external --file external/Dockerfile --tag utrarobosoccer/webots --cache-from utrarobosoccer/webots --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Build and push Docker images
         run: docker push utrarobosoccer/webots
