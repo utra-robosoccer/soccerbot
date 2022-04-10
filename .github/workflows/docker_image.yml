@@ -12,6 +12,14 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
       - uses: actions/checkout@v2
         with:
           lfs: true
@@ -24,7 +32,7 @@ jobs:
       - name: Build the Docker image
         run: |
           docker pull utrarobosoccer/soccerbot
-          DOCKER_BUILDKIT=1 docker build . --file Dockerfile --tag utrarobosoccer/soccerbot --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
+          docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Build and push Docker images
         run: docker push utrarobosoccer/soccerbot
       - name: Push to AWS repository

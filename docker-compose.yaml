@@ -15,7 +15,8 @@ x-soccerbot: &soccerbot
   build:
     context: .
     target: builder
-    args: BUILDKIT_INLINE_CACHE=1
+    args:
+      - BUILDKIT_INLINE_CACHE=1
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies
@@ -47,6 +48,8 @@ services:
     privileged: true
     build:
       context: external
+      args:
+        - BUILDKIT_INLINE_CACHE=1
       cache_from:
         - utrarobosoccer/webots
     cap_add:

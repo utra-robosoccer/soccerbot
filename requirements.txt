@@ -19,11 +19,12 @@ keras
 gluoncv
 pre-commit
 timeout_decorator
+torch
+torchvision
 
 # object detection
 Pillow==9.0.1
-torch==1.10.2+cu113
-torchvision==0.11.3+cu113
-torchaudio==0.10.2+cu113
 tqdm
 mxnet
+
+PyQt6

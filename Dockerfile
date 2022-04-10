@@ -20,7 +20,7 @@ RUN apt update && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
     apt clean
-RUN apt update && apt-fast install -y \
+RUN apt-fast install -y \
     screen \
     vim \
     python3-pip \
@@ -43,11 +43,10 @@ RUN apt update && apt-fast install -y \
     curl
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
-RUN pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
-    -r /tmp/requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+RUN pip install -r /tmp/requirements.txt
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN apt-get update && apt-fast install -y $(cat  /tmp/catkin_install_list)
+RUN apt-fast install -y $(cat /tmp/catkin_install_list)
 
 # Build
 WORKDIR /root/catkin_ws
@@ -55,5 +54,3 @@ COPY --from=dependencies /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build soccerbot
 RUN echo "source /root/catkin_ws/devel/setup.bash" >> ~/.bashrc
-RUN pip install PyQt6
-RUN sudo apt install -y xvfb
