@@ -26,5 +26,3 @@ torchvision
 Pillow==9.0.1
 tqdm
 mxnet
-
-PyQt6
