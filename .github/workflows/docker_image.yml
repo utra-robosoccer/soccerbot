@@ -13,7 +13,11 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Maximize build space
-        uses: easimon/maximize-build-space@master
+        run: |
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          df -h
       - uses: actions/checkout@v2
         with:
           lfs: true
