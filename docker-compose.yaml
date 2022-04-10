@@ -15,6 +15,9 @@ x-soccerbot: &soccerbot
   build:
     context: .
     target: builder
+    cache_from:
+      - utrarobosoccer/soccerbot
+      - utrarobosoccer/soccerbot_dependencies
   #  network_mode: host
   cap_add:
     - SYS_PTRACE
@@ -43,6 +46,8 @@ services:
     privileged: true
     build:
       context: external
+      cache_from:
+        - utrarobosoccer/webots
     cap_add:
       - SYS_PTRACE
     pid: "host"
