@@ -22,7 +22,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag utrarobosoccer/soccerbot
+        run: docker pull utrarobosoccer/soccerbot
+          docker build . --file Dockerfile --tag utrarobosoccer/soccerbot
       - name: Build and push Docker images
         run: docker push utrarobosoccer/soccerbot
       - name: Push to AWS repository
