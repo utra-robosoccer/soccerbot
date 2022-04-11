@@ -40,7 +40,16 @@ RUN apt-fast install -y \
     software-properties-common \
     sudo \
     ros-noetic-robot-state-publisher \
-    curl
+    curl \
+    libxkbcommon-x11-0 \
+    libxcb-icccm4 \
+    libxcb-xkb1 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-render-util0 \
+    libxcb-randr0 \
+    libxcb-keysyms1 \
+    libxcb-xinerama0
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
