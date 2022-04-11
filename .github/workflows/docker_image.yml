@@ -31,7 +31,7 @@ jobs:
         run: |
           docker pull utrarobosoccer/soccerbot
           docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
-      - name: Build and push Docker images
+      - name: Push Docker image to dockerhub
         run: docker push utrarobosoccer/soccerbot
       - name: Push to AWS repository
         run: |

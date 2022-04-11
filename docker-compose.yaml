@@ -98,6 +98,8 @@ services:
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
+      DISPLAY: unix$DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 #  opponent:
 #    <<: *soccerbot
 #    networks:
@@ -112,3 +114,5 @@ services:
 #      ROBOCUP_MIRROR_SERVER_IP: "simulator"
 #      COMPETITION: "true"
 #      PYTHONUNBUFFERED: 1
+#      DISPLAY: unix$DISPLAY
+#      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR

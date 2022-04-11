@@ -14,7 +14,7 @@ from unittest.mock import MagicMock
 from soccer_common.transformation import Transformation
 
 run_in_ros = False
-display = False
+display = True
 TEST_TIMEOUT = 60
 if "pytest" in sys.argv[0]:
     run_in_ros = False

@@ -32,3 +32,4 @@ cmake-build-debug
 soccerbot/bags/*
 !soccerbot/bags/view_rosbag.sh
 slave.py
+venv/

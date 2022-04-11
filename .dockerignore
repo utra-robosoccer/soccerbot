@@ -13,3 +13,4 @@ soccer_embedded
 soccer_fieldline_detection/media
 soccerbot/bags/
 LICENSE
+venv/
