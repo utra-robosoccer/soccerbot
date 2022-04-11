@@ -18,6 +18,9 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
+      - uses: ros-tooling/setup-ros@v0.2
+        with:
+          required-ros-distributions: noetic
       - uses: actions/checkout@v2
         with:
           lfs: true
@@ -36,3 +39,9 @@ jobs:
       - name: Run integration test
         run: |
           python test_integration.py
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: soccerbot/bags/*
+          retention-days: 14
