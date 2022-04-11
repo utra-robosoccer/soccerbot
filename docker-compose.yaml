@@ -16,6 +16,7 @@ x-soccerbot: &soccerbot
     context: .
     target: builder
     args:
+      - BASE_IMAGE=dustynv/ros:noetic-ros-base-l4t-r32.7.1
       - BUILDKIT_INLINE_CACHE=1
     cache_from:
       - utrarobosoccer/soccerbot
