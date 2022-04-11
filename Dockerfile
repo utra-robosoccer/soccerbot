@@ -1,4 +1,7 @@
-FROM utrarobosoccer/noetic as dependencies
+# dustynv/ros:noetic-ros-base-l4t-r32.7.1
+ARG BASE_IMAGE=utrarobosoccer/noetic
+
+FROM $BASE_IMAGE as dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
 RUN apt update && rosdep update --rosdistro noetic
@@ -7,7 +10,7 @@ RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' |
 RUN mv requirements.txt /tmp/requirements.txt
 WORKDIR /root/dependencies
 
-FROM utrarobosoccer/noetic as builder
+FROM $BASE_IMAGE as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
