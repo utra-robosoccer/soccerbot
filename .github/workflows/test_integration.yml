@@ -1,16 +1,20 @@
-name: Integration Test
+name: ROS CI
 
 on:
-  workflow_dispatch:
   pull_request:
     branches: [master]
 
+env:
+  GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
+
 jobs:
-  integration_test:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
       - name: Maximize build space
         run: |
@@ -21,10 +25,29 @@ jobs:
       - uses: ros-tooling/setup-ros@v0.2
         with:
           required-ros-distributions: noetic
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           submodules: recursive
+      - name: Move directory
+        run: |
+          mkdir -p $HOME/catkin_ws/src/soccerbot
+          mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
+      - name: Install dependencies
+        run: |
+          cd $HOME/catkin_ws/src/soccerbot
+          source /opt/ros/noetic/setup.bash
+          rosdep update
+          rosdep install --from-path -i -y .
+          pip install -r requirements.txt
+          sudo apt-get install -y python3-catkin-tools
+      - name: Build Soccerbot
+        run: |
+          cd $HOME/catkin_ws
+          source /opt/ros/noetic/setup.bash
+          catkin init
+          catkin build
+          catkin test
       - name: Docker Login
         uses: docker/login-action@v1.12.0
         with:
@@ -32,12 +55,14 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker image
         run: |
+          cd $HOME/catkin_ws/src/soccerbot
           docker pull utrarobosoccer/soccerbot
           docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
       - name: Run integration test
         run: |
+          cd $HOME/catkin_ws/src/soccerbot
           python test_integration.py
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
