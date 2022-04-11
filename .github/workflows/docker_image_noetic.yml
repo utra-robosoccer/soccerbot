@@ -1,4 +1,4 @@
-name: ROS Image Build
+name: ROS Image CI
 
 on:
   workflow_dispatch:

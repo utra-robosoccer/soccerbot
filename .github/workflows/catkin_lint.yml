@@ -1,4 +1,4 @@
-name: catkin_lint
+name: Catkin Lint
 
 on:
   push:
