@@ -39,3 +39,7 @@ jobs:
           docker-compose build
       - name: Run the integration tests
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
+      - name: Get integration test logs
+        if: always()
+        run: |
+          docker-compose logs
