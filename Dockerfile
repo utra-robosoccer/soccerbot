@@ -20,6 +20,7 @@ RUN apt update && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
     apt clean
+RUN curl -sSL https://get.docker.com/ | sh
 RUN apt-fast install -y \
     screen \
     vim \

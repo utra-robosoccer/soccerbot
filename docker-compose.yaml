@@ -20,7 +20,6 @@ x-soccerbot: &soccerbot
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies
-  #  network_mode: host
   cap_add:
     - SYS_PTRACE
   pid: "host"
@@ -41,6 +40,7 @@ x-soccerbot: &soccerbot
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
+    - /var/run/docker.sock:/var/run/docker.sock
 
 services:
   simulator:
