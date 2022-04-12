@@ -5,7 +5,6 @@ on:
     branches: [master]
 
 env:
-  GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
   COMPOSE_DOCKER_CLI_BUILD: 1
   DOCKER_BUILDKIT: 1
 
@@ -24,22 +23,23 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
-      - uses: actions/checkout@v2
-        with:
-          lfs: true
-          submodules: recursive
-      - name: Docker Login
-        uses: docker/login-action@v1.12.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker images
-        run: |
-          docker-compose pull
-          docker-compose build
-      - name: Run the integration tests
-          docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
-      - name: Get integration test logs
-        if: always()
-        run: |
-          docker-compose logs
+
+#      - uses: actions/checkout@v2
+#        with:
+#          lfs: true
+#          submodules: recursive
+#      - name: Docker Login
+#        uses: docker/login-action@v1.12.0
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_TOKEN }}
+#      - name: Build the Docker images
+#        run: |
+#          docker-compose pull
+#          docker-compose build
+#      - name: Run the integration tests
+#          docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
+#      - name: Get integration test logs
+#        if: always()
+#        run: |
+#          docker-compose logs

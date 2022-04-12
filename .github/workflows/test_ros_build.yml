@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [master]
 
-env:
-  GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
-
 jobs:
   test_ros_build:
     runs-on: ubuntu-latest
