@@ -1,0 +1,25 @@
+version: "3.3"
+
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
+services:
+  simulator:
+    extends:
+      file: docker-compose.yaml
+      service: simulator
+
+  friendly:
+    extends:
+      file: docker-compose.yaml
+      service: friendly
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.2
+    command: /bin/bash -c "source /root/catkin_ws/devel/setup.bash &&
+      export PYTHONPATH=$$PYTHONPATH:/root/catkin_ws/src/soccerbot/soccer_pycontrol/src:/root/catkin_ws/src/soccerbot/soccer_strategy/src:/root/catkin_ws/src/soccerbot/soccer_common/src &&
+      echo $$PYTHONPATH &&
+      pytest -s /root/catkin_ws/src/soccerbot/test_integration.py"

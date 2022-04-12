@@ -84,9 +84,6 @@ services:
 
   friendly:
     <<: *soccerbot
-    # Uncomment to view rviz
-    ports:
-      - 11311:11311
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
@@ -100,19 +97,19 @@ services:
       PYTHONUNBUFFERED: 1
       DISPLAY: unix$DISPLAY
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
-#  opponent:
-#    <<: *soccerbot
-#    networks:
-#      soccer_network:
-#        ipv4_address: 172.18.0.6
-#    environment:
-#      ROBOCUP_TEAM_ID: 5
-#      ROBOCUP_ROBOT_ID: 1
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
-#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      DISPLAY: unix$DISPLAY
-#      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+
+  opponent:
+    <<: *soccerbot
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.6
+    environment:
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "blue"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      ROBOCUP_TEAM_ID: 5
+      PYTHONUNBUFFERED: 1
+      DISPLAY: unix$DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR

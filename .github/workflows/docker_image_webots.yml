@@ -1,4 +1,4 @@
-name: Webots Docker Image CI
+name: Docker Image Webots
 
 on:
   push:

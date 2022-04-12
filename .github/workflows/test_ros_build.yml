@@ -1,4 +1,4 @@
-name: ros_ci
+name: Test ROS Build
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ env:
   GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
 
 jobs:
-  build:
+  test_ros_build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     concurrency:

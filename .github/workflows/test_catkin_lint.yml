@@ -1,4 +1,4 @@
-name: Catkin Lint
+name: Test Catkin Lint
 
 on:
   push:
