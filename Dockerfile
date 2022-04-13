@@ -50,6 +50,7 @@ RUN apt-fast install -y \
     libxcb-randr0 \
     libxcb-keysyms1 \
     libxcb-xinerama0
+RUN curl -sSL https://get.docker.com/ | sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt

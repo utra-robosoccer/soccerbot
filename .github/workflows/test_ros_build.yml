@@ -1,14 +1,11 @@
-name: Pytest
+name: Test ROS Build
 
 on:
   pull_request:
     branches: [master]
 
-env:
-  GITHUB_WORKSPACE: /home/runner/catkin_ws/src/soccerbot
-
 jobs:
-  pytest:
+  test_ros_build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     concurrency:
@@ -31,11 +28,15 @@ jobs:
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
+          rosdep update
+          rosdep install --from-path -i -y .
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
-      - name: Pytest
+          sudo apt-get install -y python3-catkin-tools
+      - name: Build Soccerbot
         run: |
-          cd $HOME/catkin_ws/src/soccerbot
+          cd $HOME/catkin_ws
           source /opt/ros/noetic/setup.bash
-          export PYTHONPATH=$PYTHONPATH:soccer_common/src:soccer_pycontrol/src
-          pytest -s --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol --ignore=test_integration.py
+          catkin init
+          catkin build
+          catkin test

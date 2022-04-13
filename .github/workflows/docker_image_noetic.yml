@@ -1,4 +1,4 @@
-name: ROS Image CI
+name: Docker Image Noetic
 
 on:
   workflow_dispatch:

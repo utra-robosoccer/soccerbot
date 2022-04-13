@@ -20,17 +20,9 @@ x-soccerbot: &soccerbot
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies
-  #  network_mode: host
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu, compute, utility, graphics]
   command:
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
@@ -41,6 +33,7 @@ x-soccerbot: &soccerbot
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
+    - /var/run/docker.sock:/var/run/docker.sock
 
 services:
   simulator:
@@ -58,13 +51,6 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.10
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, utility, graphics]
     command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
@@ -84,9 +70,6 @@ services:
 
   friendly:
     <<: *soccerbot
-    # Uncomment to view rviz
-    ports:
-      - 11311:11311
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
@@ -100,19 +83,19 @@ services:
       PYTHONUNBUFFERED: 1
       DISPLAY: unix$DISPLAY
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
-#  opponent:
-#    <<: *soccerbot
-#    networks:
-#      soccer_network:
-#        ipv4_address: 172.18.0.6
-#    environment:
-#      ROBOCUP_TEAM_ID: 5
-#      ROBOCUP_ROBOT_ID: 1
-#      ROBOCUP_TEAM_COLOR: "blue"
-#      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
-#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-#      COMPETITION: "true"
-#      PYTHONUNBUFFERED: 1
-#      DISPLAY: unix$DISPLAY
-#      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+
+  opponent:
+    <<: *soccerbot
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.6
+    environment:
+      ROBOCUP_ROBOT_ID: 1
+      ROBOCUP_TEAM_COLOR: "blue"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      ROBOCUP_TEAM_ID: 5
+      PYTHONUNBUFFERED: 1
+      DISPLAY: unix$DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
