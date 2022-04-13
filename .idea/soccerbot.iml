@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_pycontrol/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.8.10 Docker Compose (friendly at [/home/vuwij/catkin_ws/src/soccerbot/docker-compose.yaml])" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.8.10 Docker Compose (friendly at [$MODULE_DIR$/docker-compose.yaml])" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="workspace" level="project" />
     <orderEntry type="library" name="ROS" level="project" />
