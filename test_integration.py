@@ -26,7 +26,8 @@ class IntegrationTest(TestCase):
 
     def tearDown(self) -> None:
         super().tearDown()
-        os.system("docker stop soccerbot_simulator_1")
+        # TODO run this only on click tests
+        # os.system("docker stop soccerbot_simulator_1")
 
     def processMsg(self, data: RobotState):
         print("processMsg, status {}, role {}".format(data.status, data.role))
