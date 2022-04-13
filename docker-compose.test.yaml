@@ -32,5 +32,4 @@ services:
           devices: []
     command: /bin/bash -c "source /root/catkin_ws/devel/setup.bash &&
       export PYTHONPATH=$$PYTHONPATH:/root/catkin_ws/src/soccerbot/soccer_pycontrol/src:/root/catkin_ws/src/soccerbot/soccer_strategy/src:/root/catkin_ws/src/soccerbot/soccer_common/src &&
-      echo $$PYTHONPATH &&
       pytest -s /root/catkin_ws/src/soccerbot/test_integration.py"
