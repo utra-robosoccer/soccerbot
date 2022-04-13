@@ -1,3 +1,4 @@
 *.rviz
 soccer_webots/protos/postures.json
 .pre-commit-config.yaml
+.idea
