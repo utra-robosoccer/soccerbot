@@ -23,13 +23,6 @@ x-soccerbot: &soccerbot
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu, compute, utility, graphics]
   command:
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
@@ -58,13 +51,6 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.10
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, utility, graphics]
     command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
