@@ -10,6 +10,7 @@
         </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />
         <option name="upExitCodeFromService" value="" />
+        <option name="upForceRecreate" value="true" />
         <option name="upTimeout" value="" />
       </settings>
     </deployment>
