@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/soccer_common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_pycontrol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Remote Python 3.8.10 Docker Compose (friendly at [$MODULE_DIR$/docker-compose.yaml])" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="workspace" level="project" />
+    <orderEntry type="library" name="ROS" level="project" />
+  </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/external/webots/resources/web/templates" />
+      </list>
+    </option>
+  </component>
+</module>

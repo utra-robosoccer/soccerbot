@@ -15,6 +15,10 @@ DIST_TOLERANCE = 2
 
 
 class IntegrationTest(TestCase):
+    def reset_simulation(self):
+        if "pycharm" in sys.argv[0]:
+            os.system("docker stop soccerbot_simulator_1")
+
     def setUp(self) -> None:
         super().setUp()
 
@@ -25,9 +29,12 @@ class IntegrationTest(TestCase):
         self.distance = np.inf
 
     def tearDown(self) -> None:
-        super().tearDown()
-        # TODO run this only on click tests
-        # os.system("docker stop soccerbot_simulator_1")
+        super(IntegrationTest, self).tearDown()
+        self.reset_simulation()
+
+    def __del__(self):
+        super().__del__()
+        self.reset_simulation()
 
     def processMsg(self, data: RobotState):
         print("processMsg, status {}, role {}".format(data.status, data.role))

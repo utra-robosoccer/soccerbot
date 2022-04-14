@@ -6,24 +6,11 @@ networks:
       config:
         - subnet: 172.18.0.0/24
 
-x-gpu: &gpu
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu, compute, utility, graphics]
-
 services:
-  simulator:
-    <<: *gpu
   friendly:
-    <<: *gpu
     ports:
       - 11311:11311
   opponent:
-    <<: *gpu
     ports:
       - 11312:11311
     command: "echo 'Opponent is manually disabled in docker-compose.override.yaml file'"

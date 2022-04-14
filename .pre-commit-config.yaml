@@ -3,21 +3,21 @@ repos:
     rev: v4.1.0
     hooks:
       - id: check-symlinks
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
       - id: end-of-file-fixer
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
       - id: trailing-whitespace
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.6.2
     hooks:
       - id: prettier
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
       - id: black
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
         args:
           - --line-length=150
   - repo: https://github.com/pycqa/isort
@@ -28,12 +28,12 @@ repos:
         args:
           - --profile
           - black
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
         args:
           - --max-line-length=150
           - --max-complexity=40
@@ -46,6 +46,6 @@ repos:
     rev: v0.6.13
     hooks:
       - id: cmake-format
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs)/
+        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
         additional_dependencies:
           - pyyaml
