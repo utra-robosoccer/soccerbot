@@ -1,3 +1,5 @@
+# This file is a copy of docker-compose.yaml
+
 version: "3.3"
 
 networks:
@@ -6,21 +8,78 @@ networks:
       config:
         - subnet: 172.18.0.0/24
 
+x-soccerbot: &soccerbot
+  image: utrarobosoccer/soccerbot
+  privileged: true
+  build:
+    context: .
+    target: builder
+    args:
+      - BUILDKIT_INLINE_CACHE=1
+    cache_from:
+      - utrarobosoccer/soccerbot
+      - utrarobosoccer/soccerbot_dependencies
+  cap_add:
+    - SYS_PTRACE
+  pid: "host"
+  command:
+    /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
+    bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
+  volumes:
+    - .:/root/catkin_ws/src/soccerbot
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    - /dev/dri:/dev/dri:rw
+    - /dev/snd:/dev/snd:rw
+    - /var/run/docker.sock:/var/run/docker.sock
+
 services:
   simulator:
-    extends:
-      file: docker-compose.yaml
-      service: simulator
+    image: utrarobosoccer/webots
+    privileged: true
+    build:
+      context: external
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+      cache_from:
+        - utrarobosoccer/webots
+    cap_add:
+      - SYS_PTRACE
+    pid: "host"
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.10
     command: bash -c "cd webots && Xvfb :1 -screen 0 1024x768x24 | (./webots --minimize --no-rendering --stream=port=1234 --batch ./projects/samples/contests/robocup/worlds/robocup.wbt)"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/dri:/dev/dri:rw
+      - /dev/snd:/dev/snd:rw
+      - ./external/webots/projects/samples/contests/robocup/worlds:/usr/local/webots/projects/samples/contests/robocup/worlds:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/referee.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/referee.py:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
+      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix:1
+      JAVA_HOME: /usr
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+
   friendly:
-    extends:
-      file: docker-compose.yaml
-      service: friendly
+    <<: *soccerbot
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
     command: /bin/bash -c "source /root/catkin_ws/devel/setup.bash &&
       export PYTHONPATH=$$PYTHONPATH:/root/catkin_ws/src/soccerbot/soccer_pycontrol/src:/root/catkin_ws/src/soccerbot/soccer_strategy/src:/root/catkin_ws/src/soccerbot/soccer_common/src &&
       pytest -s /root/catkin_ws/src/soccerbot/test_integration.py"
+    environment:
+      ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
+      ROBOCUP_TEAM_COLOR: "red"
+      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
+      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      ROBOCUP_TEAM_ID: 16
+      PYTHONUNBUFFERED: 1
+      DISPLAY: unix$DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
