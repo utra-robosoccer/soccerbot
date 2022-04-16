@@ -2,7 +2,6 @@
 cmake-build-debug
 *.md
 external
-!external/GameController/protocols/python/gamestate.py
 LICENSE
 Dockerfile
 docker-compose.*

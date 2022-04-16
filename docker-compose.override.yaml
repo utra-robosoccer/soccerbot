@@ -1,5 +1,11 @@
 version: "3.3"
 
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
 services:
   friendly:
     ports:
