@@ -56,11 +56,20 @@ COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN apt-fast install -y $(cat /tmp/catkin_install_list)
+RUN apt update && apt-fast install -y $(cat /tmp/catkin_install_list)
+
+# Create User
+ARG USER="robosoccer"
+RUN groupadd -g 1000 $USER && \
+    useradd -u 1000 -g 1000 -mrs /bin/bash -b /home -p $(openssl passwd -1 $USER) $USER && \
+    usermod -aG sudo $USER && \
+    echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    usermod --append --groups 29,20,104,46,5,44 $USER
 
 # Build
-WORKDIR /root/catkin_ws
-COPY --from=dependencies /root/src src/soccerbot
+USER $USER
+WORKDIR /home/$USER/catkin_ws
+COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build soccerbot
-RUN echo "source /root/catkin_ws/devel/setup.bash" >> ~/.bashrc
+RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc

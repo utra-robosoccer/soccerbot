@@ -27,19 +27,22 @@ x-soccerbot: &soccerbot
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
+      - USER=${USER}
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
   pid: "host"
+  security_opt:
+    - seccomp:unconfined
   command:
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
-    - .:/root/catkin_ws/src/soccerbot
-      #    - /home/${USER}/catkin_ws/:/root/catkin_ws/
-      #    - /home/${USER}/catkin_ws/:/home/${USER}/catkin_ws/
+    - .:/home/$USER/catkin_ws/src/soccerbot
+    - .:/home/robosoccer/catkin_ws/src/soccerbot
+    - /home/$USER/.local:/home/$USER/.local
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
