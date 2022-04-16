@@ -22,7 +22,7 @@ class IntegrationTest(TestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        os.system("bash /root/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
+        os.system("bash $HOME/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
         time.sleep(5)
         rospy.init_node("test_integration")
         self.team = Team(None)
