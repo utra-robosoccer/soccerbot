@@ -100,6 +100,9 @@ services:
 
   opponent:
     <<: *soccerbot
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.6
     environment:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"
