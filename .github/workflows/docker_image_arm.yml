@@ -1,4 +1,4 @@
-name: Docker Image
+name: Docker Image ARM
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       - "**.md"
 
 jobs:
-  build:
+  build_arm:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
