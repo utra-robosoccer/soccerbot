@@ -1,7 +1,6 @@
 osrf-pycommon
 pip>=21.0.1
-pybullet
-matplotlib>=3.4.0
+matplotlib
 numpy>=1.20.2
 roslibpy
 scipy>=1.6.2
@@ -14,7 +13,7 @@ shapely
 vispy
 pytest
 protobuf>=3.19.4
-tensorflow
+#tensorflow
 keras
 gluoncv
 pre-commit
@@ -26,4 +25,5 @@ torchvision
 Pillow==9.0.1
 tqdm
 mxnet
-PySide6
+#PySide6
+pybullet
