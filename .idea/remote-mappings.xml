@@ -6,7 +6,7 @@
         <remote-mappings server-id="python@docker://utrarobosoccer/soccerbot//usr/bin/python3.8">
           <settings>
             <list>
-              <mapping local-root="$PROJECT_DIR$/../.." remote-root="/root/catkin_ws" />
+              <mapping local-root="$PROJECT_DIR$/../.." remote-root="$HOME/catkin_ws" />
             </list>
           </settings>
         </remote-mappings>
