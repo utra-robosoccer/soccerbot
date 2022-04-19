@@ -14,6 +14,7 @@ from rosgraph_msgs.msg import Clock
 from soccer_common.transformation import Transformation
 
 ROBOTS = ["robot1", "robot2", "robot3", "robot4"]
+ROBOTS_PROTO_NAME = ["RED_PLAYER_1", "RED_PLAYER_2", "RED_PLAYER_3", "RED_PLAYER_4"]
 os.environ["WEBOTS_ROBOT_NAME"] = "BridgeGroundTruth"
 
 supervisor = Supervisor()
@@ -37,8 +38,8 @@ def reset_ball(pose: Pose):
 
 
 def publish_ground_truth_messages(c: Clock):
-    for name in ROBOTS:
-        robot_def = supervisor.getFromDef(name)
+    for name, proto_name in zip(ROBOTS, ROBOTS_PROTO_NAME):
+        robot_def = supervisor.getFromDef(proto_name)
         ball_def = supervisor.getFromDef("ball")
 
         if robot_def is not None:
@@ -115,14 +116,14 @@ def publish_ground_truth_messages(c: Clock):
 
 if __name__ == "__main__":
 
-    rospy.init_node("groud_truth_bridge")
+    rospy.init_node("ground_truth_bridge")
     transform_broadcaster = tf.TransformBroadcaster()
 
-    clock_subscriber = rospy.Subscriber("clock", Clock, callback=publish_ground_truth_messages)
+    clock_subscriber = rospy.Subscriber("/clock", Clock, callback=publish_ground_truth_messages)
 
     reset_robot_subscribers = []
     for robot in ROBOTS:
-        reset_robot_subscribers.append(rospy.Subscriber("/reset_robot", Pose, reset_robot, robot))
+        reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", Pose, reset_robot, robot))
 
     reset_ball_subscriber = rospy.Subscriber("/reset_ball", Pose, reset_ball)
     rospy.spin()

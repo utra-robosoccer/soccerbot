@@ -20,7 +20,7 @@ class StrategyReady(Strategy):
         Actions.resume_all_robots(friendly_team.robots)
         this_robot = self.get_current_robot(friendly_team)
 
-        navigation_position = friendly_team.formations["ready"][this_robot.role]
+        navigation_position = np.array(friendly_team.formations["ready"][this_robot.role])
         if this_robot.status != Robot.Status.WALKING:  # TODO use dynamic walking to adjust position
             if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
                 Actions.navigation_to_position(this_robot, navigation_position)

@@ -4,7 +4,9 @@
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <!-- The master simulator controller -->
-    <include file="$(find soccerbot)/launch/modules/webots.launch" />
+    <include file="$(find soccerbot)/launch/modules/webots.launch">
+        <arg name="single" value="$(arg single)" />
+    </include>
 
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 

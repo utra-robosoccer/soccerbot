@@ -19,7 +19,7 @@ class RobotControlled3D(RobotControlled):
         x_pos_default = float(os.getenv("X_POS", 4))
         y_pos_default = float(os.getenv("Y_POS", -3.15))
         yaw_default = float(os.getenv("YAW", 1.57))
-        self.position_default = [x_pos_default, y_pos_default, yaw_default]
+        self.position_default = np.array([x_pos_default, y_pos_default, yaw_default])
 
         super().__init__(team=team, role=role, status=status, position=self.position_default)
 
