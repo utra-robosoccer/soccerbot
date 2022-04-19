@@ -36,7 +36,7 @@ class Test(TestCase):
         pass
 
     def reset_robot_position(self, x, y, theta, head_angle_1, head_angle_2):
-        resetPublisher = rospy.Publisher("/reset_robot", Pose, queue_size=1, latch=True)
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
         p = Pose()
         p.position.x = x
         p.position.y = y

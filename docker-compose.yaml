@@ -81,6 +81,7 @@ services:
       DISPLAY: unix$DISPLAY
       JAVA_HOME: /usr
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      COMPETITION: 1
 
   friendly:
     <<: *soccerbot
