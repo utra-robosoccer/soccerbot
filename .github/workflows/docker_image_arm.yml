@@ -32,6 +32,6 @@ jobs:
       - name: Build the Docker image
         run: |
           docker pull utrarobosoccer/soccerbot:arm64 || echo "Starting from scratch"
-          docker buildx build . --file Dockerfile --platform linux/arm64 --tag utrarobosoccer/soccerbot:arm64 --cache-from utrarobosoccer/soccerbot:arm64 --build-arg BUILDKIT_INLINE_CACHE=1
+          docker buildx build . --file Dockerfile --platform linux/arm64 --tag utrarobosoccer/soccerbot:arm64 --cache-from utrarobosoccer/soccerbot:arm64 --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BASE_IMAGE=dustynv/ros:noetic-ros-base-l4t-r32.7.1
       - name: Push Docker image to dockerhub
         run: docker push utrarobosoccer/soccerbot:arm64
