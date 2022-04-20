@@ -23,18 +23,30 @@ transform_broadcaster = None
 
 
 def reset_robot(pose: Pose, robot: str):
-    robotdef = supervisor.getFromDef(robot)
-    robotdef.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
-    axis, angle = transforms3d.quaternions.quat2axangle([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
-    robotdef.getField("rotation").setSFRotation(list(np.append(axis, angle)))
-    robotdef.resetPhysics()
+    robotdef = supervisor.getFromDef(ROBOTS_PROTO_NAME[ROBOTS.index(robot)])
+    if robotdef is not None:
+        robotdef.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.33])
+        axis, angle = transforms3d.quaternions.quat2axangle([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
+        robotdef.getField("rotation").setSFRotation(list(np.append(axis, angle)))
+        robotdef.resetPhysics()
+        supervisor.simulationResetPhysics()
+        supervisor.step(1)
+        print(f"robot {robot} reset to ({pose.position.x}, {pose.position.y})")
+    else:
+        rospy.logerr("Reset robot failed")
 
 
 def reset_ball(pose: Pose):
     ball_def = supervisor.getFromDef("BALL")
-    ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
-    ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
-    ball_def.resetPhysics()
+    if ball_def is not None:
+        ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
+        ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
+        ball_def.resetPhysics()
+        supervisor.simulationResetPhysics()
+        supervisor.step(1)
+        print(f"ball reset to ({pose.position.x}, {pose.position.y})")
+    else:
+        rospy.logerr("Reset ball failed")
 
 
 def publish_ground_truth_messages(c: Clock):
