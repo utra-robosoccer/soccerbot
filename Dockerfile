@@ -56,7 +56,6 @@ RUN apt-fast install -y \
     python3.8-dev \
     python3-pyqt5
 RUN curl -sSL https://get.docker.com/ | sh
-RUN rm /usr/bin/python
 RUN ln -s /usr/bin/python3.8 /usr/bin/python
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
