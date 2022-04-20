@@ -1,20 +1,17 @@
 <launch>
     <arg name="simulation" default="true" />
     <arg name="single" default="true" />
-    <arg name="fake_localization" default="false" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <!-- The master simulator controller -->
-    <include file="$(find soccerbot)/launch/modules/webots_simulator_master.launch">
+    <include file="$(find soccerbot)/launch/modules/webots.launch">
         <arg name="single" value="$(arg single)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
         <arg name="simulation" value="$(arg simulation)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot1" />
         <arg name="x_pos" value="4" />
         <arg name="y_pos" value="-3.15" />
@@ -23,7 +20,6 @@
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot2" />
         <arg name="x_pos" value="1" />
         <arg name="y_pos" value="-3.15" />
@@ -32,7 +28,6 @@
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot3" />
         <arg name="x_pos" value="1" />
         <arg name="y_pos" value="3.15" />
@@ -41,7 +36,6 @@
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
         <arg name="simulation" value="$(arg simulation)" />
-        <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="robot3" />
         <arg name="x_pos" value="4" />
         <arg name="y_pos" value="3.15" />

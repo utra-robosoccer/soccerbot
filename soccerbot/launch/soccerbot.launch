@@ -3,7 +3,6 @@
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
-    <arg name="fake_localization" default="false" />
     <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
@@ -30,12 +29,11 @@
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
+    <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
-        <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="robot_name" value="$(arg robot_name)" />
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />

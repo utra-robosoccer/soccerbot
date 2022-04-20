@@ -69,7 +69,8 @@ RUN groupadd -g 1000 $USER && \
 # Build
 USER $USER
 WORKDIR /home/$USER/catkin_ws
+RUN sudo chown -R $USER /home/$USER/catkin_ws
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
-RUN source /opt/ros/noetic/setup.bash && catkin build soccerbot
+RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
