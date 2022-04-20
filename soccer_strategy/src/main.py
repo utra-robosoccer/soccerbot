@@ -11,6 +11,6 @@ if __name__ == "__main__":
     g = GameEngine3D()
     try:
         g.run()
-    except rospy.exceptions.ROSException as ex:
+    except (rospy.exceptions.ROSException, KeyboardInterrupt) as ex:
         print(ex)
         exit(0)

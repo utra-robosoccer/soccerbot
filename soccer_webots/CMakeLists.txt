@@ -25,7 +25,7 @@ catkin_package()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-protobuf_generate_python(PROTO_PY protos/messages.proto)
+protobuf_generate_python(PROTO_PY src/soccer_webots/messages.proto)
 add_custom_target(robocup_api_proto ALL DEPENDS ${PROTO_PY})
 add_custom_command(
     TARGET robocup_api_proto
