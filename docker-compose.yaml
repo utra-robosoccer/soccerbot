@@ -28,9 +28,9 @@ x-soccerbot: &soccerbot
     args:
       - BUILDKIT_INLINE_CACHE=1
       - USER=${USER}
-  #    cache_from:
-  #      - utrarobosoccer/soccerbot
-  #      - utrarobosoccer/soccerbot_dependencies
+    cache_from:
+      - utrarobosoccer/soccerbot
+      - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
   pid: "host"
