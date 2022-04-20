@@ -31,7 +31,7 @@ def reset_robot(pose: Pose, robot: str):
 
 
 def reset_ball(pose: Pose):
-    ball_def = supervisor.getFromDef("ball")
+    ball_def = supervisor.getFromDef("BALL")
     ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
     ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
     ball_def.resetPhysics()
@@ -40,12 +40,12 @@ def reset_ball(pose: Pose):
 def publish_ground_truth_messages(c: Clock):
     for name, proto_name in zip(ROBOTS, ROBOTS_PROTO_NAME):
         robot_def = supervisor.getFromDef(proto_name)
-        ball_def = supervisor.getFromDef("ball")
+        ball_def = supervisor.getFromDef("BALL")
 
         if robot_def is not None:
             # Robot Position Odom
             translation = robot_def.getField("translation").getSFVec3f()
-            rotation_angleax = robot_def.getField("rotation")
+            rotation_angleax = robot_def.getField("rotation").getSFRotation()
             quat_scalar_first = transforms3d.quaternions.axangle2quat(rotation_angleax[:3], rotation_angleax[3])
             rotation_quaternion = np.append(quat_scalar_first[1:], quat_scalar_first[0])
 
@@ -85,7 +85,7 @@ def publish_ground_truth_messages(c: Clock):
             )
 
             # Robot Camera Position
-            camera_node = supervisor.getFromDef("robot1").getFromProtoDef("CAMERA")
+            camera_node = robot_def.getFromProtoDef("CAMERA")
             camera_pos = camera_node.getPosition()
             adj_matrix = Transformation.get_matrix_from_euler([0, np.pi / 2, -np.pi / 2])
             orient_matrix = np.reshape(camera_node.getOrientation(), (3, 3))

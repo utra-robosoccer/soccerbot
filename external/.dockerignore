@@ -2,6 +2,5 @@ webots/.*
 webots/!.git
 GameController/.*
 *.md
-external
 LICENSE
 Dockerfile
