@@ -1,5 +1,6 @@
 import copy
 import os
+
 import rospy
 import tf
 from geometry_msgs.msg import Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped
@@ -74,7 +75,7 @@ class SoccerbotControllerRos(SoccerbotController):
         q_new = Transformation.get_quaternion_from_euler([r, 0, 0])
         pose.set_orientation(q_new)
 
-        resetPublisher = rospy.Publisher("/reset_robot", Pose, queue_size=1, latch=True)
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
         initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         pose_stamped = self.transformation_to_pose(pose)
         resetPublisher.publish(pose_stamped.pose)

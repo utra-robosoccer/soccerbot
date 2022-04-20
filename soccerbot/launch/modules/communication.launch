@@ -1,0 +1,13 @@
+<launch>
+    <arg name="robot_name" default="robot1" />
+
+    <env name="PYTHONPATH" value="$(env PYTHONPATH):$(env HOME)/catkin_ws/src/soccerbot/external/webots/lib/controller/python38" />
+
+    <node pkg="soccer_webots" type="bridge_ground_truth.py" name="bridge_ground_truth" output="screen" />
+
+    <node pkg="soccer_webots" type="bridge_webots.py" name="bridge_webots" output="screen">
+        <param name="robot_name" value="$(arg robot_name)" />
+    </node>
+
+    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
+</launch>

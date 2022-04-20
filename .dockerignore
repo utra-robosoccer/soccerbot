@@ -2,11 +2,11 @@
 cmake-build-debug
 *.md
 external
+!external/webots/projects/samples/contests/robocup/controllers/player/messages.proto
 !external/GameController/protocols/python/gamestate.py
 LICENSE
 Dockerfile
 docker-compose.*
-external/webots
 soccer_description/meshes/*.stl
 soccer_hardware
 soccer_rlcontrol

@@ -6,14 +6,14 @@
         <remote-mappings server-id="python@docker://utrarobosoccer/soccerbot//usr/bin/python3.8">
           <settings>
             <list>
-              <mapping local-root="$PROJECT_DIR$/../.." remote-root="/root/catkin_ws" />
+              <mapping local-root="$PROJECT_DIR$/../.." remote-root="$HOME/catkin_ws" />
             </list>
           </settings>
         </remote-mappings>
-        <remote-mappings server-id="python@docker-compose://[$PROJECT_DIR$/docker-compose.yaml]:friendly//usr/bin/python3.8">
+        <remote-mappings server-id="python@docker-compose://[/home/vuwij/catkin_ws/src/soccerbot/docker-compose.yaml]:friendly//usr/bin/python3.8">
           <settings>
             <list>
-              <mapping local-root="$HOME/catkin_ws" remote-root="/root/catkin_ws" />
+              <mapping local-root="$HOME/catkin_ws" remote-root="$HOME/catkin_ws" />
             </list>
           </settings>
         </remote-mappings>
