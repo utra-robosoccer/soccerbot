@@ -3,7 +3,7 @@
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
-    <arg name="robot_id" default="(optenv ROBOCUP_ROBOT_ID 1)" />
+    <arg name="robot_id" default="$(optenv ROBOCUP_ROBOT_ID 1)" />
     <arg name="robot_name" value="robot$(arg robot_id)" />
 
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
