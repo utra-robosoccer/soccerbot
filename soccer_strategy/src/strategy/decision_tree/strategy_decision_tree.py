@@ -182,6 +182,8 @@ class StrategyDecisionTree(Strategy):
 
     @update_average_ball_position
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         self.current_formation = self.decide_formation(friendly_team)
         friendly_team.formation = self.current_formation
         self.act_individual(friendly_team, opponent_team, game_state)

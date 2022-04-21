@@ -3,14 +3,15 @@
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
-    <arg name="robot_name" default="robot$(optenv ROBOCUP_ROBOT_ID 1)" />
+    <arg name="robot_id" default="(optenv ROBOCUP_ROBOT_ID 1)" />
+    <arg name="robot_name" value="robot$(arg robot_id)" />
+
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
 
     <param name="/simulation_active" value="true" />
     <param name="/use_sim_time" value="true" />
 
-    <machine name="$(arg robot_name)" address="$(optenv IP_ADDRESS localhost)" />
     <!-- prettier-ignore -->
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
@@ -21,13 +22,9 @@
         "
     />
 
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-        <param name="publish_frequency" type="double" value="120.0" />
-    </node>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
-        <arg name="robot_name" value="$(arg robot_name)" />
-    </include>
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)" />
 
     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
@@ -46,7 +43,12 @@
         <arg name="simulation" value="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch" />
+    <include file="$(find soccerbot)/launch/modules/strategy.launch">
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="a_pos" value="$(arg a_pos)" />
+        <arg name="robot_id" value="$(arg robot_id)" />
+    </include>
 
     <!-- prettier-ignore -->
     <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag

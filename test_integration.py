@@ -47,10 +47,9 @@ class IntegrationTest(TestCase):
         else:
             os.system("bash $HOME/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
 
-        time.sleep(10)
         rospy.init_node("test_integration")
-        rospy.wait_for_message("/clock", Clock, 10)
-        time.sleep(5)
+        rospy.wait_for_message("/clock", Clock, 20)
+        time.sleep(3)
 
     def set_robot_pose(self, x, y, theta):
         resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
@@ -146,7 +145,7 @@ class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
     def test_kick(self):
-        self.set_robot_pose(-2, 0, math.pi)
-        self.set_ball_pose(-2.5, 0)
+        self.set_robot_pose(2.5, 0, 0)
+        self.set_ball_pose(3, 0)
         time.sleep(100)
         pass

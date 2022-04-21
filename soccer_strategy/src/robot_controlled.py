@@ -101,3 +101,7 @@ class RobotControlled(Robot):
     @abc.abstractmethod
     def get_back_up(self, type: str = "getupback"):
         pass
+
+    @abc.abstractmethod
+    def reset_initial_position(self):
+        pass

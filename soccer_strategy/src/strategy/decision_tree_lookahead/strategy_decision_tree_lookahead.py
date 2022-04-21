@@ -51,6 +51,8 @@ class StrategyDecisionTreeLookhead(Strategy):
         self.depth = self.TREE_DEPTH  # Max depth traversal
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         state = self.getInitialState(friendly_team, opponent_team, game_state)
         best_move, value = self.DECISION_ALGORITHM(state, Agent.FRIENDLY, 0)
         self.executeBestMove(state, best_move)

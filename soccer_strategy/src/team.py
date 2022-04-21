@@ -21,33 +21,33 @@ class Team:
         self.formation = None
         self.formations = {
             "ready": {
-                Robot.Role.GOALIE: [4, 0, np.pi],
-                Robot.Role.STRIKER: [0.5, 0, np.pi],
-                Robot.Role.RIGHT_WING: [1, 1, np.pi],
-                Robot.Role.LEFT_WING: [1, -1, np.pi],
+                Robot.Role.GOALIE: [-4, 0, 0],
+                Robot.Role.STRIKER: [-0.5, 0, 0],
+                Robot.Role.RIGHT_WING: [-1, 1, 0],
+                Robot.Role.LEFT_WING: [-1, -1, 0],
             },
             "attack": {
-                Robot.Role.GOALIE: [4.5, 0, np.pi],
-                Robot.Role.STRIKER: [-2, 0, np.pi],
-                Robot.Role.RIGHT_WING: [-2, 2.5, np.pi],
-                Robot.Role.LEFT_WING: [-2, -2.5, np.pi],
+                Robot.Role.GOALIE: [-4, 0, 0],
+                Robot.Role.STRIKER: [2, 0, 0],
+                Robot.Role.RIGHT_WING: [2, 2.5, 0],
+                Robot.Role.LEFT_WING: [2, -2.5, 0],
             },
             "defensive": {
-                Robot.Role.GOALIE: [4.5, 0, np.pi],
-                Robot.Role.STRIKER: [3.5, 0, np.pi],
-                Robot.Role.RIGHT_WING: [3.5, 2, np.pi],
-                Robot.Role.LEFT_WING: [3, -2, np.pi],
+                Robot.Role.GOALIE: [-4, 0, 0],
+                Robot.Role.STRIKER: [3.5, 0, 0],
+                Robot.Role.RIGHT_WING: [3.5, 2, 0],
+                Robot.Role.LEFT_WING: [3, -2, 0],
             },
             "midfield": {
-                Robot.Role.GOALIE: [4.5, 0, np.pi],
-                Robot.Role.STRIKER: [0, 0, np.pi],
-                Robot.Role.RIGHT_WING: [0, 3, np.pi],
-                Robot.Role.LEFT_WING: [0, -3, np.pi],
+                Robot.Role.GOALIE: [-4, 0, 0],
+                Robot.Role.STRIKER: [0, 0, 0],
+                Robot.Role.RIGHT_WING: [0, 3, 0],
+                Robot.Role.LEFT_WING: [0, -3, 0],
             },
-            "penalty_give": {Robot.Role.GOALIE: [-4.5, 0, 0], Robot.Role.STRIKER: [3.5, 0, 0]},
-            "penalty_take": {Robot.Role.GOALIE: [-4.5, 0, 0]},
+            "penalty_give": {Robot.Role.GOALIE: [-4, 0, 0], Robot.Role.STRIKER: [3.5, 0, 0]},
+            "penalty_take": {Robot.Role.GOALIE: [-4, 0, 0]},
         }
-        self.enemy_goal_position = [-4.8, 0]
+        self.enemy_goal_position = [4.8, 0]
 
     def flip_positions(self):
         self.enemy_goal_position[0] = -self.enemy_goal_position[0]

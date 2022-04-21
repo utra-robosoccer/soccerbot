@@ -66,11 +66,19 @@ Visualization Manager:
       Frame Timeout: 3
       Frames:
         All Enabled: false
+        robot1/ball_gt:
+          Value: true
         robot1/base_camera:
           Value: true
         robot1/base_footprint:
           Value: true
+        robot1/base_footprint_gt:
+          Value: true
         robot1/camera:
+          Value: true
+        robot1/camera_gt:
+          Value: true
+        robot1/goal_post:
           Value: true
         robot1/head:
           Value: true
@@ -124,9 +132,16 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
+          robot1/ball_gt:
+            {}
+          robot1/base_footprint_gt:
+            {}
+          robot1/camera_gt:
+            {}
           robot1/odom:
             robot1/base_camera:
-              {}
+              robot1/goal_post:
+                {}
             robot1/base_footprint:
               robot1/torso:
                 robot1/imu_link:
@@ -1016,7 +1031,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -6.283507823944092
+      Angle: -3.1385040283203125
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -1028,8 +1043,8 @@ Visualization Manager:
       Near Clip Distance: 0.009999999776482582
       Scale: -69.5438461303711
       Target Frame: <Fixed Frame>
-      X: 1.6583741903305054
-      Y: -0.09484518319368362
+      X: -0.1004926785826683
+      Y: -0.6401675939559937
     Saved: ~
 Window Geometry:
   Camera:

@@ -138,4 +138,8 @@ if __name__ == "__main__":
 
     rospy.init_node("object_detector")
     my_node = ObjectDetectionNode(args.model_path, args.num_feat)
-    rospy.spin()
+
+    try:
+        rospy.spin()
+    except ROSException as rx:
+        exit(0)

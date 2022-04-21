@@ -138,4 +138,8 @@ if __name__ == "__main__":
         reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", Pose, reset_robot, robot))
 
     reset_ball_subscriber = rospy.Subscriber("/reset_ball", Pose, reset_ball)
-    rospy.spin()
+
+    try:
+        rospy.spin()
+    except rospy.exceptions.ROSException as ex:
+        exit(0)

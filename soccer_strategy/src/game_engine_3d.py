@@ -1,5 +1,6 @@
 import os
 
+import rosparam
 import rospy
 from ball import Ball
 from robot import Robot
@@ -23,7 +24,7 @@ class GameEngine3D:
     SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("MODE")}
 
     def __init__(self):
-        robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+        robot_id = rospy.get_param("~robot_id", 1)
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
         rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
 
@@ -93,7 +94,7 @@ class GameEngine3D:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
-                if self.robot().status == Robot.Status.PENALIZED:
+                if self.robot().status in [Robot.Status.PENALIZED, Robot.Status.DETERMINING_SIDE]:
                     new_strategy = StrategyDetermineSide
                 elif current_strategy == StrategyDetermineSide and self.robot().status not in [
                     Robot.Status.DETERMINING_SIDE,
@@ -133,10 +134,9 @@ class GameEngine3D:
             # Decide what strategy to run
             self.decide_strategy()
             # Run the strategy
-            print("-----------------------------------------")
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"Robot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str}"
+                f"\033[1mRobot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str}\033[0m"
             )
             self.team1.log()
             self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)

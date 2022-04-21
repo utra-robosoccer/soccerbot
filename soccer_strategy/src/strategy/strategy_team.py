@@ -413,6 +413,8 @@ class ScoreStrategy(PlayerStrategy):
         super().__init__(player, ball, alpha, beta, eps)
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         self._all_robots = list(itertools.chain(friendly_team.robots, opponent_team.robots))
         if self.has_possession():
             # Try kicking to nearest point on goal line

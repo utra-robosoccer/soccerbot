@@ -17,6 +17,8 @@ class StrategyReady(Strategy):
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         Actions.resume_all_robots(friendly_team.robots)
         this_robot = self.get_current_robot(friendly_team)
 

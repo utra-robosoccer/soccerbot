@@ -37,6 +37,8 @@ class StrategyDummy(Strategy):
     @get_back_up
     @update_average_ball_position
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         this_robot = self.get_current_robot(friendly_team)
 
         if this_robot.status in [
