@@ -24,7 +24,11 @@ class StrategyDetermineSide(Strategy):
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         current_robot = self.get_current_robot(friendly_team)
-        current_robot.status = Robot.Status.DETERMINING_SIDE
+
+        if self.measurements == 0:
+            current_robot.status = Robot.Status.DETERMINING_SIDE
+        else:
+            current_robot.status = Robot.Status.READY
 
         try:
             goal_post_pose, goal_pose_orientation = self.tf_listener.lookupTransform(
@@ -42,10 +46,13 @@ class StrategyDetermineSide(Strategy):
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
 
+        # if game_state.gameState not in [GameState.GAMESTATE_INITIAL, GameState.GAMESTATE_READY] or (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(10):
+        #     rospy.logwarn(f"Game state transition ({game_state.gameState}) or timeout error, cannot determine side, determining side as from default")
+        #     self.measurements = 1
+
         if self.measurements == 1:
 
             # Determine robot position
-            self.measurements = self.measurements + 1
             x = abs(current_robot.position_default[0])
             y = -abs(current_robot.position_default[1])
             theta = abs(current_robot.position_default[2])
@@ -100,7 +107,3 @@ class StrategyDetermineSide(Strategy):
                     else:
                         unassigned_robots.pop(closest_index)
                         available_roles.pop(closest_role_index)
-
-        if self.measurements > 1:
-            current_robot.status = Robot.Status.READY
-            current_robot.time_since_action_completed = rospy.Time.now()
