@@ -96,12 +96,9 @@ class GameEngine3D:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
                 if self.robot().status in [Robot.Status.PENALIZED, Robot.Status.DETERMINING_SIDE]:
                     new_strategy = StrategyDetermineSide
-                elif current_strategy == StrategyDetermineSide and self.robot().status not in [
-                    Robot.Status.DETERMINING_SIDE,
-                    Robot.Status.DISCONNECTED,
-                ]:
+                elif current_strategy == StrategyDetermineSide and self.team1.strategy.complete:
                     new_strategy = StrategyReady
-                elif current_strategy == StrategyReady and self.team1.strategy.reached_ready_position:
+                elif current_strategy == StrategyReady and self.team1.strategy.complete:
                     new_strategy = StrategyDummy
                 elif self.gameState.hasKickOff:
                     new_strategy = StrategyDummy

@@ -27,7 +27,7 @@ class StrategyDetermineSide(Strategy):
 
         current_robot = self.get_current_robot(friendly_team)
 
-        if self.measurements == 0:
+        if self.iteration == 0:
             current_robot.status = Robot.Status.DETERMINING_SIDE
 
         try:
@@ -56,6 +56,7 @@ class StrategyDetermineSide(Strategy):
             self.determine_role(current_robot, friendly_team)
 
             current_robot.status = Robot.Status.READY
+            self.complete = True
 
     def determine_side(self, current_robot):
         # Determine robot position (assuming the robot is always on the left side

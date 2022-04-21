@@ -43,6 +43,7 @@ class Strategy:
     def __init__(self):
         self.update_frequency = 1
         self.iteration = 0
+        self.complete = False  # Used to indicate that we can transition into a new strategy
         self.time_strategy_started = rospy.Time.now()
 
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):

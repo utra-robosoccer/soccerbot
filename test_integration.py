@@ -4,6 +4,7 @@ import signal
 import subprocess
 import sys
 import time
+import unittest
 from unittest import TestCase
 
 import numpy as np
@@ -12,6 +13,7 @@ from geometry_msgs.msg import Pose
 from robot import Robot
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
+from timeout_decorator import timeout_decorator
 
 from soccer_msgs.msg import RobotState
 from soccer_strategy.src.team import Team
@@ -49,7 +51,6 @@ class IntegrationTest(TestCase):
 
         rospy.init_node("test_integration")
         rospy.wait_for_message("/clock", Clock, 20)
-        time.sleep(3)
 
     def set_robot_pose(self, x, y, theta):
         resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
@@ -144,8 +145,11 @@ class IntegrationTestInitial(IntegrationTest):
 class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
-    def test_kick(self):
-        self.set_robot_pose(2.5, 0, 0)
-        self.set_ball_pose(3, 0)
-        time.sleep(100)
-        pass
+    # Place the ball right in front of the robot, should kick right foot
+    @timeout_decorator.timeout(100)
+    def test_kick_right(self):
+        self.set_robot_pose(3.5, 0, 0)
+        self.set_ball_pose(3.67, -0.04)
+        while not rospy.is_shutdown():
+            # Verify that kick has succeeded
+            pass

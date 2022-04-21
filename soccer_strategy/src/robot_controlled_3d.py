@@ -79,7 +79,10 @@ class RobotControlled3D(RobotControlled):
 
         q = tf.transformations.euler_from_quaternion([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         self.position[2] = q[2]
-
+        self.status = Robot.Status.READY
+        if self.role == Robot.Role.UNASSIGNED:
+            self.role = Robot.Role.STRIKER
+        self.reset_initial_position()
         pass
 
     def update_robot_state(self, _):
