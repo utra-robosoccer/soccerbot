@@ -52,7 +52,8 @@ RUN apt-fast install -y \
     libxcb-render-util0 \
     libxcb-randr0 \
     libxcb-keysyms1 \
-    libxcb-xinerama0
+    libxcb-xinerama0 \
+    python3-pyqt5
 RUN curl -sSL https://get.docker.com/ | sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
