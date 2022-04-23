@@ -13,7 +13,7 @@ shapely
 vispy
 pytest
 protobuf>=3.19.4
-#tensorflow
+tensorflow
 keras
 gluoncv
 pre-commit
@@ -25,5 +25,5 @@ torchvision
 Pillow==9.0.1
 tqdm
 mxnet
-#PySide6
+PySide6
 pybullet
