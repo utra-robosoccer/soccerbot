@@ -1,4 +1,3 @@
-# dustynv/ros:noetic-ros-base-l4t-r32.7.1
 ARG BASE_IMAGE=utrarobosoccer/noetic
 
 FROM $BASE_IMAGE as dependencies
