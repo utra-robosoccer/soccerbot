@@ -23,8 +23,6 @@ jobs:
           sudo rm -rf /opt/ghc
           df -h
       - uses: actions/checkout@v2
-      - name: Debugging with tmate
-        uses: mxschmitt/action-tmate@v3.11
         with:
           lfs: true
           submodules: recursive
@@ -36,7 +34,9 @@ jobs:
       - name: Set up Docker Buildx      
         uses: crazy-max/ghaction-docker-buildx@v1      
         with:        
-          version: latest    
+          version: latest
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3.11
       - name: Build the Docker image
         run: |
           docker pull utrarobosoccer/soccerbot:arm64 || echo "Starting from scratch"
