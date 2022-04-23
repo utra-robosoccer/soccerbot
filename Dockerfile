@@ -22,7 +22,7 @@ RUN apt update && \
     echo debconf apt-fast/dlflag boolean true | debconf-set-selections && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
-    apt clean \
+    apt clean
 RUN apt-fast install -y \
     screen \
     vim \

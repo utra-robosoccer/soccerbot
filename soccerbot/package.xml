@@ -29,7 +29,6 @@
   <depend>soccer_pycontrol</depend>
   <depend>fake_localization</depend>
   <depend>webots_ros</depend>
-  <!-- <depend>liborocos-bfl-dev</depend> -->
 
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
@@ -43,6 +42,5 @@
   <depend>soccer_strategy</depend>
 
   <!-- Game Controller -->
-  <!-- <depend>ant</depend> -->
   <depend>java</depend>
 </package>

@@ -13,7 +13,6 @@ shapely
 vispy
 pytest
 protobuf>=3.19.4
-#tensorflow
 keras
 gluoncv
 pre-commit
