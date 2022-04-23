@@ -23,6 +23,9 @@ jobs:
           sudo rm -rf /opt/ghc
           df -h
       - uses: actions/checkout@v2
+      - name: Debugging with tmate
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3.11
         with:
           lfs: true
           submodules: recursive
