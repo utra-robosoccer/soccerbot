@@ -46,8 +46,8 @@ class ObjectDetectionNode(object):
         # Params
         self.br = CvBridge()
 
-        self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1)
-        self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1)
+        self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1, latch=True)
+        self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(
             "camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
@@ -96,38 +96,36 @@ class ObjectDetectionNode(object):
             x, orig_img = data.transforms.presets.rcnn.transform_test([x])
             box_ids, scores, bbxs = self.model(x)
 
-            if bbxs is None:
-                return
-
-            if box_ids[0][0][0].asscalar() < 0:
-                return
-
             bbs_msg = BoundingBoxes()
-            bb_msg = BoundingBox()
-            ball_bb = bbxs[0][0]
 
-            xratio = msg.width / orig_img.shape[1]
-            yratio = msg.height / orig_img.shape[0]
+            if bbxs is not None:
+                # if box_ids[0][0][0].asscalar() >= 0:
 
-            bb_msg.xmin = round(ball_bb[0].asscalar() * xratio)
-            bb_msg.ymin = round(ball_bb[1].asscalar() * yratio)
-            bb_msg.xmax = round(ball_bb[2].asscalar() * xratio)
-            bb_msg.ymax = round(ball_bb[3].asscalar() * yratio)
-            bb_msg.id = Label.BALL.value
-            bb_msg.Class = "ball"
-            bbs_msg.bounding_boxes.append(bb_msg)
+                bb_msg = BoundingBox()
+
+                xratio = msg.width / orig_img.shape[1]
+                yratio = msg.height / orig_img.shape[0]
+
+                ball_bb = bbxs[0][0]
+                bb_msg.xmin = round(ball_bb[0].asscalar() * xratio)
+                bb_msg.ymin = round(ball_bb[1].asscalar() * yratio)
+                bb_msg.xmax = round(ball_bb[2].asscalar() * xratio)
+                bb_msg.ymax = round(ball_bb[3].asscalar() * yratio)
+                bb_msg.id = Label.BALL.value
+                bb_msg.Class = "ball"
+                bbs_msg.bounding_boxes.append(bb_msg)
 
             bbs_msg.header = msg.header
             try:
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
+
+                    img = utils.viz.cv_plot_bbox(orig_img, bbxs[0], scores[0], box_ids[0], class_names=self.model.classes, linewidth=1)
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
+
             except ROSException as re:
                 print(re)
                 exit(0)
-
-            if self.pub_detection.get_num_connections() > 0:
-                img = utils.viz.cv_plot_bbox(orig_img, bbxs[0], scores[0], box_ids[0], class_names=self.model.classes, linewidth=1)
-                self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
 
 
 if __name__ == "__main__":

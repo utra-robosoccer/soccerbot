@@ -78,10 +78,11 @@ class GameEngine3D:
             new_strategy = StrategyDetermineSide
         elif self.gameState.gameState == GameState.GAMESTATE_READY:
             if self.robot().status in [
-                Robot.Status.DETERMINING_SIDE,
                 Robot.Status.DISCONNECTED,
                 Robot.Status.PENALIZED,
             ]:
+                new_strategy = StrategyDetermineSide
+            elif current_strategy is StrategyDetermineSide and not self.team1.strategy.complete:
                 new_strategy = StrategyDetermineSide
             else:
                 new_strategy = StrategyReady

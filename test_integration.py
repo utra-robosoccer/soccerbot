@@ -1,21 +1,22 @@
-import math
 import os
 import signal
 import subprocess
 import sys
-import time
-import unittest
 from unittest import TestCase
 
 import numpy as np
 import rospy
+import tf
 from geometry_msgs.msg import Pose
 from robot import Robot
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
 from timeout_decorator import timeout_decorator
 
+from soccer_common.camera import Camera
+from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
+from soccer_object_detection.msg import BoundingBoxes
 from soccer_strategy.src.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
@@ -49,8 +50,22 @@ class IntegrationTest(TestCase):
         else:
             os.system("bash $HOME/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
 
-        rospy.init_node("test_integration")
-        rospy.wait_for_message("/clock", Clock, 20)
+        rospy.init_node("integration_test")
+        rospy.wait_for_message("/clock", Clock, 40)
+        self.camera = Camera("robot1")
+        self.tf_listener = tf.TransformListener()
+        self.bounding_boxes_detector = rospy.Subscriber("/robot1/object_bounding_boxes", BoundingBoxes, self.bounding_boxes_callback)
+        self.bounding_boxes = None
+
+        self.clock_sub = rospy.Subscriber("/clock", Clock, self.clock_callback)
+        self.clock_pub = rospy.Publisher("/clock_test", Clock)
+
+    def clock_callback(self, c: Clock):
+        c.clock.secs += 1
+        self.clock_pub.publish(c)
+
+    def bounding_boxes_callback(self, b: BoundingBoxes):
+        self.bounding_boxes = b
 
     def set_robot_pose(self, x, y, theta):
         resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
@@ -146,10 +161,30 @@ class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
     # Place the ball right in front of the robot, should kick right foot
-    @timeout_decorator.timeout(100)
+    @timeout_decorator.timeout(10000)
     def test_kick_right(self):
         self.set_robot_pose(3.5, 0, 0)
-        self.set_ball_pose(3.67, -0.04)
+        self.set_ball_pose(3.69, -0.04)
         while not rospy.is_shutdown():
-            # Verify that kick has succeeded
-            pass
+            if self.bounding_boxes is None:
+                rospy.sleep(0.1)
+                continue
+
+            try:
+                t = self.tf_listener.getLatestCommonTime("/world", "/robot1/ball_gt")
+                (trans_ball_gt, rot) = self.tf_listener.lookupTransform("/world", "/robot1/ball_gt", t)
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                continue
+
+            self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=t)
+            bounding_box_gt = self.camera.calculateBoundingBoxesFromBall(Transformation(trans_ball_gt), ball_radius=0.07)
+            print(bounding_box_gt)
+            print(self.bounding_boxes)
+
+            try:
+                (trans_ball, rot) = self.tf_listener.lookupTransform("/world", "/robot1/ball", rospy.Time(0))
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                continue
+
+            # distance_to_gt = np.linalg.norm(trans_ball_gt - trans_ball)
+            # self.assertTrue(distance_to_gt < 0.05) # Assert 5 percent distance
