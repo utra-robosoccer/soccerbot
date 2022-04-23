@@ -25,5 +25,5 @@ torchvision
 Pillow==9.0.1
 tqdm
 mxnet
-PySide6
+#PySide6
 pybullet
