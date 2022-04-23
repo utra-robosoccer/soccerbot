@@ -42,7 +42,7 @@ RUN apt-fast install -y \
     apt-utils \
     software-properties-common \
     sudo \
-#    ros-noetic-robot-state-publisher \
+    ros-noetic-robot-state-publisher \
     curl \
     libxkbcommon-x11-0 \
     libxcb-icccm4 \
@@ -52,11 +52,8 @@ RUN apt-fast install -y \
     libxcb-render-util0 \
     libxcb-randr0 \
     libxcb-keysyms1 \
-    libxcb-xinerama0 \
-    python3.8-dev \
-    python3-pyqt5
+    libxcb-xinerama0
 RUN curl -sSL https://get.docker.com/ | sh
-RUN ln -s /usr/bin/python3.8 /usr/bin/python
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN python3.8 -m pip install --upgrade pip
