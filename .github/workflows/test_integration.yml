@@ -29,8 +29,6 @@ jobs:
         with:
           lfs: true
           submodules: recursive
-      - name: Debugging with tmate
-        uses: mxschmitt/action-tmate@v3.11
       - name: Docker Login
         uses: docker/login-action@v1.12.0
         with:

@@ -22,8 +22,6 @@ jobs:
         with:
           lfs: true
           submodules: recursive
-      - name: Debugging with tmate
-        uses: mxschmitt/action-tmate@v3.11
       - name: Move directory
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
