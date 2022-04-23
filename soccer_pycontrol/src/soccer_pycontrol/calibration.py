@@ -4,19 +4,16 @@ import functools
 import glob
 import os
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1"
-
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import argparse
 
-import keras
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
-import tensorflow as tf
-from keras.utils.vis_utils import plot_model
+import torch
+from torch import nn
 
 from soccer_common.transformation import Transformation
 
@@ -146,57 +143,48 @@ class Calibration:
         goal_positions, end_positions = self.load_data(combine_yaw=True)
 
         # define the model
+        class NN(nn.Module):
+            def __init__(self):
+                super(NN, self).__init__()
+                self.flatten = nn.Flatten()
+                self.linear_relu_stack = nn.Sequential(
+                    nn.Linear(2, 64),
+                    nn.ReLU(),
+                    nn.Linear(64, 64),
+                    nn.ReLU(),
+                    nn.Linear(64, 2),
+                )
+
+            def forward(self, inputs):
+                outputs = self.linear_relu_stack(inputs)
+                return outputs
+
+        model = NN()
         if os.path.exists(model_name):
             print("Loading from model " + model_name)
-            model = keras.models.load_model(model_name)
-        else:
-            inputs = keras.Input(shape=(2), name="end_positions")
-            x1 = tf.keras.layers.Dense(64, activation="leaky_relu")(inputs)
-            x2 = tf.keras.layers.Dense(64, activation="leaky_relu")(x1)
-            outputs = tf.keras.layers.Dense(2, name="goal_positions")(x2)
-            model = keras.Model(inputs=inputs, outputs=outputs)
-            model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.003))
-
-        # plot it
-        plot_model(
-            model,
-            to_file="model.png",
-            show_shapes=True,
-            show_dtype=True,
-            show_layer_names=True,
-            rankdir="TB",  # TB: vertical; LR: hor
-            expand_nested=True,
-            dpi=96,
-        )
+            model.load_state_dict(torch.load(model_name))
 
         # optimizer and per-prediction error
-        optimizer = tf.keras.optimizers.SGD(learning_rate=0.003)
-        f_ppError = tf.keras.losses.MeanSquaredError()
+        criterion = torch.nn.MSELoss(reduction="sum")
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.003)
 
         # for stochastic gradient descent, create batches
-        batch_size = 1
-        train_dataset = tf.data.Dataset.from_tensor_slices((goal_positions[:, 0:2], end_positions[:, 0:2]))
-        train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
+        train_dataset = torch.utils.data.DataLoader((goal_positions[:, 0:2], end_positions[:, 0:2]), batch_size=2, shuffle=True, num_workers=4)
 
-        epochs = 1000
-        ppError_avg_list = []
+        epochs = 300
         for epoch in range(last_epoch, epochs):
-            ppError_avg = 0
             for step, (x_batch_train, y_batch_train) in enumerate(train_dataset):
-                # print(step,x_batch_train,y_batch_train)
 
-                # model.fit(x_batch_train, y_batch_train)
-                with tf.GradientTape() as tape:
-                    predictions = model(x_batch_train, training=True)
-                    ppError = f_ppError(y_batch_train, predictions)
-                grads = tape.gradient(ppError, model.trainable_weights)
-                optimizer.apply_gradients(zip(grads, model.trainable_weights))
-                ppError_avg = ppError_avg + ppError
-            ppError_avg = ppError_avg / len(train_dataset)
-            ppError_avg_list.append(ppError_avg)
-            print(f"Epoch {epoch}: Average ppError: {ppError_avg}")
+                predictions = model(x_batch_train.float())
+                loss = criterion(y_batch_train.float(), predictions)
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+            print(f"Epoch {epoch}: Average ppError: {loss.item()}")
             if epoch % 5 == 0:
-                keras.models.save_model(model, f"calibration_models/model.{epoch}")
+                torch.save(model.state_dict(), f"calibration_models/model.{epoch}")
 
     def view_calibration(self):
         goal_positions, end_positions = self.load_data(True)
@@ -223,7 +211,7 @@ class Calibration:
 
         if os.path.exists(self.model_name):
             print("Loading from model " + self.model_name)
-            model = keras.models.load_model(self.model_name)
+            model = torch.load(self.model_name)
             end_positions_model = np.array(model(goal_positions[:, 0:2]))
             # plt.quiver(end_positions_model[:, 0], end_positions_model[:, 1], np.cos(end_positions_model[:, 2]),
             #            np.sin(end_positions_model[:, 2]), color="orange", width=0.001)
@@ -249,7 +237,7 @@ class Calibration:
     def invert_model(self):
         precision = 0.1
         print("Loading from model " + self.model_name)
-        model = keras.models.load_model(self.model_name)
+        model = torch.load(self.model_name)
 
         points = []
         for x in np.arange(-2, 2, precision):
@@ -289,37 +277,45 @@ class Calibration:
         )
         plt.show()
 
-        inputs = keras.Input(shape=(2), name="end_points")
-        x1 = tf.keras.layers.Dense(64, activation="leaky_relu")(inputs)
-        x2 = tf.keras.layers.Dense(64, activation="leaky_relu")(x1)
-        outputs = tf.keras.layers.Dense(2, name="start_points")(x2)
-        model = keras.Model(inputs=inputs, outputs=outputs)
-        model.compile(loss="mse", optimizer=tf.keras.optimizers.Adam(learning_rate=0.003))
+        class NN(nn.Module):
+            def __init__(self):
+                super(NN, self).__init__()
+                self.flatten = nn.Flatten()
+                self.linear_relu_stack = nn.Sequential(
+                    nn.Linear(2, 64),
+                    nn.ReLU(),
+                    nn.Linear(64, 64),
+                    nn.ReLU(),
+                    nn.Linear(64, 2),
+                )
+
+            def forward(self, inputs):
+                outputs = self.linear_relu_stack(inputs)
+                return outputs
+
+        model = NN()
 
         # optimizer and per-prediction error
-        optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
-        f_ppError = tf.keras.losses.MeanSquaredError()
+        criterion = torch.nn.MSELoss(reduction="sum")
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.003)
 
         # for stochastic gradient descent, create batches
         batch_size = 1
-        train_dataset = tf.data.Dataset.from_tensor_slices((start_points_filter, end_points_filter))
-        train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
+        train_dataset = torch.utils.data.DataLoader((start_points_filter, end_points_filter), batch_size=2, shuffle=True, num_workers=4)
 
         epochs = 21
-        ppError_avg_list = []
         for epoch in range(0, epochs):
-            ppError_avg = 0
             for step, (x_batch_train, y_batch_train) in enumerate(train_dataset):
-                with tf.GradientTape() as tape:
-                    predictions = model(x_batch_train, training=True)
-                    ppError = f_ppError(y_batch_train, predictions)
-                grads = tape.gradient(ppError, model.trainable_weights)
-                optimizer.apply_gradients(zip(grads, model.trainable_weights))
-                ppError_avg = ppError_avg + ppError
-            ppError_avg = ppError_avg / len(train_dataset)
-            ppError_avg_list.append(ppError_avg)
-            print(f"Epoch {epoch}: Average ppError: {ppError_avg}")
-        keras.models.save_model(model, self.model_name + "_inverse")
+
+                predictions = model(x_batch_train.float())
+                loss = criterion(y_batch_train.float(), predictions)
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+            print(f"Epoch {epoch}: Average ppError: {loss.item()}")
+        torch.save(model, self.model_name + "_inverse")
 
     @functools.cached_property
     def adjust_navigation_goal(self):
@@ -331,7 +327,7 @@ class Calibration:
             pass
 
         print("Loading from model " + calib_file)
-        model = keras.models.load_model(calib_file)
+        model = torch.load(calib_file)
         return model
 
     def test_adjust_navigation_goal(self):
@@ -430,7 +426,7 @@ if __name__ == "__main__":
     if args.collect:
         c.obtain_calibration()
     else:
-        # c.calibrate()
-        # c.view_calibration()
-        # c.invert_model()
+        c.calibrate()
+        c.view_calibration()
+        c.invert_model()
         c.test_adjust_navigation_transform()
