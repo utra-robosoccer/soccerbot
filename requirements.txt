@@ -26,4 +26,5 @@ Pillow==9.0.1
 tqdm
 mxnet
 #PySide6
+PyQt5
 pybullet
