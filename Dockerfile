@@ -22,7 +22,7 @@ RUN apt update && \
     echo debconf apt-fast/dlflag boolean true | debconf-set-selections && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
-    apt clean
+    apt clean \
 RUN apt-fast install -y \
     screen \
     vim \
@@ -57,12 +57,12 @@ RUN apt-fast install -y \
     qtbase5-dev \
     python3-pyqt5
 
+RUN pip install --upgrade pip Cython pybullet
+
 RUN curl -sSL https://get.docker.com/ | sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
-RUN python3.8 -m pip install --upgrade pip
-RUN python3.8 -m pip install Cython
-RUN python3.8 -m pip install -r /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN apt update && apt-fast install -y $(cat /tmp/catkin_install_list)
