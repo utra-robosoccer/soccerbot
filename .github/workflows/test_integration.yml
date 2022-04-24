@@ -37,7 +37,7 @@ jobs:
       - name: Build the Docker images
         run: |
           docker-compose pull
-          docker-compose build
+          docker-compose build --progress=plain
       - name: Run the integration tests
         run: |
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly

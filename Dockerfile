@@ -1,4 +1,6 @@
-FROM utrarobosoccer/noetic as dependencies
+ARG BASE_IMAGE=utrarobosoccer/noetic
+
+FROM $BASE_IMAGE as dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
 RUN apt update && rosdep update --rosdistro noetic
@@ -7,7 +9,7 @@ RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' |
 RUN mv requirements.txt /tmp/requirements.txt
 WORKDIR /root/dependencies
 
-FROM utrarobosoccer/noetic as builder
+FROM $BASE_IMAGE as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
@@ -20,7 +22,7 @@ RUN apt update && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
     apt clean
-RUN apt-fast install -y \
+RUN apt update && apt-fast install -y \
     screen \
     vim \
     python3-pip \
@@ -49,7 +51,13 @@ RUN apt-fast install -y \
     libxcb-render-util0 \
     libxcb-randr0 \
     libxcb-keysyms1 \
-    libxcb-xinerama0
+    libxcb-xinerama0 \
+    qt5-default \
+    qtbase5-dev \
+    python3-pyqt5
+
+RUN pip install --upgrade pip Cython pybullet
+
 RUN curl -sSL https://get.docker.com/ | sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
@@ -69,7 +77,7 @@ RUN groupadd -g 1000 $USER && \
 # Build
 USER $USER
 WORKDIR /home/$USER/catkin_ws
-RUN sudo chown -R $USER /home/$USER/catkin_ws
+RUN chown -R $USER /home/$USER/catkin_ws
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot

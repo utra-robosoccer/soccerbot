@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="13a02daf-7dc5-4013-b62a-137cf92a794c" name="TX2">
+        <fileTransfer rootFolder="/home/soccer/" accessType="SFTP" host="localhost" port="20042" sshConfigId="63fb404d-748e-4ad9-986b-ad82c43bb362" sshConfig="soccer@localhost:20042 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
