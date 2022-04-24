@@ -22,7 +22,7 @@ RUN apt update && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt install -q -y apt-fast && \
     apt clean
-RUN apt-fast install -y \
+RUN apt update && apt-fast install -y \
     screen \
     vim \
     python3-pip \
@@ -77,7 +77,7 @@ RUN groupadd -g 1000 $USER && \
 # Build
 USER $USER
 WORKDIR /home/$USER/catkin_ws
-RUN sudo chown -R $USER /home/$USER/catkin_ws
+RUN chown -R $USER /home/$USER/catkin_ws
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
