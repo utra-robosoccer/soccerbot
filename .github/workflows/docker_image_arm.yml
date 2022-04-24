@@ -35,6 +35,8 @@ jobs:
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
           version: latest
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Build the Docker image
         run: |
           docker pull utrarobosoccer/soccerbot:arm64 || echo "Starting from scratch"
