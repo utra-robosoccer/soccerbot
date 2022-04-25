@@ -15,10 +15,4 @@ find_package(
     soccer_pycontrol
 )
 
-# Build Game Controller
-execute_process(
-    COMMAND /usr/bin/ant -v
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../external/GameController/
-)
-
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)
