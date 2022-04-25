@@ -98,9 +98,7 @@ class ObjectDetectionNode(object):
 
             bbs_msg = BoundingBoxes()
 
-            if bbxs is not None:
-                # if box_ids[0][0][0].asscalar() >= 0:
-
+            if bbxs is not None and box_ids[0][0][0].asscalar() >= 0:
                 bb_msg = BoundingBox()
 
                 xratio = msg.width / orig_img.shape[1]

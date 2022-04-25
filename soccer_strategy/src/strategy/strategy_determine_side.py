@@ -27,7 +27,7 @@ class StrategyDetermineSide(Strategy):
 
         current_robot = self.get_current_robot(friendly_team)
 
-        if self.iteration == 0:
+        if self.iteration == 1:
             current_robot.status = Robot.Status.DETERMINING_SIDE
 
         try:
