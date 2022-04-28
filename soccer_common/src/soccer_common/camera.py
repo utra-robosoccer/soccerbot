@@ -171,7 +171,7 @@ class Camera:
             (self.resolution_y / 2.0 + pos_y / self.pixelHeight()),
         )
 
-    def calculateBoundingBoxesFromBall(self, ball_position: Transformation, ball_radius: float):
+    def calculateBoundingBoxesFromBall(self, ball_position: Transformation, ball_radius: float = 0.07):
         camera_pose = self.pose
         pos3d_tr = np.linalg.inv(camera_pose) @ ball_position
 
@@ -213,7 +213,7 @@ class Camera:
 
         return bounding_box
 
-    def calculateBallFromBoundingBoxes(self, ball_radius: float, bounding_boxes: [float]) -> Transformation:
+    def calculateBallFromBoundingBoxes(self, ball_radius: float = 0.07, bounding_boxes: [float] = []) -> Transformation:
         # bounding boxes [(y1, z1), (y2, z2)]
         r = ball_radius
 

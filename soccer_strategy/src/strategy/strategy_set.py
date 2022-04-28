@@ -12,4 +12,4 @@ class StrategySet(Strategy):
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        pass
+        super().update_next_strategy(friendly_team, opponent_team, game_state)

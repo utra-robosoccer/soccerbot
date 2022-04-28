@@ -209,7 +209,7 @@ class Soccerbot:
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
             previous_configuration = joint_state.position
-        except ROSException as ex:
+        except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
 
         for r in np.arange(0, 1, 0.040):
@@ -234,7 +234,7 @@ class Soccerbot:
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
             self.configuration[0:18] = joint_state.position
-        except (ROSException, KeyError) as ex:
+        except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
 
     def inverseKinematicsRightFoot(self, transformation):

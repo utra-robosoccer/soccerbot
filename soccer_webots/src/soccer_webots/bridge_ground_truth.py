@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import time
 
 import numpy as np
 import rospy
@@ -21,23 +22,40 @@ supervisor = Supervisor()
 supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_REAL_TIME)
 transform_broadcaster = None
 
+clock: Clock = None
+test_clock: Clock = None
+
 
 def reset_robot(pose: Pose, robot: str):
-    robotdef = supervisor.getFromDef(robot)
-    robotdef.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
-    axis, angle = transforms3d.quaternions.quat2axangle([pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w])
-    robotdef.getField("rotation").setSFRotation(list(np.append(axis, angle)))
-    robotdef.resetPhysics()
+    robotdef = supervisor.getFromDef(ROBOTS_PROTO_NAME[ROBOTS.index(robot)])
+    if robotdef is not None:
+        robotdef.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.366])
+        axis, angle = transforms3d.quaternions.quat2axangle([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
+        robotdef.getField("rotation").setSFRotation(list(np.append(axis, angle)))
+        robotdef.resetPhysics()
+        supervisor.simulationResetPhysics()
+        supervisor.step(1)
+        print(f"robot {robot} reset to ({pose.position.x}, {pose.position.y})")
+    else:
+        rospy.logerr("Reset robot failed")
 
 
 def reset_ball(pose: Pose):
     ball_def = supervisor.getFromDef("BALL")
-    ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
-    ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
-    ball_def.resetPhysics()
+    if ball_def is not None:
+        ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
+        ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
+        ball_def.resetPhysics()
+        supervisor.simulationResetPhysics()
+        supervisor.step(1)
+        print(f"ball reset to ({pose.position.x}, {pose.position.y})")
+    else:
+        rospy.logerr("Reset ball failed")
 
 
 def publish_ground_truth_messages(c: Clock):
+    global clock
+    clock = c
     for name, proto_name in zip(ROBOTS, ROBOTS_PROTO_NAME):
         robot_def = supervisor.getFromDef(proto_name)
         ball_def = supervisor.getFromDef("BALL")
@@ -114,16 +132,31 @@ def publish_ground_truth_messages(c: Clock):
                 )
 
 
+def test_clock_callback(c: Clock):
+    global test_clock
+    test_clock = c
+
+
 if __name__ == "__main__":
 
     rospy.init_node("ground_truth_bridge")
     transform_broadcaster = tf.TransformBroadcaster()
 
     clock_subscriber = rospy.Subscriber("/clock", Clock, callback=publish_ground_truth_messages)
+    test_clock_subscriber = rospy.Subscriber("/clock_test", Clock, callback=test_clock_callback)
 
     reset_robot_subscribers = []
     for robot in ROBOTS:
         reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", Pose, reset_robot, robot))
 
     reset_ball_subscriber = rospy.Subscriber("/reset_ball", Pose, reset_ball)
-    rospy.spin()
+
+    try:
+        while not rospy.is_shutdown():
+            if test_clock is not None and clock is not None:
+                if test_clock.clock < clock.clock:
+                    time.sleep(0.01)
+                    continue
+            supervisor.step(int(supervisor.getBasicTimeStep()))
+    except rospy.exceptions.ROSException as ex:
+        exit(0)

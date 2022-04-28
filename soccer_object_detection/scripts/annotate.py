@@ -90,7 +90,7 @@ class Test(TestCase):
 
         field_width = 2.5  # m
         field_height = 1.5
-        ball_radius = 0.07  # 0.0753 # 0.07 # 0.0962 # 0.0783
+        ball_radius = 0.07
 
         while not rospy.is_shutdown() and not self.camera.ready():
             print("Waiting for camera info")

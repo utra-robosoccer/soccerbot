@@ -1,5 +1,6 @@
 import abc
 
+import rospy
 from robot import Robot
 from robot_controlled import RobotControlled
 from robot_controlled_2d import RobotControlled2D
@@ -41,10 +42,12 @@ def get_back_up(update_next_strategy):
 class Strategy:
     def __init__(self):
         self.update_frequency = 1
+        self.iteration = 0
+        self.complete = False  # Used to indicate that we can transition into a new strategy
+        self.time_strategy_started = rospy.Time.now()
 
-    @abc.abstractmethod
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        raise NotImplementedError
+        self.iteration += 1
 
     def get_current_robot(self, friendly_team: Team) -> RobotControlled:
         for robot in friendly_team.robots:

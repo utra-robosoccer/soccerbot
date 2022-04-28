@@ -1,5 +1,4 @@
 <launch>
-    <arg name="simulation" default="true" />
     <arg name="single" default="true" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
@@ -11,33 +10,33 @@
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="robot_name" value="robot1" />
-        <arg name="x_pos" value="4" />
+        <arg name="simulation" value="true" />
+        <arg name="robot_id" value="1" />
+        <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="-3.15" />
         <arg name="a_pos" value="1.57" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="robot_name" value="robot2" />
-        <arg name="x_pos" value="1" />
+        <arg name="simulation" value="true" />
+        <arg name="robot_id" value="2" />
+        <arg name="x_pos" value="-1" />
         <arg name="y_pos" value="-3.15" />
         <arg name="a_pos" value="1.57" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="robot_name" value="robot3" />
-        <arg name="x_pos" value="1" />
+        <arg name="simulation" value="true" />
+        <arg name="robot_id" value="3" />
+        <arg name="x_pos" value="-1" />
         <arg name="y_pos" value="3.15" />
         <arg name="a_pos" value="-1.57" />
     </include>
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="robot_name" value="robot3" />
-        <arg name="x_pos" value="4" />
+        <arg name="simulation" value="true" />
+        <arg name="robot_id" value="4" />
+        <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="3.15" />
         <arg name="a_pos" value="-1.57" />
     </include>

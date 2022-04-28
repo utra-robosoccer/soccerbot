@@ -13,10 +13,11 @@ class StrategyReady(Strategy):
     def __init__(self):
         super().__init__()
         self.update_frequency = 1
-        self.reached_ready_position = False
 
     @get_back_up
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().update_next_strategy(friendly_team, opponent_team, game_state)
+
         Actions.resume_all_robots(friendly_team.robots)
         this_robot = self.get_current_robot(friendly_team)
 
@@ -28,4 +29,4 @@ class StrategyReady(Strategy):
                 navigation_position[0:2] = this_robot.position[0:2]
                 Actions.navigation_to_position(this_robot, navigation_position)
             else:
-                self.reached_ready_position = True
+                self.complete = True

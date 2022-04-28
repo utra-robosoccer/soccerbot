@@ -16,9 +16,9 @@ from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 
 class RobotControlled3D(RobotControlled):
     def __init__(self, team, role, status):
-        x_pos_default = float(os.getenv("X_POS", 4))
-        y_pos_default = float(os.getenv("Y_POS", -3.15))
-        yaw_default = float(os.getenv("YAW", 1.57))
+        x_pos_default = rospy.get_param("~x_pos", -4)
+        y_pos_default = rospy.get_param("~y_pos", -3.15)
+        yaw_default = rospy.get_param("~a_pos", 1.57)
         self.position_default = np.array([x_pos_default, y_pos_default, yaw_default])
 
         super().__init__(team=team, role=role, status=status, position=self.position_default)
@@ -29,6 +29,7 @@ class RobotControlled3D(RobotControlled):
         self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty, self.action_completed_callback, queue_size=1)
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
+        self.reset_robot_subscriber = rospy.Subscriber("reset_robot", Pose, self.reset_robot_callback, queue_size=1)
         # Publishers
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
@@ -71,6 +72,18 @@ class RobotControlled3D(RobotControlled):
         self.goal_position = goal_position
         self.goal_publisher.publish(p)
         return True
+
+    def reset_robot_callback(self, pose: Pose):
+        self.position[0] = pose.position.x
+        self.position[1] = pose.position.y
+
+        q = tf.transformations.euler_from_quaternion([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
+        self.position[2] = q[2]
+        self.status = Robot.Status.READY
+        if self.role == Robot.Role.UNASSIGNED:
+            self.role = Robot.Role.STRIKER
+        self.reset_initial_position()
+        pass
 
     def update_robot_state(self, _):
         # Get Ball Position from TF
@@ -199,7 +212,9 @@ class RobotControlled3D(RobotControlled):
                 rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw})")
                 self.status = Robot.Status.FALLEN_SIDE
 
-    def reset_initial_position(self, position):
+    def reset_initial_position(self):
+        position = self.position
+
         p = PoseWithCovarianceStamped()
         p.header.frame_id = "world"
         p.header.stamp = rospy.get_rostime()
@@ -212,7 +227,7 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.y = q[1]
         p.pose.pose.orientation.z = q[2]
         p.pose.pose.orientation.w = q[3]
-        print("Setting initial Robot " + self.robot_name + " position " + str(position) + " orientation " + str(q))
+        rospy.loginfo("Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
         # fmt: off
         p.pose.covariance = [0.0025, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0025, 0.0, 0.0, 0.0, 0.0,
