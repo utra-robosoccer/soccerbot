@@ -70,6 +70,7 @@
         set_pose
         state
         torso_height
+        object_bounding_boxes
     "
     />
 </launch>

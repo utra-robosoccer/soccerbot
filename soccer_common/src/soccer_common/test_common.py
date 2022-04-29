@@ -1,28 +1,15 @@
-import json
-import math
-import os
-import random
-import time
 from unittest import TestCase
+from unittest.mock import MagicMock
 
-import cv2
-import numpy as np
-import rospy
-import tf
-from cv_bridge import CvBridge
-from geometry_msgs.msg import Pose
-from scipy.spatial.transform import Rotation as R
-from sensor_msgs.msg import Image
-from tf import TransformListener
+import tf2_ros
 
+tf2_ros.TransformListener = MagicMock()
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 
 
 class Test(TestCase):
     def test_calculate_bounding_boxes_from_ball(self):
-        rospy.init_node("test_soccer_bounding_boxes")
-
         for cam_angle in [0, 0.1, -0.1]:
             q = Transformation.get_quaternion_from_euler([cam_angle, 0, 0])
 

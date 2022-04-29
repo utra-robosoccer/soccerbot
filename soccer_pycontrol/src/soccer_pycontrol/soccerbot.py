@@ -74,7 +74,7 @@ class Soccerbot:
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
-    def __init__(self, pose, useFixedBase=False, useCalibration=True):
+    def __init__(self, pose, useFixedBase=False, useCalibration=False):
         self.useCalibration = useCalibration
 
         home = expanduser("~")
