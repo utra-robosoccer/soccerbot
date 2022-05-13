@@ -135,7 +135,7 @@ class FieldPosition:
     def __init__(self, center):
         self.center = center
 
-
+#add these to Team class
 class FieldPositions:
     CENTER_STRIKER = FieldPosition(np.array([0, 0, np.pi]))
     GOALIE = FieldPosition(np.array([4.5, 0, np.pi]))

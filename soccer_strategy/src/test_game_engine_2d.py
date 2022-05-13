@@ -38,14 +38,14 @@ class Test(TestCase):
                 opponent_wins += 1
         print(f"Friendly: {friendly_wins}, opponent: {opponent_wins}")
 
-    @unittest.skip("Under Development")
+    #@unittest.skip("Under Development")
     def test_formation_strategy(self):
-        rospy.init_node("dummy_strategy")
+        #
+        # rospy.init_node("dummy_strategy")
         friendly_wins = 0
         opponent_wins = 0
         for i in range(10):
             g = GameEngine2D(display=self.display, team_1_strategy=StrategyDecisionTree, team_2_strategy=StrategyStationary)
-
             friendly_points, opponent_points = g.run()
             if friendly_points > opponent_points:
                 friendly_wins += 1
