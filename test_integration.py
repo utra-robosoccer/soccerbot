@@ -163,8 +163,8 @@ class IntegrationTestPlaying(IntegrationTest):
     # Place the ball right in front of the robot, should kick right foot
     @timeout_decorator.timeout(10000)
     def test_kick_right(self):
-        self.set_robot_pose(3.5, 0, 0)
-        self.set_ball_pose(3.69, -0.04)
+        self.set_robot_pose(3.8, 0, 0)
+        self.set_ball_pose(3.99, -0.04)
         while not rospy.is_shutdown():
             if self.bounding_boxes is None:
                 rospy.sleep(0.1)
@@ -177,9 +177,7 @@ class IntegrationTestPlaying(IntegrationTest):
                 continue
 
             self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=t)
-            bounding_box_gt = self.camera.calculateBoundingBoxesFromBall(Transformation(trans_ball_gt), ball_radius=0.07)
-            print(bounding_box_gt)
-            print(self.bounding_boxes)
+            # bounding_box_gt = self.camera.calculateBoundingBoxesFromBall(Transformation(trans_ball_gt), ball_radius=0.07)
 
             try:
                 (trans_ball, rot) = self.tf_listener.lookupTransform("/world", "/robot1/ball", rospy.Time(0))

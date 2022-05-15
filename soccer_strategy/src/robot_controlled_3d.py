@@ -30,6 +30,7 @@ class RobotControlled3D(RobotControlled):
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty, self.action_completed_callback, queue_size=1)
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
         self.reset_robot_subscriber = rospy.Subscriber("reset_robot", Pose, self.reset_robot_callback, queue_size=1)
+
         # Publishers
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
