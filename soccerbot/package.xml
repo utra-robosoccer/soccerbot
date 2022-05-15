@@ -29,6 +29,7 @@
   <depend>soccer_pycontrol</depend>
   <depend>fake_localization</depend>
   <depend>webots_ros</depend>
+<!--  <depend>webots_ros</depend>-->
 
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>

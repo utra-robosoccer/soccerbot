@@ -1,12 +1,19 @@
 <launch>
     <arg name="single" default="true" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
-
+    <arg name="fake_localization" default="false" />
+    <arg name="competition" default="false" />
     <!-- The master simulator controller -->
-    <include file="$(find soccerbot)/launch/modules/webots.launch">
+    <!--    <include file="$(find soccerbot)/launch/modules/webots.launch">-->
+    <!--        <arg name="single" value="$(arg single)" />-->
+    <!--    </include>-->
+    <include file="$(find soccerbot)/launch/modules/webots_simulator_master.launch" unless="$(arg competition)">
         <arg name="single" value="$(arg single)" />
+        <arg name="fake_localization" value="$(arg fake_localization)" />
     </include>
 
+    <!-- start plotjuggler -->
+    <!--    <node pkg="plotjuggler" type="PlotJuggler" name="my_plot_Juggler" args="" />-->
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">

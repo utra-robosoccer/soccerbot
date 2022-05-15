@@ -12,6 +12,10 @@
     <param name="/simulation_active" value="true" />
     <param name="/use_sim_time" value="true" />
 
+    <include file="$(find soccerbot)/launch/modules/webots_simulator_robot.launch" if="$(arg simulation)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
+
     <!-- prettier-ignore -->
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
         robot_name:=$(arg robot_name)
@@ -64,6 +68,7 @@
         imu_filtered
         initialpose
         joint_command
+        joint_states
         odom
         path
         scan
