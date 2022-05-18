@@ -4,10 +4,12 @@ import os
 import time
 
 import rospy
+import tf
 from controller import Field, Node, Robot
-from geometry_msgs.msg import Point, Pose, PoseArray
+from geometry_msgs.msg import Point, Pose, PoseArray, PoseStamped
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Int8MultiArray
+from tf import TransformListener
 from visualization_msgs.msg import Marker
 
 
@@ -117,11 +119,13 @@ class RobotController:
             self.pressure_sensors.append(sensor)
 
         # self.robot_node = self.supervisor.getFromDef(self.robot_node_name)
+        self.current_positions = {}
         for i in range(0, self.motor_count):
             self.motors.append(self.robot_node.getDevice(self.motor_names[i]))
             self.motors[-1].enableTorqueFeedback(self.timestep)
-            self.sensors.append(self.robot_node.getDevice(self.sensor_names[i]))
-            self.sensors[-1].enable(self.timestep)
+            sensor = self.robot_node.getDevice(self.sensor_names[i])
+            sensor.enable(self.timestep)
+            self.sensors.append(sensor)
 
         self.accel = self.robot_node.getDevice(accel_name)
         self.accel.enable(self.timestep)
@@ -136,6 +140,21 @@ class RobotController:
         self.pub_js = rospy.Publisher(base_ns + "/joint_states", JointState, queue_size=1)
         self.pub_cam = rospy.Publisher(base_ns + "/camera/image_raw", Image, queue_size=1)
         self.pub_cam_info = rospy.Publisher(base_ns + "/camera/camera_info", CameraInfo, queue_size=1, latch=True)
+        self.leg_names = [
+            "left_hip_side",
+            "left_hip_front",
+            "left_thigh",
+            "left_calve",
+            "left_ankle",
+            "left_foot",
+            "right_hip_side",
+            "right_hip_front",
+            "right_thigh",
+            "right_calve",
+            "right_ankle",
+            "right_foot",
+        ]
+        self.pub_legs = {i: rospy.Publisher(base_ns + "/{}".format(self.leg_names[i]), PoseStamped, queue_size=1) for i in range(len(self.leg_names))}
 
         self.pressure_sensors_vis_pub = {i: rospy.Publisher(base_ns + "/foot_pressure_vis_{}".format(i), Marker, queue_size=10) for i in range(8)}
 
@@ -156,6 +175,9 @@ class RobotController:
         self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
         for i, name in enumerate(self.external_motor_names):
             self.motors[i].setPosition(self.joint_command[i])
+            self.current_positions[self.external_motor_names[i]] = self.joint_command[i]
+
+        self.tf_listener = TransformListener()
 
     def mat_from_fov_and_resolution(self, fov, res):
         return 0.5 * res * (math.cos((fov / 2)) / math.sin((fov / 2)))
@@ -185,6 +207,50 @@ class RobotController:
         self.publish_joint_states()
         self.publish_imu()
         self.get_pressure_message()
+        self.publish_pose()
+
+    def publish_pose(self):
+
+        # self.external_motor_names = [
+        #     "left_arm_motor_0",
+        #     "left_arm_motor_1",
+        #     "right_arm_motor_0",
+        #     "right_arm_motor_1",
+        #     "right_leg_motor_0",
+        #     "right_leg_motor_1",
+        #     "right_leg_motor_2",
+        #     "right_leg_motor_3",
+        #     "right_leg_motor_4",
+        #     "right_leg_motor_5",
+        #     "left_leg_motor_0",
+        #     "left_leg_motor_1",
+        #     "left_leg_motor_2",
+        #     "left_leg_motor_3",
+        #     "left_leg_motor_4",
+        #     "left_leg_motor_5",
+        #     "head_motor_0",
+        #     "head_motor_1",
+        # ]
+        for i, publisher in enumerate(self.pub_legs):
+            try:
+                (ball_position, rot) = self.tf_listener.lookupTransform(
+                    "robot1/torso", "robot1/" + self.leg_names[i], rospy.Time.from_seconds(self.time)
+                )
+                header = self.tf_listener.getLatestCommonTime("robot1/torso", "robot1/" + self.leg_names[i])
+                temp_pose = PoseStamped()
+                temp_pose.header.stamp = header
+                temp_pose.header.frame_id = self.base_frame + "torso"
+                temp_pose.pose.position.x = ball_position[0]
+                temp_pose.pose.position.y = ball_position[1]
+                temp_pose.pose.position.z = ball_position[2]
+                temp_pose.pose.orientation.x = rot[0]
+                temp_pose.pose.orientation.y = rot[1]
+                temp_pose.pose.orientation.z = rot[2]
+                temp_pose.pose.orientation.w = rot[3]
+                self.pub_legs[i].publish(temp_pose)
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                rospy.logwarn_throttle(2, "Cannot find Leg Pose")
 
     def all_motor_callback(self, msg):
         for i, name in enumerate(msg.name):
@@ -242,12 +308,15 @@ class RobotController:
         js.position = []
         js.effort = []
         js.velocity = []
+
         for i in range(len(self.sensors)):
             js.name.append(self.external_motor_names[i])
             value = self.sensors[i].getValue()
             js.position.append(value)
             js.effort.append(self.motors[i].getTorqueFeedback())
-            js.velocity.append(self.motors[i].getVelocity())
+            velocity = 1000 * ((value - self.current_positions[self.external_motor_names[i]]) / self.timestep)
+            js.velocity.append(velocity)
+            self.current_positions[self.external_motor_names[i]] = value
         return js
 
     def publish_joint_states(self):

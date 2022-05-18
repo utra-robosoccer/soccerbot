@@ -76,6 +76,18 @@
         state
         torso_height
         object_bounding_boxes
+        left_hip_side
+        left_hip_front
+        left_thigh
+        left_calve
+         left_ankle
+         left_foot
+         right_hip_side
+         right_hip_front
+         right_thigh
+         right_calve
+         right_ankle
+         right_foot
     "
     />
 </launch>
