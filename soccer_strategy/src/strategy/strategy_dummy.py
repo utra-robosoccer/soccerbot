@@ -64,6 +64,8 @@ class StrategyDummy(Strategy):
 
                 if this_robot.can_kick(ball, goal_position):
                     if this_robot.status in [Robot.Status.READY]:
+                        exit(0)
+
                         delta = goal_position - ball.position[0:2]
                         unit = delta / np.linalg.norm(delta)
 

@@ -16,7 +16,7 @@ import math
 import rospy
 import tf2_ros
 from detector import Detector
-from geometry_msgs.msg import PointStamped, PoseStamped, TransformStamped
+from geometry_msgs.msg import Pose2D, TransformStamped
 from sensor_msgs.msg import JointState
 
 from soccer_common.transformation import Transformation
@@ -28,7 +28,7 @@ class DetectorBall(Detector):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback, queue_size=1)
         self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback, queue_size=1)
-        self.robot_pose_publisher = rospy.Publisher("detected_robot_pose", PoseStamped, queue_size=1)
+        self.ball_pixel_publisher = rospy.Publisher("ball_pixel", Pose2D, queue_size=1)
         self.head_motor_1_angle = 0
         self.last_ball_pose = None
         self.last_ball_pose_counter = 0
@@ -50,6 +50,7 @@ class DetectorBall(Detector):
         # Ball
         max_detection_size = 0
         final_camera_to_ball = None
+        final_ball_pixel = None
         candidate_ball_counter = 1
         for box in msg.bounding_boxes:
             if box.Class == "ball":
@@ -94,6 +95,9 @@ class DetectorBall(Detector):
                 # Get the largest detection
                 if detection_size > max_detection_size:
                     final_camera_to_ball = camera_to_ball
+                    final_ball_pixel = Pose2D()
+                    final_ball_pixel.x = (box.xmax - box.xmin) * 0.5 + box.xmin
+                    final_ball_pixel.y = (box.ymax - box.ymin) * 0.5 + box.ymin
                     self.last_ball_pose = ball_pose
                     self.last_ball_pose_counter = 0
                     max_detection_size = detection_size
@@ -118,6 +122,8 @@ class DetectorBall(Detector):
             ball_pose.transform.rotation.z = 0
             ball_pose.transform.rotation.w = 1
             br.sendTransform(ball_pose)
+
+            self.ball_pixel_publisher.publish(final_ball_pixel)
 
         # Robots
         detected_robots = 0
