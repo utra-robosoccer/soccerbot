@@ -200,19 +200,19 @@ class SoccerbotRos(Soccerbot):
                 pass
 
             # If the last time it saw the ball was 5 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(5):
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
                 assert self.ball_pixel is not None
 
                 if self.ball_pixel.x > 640 / 2:
-                    self.configuration[Joints.HEAD_2] += 0.05
-                else:
-                    self.configuration[Joints.HEAD_2] -= 0.05
-                if self.ball_pixel.y > 480 / 2:
                     self.configuration[Joints.HEAD_1] += 0.05
                 else:
                     self.configuration[Joints.HEAD_1] -= 0.05
+                # if self.ball_pixel.y > 480 / 2:
+                #     self.configuration[Joints.HEAD_1] += 0.05
+                # else:
+                #     self.configuration[Joints.HEAD_1] -= 0.05
 
-                rospy.loginfo_throttle(0.1, f"Centered Camera on Ball ({ self.anglelr }, { self.angleud })")
+                rospy.loginfo_throttle(0.1, f"Centering Camera on Ball (x,y) ({ self.ball_pixel.x }, { self.ball_pixel.y }) -> (320, 280)")
                 rospy.sleep(1.0)
                 # self.head_centered_on_ball_publisher.publish()
             else:

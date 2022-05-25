@@ -10,22 +10,23 @@ if "ROS_NAMESPACE" not in os.environ:
 from argparse import ArgumentParser
 
 import cv2
-import gluoncv
 import mxnet as mx
-import numpy as np
 import rospy
-import torch
-import util
 from cv_bridge import CvBridge
 from gluoncv import data, model_zoo, utils
-from matplotlib import pyplot as plt
 from model import CNN, Label, find_batch_bounding_boxes, init_weights
+from mxnet import autograd, gluon, np, npx
 from rospy import ROSException
 from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
+
+if mx.context.num_gpus() == 0:
+    ctx = mx.cpu()
+else:
+    ctx = mx.gpu()
 
 
 class ObjectDetectionNode(object):
@@ -36,7 +37,7 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path, num_feat):
-        self.model = model_zoo.get_model("yolo3_mobilenet1.0_coco", pretrained=True)
+        self.model = model_zoo.get_model("yolo3_mobilenet1.0_coco", pretrained=True, ctx=ctx)
         self.model.reset_class(classes=["sports ball"], reuse_weights=["sports ball"])
 
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
@@ -93,33 +94,45 @@ class ObjectDetectionNode(object):
             # bbxs = find_batch_bounding_boxes(outputs)[0]
 
             x = mx.nd.array(img)
-            x, orig_img = data.transforms.presets.rcnn.transform_test([x])
+            x, orig_img = data.transforms.presets.rcnn.transform_test(
+                [x],
+            )
+            x = mx.nd.array(x, ctx=ctx)
             box_ids, scores, bbxs = self.model(x)
 
             bbs_msg = BoundingBoxes()
 
-            if bbxs is not None and box_ids[0][0][0].asscalar() >= 0:
-                bb_msg = BoundingBox()
+            for box_id, score, bbx in zip(box_ids[0], scores[0], bbxs[0]):
+                if box_id.asscalar() != -1:
+                    bb_msg = BoundingBox()
 
-                xratio = msg.width / orig_img.shape[1]
-                yratio = msg.height / orig_img.shape[0]
+                    xratio = msg.width / orig_img.shape[1]
+                    yratio = msg.height / orig_img.shape[0]
 
-                ball_bb = bbxs[0][0]
-                bb_msg.xmin = round(ball_bb[0].asscalar() * xratio)
-                bb_msg.ymin = round(ball_bb[1].asscalar() * yratio)
-                bb_msg.xmax = round(ball_bb[2].asscalar() * xratio)
-                bb_msg.ymax = round(ball_bb[3].asscalar() * yratio)
-                bb_msg.id = Label.BALL.value
-                bb_msg.Class = "ball"
-                bbs_msg.bounding_boxes.append(bb_msg)
+                    bb_msg.xmin = round(bbx[0].asscalar() * xratio)
+                    bb_msg.ymin = round(bbx[1].asscalar() * yratio)
+                    bb_msg.xmax = round(bbx[2].asscalar() * xratio)
+                    bb_msg.ymax = round(bbx[3].asscalar() * yratio)
+                    bb_msg.id = Label.BALL.value
+                    bb_msg.Class = "ball"
+                    bbs_msg.bounding_boxes.append(bb_msg)
 
             bbs_msg.header = msg.header
             try:
+                if self.pub_detection.get_num_connections() > 0:
+                    img = utils.viz.cv_plot_bbox(
+                        orig_img,
+                        bbxs[0][0 : len(bbs_msg.bounding_boxes)],
+                        scores=scores[0][0 : len(bbs_msg.bounding_boxes)],
+                        labels=box_ids[0][0 : len(bbs_msg.bounding_boxes)],
+                        class_names=self.model.classes,
+                        linewidth=1,
+                        thresh=0.0,
+                    )
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
+
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
-
-                    img = utils.viz.cv_plot_bbox(orig_img, bbxs[0], scores[0], box_ids[0], class_names=self.model.classes, linewidth=1)
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
 
             except ROSException as re:
                 print(re)

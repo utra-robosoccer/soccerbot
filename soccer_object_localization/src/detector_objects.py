@@ -57,7 +57,7 @@ class DetectorBall(Detector):
                 # Exclude weirdly shaped balls
                 ratio = (box.ymax - box.ymin) / (box.xmax - box.xmin)
                 if ratio > 2 or ratio < 0.5:
-                    rospy.logwarn_throttle(1, "Excluding weirdly shaped ball")
+                    rospy.logwarn_throttle(1, f"Excluding weirdly shaped ball {box.ymax - box.ymin} x {box.xmax - box.xmin}")
                     continue
 
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]

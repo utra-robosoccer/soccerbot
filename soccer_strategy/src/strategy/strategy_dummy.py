@@ -63,8 +63,8 @@ class StrategyDummy(Strategy):
             elif current_closest.robot_id == this_robot.robot_id:
 
                 if this_robot.can_kick(ball, goal_position):
+                    exit(0)
                     if this_robot.status in [Robot.Status.READY]:
-                        exit(0)
 
                         delta = goal_position - ball.position[0:2]
                         unit = delta / np.linalg.norm(delta)
