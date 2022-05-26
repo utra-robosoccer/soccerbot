@@ -50,6 +50,8 @@ class SoccerbotRos(Soccerbot):
         self.last_ball_found_timestamp = None
         self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", Pose2D, self.ball_pixel_callback, queue_size=1)
         self.ball_pixel: Pose2D = None
+        self.last_ball_pixel: Pose2D = None
+        self.last_ball_pixel_update = rospy.Time.now()
         self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
@@ -180,8 +182,8 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    HEAD_YAW_FREQ = 0.004
-    HEAD_PITCH_FREQ = 0.004
+    HEAD_YAW_FREQ = 0.005
+    HEAD_PITCH_FREQ = 0.005
 
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
@@ -199,22 +201,39 @@ class SoccerbotRos(Soccerbot):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
+            # So that the arms don't block the vision
+            self.configuration[Joints.LEFT_ARM_2] = (0.3 - self.configuration[Joints.LEFT_ARM_2]) * 0.05 + self.configuration[Joints.LEFT_ARM_2]
+            self.configuration[Joints.RIGHT_ARM_2] = (0.3 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
+
             # If the last time it saw the ball was 5 seconds ago
             if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
+
                 assert self.ball_pixel is not None
 
-                if self.ball_pixel.x > 640 / 2:
-                    self.configuration[Joints.HEAD_1] += 0.05
-                else:
-                    self.configuration[Joints.HEAD_1] -= 0.05
-                # if self.ball_pixel.y > 480 / 2:
-                #     self.configuration[Joints.HEAD_1] += 0.05
-                # else:
-                #     self.configuration[Joints.HEAD_1] -= 0.05
+                camera_movement_speed = 0.0005
+                pixel_threshold = 15
+                if self.ball_pixel != self.last_ball_pixel or (rospy.Time.now() - self.last_ball_pixel_update) > rospy.Duration(0.5):
+                    xpixeldiff = self.ball_pixel.x - 640 / 2
+                    if abs(xpixeldiff) > pixel_threshold:
+                        self.configuration[Joints.HEAD_1] -= max(
+                            min(camera_movement_speed * xpixeldiff, camera_movement_speed * 100), -camera_movement_speed * 100
+                        )
+                    ypixeldiff = self.ball_pixel.y - 480 / 2
+                    if abs(ypixeldiff) > pixel_threshold:
+                        self.configuration[Joints.HEAD_2] += max(
+                            min(camera_movement_speed * ypixeldiff, camera_movement_speed * 100), -camera_movement_speed * 100
+                        )
 
-                rospy.loginfo_throttle(0.1, f"Centering Camera on Ball (x,y) ({ self.ball_pixel.x }, { self.ball_pixel.y }) -> (320, 280)")
-                rospy.sleep(1.0)
-                # self.head_centered_on_ball_publisher.publish()
+                    self.last_ball_pixel = self.ball_pixel
+                    self.last_ball_pixel_update = rospy.Time.now()
+
+                    if abs(xpixeldiff) <= pixel_threshold and abs(ypixeldiff) <= pixel_threshold:
+                        self.head_centered_on_ball_publisher.publish()
+                        rospy.loginfo_throttle(1, f"Centered Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
+
+                    else:
+                        rospy.loginfo_throttle(1, f"Centering Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
+
             else:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * 0.185 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15

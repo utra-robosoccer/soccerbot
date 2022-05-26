@@ -86,6 +86,7 @@ class StrategyDummy(Strategy):
                 player_position = this_robot.position[0:2]
 
                 # Haven't seen the ball timeout
+                time.sleep(1000)
                 print("Player {}: Rotating to locate ball".format(this_robot.robot_id))
 
                 turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.8]
