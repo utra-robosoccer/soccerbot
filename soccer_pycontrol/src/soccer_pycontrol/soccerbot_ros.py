@@ -4,7 +4,7 @@ import time
 
 import rospy
 import tf
-from geometry_msgs.msg import PointStamped, Pose, PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Empty, Float64
@@ -48,9 +48,10 @@ class SoccerbotRos(Soccerbot):
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
-        self.last_ball_pose = (None, None)
-        self.anglelr = 0
-        self.angleud = 0
+        self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", Pose2D, self.ball_pixel_callback, queue_size=1)
+        self.ball_pixel: Pose2D = None
+        self.last_ball_pixel: Pose2D = None
+        self.last_ball_pixel_update = rospy.Time.now()
         self.head_centered_on_ball_publisher = rospy.Publisher("head_centered_on_ball", Empty, queue_size=1)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
@@ -63,6 +64,9 @@ class SoccerbotRos(Soccerbot):
     def imu_callback(self, msg: Imu):
         self.imu_msg = msg
         self.imu_ready = True
+
+    def ball_pixel_callback(self, msg: Pose2D):
+        self.ball_pixel = msg
 
     def publishAngles(self):
         js = JointState()
@@ -178,8 +182,8 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    HEAD_YAW_FREQ = 0.004
-    HEAD_PITCH_FREQ = 0.004
+    HEAD_YAW_FREQ = 0.005
+    HEAD_PITCH_FREQ = 0.005
 
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
@@ -190,30 +194,46 @@ class SoccerbotRos(Soccerbot):
                 ball_found_timestamp = self.listener.getLatestCommonTime(
                     os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball"
                 )
-                (trans, rot) = self.listener.lookupTransform(
-                    os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp
-                )
                 if self.last_ball_found_timestamp is None or ball_found_timestamp - self.last_ball_found_timestamp > rospy.Duration(2):
-                    self.last_ball_pose = (trans, rot)
-                    self.anglelr = math.atan2(trans[1], trans[0])
-                    self.angleud = math.atan2(trans[2], trans[0])
                     self.last_ball_found_timestamp = ball_found_timestamp
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
+            # So that the arms don't block the vision
+            self.configuration[Joints.LEFT_ARM_2] = (0.3 - self.configuration[Joints.LEFT_ARM_2]) * 0.05 + self.configuration[Joints.LEFT_ARM_2]
+            self.configuration[Joints.RIGHT_ARM_2] = (0.3 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
+
             # If the last time it saw the ball was 5 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(5):
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
 
-                self.configuration[Joints.HEAD_1] += self.anglelr
-                self.configuration[Joints.HEAD_2] -= self.angleud
-                self.anglelr = 0
-                self.angleud = 0
+                assert self.ball_pixel is not None
 
-                rospy.loginfo_throttle(0.1, f"Centered Camera on Ball ({ self.anglelr }, { self.angleud })")
-                rospy.sleep(1.0)
-                self.head_centered_on_ball_publisher.publish()
+                camera_movement_speed = 0.0005
+                pixel_threshold = 15
+                if self.ball_pixel != self.last_ball_pixel or (rospy.Time.now() - self.last_ball_pixel_update) > rospy.Duration(0.5):
+                    xpixeldiff = self.ball_pixel.x - 640 / 2
+                    if abs(xpixeldiff) > pixel_threshold:
+                        self.configuration[Joints.HEAD_1] -= max(
+                            min(camera_movement_speed * xpixeldiff, camera_movement_speed * 100), -camera_movement_speed * 100
+                        )
+                    ypixeldiff = self.ball_pixel.y - 480 / 2
+                    if abs(ypixeldiff) > pixel_threshold:
+                        self.configuration[Joints.HEAD_2] += max(
+                            min(camera_movement_speed * ypixeldiff, camera_movement_speed * 100), -camera_movement_speed * 100
+                        )
+
+                    self.last_ball_pixel = self.ball_pixel
+                    self.last_ball_pixel_update = rospy.Time.now()
+
+                    if abs(xpixeldiff) <= pixel_threshold and abs(ypixeldiff) <= pixel_threshold:
+                        self.head_centered_on_ball_publisher.publish()
+                        rospy.loginfo_throttle(1, f"Centered Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
+
+                    else:
+                        rospy.loginfo_throttle(1, f"Centering Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
+
             else:
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * 0.185 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
