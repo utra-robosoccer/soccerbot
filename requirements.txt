@@ -12,7 +12,7 @@ opencv-python>=4.5.5.62
 shapely
 vispy
 pytest
-protobuf>=3.19.4
+protobuf==3.20.1
 keras
 gluoncv
 pre-commit
