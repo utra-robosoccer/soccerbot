@@ -23,5 +23,5 @@ torchvision
 # object detection
 Pillow==9.0.1
 tqdm
-mxnet
+mxnet-cu112
 pybullet
