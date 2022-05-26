@@ -55,6 +55,20 @@ RUN apt update && apt-fast install -y \
     qt5-default \
     qtbase5-dev \
     python3-pyqt5
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install keyboard-configuration # This needs to be its own individual step
+
+# CUDA Installation
+# Architecture: Use sbsa for arm build
+# CUDA Installation Ref: https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_network
+# CUDNN (Ref: https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux)
+ARG ARCHITECTURE=x86_64
+ARG OS=ubuntu2004
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/$OS/$ARCHITECTURE/cuda-$OS.pin && \
+    sudo mv cuda-$OS.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
+    sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/3bf863cc.pub && \
+    sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/ /" && \
+    sudo apt-get update
+RUN DEBIAN_FRONTEND=noninteractive sudo apt-fast -yq --no-install-recommends install cuda libcudnn8 libcudnn8-dev libnccl2 libnccl-dev
 
 RUN pip install --upgrade pip Cython pybullet
 
@@ -77,7 +91,7 @@ RUN groupadd -g 1000 $USER && \
 # Build
 USER $USER
 WORKDIR /home/$USER/catkin_ws
-RUN chown -R $USER /home/$USER/catkin_ws
+RUN sudo chown -R $USER /home/$USER/catkin_ws
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
