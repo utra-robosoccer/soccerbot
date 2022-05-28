@@ -17,6 +17,13 @@
             </list>
           </settings>
         </remote-mappings>
+        <remote-mappings server-id="python@docker-compose://[/home/alex/dev/robosoccer/catkin_ws/src/soccerbot/docker-compose.yaml]:friendly//usr/bin/python3.8">
+          <settings>
+            <list>
+              <mapping local-root="$USER_HOME$/catkin_ws" remote-root="/root/catkin_ws" />
+            </list>
+          </settings>
+        </remote-mappings>
       </list>
     </list>
   </component>
