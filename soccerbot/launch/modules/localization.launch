@@ -2,11 +2,11 @@
 
 <launch>
     <arg name="fake_localization" default="false" />
-    <arg name="robot_name" />
-    <arg name="map_name" />
-    <arg name="x_pos" />
-    <arg name="y_pos" />
-    <arg name="a_pos" />
+    <arg name="robot_name" default="robot1" />
+    <arg name="map_name" default="robocup" />
+    <arg name="x_pos" default="0" />
+    <arg name="y_pos" default="0" />
+    <arg name="a_pos" default="0" />
 
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find soccer_common)/maps/$(arg map_name).yaml">
@@ -24,6 +24,8 @@
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen" />
     <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/src/outputs/model3_feat10 --num-feat 10" unless="$(arg fake_localization)">
         <env name="OMP_NUM_THREADS" value="1" />
+        <env name="MXNET_CUDNN_AUTOTUNE_DEFAULT" value="0" />
+        <env name="MXNET_CUDNN_LIB_CHECKING" value="0" />
     </node>
 
     <!-- Complementary filter -->

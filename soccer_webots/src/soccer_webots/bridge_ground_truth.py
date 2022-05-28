@@ -153,10 +153,6 @@ if __name__ == "__main__":
 
     try:
         while not rospy.is_shutdown():
-            if test_clock is not None and clock is not None:
-                if test_clock.clock < clock.clock:
-                    time.sleep(0.01)
-                    continue
             supervisor.step(int(supervisor.getBasicTimeStep()))
     except rospy.exceptions.ROSException as ex:
         exit(0)
