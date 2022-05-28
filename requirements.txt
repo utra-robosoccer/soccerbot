@@ -24,4 +24,5 @@ torchvision
 Pillow==9.0.1
 tqdm
 mxnet-cu112; platform_machine == 'x86_64'
+mxnet; platform_machine == 'aarch64'
 pybullet
