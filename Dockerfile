@@ -7,6 +7,7 @@ RUN apt update && rosdep update --rosdistro noetic
 ADD . .
 RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
+RUN mv soccerbot/scripts/build_mxnet.sh /tmp/build_mxnet.sh
 WORKDIR /root/dependencies
 
 FROM $BASE_IMAGE as builder
@@ -96,3 +97,8 @@ COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+FROM builder as build_arm
+
+COPY --from=dependencies /tmp/build_mxnet.sh /tmp/build_mxnet.sh
+RUN ./build_mxnet.sh
