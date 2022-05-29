@@ -3,7 +3,7 @@ name: Docker Image ARM
 on:
   workflow_dispatch:
   push:
-    branches: [master, test_arm_build]
+    branches: [master, test_arm_pull]
     paths-ignore:
       - "**.md"
 
@@ -39,3 +39,11 @@ jobs:
         run: |
           docker pull utrarobosoccer/soccerbot:arm64 || echo "Starting from scratch"
           docker buildx build . --file Dockerfile --platform linux/arm64 --progress=plain --tag utrarobosoccer/soccerbot:arm64 --push --cache-from utrarobosoccer/soccerbot:arm64 --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BASE_IMAGE=arm64v8/ros:noetic-robot --build-arg ARCHITECTURE=sbsa
+  deploy_robot1:
+    needs: build_arm
+    runs-on: robot1
+    steps:
+      - name: Pull docker image
+        run: |
+          docker pull utrarobosoccer/soccerbot:arm64
+  
