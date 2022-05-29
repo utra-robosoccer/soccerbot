@@ -7,6 +7,7 @@ RUN apt update && rosdep update --rosdistro noetic
 ADD . .
 RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
+RUN mv soccerbot/scripts/build_mxnet.sh /tmp/build_mxnet.sh
 WORKDIR /root/dependencies
 
 FROM $BASE_IMAGE as builder
@@ -89,9 +90,9 @@ RUN groupadd -g 1000 $USER && \
     usermod --append --groups 29,20,104,46,5,44 $USER
 
 # Build
-USER $USER
 WORKDIR /home/$USER/catkin_ws
-RUN sudo chown -R $USER /home/$USER/catkin_ws
+RUN chown -R $USER /home/$USER/catkin_ws
+USER $USER
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
