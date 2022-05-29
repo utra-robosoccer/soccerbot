@@ -3,7 +3,7 @@ name: Docker Image ARM
 on:
   workflow_dispatch:
   push:
-    branches: [master, sr_arm_image]
+    branches: [master, test_arm_build]
     paths-ignore:
       - "**.md"
 
