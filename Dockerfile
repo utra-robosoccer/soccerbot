@@ -7,6 +7,7 @@ RUN apt update && rosdep update --rosdistro noetic
 ADD . .
 RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
+RUN mv soccerbot/scripts/build_mxnet.sh /tmp/build_mxnet.sh
 WORKDIR /root/dependencies
 
 FROM $BASE_IMAGE as builder
