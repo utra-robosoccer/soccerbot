@@ -102,6 +102,8 @@ class Camera:
             camera_footprint.transform.rotation.w = rot_only_yaw[3]
             br.sendTransform(camera_footprint)
 
+        return True
+
     def cameraInfoCallback(self, camera_info: CameraInfo):
         self.resolution_x = camera_info.width
         self.resolution_y = camera_info.height
@@ -113,7 +115,7 @@ class Camera:
         pixel_pose = Transformation((self.focal_length, tx, ty), (0, 0, 0, 1))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (self.pose.get_position()[2] - pixel_world_pose.get_position()[2]) / self.pose.get_position()[2]
+        ratio = (self.pose.get_position()[2] - pixel_world_pose.get_position()[2]) / self.pose.get_position()[2]  # Fix divide by 0 problem
         x_delta = (pixel_world_pose.get_position()[0] - self.pose.get_position()[0]) / ratio
         y_delta = (pixel_world_pose.get_position()[1] - self.pose.get_position()[1]) / ratio
 
