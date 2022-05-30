@@ -49,7 +49,7 @@ class DetectorBall(Detector):
 
         # Ball
         max_detection_size = 0
-        final_camera_to_ball = None
+        final_camera_to_ball: Transformation = None
         final_ball_pixel = None
         candidate_ball_counter = 1
         for box in msg.bounding_boxes:
@@ -110,17 +110,17 @@ class DetectorBall(Detector):
             )
             br = tf2_ros.TransformBroadcaster()
             ball_pose = TransformStamped()
-            ball_pose.header.frame_id = self.robot_name + "/base_camera"
+            ball_pose.header.frame_id = self.robot_name + "/camera"
             ball_pose.child_frame_id = self.robot_name + "/ball"
             ball_pose.header.stamp = msg.header.stamp
             ball_pose.header.seq = msg.header.seq
             ball_pose.transform.translation.x = final_camera_to_ball.get_position()[0]
             ball_pose.transform.translation.y = final_camera_to_ball.get_position()[1]
-            ball_pose.transform.translation.z = 0
-            ball_pose.transform.rotation.x = 0
-            ball_pose.transform.rotation.y = 0
-            ball_pose.transform.rotation.z = 0
-            ball_pose.transform.rotation.w = 1
+            ball_pose.transform.translation.z = final_camera_to_ball.get_position()[2]
+            ball_pose.transform.rotation.x = final_camera_to_ball.get_orientation()[0]
+            ball_pose.transform.rotation.y = final_camera_to_ball.get_orientation()[1]
+            ball_pose.transform.rotation.z = final_camera_to_ball.get_orientation()[2]
+            ball_pose.transform.rotation.w = final_camera_to_ball.get_orientation()[3]
             br.sendTransform(ball_pose)
 
             self.ball_pixel_publisher.publish(final_ball_pixel)
