@@ -13,6 +13,7 @@ find_package(
     soccer_strategy
     soccer_object_localization
     soccer_pycontrol
+    soccer_hardware
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)

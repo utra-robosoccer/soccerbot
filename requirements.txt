@@ -5,7 +5,7 @@ numpy>=1.20.2
 roslibpy
 scipy>=1.6.2
 prettytable
-serial
+pyserial>=3.5
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62

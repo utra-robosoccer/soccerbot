@@ -15,6 +15,7 @@
 
   <!-- Sensors -->
   <depend>usb_cam</depend>
+  <depend>soccer_hardware</depend>
 
   <!-- Localization -->
   <depend>amcl</depend>
