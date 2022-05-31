@@ -8,9 +8,7 @@ LICENSE
 Dockerfile
 docker-compose.*
 soccer_description/meshes/*.stl
-soccer_hardware
 soccer_rlcontrol
-soccer_embedded
 soccer_fieldline_detection/media
 soccerbot/bags/
 LICENSE

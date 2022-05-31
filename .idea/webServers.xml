@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="13a02daf-7dc5-4013-b62a-137cf92a794c" name="TX2">
-        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.0.100" port="22" sshConfigId="fc3e3ef9-6659-4440-b2d1-5fa9df74a719" sshConfig="robot1@192.168.0.100:22 agent" authAgent="true">
+      <webServer id="13a02daf-7dc5-4013-b62a-137cf92a794c" name="TX2" url="http://192.168.0.101">
+        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.0.101" port="22" sshConfigId="fc3e3ef9-6659-4440-b2d1-5fa9df74a719" sshConfig="robot1@192.168.0.101:22 agent" authAgent="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
