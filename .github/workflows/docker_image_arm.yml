@@ -1,9 +1,10 @@
 name: Docker Image ARM
+# Ref: https://docs.docker.com/desktop/multi-arch/
 
 on:
   workflow_dispatch:
   push:
-    branches: [master, test_arm_build]
+    branches: [master, cuda_arm_test]
     paths-ignore:
       - "**.md"
 
