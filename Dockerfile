@@ -75,7 +75,7 @@ RUN pip install --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY --from=dependencies --chown=$USER /tmp/build_mxnet.sh build_mxnet.sh
+COPY --from=dependencies --chown=$USER /tmp/install_mxnet.sh install_mxnet.sh
 RUN bash install_mxnet.sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
