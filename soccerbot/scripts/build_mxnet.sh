@@ -1,23 +1,40 @@
-# From https://mxnet.apache.org/versions/1.4.1/install/index.html?platform=Devices&language=Python&processor=GPU
-sudo apt-get update
-sudo apt-get -y install git build-essential libatlas-base-dev libopencv-dev graphviz python-pip
-sudo pip install pip --upgrade
-sudo pip install setuptools numpy --upgrade
-sudo pip install graphviz jupyter
+#!/usr/bin/env bash
 
-git clone https://github.com/utra-robosoccer/incubator-mxnet.git --recursive
-cd incubator-mxnet
+# Builds MXNet on the arm and then creates the wheel
 
-cp make/crosscompile.jetson.mk config.mk
+# https://mxnet.apache.org/get_started/jetson_setup
+# https://www.mssqltips.com/sqlservertip/6802/create-wheel-file-python-package-distribute-custom-code/
+apt update
+apt-fast install -y build-essential \
+                        git \
+                        libopenblas-dev \
+                        libopencv-dev \
+                        python3-pip \
+                        python-numpy
+pip install pip --upgrade
+pip3 install --upgrade \
+                        pip \
+                        setuptools \
+                        numpy
+git clone --recursive --depth 1 -b v1.9.1 https://github.com/utra-robosoccer/incubator-mxnet.git mxnet
 
-# MSHADOW_CFLAGS += -DMSHADOW_USE_PASCAL=1
+echo "export PATH=/usr/local/cuda/bin:\$PATH" >> ~/.bashrc
+echo "export MXNET_HOME=\$HOME/mxnet/" >> ~/.bashrc
+echo "export PYTHONPATH=\$MXNET_HOME/python:\$PYTHONPATH" >> ~/.bashrc
+export PATH=/usr/local/cuda/bin:$PATH
+export MXNET_HOME=$HOME/mxnet/
+export PYTHONPATH=$MXNET_HOME/python:$PYTHONPATH
+
+cd mxnet
+cp make/config_jetson.mk config.mk
 make -j $(nproc)
 
 cd python
-pip install --upgrade pip
-pip install -e .
+pip3 install -e .
 
-cd ..
-export MXNET_HOME=$(pwd)
-echo "export PYTHONPATH=$MXNET_HOME/python:$PYTHONPATH" >> ~/.rc
-source ~/.rc
+# Create wheel package
+pip install wheel
+python -m pip install --upgrade pip
+python3 setup.py bdist_wheel
+python3 -m pip install --upgrade twine
+python3 -m twine upload --repository testpypi dist/*
