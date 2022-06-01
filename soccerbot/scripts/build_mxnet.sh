@@ -10,7 +10,7 @@ sudo pip3 install --upgrade \
                         pip \
                         setuptools \
                         numpy
-git clone --recursive --depth 0 -b v1.9.1 https://github.com/utra-robosoccer/incubator-mxnet.git mxnet
+git clone --recursive --depth 1 -b v1.9.1 https://github.com/utra-robosoccer/incubator-mxnet.git mxnet
 
 echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
 echo "export MXNET_HOME=$HOME/mxnet/" >> ~/.bashrc
