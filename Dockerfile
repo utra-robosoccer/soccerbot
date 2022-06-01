@@ -99,3 +99,6 @@ RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra
+
+COPY --from=dependencies --chown=$USER /tmp/build_mxnet.sh build_mxnet.sh
+RUN build_mxnet.sh
