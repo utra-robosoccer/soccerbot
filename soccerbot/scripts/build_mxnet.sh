@@ -6,7 +6,7 @@ if [ "$(uname -m)" = "x86_64" ]; then
 fi
 # https://mxnet.apache.org/get_started/jetson_setup
 apt update
-apt install -y build-essential \
+apt-fast install -y build-essential \
                         git \
                         libopenblas-dev \
                         libopencv-dev \
@@ -19,9 +19,9 @@ pip3 install --upgrade \
                         numpy
 git clone --recursive --depth 1 -b v1.9.1 https://github.com/utra-robosoccer/incubator-mxnet.git mxnet
 
-echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
-echo "export MXNET_HOME=$HOME/mxnet/" >> ~/.bashrc
-echo "export PYTHONPATH=$MXNET_HOME/python:$PYTHONPATH" >> ~/.bashrc
+echo "export PATH=/usr/local/cuda/bin:\$PATH" >> ~/.bashrc
+echo "export MXNET_HOME=\$HOME/mxnet/" >> ~/.bashrc
+echo "export PYTHONPATH=\$MXNET_HOME/python:\$PYTHONPATH" >> ~/.bashrc
 source ~/.bashrc
 
 cd $MXNET_HOME
