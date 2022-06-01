@@ -104,3 +104,4 @@ RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/mxnet/
 ENV LD_PRELOAD=$LD_PRELOAD:/usr/local/lib/python3.8/dist-packages/torch/lib/libgomp-d22c30c5.so.1
+
