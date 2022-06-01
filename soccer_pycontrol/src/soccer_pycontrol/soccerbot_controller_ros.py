@@ -227,6 +227,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
+                self.soccerbot.pose[2, 3] = 0.334  # TODO remove hardcode
                 self.soccerbot.publishHeight()
                 self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
