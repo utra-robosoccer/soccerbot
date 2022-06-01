@@ -7,7 +7,7 @@ RUN apt update && rosdep update --rosdistro noetic
 ADD . .
 RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
 RUN mv requirements.txt /tmp/requirements.txt
-RUN mv soccerbot/scripts/build_mxnet.sh /tmp/build_mxnet.sh
+RUN mv soccerbot/scripts/install_mxnet.sh /tmp/install_mxnet.sh
 WORKDIR /root/dependencies
 
 FROM $BASE_IMAGE as builder
@@ -76,7 +76,7 @@ RUN pip install --upgrade pip Cython pybullet
 RUN curl -sSL https://get.docker.com/ | sh
 
 COPY --from=dependencies --chown=$USER /tmp/build_mxnet.sh build_mxnet.sh
-RUN bash build_mxnet.sh
+RUN bash install_mxnet.sh
 
 COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
@@ -101,4 +101,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUIL
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/mxnet/

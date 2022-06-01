@@ -1,10 +1,9 @@
+#!/usr/bin/env bash
 
-if [ "$(uname -m)" = "x86_64" ]; then
-    echo "Skipping for x86_64"
-    uname -m
-    exit 0
-fi
+# Builds MXNet on the arm and then creates the wheel
+
 # https://mxnet.apache.org/get_started/jetson_setup
+# https://www.mssqltips.com/sqlservertip/6802/create-wheel-file-python-package-distribute-custom-code/
 apt update
 apt-fast install -y build-essential \
                         git \
@@ -32,3 +31,10 @@ make -j $(nproc)
 
 cd python
 pip3 install -e .
+
+# Create wheel package
+pip install wheel
+python -m pip install --upgrade pip
+python3 setup.py bdist_wheel
+python3 -m pip install --upgrade twine
+python3 -m twine upload --repository testpypi dist/*
