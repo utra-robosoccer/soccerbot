@@ -1,12 +1,19 @@
+
+if [ "$(uname -m)" = "x86_64" ]; then
+    echo "Skipping for x86_64"
+    uname -m
+    exit 0
+fi
 # https://mxnet.apache.org/get_started/jetson_setup
-sudo apt-get update
-sudo apt-get install -y build-essential \
+apt update
+apt install -y build-essential \
                         git \
                         libopenblas-dev \
                         libopencv-dev \
                         python3-pip \
-                        python-numpysudo pip install pip --upgrade
-sudo pip3 install --upgrade \
+                        python-numpy
+pip install pip --upgrade
+pip3 install --upgrade \
                         pip \
                         setuptools \
                         numpy
@@ -22,4 +29,4 @@ cp $MXNET_HOME/make/config_jetson.mk config.mk
 make -j $(nproc)
 
 cd $MXNET_HOME/python
-sudo pip3 install -e .
+pip3 install -e .
