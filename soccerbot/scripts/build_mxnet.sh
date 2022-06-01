@@ -22,7 +22,9 @@ git clone --recursive --depth 1 -b v1.9.1 https://github.com/utra-robosoccer/inc
 echo "export PATH=/usr/local/cuda/bin:\$PATH" >> ~/.bashrc
 echo "export MXNET_HOME=\$HOME/mxnet/" >> ~/.bashrc
 echo "export PYTHONPATH=\$MXNET_HOME/python:\$PYTHONPATH" >> ~/.bashrc
-source ~/.bashrc
+export PATH=/usr/local/cuda/bin:$PATH
+export MXNET_HOME=$HOME/mxnet/
+export PYTHONPATH=$MXNET_HOME/python:$PYTHONPATH
 
 cd mxnet
 cp make/config_jetson.mk config.mk
