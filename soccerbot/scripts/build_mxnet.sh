@@ -24,9 +24,9 @@ echo "export MXNET_HOME=\$HOME/mxnet/" >> ~/.bashrc
 echo "export PYTHONPATH=\$MXNET_HOME/python:\$PYTHONPATH" >> ~/.bashrc
 source ~/.bashrc
 
-cd $MXNET_HOME
-cp $MXNET_HOME/make/config_jetson.mk config.mk
+cd mxnet
+cp make/config_jetson.mk config.mk
 make -j $(nproc)
 
-cd $MXNET_HOME/python
+cd python
 pip3 install -e .
