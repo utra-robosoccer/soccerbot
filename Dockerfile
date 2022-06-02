@@ -97,10 +97,10 @@ RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
 
 # Build C++ ROS Packages such as AMCL first
-COPY --from=dependencies --chown=$USER /root/src/amcl src/amcl
+COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
-RUN rm -rf src/amcl
+RUN rm -rf src/soccerbot
 
 # Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
