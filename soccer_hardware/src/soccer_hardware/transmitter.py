@@ -1,11 +1,11 @@
 # Transmitter.py
 
 import struct
+from queue import Queue
 from threading import Event, Lock, Thread
 
 import rospy as rp
 import serial
-from Queue import Queue
 from utility import log_string
 
 
