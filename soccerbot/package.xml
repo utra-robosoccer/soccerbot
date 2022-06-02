@@ -19,7 +19,7 @@
 <!--  <depend>soccer_embedded</depend>-->
 
   <!-- Localization -->
-  <depend>amcl</depend>
+  <exec_depend>amcl</exec_depend>
   <depend>pointcloud_to_laserscan</depend>
   <depend>soccer_object_detection</depend>
   <depend>soccer_object_localization</depend>
