@@ -35,7 +35,7 @@ def reset_robot(pose: Pose, robot: str):
         robotdef.resetPhysics()
         supervisor.simulationResetPhysics()
         supervisor.step(1)
-        print(f"robot {robot} reset to ({pose.position.x}, {pose.position.y})")
+        print(f"{robot} reset to ({pose.position.x}, {pose.position.y})")
     else:
         rospy.logerr("Reset robot failed")
 

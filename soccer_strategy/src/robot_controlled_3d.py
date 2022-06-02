@@ -80,6 +80,7 @@ class RobotControlled3D(RobotControlled):
 
         q = tf.transformations.euler_from_quaternion([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         self.position[2] = q[2]
+        rospy.loginfo(f"Robot Reset Called to {pose.position.x} {pose.position.y} {q[2]}")
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
@@ -89,6 +90,8 @@ class RobotControlled3D(RobotControlled):
     def update_robot_state(self, _):
         # Get Ball Position from TF
         ground_truth = not bool(os.getenv("COMPETITION", False))
+        if ground_truth:
+            rospy.loginfo_once("Using Ground Truth")
 
         try:
             if ground_truth:

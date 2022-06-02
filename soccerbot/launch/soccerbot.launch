@@ -71,6 +71,10 @@
         state
         torso_height
         object_bounding_boxes
+        reset_robot
+        /reset_ball
+        /tf
+        /tf_static
     "
     />
 </launch>
