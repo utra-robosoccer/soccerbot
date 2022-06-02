@@ -4,6 +4,8 @@ cmake-build-debug
 external
 !external/webots/projects/samples/contests/robocup/controllers/player/messages.proto
 !external/GameController/protocols/python/gamestate.py
+!external/navigation/amcl
+!external/CATKIN_IGNORE
 LICENSE
 Dockerfile
 docker-compose.*

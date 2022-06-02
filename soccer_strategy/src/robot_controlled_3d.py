@@ -30,6 +30,7 @@ class RobotControlled3D(RobotControlled):
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty, self.action_completed_callback, queue_size=1)
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
         self.reset_robot_subscriber = rospy.Subscriber("reset_robot", Pose, self.reset_robot_callback, queue_size=1)
+
         # Publishers
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
@@ -79,6 +80,7 @@ class RobotControlled3D(RobotControlled):
 
         q = tf.transformations.euler_from_quaternion([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         self.position[2] = q[2]
+        rospy.loginfo(f"Robot Reset Called to {pose.position.x} {pose.position.y} {q[2]}")
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
@@ -88,6 +90,8 @@ class RobotControlled3D(RobotControlled):
     def update_robot_state(self, _):
         # Get Ball Position from TF
         ground_truth = not bool(os.getenv("COMPETITION", False))
+        if ground_truth:
+            rospy.loginfo_once("Using Ground Truth")
 
         try:
             if ground_truth:
