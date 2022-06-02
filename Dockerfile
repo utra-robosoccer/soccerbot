@@ -92,14 +92,20 @@ RUN groupadd -g 1000 $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 $USER
 
-# Build
 WORKDIR /home/$USER/catkin_ws
 RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
+
+# Build C++ ROS Packages such as AMCL first
+COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
+RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
+RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
+RUN rm -rf src/soccerbot
+
+# Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
-
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/mxnet/

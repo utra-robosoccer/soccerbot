@@ -8,3 +8,6 @@
 [submodule "soccer_strategy/src/game_controller/RobocupProtocol"]
 	path = soccer_strategy/src/game_controller/RobocupProtocol
 	url = git@github.com:utra-robosoccer/RobocupProtocol.git
+[submodule "external/navigation"]
+	path = external/navigation
+	url = git@github.com:utra-robosoccer/navigation.git
