@@ -100,6 +100,7 @@ USER $USER
 COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
+RUN rm -rf src/soccerbot
 
 # Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
@@ -108,4 +109,3 @@ RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/mxnet/
-ENV LD_PRELOAD=$LD_PRELOAD:/usr/local/lib/python3.8/dist-packages/torch/lib/libgomp-d22c30c5.so.1

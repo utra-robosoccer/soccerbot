@@ -36,3 +36,4 @@ services:
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
+      LD_PRELOAD: /usr/local/lib/python3.8/dist-packages/torch/lib/libgomp-d22c30c5.so.1
