@@ -20,7 +20,7 @@ services:
       BALL_X: 4.16
       BALL_Y: -0.04
 
-  friendly1:
+  friendly:
     extends:
       file: docker-compose.test.yaml
       service: friendly

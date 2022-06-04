@@ -70,7 +70,7 @@ services:
         ipv4_address: 172.18.0.2
     command: /bin/bash -c "source $$HOME/catkin_ws/devel/setup.bash &&
       export PYTHONPATH=$$PYTHONPATH:$$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
-      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestPlaying::test_game_start || sleep infinity"
+      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestInitial::test_game_start || sleep infinity"
     environment:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOCUP_TEAM_COLOR: "red"

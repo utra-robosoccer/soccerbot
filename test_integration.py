@@ -58,7 +58,7 @@ class IntegrationTest(TestCase):
         self.bounding_boxes = None
 
         self.clock_sub = rospy.Subscriber("/clock", Clock, self.clock_callback)
-        self.clock_pub = rospy.Publisher("/clock_test", Clock)
+        self.clock_pub = rospy.Publisher("/clock_test", Clock, queue_size=1)
 
     def clock_callback(self, c: Clock):
         c.clock.secs += 1
@@ -127,7 +127,7 @@ class IntegrationTestInitial(IntegrationTest):
 
         DIST_TOLERANCE = 2
 
-        def processMsg(self, data: RobotState):
+        def processMsg(data: RobotState):
             print("processMsg, status {}, role {}".format(data.status, data.role))
             if data.role == RobotState.ROLE_GOALIE:
                 coords = self.team.formations["ready"][Robot.Role.GOALIE]
@@ -152,7 +152,7 @@ class IntegrationTestInitial(IntegrationTest):
             except rospy.ROSException:
                 print("Connection Failed")
 
-            handle = rospy.Subscriber("/robot1/state", RobotState, self.processMsg)
+            handle = rospy.Subscriber("/robot1/state", RobotState, processMsg)
             rospy.wait_for_message("/robot1/state", RobotState, 120)
             assert handle.get_num_connections() > 0
             print("Connection looks okay")
