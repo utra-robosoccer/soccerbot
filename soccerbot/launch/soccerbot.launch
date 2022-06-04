@@ -9,8 +9,7 @@
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
 
-    <param name="/simulation_active" value="true" />
-    <param name="/use_sim_time" value="true" />
+    <param name="/use_sim_time" value="$(arg simulation)" />
 
     <!-- prettier-ignore -->
     <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
