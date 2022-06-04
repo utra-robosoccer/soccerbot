@@ -4,7 +4,7 @@ Type of PR
 - [ ] Bug fix on real robot
 - [ ] Bug fix in simulation
 - [ ] Feature on real robot
-- [ ] Feature on real robot
+- [ ] Feature in simulation
 - [ ] Documentation or other improvement
 
 Checklist
