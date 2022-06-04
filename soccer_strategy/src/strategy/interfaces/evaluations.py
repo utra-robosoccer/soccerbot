@@ -37,7 +37,7 @@ class Evaluations:
         # fmt: on
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
-        if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15:
+        if distance_of_player_to_ball < 0.20 and abs(nav_angle__diff) < 0.15:
             return True
         return False
 

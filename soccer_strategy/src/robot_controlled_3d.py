@@ -89,9 +89,11 @@ class RobotControlled3D(RobotControlled):
 
     def update_robot_state(self, _):
         # Get Ball Position from TF
-        ground_truth = not bool(os.getenv("COMPETITION", False))
+        ground_truth = not bool(os.getenv("COMPETITION", True))
         if ground_truth:
             rospy.loginfo_once("Using Ground Truth")
+        else:
+            rospy.loginfo_once("Using Actual Measurements")
 
         try:
             if ground_truth:

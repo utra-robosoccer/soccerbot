@@ -73,8 +73,8 @@ class DetectorBall(Detector):
                 )
                 candidate_ball_counter = candidate_ball_counter + 1
 
-                # Exclude balls outside the field
-                if abs(ball_pose.get_position()[0]) > 4.5 or abs(ball_pose.get_position()[1]) > 3:
+                # Exclude balls outside the field + extra space in the net
+                if abs(ball_pose.get_position()[0]) > 5.2 or abs(ball_pose.get_position()[1]) > 3.5:
                     continue
 
                 # Exclude balls that are too far from the previous location

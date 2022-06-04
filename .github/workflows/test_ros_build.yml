@@ -39,4 +39,3 @@ jobs:
           source /opt/ros/noetic/setup.bash
           catkin init
           catkin build
-          catkin test

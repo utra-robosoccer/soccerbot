@@ -25,6 +25,9 @@ x-soccerbot: &soccerbot
   command:
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
+  volumes:
+    - .:/home/$USER/catkin_ws/src/soccerbot
+    - .:/home/robosoccer/catkin_ws/src/soccerbot
 
 services:
   simulator:
@@ -42,6 +45,7 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.10
+    #    command: bash -c "cd webots && ./webots --minimize  --stream=port=1234 --batch ./projects/samples/contests/robocup/worlds/robocup.wbt"  # Uncomment for local test
     command: bash -c "cd webots && Xvfb :1 -screen 0 1024x768x24 | (./webots --minimize --no-rendering --stream=port=1234 --batch ./projects/samples/contests/robocup/worlds/robocup.wbt)"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
@@ -56,6 +60,7 @@ services:
       - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix:1
+      #      DISPLAY: unix$DISPLAY # Uncomment for local test
       JAVA_HOME: /usr
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
@@ -64,9 +69,9 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
-    command: /bin/bash -c "source $HOME/catkin_ws/devel/setup.bash &&
-      export PYTHONPATH=$$PYTHONPATH:$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
-      pytest -s $HOME/catkin_ws/src/soccerbot/test_integration.py"
+    command: /bin/bash -c "source $$HOME/catkin_ws/devel/setup.bash &&
+      export PYTHONPATH=$$PYTHONPATH:$$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
+      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestInitial::test_game_start"
     environment:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOCUP_TEAM_COLOR: "red"

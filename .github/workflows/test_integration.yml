@@ -38,7 +38,7 @@ jobs:
         run: |
           docker-compose pull
           docker-compose build --progress=plain
-      - name: Run the integration tests
+      - name: Walking Integration Test
         run: |
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
       - name: Get integration test logs
@@ -49,5 +49,18 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags
+          name: Rosbags_Walking
+          path: soccerbot/bags
+      - name: Kick Integration Test
+        run: |
+          docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
+      - name: Get integration test logs
+        if: always()
+        run: |
+          docker-compose logs
+      - name: Get rosbag
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Rosbags_Kick
           path: soccerbot/bags

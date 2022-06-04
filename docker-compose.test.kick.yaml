@@ -1,0 +1,32 @@
+version: "3.3"
+
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
+services:
+  simulator:
+    extends:
+      file: docker-compose.test.yaml
+      service: simulator
+    environment:
+      START_PLAY: "true"
+      ROBOT_X: 4.0
+      ROBOT_Y: 0.0
+      ROBOT_Z: 0.366
+      ROBOT_THETA: 0.0
+      BALL_X: 4.16
+      BALL_Y: -0.04
+
+  friendly:
+    extends:
+      file: docker-compose.test.yaml
+      service: friendly
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.2
+    command: /bin/bash -c "source $$HOME/catkin_ws/devel/setup.bash &&
+      export PYTHONPATH=$$PYTHONPATH:$$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
+      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestPlaying::test_kick_right || sleep infinity"
