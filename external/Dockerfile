@@ -44,7 +44,7 @@ RUN ./webots/scripts/install/linux_compilation_dependencies.sh
 COPY webots webots
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
-    make -j$($(expr $(nproc) - 2) > 2 ? $(expr $(nproc) - 2) : 2) # Reduce this for local builds
+    make -j $(echo $(expr $(nproc) - 2) > 2 ? $(expr $(nproc) - 2) : 2) # Reduce this for local builds
 
 RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd GameController && \
