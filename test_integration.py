@@ -93,6 +93,19 @@ class IntegrationTest(TestCase):
 
         ballPublisher.publish(p)
 
+    def get_ball_pose(self, gt=False):
+        try:
+            if gt:
+                frame = "robot1/ball_gt"
+            else:
+                frame = "robot1/ball"
+            last_observed_time_stamp = self.tf_listener.getLatestCommonTime("world", frame)
+            ball_pose = self.tf_listener.lookupTransform("world", frame, last_observed_time_stamp)
+            return np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
+            return None
+
     def setUp(self) -> None:
         self.start_simulation()
         super().setUp()
@@ -163,26 +176,20 @@ class IntegrationTestPlaying(IntegrationTest):
     # Place the ball right in front of the robot, should kick right foot
     @timeout_decorator.timeout(10000)
     def test_kick_right(self):
-        self.set_robot_pose(3.8, 0, 0)
-        self.set_ball_pose(3.99, -0.04)
+        self.set_robot_pose(4.0, 0.0, 0)
+        self.set_ball_pose(4.16, -0.04)
         while not rospy.is_shutdown():
             if self.bounding_boxes is None:
                 rospy.sleep(0.1)
                 continue
 
-            try:
-                t = self.tf_listener.getLatestCommonTime("/world", "/robot1/ball_gt")
-                (trans_ball_gt, rot) = self.tf_listener.lookupTransform("/world", "/robot1/ball_gt", t)
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                continue
+            gt_ball_pose = self.get_ball_pose(gt=False)
+            if gt_ball_pose is not None:
+                print(f"Current ball location: {gt_ball_pose}")
+                if gt_ball_pose[0] > 4.5:
+                    print("Goal Scored")
+                    return
+            else:
+                print("Ball not found")
 
-            self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=t)
-            # bounding_box_gt = self.camera.calculateBoundingBoxesFromBall(Transformation(trans_ball_gt), ball_radius=0.07)
-
-            try:
-                (trans_ball, rot) = self.tf_listener.lookupTransform("/world", "/robot1/ball", rospy.Time(0))
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                continue
-
-            # distance_to_gt = np.linalg.norm(trans_ball_gt - trans_ball)
-            # self.assertTrue(distance_to_gt < 0.05) # Assert 5 percent distance
+            rospy.sleep(0.5)
