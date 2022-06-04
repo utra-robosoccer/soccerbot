@@ -39,4 +39,5 @@ jobs:
           source /opt/ros/noetic/setup.bash
           catkin init
           catkin build
+          touch amcl/CATKIN_IGNORE
           catkin test
