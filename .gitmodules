@@ -1,13 +1,9 @@
-[submodule "external/webots"]
-	path = external/webots
-	url = git@github.com:utra-robosoccer/webots.git
-	branch = release
 [submodule "external/GameController"]
 	path = external/GameController
-	url = git@github.com:RoboCup-Humanoid-TC/GameController.git
+	url = https://github.com/RoboCup-Humanoid-TC/GameController.git
 [submodule "soccer_strategy/src/game_controller/RobocupProtocol"]
 	path = soccer_strategy/src/game_controller/RobocupProtocol
-	url = git@github.com:utra-robosoccer/RobocupProtocol.git
+	url = https://github.com/utra-robosoccer/RobocupProtocol.git
 [submodule "external/navigation"]
 	path = external/navigation
-	url = git@github.com:utra-robosoccer/navigation.git
+	url = https://github.com/utra-robosoccer/navigation.git

@@ -4,9 +4,13 @@ import struct
 from queue import Queue
 from threading import Event, Lock, Thread
 
+import numpy as np
 import rospy as rp
 import serial
+from motor_util import CMD_HEADS, CMDS, RWS, uart_transact
 from utility import log_string
+
+ANGLE2POT_VOLTS = 0xFFF / 180.0
 
 
 class Transmitter(Thread):
@@ -32,29 +36,9 @@ class Transmitter(Thread):
 
     def _send_packet_to_mcu(self, byteStream):
         """Sends bytes to the MCU with the header sequence attached."""
-        header = struct.pack("<L", 0xFFFFFFFF)
-        id = struct.pack("<I", 0x1234)
-        padding = bytes("".encode())
-        footer = struct.pack("<L", 0x00000000)
-
-        num_bytes = len(byteStream)
-        if num_bytes < 80:
-            padding = struct.pack("<B", 0x00) * (80 - num_bytes)
-
-        packet = header + id + byteStream + padding + footer
-        if self._dry_run:
-            print(str(packet) + "\n")
-        else:
-            self._ser.write(packet)
-
-    def _vec2bytes(self, vec):
-        """Transforms a numpy vector to a byte array, with entries interpreted as
-        32-bit floats.
-        """
-        byte_arr = bytes("".encode())
-        for element in vec:
-            byte_arr = byte_arr + struct.pack("f", element)
-        return byte_arr
+        with self._ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
+            # print(byteStream)
+            return uart_transact(self._ser, byteStream, CMDS.POSITION, RWS.WRITE, 0.01)
 
     def get_num_tx(self):
         with self._num_tx_lock:
@@ -76,7 +60,8 @@ class Transmitter(Thread):
             while not rp.is_shutdown():
                 while not self._cmd_queue.empty():
                     goal_angles = self._cmd_queue.get()
-                    self._send_packet_to_mcu(self._vec2bytes(goal_angles))
+                    print(goal_angles)
+                    self._send_packet_to_mcu((np.array(goal_angles) * ANGLE2POT_VOLTS).astype(np.uint16))
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
         except serial.serialutil.SerialException:
