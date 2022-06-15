@@ -397,6 +397,9 @@ class AcrobotWalkerEnv(core.Env):
         q = s_augmented[0:2]
         qdot = s_augmented[2:4]
 
+        # First calculate foot impact
+        dist = self._dist_to_floor()
+
         # TODO fix math i2=linertia(1)
         D = self.calc_D(
             i1=self._linertia(0),
@@ -412,12 +415,12 @@ class AcrobotWalkerEnv(core.Env):
         P = self.calc_P(g=self.g, l1=self.leg_length, lc1=self._lcom(0), lc2=self._lcom(1), m1=self._lmass(0), m2=self._lmass(1), q1=q[0], q2=q[1])
         B = self.calc_B(qd2=qdot[1])
 
-        dist = self._dist_to_floor()
-        if dist < 0 and q[1] < 0:
-            self.tau_q = np.array([0, 0])
-        else:
-            self.tau_q = np.linalg.lstsq(D, np.array([0, tau]))[0]
+        # Torque from tau
+        self.tau_q = np.linalg.lstsq(D, np.array([0, tau]))[0]
+
+        # Torque from gravity
         self.tau_g = np.linalg.lstsq(D, (-C @ np.array([qdot]).T - P - B))[0].T.flatten()
+
         qddot_new = self.tau_g + self.tau_q
         return np.concatenate([qdot, qddot_new])
 
