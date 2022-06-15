@@ -5,8 +5,9 @@
 [![Webots Docker Image CI](https://github.com/utra-robosoccer/soccerbot/actions/workflows/docker_image_webots.yml/badge.svg)](https://github.com/utra-robosoccer/soccerbot/actions/workflows/docker_image_webots.yml)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/utra-robosoccer/soccerbot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/utra-robosoccer/soccerbot/alerts/)
 [![Documentation Status](https://readthedocs.org/projects/soccerbot/badge/?version=latest)](https://soccerbot.readthedocs.io/en/latest/?badge=latest)
+[![Docker Image Size](https://badgen.net/docker/size/utrarobosoccer/soccerbot?icon=docker&label=image%20size)](https://hub.docker.com/r/utrarobosoccer/soccerbot/)
+[![Docker Pulls](https://badgen.net/docker/pulls/utrarobosoccer/soccerbot?icon=docker&label=pulls)](https://hub.docker.com/r/utrarobosoccer/soccerbot/)
 
-Welcome to the Soccerbot Repository
 
 The initial efforts to form new team within UTRA began summer 2016. However, it was not until summer 2017 that we were well-defined and the creation of our robots from scratch began. Following some recruitment around that time, our team had a small number of members split across three subsystems: mechanical, electrical and software. Later that summer, the embedded subsystem (microcontroller software), emerged out of the electrical subsystem, and the control subsystem was formed to focus on bipedal locomotion.
 
