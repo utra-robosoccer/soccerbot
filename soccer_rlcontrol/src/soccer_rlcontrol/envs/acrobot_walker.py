@@ -140,15 +140,15 @@ class AcrobotWalkerEnv(core.Env):
             pb.disconnect(self.client_id)
 
         # Solve Robotics Equations
-        self.solveRoboticsEquations()
+        # self.solveRoboticsEquations()
         self.loadRoboticsEquations()
 
         # Joint constraints
-        joint_velocity_limit = 1.8
+        joint_velocity_limit = 20 * pi
         motor_torque_limit = 0.22
         angle_limit = pi / 20
         high = np.array([pi, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
-        low = np.array([-pi, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
+        low = np.array([0, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
         self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
         self.action_space = spaces.Box(low=np.array([-motor_torque_limit]), high=np.array([motor_torque_limit]), dtype=np.float32)
         self.state = None
@@ -163,7 +163,8 @@ class AcrobotWalkerEnv(core.Env):
 
     def solveRoboticsEquations(self):
 
-        q1, q2, qd1, qd2, qdd1, qdd2, l1, l2, lc1, lc2, i1, i2, m1, m2, g = sym.symbols("q1 q2 qd1 qd2 qdd1 qdd2 l1 l2 lc1 lc2 i1 i2 m1 m2 g")
+        q1, q2, qd1, qd2, qdd1, qdd2, l1, l2, lc1, lc2, i1, i2, m1, m2 = sym.symbols("q1 q2 qd1 qd2 qdd1 qdd2 l1 l2 lc1 lc2 i1 i2 m1 m2")
+        g = self.g
 
         q = sym.Matrix([q1, q2])
         qd = sym.Matrix([qd1, qd2])
@@ -247,7 +248,7 @@ class AcrobotWalkerEnv(core.Env):
         Taue = ddtdLedqdot - dLedq
 
         # Solving for D Matrix
-        De = sym.linear_eq_to_matrix(Taue, list(qdde))
+        De, be = sym.linear_eq_to_matrix(Taue, list(qdde))
 
         # Upsilons
         E = rende.jacobian(qe)
@@ -278,6 +279,8 @@ class AcrobotWalkerEnv(core.Env):
         for symbol_name in symbol_names:
             with open(dir_path + f"/gen/{symbol_name}.pkl", "rb+") as file:
                 symbol_lambda = dill.load(file)
+                if symbol_name == "renddot":
+                    symbol_name = "J"
                 setattr(self, "calc_" + symbol_name, symbol_lambda)
         pass
 
@@ -318,7 +321,7 @@ class AcrobotWalkerEnv(core.Env):
         for i in range(0, 4):
             if s[i] >= self.observation_space.high[i] or s[i] <= self.observation_space.low[i]:
                 return True
-        return True
+        return False
 
     def _switch_leg(self, num):
         if self.state[4] % 2 == 1:
@@ -365,29 +368,42 @@ class AcrobotWalkerEnv(core.Env):
         q = s_augmented[0:2]
         qdot = s_augmented[2:4]
 
-        De = self.calc_De(self._linertia(0), self._linertia(1), self.leg_length, self._lcom(0), self._lcom(1), self._lmass(0), self._lmass(1), q1, q2)
-        E = self.calc_E(self.leg_length, self.leg_length, q1, q2)
-        dUde = self.calc_dUde(self.leg_length, q1)
-        last_term = np.concatenate([np.zeros(2), dUde])
+        De = self.calc_De(
+            i1=self._linertia(0),
+            i2=self._linertia(1),
+            l1=self.leg_length,
+            lc1=self._lcom(0),
+            lc2=self._lcom(1),
+            m1=self._lmass(0),
+            m2=self._lmass(1),
+            q1=q1,
+            q2=q2,
+        )
+        E = self.calc_E(l1=self.leg_length, l2=self.leg_length, q1=q1, q2=q2)
+        dUde = self.calc_dUde(l1=self.leg_length, q1=q1)
+        last_term = np.concatenate([np.zeros((2, 2)), dUde])
 
-        delta_F = -np.solve(E @ np.inv(De) @ E.T, E) * last_term
-        delta_qedot = np.linalg.solve(De, E).T * delta_F + last_term
+        delta_F = -np.linalg.solve(E @ np.linalg.inv(De) @ E.T, E) @ last_term
+        delta_qedot = np.linalg.solve(De, E.T) @ delta_F + last_term
         T = np.array([[1, 1], [0, -1]])
 
-        qp = wrapTo2Pi(T @ q + np.array([[-pi], [0]]))
-        qp_dot = np.concatenate([T, np.zeros(2, 2)]) * (delta_qedot * qdot) * 1  # obj.lcurve.energy_loss
+        qp = T @ q + np.array([-pi, 0])
+        qp[0] = wrapTo2Pi(qp[0])
+        qp[1] = wrapTo2Pi(qp[1])
+        qp_dot = np.concatenate([T, np.zeros((2, 2))], axis=1) @ (delta_qedot @ np.array([qdot]).T) * 1  # obj.lcurve.energy_loss
 
         # Collision with floor?
-        rend_dot = self.calc_J(self.leg_length, self.leg_length, qp[0], qp[1]) * qp_dot
-        if rend_dot < 0:
-            x_next = np.concatenate([qp, -qp_dot])
+        rend_dot = self.calc_J(l1=self.leg_length, l2=self.leg_length, q1=qp[0], q2=qp[1]) @ qp_dot
+
+        if rend_dot[1] < 0:
+            x_next = np.concatenate([qp, -qp_dot.flatten()])
         else:
-            x_next = np.concatenate([qp, qp_dot])
+            x_next = np.concatenate([qp, qp_dot.flatten()])
 
         rH = self.leg_length * np.array([cos(q1), sin(q1)])
         step_diff = rH + self.leg_length * np.array([cos(q1 + q2), sin(q1 + q2)])
 
-        return np.concatenate(x_next, not s_augmented[4], s_augmented[4] + step_diff, 0)
+        return np.concatenate([x_next, [s_augmented[4] + 1, s_augmented[5] + step_diff[0], 0]])
 
     def _dsdt(self, s_augmented):
         tau = s_augmented[-1]
@@ -395,9 +411,9 @@ class AcrobotWalkerEnv(core.Env):
         qdot = s_augmented[2:4]
 
         # First determine and calculate foot impact
-        # dist = self._dist_to_floor()
-        # if dist < 0 and q[1] < 0:
-        #     return self._impact_foot(s_augmented)
+        dist = self._dist_to_floor()
+        if dist < 0 and q[1] < 0:
+            return self._impact_foot(s_augmented)
 
         D = self.calc_D(
             i1=self._linertia(0),
@@ -410,7 +426,7 @@ class AcrobotWalkerEnv(core.Env):
             q2=q[1],
         )
         C = self.calc_C(l1=self.leg_length, lc2=self._lcom(1), m2=self._lmass(1), q2=q[1], qd1=qdot[0], qd2=qdot[1])
-        P = self.calc_P(g=self.g, l1=self.leg_length, lc1=self._lcom(0), lc2=self._lcom(1), m1=self._lmass(0), m2=self._lmass(1), q1=q[0], q2=q[1])
+        P = self.calc_P(l1=self.leg_length, lc1=self._lcom(0), lc2=self._lcom(1), m1=self._lmass(0), m2=self._lmass(1), q1=q[0], q2=q[1])
         B = self.calc_B(qd2=qdot[1])
 
         # Torque from tau
@@ -456,9 +472,9 @@ class AcrobotWalkerEnv(core.Env):
         q1 = s[0]
         q2 = s[1]
 
-        pheel = np.array([0, s[5]]) + np.array([SCREEN_DIM / 4, SCREEN_DIM / 2])
-
         SCALE = 200
+
+        pheel = np.array([s[5], 0]) * SCALE + np.array([SCREEN_DIM / 4, SCREEN_DIM / 2])
 
         rc1 = (self.leg_length - self._lcom(0)) * np.array([[cos(q1), sin(q1)]]) * SCALE + pheel
         rH = self.leg_length * np.array([cos(q1), sin(q1)]) * SCALE + pheel
@@ -501,7 +517,8 @@ def rk4(derivs, y0, t):
     dt = t[1] - t[0]
 
     k0 = np.asarray(derivs(y0))
-    return y0 + k0 * dt
+    # return y0 + k0 * dt
+
     # If impact event occurred
     if k0[4] > y0[4]:
         return k0

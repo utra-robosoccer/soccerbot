@@ -17,9 +17,13 @@ class Test(TestCase):
     def test_acrobot_basic(self):
         env = gym.make("AcrobotWalker-v0", render_mode="human")
         env.reset()
+        for i in range(1, 45):
+            (obs, reward, terminal, info) = env.step(0.005)
+            env.render()
         for i in range(1, 1000):
-            time.sleep(0.01)
-            env.step(0)
+            (obs, reward, terminal, info) = env.step(-0.055)
+            if terminal:
+                break
             env.render()
 
     def test_acrobot_sarsa(self):
