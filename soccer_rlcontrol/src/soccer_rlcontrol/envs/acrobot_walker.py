@@ -40,9 +40,7 @@ class AcrobotWalkerEnv(core.Env):
     joint between the two links.
     | Num | Action                                | Unit         |
     |-----|---------------------------------------|--------------|
-    | 0   | apply -1 torque to the actuated joint | torque (N m) |
-    | 1   | apply 0 torque to the actuated joint  | torque (N m) |
-    | 2   | apply 1 torque to the actuated joint  | torque (N m) |
+    | 0   | amount of torque to applied joint     | torque (N m) |
     ### Observation Space
     The observation is a `ndarray` with shape `(6,)` that provides information about the
     two rotational joint angles as well as their angular velocities:
@@ -52,7 +50,7 @@ class AcrobotWalkerEnv(core.Env):
     | 1   | theta2                       | -pi                 | pi                |
     | 2   | Angular velocity of theta1   | -20 * pi            | 20 * pi           |
     | 3   | Angular velocity of theta2   | -20 * pi            | 20 * pi           |
-    | 4   | Which Foot on the ground     | 0                   | 1                 |
+    | 4   | Step Count                   | 0                   | inf               |
     | 5   | Displacement of ground foot  | -inf                | inf               |
     where
     - `theta1` is the angle of the first joint, where an angle of 0 indicates the first link is pointing directly
@@ -81,13 +79,11 @@ class AcrobotWalkerEnv(core.Env):
     """
 
     metadata = {
-        "render_modes": ["pybullet", "numerical"],
+        "render_modes": ["pybullet", "human"],
         "render_fps": 15,
     }
 
     dt = 0.01
-
-    SCREEN_DIM = 500
 
     def __init__(self, render_mode: Optional[str] = None):
         assert render_mode is None or render_mode in self.metadata["render_modes"]
@@ -105,6 +101,8 @@ class AcrobotWalkerEnv(core.Env):
             )
         else:
             self.client_id = pb.connect(pb.DIRECT)
+            self.screen = None
+            self.clock = None
 
         home = expanduser("~")
 
@@ -142,22 +140,21 @@ class AcrobotWalkerEnv(core.Env):
             pb.disconnect(self.client_id)
 
         # Solve Robotics Equations
-        # self.solveRoboticsEquations()
+        self.solveRoboticsEquations()
         self.loadRoboticsEquations()
-
-        # Input constraints
 
         # Joint constraints
         joint_velocity_limit = 1.8
         motor_torque_limit = 0.22
-        high = np.array([pi, pi, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
-        low = np.array([-pi, -pi, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
+        angle_limit = pi / 20
+        high = np.array([pi, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
+        low = np.array([-pi, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
         self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
         self.action_space = spaces.Box(low=np.array([-motor_torque_limit]), high=np.array([motor_torque_limit]), dtype=np.float32)
         self.state = None
 
     def reset(self, *, seed: Optional[int] = None, return_info: bool = False, options: Optional[dict] = None):
-        self.state = np.array([np.pi / 2, 0, 0, 0, 0, 0])
+        self.state = np.array([np.pi / 2, 0, -0.005, -0.05, 0, 0])
 
         if not return_info:
             return self._get_ob()
@@ -203,7 +200,7 @@ class AcrobotWalkerEnv(core.Env):
 
         # Find the C, D, P, B Matrix
         D, b = sym.linear_eq_to_matrix(tau, list(qdd))
-        P = b.subs([(qd1, 0), (qd2, 0)])
+        P = -b.subs([(qd1, 0), (qd2, 0)])
         C = sym.zeros(2, 2)
 
         for k in range(2):
@@ -284,31 +281,29 @@ class AcrobotWalkerEnv(core.Env):
                 setattr(self, "calc_" + symbol_name, symbol_lambda)
         pass
 
-    def step(self, a):
+    def step(self, tau):
         s = self.state
         assert s is not None, "Call reset before using AcrobotEnv object."
 
-        if not self.action_space.contains([a]):
-            raise Exception(f"Torque { a } provided beyond provided bounds [{self.action_space.high[0]} {self.action_space.low[0]}]")
-        tau = a
+        if not self.action_space.contains([tau]):
+            raise Exception(f"Torque { tau } provided beyond provided bounds [{self.action_space.high[0]} {self.action_space.low[0]}]")
 
-        # Add noise to the force action (TODO)
-
-        # Now, augment the state with our force action so it can be passed to
-        # _dsdt
         s_augmented = np.append(s, tau)
-
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])
 
-        ns[0] = wrapToPi(ns[0])
-        ns[1] = wrapToPi(ns[1])
-        ns[2] = bound(ns[2], -self.MAX_VEL_1, self.MAX_VEL_1)
-        ns[3] = bound(ns[3], -self.MAX_VEL_2, self.MAX_VEL_2)
-        self.state = ns
-        terminal = self._terminal()
-        reward = -1.0 if not terminal else 0.0
+        for i in range(0, 4):
+            ns[i] = max(min(ns[i], self.observation_space.high[i]), self.observation_space.low[i])
 
-        self.renderer.render_step()
+        # Compute reward
+        reward = -1.0
+        if ns[4] > s[4]:
+            reward += 1000
+
+        self.state = ns[0:-1]
+        terminal = self._terminal()
+        if terminal:
+            reward = 0.0
+
         return self._get_ob(), reward, terminal, {}
 
     def _get_ob(self):
@@ -319,7 +314,11 @@ class AcrobotWalkerEnv(core.Env):
     def _terminal(self):
         s = self.state
         assert s is not None, "Call reset before using AcrobotEnv object."
-        return bool(-cos(s[0]) - cos(s[1] + s[0]) > 1.0)
+
+        for i in range(0, 4):
+            if s[i] >= self.observation_space.high[i] or s[i] <= self.observation_space.low[i]:
+                return True
+        return True
 
     def _switch_leg(self, num):
         if self.state[4] % 2 == 1:
@@ -362,8 +361,6 @@ class AcrobotWalkerEnv(core.Env):
     def _impact_foot(self, s_augmented):
         q1 = s_augmented[0]
         q2 = s_augmented[1]
-        q1_dot = s_augmented[2]
-        q2_dot = s_augmented[3]
 
         q = s_augmented[0:2]
         qdot = s_augmented[2:4]
@@ -390,20 +387,21 @@ class AcrobotWalkerEnv(core.Env):
         rH = self.leg_length * np.array([cos(q1), sin(q1)])
         step_diff = rH + self.leg_length * np.array([cos(q1 + q2), sin(q1 + q2)])
 
-        return x_next, step_diff
+        return np.concatenate(x_next, not s_augmented[4], s_augmented[4] + step_diff, 0)
 
     def _dsdt(self, s_augmented):
         tau = s_augmented[-1]
         q = s_augmented[0:2]
         qdot = s_augmented[2:4]
 
-        # First calculate foot impact
-        dist = self._dist_to_floor()
+        # First determine and calculate foot impact
+        # dist = self._dist_to_floor()
+        # if dist < 0 and q[1] < 0:
+        #     return self._impact_foot(s_augmented)
 
-        # TODO fix math i2=linertia(1)
         D = self.calc_D(
             i1=self._linertia(0),
-            i2=self._linertia(0),
+            i2=self._linertia(0),  # TODO fix math i2=linertia(1)
             l1=self.leg_length,
             lc1=self._lcom(0),
             lc2=self._lcom(1),
@@ -416,102 +414,68 @@ class AcrobotWalkerEnv(core.Env):
         B = self.calc_B(qd2=qdot[1])
 
         # Torque from tau
-        self.tau_q = np.linalg.lstsq(D, np.array([0, tau]))[0]
+        tau_q = np.linalg.lstsq(D, np.array([0, tau]))[0]
 
         # Torque from gravity
-        self.tau_g = np.linalg.lstsq(D, (-C @ np.array([qdot]).T - P - B))[0].T.flatten()
+        tau_g = np.linalg.lstsq(D, (-C @ np.array([qdot]).T - P - B))[0].T.flatten()
 
-        qddot_new = self.tau_g + self.tau_q
-        return np.concatenate([qdot, qddot_new])
+        qddot_new = tau_g + tau_q
+        return np.concatenate([qdot, qddot_new, s_augmented[4:6], np.array([0])])
 
     def render(self, mode="human"):
-        if self.render_mode is not None:
-            return self.renderer.get_renders()
-        # else:
-        #     return self._render(mode)
+        assert mode in self.metadata["render_modes"]
+        try:
+            import pygame
+            from pygame import gfxdraw
+        except ImportError:
+            raise DependencyNotInstalled("pygame is not installed, run `pip install gym[classic_control]`")
 
-    # def _render(self, mode="human"):
-    #     assert mode in self.metadata["render_modes"]
-    #     try:
-    #         import pygame
-    #         from pygame import gfxdraw
-    #     except ImportError:
-    #         raise DependencyNotInstalled(
-    #             "pygame is not installed, run `pip install gym[classic_control]`"
-    #         )
-    #
-    #     if self.screen is None:
-    #         pygame.init()
-    #         if mode == "human":
-    #             pygame.display.init()
-    #             self.screen = pygame.display.set_mode(
-    #                 (self.SCREEN_DIM, self.SCREEN_DIM)
-    #             )
-    #         else:  # mode in {"rgb_array", "single_rgb_array"}
-    #             self.screen = pygame.Surface((self.SCREEN_DIM, self.SCREEN_DIM))
-    #     if self.clock is None:
-    #         self.clock = pygame.time.Clock()
-    #
-    #     surf = pygame.Surface((self.SCREEN_DIM, self.SCREEN_DIM))
-    #     surf.fill((255, 255, 255))
-    #     s = self.state
-    #
-    #     bound = self.LINK_LENGTH_1 + self.LINK_LENGTH_2 + 0.2  # 2.2 for default
-    #     scale = self.SCREEN_DIM / (bound * 2)
-    #     offset = self.SCREEN_DIM / 2
-    #
-    #     if s is None:
-    #         return None
-    #
-    #     p1 = [
-    #         -self.LINK_LENGTH_1 * cos(s[0]) * scale,
-    #         self.LINK_LENGTH_1 * sin(s[0]) * scale,
-    #     ]
-    #
-    #     p2 = [
-    #         p1[0] - self.LINK_LENGTH_2 * cos(s[0] + s[1]) * scale,
-    #         p1[1] + self.LINK_LENGTH_2 * sin(s[0] + s[1]) * scale,
-    #     ]
-    #
-    #     xys = np.array([[0, 0], p1, p2])[:, ::-1]
-    #     thetas = [s[0] - pi / 2, s[0] + s[1] - pi / 2]
-    #     link_lengths = [self.LINK_LENGTH_1 * scale, self.LINK_LENGTH_2 * scale]
-    #
-    #     pygame.draw.line(
-    #         surf,
-    #         start_pos=(-2.2 * scale + offset, 1 * scale + offset),
-    #         end_pos=(2.2 * scale + offset, 1 * scale + offset),
-    #         color=(0, 0, 0),
-    #     )
-    #
-    #     for ((x, y), th, llen) in zip(xys, thetas, link_lengths):
-    #         x = x + offset
-    #         y = y + offset
-    #         l, r, t, b = 0, llen, 0.1 * scale, -0.1 * scale
-    #         coords = [(l, b), (l, t), (r, t), (r, b)]
-    #         transformed_coords = []
-    #         for coord in coords:
-    #             coord = pygame.math.Vector2(coord).rotate_rad(th)
-    #             coord = (coord[0] + x, coord[1] + y)
-    #             transformed_coords.append(coord)
-    #         gfxdraw.aapolygon(surf, transformed_coords, (0, 204, 204))
-    #         gfxdraw.filled_polygon(surf, transformed_coords, (0, 204, 204))
-    #
-    #         gfxdraw.aacircle(surf, int(x), int(y), int(0.1 * scale), (204, 204, 0))
-    #         gfxdraw.filled_circle(surf, int(x), int(y), int(0.1 * scale), (204, 204, 0))
-    #
-    #     surf = pygame.transform.flip(surf, False, True)
-    #     self.screen.blit(surf, (0, 0))
-    #
-    #     if mode == "human":
-    #         pygame.event.pump()
-    #         self.clock.tick(self.metadata["render_fps"])
-    #         pygame.display.flip()
-    #
-    #     elif mode in {"rgb_array", "single_rgb_array"}:
-    #         return np.transpose(
-    #             np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2)
-    #         )
+        SCREEN_DIM = 500
+
+        if self.screen is None:
+            pygame.init()
+            pygame.display.init()
+            self.screen = pygame.display.set_mode((SCREEN_DIM, SCREEN_DIM))
+        if self.clock is None:
+            self.clock = pygame.time.Clock()
+
+        surf = pygame.Surface((SCREEN_DIM, SCREEN_DIM))
+        surf.fill((255, 255, 255))
+        s = self.state
+
+        if s is None:
+            return None
+
+        pygame.draw.line(
+            surf,
+            start_pos=(0, SCREEN_DIM / 2),
+            end_pos=(SCREEN_DIM, SCREEN_DIM / 2),
+            color=(100, 100, 100),
+        )
+
+        q1 = s[0]
+        q2 = s[1]
+
+        pheel = np.array([0, s[5]]) + np.array([SCREEN_DIM / 4, SCREEN_DIM / 2])
+
+        SCALE = 200
+
+        rc1 = (self.leg_length - self._lcom(0)) * np.array([[cos(q1), sin(q1)]]) * SCALE + pheel
+        rH = self.leg_length * np.array([cos(q1), sin(q1)]) * SCALE + pheel
+        rc2 = rH + self._lcom(1) * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
+        pH2 = rH + self.leg_length * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
+
+        pygame.draw.line(surf, (255, 0, 0), start_pos=tuple(np.squeeze(pheel)), end_pos=tuple(np.squeeze(rH)))
+        pygame.draw.line(surf, (0, 255, 0), start_pos=tuple(np.squeeze(rH)), end_pos=tuple(np.squeeze(pH2)))
+        pygame.draw.circle(surf, (255, 0, 0), tuple(np.squeeze(rc1)), 3)
+        pygame.draw.circle(surf, (0, 255, 0), tuple(np.squeeze(rc2)), 3)
+
+        surf = pygame.transform.flip(surf, False, True)
+        self.screen.blit(surf, (0, 0))
+
+        pygame.event.pump()
+        self.clock.tick(self.metadata["render_fps"])
+        pygame.display.flip()
 
 
 def close(self):
@@ -533,54 +497,17 @@ def wrapToPi(num: float) -> float:
     return rem
 
 
-def bound(x, m, M=None):
-    """Either have m as scalar, so bound(x,m,M) which returns m <= x <= M *OR*
-    have m as length 2 vector, bound(x,m, <IGNORED>) returns m[0] <= x <= m[1].
-    Args:
-        x: scalar
-        m: The lower bound
-        M: The upper bound
-    Returns:
-        x: scalar, bound between min (m) and Max (M)
-    """
-    if M is None:
-        M = m[1]
-        m = m[0]
-    # bound x between min (m) and Max (M)
-    return min(max(x, m), M)
-
-
 def rk4(derivs, y0, t):
-    """
-    Integrate 1-D or N-D system of ODEs using 4-th order Runge-Kutta.
-    Args:
-        derivs: the derivative of the system and has the signature ``dy = derivs(yi)``
-        y0: initial state vector
-        t: sample times
-    Returns:
-        yout: Runge-Kutta approximation of the ODE
-    """
+    dt = t[1] - t[0]
 
-    try:
-        Ny = len(y0)
-    except TypeError:
-        yout = np.zeros((len(t),), np.float_)
-    else:
-        yout = np.zeros((len(t), Ny), np.float_)
+    k0 = np.asarray(derivs(y0))
+    return y0 + k0 * dt
+    # If impact event occurred
+    if k0[4] > y0[4]:
+        return k0
 
-    yout[0] = y0
-
-    for i in np.arange(len(t) - 1):
-
-        this = t[i]
-        dt = t[i + 1] - this
-        dt2 = dt / 2.0
-        y0 = yout[i]
-
-        k1 = np.asarray(derivs(y0))
-        k2 = np.asarray(derivs(y0 + dt2 * k1))
-        k3 = np.asarray(derivs(y0 + dt2 * k2))
-        k4 = np.asarray(derivs(y0 + dt * k3))
-        yout[i + 1] = y0 + dt / 6.0 * (k1 + 2 * k2 + 2 * k3 + k4)
+    k1 = np.asarray(derivs(y0 + 0.5 * dt * k0))
+    k2 = np.asarray(derivs(y0 + 0.5 * dt * k1))
+    k3 = np.asarray(derivs(y0 + dt * k2))
     # We only care about the final timestep and we cleave off action value which will be zero
-    return yout[-1][:4]
+    return y0 + dt / 6.0 * (k0 + 2 * k1 + 2 * k2 + k3)

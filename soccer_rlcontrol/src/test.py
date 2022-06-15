@@ -1,3 +1,4 @@
+import time
 from unittest import TestCase
 
 import gym
@@ -14,9 +15,12 @@ class Test(TestCase):
         super().setUpClass()
 
     def test_acrobot_basic(self):
-        env = gym.make("AcrobotWalker-v0", render_mode="numerical")
+        env = gym.make("AcrobotWalker-v0", render_mode="human")
         env.reset()
-        env.step(0)
+        for i in range(1, 1000):
+            time.sleep(0.01)
+            env.step(0)
+            env.render()
 
     def test_acrobot_sarsa(self):
         env = gym.make("AcrobotWalker-v0", render_mode="numerical")

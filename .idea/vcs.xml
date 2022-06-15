@@ -11,6 +11,5 @@
     <mapping directory="$PROJECT_DIR$/external/webots/resources/webots_ros" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/src/glm" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/src/stb" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/soccer_rlcontrol" vcs="Git" />
   </component>
 </project>
