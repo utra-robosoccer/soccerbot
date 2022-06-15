@@ -1,0 +1,78 @@
+<robot name="acrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="JOINT_FRICTION" value="0.05"/>
+    <xacro:property name="JOINT_DAMPING" value="0.02"/>
+    <xacro:property name="MOTOR_TORQUE" value="0.22"/>
+    <xacro:property name="MOTOR_VELOCITY" value="1.8"/>
+    <xacro:property name="PI" value="3.1415928"/>
+
+    <xacro:property name="MAXIMUM_ANGLE" value="${11*PI/12}"/>
+
+    <link name="base_link" />
+
+    <link name="leg1">
+        <collision>
+            <origin rpy="${PI/2} 0 0" xyz="348.54e-3 0 0"/>
+            <geometry>
+                <cylinder length="102.555e-3" radius="4.081e-3"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="460.566e-3"/>
+            <origin rpy="0 0 0" xyz="30.4146e-3 0 0"/>
+            <inertia ixx="3.451e-4" ixy="0.0" ixz="0.0"
+                     iyy="2.45e-3" iyz="0.0"
+                     izz="2.19e-3"/>
+        </inertial>
+        <visual name="visual">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://acrobot_description/meshes/leg1.stl" scale="1 1 1"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 0.8 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="leg2">
+        <collision>
+            <origin rpy="${PI/2} 0 0" xyz="-348.54e-3 0 0"/>
+            <geometry>
+                <cylinder length="102.555e-3" radius="4.081e-3"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="109.617e-3"/>
+            <origin rpy="0 0 0" xyz="-92.3558e-3 0 0"/>
+            <inertia ixx="2.24e-4" ixy="0" ixz="0"
+                     iyy="1.60e-3" iyz="0"
+                     izz="1.38e-3"/>
+        </inertial>
+        <visual name="visual">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://acrobot_description/meshes/leg2.stl" scale="1 1 1"/>
+            </geometry>
+            <material name="red">
+                <color rgba="0.8 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="base_link" type="fixed">
+        <parent link="base_link"/>
+        <child link="leg1"/>
+        <origin rpy="0 ${PI/2} 0" xyz="0 0 0.348"/>
+    </joint>
+
+    <joint name="joint" type="revolute">
+        <parent link="leg1"/>
+        <child link="leg2"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
+        <limit effort="${MOTOR_TORQUE}" lower="-${MAXIMUM_ANGLE}" upper="${MAXIMUM_ANGLE}" velocity="${MOTOR_VELOCITY}"/>
+    </joint>
+
+</robot>

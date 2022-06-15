@@ -1,0 +1,10 @@
+<launch>
+    <arg name="model_name" default="acrobot" />
+
+    <param name="robot_description" command="xacro --inorder '$(find acrobot_description)/models/$(arg model_name).xacro'" />
+
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find acrobot_description)/rviz/acrobot.rviz" required="true" />
+</launch>

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/acrobot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/GameController" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/projects/robots/mobsya/thymio/controllers/thymio2_aseba/aseba" vcs="Git" />
@@ -12,5 +13,7 @@
     <mapping directory="$PROJECT_DIR$/external/webots/src/glm" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/src/stb" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/navigation" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/soccer_rl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/soccer_rlcontrol" vcs="Git" />
   </component>
 </project>
