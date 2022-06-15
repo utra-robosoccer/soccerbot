@@ -4,7 +4,7 @@ from threading import Event, Lock, Thread
 
 import rospy as rp
 import serial
-from motor_util import CMD_HEADS, CMDS, RWS, uart_transact
+from motor_util import CMD_HEADS, CMDS, RWS, uart_transact, un6pack
 from receiver import Receiver
 from transformations import *
 from utility import log_string
@@ -20,9 +20,6 @@ class MotorReceiver(Receiver):
                 # print(raw_pos)
                 for servo_idx, (p_valid, p) in raw_pos.items():
                     if p_valid:
-                        p = (p[1] & 0x3F) | ((p[2] & 0x3F) << 6)
-                        if p & 0x800:
-                            p -= 0x1000
-                        pos[servo_idx] = float(p) / 0xFFF * 180.0  # note: we use degrees for motor angles
+                        pos[servo_idx] = un6pack(p[1:3], False) / 0xFFF * 180.0  # note: we use degrees for motor angles
 
         return (valid, pos)

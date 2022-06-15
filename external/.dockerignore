@@ -1,6 +1,0 @@
-webots/.*
-webots/!.git
-GameController/.*
-*.md
-LICENSE
-Dockerfile

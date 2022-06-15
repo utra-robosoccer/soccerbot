@@ -1,5 +1,5 @@
 <launch>
-    <arg name="simulation" default="true" />
+    <arg name="simulation" default="false" />
     <arg name="x_pos" default="$(optenv X_POS 0)" />
     <arg name="y_pos" default="$(optenv Y_POS 0)" />
     <arg name="a_pos" default="$(optenv YAW 0)" />
