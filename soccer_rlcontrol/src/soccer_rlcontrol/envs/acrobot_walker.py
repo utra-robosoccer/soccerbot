@@ -79,7 +79,7 @@ class AcrobotWalkerEnv(core.Env):
     """
 
     metadata = {
-        "render_modes": ["pybullet", "human"],
+        "render_modes": ["pybullet", "human", "rgb_array"],
         "render_fps": 15,
     }
 
@@ -294,9 +294,6 @@ class AcrobotWalkerEnv(core.Env):
         s_augmented = np.append(s, tau)
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])
 
-        for i in range(0, 4):
-            ns[i] = max(min(ns[i], self.observation_space.high[i]), self.observation_space.low[i])
-
         # Compute reward
         reward = -1.0
         if ns[4] > s[4]:
@@ -450,8 +447,11 @@ class AcrobotWalkerEnv(core.Env):
 
         if self.screen is None:
             pygame.init()
-            pygame.display.init()
-            self.screen = pygame.display.set_mode((SCREEN_DIM, SCREEN_DIM))
+            if mode == "human":
+                pygame.display.init()
+                self.screen = pygame.display.set_mode((SCREEN_DIM, SCREEN_DIM))
+            elif mode == "rgb_array":
+                self.screen = pygame.Surface((SCREEN_DIM, SCREEN_DIM))
         if self.clock is None:
             self.clock = pygame.time.Clock()
 
@@ -489,9 +489,13 @@ class AcrobotWalkerEnv(core.Env):
         surf = pygame.transform.flip(surf, False, True)
         self.screen.blit(surf, (0, 0))
 
-        pygame.event.pump()
-        self.clock.tick(self.metadata["render_fps"])
-        pygame.display.flip()
+        if mode == "human":
+            pygame.event.pump()
+            self.clock.tick(self.metadata["render_fps"])
+            pygame.display.flip()
+
+        elif mode == "rgb_array":
+            return np.transpose(np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2))
 
 
 def close(self):
