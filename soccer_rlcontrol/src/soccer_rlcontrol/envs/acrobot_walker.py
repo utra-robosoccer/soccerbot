@@ -101,7 +101,7 @@ class AcrobotWalkerEnv(core.Env):
             )
         else:
             self.client_id = pb.connect(pb.DIRECT)
-            self.screen = None
+            self.viewer = None
             self.clock = None
 
         home = expanduser("~")
@@ -427,48 +427,22 @@ class AcrobotWalkerEnv(core.Env):
         B = self.calc_B(qd2=qdot[1])
 
         # Torque from tau
-        tau_q = np.linalg.lstsq(D, np.array([0, tau]))[0]
+        tau_q = np.linalg.solve(D, np.array([0, tau]))
 
         # Torque from gravity
-        tau_g = np.linalg.lstsq(D, (-C @ np.array([qdot]).T - P - B))[0].T.flatten()
+        tau_g = np.linalg.solve(D, (-C @ np.array([qdot]).T - P - B)).T.flatten()
 
         qddot_new = tau_g + tau_q
         return np.concatenate([qdot, qddot_new, s_augmented[4:6], np.array([0])])
 
     def render(self, mode="human"):
         assert mode in self.metadata["render_modes"]
-        try:
-            import pygame
-            from pygame import gfxdraw
-        except ImportError:
-            raise DependencyNotInstalled("pygame is not installed, run `pip install gym[classic_control]`")
 
         SCREEN_DIM = 500
 
-        if self.screen is None:
-            pygame.init()
-            if mode == "human":
-                pygame.display.init()
-                self.screen = pygame.display.set_mode((SCREEN_DIM, SCREEN_DIM))
-            elif mode == "rgb_array":
-                self.screen = pygame.Surface((SCREEN_DIM, SCREEN_DIM))
-        if self.clock is None:
-            self.clock = pygame.time.Clock()
-
-        surf = pygame.Surface((SCREEN_DIM, SCREEN_DIM))
-        surf.fill((255, 255, 255))
         s = self.state
-
         if s is None:
             return None
-
-        pygame.draw.line(
-            surf,
-            start_pos=(0, SCREEN_DIM / 2),
-            end_pos=(SCREEN_DIM, SCREEN_DIM / 2),
-            color=(100, 100, 100),
-        )
-
         q1 = s[0]
         q2 = s[1]
 
@@ -481,30 +455,53 @@ class AcrobotWalkerEnv(core.Env):
         rc2 = rH + self._lcom(1) * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
         pH2 = rH + self.leg_length * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
 
-        pygame.draw.line(surf, (255, 0, 0), start_pos=tuple(np.squeeze(pheel)), end_pos=tuple(np.squeeze(rH)))
-        pygame.draw.line(surf, (0, 255, 0), start_pos=tuple(np.squeeze(rH)), end_pos=tuple(np.squeeze(pH2)))
-        pygame.draw.circle(surf, (255, 0, 0), tuple(np.squeeze(rc1)), 3)
-        pygame.draw.circle(surf, (0, 255, 0), tuple(np.squeeze(rc2)), 3)
+        if self.viewer is None:
+            from gym.envs.classic_control import rendering
 
-        surf = pygame.transform.flip(surf, False, True)
-        self.screen.blit(surf, (0, 0))
+            self.viewer = rendering.Viewer(SCREEN_DIM, SCREEN_DIM)
 
-        if mode == "human":
-            pygame.event.pump()
-            self.clock.tick(self.metadata["render_fps"])
-            pygame.display.flip()
+            self.ground_line = rendering.Line((0, SCREEN_DIM / 2), (SCREEN_DIM, SCREEN_DIM / 2))
+            self.ground_line.linewidth.stroke = 2
+            self.viewer.add_geom(self.ground_line)
 
-        elif mode == "rgb_array":
-            return np.transpose(np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2))
+            self.pole1 = rendering.Line(tuple(np.squeeze(pheel)), tuple(np.squeeze(rH)))
+            self.pole1.linewidth.stroke = 2
+            self.pole1.set_color(1, 0, 0)
+            self.viewer.add_geom(self.pole1)
+
+            self.pole2 = rendering.Line(tuple(np.squeeze(rH)), tuple(np.squeeze(pH2)))
+            self.pole2.linewidth.stroke = 2
+            self.pole2.set_color(0, 1, 0)
+            self.viewer.add_geom(self.pole2)
+
+            self.circ1 = rendering.make_circle(radius=3)
+            self.circ1.set_color(1, 0, 0)
+            self.circ1_tr = rendering.Transform(translation=tuple(np.squeeze(rc1)))
+            self.circ1.add_attr(self.circ1_tr)
+            self.viewer.add_geom(self.circ1)
+
+            self.circ2 = rendering.make_circle(radius=3)
+            self.circ2.set_color(0, 1, 0)
+            self.circ2_tr = rendering.Transform(translation=tuple(np.squeeze(rc2)))
+            self.circ2.add_attr(self.circ2_tr)
+            self.viewer.add_geom(self.circ2)
+
+            self.viewer.render(return_rgb_array=mode == "rgb_array")
+
+        self.pole1.start = tuple(np.squeeze(pheel))
+        self.pole1.end = tuple(np.squeeze(rH))
+        self.pole2.start = tuple(np.squeeze(rH))
+        self.pole2.end = tuple(np.squeeze(pH2))
+        self.circ1_tr.translation = tuple(np.squeeze(rc1))
+        self.circ2_tr.translation = tuple(np.squeeze(rc2))
+
+        return self.viewer.render(return_rgb_array=mode == "rgb_array")
 
 
 def close(self):
-    if self.screen is not None:
-        import pygame
-
-        pygame.display.quit()
-        pygame.quit()
-        self.isopen = False
+    if self.viewer is not None:
+        self.viewer.close()
+        self.viewer = None
 
 
 def wrapTo2Pi(num: float) -> float:

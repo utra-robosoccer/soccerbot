@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import os
 from unittest import TestCase
 
 import gym
@@ -35,7 +37,7 @@ class Test(TestCase):
             np.linspace(env.observation_space.low[3], env.observation_space.high[3], bin_size),
             np.array([0, 1]),  # Left or right foot
         ]
-        action_bin_size = 10
+        action_bin_size = 20
         action_bins = np.linspace(env.action_space.low[0], env.action_space.high[0], action_bin_size)
 
         Q = np.random.uniform(low=-1, high=1, size=([bin_size] * 4 + [2] + [action_bin_size]))
@@ -53,8 +55,6 @@ class Test(TestCase):
             s = obs2state(obs)
             a = policy_fun(s)
 
-            display = Display(visible=True, size=(600, 400))
-            display.start()
             prev_screen = env.render(mode="rgb_array")
             plt.imshow(prev_screen)
 
@@ -91,7 +91,7 @@ class Test(TestCase):
 
             env.close()
 
-        def train(alpha=0.15, eps=0.2, gamma=0.995, episodes=10000):
+        def train(alpha=0.15, eps=0.2, gamma=0.995, episodes=50000):
             print("Starting training with alpha={} eps={} gamma={} episodes={}".format(alpha, eps, gamma, episodes))
             score = 0
             for episode_i in range(episodes):
@@ -103,12 +103,20 @@ class Test(TestCase):
                         score += r
                 if episode_i % 200 == 0:
                     print("Episode " + str(episode_i) + ": Average score (steps) for last 200 episodes: " + str(score / 200))
+                    test_policy(lambda s: np.argmax(Q[s]))
+
+                    dir_path = os.path.dirname(os.path.realpath(__file__))
+                    np.save(dir_path + f"/data/Q{episode_i}", Q)
                     score = 0
 
-        test_policy(lambda s: np.argmax(Q[s]))
         train()
         print("Running Tests")
         total_score = 0
         for i in range(0, 20):
             total_score += test_policy(lambda s: np.argmax(Q[s]))
         print("Average number of steps lasted: " + str(total_score / 20))
+
+
+if __name__ == "__main__":
+    t = Test()
+    t.test_acrobot_sarsa()
