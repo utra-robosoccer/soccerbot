@@ -144,7 +144,7 @@ class AcrobotWalkerEnv(core.Env):
         self.loadRoboticsEquations()
 
         # Joint constraints
-        joint_velocity_limit = 20 * pi
+        joint_velocity_limit = 2 * pi
         motor_torque_limit = 0.22
         angle_limit = pi / 20
         high = np.array([pi, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
