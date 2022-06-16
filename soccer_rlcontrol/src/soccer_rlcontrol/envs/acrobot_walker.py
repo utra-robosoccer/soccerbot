@@ -83,7 +83,7 @@ class AcrobotWalkerEnv(core.Env):
         "render_fps": 15,
     }
 
-    dt = 0.01
+    dt = 0.02
 
     def __init__(self, render_mode: Optional[str] = None):
         assert render_mode is None or render_mode in self.metadata["render_modes"]
@@ -144,7 +144,7 @@ class AcrobotWalkerEnv(core.Env):
         self.loadRoboticsEquations()
 
         # Joint constraints
-        joint_velocity_limit = 2 * pi
+        joint_velocity_limit = 3 * pi
         motor_torque_limit = 0.22
         angle_limit = pi / 20
         high = np.array([pi, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
@@ -295,14 +295,14 @@ class AcrobotWalkerEnv(core.Env):
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])
 
         # Compute reward
-        reward = -1.0
+        reward = 1.0
         if ns[4] > s[4]:
             reward += 1000
 
         self.state = ns[0:-1]
         terminal = self._terminal()
         if terminal:
-            reward = 0.0
+            reward = -1000
 
         return self._get_ob(), reward, terminal, {}
 
@@ -329,21 +329,21 @@ class AcrobotWalkerEnv(core.Env):
         else:
             return num
 
-    def _linertia(self, num):
+    def linertia(self, num):
         num = self._switch_leg(num)
         if num == 0:
             return self.moi0
         else:
             return self.moi1
 
-    def _lcom(self, num):
+    def lcom(self, num):
         num = self._switch_leg(num)
         if num == 0:
             return self.com0
         else:
             return self.com1
 
-    def _lmass(self, num):
+    def lmass(self, num):
         num = self._switch_leg(num)
         if num == 0:
             return self.m0
@@ -366,13 +366,13 @@ class AcrobotWalkerEnv(core.Env):
         qdot = s_augmented[2:4]
 
         De = self.calc_De(
-            i1=self._linertia(0),
-            i2=self._linertia(1),
+            i1=self.linertia(0),
+            i2=self.linertia(1),
             l1=self.leg_length,
-            lc1=self._lcom(0),
-            lc2=self._lcom(1),
-            m1=self._lmass(0),
-            m2=self._lmass(1),
+            lc1=self.lcom(0),
+            lc2=self.lcom(1),
+            m1=self.lmass(0),
+            m2=self.lmass(1),
             q1=q1,
             q2=q2,
         )
@@ -413,17 +413,17 @@ class AcrobotWalkerEnv(core.Env):
             return self._impact_foot(s_augmented)
 
         D = self.calc_D(
-            i1=self._linertia(0),
-            i2=self._linertia(0),  # TODO fix math i2=linertia(1)
+            i1=self.linertia(0),
+            i2=self.linertia(1),  # TODO fix math i2=linertia(1)
             l1=self.leg_length,
-            lc1=self._lcom(0),
-            lc2=self._lcom(1),
-            m1=self._lmass(0),
-            m2=self._lmass(1),
+            lc1=self.lcom(0),
+            lc2=self.lcom(1),
+            m1=self.lmass(0),
+            m2=self.lmass(1),
             q2=q[1],
         )
-        C = self.calc_C(l1=self.leg_length, lc2=self._lcom(1), m2=self._lmass(1), q2=q[1], qd1=qdot[0], qd2=qdot[1])
-        P = self.calc_P(l1=self.leg_length, lc1=self._lcom(0), lc2=self._lcom(1), m1=self._lmass(0), m2=self._lmass(1), q1=q[0], q2=q[1])
+        C = self.calc_C(l1=self.leg_length, lc2=self.lcom(1), m2=self.lmass(1), q2=q[1], qd1=qdot[0], qd2=qdot[1])
+        P = self.calc_P(l1=self.leg_length, lc1=self.lcom(0), lc2=self.lcom(1), m1=self.lmass(0), m2=self.lmass(1), q1=q[0], q2=q[1])
         B = self.calc_B(qd2=qdot[1])
 
         # Torque from tau
@@ -450,9 +450,9 @@ class AcrobotWalkerEnv(core.Env):
 
         pheel = np.array([s[5], 0]) * SCALE + np.array([SCREEN_DIM / 4, SCREEN_DIM / 2])
 
-        rc1 = (self.leg_length - self._lcom(0)) * np.array([[cos(q1), sin(q1)]]) * SCALE + pheel
+        rc1 = (self.leg_length - self.lcom(0)) * np.array([[cos(q1), sin(q1)]]) * SCALE + pheel
         rH = self.leg_length * np.array([cos(q1), sin(q1)]) * SCALE + pheel
-        rc2 = rH + self._lcom(1) * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
+        rc2 = rH + self.lcom(1) * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
         pH2 = rH + self.leg_length * np.array([cos(q1 + q2), sin(q1 + q2)]) * SCALE
 
         if self.viewer is None:

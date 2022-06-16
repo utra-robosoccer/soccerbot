@@ -95,9 +95,10 @@ class Test(TestCase):
             env.render()
 
     def test_acrobot_sarsa(self):
-        def train(alpha=0.15, eps=0.2, gamma=0.995, episodes=50000):
+        def train(alpha=0.15, eps=0.05, gamma=0.995, episodes=500000):
             print("Starting training with alpha={} eps={} gamma={} episodes={}".format(alpha, eps, gamma, episodes))
             score = 0
+            interval = 200
             for episode_i in range(episodes):
                 policy_fun = lambda s: rng.choice((np.argmax(Q[s]), rng.randint(action_bin_size)), p=(1 - eps, eps))  # eps chance of a random pick
 
@@ -105,8 +106,8 @@ class Test(TestCase):
                     if not done:
                         Q[s][a] = Q[s][a] + alpha * (r + gamma * np.max(Q[s_]) - Q[s][a])
                         score += r
-                if episode_i % 200 == 0:
-                    print("Episode " + str(episode_i) + ": Average score (steps) for last 200 episodes: " + str(score / 200))
+                if episode_i % interval == 0:
+                    print("Episode " + str(episode_i) + ": Average score (steps) for last 200 episodes: " + str(score / interval))
                     test_policy(lambda s: np.argmax(Q[s]))
 
                     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -118,7 +119,7 @@ class Test(TestCase):
     def test_q_policy(self):
         print("Running Tests")
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        Q = np.load(dir_path + "/data/Q31200.npy")
+        Q = np.load(dir_path + "/data/Q11400.npy")
 
         total_score = 0
         for i in range(0, 20):
@@ -129,12 +130,55 @@ class Test(TestCase):
     def test_visualize_q(self):
         import matplotlib.pyplot as plt
 
+        env.reset()
+
+        # Visualize streamplot
+        bx, by = np.meshgrid(bins[0], bins[1])
+
+        bu = np.zeros((len(bx), len(bx)))
+        bv = np.zeros((len(by), len(by)))
+
+        m1 = env.lmass(1)
+        m2 = env.lmass(2)
+
+        # Holonomic field
+        B = np.array([[0], [1]])
+
+        # Gravity field
+        R = np.zeros(np.shape(bx))
+        Z = np.zeros(np.shape(by))
+
+        for i in range(np.shape(bx)[0]):
+            for j in range(np.shape(bx)[1]):
+                D = env.calc_D(i1=env.linertia(0), i2=env.linertia(1), l1=env.leg_length, lc1=env.lcom(0), lc2=env.lcom(1), m1=m1, m2=m2, q2=by[i, j])
+                P = env.calc_P(l1=env.leg_length, lc1=env.lcom(0), lc2=env.lcom(1), m1=env.lmass(0), m2=env.lmass(1), q1=bx[i, j], q2=by[i, j])
+                temp = np.linalg.solve(D, B)
+                bu[i, j] = temp[0]
+                bv[i, j] = temp[1]
+
+                temp2 = np.linalg.solve(D, -P)
+                R[i, j] = temp2[0][0]
+                Z[i, j] = temp2[1][0]
+
+        plt.figure(figsize=(4, 8))
+        plt.show(block=False)
+
+        # Holonomic plot
+        plt.streamplot(bx, by, bu, bv, linewidth=0.5)
+
+        # Gravity field
+        plt.quiver(bx, by, R, Z, width=0.002)
+
+        # Plot collisions
+        plt.plot(bins[0], -2 * bins[0] + 2 * np.pi, marker="", linewidth=0.5)
+        plt.plot(bins[0], -2 * bins[0], marker="", linewidth=0.5)
+        plt.xlim([0, np.pi])
+        plt.ylim([-np.pi, np.pi])
+        # Plot impact surfaces
+
         plt.ion()
-        for i in range(0, 25600, 200):
+        for i in range(0, 78600, 200):
             dir_path = os.path.dirname(os.path.realpath(__file__))
             Q = np.load(dir_path + f"/data/Q{i}.npy")
 
             vis = np.argmax(np.average(np.average(Q, 2), 2)[:, :, 0, :], 2)
-            plt.imshow(vis, cmap="hot", interpolation="nearest")
-            plt.draw()
-            plt.pause(0.1)
