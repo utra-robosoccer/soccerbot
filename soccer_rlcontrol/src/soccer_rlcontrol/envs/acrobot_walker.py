@@ -17,11 +17,7 @@ from sympy.utilities.lambdify import implemented_function, lambdify
 from soccer_common import Transformation as tr
 
 __copyright__ = "Copyright 2022, UTRA Robosoccer"
-__credits__ = [
-    "Jiashen Wang",
-    "Jonathan Spragett",
-    "Shahryar Rajabzadeh",
-]
+__credits__ = ["Jiashen Wang"]
 __license__ = "BSD 3-Clause"
 __author__ = "Jiashen Wang <jiashen.wang@mail.utoronto.ca.de>"
 
@@ -83,7 +79,7 @@ class AcrobotWalkerEnv(core.Env):
         "render_fps": 15,
     }
 
-    dt = 0.02
+    dt = 0.01
 
     def __init__(self, render_mode: Optional[str] = None):
         assert render_mode is None or render_mode in self.metadata["render_modes"]
@@ -146,9 +142,10 @@ class AcrobotWalkerEnv(core.Env):
         # Joint constraints
         joint_velocity_limit = 3 * pi
         motor_torque_limit = 0.22
+        q1_train_limit = pi / 8
         angle_limit = pi / 20
-        high = np.array([pi, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
-        low = np.array([0, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
+        high = np.array([pi / 2 + q1_train_limit, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
+        low = np.array([pi / 2 - q1_train_limit, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
         self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
         self.action_space = spaces.Box(low=np.array([-motor_torque_limit]), high=np.array([motor_torque_limit]), dtype=np.float32)
         self.state = None
@@ -295,14 +292,12 @@ class AcrobotWalkerEnv(core.Env):
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])
 
         # Compute reward
-        reward = 1.0
+        reward = -1.0
         if ns[4] > s[4]:
-            reward += 1000
+            reward += 100
 
         self.state = ns[0:-1]
         terminal = self._terminal()
-        if terminal:
-            reward = -1000
 
         return self._get_ob(), reward, terminal, {}
 
@@ -433,7 +428,7 @@ class AcrobotWalkerEnv(core.Env):
         tau_g = np.linalg.solve(D, (-C @ np.array([qdot]).T - P - B)).T.flatten()
 
         qddot_new = tau_g + tau_q
-        return np.concatenate([qdot, qddot_new, s_augmented[4:6], np.array([0])])
+        return np.concatenate([qdot, qddot_new, np.array([s_augmented[4], 0, 0])])
 
     def render(self, mode="human"):
         assert mode in self.metadata["render_modes"]
@@ -527,5 +522,7 @@ def rk4(derivs, y0, t):
     k1 = np.asarray(derivs(y0 + 0.5 * dt * k0))
     k2 = np.asarray(derivs(y0 + 0.5 * dt * k1))
     k3 = np.asarray(derivs(y0 + dt * k2))
-    # We only care about the final timestep and we cleave off action value which will be zero
-    return y0 + dt / 6.0 * (k0 + 2 * k1 + 2 * k2 + k3)
+
+    der = y0 + dt / 6.0 * (k0 + 2 * k1 + 2 * k2 + k3)
+    der[4] = y0[4]
+    return der

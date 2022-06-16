@@ -12,26 +12,37 @@ from soccer_rlcontrol.envs import *
 env = gym.make("AcrobotWalker-v0", render_mode="human")
 rng = np.random.RandomState(0)
 
-bin_size = 15
+bin_size = 20
 bins = [
     np.linspace(env.observation_space.low[0], env.observation_space.high[0], bin_size),
     np.linspace(env.observation_space.low[1], env.observation_space.high[1], bin_size),
-    np.linspace(env.observation_space.low[2], env.observation_space.high[2], bin_size),
-    np.linspace(env.observation_space.low[3], env.observation_space.high[3], bin_size),
+    # np.linspace(env.observation_space.low[2], env.observation_space.high[2], bin_size), #assuming velocity space doesn't matter
+    # np.linspace(env.observation_space.low[3], env.observation_space.high[3], bin_size),
     np.array([0, 1]),  # Left or right foot
 ]
-action_bin_size = 15
+action_bin_size = 5
 action_bins = np.linspace(env.action_space.low[0], env.action_space.high[0], action_bin_size)
 
-Q = np.random.uniform(low=-1, high=1, size=([bin_size] * 4 + [2] + [action_bin_size]))
+Q = np.random.uniform(low=-1, high=1, size=([bin_size] * 2 + [2] + [action_bin_size]))
+for q1 in range(Q.shape[0]):
+    for q2 in range(Q.shape[1]):
+        if bins[1][q2] < -2 * bins[0][q1]:
+            Q[q1, q2] = 0
+        if bins[1][q2] > -2 * bins[0][q1] + 2 * np.pi:
+            Q[q1, q2] = 0
+
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+# Q = np.load(dir_path + "/data/Q43400.npy")
+np.save(dir_path + "/data/Qinit", Q)
 
 
 def obs2state(state):
-    state = state[0:5]
+    ss = state[0:2]  # state[0:5]
     index = []
-    for i in range(len(state) - 1):
+    for i in range(len(ss)):
         index.append(np.digitize(state[i], bins[i]) - 1)
-    index.append(int(state[4] % 2))
+    index.append(int(state[4] % 2))  # index.append(int(state[4] % 2))
     return tuple(index)
 
 
@@ -85,17 +96,27 @@ class Test(TestCase):
     def test_acrobot_basic(self):
         env = gym.make("AcrobotWalker-v0", render_mode="human")
         env.reset()
-        for i in range(1, 45):
+        for i in range(1, 35):
             (obs, reward, terminal, info) = env.step(0.005)
             env.render()
-        for i in range(1, 1000):
-            (obs, reward, terminal, info) = env.step(-0.055)
+        for i in range(1, 30):
+            (obs, reward, terminal, info) = env.step(-0.065)
+            if terminal:
+                break
+            env.render()
+        for i in range(1, 80):
+            (obs, reward, terminal, info) = env.step(0.0718)
+            if terminal:
+                break
+            env.render()
+        for i in range(1, 80):
+            (obs, reward, terminal, info) = env.step(-0.15)
             if terminal:
                 break
             env.render()
 
     def test_acrobot_sarsa(self):
-        def train(alpha=0.15, eps=0.05, gamma=0.995, episodes=500000):
+        def train(alpha=0.15, eps=0.02, gamma=0.995, episodes=500000):
             print("Starting training with alpha={} eps={} gamma={} episodes={}".format(alpha, eps, gamma, episodes))
             score = 0
             interval = 200
@@ -130,6 +151,8 @@ class Test(TestCase):
     def test_visualize_q(self):
         import matplotlib.pyplot as plt
 
+        plt.ion()
+
         env.reset()
 
         # Visualize streamplot
@@ -160,25 +183,33 @@ class Test(TestCase):
                 R[i, j] = temp2[0][0]
                 Z[i, j] = temp2[1][0]
 
-        plt.figure(figsize=(4, 8))
+        plt.figure(figsize=(6, 12))
         plt.show(block=False)
 
         # Holonomic plot
         plt.streamplot(bx, by, bu, bv, linewidth=0.5)
 
         # Gravity field
-        plt.quiver(bx, by, R, Z, width=0.002)
+        # plt.quiver(bx, by, R, Z, width=0.002)
 
         # Plot collisions
         plt.plot(bins[0], -2 * bins[0] + 2 * np.pi, marker="", linewidth=0.5)
         plt.plot(bins[0], -2 * bins[0], marker="", linewidth=0.5)
         plt.xlim([0, np.pi])
         plt.ylim([-np.pi, np.pi])
-        # Plot impact surfaces
 
-        plt.ion()
-        for i in range(0, 78600, 200):
-            dir_path = os.path.dirname(os.path.realpath(__file__))
-            Q = np.load(dir_path + f"/data/Q{i}.npy")
+        # Plot strategy field
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        Q = np.load(dir_path + "/data/Q28400.npy")
 
-            vis = np.argmax(np.average(np.average(Q, 2), 2)[:, :, 0, :], 2)
+        action_map_index = np.argmax(Q[:, :, 0, :], 2)
+        action_map = action_bins[action_map_index]
+
+        bu2 = np.multiply(action_map, bu)
+        bv2 = np.multiply(action_map, bv)
+
+        plt.quiver(bx, by, bu2, bv2, width=0.003, color="r")
+        plt.xlabel("q1")
+        plt.ylabel("q2")
+
+        plt.show(block=True)

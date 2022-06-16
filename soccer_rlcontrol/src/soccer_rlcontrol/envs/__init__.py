@@ -8,6 +8,6 @@ _load_env_plugins()
 register(
     id="AcrobotWalker-v0",
     entry_point="soccer_rlcontrol.envs:AcrobotWalkerEnv",
-    max_episode_steps=500,
+    max_episode_steps=2000,
     reward_threshold=195.0,
 )
