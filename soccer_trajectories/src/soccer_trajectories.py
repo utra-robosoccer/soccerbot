@@ -144,7 +144,6 @@ class Trajectory:
 class SoccerTrajectoryClass:
     def __init__(self):
         self.trajectory_path = ""
-        self.simulation = True
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
@@ -161,10 +160,7 @@ class SoccerTrajectoryClass:
             return
         self.trajectory_complete = False
 
-        if self.simulation:
-            path = self.trajectory_path + "/" + "simulation_" + command.trajectory_name + ".csv"
-        else:
-            path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
+        path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
             self.trajectory_complete = True
@@ -180,7 +176,6 @@ class SoccerTrajectoryClass:
     def run(self):
         rospy.init_node("soccer_trajectories")
         self.trajectory_path = rospy.get_param("~trajectory_path")
-        self.simulation = rospy.get_param("~simulation")
         rospy.spin()
 
 

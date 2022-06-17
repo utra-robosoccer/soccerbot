@@ -1,6 +1,7 @@
 import functools
 
 import numpy as np
+import rospy
 from scipy.special import comb
 
 from soccer_common.transformation import Transformation
@@ -8,7 +9,7 @@ from soccer_pycontrol.path_section import PathSection
 
 
 class PathSectionBezier(PathSection):
-    turn_duration = 3  # Number of body steps to turn
+    turn_duration = rospy.get_param("turn_duration", 3)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform
