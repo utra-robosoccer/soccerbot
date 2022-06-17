@@ -141,8 +141,8 @@ class AcrobotWalkerEnv(core.Env):
 
         # Joint constraints
         joint_velocity_limit = 3 * pi
-        motor_torque_limit = 0.22
-        q1_train_limit = pi / 8
+        motor_torque_limit = 0.15
+        q1_train_limit = pi / 2  # pi / 8
         angle_limit = pi / 20
         high = np.array([pi / 2 + q1_train_limit, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
         low = np.array([pi / 2 - q1_train_limit, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
@@ -292,9 +292,9 @@ class AcrobotWalkerEnv(core.Env):
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])
 
         # Compute reward
-        reward = -1.0
+        reward = 1.0
         if ns[4] > s[4]:
-            reward += 100
+            reward += 1000
 
         self.state = ns[0:-1]
         terminal = self._terminal()

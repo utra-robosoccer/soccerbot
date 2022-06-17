@@ -105,7 +105,7 @@ class Test(TestCase):
                 break
             env.render()
         for i in range(1, 80):
-            (obs, reward, terminal, info) = env.step(0.0718)
+            (obs, reward, terminal, info) = env.step(0.07185)
             if terminal:
                 break
             env.render()
@@ -114,9 +114,29 @@ class Test(TestCase):
             if terminal:
                 break
             env.render()
+        for i in range(1, 40):
+            (obs, reward, terminal, info) = env.step(-0.09)
+            if terminal:
+                break
+            env.render()
+        for i in range(1, 40):
+            (obs, reward, terminal, info) = env.step(0.0102)
+            if terminal:
+                break
+            env.render()
+        for i in range(1, 100):
+            (obs, reward, terminal, info) = env.step(-0.15)
+            if terminal:
+                break
+            env.render()
+        for i in range(1, 40):
+            (obs, reward, terminal, info) = env.step(0)
+            if terminal:
+                break
+            env.render()
 
     def test_acrobot_sarsa(self):
-        def train(alpha=0.15, eps=0.02, gamma=0.995, episodes=500000):
+        def train(alpha=0.15, eps=0.2, gamma=0.995, episodes=500000):
             print("Starting training with alpha={} eps={} gamma={} episodes={}".format(alpha, eps, gamma, episodes))
             score = 0
             interval = 200
@@ -200,7 +220,7 @@ class Test(TestCase):
 
         # Plot strategy field
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        Q = np.load(dir_path + "/data/Q28400.npy")
+        Q = np.load(dir_path + "/data/Qinit.npy")
 
         action_map_index = np.argmax(Q[:, :, 0, :], 2)
         action_map = action_bins[action_map_index]
