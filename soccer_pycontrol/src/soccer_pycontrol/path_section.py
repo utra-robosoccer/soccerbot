@@ -11,9 +11,9 @@ from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 
 
 class PathSection(ABC):
-    backwards_bodystep_size_ratio = rospy.get_param("backwards_bodystep_size_ratio", 0.5)  # How much smaller the body step is for backwards movement
-    bodystep_size_default = rospy.get_param("bodystep_size_default", 0.15)
-    steps_per_second_default = rospy.get_param("steps_per_second_default", 0.15)
+    backwards_bodystep_size_ratio = rospy.get_param("~backwards_bodystep_size_ratio", 0.5)  # How much smaller the body step is for backwards movement
+    bodystep_size_default = rospy.get_param("~bodystep_size_default", 0.15)
+    steps_per_second_default = rospy.get_param("~steps_per_second_default", 0.15)
 
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation, bodystep_size=bodystep_size_default):
