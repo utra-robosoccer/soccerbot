@@ -9,6 +9,6 @@ find_package(
 catkin_package(CATKIN_DEPENDS urdf xacro)
 
 xacro_add_files(
-    models/soccerbot.xacro OUTPUT
-    ${CMAKE_CURRENT_SOURCE_DIR}/models/soccerbot_stl.urdf TARGET media_files
+    models/bez1/soccerbot.xacro OUTPUT
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/bez1/soccerbot.urdf TARGET media_files
 )
