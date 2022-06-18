@@ -140,7 +140,7 @@ class Trajectory:
                 pub_all_motor.publish(js)
             except ROSException as ex:
                 print(ex)
-            exit(0)
+                exit(0)
             t = t + 0.01
             rate.sleep()
 
