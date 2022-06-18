@@ -96,7 +96,6 @@ RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
 
 # Predownload yolo3 mobilenet
-RUN sudo apt update && sudo apt-get install -y unzip
 RUN curl https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/gluon/models/yolo3_mobilenet1.0_coco-66dbbae6.zip \
     --create-dirs --output /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip && \
     unzip /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip -d /home/$USER/.mxnet/models/
