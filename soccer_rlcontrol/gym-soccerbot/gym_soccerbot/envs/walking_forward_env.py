@@ -331,9 +331,9 @@ class WalkingForward(gym.Env):
             # load ramp
 
             # load soccerbot
-            # p.loadURDF("/home/shahryar/catkin_ws/src/soccer_ws/soccer_description/models/soccerbot_stl.urdf",
-            # p.loadURDF("/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/soccer_description/models/soccerbot_stl.urdf",
-            # "/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/soccer_description/models/soccerbot_stl.urdf",
+            # p.loadURDF("/home/shahryar/catkin_ws/src/soccer_ws/bez1_description/urdf/soccerbot_stl.urdf",
+            # p.loadURDF("/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/bez1_description/urdf/soccerbot_stl.urdf",
+            # "/home/shahryar/PycharmProjects/DeepRL/gym-soccerbot/gym_soccerbot/bez1_description/urdf/soccerbot_stl.urdf",
             urdfBotPath = gym_soccerbot.getModelPath()
             self.soccerbotUid = p.loadURDF(
                 urdfBotPath,

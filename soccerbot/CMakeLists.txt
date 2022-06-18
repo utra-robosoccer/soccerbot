@@ -11,7 +11,6 @@ find_package(
     soccer_object_detection
     bez1_description
     bez3_description
-    urdf_description
     soccer_strategy
     soccer_object_localization
     soccer_pycontrol

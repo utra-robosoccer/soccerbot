@@ -3,6 +3,7 @@ from math import ceil, floor
 
 import matplotlib.pyplot as plt
 import numpy as np
+import rospy
 
 from soccer_common import Transformation
 from soccer_pycontrol.path_section import PathSection
@@ -12,10 +13,10 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Path:
-    step_precision = 0.02  # Time for a single time step
+    step_precision = rospy.get_param("~step_precision", 0.02)  # Time for a single time step
 
-    pre_footstep_ratio = 0.15  # Ratio of fullstep duration to keep foot on ground on prefootstep
-    post_footstep_ratio = 0.25  # Ratio of fullstep duration to keep foot on ground on postfootstep
+    pre_footstep_ratio = rospy.get_param("~pre_footstep_ratio", 0.15)  # Ratio of fullstep duration to keep foot on ground on prefootstep
+    post_footstep_ratio = rospy.get_param("~post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform
@@ -96,7 +97,8 @@ class Path:
 
         cumulative_ratio = 0
         for path_section in self.path_sections:
-            if total_duration == 0: return 0, path_section
+            if total_duration == 0:
+                return 0, path_section
             ratio = path_section.duration() / total_duration
             next_cumulative_ratio = cumulative_ratio + ratio
             if next_cumulative_ratio >= r:
