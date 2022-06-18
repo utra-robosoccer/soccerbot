@@ -157,7 +157,7 @@ class IntegrationTestInitial(IntegrationTest):
             assert handle.get_num_connections() > 0
             print("Connection looks okay")
             # Validate that the robot moves towards the goal
-            for i in range(0, 100):  # 100s timeout
+            for i in range(0, 200):  # 100s timeout
                 print("dist: {}, cycle: {}".format(self.distance, i))
                 rospy.sleep(1)
                 if self.distance < DIST_TOLERANCE:
