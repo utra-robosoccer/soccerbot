@@ -36,7 +36,6 @@ class SoccerbotControllerRos(SoccerbotController):
         try:
             (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print(e)
             return False
         self.robot_pose = PoseStamped()
         self.robot_pose.pose.position.x = trans[0]
@@ -113,7 +112,6 @@ class SoccerbotControllerRos(SoccerbotController):
             try:
                 self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
             except Exception as ex:
-                print(ex)
                 return
 
             end = time.time()
