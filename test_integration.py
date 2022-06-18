@@ -192,3 +192,23 @@ class IntegrationTestPlaying(IntegrationTest):
                 print("Ball not found")
 
             rospy.sleep(0.5)
+
+    @timeout_decorator.timeout(10000)
+    def test_walk_and_kick_right(self):
+        self.set_robot_pose(3.5, 0.0, 0)
+        self.set_ball_pose(4.16, -0.04)
+        while not rospy.is_shutdown():
+            if self.bounding_boxes is None:
+                rospy.sleep(0.1)
+                continue
+
+            gt_ball_pose = self.get_ball_pose(gt=False)
+            if gt_ball_pose is not None:
+                print(f"Current ball location: {gt_ball_pose}")
+                if gt_ball_pose[0] > 4.5:
+                    print("Goal Scored")
+                    return
+            else:
+                print("Ball not found")
+
+            rospy.sleep(0.5)
