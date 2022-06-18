@@ -14,7 +14,6 @@ from scipy.spatial.transform import Rotation as R
 from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
-from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBoxes
 from soccer_strategy.src.team import Team

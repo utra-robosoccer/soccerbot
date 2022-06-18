@@ -7,8 +7,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from soccer_msgs_mock.msg import RobotState
 
-from soccer_pycontrol.path import Path
-
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -43,6 +41,8 @@ else:
     rospy.loginfo_throttle = lambda a, b: None
     rospy.get_param = lambda a, b: b
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
+
+from soccer_pycontrol.path import Path
 
 
 class TestSpecial(TestCase):

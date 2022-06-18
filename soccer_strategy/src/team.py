@@ -1,46 +1,46 @@
 import enum
 import os
-import math
 
 import numpy as np
 from ball import Ball
 from robot import Robot
-from robot_controlled_2d import RobotControlled2D
 
 
 class FieldSide(enum.IntEnum):
     NORMAL = 0
     REVERSED = 1
 
-#cartesian coordinates with field centered at (0,0), scoring in positive x direction
+
+# cartesian coordinates with field centered at (0,0), scoring in positive x direction
 DEFAULT_FORMATIONS = {
-            "ready": {
-                Robot.Role.GOALIE: [-4, 0, 0],
-                Robot.Role.STRIKER: [-0.5, 0, 0],
-                Robot.Role.RIGHT_WING: [-1, 1, 0],
-                Robot.Role.LEFT_WING: [-1, -1, 0],
-            },
-            "attack": {
-                Robot.Role.GOALIE: [-4, 0, 0],
-                Robot.Role.STRIKER: [2, 0, 0],
-                Robot.Role.RIGHT_WING: [2, 2.5, 0],
-                Robot.Role.LEFT_WING: [2, -2.5, 0],
-            },
-            "defensive": {
-                Robot.Role.GOALIE: [-4, 0, 0],
-                Robot.Role.STRIKER: [3.5, 0, 0],
-                Robot.Role.RIGHT_WING: [3.5, 2, 0],
-                Robot.Role.LEFT_WING: [3, -2, 0],
-            },
-            "midfield": {
-                Robot.Role.GOALIE: [-4, 0, 0],
-                Robot.Role.STRIKER: [0, 0, 0],
-                Robot.Role.RIGHT_WING: [0, 3, 0],
-                Robot.Role.LEFT_WING: [0, -3, 0],
-            },
-            "penalty_give": {Robot.Role.GOALIE: [-4, 0, 0], Robot.Role.STRIKER: [3.5, 0, 0]},
-            "penalty_take": {Robot.Role.GOALIE: [-4, 0, 0]},
-        }
+    "ready": {
+        Robot.Role.GOALIE: [-4, 0, 0],
+        Robot.Role.STRIKER: [-0.5, 0, 0],
+        Robot.Role.RIGHT_WING: [-1, 1, 0],
+        Robot.Role.LEFT_WING: [-1, -1, 0],
+    },
+    "attack": {
+        Robot.Role.GOALIE: [-4, 0, 0],
+        Robot.Role.STRIKER: [2, 0, 0],
+        Robot.Role.RIGHT_WING: [2, 2.5, 0],
+        Robot.Role.LEFT_WING: [2, -2.5, 0],
+    },
+    "defensive": {
+        Robot.Role.GOALIE: [-4, 0, 0],
+        Robot.Role.STRIKER: [3.5, 0, 0],
+        Robot.Role.RIGHT_WING: [3.5, 2, 0],
+        Robot.Role.LEFT_WING: [3, -2, 0],
+    },
+    "midfield": {
+        Robot.Role.GOALIE: [-4, 0, 0],
+        Robot.Role.STRIKER: [0, 0, 0],
+        Robot.Role.RIGHT_WING: [0, 3, 0],
+        Robot.Role.LEFT_WING: [0, -3, 0],
+    },
+    "penalty_give": {Robot.Role.GOALIE: [-4, 0, 0], Robot.Role.STRIKER: [3.5, 0, 0]},
+    "penalty_take": {Robot.Role.GOALIE: [-4, 0, 0]},
+}
+
 
 class Team:
     def __init__(self, robots):
@@ -52,7 +52,6 @@ class Team:
         self.formation = None
         self.formations = DEFAULT_FORMATIONS
         self.enemy_goal_position = [4.8, 0]
-
 
     def flip_positions(self):
         self.enemy_goal_position[0] = -self.enemy_goal_position[0]
