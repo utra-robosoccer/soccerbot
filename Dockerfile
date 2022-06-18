@@ -6,8 +6,6 @@ WORKDIR /root/src
 RUN apt update && rosdep update --rosdistro noetic
 ADD . .
 RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
-RUN mv requirements.txt /tmp/requirements.txt
-RUN mv soccerbot/scripts/install_mxnet.sh /tmp/install_mxnet.sh
 WORKDIR /root/dependencies
 
 FROM $BASE_IMAGE as builder
@@ -75,10 +73,10 @@ RUN pip install --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY --from=dependencies --chown=$USER /tmp/install_mxnet.sh install_mxnet.sh
+COPY soccerbot/scripts/install_mxnet.sh install_mxnet.sh
 RUN bash install_mxnet.sh
 
-COPY --from=dependencies /tmp/requirements.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
@@ -95,6 +93,12 @@ RUN groupadd -g 1000 $USER && \
 WORKDIR /home/$USER/catkin_ws
 RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
+
+# Predownload yolo3 mobilenet
+RUN sudo apt update && sudo apt-get install -y unzip
+RUN curl https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/gluon/models/yolo3_mobilenet1.0_coco-66dbbae6.zip \
+    --create-dirs --output /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip && \
+    unzip /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip -d /home/$USER/.mxnet/models/
 
 # Build C++ ROS Packages such as AMCL first
 COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl

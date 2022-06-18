@@ -1,23 +1,27 @@
+# Exclude Regex https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html#zz-1.8
+x-exclude: &exclude
+  exclude: ^(external\/|cmake-build-debug\/|.pytest_cache\/|soccer_embedded\/|docs\/|.idea\/|.+pb2\.py)
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
       - id: check-symlinks
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
       - id: end-of-file-fixer
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
       - id: trailing-whitespace
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.6.2
     hooks:
       - id: prettier
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
       - id: black
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
         args:
           - --line-length=150
   - repo: https://github.com/pycqa/isort
@@ -28,12 +32,12 @@ repos:
         args:
           - --profile
           - black
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
         args:
           - --max-line-length=150
           - --max-complexity=40
@@ -46,6 +50,6 @@ repos:
     rev: v0.6.13
     hooks:
       - id: cmake-format
-        exclude: ^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea)/
+        <<: *exclude
         additional_dependencies:
           - pyyaml

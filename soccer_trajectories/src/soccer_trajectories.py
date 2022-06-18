@@ -136,7 +136,11 @@ class Trajectory:
                 position_mirrored[10:16] = js.position[4:10]
                 js.position = position_mirrored
 
-            pub_all_motor.publish(js)
+            try:
+                pub_all_motor.publish(js)
+            except ROSException as ex:
+                print(ex)
+            exit(0)
             t = t + 0.01
             rate.sleep()
 
