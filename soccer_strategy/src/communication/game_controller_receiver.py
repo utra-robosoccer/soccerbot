@@ -43,6 +43,7 @@ class GameStateReceiver(object):
         self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 
     def receive_forever(self):
+        connected = False
         while not rospy.is_shutdown():
             try:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
@@ -50,11 +51,15 @@ class GameStateReceiver(object):
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
                 rospy.loginfo_once("\033[96mConnected to Game Controller\033[0m")
+                connected = True
 
             except AssertionError as ae:
                 rospy.logerr_throttle(10, ae)
             except socket.timeout as s:
-                rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                if not connected:
+                    rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                else:
+                    rospy.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
                 self.receiver_socket.close()
                 self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
