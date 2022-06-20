@@ -26,8 +26,8 @@ class Transmitter(Thread):
 
     def start(self, *args, **kwargs):
         with self._ser._motor_lock:
-            uart_transact(self._ser, [2048, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            uart_transact(self._ser, [1800] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
+            uart_transact(self._ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+            uart_transact(self._ser, [1700] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
         super().start(*args, **kwargs)
 
     def stop(self):
@@ -47,6 +47,7 @@ class Transmitter(Thread):
             flat_goal_angles = [0] * (max(goal_angles.keys()) + 1)
             for idx, v in goal_angles.items():
                 flat_goal_angles[idx] = int(v * ANGLE2POT_VOLTS)
+        print(flat_goal_angles)
         return uart_transact(self._ser, flat_goal_angles, CMDS.POSITION, RWS.WRITE, 0.01)
 
     def get_num_tx(self):
