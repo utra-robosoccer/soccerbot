@@ -12,7 +12,7 @@
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
         <arg name="simulation" value="true" />
         <arg name="robot_id" value="1" />
-        <arg name="robot_model" value="bez3" />
+        <arg name="robot_model" value="bez1" />
         <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="-3.15" />
         <arg name="a_pos" value="1.57" />
