@@ -3,19 +3,19 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="robot_name" default="/" />
     <xacro:arg name="model_type" default="dae" />
-    <xacro:arg name="file_path" default="../soccer_description" />
+    <xacro:arg name="file_path" default="package://bez1_description" />
     <xacro:arg name="has_base_footprint" default="false" />
     <xacro:arg name="tf_prefix" default="" />
     <xacro:property name="FILE_PATH" value="$(arg file_path)"/>
     <xacro:property name="MODEL_TYPE" value="$(arg model_type)"/>
 
-    <xacro:include filename="$(find soccer_description)/models/bez1/parameters.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/parameters.xacro" />
 
-    <xacro:include filename="$(find soccer_description)/models/bez1/arm.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/bez1/leg.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/bez1/head.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/bez1/front_camera.xacro" />
-    <xacro:include filename="$(find soccer_description)/models/bez1/imu.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/arm.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/leg.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/head.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/front_camera.xacro" />
+    <xacro:include filename="$(find bez1_description)/urdf/imu.xacro" />
 
     <link name="$(arg tf_prefix)/torso">
         <inertial>

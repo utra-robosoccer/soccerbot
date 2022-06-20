@@ -13,10 +13,11 @@
     <param name="/use_sim_time" value="$(arg simulation)" />
 
     <!-- prettier-ignore -->
-    <param name="robot_description" command="xacro '$(find soccer_description)/models/$(arg robot_model)/soccerbot.xacro'
+
+    <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
-        file_path:=package://soccer_description
+        file_path:=package://bez1_description
         has_base_footprint:=false
         tf_prefix:=$(arg robot_name)
         "
