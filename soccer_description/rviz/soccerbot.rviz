@@ -8,8 +8,9 @@ Panels:
         - /Status1
         - /RobotModel1
         - /Image1
-      Splitter Ratio: 0.5
-    Tree Height: 663
+        - /TF1
+      Splitter Ratio: 0.2633744776248932
+    Tree Height: 674
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -54,7 +55,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 1
+    - Alpha: 0.4000000059604645
       Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
@@ -219,6 +220,89 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        bez1/camera:
+          Value: true
+        bez1/head:
+          Value: true
+        bez1/imu_link:
+          Value: true
+        bez1/left_ankle:
+          Value: true
+        bez1/left_bicep:
+          Value: true
+        bez1/left_calve:
+          Value: true
+        bez1/left_foot:
+          Value: true
+        bez1/left_forearm:
+          Value: true
+        bez1/left_hip_front:
+          Value: true
+        bez1/left_hip_side:
+          Value: true
+        bez1/left_thigh:
+          Value: true
+        bez1/neck:
+          Value: true
+        bez1/right_ankle:
+          Value: true
+        bez1/right_bicep:
+          Value: true
+        bez1/right_calve:
+          Value: true
+        bez1/right_foot:
+          Value: true
+        bez1/right_forearm:
+          Value: true
+        bez1/right_hip_front:
+          Value: true
+        bez1/right_hip_side:
+          Value: true
+        bez1/right_thigh:
+          Value: true
+        bez1/torso:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.10000000149011612
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        bez1/torso:
+          bez1/imu_link:
+            {}
+          bez1/left_bicep:
+            bez1/left_forearm:
+              {}
+          bez1/left_hip_side:
+            bez1/left_hip_front:
+              bez1/left_thigh:
+                bez1/left_calve:
+                  bez1/left_ankle:
+                    bez1/left_foot:
+                      {}
+          bez1/neck:
+            bez1/head:
+              bez1/camera:
+                {}
+          bez1/right_bicep:
+            bez1/right_forearm:
+              {}
+          bez1/right_hip_side:
+            bez1/right_hip_front:
+              bez1/right_thigh:
+                bez1/right_calve:
+                  bez1/right_ankle:
+                    bez1/right_foot:
+                      {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 238; 238; 238
@@ -247,25 +331,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.20676851272583
+      Distance: 0.8051276206970215
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.5859977006912231
-        Y: -0.24304908514022827
-        Z: -0.00438926974311471
+        X: -0.336234986782074
+        Y: -0.27039414644241333
+        Z: -0.24368901550769806
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3453984260559082
+      Pitch: 0.5253982543945312
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 0.4803980588912964
+      Yaw: 0.6553977131843567
     Saved: ~
 Window Geometry:
   Displays:
@@ -275,7 +358,7 @@ Window Geometry:
   Hide Right Dock: false
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001a0000003a5fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000002d4000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006101000001c9000001860000000000000000fb0000000a0049006d0061006700650100000317000000cb0000001600ffffff000000010000010f000002e2fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000028000002e2000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006400000003efc0100000002fb0000000800540069006d0065000000000000000640000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000001f9000003a500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000206000003acfc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000004f00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000034000002db000000ab00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006101000001c9000001860000000000000000fb0000000a0049006d0061006700650100000314000000cc0000001600ffffff000000010000010f000002e2fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000028000002e20000009200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006400000003efc0100000002fb0000000800540069006d00650000000000000006400000046000fffffffb0000000800540069006d0065010000000000000450000000000000000000000545000003ac00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -284,6 +367,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 927
-  X: 747
-  Y: 65
+  Width: 1872
+  X: 0
+  Y: 23

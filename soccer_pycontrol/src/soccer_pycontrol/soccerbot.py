@@ -7,6 +7,7 @@ from os.path import expanduser
 import matplotlib.pyplot as plt
 import numpy as np
 import pybullet as pb
+import rosparam
 import rospy
 from rospy import ROSException
 from sensor_msgs.msg import JointState
@@ -19,58 +20,114 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Joints(enum.IntEnum):
-    LEFT_ARM_1 = 0
-    LEFT_ARM_2 = 1
-    RIGHT_ARM_1 = 2
-    RIGHT_ARM_2 = 3
-    LEFT_LEG_1 = 4
-    LEFT_LEG_2 = 5
-    LEFT_LEG_3 = 6
-    LEFT_LEG_4 = 7
-    LEFT_LEG_5 = 8
-    LEFT_LEG_6 = 9
-    RIGHT_LEG_1 = 10
-    RIGHT_LEG_2 = 11
-    RIGHT_LEG_3 = 12
-    RIGHT_LEG_4 = 13
-    RIGHT_LEG_5 = 14
-    RIGHT_LEG_6 = 15
-    HEAD_1 = 16
-    HEAD_2 = 17
-    HEAD_CAMERA = 18
-    IMU = 19
+    # LEFT_ARM_1 = 0
+    # LEFT_ARM_2 = 1
+    # RIGHT_ARM_1 = 2
+    # RIGHT_ARM_2 = 3
+    # LEFT_LEG_1 = 4
+    # LEFT_LEG_2 = 5
+    # LEFT_LEG_3 = 6
+    # LEFT_LEG_4 = 7
+    # LEFT_LEG_5 = 8
+    # LEFT_LEG_6 = 9
+    # RIGHT_LEG_1 = 10
+    # RIGHT_LEG_2 = 11
+    # RIGHT_LEG_3 = 12
+    # RIGHT_LEG_4 = 13
+    # RIGHT_LEG_5 = 14
+    # RIGHT_LEG_6 = 15
+    # HEAD_1 = 16
+    # HEAD_2 = 17
+    # HEAD_CAMERA = 18
+    # IMU = 19
+
+    IMU = 0
+    LEFT_ARM_1 = 13
+    LEFT_ARM_2 = 14
+    RIGHT_ARM_1 = 15
+    RIGHT_ARM_2 = 16
+    LEFT_LEG_1 = 1
+    LEFT_LEG_2 = 2
+    LEFT_LEG_3 = 3
+    LEFT_LEG_4 = 4
+    LEFT_LEG_5 = 5
+    LEFT_LEG_6 = 6
+    RIGHT_LEG_1 = 7
+    RIGHT_LEG_2 = 8
+    RIGHT_LEG_3 = 9
+    RIGHT_LEG_4 = 10
+    RIGHT_LEG_5 = 11
+    RIGHT_LEG_6 = 12
+    HEAD_1 = 17
+    HEAD_2 = 18
+    HEAD_CAMERA = 19
 
 
 class Links(enum.IntEnum):
+    # TORSO = -1
+    # LEFT_ARM_1 = 0
+    # LEFT_ARM_2 = 1
+    # RIGHT_ARM_1 = 2
+    # RIGHT_ARM_2 = 3
+    # LEFT_LEG_1 = 4
+    # LEFT_LEG_2 = 5
+    # LEFT_LEG_3 = 6
+    # LEFT_LEG_4 = 7
+    # LEFT_LEG_5 = 8
+    # LEFT_LEG_6 = 9
+    # RIGHT_LEG_1 = 10
+    # RIGHT_LEG_2 = 11
+    # RIGHT_LEG_3 = 12
+    # RIGHT_LEG_4 = 13
+    # RIGHT_LEG_5 = 14
+    # RIGHT_LEG_6 = 15
+    # HEAD_1 = 16
+    # HEAD_2 = 17
+    # HEAD_CAMERA = 18
+    # IMU = 19
+
     TORSO = -1
-    LEFT_ARM_1 = 0
-    LEFT_ARM_2 = 1
-    RIGHT_ARM_1 = 2
-    RIGHT_ARM_2 = 3
-    LEFT_LEG_1 = 4
-    LEFT_LEG_2 = 5
-    LEFT_LEG_3 = 6
-    LEFT_LEG_4 = 7
-    LEFT_LEG_5 = 8
-    LEFT_LEG_6 = 9
-    RIGHT_LEG_1 = 10
-    RIGHT_LEG_2 = 11
-    RIGHT_LEG_3 = 12
-    RIGHT_LEG_4 = 13
-    RIGHT_LEG_5 = 14
-    RIGHT_LEG_6 = 15
-    HEAD_1 = 16
-    HEAD_2 = 17
-    HEAD_CAMERA = 18
-    IMU = 19
+
+    IMU = 0
+    LEFT_ARM_1 = 13
+    LEFT_ARM_2 = 14
+    RIGHT_ARM_1 = 15
+    RIGHT_ARM_2 = 16
+    LEFT_LEG_1 = 1
+    LEFT_LEG_2 = 2
+    LEFT_LEG_3 = 3
+    LEFT_LEG_4 = 4
+    LEFT_LEG_5 = 5
+    LEFT_LEG_6 = 6
+    RIGHT_LEG_1 = 7
+    RIGHT_LEG_2 = 8
+    RIGHT_LEG_3 = 9
+    RIGHT_LEG_4 = 10
+    RIGHT_LEG_5 = 11
+    RIGHT_LEG_6 = 12
+    HEAD_1 = 17
+    HEAD_2 = 18
+    HEAD_CAMERA = 19
+
+
+BEZ3_JOINT_DIRS = [
+    # bez 1 -> bez 3 actual robot
+    # [-1, 1, -1, 1, 1, -1], # right leg
+    # [-1, -1, 1, 1, 1, -1], # left leg
+    [-1, -1, -1, 1, 1, -1],  # right leg
+    [-1, -1, 1, 1, 1, 1],  # left leg
+]
+# BEZ1_JOINT_DIRS = [
+#     [1, 1, ],
+# ] # Bez 1 set the convention, is all 1s
 
 
 class Soccerbot:
-    standing_hip_height = 0.36  # Hardcoded for now, todo calculate this
+    standing_hip_height = rospy.get_param("hip_height", 0.36)  # Hardcoded for now, todo calculate this
     walking_hip_height = 0.165
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
-    pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
+    # pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
@@ -79,13 +136,14 @@ class Soccerbot:
 
         home = expanduser("~")
         self.body = pb.loadURDF(
-            home + "/catkin_ws/src/soccerbot/soccer_description/models/soccerbot_stl.urdf",
+            home
+            + f"/catkin_ws/src/soccerbot/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE,
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | pb.URDF_MERGE_FIXED_LINKS,
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
             baseOrientation=pose.get_orientation(),
         )
-
+        self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
         self.time_step_sim = 1.0 / 240
@@ -114,6 +172,7 @@ class Soccerbot:
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
         self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        # self.left_foot_init_position[0, 3] = -self.right_foot_init_position[0, 3]
 
         self.setPose(pose)
         self.torso_offset = tr()
@@ -214,8 +273,8 @@ class Soccerbot:
 
         for r in np.arange(0, 1, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
-            self.configuration[0:18] = (
-                np.array(np.array(configuration[0:18]) - np.array(previous_configuration)) * r + np.array(previous_configuration)
+            self.configuration[0:20] = (
+                np.array(np.array(configuration[0:20]) - np.array(previous_configuration)) * r + np.array(previous_configuration)
             ).tolist()
             self.publishAngles()
             rospy.sleep(0.020)
@@ -233,7 +292,7 @@ class Soccerbot:
     def updateRobotConfiguration(self):
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            self.configuration[0:18] = joint_state.position
+            self.configuration[0:20] = joint_state.position
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
 
@@ -244,6 +303,8 @@ class Soccerbot:
         :return: Motor angles for the right foot
         """
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
+        # transformation = np.array(transformation)[[1, 0, 2, 3],:]
+        # transformation = transformation[:,[1, 0, 2, 3]]
         invconf = np.linalg.inv(transformation)
 
         d3 = self.DH[2, 0]

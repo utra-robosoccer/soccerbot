@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(soccer_description)
+project(bez3_description)
 
 find_package(
     catkin
@@ -9,6 +9,6 @@ find_package(
 catkin_package(CATKIN_DEPENDS urdf xacro)
 
 xacro_add_files(
-    urdf/bez1.xacro OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/urdf/bez1.urdf TARGET
+    urdf/bez3.xacro OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/urdf/bez3.urdf TARGET
     media_files
 )
