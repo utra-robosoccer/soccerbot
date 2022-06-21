@@ -1,0 +1,17 @@
+<launch>
+    <param
+        name="robot_description"
+        command="xacro '$(find bez1_description)/urdf/soccerbot.xacro'
+        robot_name:=bez1
+        model_type:=dae
+        file_path:=package://bez1_description
+        has_base_footprint:=false
+        tf_prefix:=bez1
+        "
+    />
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <arg name="rvizconfig" default="$(find bez1_description)/rviz/soccerbot.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

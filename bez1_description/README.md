@@ -1,4 +1,4 @@
-# soccer_description
+# bez1_description
 
 The URDF model and description of the soccer robot used by Robosoccer
 
