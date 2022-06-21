@@ -3,7 +3,7 @@
 <robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="robot_name" default="/" />
     <xacro:arg name="model_type" default="dae" />
-    <xacro:arg name="file_path" default="../soccer_description" />
+    <xacro:arg name="file_path" default="../bez1_description" />
     <xacro:arg name="has_base_footprint" default="false" />
     <xacro:arg name="tf_prefix" default="" />
     <xacro:property name="FILE_PATH" value="$(arg file_path)"/>

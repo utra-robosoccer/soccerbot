@@ -50,5 +50,5 @@ from os.path import dirname as up
 
 
 def getModelPath():
-    respath = os.path.join(up(up(up(os.path.dirname(__file__)))), "bez1_description/models/soccerbot_stl.urdf")
+    respath = os.path.join(up(up(up(os.path.dirname(__file__)))), "bez1_description/urdf/soccerbot_stl.urdf")
     return respath
