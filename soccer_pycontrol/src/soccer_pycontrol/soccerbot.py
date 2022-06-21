@@ -79,7 +79,7 @@ class Soccerbot:
 
         home = expanduser("~")
         self.body = pb.loadURDF(
-            home + "/catkin_ws/src/soccerbot/bez3_description/urdf/bez1.urdf",
+            home + "/catkin_ws/src/soccerbot/bez1_description/urdf/soccerbot.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE,
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
