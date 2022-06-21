@@ -9,7 +9,9 @@ find_package(
     soccer_msgs
     soccer_trajectories
     soccer_object_detection
-    soccer_description
+    bez1_description
+    bez3_description
+    urdf_description
     soccer_strategy
     soccer_object_localization
     soccer_pycontrol

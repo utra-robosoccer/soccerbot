@@ -3,6 +3,8 @@ import sys
 import time
 
 import numpy as np
+import pybullet as pb
+import yaml
 from timeout_decorator import timeout_decorator
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -13,12 +15,13 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
+robot_model = "bez3"
 run_in_ros = False
 display = True
-TEST_TIMEOUT = 60
+TEST_TIMEOUT = 60e6
 if "pytest" in sys.argv[0]:
     run_in_ros = False
-    display = False
+    display = True
 else:
     import rospy
 
@@ -35,11 +38,43 @@ else:
 
     rospy.Time = MagicMock()
     joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
+    joint_state.position = [0.0] * 20
     rospy.wait_for_message = MagicMock(return_value=joint_state)
     rospy.loginfo_throttle = lambda a, b: None
-    rospy.get_param = lambda a, b: b
+
+    def f(a, b):
+        if a == "robot_model":
+            return robot_model
+        with open(f"../../config/{robot_model}_sim.yaml", "r") as g:
+
+            y = yaml.safe_load(g)
+            try:
+                for c in a.split("/"):
+                    y = y[c]
+                return y
+            except Exception:
+                return b
+
+            # def go(y, x):
+            #     if len(x) == 1:
+            #         return y[x[0]]
+            #     else:
+            #         return go(y[x], x[1:])
+
+            # try:
+            #     return go(y, a.split('/'))
+            # except Exception:
+            #     return b
+
+            # if y is not None and a in y:
+            #     return y[a]
+            # else:
+            #     return b
+
+    rospy.get_param = f
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
+
+from soccer_pycontrol.soccerbot import BEZ3_JOINT_DIRS, Links
 
 
 class TestWalking(TestCase):
@@ -55,10 +90,35 @@ class TestWalking(TestCase):
         del self.walker
 
     @timeout_decorator.timeout(TEST_TIMEOUT)
+    def test_ik_1(self):
+        # t = self.walker.soccerbot.right_foot_init_position # Transformation((0, 0, 0.4), (0,0,0,1))
+        # print(self.walker.soccerbot.inverseKinematicsLeftFoot(t))
+        self.walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = self.walker.soccerbot.inverseKinematicsRightFoot(
+            np.copy(self.walker.soccerbot.right_foot_init_position)
+        )
+        self.walker.soccerbot.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = self.walker.soccerbot.inverseKinematicsLeftFoot(
+            np.copy(self.walker.soccerbot.left_foot_init_position)
+        )
+
+        pb.setJointMotorControlArray(
+            bodyIndex=self.walker.soccerbot.body,
+            controlMode=pb.POSITION_CONTROL,
+            jointIndices=list(range(0, 20, 1)),
+            targetPositions=self.walker.soccerbot.get_angles(),
+        )
+        for _ in range(100):
+            if _ % 16 == 0:
+                _ = _
+            pb.stepSimulation()
+
+        pass
+
+    @timeout_decorator.timeout(TEST_TIMEOUT)
     def test_walk_1(self):
+        # pb.setGravity(0, 0, -4)
         self.walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
-        self.walker.wait(100)
+        self.walker.wait(200)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         walk_success = self.walker.run()
         self.assertTrue(walk_success)
