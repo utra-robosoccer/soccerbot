@@ -9,3 +9,4 @@
 *.elf filter=lfs diff=lfs merge=lfs -binary
 *.a filter=lfs diff=lfs merge=lfs -binary
 *.pptx filter=lfs diff=lfs merge=lfs -binary
+*.model filter=lfs diff=lfs merge=lfs -text
