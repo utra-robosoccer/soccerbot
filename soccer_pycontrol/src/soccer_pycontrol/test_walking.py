@@ -15,13 +15,13 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-robot_model = "bez3"
+robot_model = "bez1"
 run_in_ros = False
 display = True
-TEST_TIMEOUT = 60e6
+TEST_TIMEOUT = 60
 if "pytest" in sys.argv[0]:
     run_in_ros = False
-    display = True
+    display = False
 else:
     import rospy
 
@@ -43,6 +43,7 @@ else:
     rospy.loginfo_throttle = lambda a, b: None
 
     def f(a, b):
+        a = a.lstrip("~")
         if a == "robot_model":
             return robot_model
         with open(f"../../config/{robot_model}_sim.yaml", "r") as g:
@@ -55,26 +56,10 @@ else:
             except Exception:
                 return b
 
-            # def go(y, x):
-            #     if len(x) == 1:
-            #         return y[x[0]]
-            #     else:
-            #         return go(y[x], x[1:])
-
-            # try:
-            #     return go(y, a.split('/'))
-            # except Exception:
-            #     return b
-
-            # if y is not None and a in y:
-            #     return y[a]
-            # else:
-            #     return b
-
     rospy.get_param = f
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
-from soccer_pycontrol.soccerbot import BEZ3_JOINT_DIRS, Links
+from soccer_pycontrol.soccerbot import Links
 
 
 class TestWalking(TestCase):
