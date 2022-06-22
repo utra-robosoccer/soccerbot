@@ -11,8 +11,7 @@
   <depend>xterm</depend>
 
   <!-- Simulation -->
-  <depend>soccer_description</depend>
-
+  <depend>bez1_description</depend>
   <!-- Sensors -->
   <depend>usb_cam</depend>
   <depend>soccer_hardware</depend>
