@@ -14,7 +14,7 @@ from rosgraph_msgs.msg import Clock
 
 from soccer_common.transformation import Transformation
 
-ROBOTS = ["robot1", "robot2", "robot1", "robot4"]
+ROBOTS = ["robot1", "robot2", "robot3", "robot4"]
 ROBOTS_PROTO_NAME = ["RED_PLAYER_1", "RED_PLAYER_2", "RED_PLAYER_3", "RED_PLAYER_4"]
 os.environ["WEBOTS_ROBOT_NAME"] = "BridgeGroundTruth"
 

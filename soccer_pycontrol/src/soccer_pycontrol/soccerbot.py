@@ -66,18 +66,6 @@ class Links(enum.IntEnum):
     IMU = rospy.get_param("~joint_indices/IMU", 19)
 
 
-BEZ3_JOINT_DIRS = [
-    # bez 1 -> bez 3 actual robot
-    # [-1, 1, -1, 1, 1, -1], # right leg
-    # [-1, -1, 1, 1, 1, -1], # left leg
-    [-1, -1, -1, 1, 1, -1],  # right leg
-    [-1, -1, 1, 1, 1, 1],  # left leg
-]
-# BEZ1_JOINT_DIRS = [
-#     [1, 1, ],
-# ] # Bez 1 set the convention, is all 1s
-
-
 class Soccerbot:
     torso_height = rospy.get_param("~hip_height", 0.36)  # Hardcoded for now, todo calculate this
     walking_hip_height = rospy.get_param("~walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
@@ -95,7 +83,7 @@ class Soccerbot:
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | pb.URDF_MERGE_FIXED_LINKS,
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("~_merge_fixed_links", False) else 0),
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
             baseOrientation=pose.get_orientation(),
         )
@@ -128,7 +116,6 @@ class Soccerbot:
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
         self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
-        # self.left_foot_init_position[0, 3] = -self.right_foot_init_position[0, 3]
 
         self.setPose(pose)
         self.torso_offset = tr([rospy.get_param("~torso_offset_x", 0), 0, 0])

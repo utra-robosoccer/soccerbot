@@ -28,3 +28,4 @@ steps_per_second_default: 2
 bodystep_size_default: 0.08
 foot_separation: 0.06
 torso_offset_x: 0.04
+_merge_fixed_links: true
