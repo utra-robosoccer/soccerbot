@@ -20,94 +20,50 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Joints(enum.IntEnum):
-    # LEFT_ARM_1 = 0
-    # LEFT_ARM_2 = 1
-    # RIGHT_ARM_1 = 2
-    # RIGHT_ARM_2 = 3
-    # LEFT_LEG_1 = 4
-    # LEFT_LEG_2 = 5
-    # LEFT_LEG_3 = 6
-    # LEFT_LEG_4 = 7
-    # LEFT_LEG_5 = 8
-    # LEFT_LEG_6 = 9
-    # RIGHT_LEG_1 = 10
-    # RIGHT_LEG_2 = 11
-    # RIGHT_LEG_3 = 12
-    # RIGHT_LEG_4 = 13
-    # RIGHT_LEG_5 = 14
-    # RIGHT_LEG_6 = 15
-    # HEAD_1 = 16
-    # HEAD_2 = 17
-    # HEAD_CAMERA = 18
-    # IMU = 19
-
-    IMU = 0
-    LEFT_ARM_1 = 13
-    LEFT_ARM_2 = 14
-    RIGHT_ARM_1 = 15
-    RIGHT_ARM_2 = 16
-    LEFT_LEG_1 = 1
-    LEFT_LEG_2 = 2
-    LEFT_LEG_3 = 3
-    LEFT_LEG_4 = 4
-    LEFT_LEG_5 = 5
-    LEFT_LEG_6 = 6
-    RIGHT_LEG_1 = 7
-    RIGHT_LEG_2 = 8
-    RIGHT_LEG_3 = 9
-    RIGHT_LEG_4 = 10
-    RIGHT_LEG_5 = 11
-    RIGHT_LEG_6 = 12
-    HEAD_1 = 17
-    HEAD_2 = 18
-    HEAD_CAMERA = 19
+    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
+    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
+    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
+    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
+    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
+    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
+    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
+    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
+    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
+    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
+    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
+    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
+    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
+    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
+    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
+    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
+    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
+    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
+    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Links(enum.IntEnum):
-    # TORSO = -1
-    # LEFT_ARM_1 = 0
-    # LEFT_ARM_2 = 1
-    # RIGHT_ARM_1 = 2
-    # RIGHT_ARM_2 = 3
-    # LEFT_LEG_1 = 4
-    # LEFT_LEG_2 = 5
-    # LEFT_LEG_3 = 6
-    # LEFT_LEG_4 = 7
-    # LEFT_LEG_5 = 8
-    # LEFT_LEG_6 = 9
-    # RIGHT_LEG_1 = 10
-    # RIGHT_LEG_2 = 11
-    # RIGHT_LEG_3 = 12
-    # RIGHT_LEG_4 = 13
-    # RIGHT_LEG_5 = 14
-    # RIGHT_LEG_6 = 15
-    # HEAD_1 = 16
-    # HEAD_2 = 17
-    # HEAD_CAMERA = 18
-    # IMU = 19
-
-    TORSO = -1
-
-    IMU = 0
-    LEFT_ARM_1 = 13
-    LEFT_ARM_2 = 14
-    RIGHT_ARM_1 = 15
-    RIGHT_ARM_2 = 16
-    LEFT_LEG_1 = 1
-    LEFT_LEG_2 = 2
-    LEFT_LEG_3 = 3
-    LEFT_LEG_4 = 4
-    LEFT_LEG_5 = 5
-    LEFT_LEG_6 = 6
-    RIGHT_LEG_1 = 7
-    RIGHT_LEG_2 = 8
-    RIGHT_LEG_3 = 9
-    RIGHT_LEG_4 = 10
-    RIGHT_LEG_5 = 11
-    RIGHT_LEG_6 = 12
-    HEAD_1 = 17
-    HEAD_2 = 18
-    HEAD_CAMERA = 19
+    TORSO = rospy.get_param("joint_indices/TORSO", 1)
+    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
+    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
+    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
+    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
+    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
+    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
+    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
+    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
+    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
+    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
+    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
+    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
+    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
+    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
+    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
+    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
+    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
+    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
+    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 BEZ3_JOINT_DIRS = [
@@ -123,8 +79,8 @@ BEZ3_JOINT_DIRS = [
 
 
 class Soccerbot:
-    standing_hip_height = rospy.get_param("hip_height", 0.36)  # Hardcoded for now, todo calculate this
-    walking_hip_height = 0.165
+    torso_height = rospy.get_param("hip_height", 0.36)  # Hardcoded for now, todo calculate this
+    walking_hip_height = rospy.get_param("walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     # pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
@@ -140,7 +96,7 @@ class Soccerbot:
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | pb.URDF_MERGE_FIXED_LINKS,
-            basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.standing_hip_height],
+            basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
             baseOrientation=pose.get_orientation(),
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
@@ -183,7 +139,7 @@ class Soccerbot:
         self.configuration_offset = [0.0] * len(Joints)
         self.max_forces = []
         for i in range(0, 20):
-            self.max_forces.append(pb.getJointInfo(self.body, i)[10])
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or rospy.get_param("max_force", 6))
 
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
@@ -365,7 +321,7 @@ class Soccerbot:
             last_hip_height = self.pose.get_position()[2]
         except:
             self.pose = pose
-            last_hip_height = Soccerbot.standing_hip_height
+            last_hip_height = Soccerbot.torso_height
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
 
         # Remove the roll and yaw from the pose

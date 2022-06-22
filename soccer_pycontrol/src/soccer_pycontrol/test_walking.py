@@ -46,11 +46,30 @@ else:
         if a == "robot_model":
             return robot_model
         with open(f"../../config/{robot_model}_sim.yaml", "r") as g:
+
             y = yaml.safe_load(g)
-            if y is not None and a in y:
-                return y[a]
-            else:
+            try:
+                for c in a.split("/"):
+                    y = y[c]
+                return y
+            except Exception:
                 return b
+
+            # def go(y, x):
+            #     if len(x) == 1:
+            #         return y[x[0]]
+            #     else:
+            #         return go(y[x], x[1:])
+
+            # try:
+            #     return go(y, a.split('/'))
+            # except Exception:
+            #     return b
+
+            # if y is not None and a in y:
+            #     return y[a]
+            # else:
+            #     return b
 
     rospy.get_param = f
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
@@ -88,16 +107,18 @@ class TestWalking(TestCase):
             targetPositions=self.walker.soccerbot.get_angles(),
         )
         for _ in range(100):
+            if _ % 16 == 0:
+                _ = _
             pb.stepSimulation()
 
         pass
 
     @timeout_decorator.timeout(TEST_TIMEOUT)
     def test_walk_1(self):
-        pb.setGravity(0, 0, -4)
+        # pb.setGravity(0, 0, -4)
         self.walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
-        # self.walker.wait(100)
+        self.walker.wait(200)
         self.walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         walk_success = self.walker.run()
         self.assertTrue(walk_success)

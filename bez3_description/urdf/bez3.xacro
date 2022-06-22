@@ -27,9 +27,9 @@
 
 <link name="torso_1">
   <inertial>
-    <origin xyz="-0.003658211229359205 -0.006167940664238083 -0.07338742094913073" rpy="0 0 0"/>
-    <mass value="3.328477451240261"/>
-    <inertia ixx="0.029875" iyy="0.013936" izz="0.024705" ixy="5.6e-05" iyz="5e-06" ixz="0.000674"/>
+    <origin xyz="-0.003658211229359205 -0.006167940664238083 -0.07338742094913071" rpy="0 0 0"/>
+    <mass value="0.2968069064800233"/>
+    <inertia ixx="0.002664" iyy="0.001243" izz="0.002203" ixy="5e-06" iyz="0.0" ixz="6e-05"/>
   </inertial>
   <visual>
     <origin xyz="-0.0 -0.005 -0.0" rpy="0 0 0"/>
@@ -46,23 +46,23 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_1">
+<link name="JX_servo_v12_1">
   <inertial>
-    <origin xyz="0.0002196166185167714 -2.643121901901857e-10 0.014139939556201991" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.00045" iyy="0.000785" izz="0.000503" ixy="-0.0" iyz="0.0" ixz="4.6e-05"/>
+    <origin xyz="0.00027407227629309625 4.531028330312381e-13 0.012509678934478005" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="7.7e-05" iyy="0.000137" izz="9e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -70,15 +70,15 @@
 <link name="left_hip_side_1">
   <inertial>
     <origin xyz="-0.0006601764265435524 7.984241046088414e-10 -0.021141547194982763" rpy="0 0 0"/>
-    <mass value="0.21965915789216364"/>
-    <inertia ixx="0.000107" iyy="0.000213" izz="0.000165" ixy="0.0" iyz="0.0" ixz="-2e-06"/>
+    <mass value="0.018999817606213904"/>
+    <inertia ixx="9e-06" iyy="1.8e-05" izz="1.4e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
@@ -88,39 +88,39 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_8">
+<link name="JX_servo_v12_8">
   <inertial>
-    <origin xyz="-0.04053993955620194 -2.643123636625333e-10 -0.017780294556127285" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000503" iyy="0.000785" izz="0.00045" ixy="-0.0" iyz="-0.0" ixz="-4.6e-05"/>
+    <origin xyz="-0.03890967893447789 4.529293606836404e-13 -0.017725838898350915" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="-0.0" iyz="0.0" ixz="-6e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_8.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_8.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="left_hip_front_1">
   <inertial>
-    <origin xyz="0.02375859039821049 0.009336273295607947 -0.06494791715192266" rpy="0 0 0"/>
-    <mass value="0.2801003105283029"/>
-    <inertia ixx="0.00024" iyy="0.000331" izz="0.000219" ixy="2e-06" iyz="-3e-06" ixz="8.6e-05"/>
+    <origin xyz="0.023758590398210495 0.009336273295607947 -0.06494791715192266" rpy="0 0 0"/>
+    <mass value="0.025976181664280836"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="0.0" iyz="-0.0" ixz="8e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
@@ -130,23 +130,23 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_9">
+<link name="JX_servo_v12_9">
   <inertial>
-    <origin xyz="-0.008499999392960884 -0.01803993921347575 0.037119705443873385" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="0.0" iyz="-4.6e-05" ixz="0.0"/>
+    <origin xyz="-0.008499999657726187 -0.016409678591751728 0.03717416110164981" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="-6e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_9.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_9.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -154,15 +154,15 @@
 <link name="left_thigh_1">
   <inertial>
     <origin xyz="0.0035522308946802695 -0.037286001427951104 -0.06738530321679864" rpy="0 0 0"/>
-    <mass value="0.5622725416559319"/>
-    <inertia ixx="0.001718" iyy="0.00106" izz="0.00082" ixy="-1e-06" iyz="2e-06" ixz="3.8e-05"/>
+    <mass value="0.04698736144283967"/>
+    <inertia ixx="0.000144" iyy="8.9e-05" izz="6.9e-05" ixy="-0.0" iyz="0.0" ixz="3e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_thigh_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
@@ -172,23 +172,23 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_11">
+<link name="JX_servo_v12_11">
   <inertial>
-    <origin xyz="6.070390318885233e-10 -0.04053993921347642 -0.017780294556126508" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="0.0" iyz="-4.6e-05" ixz="0.0"/>
+    <origin xyz="3.422737293243272e-10 -0.03890967859175239 -0.017725838898350055" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="-6e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_11.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_11.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -196,15 +196,15 @@
 <link name="left_calve_1">
   <inertial>
     <origin xyz="-0.008549992578499489 -0.011776675554452998 -0.0353123749558687" rpy="0 0 0"/>
-    <mass value="0.514989606773696"/>
-    <inertia ixx="0.001057" iyy="0.00057" izz="0.000621" ixy="-0.0" iyz="-2.9e-05" ixz="0.0"/>
+    <mass value="0.035688451730559324"/>
+    <inertia ixx="7.3e-05" iyy="3.9e-05" izz="4.3e-05" ixy="-0.0" iyz="-2e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_calve_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
@@ -214,39 +214,39 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_12">
+<link name="JX_servo_v12_12">
   <inertial>
-    <origin xyz="7.841479028602993e-11 -0.040539939213477115 0.01778050548278931" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="-0.0" iyz="4.6e-05" ixz="0.0"/>
+    <origin xyz="3.43180092850226e-10 -0.0389096785917531 0.01772604982501308" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="-0.0" iyz="6e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_12.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_12.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="left_hip_front_2">
   <inertial>
-    <origin xyz="-0.04064140960179005 -0.017336272610156404 -0.008851871921414733" rpy="0 0 0"/>
-    <mass value="0.2801003105283029"/>
-    <inertia ixx="0.00024" iyy="0.000331" izz="0.000219" ixy="-2e-06" iyz="-3e-06" ixz="-8.6e-05"/>
+    <origin xyz="-0.040641409601790045 -0.017336272610156404 -0.008851871921414733" rpy="0 0 0"/>
+    <mass value="0.025976181664280836"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="-0.0" iyz="-0.0" ixz="-8e-06"/>
   </inertial>
   <visual>
     <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
@@ -256,39 +256,39 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_13">
+<link name="JX_servo_v12_13">
   <inertial>
-    <origin xyz="-0.014139939556202498 0.008500000949764205 -0.037119494517210805" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000503" iyy="0.000785" izz="0.00045" ixy="0.0" iyz="-0.0" ixz="4.6e-05"/>
+    <origin xyz="-0.01250967893447847 0.008500000684998912 -0.0371739501749872" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_13.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_13.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="left_foot_1">
   <inertial>
-    <origin xyz="0.03678225489457133 -0.0014130788744076417 -0.021045237827845176" rpy="0 0 0"/>
-    <mass value="0.34210600833439103"/>
-    <inertia ixx="0.000178" iyy="0.00044" izz="0.000406" ixy="-8e-06" iyz="-6e-06" ixz="3.3e-05"/>
+    <origin xyz="0.03678225489457133 -0.0014130788744076417 -0.02104523782784523" rpy="0 0 0"/>
+    <mass value="0.03704332574321432"/>
+    <inertia ixx="1.9e-05" iyy="4.8e-05" izz="4.4e-05" ixy="-1e-06" iyz="-1e-06" ixz="4e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
@@ -298,39 +298,39 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_14">
+<link name="JX_servo_v12_14">
   <inertial>
-    <origin xyz="0.0002196166185167714 -2.643122040679735e-10 0.014139939556201936" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.00045" iyy="0.000785" izz="0.000503" ixy="-0.0" iyz="0.0" ixz="4.6e-05"/>
+    <origin xyz="0.00027407227629309625 4.531167108190459e-13 0.012509678934477936" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="7.7e-05" iyy="0.000137" izz="9e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_14.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_14.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="right_hip_side_1">
   <inertial>
-    <origin xyz="-0.0006601764265435368 -7.984240837921597e-10 -0.021141552658250296" rpy="0 0 0"/>
-    <mass value="0.2196591578921638"/>
-    <inertia ixx="0.000107" iyy="0.000213" izz="0.000165" ixy="-0.0" iyz="-0.0" ixz="-2e-06"/>
+    <origin xyz="-0.0006601764265435368 -7.984240907310536e-10 -0.021141552658250296" rpy="0 0 0"/>
+    <mass value="0.018999817606213918"/>
+    <inertia ixx="9e-06" iyy="1.8e-05" izz="1.4e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
@@ -340,23 +340,23 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_15">
+<link name="JX_servo_v12_15">
   <inertial>
-    <origin xyz="-0.04053993955620186 -2.643120514123076e-10 -0.017780294556127257" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000503" iyy="0.000785" izz="0.00045" ixy="-0.0" iyz="-0.0" ixz="-4.6e-05"/>
+    <origin xyz="-0.03890967893447782 4.5325548869712406e-13 -0.017725838898350943" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="-0.0" iyz="0.0" ixz="-6e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_15.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_15.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -364,15 +364,15 @@
 <link name="right_ankle_1">
   <inertial>
     <origin xyz="0.02375859039821196 -0.00933627329560792 -0.06494791715192275" rpy="0 0 0"/>
-    <mass value="0.2801003105283028"/>
-    <inertia ixx="0.00024" iyy="0.000331" izz="0.000219" ixy="-2e-06" iyz="3e-06" ixz="8.6e-05"/>
+    <mass value="0.025976181664280826"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="-0.0" iyz="0.0" ixz="8e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_ankle_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
@@ -382,23 +382,23 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_16">
+<link name="JX_servo_v12_16">
   <inertial>
-    <origin xyz="-0.008499999921584888 0.018039939213475596 0.037119705443873274" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="0.0" iyz="4.6e-05" ixz="-0.0"/>
+    <origin xyz="-0.008499999656819584 0.016409678591751596 0.03717416110164953" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="6e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_16.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_16.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -406,15 +406,15 @@
 <link name="right_thigh_1">
   <inertial>
     <origin xyz="0.0035522343275843837 0.03728602282125167 -0.06738525640624529" rpy="0 0 0"/>
-    <mass value="0.5622720012981443"/>
-    <inertia ixx="0.001718" iyy="0.00106" izz="0.00082" ixy="1e-06" iyz="-2e-06" ixz="3.8e-05"/>
+    <mass value="0.04698731628682583"/>
+    <inertia ixx="0.000144" iyy="8.9e-05" izz="6.9e-05" ixy="0.0" iyz="-0.0" ixz="3e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_thigh_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
@@ -424,126 +424,126 @@
   </collision>
 </link>
 
-<link name="JX_servo_v8_17">
+<link name="JX_servo_v12_17">
   <inertial>
-    <origin xyz="7.841513115919296e-11 0.0405399392134763 -0.017780294556126897" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="0.0" iyz="4.6e-05" ixz="-0.0"/>
+    <origin xyz="3.431804328560273e-10 0.038909678591752296 -0.017725838898350554" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="6e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_17.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_17.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="right_calve_1">
   <inertial>
-    <origin xyz="-0.008549992533062715 0.01177662703102094 -0.03531238005988813" rpy="0 0 0"/>
-    <mass value="0.5149901707605673"/>
-    <inertia ixx="0.001057" iyy="0.00057" izz="0.000621" ixy="0.0" iyz="2.9e-05" ixz="0.0"/>
+    <origin xyz="-0.00854999027881307 0.011776733864301954 -0.035312401211175015" rpy="0 0 0"/>
+    <mass value="0.03568840560735723"/>
+    <inertia ixx="7.3e-05" iyy="3.9e-05" izz="4.3e-05" ixy="0.0" iyz="2e-06" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0035 0.0699 0.377636" rpy="0 0 0"/>
+    <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
-    <origin xyz="-0.0035 0.0699 0.377636" rpy="0 0 0"/>
+    <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="JX_servo_v8_18">
+<link name="JX_servo_v12_18">
   <inertial>
-    <origin xyz="6.070395332236078e-10 0.04053993921347702 0.017780505482788922" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000785" iyy="0.000503" izz="0.00045" ixy="-0.0" iyz="-4.6e-05" ixz="-0.0"/>
+    <origin xyz="3.422741994343892e-10 0.03890967859175305 0.017726049825012857" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="-0.0" iyz="-6e-06" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.00505 0.0979 0.462641" rpy="0 0 0"/>
+    <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_18.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
-    <origin xyz="0.00505 0.0979 0.462641" rpy="0 0 0"/>
+    <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_18.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="right_ankle_2">
   <inertial>
-    <origin xyz="-0.040641409601788095 0.017336272610156522 -0.008851871921415344" rpy="0 0 0"/>
-    <mass value="0.2801003105283028"/>
-    <inertia ixx="0.00024" iyy="0.000331" izz="0.000219" ixy="2e-06" iyz="3e-06" ixz="-8.6e-05"/>
+    <origin xyz="-0.040641409601788116 0.017336272610156585 -0.008851871921415178" rpy="0 0 0"/>
+    <mass value="0.025976181664280826"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="0.0" iyz="0.0" ixz="-8e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.00345 0.0754 0.407741" rpy="0 0 0"/>
+    <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
-    <origin xyz="-0.00345 0.0754 0.407741" rpy="0 0 0"/>
+    <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="JX_servo_v8_19">
+<link name="JX_servo_v12_19">
   <inertial>
-    <origin xyz="-0.01413993955620168 -0.008500000421139749 -0.03711949451721097" rpy="0 0 0"/>
-    <mass value="1.0848385350345584"/>
-    <inertia ixx="0.000503" iyy="0.000785" izz="0.00045" ixy="0.0" iyz="-0.0" ixz="4.6e-05"/>
+    <origin xyz="-0.012509678934477693 -0.00850000068590498 -0.03717395017498715" rpy="0 0 0"/>
+    <mass value="0.19853540350189508"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.06095 0.0504 0.407741" rpy="0 0 0"/>
+    <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_19.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="copper_polished"/>
+    <material name="plastic_matte_black"/>
   </visual>
   <collision>
-    <origin xyz="0.06095 0.0504 0.407741" rpy="0 0 0"/>
+    <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v8_19.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="right_foot_1">
   <inertial>
-    <origin xyz="0.0367822548945716 0.0014130788744076347 -0.02104523782784573" rpy="0 0 0"/>
-    <mass value="0.3421060083343909"/>
-    <inertia ixx="0.000178" iyy="0.00044" izz="0.000406" ixy="8e-06" iyz="6e-06" ixz="3.3e-05"/>
+    <origin xyz="0.03678225489457156 0.001413078874407711 -0.021045237827845564" rpy="0 0 0"/>
+    <mass value="0.037043325743214305"/>
+    <inertia ixx="1.9e-05" iyy="4.8e-05" izz="4.4e-05" ixy="1e-06" iyz="1e-06" ixz="4e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.03455 0.0589 0.462641" rpy="0 0 0"/>
+    <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
-    <origin xyz="0.03455 0.0589 0.462641" rpy="0 0 0"/>
+    <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -553,15 +553,15 @@
 <link name="25t-servo-hub_1">
   <inertial>
     <origin xyz="-4.77893450374911e-07 0.003136191852991313 1.6215494567234368e-07" rpy="0 0 0"/>
-    <mass value="0.016237434875861913"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
@@ -573,16 +573,16 @@
 
 <link name="gobilda-servo_1">
   <inertial>
-    <origin xyz="4.090884020424568e-10 0.021298627430347272 -0.009866384764819228" rpy="0 0 0"/>
-    <mass value="0.19736839764730799"/>
-    <inertia ixx="4.4e-05" iyy="3.4e-05" izz="2.2e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <origin xyz="1.3433243441218767e-09 0.021117732524250116 -0.00976910769495494" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
@@ -595,15 +595,15 @@
 <link name="left_bicep_1">
   <inertial>
     <origin xyz="0.007500000000005787 -0.003484179384329711 -0.06115545050144429" rpy="0 0 0"/>
-    <mass value="0.017347091316258258"/>
-    <inertia ixx="1.4e-05" iyy="1.3e-05" izz="4e-06" ixy="-0.0" iyz="1e-06" ixz="-0.0"/>
+    <mass value="0.011455626340925264"/>
+    <inertia ixx="9e-06" iyy="8e-06" izz="3e-06" ixy="-0.0" iyz="1e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_bicep_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="abs_white"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
@@ -615,16 +615,16 @@
 
 <link name="gobilda-servo_3">
   <inertial>
-    <origin xyz="0.0075000004090884295 -0.015601372569652716 -0.01736638476481922" rpy="0 0 0"/>
-    <mass value="0.19736839764730799"/>
-    <inertia ixx="4.4e-05" iyy="3.4e-05" izz="2.2e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <origin xyz="0.007500001343324372 -0.015782267475749873 -0.01726910769495492" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
@@ -637,15 +637,15 @@
 <link name="25t-servo-hub_2">
   <inertial>
     <origin xyz="-4.77893450343686e-07 0.000342191852934437 1.6215494560989363e-07" rpy="0 0 0"/>
-    <mass value="0.016237434875861913"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
@@ -657,16 +657,16 @@
 
 <link name="elbow-attach_1">
   <inertial>
-    <origin xyz="-0.009233924925004727 -0.0015151372970110266 -0.002548115188024211" rpy="0 0 0"/>
-    <mass value="0.05766200981695701"/>
-    <inertia ixx="6e-06" iyy="1.9e-05" izz="1.3e-05" ixy="1e-06" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="-0.009233924925004727 -0.0015151372970110405 -0.002548115188024211" rpy="0 0 0"/>
+    <mass value="0.005141835270301899"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
@@ -679,15 +679,15 @@
 <link name="left_forearm_1">
   <inertial>
     <origin xyz="0.00223843912986596 0.02233699999994311 -0.06792564077352817" rpy="0 0 0"/>
-    <mass value="0.306954483317309"/>
-    <inertia ixx="0.000666" iyy="0.000634" izz="5.4e-05" ixy="0.0" iyz="0.0" ixz="4.1e-05"/>
+    <mass value="0.027371737365874692"/>
+    <inertia ixx="5.9e-05" iyy="5.7e-05" izz="5e-06" ixy="0.0" iyz="0.0" ixz="4e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/left_forearm_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
@@ -700,15 +700,15 @@
 <link name="elbow-bearing_1">
   <inertial>
     <origin xyz="0.017892138559024794 0.003495502323537125 -0.012651303520558516" rpy="0 0 0"/>
-    <mass value="0.05541781310486511"/>
-    <inertia ixx="6e-06" iyy="1.8e-05" izz="1.2e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+    <mass value="0.004941715818268227"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
@@ -721,15 +721,15 @@
 <link name="25t-servo-hub_Mirror__1">
   <inertial>
     <origin xyz="8.974977877482249e-07 -0.0031361151897775635 1.0845728465602722e-06" rpy="0 0 0"/>
-    <mass value="0.016236664394569493"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.005584585205775494"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
@@ -741,16 +741,16 @@
 
 <link name="gobilda-servo_Mirror__1">
   <inertial>
-    <origin xyz="4.090884020424568e-10 -0.021298627430404116 -0.009866384764819214" rpy="0 0 0"/>
-    <mass value="0.197368397647308"/>
-    <inertia ixx="4.4e-05" iyy="3.4e-05" izz="2.2e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="1.3433243441218767e-09 -0.02111773252430696 -0.009769107694954933" rpy="0 0 0"/>
+    <mass value="0.06058731124882261"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
@@ -763,15 +763,15 @@
 <link name="right_bicep_1">
   <inertial>
     <origin xyz="0.00750000000000579 0.0034841793842728674 -0.06115545050144429" rpy="0 0 0"/>
-    <mass value="0.017347091316258265"/>
-    <inertia ixx="1.4e-05" iyy="1.3e-05" izz="4e-06" ixy="0.0" iyz="-1e-06" ixz="-0.0"/>
+    <mass value="0.011455626340925269"/>
+    <inertia ixx="9e-06" iyy="8e-06" izz="3e-06" ixy="0.0" iyz="-1e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_bicep_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="abs_white"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
@@ -783,16 +783,16 @@
 
 <link name="gobilda-servo_Mirror__2">
   <inertial>
-    <origin xyz="0.0075000004090884295 0.015601372569595845 -0.017366384764819234" rpy="0 0 0"/>
-    <mass value="0.197368397647308"/>
-    <inertia ixx="4.4e-05" iyy="3.4e-05" izz="2.2e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="0.007500001343324372 0.015782267475693 -0.017269107694954933" rpy="0 0 0"/>
+    <mass value="0.06058731124882261"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
@@ -805,15 +805,15 @@
 <link name="25t-servo-hub_Mirror__2">
   <inertial>
     <origin xyz="8.97497787772511e-07 -0.00034211518977761424 1.0845728465325166e-06" rpy="0 0 0"/>
-    <mass value="0.016236664394569493"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.005584585205775494"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
@@ -826,15 +826,15 @@
 <link name="elbow-attach_Mirror__1">
   <inertial>
     <origin xyz="-0.009233924925004636 0.001515137296954086 -0.0025481151880241137" rpy="0 0 0"/>
-    <mass value="0.05766200981695702"/>
-    <inertia ixx="6e-06" iyy="1.9e-05" izz="1.3e-05" ixy="-1e-06" iyz="0.0" ixz="0.0"/>
+    <mass value="0.005141835270301901"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
@@ -847,15 +847,15 @@
 <link name="right_forearm_1">
   <inertial>
     <origin xyz="0.0022384391298659947 -0.02233700000000001 -0.06792564077352811" rpy="0 0 0"/>
-    <mass value="0.306954483317309"/>
-    <inertia ixx="0.000666" iyy="0.000634" izz="5.4e-05" ixy="-0.0" iyz="0.0" ixz="4.1e-05"/>
+    <mass value="0.027371737365874692"/>
+    <inertia ixx="5.9e-05" iyy="5.7e-05" izz="5e-06" ixy="-0.0" iyz="0.0" ixz="4e-06"/>
   </inertial>
   <visual>
     <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/right_forearm_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
@@ -867,16 +867,16 @@
 
 <link name="elbow-bearing_Mirror__1">
   <inertial>
-    <origin xyz="0.01789213855902462 -0.003495502323594024 -0.012651303520558502" rpy="0 0 0"/>
-    <mass value="0.05541781310486507"/>
-    <inertia ixx="6e-06" iyy="1.8e-05" izz="1.2e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="0.01789213855902462 -0.003495502323594024 -0.012651303520558488" rpy="0 0 0"/>
+    <mass value="0.004941715818268223"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
@@ -886,39 +886,39 @@
   </collision>
 </link>
 
-<link name="custom_servo_support__lower_neck__v1_1">
+<link name="custom_servo_support__lower_neck__v2_1">
   <inertial>
-    <origin xyz="-0.0001818603745370151 4.0956127378422025e-15 0.001967193599301919" rpy="0 0 0"/>
-    <mass value="0.03517082825922691"/>
-    <inertia ixx="5e-06" iyy="5e-06" izz="1e-05" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="-0.0001818603745370151 4.095612737842203e-15 0.001967193599301919" rpy="0 0 0"/>
+    <mass value="0.003136252201459725"/>
+    <inertia ixx="0.0" iyy="0.0" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="gobilda-servo_4">
   <inertial>
-    <origin xyz="0.017366384809522694 0.007500000409088452 0.01560137256959265" rpy="0 0 0"/>
-    <mass value="0.19736839764730799"/>
-    <inertia ixx="2.2e-05" iyy="4.4e-05" izz="3.4e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="0.017269107739658406 0.007500001343324397 0.015782267475689782" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="7e-06" iyy="1.4e-05" izz="1e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
@@ -931,15 +931,15 @@
 <link name="25t-servo-hub_3">
   <inertial>
     <origin xyz="-4.778487469048187e-07 1.6215494569815637e-07 -0.0003421918530514406" rpy="0 0 0"/>
-    <mass value="0.016237434875861913"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
@@ -951,16 +951,16 @@
 
 <link name="neck_1">
   <inertial>
-    <origin xyz="4.470346662288627e-11 0.0015600923125218369 0.014702901470170587" rpy="0 0 0"/>
-    <mass value="0.1451172084285195"/>
-    <inertia ixx="0.000103" iyy="4.4e-05" izz="8.9e-05" ixy="-0.0" iyz="1e-06" ixz="-0.0"/>
+    <origin xyz="4.4703468357609744e-11 0.0015600923125218369 0.014702901470170587" rpy="0 0 0"/>
+    <mass value="0.012940388012734224"/>
+    <inertia ixx="9e-06" iyy="4e-06" izz="8e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/neck_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
@@ -972,16 +972,16 @@
 
 <link name="25t-servo-hub_4">
   <inertial>
-    <origin xyz="-4.77848746903084e-07 0.0031361918529913616 6.322169145839274e-07" rpy="0 0 0"/>
-    <mass value="0.016237434875861913"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="-4.77848746903084e-07 0.003136191852991365 6.322169145839274e-07" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
@@ -993,16 +993,16 @@
 
 <link name="gobilda-servo_5">
   <inertial>
-    <origin xyz="0.009866384809522696 0.02129862743034732 4.704710573483206e-07" rpy="0 0 0"/>
-    <mass value="0.19736839764730799"/>
-    <inertia ixx="2.2e-05" iyy="3.4e-05" izz="4.4e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="0.009769107739658408 0.021117732524250185 4.714052932869306e-07" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="7e-06" iyy="1e-05" izz="1.4e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
@@ -1015,15 +1015,15 @@
 <link name="head_1">
   <inertial>
     <origin xyz="0.017762050405363966 -0.005180173125019489 5.450273398273364e-05" rpy="0 0 0"/>
-    <mass value="0.08583116046555261"/>
-    <inertia ixx="2.4e-05" iyy="3e-05" izz="3.3e-05" ixy="1e-06" iyz="3e-06" ixz="-2e-06"/>
+    <mass value="0.007653734054253099"/>
+    <inertia ixx="2e-06" iyy="3e-06" izz="3e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://bez3_description/meshes/head_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
@@ -1036,8 +1036,8 @@
 <link name="camera_1">
   <inertial>
     <origin xyz="0.014184398578565184 -1.0759407732763727e-05 0.019215618136865634" rpy="0 0 0"/>
-    <mass value="0.17999927702289192"/>
-    <inertia ixx="9.9e-05" iyy="8.2e-05" izz="0.000132" ixy="0.0" iyz="-0.0" ixz="-2.1e-05"/>
+    <mass value="0.094257141411043"/>
+    <inertia ixx="5.2e-05" iyy="4.3e-05" izz="6.9e-05" ixy="0.0" iyz="-0.0" ixz="-1.1e-05"/>
   </inertial>
   <visual>
     <origin xyz="-0.00685 -0.003487 -0.101481" rpy="0 0 0"/>
@@ -1096,6 +1096,48 @@
   </collision>
 </link>
 
+<link name="Component32_1">
+  <inertial>
+    <origin xyz="-8.673617379884035e-18 3.3333333333211267e-07 -0.0235" rpy="0 0 0"/>
+    <mass value="0.31999527000000005"/>
+    <inertia ixx="0.000364" iyy="9.2e-05" izz="0.000338" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_blue"/>
+  </visual>
+  <collision>
+    <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="TX2_board_v2_1">
+  <inertial>
+    <origin xyz="0.0007727737790098402 -3.4264823634152304e-05 -0.015294861644822792" rpy="0 0 0"/>
+    <mass value="0.2621637298853286"/>
+    <inertia ixx="0.000165" iyy="7.1e-05" izz="0.000195" ixy="-0.0" iyz="-0.0" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver_default"/>
+  </visual>
+  <collision>
+    <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
 <joint name="Rigid1" type="fixed">
   <origin xyz="0.0 0.005 0.0" rpy="0 0 0"/>
   <parent link="base_link"/>
@@ -1105,12 +1147,12 @@
 <joint name="Rigid2" type="fixed">
   <origin xyz="-0.0225 0.0495 -0.13699" rpy="0 0 0"/>
   <parent link="torso_1"/>
-  <child link="JX_servo_v8_1"/>
+  <child link="JX_servo_v12_1"/>
 </joint>
 
 <joint name="left_leg_motor_0" type="continuous">
   <origin xyz="0.018 0.0 -0.0264" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_1"/>
+  <parent link="JX_servo_v12_1"/>
   <child link="left_hip_side_1"/>
   <axis xyz="0.0 0.0 -1.0"/>
 </joint>
@@ -1118,25 +1160,25 @@
 <joint name="left_leg_motor_1" type="continuous">
   <origin xyz="-0.03 0.0 -0.035336" rpy="0 0 0"/>
   <parent link="left_hip_side_1"/>
-  <child link="JX_servo_v8_8"/>
+  <child link="JX_servo_v12_8"/>
   <axis xyz="1.0 -0.0 -0.0"/>
 </joint>
 
 <joint name="Rigid5" type="fixed">
   <origin xyz="-0.0264 -0.0085 0.0189" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_8"/>
+  <parent link="JX_servo_v12_8"/>
   <child link="left_hip_front_1"/>
 </joint>
 
 <joint name="Rigid6" type="fixed">
   <origin xyz="0.0644 0.0239 -0.0738" rpy="0 0 0"/>
   <parent link="left_hip_front_1"/>
-  <child link="JX_servo_v8_9"/>
+  <child link="JX_servo_v12_9"/>
 </joint>
 
 <joint name="left_leg_motor_2" type="continuous">
   <origin xyz="-0.0085 0.0225 0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_9"/>
+  <parent link="JX_servo_v12_9"/>
   <child link="left_thigh_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
@@ -1144,38 +1186,38 @@
 <joint name="left_leg_motor_3" type="continuous">
   <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
   <parent link="left_thigh_1"/>
-  <child link="JX_servo_v8_11"/>
+  <child link="JX_servo_v12_11"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="Rigid9" type="fixed">
   <origin xyz="0.0085 -0.0264 -0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_11"/>
+  <parent link="JX_servo_v12_11"/>
   <child link="left_calve_1"/>
 </joint>
 
 <joint name="left_leg_motor_4" type="continuous">
   <origin xyz="-0.00855 0.028 -0.085005" rpy="0 0 0"/>
   <parent link="left_calve_1"/>
-  <child link="JX_servo_v8_12"/>
+  <child link="JX_servo_v12_12"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="Rigid11" type="fixed">
   <origin xyz="0.0085 -0.0225 0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_12"/>
+  <parent link="JX_servo_v12_12"/>
   <child link="left_hip_front_2"/>
 </joint>
 
 <joint name="Rigid12" type="fixed">
   <origin xyz="-0.0644 -0.025 0.0" rpy="0 0 0"/>
   <parent link="left_hip_front_2"/>
-  <child link="JX_servo_v8_13"/>
+  <child link="JX_servo_v12_13"/>
 </joint>
 
 <joint name="left_leg_motor_5" type="continuous">
   <origin xyz="0.0264 0.0085 -0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_13"/>
+  <parent link="JX_servo_v12_13"/>
   <child link="left_foot_1"/>
   <axis xyz="1.0 -0.0 -0.0"/>
 </joint>
@@ -1183,38 +1225,38 @@
 <joint name="Rigid14" type="fixed">
   <origin xyz="-0.0225 -0.0595 -0.137" rpy="0 0 0"/>
   <parent link="torso_1"/>
-  <child link="JX_servo_v8_14"/>
+  <child link="JX_servo_v12_14"/>
 </joint>
 
 <joint name="right_leg_motor_0" type="continuous">
   <origin xyz="0.018 0.0 -0.0264" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_14"/>
+  <parent link="JX_servo_v12_14"/>
   <child link="right_hip_side_1"/>
-  <axis xyz="-0.0 0.0 -1.0"/>
+  <axis xyz="-0.0 0.0 1.0"/>
 </joint>
 
 <joint name="right_leg_motor_1" type="continuous">
   <origin xyz="-0.03 0.0 -0.035336" rpy="0 0 0"/>
   <parent link="right_hip_side_1"/>
-  <child link="JX_servo_v8_15"/>
+  <child link="JX_servo_v12_15"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
 <joint name="Rigid17" type="fixed">
   <origin xyz="-0.0264 0.0085 0.0189" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_15"/>
+  <parent link="JX_servo_v12_15"/>
   <child link="right_ankle_1"/>
 </joint>
 
 <joint name="Rigid18" type="fixed">
   <origin xyz="0.0644 -0.0239 -0.0738" rpy="0 0 0"/>
   <parent link="right_ankle_1"/>
-  <child link="JX_servo_v8_16"/>
+  <child link="JX_servo_v12_16"/>
 </joint>
 
 <joint name="right_leg_motor_2" type="continuous">
   <origin xyz="-0.0085 -0.0225 0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_16"/>
+  <parent link="JX_servo_v12_16"/>
   <child link="right_thigh_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
@@ -1222,38 +1264,38 @@
 <joint name="right_leg_motor_3" type="continuous">
   <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
   <parent link="right_thigh_1"/>
-  <child link="JX_servo_v8_17"/>
+  <child link="JX_servo_v12_17"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid21" type="fixed">
-  <origin xyz="0.0085 0.0225 -0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_17"/>
+  <origin xyz="0.0085 0.0264 -0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_17"/>
   <child link="right_calve_1"/>
 </joint>
 
 <joint name="right_leg_motor_4" type="continuous">
   <origin xyz="-0.00855 -0.028 -0.085005" rpy="0 0 0"/>
   <parent link="right_calve_1"/>
-  <child link="JX_servo_v8_18"/>
+  <child link="JX_servo_v12_18"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid23" type="fixed">
   <origin xyz="0.0085 0.0225 0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_18"/>
+  <parent link="JX_servo_v12_18"/>
   <child link="right_ankle_2"/>
 </joint>
 
 <joint name="Rigid24" type="fixed">
   <origin xyz="-0.0644 0.025 0.0" rpy="0 0 0"/>
   <parent link="right_ankle_2"/>
-  <child link="JX_servo_v8_19"/>
+  <child link="JX_servo_v12_19"/>
 </joint>
 
 <joint name="right_leg_motor_5" type="continuous">
   <origin xyz="0.0264 -0.0085 -0.0549" rpy="0 0 0"/>
-  <parent link="JX_servo_v8_19"/>
+  <parent link="JX_servo_v12_19"/>
   <child link="right_foot_1"/>
   <axis xyz="-1.0 0.0 -0.0"/>
 </joint>
@@ -1287,7 +1329,7 @@
   <origin xyz="0.0075 -0.0369 -0.0075" rpy="0 0 0"/>
   <parent link="gobilda-servo_3"/>
   <child link="25t-servo-hub_2"/>
-  <axis xyz="-0.0 1.0 -0.0"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid31" type="fixed">
@@ -1337,7 +1379,7 @@
   <origin xyz="0.0075 0.0369 -0.0075" rpy="0 0 0"/>
   <parent link="gobilda-servo_Mirror__2"/>
   <child link="25t-servo-hub_Mirror__2"/>
-  <axis xyz="-0.0 1.0 0.0"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="Rigid39" type="fixed">
@@ -1361,12 +1403,12 @@
 <joint name="Rigid42" type="fixed">
   <origin xyz="0.0 -0.005 -1e-05" rpy="0 0 0"/>
   <parent link="torso_1"/>
-  <child link="custom_servo_support__lower_neck__v1_1"/>
+  <child link="custom_servo_support__lower_neck__v2_1"/>
 </joint>
 
 <joint name="Rigid43" type="fixed">
   <origin xyz="-0.01715 -0.0075 0.00698" rpy="0 0 0"/>
-  <parent link="custom_servo_support__lower_neck__v1_1"/>
+  <parent link="custom_servo_support__lower_neck__v2_1"/>
   <child link="gobilda-servo_4"/>
 </joint>
 
@@ -1420,6 +1462,18 @@
   <parent link="torso_1"/>
   <child link="imu-link_1"/>
   <axis xyz="0.0 0.0 1.0"/>
+</joint>
+
+<joint name="Rigid52" type="fixed">
+  <origin xyz="-0.012 -0.004667 -0.005" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="Component32_1"/>
+</joint>
+
+<joint name="Rigid53" type="fixed">
+  <origin xyz="0.0 0.0 -0.047" rpy="0 0 0"/>
+  <parent link="Component32_1"/>
+  <child link="TX2_board_v2_1"/>
 </joint>
 
 </robot>

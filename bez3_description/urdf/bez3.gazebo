@@ -21,7 +21,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_1">
+<gazebo reference="JX_servo_v12_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -35,7 +35,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_8">
+<gazebo reference="JX_servo_v12_8">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -49,7 +49,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_9">
+<gazebo reference="JX_servo_v12_9">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -63,7 +63,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_11">
+<gazebo reference="JX_servo_v12_11">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -77,7 +77,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_12">
+<gazebo reference="JX_servo_v12_12">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -91,7 +91,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_13">
+<gazebo reference="JX_servo_v12_13">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -105,7 +105,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_14">
+<gazebo reference="JX_servo_v12_14">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -119,7 +119,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_15">
+<gazebo reference="JX_servo_v12_15">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -133,7 +133,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_16">
+<gazebo reference="JX_servo_v12_16">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -147,7 +147,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_17">
+<gazebo reference="JX_servo_v12_17">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -161,7 +161,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_18">
+<gazebo reference="JX_servo_v12_18">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -175,7 +175,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="JX_servo_v8_19">
+<gazebo reference="JX_servo_v12_19">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -301,7 +301,7 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="custom_servo_support__lower_neck__v1_1">
+<gazebo reference="custom_servo_support__lower_neck__v2_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
@@ -365,6 +365,20 @@
 </gazebo>
 
 <gazebo reference="imu-link_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+<gazebo reference="Component32_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+<gazebo reference="TX2_board_v2_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
