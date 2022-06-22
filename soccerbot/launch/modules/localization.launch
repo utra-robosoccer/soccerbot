@@ -54,7 +54,7 @@
         <param name="base_link_frame" value="$(arg robot_name)/base_camera" />
     </node>
 
-    <node name="torso_height_publisher" pkg="soccer_description" type="base_footprint_to_torso.py" />
+    <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
 
     <!-- AMCL Localization $(arg x_pos)-->
     <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg fake_localization)" output="log">

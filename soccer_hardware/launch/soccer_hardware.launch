@@ -4,8 +4,8 @@
         <param name="imu_baud_rate" value="230400" />
         <param name="servo_port" value="/dev/ttyUSB" />
         <param name="servo_baud_rate" value="1000000" />
-        <rosparam command="load" file="$(find soccer_description)/config/soccerbot_control.yaml" />
-        <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+        <rosparam command="load" file="$(find bez1_description)/config/soccerbot_control.yaml" />
+        <rosparam command="load" file="$(find bez1_description)/config/motor_mapping.yaml" />
         <rosparam command="load" file="$(find soccer_hardware)/config/imu_calibration.yaml" />
     </node>
 </launch>

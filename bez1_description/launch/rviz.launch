@@ -1,7 +1,7 @@
 <launch>
     <param
         name="robot_description"
-        command="xacro '$(find bez1_description)/urdf/bez1.xacro'
+        command="xacro '$(find bez1_description)/urdf/soccerbot.xacro'
         robot_name:=bez1
         model_type:=dae
         file_path:=package://bez1_description
