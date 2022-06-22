@@ -7,3 +7,5 @@
 *.dae filter=lfs diff=lfs merge=lfs -binary
 *.npy filter=lfs diff=lfs merge=lfs -binary
 *.elf filter=lfs diff=lfs merge=lfs -binary
+*.a filter=lfs diff=lfs merge=lfs -binary
+*.pptx filter=lfs diff=lfs merge=lfs -binary
