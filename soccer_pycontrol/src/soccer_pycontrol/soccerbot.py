@@ -216,8 +216,8 @@ class Soccerbot:
 
         for r in np.arange(0, 1, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
-            self.configuration[0:20] = (
-                np.array(np.array(configuration[0:20]) - np.array(previous_configuration)) * r + np.array(previous_configuration)
+            self.configuration[0:18] = (
+                np.array(np.array(configuration[0:18]) - np.array(previous_configuration)) * r + np.array(previous_configuration)
             ).tolist()
             self.publishAngles()
             rospy.sleep(0.020)
@@ -235,7 +235,7 @@ class Soccerbot:
     def updateRobotConfiguration(self):
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            self.configuration[0:20] = joint_state.position
+            self.configuration[0:18] = joint_state.position
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
 

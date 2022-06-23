@@ -38,7 +38,7 @@ else:
 
     rospy.Time = MagicMock()
     joint_state = MagicMock()
-    joint_state.position = [0.0] * 20
+    joint_state.position = [0.0] * 18
     rospy.wait_for_message = MagicMock(return_value=joint_state)
     rospy.loginfo_throttle = lambda a, b: None
 
