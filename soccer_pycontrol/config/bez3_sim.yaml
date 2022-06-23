@@ -1,6 +1,6 @@
 # Path parameters
 
-hip_height: 0.45
+torso_height: 0.45
 walking_hip_height: 0.22
 joint_indices:
   IMU: 12
@@ -28,4 +28,4 @@ steps_per_second_default: 2
 bodystep_size_default: 0.08
 foot_separation: 0.06
 torso_offset_x: 0.04
-_merge_fixed_links: true
+merge_fixed_links: true
