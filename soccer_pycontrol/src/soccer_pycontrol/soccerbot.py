@@ -67,7 +67,7 @@ class Links(enum.IntEnum):
 
 
 class Soccerbot:
-    torso_height = rospy.get_param("~hip_height", 0.36)  # Hardcoded for now, todo calculate this
+    torso_height = rospy.get_param("~torso_height", 0.36)  # Hardcoded for now, todo calculate this
     walking_hip_height = rospy.get_param("~walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
@@ -302,9 +302,9 @@ class Soccerbot:
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
     def setPose(self, pose: tr):
-        try:
+        if hasattr(self, "pose"):
             last_hip_height = self.pose.get_position()[2]
-        except:
+        else:
             self.pose = pose
             last_hip_height = Soccerbot.torso_height
         self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
