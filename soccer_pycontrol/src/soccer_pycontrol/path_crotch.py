@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 import rospy
+
 from soccer_common.transformation import Transformation as tr
 from soccer_pycontrol.path_foot import PathFoot
 
