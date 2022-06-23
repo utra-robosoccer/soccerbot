@@ -27,7 +27,8 @@ class UART_STATES(Enum):
 
 CMD_WIDTHS = [2, 2, 7, 6, 2]
 BAUD = int(1e6)
-NUM_SERVOS = 12
+NUM_SERVOS = 13
+LAST_SERVO_IDX = 12  # NUM_SERVOS - 1
 EXPECT_BYTE_RX_TIME = 15e-6  # based on servo microcontroller nominal wait width per byte plus margin
 EXPECT_BYTE_TX_TIME = 15e-6
 
@@ -56,6 +57,20 @@ def bytepack(A):
         return struct.pack("B" * len(A), *A)
     else:
         return struct.pack("B", A)
+
+
+def un6pack(bs, _signed=True):
+    # little-endian
+    c = 0
+    for i, b in enumerate(bs):
+        c |= (b & 0x3F) << (i * 6)
+
+    if _signed:
+        sign_bit = 1 << (len(bs) * 6 - 1)
+        if c & sign_bit:
+            c -= sign_bit << 1
+
+    return c
 
 
 INF = float("inf")
@@ -96,7 +111,6 @@ def uart_transact(ser, B, cmd, rw, timeout=INF):
             log_string("I\t")
 
     ### UART munching FSM ###
-    LAST_SERVO_IDX = 12  # NUM_SERVOS - 1
     uart_state = UART_STATES.START
     expect_len = len(Astr) + 1
     r0 = b""
@@ -104,7 +118,7 @@ def uart_transact(ser, B, cmd, rw, timeout=INF):
     servo_frames = {}
     master_frame = []
     empty_frames = 0
-    MAX_EMPTY_FRAMES = 3
+    MAX_EMPTY_FRAMES = 8
     _saw_master_start = False
     while uart_state != UART_STATES.ENDED and empty_frames < MAX_EMPTY_FRAMES:
         # examine timeout condition

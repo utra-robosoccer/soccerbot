@@ -24,6 +24,11 @@ class Transmitter(Thread):
         self._num_tx = 0
         self._num_tx_lock = Lock()
 
+    def start(self, *args, **kwargs):
+        with self._ser._motor_lock:
+            uart_transact(self._ser, [128, 1, 2] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+        super().start(*args, **kwargs)
+
     def stop(self):
         """
         Prevents any more commands from being added to the queue and causes the
@@ -60,7 +65,7 @@ class Transmitter(Thread):
             while not rp.is_shutdown():
                 while not self._cmd_queue.empty():
                     goal_angles = self._cmd_queue.get()
-                    print(goal_angles)
+                    # print(goal_angles)
                     self._send_packet_to_mcu((np.array(goal_angles) * ANGLE2POT_VOLTS).astype(np.uint16))
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
