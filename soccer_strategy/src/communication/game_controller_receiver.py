@@ -47,6 +47,7 @@ class GameStateReceiver(object):
         while not rospy.is_shutdown():
             try:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
+                print("******************GAMECONTROLLER")
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
                 rospy.loginfo_once("\033[96mConnected to Game Controller\033[0m")
