@@ -10,10 +10,10 @@ Panels:
         - /TF1/Frames1
         - /Friendly 11
         - /Friendly 11/Localization1
-        - /Friendly 11/Localization1/Objection Detection1
         - /Friendly 11/Planning1
+        - /Friendly 21/Localization1
         - /Friendly 21/Planning1
-        - /Friendly 31/Localization1
+        - /Friendly 31/Localization1/Map1
         - /Friendly 31/Planning1/Goal1
         - /Friendly 31/Planning1/Path1
       Splitter Ratio: 0.7837837934494019
@@ -35,7 +35,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Objection Detection
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -66,7 +66,7 @@ Visualization Manager:
       Frame Timeout: 3
       Frames:
         All Enabled: false
-        robot1/ball_gt:
+        robot1/ball:
           Value: true
         robot1/base_camera:
           Value: true
@@ -75,8 +75,6 @@ Visualization Manager:
         robot1/base_footprint_gt:
           Value: true
         robot1/camera:
-          Value: true
-        robot1/camera_gt:
           Value: true
         robot1/head:
           Value: true
@@ -130,11 +128,7 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          robot1/ball_gt:
-            {}
           robot1/base_footprint_gt:
-            {}
-          robot1/camera_gt:
             {}
           robot1/odom:
             robot1/base_camera:
@@ -156,7 +150,8 @@ Visualization Manager:
                 robot1/neck:
                   robot1/head:
                     robot1/camera:
-                      {}
+                      robot1/ball:
+                        {}
                 robot1/right_bicep:
                   robot1/right_forearm:
                     {}
@@ -255,8 +250,8 @@ Visualization Manager:
               Value: false
             - Alpha: 0.30000001192092896
               Class: rviz/Map
-              Color Scheme: raw
-              Draw Behind: false
+              Color Scheme: map
+              Draw Behind: true
               Enabled: true
               Name: Map
               Topic: /robot1/map
@@ -653,7 +648,7 @@ Visualization Manager:
               Value: true
             - Alpha: 0.30000001192092896
               Class: rviz/Map
-              Color Scheme: raw
+              Color Scheme: map
               Draw Behind: false
               Enabled: true
               Name: Map
@@ -883,7 +878,7 @@ Visualization Manager:
               Value: false
             - Alpha: 0.30000001192092896
               Class: rviz/Map
-              Color Scheme: raw
+              Color Scheme: map
               Draw Behind: false
               Enabled: true
               Name: Map
@@ -1040,10 +1035,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: -69.5438461303711
+      Scale: -130.13986206054688
       Target Frame: <Fixed Frame>
-      X: -0.1004926785826683
-      Y: -0.6401675939559937
+      X: 4.118077754974365
+      Y: -1.0959924459457397
     Saved: ~
 Window Geometry:
   Camera:
@@ -1067,5 +1062,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1267
-  X: 0
+  X: 72
   Y: 27
