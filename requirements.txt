@@ -19,6 +19,8 @@ pre-commit
 timeout_decorator
 torch
 torchvision
+parameterized
+pytest-timeout
 
 # object detection
 Pillow==9.0.1
