@@ -50,6 +50,7 @@ class Camera:
                     (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
                 break
             except (
+                tf2_py.LookupException,
                 tf.LookupException,
                 tf.ConnectivityException,
                 tf.ExtrapolationException,

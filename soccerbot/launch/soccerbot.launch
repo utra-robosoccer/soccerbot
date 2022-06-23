@@ -5,6 +5,7 @@
     <arg name="a_pos" default="$(optenv YAW 0)" />
     <arg name="robot_id" default="$(optenv ROBOCUP_ROBOT_ID 1)" />
     <arg name="robot_name" value="robot$(arg robot_id)" />
+    <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
 
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
@@ -12,10 +13,11 @@
     <param name="/use_sim_time" value="$(arg simulation)" />
 
     <!-- prettier-ignore -->
-    <param name="robot_description" command="xacro '$(find soccer_description)/models/soccerbot.xacro'
+
+    <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/soccerbot.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
-        file_path:=package://soccer_description
+        file_path:=package://bez1_description
         has_base_footprint:=false
         tf_prefix:=$(arg robot_name)
         "
@@ -40,6 +42,7 @@
 
     <include file="$(find soccerbot)/launch/modules/navigation.launch">
         <arg name="simulation" value="$(arg simulation)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch">
@@ -50,7 +53,7 @@
     </include>
 
     <!-- prettier-ignore -->
-    <node pkg="rosbag" type="record" name="rosbag" args="record -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
+    <node pkg="rosbag" type="record" name="rosbag" args="-O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
         state
         action_complete
         amcl_pose

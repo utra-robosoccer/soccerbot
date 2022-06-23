@@ -9,9 +9,10 @@ external
 LICENSE
 Dockerfile
 docker-compose.*
-soccer_description/meshes/*.stl
+bez1_description/meshes/*.stl
 soccer_rlcontrol
 soccer_fieldline_detection/media
 soccerbot/bags/
+!soccerbot/bags/view_rosbag.sh
 LICENSE
 venv/

@@ -14,7 +14,6 @@ from scipy.spatial.transform import Rotation as R
 from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
-from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBoxes
 from soccer_strategy.src.team import Team
@@ -157,7 +156,7 @@ class IntegrationTestInitial(IntegrationTest):
             assert handle.get_num_connections() > 0
             print("Connection looks okay")
             # Validate that the robot moves towards the goal
-            for i in range(0, 100):  # 100s timeout
+            for i in range(0, 200):  # 100s timeout
                 print("dist: {}, cycle: {}".format(self.distance, i))
                 rospy.sleep(1)
                 if self.distance < DIST_TOLERANCE:

@@ -1,4 +1,4 @@
-image: lines.png
+image: robocup.pgm
 resolution: 0.01
 origin: [-5.5, -4., 0.0]
 occupied_thresh: 0.99
