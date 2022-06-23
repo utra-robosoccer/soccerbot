@@ -19,7 +19,6 @@ pre-commit
 timeout_decorator
 torch
 torchvision
-parameterized
 pytest-timeout
 pytest-rerunfailures
 
