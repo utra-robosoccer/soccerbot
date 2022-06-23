@@ -26,7 +26,8 @@ class Transmitter(Thread):
 
     def start(self, *args, **kwargs):
         with self._ser._motor_lock:
-            uart_transact(self._ser, [128, 1, 2] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+            uart_transact(self._ser, [2048, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+            uart_transact(self._ser, [1800] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
         super().start(*args, **kwargs)
 
     def stop(self):
@@ -39,11 +40,14 @@ class Transmitter(Thread):
     def _stopped(self):
         return self._stop_event.is_set()
 
-    def _send_packet_to_mcu(self, byteStream):
-        """Sends bytes to the MCU with the header sequence attached."""
+    def _send_packet_to_mcu(self, goal_angles):
+        """Sends bytes to the MCU with the header sequence attached. Angles in degrees."""
         with self._ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
-            # print(byteStream)
-            return uart_transact(self._ser, byteStream, CMDS.POSITION, RWS.WRITE, 0.01)
+            # print('**************', goal_angles)
+            flat_goal_angles = [0] * (max(goal_angles.keys()) + 1)
+            for idx, v in goal_angles.items():
+                flat_goal_angles[idx] = int(v * ANGLE2POT_VOLTS)
+        return uart_transact(self._ser, flat_goal_angles, CMDS.POSITION, RWS.WRITE, 0.01)
 
     def get_num_tx(self):
         with self._num_tx_lock:
@@ -66,9 +70,10 @@ class Transmitter(Thread):
                 while not self._cmd_queue.empty():
                     goal_angles = self._cmd_queue.get()
                     # print(goal_angles)
-                    self._send_packet_to_mcu((np.array(goal_angles) * ANGLE2POT_VOLTS).astype(np.uint16))
+                    self._send_packet_to_mcu(goal_angles)
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
-        except serial.serialutil.SerialException:
+        except serial.serialutil.SerialException as e:
             log_string("Serial exception in thread {0}".format(self._name))
+            print(e)
         log_string("Stopping Tx thread ({0})...".format(self._name))
