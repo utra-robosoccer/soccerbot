@@ -27,4 +27,4 @@ if [ "$ROBOCUP_ROBOT_ID" == "4" ]; then
 fi
 
 source ~/catkin_ws/devel/setup.bash
-roslaunch soccerbot soccerbot.launch __ns:=robot$ROBOCUP_ROBOT_ID || sleep infinity;
+roslaunch soccerbot soccerbot.launch simulation:=true __ns:=robot$ROBOCUP_ROBOT_ID || sleep infinity;
