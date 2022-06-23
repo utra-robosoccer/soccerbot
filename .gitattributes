@@ -15,3 +15,4 @@ docs/** linguist-vendored
 *.html linguist-vendored
 *.c linguist-vendored
 *.js linguist-vendored
+*.xcf filter=lfs diff=lfs merge=lfs -text
