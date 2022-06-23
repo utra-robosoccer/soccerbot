@@ -76,8 +76,6 @@ class TestWalking(TestCase):
 
     @timeout_decorator.timeout(TEST_TIMEOUT)
     def test_ik_1(self):
-        # t = self.walker.soccerbot.right_foot_init_position # Transformation((0, 0, 0.4), (0,0,0,1))
-        # print(self.walker.soccerbot.inverseKinematicsLeftFoot(t))
         self.walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = self.walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(self.walker.soccerbot.right_foot_init_position)
         )
@@ -100,7 +98,6 @@ class TestWalking(TestCase):
 
     @timeout_decorator.timeout(TEST_TIMEOUT)
     def test_walk_1(self):
-        # pb.setGravity(0, 0, -4)
         self.walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(200)

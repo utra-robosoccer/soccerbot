@@ -43,7 +43,7 @@ class Joints(enum.IntEnum):
 
 
 class Links(enum.IntEnum):
-    TORSO = rospy.get_param("~joint_indices/TORSO", 1)
+    TORSO = rospy.get_param("~joint_indices/TORSO", -1)
     LEFT_ARM_1 = rospy.get_param("~joint_indices/LEFT_ARM_1", 0)
     LEFT_ARM_2 = rospy.get_param("~joint_indices/LEFT_ARM_2", 1)
     RIGHT_ARM_1 = rospy.get_param("~joint_indices/RIGHT_ARM_1", 2)
@@ -83,7 +83,7 @@ class Soccerbot:
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("~_merge_fixed_links", False) else 0),
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("~merge_fixed_links", False) else 0),
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
             baseOrientation=pose.get_orientation(),
         )
@@ -246,8 +246,6 @@ class Soccerbot:
         :return: Motor angles for the right foot
         """
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
-        # transformation = np.array(transformation)[[1, 0, 2, 3],:]
-        # transformation = transformation[:,[1, 0, 2, 3]]
         invconf = np.linalg.inv(transformation)
 
         d3 = self.DH[2, 0]

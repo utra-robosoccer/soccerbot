@@ -113,6 +113,7 @@ class SoccerbotControllerRos(SoccerbotController):
             try:
                 self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
             except Exception as ex:
+                print(ex)
                 return
 
             end = time.time()

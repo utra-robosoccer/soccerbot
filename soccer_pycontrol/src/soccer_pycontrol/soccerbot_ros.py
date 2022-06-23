@@ -79,7 +79,7 @@ class SoccerbotRos(Soccerbot):
             js.position.append(self.get_angles()[i])
         try:
             rospy.loginfo_once("Started Publishing Motors")
-            # self.pub_all_motor.publish(js)
+            self.pub_all_motor.publish(js)
         except rospy.exceptions.ROSException as ex:
             print(ex)
             exit(0)
