@@ -128,7 +128,10 @@ class SoccerbotControllerRos(SoccerbotController):
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
         stable_count = 5
 
-        while not single_trajectory and self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
+        if single_trajectory:
+            self.soccerbot.robot_state.status = RobotState.STATUS_WALKING
+
+        while self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
             try:
                 r.sleep()
             except ROSInterruptException:

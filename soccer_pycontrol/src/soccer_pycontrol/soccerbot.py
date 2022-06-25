@@ -217,7 +217,7 @@ class Soccerbot:
         for r in np.arange(0, 1, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
             self.configuration[0:18] = (
-                np.array(np.array(configuration[0:18]) - np.array(previous_configuration)) * r + np.array(previous_configuration)
+                np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
             ).tolist()
             self.publishAngles()
             rospy.sleep(0.020)

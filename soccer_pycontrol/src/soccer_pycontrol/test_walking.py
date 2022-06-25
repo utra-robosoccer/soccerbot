@@ -16,8 +16,8 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-run_in_ros = False
-display = False
+run_in_ros = True
+display = True
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -68,7 +68,7 @@ from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
 class TestWalking:
-    robot_models = ["bez1", "bez3"]
+    robot_models = ["bez1"]
 
     @staticmethod
     @pytest.fixture(params=robot_models)
@@ -76,18 +76,16 @@ class TestWalking:
         global robot_model
         robot_model = request.param
 
-        # Recursively reloads all parameters in all files
-        for i in range(2):
-            for attribute_name in dir(soccer_pycontrol):
-                if attribute_name == __name__.replace(__package__ + ".", ""):
-                    continue
-                attribute = getattr(soccer_pycontrol, attribute_name)
-                if type(attribute) is ModuleType:
-                    reload(attribute)
-
         if run_in_ros:
             c = SoccerbotControllerRos()
         else:
+            for i in range(2):
+                for attribute_name in dir(soccer_pycontrol):
+                    if attribute_name == __name__.replace(__package__ + ".", ""):
+                        continue
+                    attribute = getattr(soccer_pycontrol, attribute_name)
+                    if type(attribute) is ModuleType:
+                        reload(attribute)
             c = SoccerbotController(display=display)
         yield c
         del c
@@ -113,15 +111,14 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    # @pytest.mark.timeout(TEST_TIMEOUT)
+    # @pytest.mark.flaky(reruns=1)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
         walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -166,7 +163,6 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.flaky(reruns=2)
     def test_walk_6(self, walker: SoccerbotController):
         walker.setPose(Transformation([2.008, -0.646, 0.0], [0.0149, -0.0474, 0.99985, -0.0072]))
         walker.wait(100)
