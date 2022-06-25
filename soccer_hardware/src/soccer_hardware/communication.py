@@ -32,11 +32,9 @@ class Communication:
         self._motor_map = rp.get_param("~motor_mapping")
         self._imu_calibration = rp.get_param("~imu_calibration")
 
-        self._joint_command_sub = rp.Subscriber("/joint_command", JointState, self.joint_command_callback)
+        self._joint_command_sub = rp.Subscriber("joint_command", JointState, self.joint_command_callback)
 
         for motor in self._motor_map:
-            # self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
-            # self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
             self._motor_map[motor]["value"] = 0.0
 
         self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
@@ -52,25 +50,13 @@ class Communication:
         tx_cycle.set_e_lim(0, -3.0)
         rp.spin()
 
-    def trajectory_callback(self, robot_goal, motor):
-        self._motor_map[motor]["value"] = robot_goal.data
-
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
             if motor_name in self._motor_map:
                 self._motor_map[motor_name]["value"] = target
-        # print('************', [(a['id'], a['value']) for a in sorted(self._motor_map.values(), key=lambda b: int(b['id']))])
-
-    # def send_angles(self, event):
-    #     motor_angles = [0] * len(self._motor_map)
-    #     for motor in self._motor_map:
-    #         motor_angles[int(self._motor_map[motor]["id"])] = np.rad2deg(
-    #             self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])
-    #         ) + float(self._motor_map[motor]["offset"])
-    #     self._tx_thread.send(motor_angles)
 
     def send_angles(self, event):
-        motor_angles = {}  # [0] * len(self._motor_map)
+        motor_angles = {}
         for motor_name, motor in self._motor_map.items():
             angle = np.rad2deg(motor["value"] * float(motor["direction"])) + float(motor["offset"])
             if "limits" in motor and motor["limits"] is not None:
@@ -116,15 +102,6 @@ class Communication:
                 angle = np.deg2rad(angle)
             else:
                 angle = self._motor_map[motor]["value"]
-
-            # # Joint controller state
-            # state = JointControllerState()
-            # state.process_value = angle
-            # state.command = self._motor_map[motor]["value"]
-            # state.error = angle - self._motor_map[motor]["value"]
-            # state.process_value_dot = 0  # TODO PID settings and process value dot
-            # state.header.stamp = rp.rostime.get_rostime()
-            # self._motor_map[motor]["publisher"].publish(state)
 
             # Joint State
             joint_state.name.append(motor)
