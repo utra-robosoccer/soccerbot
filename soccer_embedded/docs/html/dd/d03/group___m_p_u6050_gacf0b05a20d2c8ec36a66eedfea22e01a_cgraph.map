@@ -1,5 +1,0 @@
-<map id="init" name="init">
-<area shape="rect" id="node2" href="$dd/d03/group___m_p_u6050.html#gaa5a75771cff2c02806b4a35d98791f3c" title="Writes to a register from the MPU6050. " alt="" coords="92,5,175,32"/>
-<area shape="rect" id="node3" href="$dd/d03/group___m_p_u6050.html#ga65ca72084cf43eda9ccb4922dfa65e62" title="Sets the offsets of the sensor. " alt="" coords="97,56,170,83"/>
-<area shape="rect" id="node4" href="$dd/d03/group___m_p_u6050.html#gaa2a2d8a4170103fb695add6fb8a50eb4" title="Reads a byte from a register on the sensor, and stores it in the member variable received_byte. " alt="" coords="223,56,305,83"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="UART" name="UART">
-<area shape="rect" id="node1" href="$d2/d54/group___header.html" title="Header" alt="" coords="170,5,233,32"/>
-<area shape="rect" id="node2" href="$d7/d62/group___uart_driver__test.html" title="UartDriver unit tests. " alt="" coords="148,56,255,83"/>
-<area shape="rect" id="node3" href="$d0/d27/group___uart_driver.html" title="Manages the usage of a particular UART, taking care of hardware&#45;level calls, OS&#45;level calls..." alt="" coords="162,116,241,143"/>
-<area shape="rect" id="node4" href="$d9/d44/group___uart_interface.html" title="Interface implemented by concrete &amp; mock UART objects. " alt="" coords="154,177,249,204"/>
-<area shape="rect" id="node5" href="$d5/d66/group___hal_uart_interface.html" title="Implements UartInterface using HAL functions. " alt="" coords="144,248,259,275"/>
-</map>
