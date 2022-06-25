@@ -16,8 +16,8 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-run_in_ros = True
-display = True
+run_in_ros = False
+display = False
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -68,7 +68,7 @@ from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
 class TestWalking:
-    robot_models = ["bez1"]
+    robot_models = ["bez1", "bez3"]
 
     @staticmethod
     @pytest.fixture(params=robot_models)
@@ -111,8 +111,6 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    # @pytest.mark.timeout(TEST_TIMEOUT)
-    # @pytest.mark.flaky(reruns=1)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -128,7 +126,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0.0198, -0.0199, 0], [0.00000, 0, 0, 1]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -138,7 +136,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([-2.26, -1.27, 0], [0, 0, 0.997836202477347, 0.06574886330262358]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -148,7 +146,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([-0.12015226, -0.19813691, 0.321], [0, 0, 0.95993011, -0.28023953]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -158,7 +156,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0.0859, -0.016, 0.0], [0, 0, 0.998, 0.0176]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -168,7 +166,7 @@ class TestWalking:
         walker.wait(100)
         walker.ready()
         walker.setGoal(Transformation([0.00736, 0.0356, 0.0], [0, 0, 0.998, 0.0176]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -183,7 +181,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -193,7 +191,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -203,7 +201,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -215,7 +213,7 @@ class TestWalking:
 
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         walker.setGoal(goal)
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -228,7 +226,7 @@ class TestWalking:
         goal.set_position([0.05, 0.05, 0])
         walker.setGoal(goal)
         # walker.soccerbot.robot_path.show()
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -240,7 +238,7 @@ class TestWalking:
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([0.15, 0.05, 0])
         walker.setGoal(goal)
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -252,7 +250,7 @@ class TestWalking:
         goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
         goal.set_position([-0.3, 0, 0])
         walker.setGoal(goal)
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -264,7 +262,7 @@ class TestWalking:
         goal = Transformation.get_transform_from_euler([-np.pi / 2, 0, 0])
         goal.set_position([-0.2, -0.2, 0])
         walker.setGoal(goal)
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -274,7 +272,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0.0503, 0.06323, 0], [0, 0, 1, 0]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -289,7 +287,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0.14076394628045208, -0.034574636811865296, 0], [0, 0, -0.9999956132297835, -0.002962013029887055]))
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -300,5 +298,5 @@ class TestWalking:
         walker.wait(100)
         goal = Transformation.get_transform_from_euler([0, 0, 0])
         walker.setGoal(goal)
-        walk_success = walker.run()
+        walk_success = walker.run(single_trajectory=True)
         assert walk_success
