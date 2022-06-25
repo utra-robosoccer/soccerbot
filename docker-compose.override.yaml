@@ -1,10 +1,22 @@
 version: "3.3"
 
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
 services:
   friendly:
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.2
     ports:
       - 11311:11311
   opponent:
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.6
     ports:
       - 11312:11311
     command: "echo 'Opponent is manually disabled in docker-compose.override.yaml file'"
