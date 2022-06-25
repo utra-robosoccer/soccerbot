@@ -17,8 +17,8 @@ from unittest.mock import MagicMock
 from soccer_common.transformation import Transformation
 
 run_in_ros = False
-display = False
-TEST_TIMEOUT = 60
+display = True
+TEST_TIMEOUT = 60e3
 
 if run_in_ros:
     import rospy
@@ -68,7 +68,7 @@ from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
 class TestWalking:
-    robot_models = ["bez1", "bez3"]
+    robot_models = ["bez2"]
 
     @staticmethod
     @pytest.fixture(params=robot_models)
@@ -89,11 +89,14 @@ class TestWalking:
             c = SoccerbotControllerRos()
         else:
             c = SoccerbotController(display=display)
+            # try:
+            # except pb.error as e:
+            #     c = SoccerbotController(display=False)
         yield c
         del c
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
+    # @pytest.mark.flaky(reruns=1)
     def test_ik(self, walker: SoccerbotController):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -108,6 +111,7 @@ class TestWalking:
             jointIndices=list(range(0, 20, 1)),
             targetPositions=walker.soccerbot.get_angles(),
         )
+
         for _ in range(100):
             if _ % 16 == 0:
                 _ = _
@@ -115,7 +119,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2", "bez3"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()

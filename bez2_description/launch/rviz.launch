@@ -1,0 +1,16 @@
+<launch>
+    <param
+        name="robot_description"
+        command="xacro '$(find bez2_description)/urdf/bez2.xacro'
+        robot_name:=bez2
+        model_type:=dae
+        file_path:=package://bez2_description
+        has_base_footprint:=false
+        "
+    />
+    <node name="joint_state_publisher_gui_bez2" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher_bez2" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <arg name="rvizconfig" default="$(find bez2_description)/launch/urdf.rviz" />
+    <node name="rviz_bez2" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

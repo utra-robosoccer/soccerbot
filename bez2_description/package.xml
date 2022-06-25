@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bez2_description</name>
+  <version>0.0.0</version>
+  <description>The bez2_description package</description>
+  <maintainer email="lkunelk@gmail.com">Nam Nguyen</maintainer>
+  <license>BSD</license>
+  <author email="lkunelk@gmail.com">Nam Nguyen</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+  <depend>dynamic_reconfigure</depend>
+  <depend>ros_control</depend>
+  <depend>effort_controllers</depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/models" />
+  </export>
+</package>

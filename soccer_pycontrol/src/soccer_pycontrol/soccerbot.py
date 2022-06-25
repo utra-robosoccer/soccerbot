@@ -82,7 +82,7 @@ class Soccerbot:
         self.body = pb.loadURDF(
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
-            useFixedBase=useFixedBase,
+            useFixedBase=True,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("~merge_fixed_links", False) else 0),
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
             baseOrientation=pose.get_orientation(),

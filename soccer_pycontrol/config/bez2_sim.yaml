@@ -1,0 +1,32 @@
+# Path parameters
+
+torso_height: 0.43
+walking_hip_height: 0.165
+joint_indices:
+  LEFT_ARM_1: 0
+  LEFT_ARM_2: 1
+  RIGHT_ARM_1: 3
+  RIGHT_ARM_2: 4
+  HEAD_1: 5
+  HEAD_2: 6
+  LEFT_LEG_1: 8
+  LEFT_LEG_2: 9
+  LEFT_LEG_3: 10
+  LEFT_LEG_4: 11
+  LEFT_LEG_5: 12
+  LEFT_LEG_6: 13
+  RIGHT_LEG_1: 14
+  RIGHT_LEG_2: 15
+  RIGHT_LEG_3: 16
+  RIGHT_LEG_4: 17
+  RIGHT_LEG_5: 18
+  RIGHT_LEG_6: 19
+  IMU: 2
+  HEAD_CAMERA: 7
+
+steps_per_second_default: 2
+bodystep_size_default: 0.08
+foot_separation: 0.06
+torso_offset_x: 0.04
+merge_fixed_links: true
+max_force: 100
