@@ -1450,14 +1450,14 @@
   <child link="camera_1"/>
 </joint>
 
-<joint name="camera_joint" type="continuous">
+<joint name="camera_joint" type="fixed">
   <origin xyz="0.0372 0.0 0.027" rpy="0 0 0"/>
   <parent link="camera_1"/>
   <child link="camera-link_1"/>
   <axis xyz="1.0 -0.0 0.0"/>
 </joint>
 
-<joint name="imu_joint" type="continuous">
+<joint name="imu_joint" type="fixed">
   <origin xyz="0.0 -0.005 -0.005" rpy="0 0 0"/>
   <parent link="torso_1"/>
   <child link="imu-link_1"/>
