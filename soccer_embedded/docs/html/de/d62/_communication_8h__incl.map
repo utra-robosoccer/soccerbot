@@ -1,0 +1,4 @@
+<map id="soccer&#45;embedded/Common/include/Communication.h" name="soccer&#45;embedded/Common/include/Communication.h">
+<area shape="rect" id="node6" href="$d2/dea/robot_state_8h.html" title="Defines the RobotState data structure used in communication with the high&#45;level software. RobotState is the data structure sent from the MCU to the PC; it contains sensor data. " alt="" coords="385,95,478,121"/>
+<area shape="rect" id="node7" href="$d2/d6a/robot_goal_8h.html" title="Defines the RobotGoal data structure used in communication with the high&#45;level software. RobotGoal is the data structure sent from the PC to the MCU; it contains motor trajectories. " alt="" coords="503,95,592,121"/>
+</map>
