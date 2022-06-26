@@ -11,6 +11,3 @@
 [submodule "external/navigation"]
 	path = external/navigation
 	url = git@github.com:utra-robosoccer/navigation.git
-[submodule "external/urdf2webots"]
-	path = external/urdf2webots
-	url = git@github.com:cyberbotics/urdf2webots.git
