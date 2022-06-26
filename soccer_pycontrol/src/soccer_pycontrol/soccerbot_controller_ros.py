@@ -20,7 +20,7 @@ class SoccerbotControllerRos(SoccerbotController):
         pb.setGravity(0, 0, -9.81)
 
         self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=2, spinningFriction=2, rollingFriction=0.0)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
 

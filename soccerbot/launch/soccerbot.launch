@@ -12,6 +12,12 @@
 
     <param name="/use_sim_time" value="$(arg simulation)" />
 
+    <include file="$(find soccerbot)/launch/modules/webots.launch">
+        <arg name="single" value="true" />
+    </include>
+
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
     <!-- prettier-ignore -->
 
     <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
