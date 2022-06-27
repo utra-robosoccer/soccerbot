@@ -142,12 +142,12 @@ class AcrobotWalkerEnv(core.Env):
         # Joint constraints
         joint_velocity_limit = 3 * pi
         motor_torque_limit = 0.15
-        q1_train_limit = pi / 2  # pi / 8
+        q1_train_limit = pi / 8
         angle_limit = pi / 20
-        high = np.array([pi / 2 + q1_train_limit, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, np.inf], dtype=np.float32)
-        low = np.array([pi / 2 - q1_train_limit, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, 0, np.inf], dtype=np.float32)
-        self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
-        self.action_space = spaces.Box(low=np.array([-motor_torque_limit]), high=np.array([motor_torque_limit]), dtype=np.float32)
+        high = np.array([pi / 2 + q1_train_limit, pi - angle_limit, joint_velocity_limit, joint_velocity_limit, 1, 1000000], dtype=np.float64)
+        low = np.array([pi / 2 - q1_train_limit, -pi + angle_limit, -joint_velocity_limit, -joint_velocity_limit, -1, -1000000], dtype=np.float64)
+        self.observation_space = spaces.Box(low=low, high=high, dtype=np.float64)
+        self.action_space = spaces.Box(low=np.array([-motor_torque_limit]), high=np.array([motor_torque_limit]), dtype=np.float64)
         self.state = None
 
     def reset(self, *, seed: Optional[int] = None, return_info: bool = False, options: Optional[dict] = None):

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import os
-import time
 from unittest import TestCase
 
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import Rectangle
 from pyvirtualdisplay import Display
 from soccer_rlcontrol.envs import *
 
@@ -14,6 +14,10 @@ rng = np.random.RandomState(0)
 
 bin_size = 20
 bins = [
+    np.linspace(0, np.pi, bin_size),
+    np.linspace(-np.pi, np.pi, bin_size),
+]
+bins_safety = [
     np.linspace(env.observation_space.low[0], env.observation_space.high[0], bin_size),
     np.linspace(env.observation_space.low[1], env.observation_space.high[1], bin_size),
     # np.linspace(env.observation_space.low[2], env.observation_space.high[2], bin_size), #assuming velocity space doesn't matter
@@ -26,11 +30,10 @@ action_bins = np.linspace(env.action_space.low[0], env.action_space.high[0], act
 Q = np.random.uniform(low=-1, high=1, size=([bin_size] * 2 + [2] + [action_bin_size]))
 for q1 in range(Q.shape[0]):
     for q2 in range(Q.shape[1]):
-        if bins[1][q2] < -2 * bins[0][q1]:
+        if bins_safety[1][q2] < -2 * bins_safety[0][q1]:
             Q[q1, q2] = 0
-        if bins[1][q2] > -2 * bins[0][q1] + 2 * np.pi:
+        if bins_safety[1][q2] > -2 * bins_safety[0][q1] + 2 * np.pi:
             Q[q1, q2] = 0
-
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # Q = np.load(dir_path + "/data/Q43400.npy")
@@ -41,7 +44,7 @@ def obs2state(state):
     ss = state[0:2]  # state[0:5]
     index = []
     for i in range(len(ss)):
-        index.append(np.digitize(state[i], bins[i]) - 1)
+        index.append(np.digitize(state[i], bins_safety[i]) - 1)
     index.append(int(state[4] % 2))  # index.append(int(state[4] % 2))
     return tuple(index)
 
@@ -212,6 +215,18 @@ class Test(TestCase):
         # Gravity field
         # plt.quiver(bx, by, R, Z, width=0.002)
 
+        # Limit
+        plt.gca().add_patch(
+            Rectangle(
+                (env.observation_space.low[0], env.observation_space.low[1]),
+                env.observation_space.high[0] - env.observation_space.low[0],
+                env.observation_space.high[1] - env.observation_space.low[1],
+                edgecolor="blue",
+                fill=False,
+                lw=1,
+            )
+        )
+
         # Plot collisions
         plt.plot(bins[0], -2 * bins[0] + 2 * np.pi, marker="", linewidth=0.5)
         plt.plot(bins[0], -2 * bins[0], marker="", linewidth=0.5)
@@ -227,8 +242,9 @@ class Test(TestCase):
 
         bu2 = np.multiply(action_map, bu)
         bv2 = np.multiply(action_map, bv)
+        bx, by = np.meshgrid(bins_safety[0], bins_safety[1])
 
-        plt.quiver(bx, by, bu2, bv2, width=0.003, color="r")
+        plt.quiver(bx, by, bu2, bv2, width=0.002, color="r")
         plt.xlabel("q1")
         plt.ylabel("q2")
 

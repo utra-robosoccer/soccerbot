@@ -25,3 +25,5 @@ Pillow==9.0.1
 tqdm
 mxnet-cu112; platform_machine == 'x86_64'
 pybullet
+gym==0.21.0
+pyglet
