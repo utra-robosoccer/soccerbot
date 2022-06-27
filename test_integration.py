@@ -128,6 +128,7 @@ class IntegrationTestInitial(IntegrationTest):
 
         def processMsg(data: RobotState):
             print("processMsg, status {}, role {}".format(data.status, data.role))
+            coords = [inf, inf, inf] # Placeholder
             if data.role == RobotState.ROLE_GOALIE:
                 coords = self.team.formations["ready"][Robot.Role.GOALIE]
                 print("Robot.Role.GOALIE - {}".format(coords))
