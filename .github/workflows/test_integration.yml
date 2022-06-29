@@ -11,9 +11,9 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-  test_integration:
+  build_docker_images:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -38,6 +38,34 @@ jobs:
         run: |
           docker-compose pull
           docker-compose build --progress=plain
+      - name: Cache the docker images
+        run: |
+          docker save utrarobosoccer/soccerbot > /tmp/soccerbot.tar
+          docker save utrarobosoccer/webots > /tmp/webots.tar
+      - name: Upload soccerbot image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: soccerbot
+          path: /tmp/soccerbot.tar
+      - name: Upload webots image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: soccerbot
+          path: /tmp/webots.tar
+  run_integration_tests:
+    runs-on: ubuntu-latest
+    needs: build_docker_images
+    strategy:
+      fail-fast: false
+      matrix:
+        robot_model: [bez1, bez3]
+    timeout-minutes: 60
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      ROBOT_MODEL: ${{ matrix.robot_model }}
+    steps:
       - name: Walking Integration Test
         run: |
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
