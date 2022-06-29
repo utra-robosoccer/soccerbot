@@ -4,7 +4,7 @@ name: Docker Image ARM
 on:
   workflow_dispatch:
   push:
-    branches: [master, cuda_arm_test]
+    branches: [master, change_mxnet_to_pip]
     paths-ignore:
       - "**.md"
 
