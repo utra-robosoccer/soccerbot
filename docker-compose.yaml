@@ -67,9 +67,11 @@ services:
       - ./external/webots/projects/samples/contests/robocup/worlds:/usr/local/webots/projects/samples/contests/robocup/worlds:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/referee.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/referee.py:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game_single_${ROBOT_MODEL:-bez1}.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
@@ -80,6 +82,7 @@ services:
     <<: *soccerbot
     environment:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
+      ROBOT_MODEL: bez1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
@@ -93,6 +96,7 @@ services:
     <<: *soccerbot
     environment:
       ROBOCUP_ROBOT_ID: 1
+      ROBOT_MODEL: bez1
       ROBOCUP_TEAM_COLOR: "blue"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
