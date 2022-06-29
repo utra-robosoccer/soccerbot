@@ -172,10 +172,9 @@ class Transformation(np.ndarray):
         """
         r = R.from_quat(quaternion)
         angle = np.linalg.norm(r.as_rotvec())
-        np.seterr(invalid="raise")
-        try:
-            vector = r.as_rotvec() / np.linalg.norm(r.as_rotvec())
-        except:
+        if angle:
+            vector = r.as_rotvec() / angle
+        else:
             vector = [0, 0, 1]
         return angle, vector
 

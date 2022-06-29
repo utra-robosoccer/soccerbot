@@ -1,4 +1,4 @@
-<robot name="soccerbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="bez1" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro name="front_camera" params="origin">
         <link name="$(arg tf_prefix)/camera" >

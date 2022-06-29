@@ -10,7 +10,7 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class PathSectionShort(PathSection):
-    steps_per_second_default = rospy.get_param("~steps_per_second_default", 2.5) # try 6 motors P = 09.25
+    steps_per_second_default = rospy.get_param("~steps_per_second_default", 2.5)  # try 6 motors P = 09.25
     scale_yaw = rospy.get_param("~scale_yaw", 1.0)  # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
